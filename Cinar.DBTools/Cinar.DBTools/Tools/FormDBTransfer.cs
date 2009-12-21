@@ -52,9 +52,8 @@ namespace Cinar.DBTools.Tools
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             DBTransfer dbTranfer = (DBTransfer)e.Argument;
-            dbTranfer.Transfer();
+            dbTranfer.Transfer(cbTransferData.Checked);
         }
 
         private void log(string msg)
@@ -79,6 +78,11 @@ namespace Cinar.DBTools.Tools
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             txtLog.Text += e.UserState.ToString();
+        }
+
+        private void cbTransferData_CheckedChanged(object sender, EventArgs e)
+        {
+            groupTransferData.Enabled = cbTransferData.Checked;
         }
     }
 }
