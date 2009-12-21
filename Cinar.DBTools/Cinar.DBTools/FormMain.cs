@@ -13,6 +13,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Collections;
 using Cinar.Scripting;
+using System.Diagnostics;
 
 namespace Cinar.DBTools
 {
@@ -35,6 +36,12 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuNewConnection},
                                          new CommandTrigger{ Control = btnNewConnection},
+                                     }
+                                 },
+                     new Command {
+                                     Execute = cmdExit,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuExit},
                                      }
                                  },
                      new Command {
@@ -181,6 +188,7 @@ namespace Cinar.DBTools
             {
                 ser.Serialize(sr, Provider.Connections);
             }
+            statusText.Text = "Connections saved.";
         }
         private void cmdRefresh(string arg)
         {
@@ -218,6 +226,10 @@ namespace Cinar.DBTools
                 rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database").Tag = cs;
             }
         }
+        private void cmdExit(string arg)
+        {
+            Close();
+        }
         private void cmdEditConnection(string arg)
         {
             ConnectionSettings cs = (ConnectionSettings)treeView.SelectedNode.Tag;
@@ -252,6 +264,8 @@ namespace Cinar.DBTools
                 Provider.Connections.Remove(cs);
                 saveConnections();
                 currNode.Remove();
+
+                statusText.Text = "Connection deleted.";
             }
         }
 
@@ -307,12 +321,25 @@ namespace Cinar.DBTools
                     sb.AppendLine("Not available.");
                     break;
             }
+            statusText.Text = "SQL generated.";
             showInfoText(sb.ToString());
         }
         private void cmdExecuteSQL(string arg)
         {
             if(!checkConnection()) return;
-            bindGridResults(Provider.Database.GetDataTable(txtSQL.Text));
+            executeSQL(txtSQL.Text);
+        }
+
+        private void executeSQL(string sql)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            DataTable dt = Provider.Database.GetDataTable(sql);
+            watch.Stop();
+            statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
+            statusNumberOfRows.Text = (dt==null ? 0 : dt.Rows.Count) + " rows";
+            statusText.Text = "Query executed succesfully.";
+            bindGridResults(dt);
         }
 
         private bool checkConnection()
@@ -334,6 +361,8 @@ namespace Cinar.DBTools
             engine.Execute();
 
             showInfoText(engine.Output);
+
+            statusText.Text = "Script executed succesfully.";
         }
 
         private void cmdSetActiveConnection(string arg)
@@ -349,6 +378,8 @@ namespace Cinar.DBTools
             {
                 Provider.ActiveConnection = findConnection(treeView.SelectedNode);
             }
+
+            statusText.Text = "Active connection: " + Provider.ActiveConnection;
         }
 
         private void populateTreeNodesForDatabase(TreeNode parentNode)
@@ -395,8 +426,7 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            DataTable dt = Provider.Database.GetDataTable("select top 10 * from " + tableName);
-            bindGridResults(dt);
+            executeSQL("select top 10 * from " + tableName);
         }
 
         private void cmdTableDrop(string arg)
@@ -427,35 +457,35 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            showInfoText("Table \"" + tableName + "\" has " + Provider.Database.GetValue("select count(*) from " + tableName) + " records.");
+            executeSQL("select count(*) AS number_of_rows from " + tableName);
         }
 
         private void cmdFieldDistinct(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            bindGridResults(Provider.Database.GetDataTable("select distinct top 100 " + field.Name + " from " + field.Table.Name));
+            executeSQL("select distinct top 100 " + field.Name + " from " + field.Table.Name);
         }
 
         private void cmdFieldMax(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            showInfoText(field.Table.Name + "." + field.Name + " max. value : " + Provider.Database.GetValue("select max(" + field.Name + ") from " + field.Table.Name));
+            executeSQL("select max(" + field.Name + ") AS " + field.Name + "_MAX_value from " + field.Table.Name);
         }
 
         private void cmdFieldMin(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            showInfoText(field.Table.Name + "." + field.Name + " min. value : " + Provider.Database.GetValue("select min(" + field.Name + ") from " + field.Table.Name));
+            executeSQL("select min(" + field.Name + ") AS " + field.Name + "_MIN_value from " + field.Table.Name);
         }
 
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            bindGridResults(Provider.Database.GetDataTable("select top 100 " + field.Name + ", count(*) as RecordCount from " + field.Table.Name + " group by "+field.Name+" order by RecordCount desc"));
+            executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from " + field.Table.Name + " group by "+field.Name+" order by RecordCount desc");
         }
 
         private void cmdGenerateCode(string arg)
