@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Configuration;
-using BK.Database;
+using Cinar.Database;
 
 namespace Cinar.LocalizationTool
 {
@@ -20,8 +20,8 @@ namespace Cinar.LocalizationTool
             Application.Run(new MainForm());
         }
 
-        private static Database db;
-        public static Database Database
+        private static Database.Database db;
+        public static Database.Database Database
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Cinar.LocalizationTool
                 {
                     string sqlCon = ConfigurationSettings.AppSettings["sqlConnection"];
                     DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationSettings.AppSettings["sqlProvider"]);
-                    db = new Database(sqlCon, sqlPro);
+                    db = new Database.Database(sqlCon, sqlPro);
                 }
                 return db;
             }
