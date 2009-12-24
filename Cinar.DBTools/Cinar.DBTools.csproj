@@ -155,15 +155,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cinar.Database\Cinar.Database.csproj">
+    <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
       <Project>{255C4AA9-75A1-4458-882D-35A7F02DE307}</Project>
       <Name>Cinar.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cinar.Scripting\Cinar.Scripting.csproj">
+    <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cinar.UICommands\Cinar.UICommands.csproj">
+    <ProjectReference Include="..\Cinar.UICommands\Cinar.UICommands.csproj">
       <Project>{90107230-692B-4EEF-9308-31D954AE722E}</Project>
       <Name>Cinar.UICommands</Name>
     </ProjectReference>
