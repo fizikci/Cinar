@@ -60,17 +60,6 @@ namespace Cinar.Database.Tools
                 Table srcTable = dbSrc.Tables[tableName];
                 Table newTable = srcTable.CloneForDatabase(dbDst, prefix + tableName);
                 dbDst.CreateTable(newTable, null, true);
-
-                if (transferData)
-                {
-                    foreach (Field f in srcTable.Fields)
-                        if (f.IsDateType())
-                        {
-                            int res = dbSrc.ExecuteNonQuery("update " + srcTable.Name + " set " + f.Name + "='1980-01-01 00:00' where " + f.Name + "<'1980-01-01 00:00'");
-                            if (res > 0)
-                                logLine(res + " kayıt için " + srcTable.Name + "." + f.Name + " alanı düzeltildi");
-                        }
-                }
             }
             else
             {
@@ -84,31 +73,50 @@ namespace Cinar.Database.Tools
 
             if (transferData)
             {
-                DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + prefix + tableName);
+                Table srcTable = dbSrc.Tables[tableName];
+                foreach (Field f in srcTable.Fields)
+                    if (f.IsDateType())
+                    {
+                        int res = dbSrc.ExecuteNonQuery("update " + srcTable.Name + " set " + f.Name + "='1980-01-01 00:00' where " + f.Name + "<'1980-01-01 00:00'");
+                        if (res > 0)
+                            logLine(res + " kayıt için " + srcTable.Name + "." + f.Name + " alanı düzeltildi");
+                    }
+
                 for (; i < rowCount; i += pageSize)
                 {
                     if (maxRowToTransfer > 0 && i >= maxRowToTransfer)
                         break; //****
 
+                    int transferedRows = 0;
+
                     DataTable dt = dbSrc.GetDataTable("select * from " + tableName + " limit " + pageSize + " offset " + i);
+                    DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + tableName);
                     foreach (DataRow dr in dt.Rows)
                     {
-                        DataRow drDest = dtDestSample.NewRow();
+                        System.Collections.Hashtable drDest = new System.Collections.Hashtable();//newRow(dbDst, prefix + tableName);
                         foreach (DataColumn dc in dt.Columns)
                             if (!dr.IsNull(dc))
                                 drDest[dc.ColumnName] = Convert.ChangeType(dr[dc], dtDestSample.Columns[dc.ColumnName].DataType);
 
                         dbDst.Insert(prefix + tableName, drDest, false);
+                        transferedRows++;
                     }
                     log(".");
+                    //GC.Collect();
                     if (dt.Rows.Count < pageSize)
                     {
-                        log(" (" + (i + dt.Rows.Count + 1) + " kayıt)");
+                        log(" (" + (i + dt.Rows.Count + 1) + " kayıt, " + transferedRows + " yeni)");
                         break; //***
                     }
                 }
                 logLine("");
             }
+        }
+
+        private DataRow newRow(Database db, string tableName) 
+        {
+            DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + tableName);
+            return dtDestSample.NewRow();
         }
 
         private void log(string str, params object[] values)

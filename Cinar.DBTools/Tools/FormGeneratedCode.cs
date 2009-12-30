@@ -19,9 +19,12 @@ namespace Cinar.DBTools.Tools
             txtCode.Text = code;
         }
 
+        public string Path { get; set; }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = Path;
             if (sfd.ShowDialog() == DialogResult.OK)
                 File.WriteAllText(sfd.FileName, txtCode.Text, Encoding.UTF8);
         }

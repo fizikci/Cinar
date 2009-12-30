@@ -187,14 +187,14 @@ namespace Cinar.Database
             }
         }
 
-        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password)
+        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
         {
-            SetConnectionString(provider, host, dbName, userName, password);
+            SetConnectionString(provider, host, dbName, userName, password, defaultCommandTimeout);
 
             createProviderAndReadMetadata(this.connectionString, provider);
         }
 
-        public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password)
+        public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
         {
             this.provider = provider;
             switch (provider)
@@ -204,8 +204,9 @@ namespace Cinar.Database
                                                           host, dbName, userName, password);
                     break;
                 case DatabaseProvider.MySQL:
-                    this.connectionString = String.Format("Server={0};Database={1};Uid={2};Pwd={3};old syntax=yes;charset=utf8",
-                                                          host, dbName, userName, password);
+                    if (defaultCommandTimeout == 0) defaultCommandTimeout = 20;
+                    this.connectionString = String.Format("Server={0};Database={1};Uid={2};Pwd={3};old syntax=yes;charset=utf8;default command timeout={4};",
+                                                          host, dbName, userName, password, defaultCommandTimeout);
                     break;
                 case DatabaseProvider.SQLServer:
                     this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",

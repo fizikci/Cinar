@@ -123,8 +123,15 @@ namespace Cinar.DBTools.Tools
                     engine.Parse();
                     engine.Execute();
 
+                    Interpreter engine2 = new Interpreter(tmp.FileNameFormat.Replace("\\", "|"), null);
+                    engine2.SetAttribute("table", selectedTable);
+                    engine2.SetAttribute("util", new Util());
+                    engine2.Parse();
+                    engine2.Execute();
+
                     FormGeneratedCode form = new FormGeneratedCode(engine.Output);
                     form.Text += " - " + tmp.Name + " code for " + selectedTable.Name;
+                    form.Path = "E:\\kodlar\\projects\\Interpress\\" + engine2.Output.Replace("|", "\\");
                     form.Show();
                 }
             }
@@ -213,6 +220,22 @@ namespace Cinar.DBTools.Tools
                 {
                     i++;
                     res = res + str.Substring(i, 1).ToUpperInvariant();
+                }
+                else
+                    res = res + harf;
+            }
+            return res;
+        }
+        public string CapWithDash(string str)
+        {
+            string res = str.Substring(0, 1).ToUpperInvariant();
+            for (var i = 1; i < str.Length; i++)
+            {
+                var harf = str.Substring(i, 1);
+                if (harf == "_")
+                {
+                    i++;
+                    res = res + "_" + str.Substring(i, 1).ToUpperInvariant();
                 }
                 else
                     res = res + harf;
