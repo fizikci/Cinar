@@ -60,7 +60,6 @@
             this.txtSQL = new System.Windows.Forms.RichTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpResults = new System.Windows.Forms.TabPage();
-            this.gridResults = new Cinar.DBTools.Controls.MyDataGrid();
             this.tpInfo = new System.Windows.Forms.TabPage();
             this.txtInfo = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -86,6 +85,7 @@
             this.btnCodeGenerator = new System.Windows.Forms.ToolStripButton();
             this.btnCheckDatabaseSchema = new System.Windows.Forms.ToolStripButton();
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
+            this.gridResults = new Cinar.DBTools.Controls.MyDataGrid();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -100,10 +100,10 @@
             this.splitContainer2.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpResults.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).BeginInit();
             this.tpInfo.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -150,7 +150,7 @@
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusText.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(646, 17);
+            this.statusText.Size = new System.Drawing.Size(677, 17);
             this.statusText.Spring = true;
             this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -396,19 +396,6 @@
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
             // 
-            // gridResults
-            // 
-            this.gridResults.AllowUserToAddRows = false;
-            this.gridResults.AllowUserToDeleteRows = false;
-            this.gridResults.AllowUserToOrderColumns = true;
-            this.gridResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridResults.Location = new System.Drawing.Point(3, 3);
-            this.gridResults.Name = "gridResults";
-            this.gridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridResults.Size = new System.Drawing.Size(582, 382);
-            this.gridResults.TabIndex = 0;
-            // 
             // tpInfo
             // 
             this.tpInfo.Controls.Add(this.txtInfo);
@@ -629,12 +616,26 @@
             this.btnDatabaseTransfer.Size = new System.Drawing.Size(23, 22);
             this.btnDatabaseTransfer.Text = "Database Transfer";
             // 
+            // gridResults
+            // 
+            this.gridResults.AllowUserToAddRows = false;
+            this.gridResults.AllowUserToDeleteRows = false;
+            this.gridResults.AllowUserToOrderColumns = true;
+            this.gridResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridResults.Location = new System.Drawing.Point(3, 3);
+            this.gridResults.Name = "gridResults";
+            this.gridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridResults.Size = new System.Drawing.Size(582, 382);
+            this.gridResults.TabIndex = 0;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(899, 679);
             this.Controls.Add(this.toolStripContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
             this.Text = "Çınar Database Tools";
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
@@ -655,13 +656,13 @@
             this.splitContainer2.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tpResults.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).EndInit();
             this.tpInfo.ResumeLayout(false);
             this.tpInfo.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).EndInit();
             this.ResumeLayout(false);
 
         }

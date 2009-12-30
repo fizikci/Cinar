@@ -79,7 +79,8 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuCodeGenerator}, 
                                          new CommandTrigger{ Control = btnCodeGenerator}, 
-                                     }
+                                     },
+                                     IsEnabled = ()=> Provider.Database != null
                                  },
                      new Command {
                                      Execute = cmdCheckDatabaseSchema,
@@ -168,7 +169,7 @@ namespace Cinar.DBTools
                         if (cs.Database == null)
                             cs.RefreshDatabaseSchema();
                         cs.Database.SetCollectionParents();
-                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password);
+                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 1000);
                         cs.Database.CreateDbProvider();
 
                         TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
@@ -545,7 +546,7 @@ namespace Cinar.DBTools
         public void RefreshDatabaseSchema()
         {
             if (Database == null)
-                Database = new Database.Database(Provider, Host, DbName, UserName, Password);
+                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 1000);
             else
                 Database.Refresh();
         }

@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
-      <Project>{255C4AA9-75A1-4458-882D-35A7F02DE307}</Project>
+      <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
       <Name>Cinar.Database</Name>
     </ProjectReference>
   </ItemGroup>
