@@ -242,7 +242,7 @@ namespace Cinar.Database
         }
     }
 
-    public class FieldCollection : CollectionBase
+    public class FieldCollection : List<Field>
     {
         internal Table table;
         public FieldCollection()
@@ -252,23 +252,17 @@ namespace Cinar.Database
         {
             this.table = table;
         }
-        public int Add(Field field)
+        public new int Add(Field field)
         {
             field.parent = this;
-            return this.List.Add(field);
-        }
-        public Field this[int index]
-        {
-            get
-            {
-                return (Field)this.List[index];
-            }
+            base.Add(field);
+            return base.Count;
         }
         public Field this[string name]
         {
             get
             {
-                foreach(Field fld in this.List)
+                foreach(Field fld in this)
                     if(fld.Name == name)
                         return fld;
                 return null;
@@ -276,7 +270,7 @@ namespace Cinar.Database
         }
         public Field Find(DbType fieldType)
         {
-            foreach (Field fld in this.List)
+            foreach (Field fld in this)
                 if (fld.FieldType == fieldType)
                     return fld;
             return null;

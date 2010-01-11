@@ -63,12 +63,16 @@ namespace Cinar.Database.Providers
                             newConnStr += param + ";";
                     }
                     con = new NpgsqlConnection(newConnStr);
-                    con.Open();
-                    IDbCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "create database " + dbName + ";";
-                    cmd.ExecuteNonQuery();
-                    con.ChangeDatabase(dbName);
-                    con.Close();
+                    try
+                    {
+                        con.Open();
+                        IDbCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "create database " + dbName + ";";
+                        cmd.ExecuteNonQuery();
+                        con.ChangeDatabase(dbName);
+                        con.Close();
+                    }
+                    catch { }
                 }
             }
         }

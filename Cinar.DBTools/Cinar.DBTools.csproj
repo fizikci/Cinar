@@ -88,27 +88,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormConnect.resx">
       <DependentUpon>FormConnect.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCheckDatabaseSchema.resx">
       <DependentUpon>FormCheckDatabaseSchema.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCodeGenerator.resx">
       <DependentUpon>FormCodeGenerator.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBTransfer.resx">
       <DependentUpon>FormDBTransfer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormGeneratedCode.resx">
       <DependentUpon>FormGeneratedCode.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormERDiagram.resx">
       <DependentUpon>FormERDiagram.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormHTMLDeneme.resx">
+      <DependentUpon>FormHTMLDeneme.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormTemplate.resx">
       <DependentUpon>FormTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\SelectTableDialog.resx">
       <DependentUpon>SelectTableDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -150,6 +162,12 @@
     <Compile Include="Tools\FormERDiagram.Designer.cs">
       <DependentUpon>FormERDiagram.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\FormHTMLDeneme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormHTMLDeneme.Designer.cs">
+      <DependentUpon>FormHTMLDeneme.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\FormTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,12 +183,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
-      <Project>{255C4AA9-75A1-4458-882D-35A7F02DE307}</Project>
+      <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
       <Name>Cinar.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.HTMLParser\Cinar.HTMLParser.csproj">
+      <Project>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</Project>
+      <Name>Cinar.HTMLParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>

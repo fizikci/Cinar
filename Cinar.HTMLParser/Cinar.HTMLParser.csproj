@@ -47,10 +47,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HTMLDocument.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HTMLDocument.Designer.cs">
+      <DependentUpon>HTMLDocument.cs</DependentUpon>
+    </Compile>
     <Compile Include="HTMLElement.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebPageBitmap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HTMLDocument.resx">
+      <DependentUpon>HTMLDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

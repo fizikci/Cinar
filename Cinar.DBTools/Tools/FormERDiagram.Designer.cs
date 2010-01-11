@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormERDiagram));
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -35,6 +37,13 @@
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.panel = new System.Windows.Forms.Panel();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuArrangeTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAddTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSetAsDisplayField = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSetAsPrimaryKey = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,10 +55,11 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel = new System.Windows.Forms.Panel();
+            this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,8 +104,9 @@
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(255, 572);
+            this.propertyGrid.Size = new System.Drawing.Size(255, 439);
             this.propertyGrid.TabIndex = 0;
+            this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
             // 
             // splitContainer
             // 
@@ -112,9 +123,62 @@
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.propertyGrid);
-            this.splitContainer.Size = new System.Drawing.Size(870, 572);
+            this.splitContainer.Size = new System.Drawing.Size(870, 439);
             this.splitContainer.SplitterDistance = 611;
             this.splitContainer.TabIndex = 1;
+            // 
+            // panel
+            // 
+            this.panel.ContextMenuStrip = this.contextMenu;
+            this.panel.Location = new System.Drawing.Point(4, 4);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(750, 750);
+            this.panel.TabIndex = 0;
+            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panelOnPaint);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelMouseMove);
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelMouseDown);
+            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelMouseUp);
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuArrangeTables,
+            this.menuAddTables,
+            this.menuRemove,
+            this.menuSetAsDisplayField,
+            this.menuSetAsPrimaryKey});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(168, 114);
+            // 
+            // menuArrangeTables
+            // 
+            this.menuArrangeTables.Name = "menuArrangeTables";
+            this.menuArrangeTables.Size = new System.Drawing.Size(167, 22);
+            this.menuArrangeTables.Text = "Arrange Tables";
+            // 
+            // menuAddTables
+            // 
+            this.menuAddTables.Name = "menuAddTables";
+            this.menuAddTables.Size = new System.Drawing.Size(167, 22);
+            this.menuAddTables.Text = "Add Tables...";
+            // 
+            // menuRemove
+            // 
+            this.menuRemove.Name = "menuRemove";
+            this.menuRemove.Size = new System.Drawing.Size(167, 22);
+            this.menuRemove.Text = "Remove";
+            // 
+            // menuSetAsDisplayField
+            // 
+            this.menuSetAsDisplayField.Name = "menuSetAsDisplayField";
+            this.menuSetAsDisplayField.Size = new System.Drawing.Size(167, 22);
+            this.menuSetAsDisplayField.Text = "Set As Display Field";
+            // 
+            // menuSetAsPrimaryKey
+            // 
+            this.menuSetAsPrimaryKey.Name = "menuSetAsPrimaryKey";
+            this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(167, 22);
+            this.menuSetAsPrimaryKey.Text = "Set As Primary Key";
             // 
             // menuStrip1
             // 
@@ -140,24 +204,24 @@
             // menuNew
             // 
             this.menuNew.Name = "menuNew";
-            this.menuNew.Size = new System.Drawing.Size(123, 22);
+            this.menuNew.Size = new System.Drawing.Size(112, 22);
             this.menuNew.Text = "New...";
             // 
             // menuOpen
             // 
             this.menuOpen.Name = "menuOpen";
-            this.menuOpen.Size = new System.Drawing.Size(123, 22);
+            this.menuOpen.Size = new System.Drawing.Size(112, 22);
             this.menuOpen.Text = "Open...";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(120, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(109, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(123, 22);
+            this.menuExit.Size = new System.Drawing.Size(112, 22);
             this.menuExit.Text = "Exit";
             // 
             // fileToolStripMenuItem
@@ -189,31 +253,33 @@
             this.exToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exToolStripMenuItem.Text = "Exit";
             // 
-            // panel
+            // imageListTree
             // 
-            this.panel.Location = new System.Drawing.Point(4, 4);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(681, 652);
-            this.panel.TabIndex = 0;
-            this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panelOnPaint);
-            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelMouseMove);
-            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelMouseDown);
-            this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelMouseUp);
+            this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
+            this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListTree.Images.SetKeyName(0, "Host");
+            this.imageListTree.Images.SetKeyName(1, "Database");
+            this.imageListTree.Images.SetKeyName(2, "Table");
+            this.imageListTree.Images.SetKeyName(3, "Field");
+            this.imageListTree.Images.SetKeyName(4, "Key");
             // 
             // FormERDiagram
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(870, 596);
+            this.ClientSize = new System.Drawing.Size(870, 463);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormERDiagram";
             this.Text = "FormSchemaView";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -242,6 +308,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem menuExit;
         private System.Windows.Forms.Panel panel;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem menuArrangeTables;
+        private System.Windows.Forms.ToolStripMenuItem menuAddTables;
+        private System.Windows.Forms.ToolStripMenuItem menuRemove;
+        private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayField;
+        private System.Windows.Forms.ToolStripMenuItem menuSetAsPrimaryKey;
+        private System.Windows.Forms.ImageList imageListTree;
 
     }
 }

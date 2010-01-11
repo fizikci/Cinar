@@ -50,11 +50,12 @@ namespace Cinar.Database.Providers
                     con.Open();
                     con.Close();
                 }
-                catch {
+                catch
+                {
                     // ihtimal, veritabaný create edilmemiþ. create edelim o zaman:
                     string newConnStr = "";
                     string dbName = "";
-                    foreach(string param in db.ConnectionString.Split(';'))
+                    foreach (string param in db.ConnectionString.Split(';'))
                     {
                         if (param.StartsWith("Database=", StringComparison.InvariantCultureIgnoreCase))
                             dbName = param.Split('=')[1];
@@ -62,12 +63,16 @@ namespace Cinar.Database.Providers
                             newConnStr += param + ";";
                     }
                     con = new MySqlConnection(newConnStr);
-                    con.Open();
-                    IDbCommand cmd = con.CreateCommand();
-                    cmd.CommandText = "create database " + dbName + " default charset utf8 collate utf8_turkish_ci";
-                    cmd.ExecuteNonQuery();
-                    con.ChangeDatabase(dbName);
-                    con.Close();
+                    try
+                    {
+                        con.Open();
+                        IDbCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "create database " + dbName + " default charset utf8 collate utf8_turkish_ci";
+                        cmd.ExecuteNonQuery();
+                        con.ChangeDatabase(dbName);
+                        con.Close();
+                    }
+                    catch { }
                 }
             }
         }
