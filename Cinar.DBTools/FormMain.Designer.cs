@@ -55,6 +55,10 @@
             this.menuTableDrop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuEditConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDeleteConnection = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuNewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuNewConnectionContext = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRefreshMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
@@ -89,7 +93,7 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
-            this.menuViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -120,11 +124,11 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(669, 330);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(707, 299);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(669, 401);
+            this.toolStripContainer1.Size = new System.Drawing.Size(707, 370);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -144,7 +148,7 @@
             this.statusNumberOfRows});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(669, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(707, 22);
             this.statusStrip1.TabIndex = 0;
             // 
             // statusText
@@ -208,8 +212,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(669, 330);
-            this.splitContainer1.SplitterDistance = 222;
+            this.splitContainer1.Size = new System.Drawing.Size(707, 299);
+            this.splitContainer1.SplitterDistance = 234;
             this.splitContainer1.TabIndex = 0;
             // 
             // treeView
@@ -221,8 +225,9 @@
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(222, 330);
+            this.treeView.Size = new System.Drawing.Size(234, 299);
             this.treeView.TabIndex = 0;
+            this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             // 
             // menuStripTree
@@ -238,38 +243,43 @@
             this.menuGroupedCounts,
             this.menuTableDrop,
             this.menuEditConnection,
-            this.menuDeleteConnection});
+            this.menuDeleteConnection,
+            this.menuOpenERDiagram,
+            this.menuNewERDiagram,
+            this.menuNewConnectionContext,
+            this.menuRefreshMetadata,
+            this.menuDeleteERDiagram});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(163, 246);
+            this.menuStripTree.Size = new System.Drawing.Size(198, 356);
             // 
             // menuCount
             // 
             this.menuCount.Name = "menuCount";
-            this.menuCount.Size = new System.Drawing.Size(162, 22);
+            this.menuCount.Size = new System.Drawing.Size(197, 22);
             this.menuCount.Text = "Count";
             // 
             // menuTop10
             // 
             this.menuTop10.Name = "menuTop10";
-            this.menuTop10.Size = new System.Drawing.Size(162, 22);
+            this.menuTop10.Size = new System.Drawing.Size(197, 22);
             this.menuTop10.Text = "Top 10";
             // 
             // menuDistinct
             // 
             this.menuDistinct.Name = "menuDistinct";
-            this.menuDistinct.Size = new System.Drawing.Size(162, 22);
+            this.menuDistinct.Size = new System.Drawing.Size(197, 22);
             this.menuDistinct.Text = "Distinct";
             // 
             // menuMax
             // 
             this.menuMax.Name = "menuMax";
-            this.menuMax.Size = new System.Drawing.Size(162, 22);
+            this.menuMax.Size = new System.Drawing.Size(197, 22);
             this.menuMax.Text = "Max()";
             // 
             // menuMin
             // 
             this.menuMin.Name = "menuMin";
-            this.menuMin.Size = new System.Drawing.Size(162, 22);
+            this.menuMin.Size = new System.Drawing.Size(197, 22);
             this.menuMin.Text = "Min()";
             // 
             // menuGenerateSQL
@@ -280,62 +290,86 @@
             this.menuGenerateSQLUpdate,
             this.menuGenerateSQLCreateTable});
             this.menuGenerateSQL.Name = "menuGenerateSQL";
-            this.menuGenerateSQL.Size = new System.Drawing.Size(162, 22);
+            this.menuGenerateSQL.Size = new System.Drawing.Size(197, 22);
             this.menuGenerateSQL.Text = "Generate SQL";
             // 
             // menuGenerateSQLSelect
             // 
             this.menuGenerateSQLSelect.Name = "menuGenerateSQLSelect";
-            this.menuGenerateSQLSelect.Size = new System.Drawing.Size(136, 22);
+            this.menuGenerateSQLSelect.Size = new System.Drawing.Size(147, 22);
             this.menuGenerateSQLSelect.Text = "Select";
             // 
             // menuGenerateSQLInsert
             // 
             this.menuGenerateSQLInsert.Name = "menuGenerateSQLInsert";
-            this.menuGenerateSQLInsert.Size = new System.Drawing.Size(136, 22);
+            this.menuGenerateSQLInsert.Size = new System.Drawing.Size(147, 22);
             this.menuGenerateSQLInsert.Text = "Insert";
             // 
             // menuGenerateSQLUpdate
             // 
             this.menuGenerateSQLUpdate.Name = "menuGenerateSQLUpdate";
-            this.menuGenerateSQLUpdate.Size = new System.Drawing.Size(136, 22);
+            this.menuGenerateSQLUpdate.Size = new System.Drawing.Size(147, 22);
             this.menuGenerateSQLUpdate.Text = "Update";
             // 
             // menuGenerateSQLCreateTable
             // 
             this.menuGenerateSQLCreateTable.Name = "menuGenerateSQLCreateTable";
-            this.menuGenerateSQLCreateTable.Size = new System.Drawing.Size(136, 22);
+            this.menuGenerateSQLCreateTable.Size = new System.Drawing.Size(147, 22);
             this.menuGenerateSQLCreateTable.Text = "Create Table";
             // 
             // menuRefresh
             // 
             this.menuRefresh.Name = "menuRefresh";
-            this.menuRefresh.Size = new System.Drawing.Size(162, 22);
-            this.menuRefresh.Text = "Refresh";
+            this.menuRefresh.Size = new System.Drawing.Size(197, 22);
+            this.menuRefresh.Text = "Refresh Nodes";
             // 
             // menuGroupedCounts
             // 
             this.menuGroupedCounts.Name = "menuGroupedCounts";
-            this.menuGroupedCounts.Size = new System.Drawing.Size(162, 22);
+            this.menuGroupedCounts.Size = new System.Drawing.Size(197, 22);
             this.menuGroupedCounts.Text = "Grouped Counts";
             // 
             // menuTableDrop
             // 
             this.menuTableDrop.Name = "menuTableDrop";
-            this.menuTableDrop.Size = new System.Drawing.Size(162, 22);
+            this.menuTableDrop.Size = new System.Drawing.Size(197, 22);
             this.menuTableDrop.Text = "Drop Table";
             // 
             // menuEditConnection
             // 
             this.menuEditConnection.Name = "menuEditConnection";
-            this.menuEditConnection.Size = new System.Drawing.Size(162, 22);
+            this.menuEditConnection.Size = new System.Drawing.Size(197, 22);
             this.menuEditConnection.Text = "Edit Connection...";
             // 
             // menuDeleteConnection
             // 
             this.menuDeleteConnection.Name = "menuDeleteConnection";
-            this.menuDeleteConnection.Size = new System.Drawing.Size(162, 22);
+            this.menuDeleteConnection.Size = new System.Drawing.Size(197, 22);
             this.menuDeleteConnection.Text = "Delete Connection";
+            // 
+            // menuOpenERDiagram
+            // 
+            this.menuOpenERDiagram.Name = "menuOpenERDiagram";
+            this.menuOpenERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuOpenERDiagram.Text = "Open ER Diagram...";
+            // 
+            // menuNewERDiagram
+            // 
+            this.menuNewERDiagram.Name = "menuNewERDiagram";
+            this.menuNewERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuNewERDiagram.Text = "New ER Diagram...";
+            // 
+            // menuNewConnectionContext
+            // 
+            this.menuNewConnectionContext.Name = "menuNewConnectionContext";
+            this.menuNewConnectionContext.Size = new System.Drawing.Size(197, 22);
+            this.menuNewConnectionContext.Text = "Add New Connection...";
+            // 
+            // menuRefreshMetadata
+            // 
+            this.menuRefreshMetadata.Name = "menuRefreshMetadata";
+            this.menuRefreshMetadata.Size = new System.Drawing.Size(197, 22);
+            this.menuRefreshMetadata.Text = "Refresh Metadata";
             // 
             // imageListTree
             // 
@@ -361,8 +395,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl);
-            this.splitContainer2.Size = new System.Drawing.Size(443, 330);
-            this.splitContainer2.SplitterDistance = 103;
+            this.splitContainer2.Size = new System.Drawing.Size(469, 299);
+            this.splitContainer2.SplitterDistance = 93;
             this.splitContainer2.TabIndex = 0;
             // 
             // txtSQL
@@ -373,7 +407,7 @@
             this.txtSQL.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtSQL.Location = new System.Drawing.Point(0, 0);
             this.txtSQL.Name = "txtSQL";
-            this.txtSQL.Size = new System.Drawing.Size(443, 103);
+            this.txtSQL.Size = new System.Drawing.Size(469, 93);
             this.txtSQL.TabIndex = 0;
             this.txtSQL.Text = "";
             this.txtSQL.WordWrap = false;
@@ -386,7 +420,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(443, 223);
+            this.tabControl.Size = new System.Drawing.Size(469, 202);
             this.tabControl.TabIndex = 0;
             // 
             // tpResults
@@ -395,7 +429,7 @@
             this.tpResults.Location = new System.Drawing.Point(4, 22);
             this.tpResults.Name = "tpResults";
             this.tpResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResults.Size = new System.Drawing.Size(435, 197);
+            this.tpResults.Size = new System.Drawing.Size(461, 176);
             this.tpResults.TabIndex = 0;
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
@@ -410,7 +444,7 @@
             this.gridResults.Location = new System.Drawing.Point(3, 3);
             this.gridResults.Name = "gridResults";
             this.gridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridResults.Size = new System.Drawing.Size(429, 191);
+            this.gridResults.Size = new System.Drawing.Size(455, 170);
             this.gridResults.TabIndex = 0;
             // 
             // tpInfo
@@ -448,7 +482,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(669, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(707, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -465,18 +499,18 @@
             // menuNewConnection
             // 
             this.menuNewConnection.Name = "menuNewConnection";
-            this.menuNewConnection.Size = new System.Drawing.Size(164, 22);
+            this.menuNewConnection.Size = new System.Drawing.Size(175, 22);
             this.menuNewConnection.Text = "New Connection...";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(172, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(164, 22);
+            this.menuExit.Size = new System.Drawing.Size(175, 22);
             this.menuExit.Text = "Exit";
             // 
             // toolsToolStripMenuItem
@@ -493,25 +527,25 @@
             // menuCodeGenerator
             // 
             this.menuCodeGenerator.Name = "menuCodeGenerator";
-            this.menuCodeGenerator.Size = new System.Drawing.Size(204, 22);
+            this.menuCodeGenerator.Size = new System.Drawing.Size(215, 22);
             this.menuCodeGenerator.Text = "Code Generator...";
             // 
             // menuCheckDatabaseSchema
             // 
             this.menuCheckDatabaseSchema.Name = "menuCheckDatabaseSchema";
-            this.menuCheckDatabaseSchema.Size = new System.Drawing.Size(204, 22);
+            this.menuCheckDatabaseSchema.Size = new System.Drawing.Size(215, 22);
             this.menuCheckDatabaseSchema.Text = "Check Database Schema...";
             // 
             // menuDBTransfer
             // 
             this.menuDBTransfer.Name = "menuDBTransfer";
-            this.menuDBTransfer.Size = new System.Drawing.Size(204, 22);
+            this.menuDBTransfer.Size = new System.Drawing.Size(215, 22);
             this.menuDBTransfer.Text = "Database Transfer...";
             // 
             // menuViewERDiagram
             // 
             this.menuViewERDiagram.Name = "menuViewERDiagram";
-            this.menuViewERDiagram.Size = new System.Drawing.Size(204, 22);
+            this.menuViewERDiagram.Size = new System.Drawing.Size(215, 22);
             this.menuViewERDiagram.Text = "View ER Diagram...";
             // 
             // helpToolStripMenuItem
@@ -525,7 +559,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             // 
             // toolStrip1
@@ -549,7 +583,7 @@
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(669, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(707, 25);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 1;
             // 
@@ -656,17 +690,17 @@
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
             // 
-            // menuViewERDiagram
+            // menuDeleteERDiagram
             // 
-            this.menuViewERDiagram.Name = "menuViewERDiagram";
-            this.menuViewERDiagram.Size = new System.Drawing.Size(215, 22);
-            this.menuViewERDiagram.Text = "View ER Diagram...";
+            this.menuDeleteERDiagram.Name = "menuDeleteERDiagram";
+            this.menuDeleteERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuDeleteERDiagram.Text = "Delete ER Diagram";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 401);
+            this.ClientSize = new System.Drawing.Size(707, 370);
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
@@ -762,6 +796,11 @@
         private System.Windows.Forms.ToolStripMenuItem menuViewERDiagram;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton btnTryAndSee;
+        private System.Windows.Forms.ToolStripMenuItem menuOpenERDiagram;
+        private System.Windows.Forms.ToolStripMenuItem menuNewERDiagram;
+        private System.Windows.Forms.ToolStripMenuItem menuNewConnectionContext;
+        private System.Windows.Forms.ToolStripMenuItem menuRefreshMetadata;
+        private System.Windows.Forms.ToolStripMenuItem menuDeleteERDiagram;
 
     }
 }

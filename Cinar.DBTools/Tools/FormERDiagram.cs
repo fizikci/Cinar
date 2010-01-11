@@ -31,6 +31,10 @@ namespace Cinar.DBTools.Tools
                     Trigger = new CommandTrigger{ Control = menuNew}
                 },
                 new Command {
+                    Execute = cmdSaveSchema,
+                    Trigger = new CommandTrigger{ Control = menuSave}
+                },
+                new Command {
                     Execute = cmdToggleTableView,
                     Trigger = new CommandTrigger{Control=panel, Event="DoubleClick"}
                 },
@@ -67,7 +71,19 @@ namespace Cinar.DBTools.Tools
             Schema.ImageList = imageListTree;
         }
 
-        Schema currentSchema;
+        protected override void OnLoad(EventArgs e)
+        {
+            panel.Width = splitContainer.Panel1.Width;
+            panel.Height = splitContainer.Panel1.Height;
+
+            if (this.CurrentSchema == null)
+                cmdNewSchema(null);
+
+            base.OnLoad(e);
+
+        }
+
+        public Schema CurrentSchema;
 
         private void cmdNewSchema(string arg)
         {
@@ -79,12 +95,25 @@ namespace Cinar.DBTools.Tools
                 panelPaint(true);
             }
         }
+        public FormMain Opener;
+        private void cmdSaveSchema(string arg)
+        {
+            if (string.IsNullOrEmpty(CurrentSchema.Name))
+            {
+                MessageBox.Show("Please enter a name for the current schema", "Çınar Database Tools");
+                return;
+            }
+
+            if (conn.Schemas.IndexOf(CurrentSchema) == -1)
+                conn.Schemas.Add(CurrentSchema);
+            Opener.SaveConnections();
+        }
 
         private void createNewSchema(List<Table> tables)
         {
-            currentSchema = new Schema();
-            currentSchema.conn = conn;
-            currentSchema.Name = conn.Database.Name + " Schema";
+            CurrentSchema = new Schema();
+            CurrentSchema.conn = conn;
+            CurrentSchema.Name = "";
             addTablesToSchema(tables, true);
         }
 
@@ -97,23 +126,23 @@ namespace Cinar.DBTools.Tools
                 tv.Size = new Size(Schema.Def_TableWidth, Schema.Def_TitleHeight + tbl.Fields.Count * Schema.Def_FieldHeight);
                 tv.TableName = tbl.Name;
 
-                currentSchema.Tables.Add(tv);
+                CurrentSchema.Tables.Add(tv);
             }
 
             arrangeTables(circularLayout);
 
-            currentSchema.ConnectionLines.Clear();
+            CurrentSchema.ConnectionLines.Clear();
 
             for (int i = 0; i < conn.Database.Tables.Count; i++)
             {
                 Table tbl = conn.Database.Tables[i];
-                if (currentSchema.GetTableView(tbl.Name) == null)
+                if (CurrentSchema.GetTableView(tbl.Name) == null)
                     continue;
 
                 foreach (Field fld in tbl.Fields)
                     if (fld.ReferenceField != null)
                     {
-                        TableView tv = currentSchema.GetTableView(fld.ReferenceField.Table.Name);
+                        TableView tv = CurrentSchema.GetTableView(fld.ReferenceField.Table.Name);
                         if(tv==null)
                             continue;
 
@@ -121,10 +150,10 @@ namespace Cinar.DBTools.Tools
                         cl.FromField = fld.Name;
                         cl.FromTable = tbl.Name;
                         cl.ToTable = tv.TableName;
-                        TableView fromTV = currentSchema.GetTableView(cl.FromTable);
+                        TableView fromTV = CurrentSchema.GetTableView(cl.FromTable);
                         cl.StartPoint = fromTV.Rectangle.FindClosestSideCenterTo(tv.Rectangle);
                         cl.EndPoint = tv.Rectangle.FindClosestSideCenterTo(fromTV.Rectangle);
-                        currentSchema.ConnectionLines.Add(cl);
+                        CurrentSchema.ConnectionLines.Add(cl);
                     }
             }
         }
@@ -135,18 +164,18 @@ namespace Cinar.DBTools.Tools
             {
                 Point center = new Point(400, 400);
                 Size caplar = new Size(400, 300);
-                for (int i = 0; i < currentSchema.Tables.Count; i++)
+                for (int i = 0; i < CurrentSchema.Tables.Count; i++)
                 {
-                    TableView tv = currentSchema.Tables[i];
-                    double aci = 360d / (double)currentSchema.Tables.Count * i * Math.PI / 180d;
+                    TableView tv = CurrentSchema.Tables[i];
+                    double aci = 360d / (double)CurrentSchema.Tables.Count * i * Math.PI / 180d;
                     tv.Position = center + new Size(Convert.ToInt32(caplar.Width * Math.Cos(aci)), Convert.ToInt32(caplar.Height * Math.Sin(aci)));
                 }
             }
             else
             {
-                for (int i = 0; i < currentSchema.Tables.Count; i++)
+                for (int i = 0; i < CurrentSchema.Tables.Count; i++)
                 {
-                    TableView tv = currentSchema.Tables[i];
+                    TableView tv = CurrentSchema.Tables[i];
                     tv.Position = new Point(20, 20 + i * (Schema.Def_TitleHeight + 20));
                 }
             }
@@ -154,18 +183,18 @@ namespace Cinar.DBTools.Tools
 
         private void correctPanelSize()
         {
-            if(currentSchema!=null)
-                panel.Size = currentSchema.CalculateTotalSize();
+            if(CurrentSchema!=null)
+                panel.Size = CurrentSchema.CalculateTotalSize();
         }
 
         private void panelPaint(bool cls)
         {
-            if (currentSchema != null)
+            if (CurrentSchema != null)
             {
                 Graphics g = panel.CreateGraphics();
                 if (cls)
                     g.FillRectangle(Brushes.White, new Rectangle(0, 0, panel.Width, panel.Height));
-                currentSchema.Draw(g, panel.Width, panel.Height);
+                CurrentSchema.Draw(g, panel.Width, panel.Height);
             }
         }
 
@@ -180,9 +209,9 @@ namespace Cinar.DBTools.Tools
 
         private void panelMouseDown(object sender, MouseEventArgs e)
         {
-            if (currentSchema != null)
+            if (CurrentSchema != null)
             {
-                TableView tv = currentSchema.HitTestTable(e.Location);
+                TableView tv = CurrentSchema.HitTestTable(e.Location);
                 if (tv != null)
                 {
                     if (selectedTV != null)
@@ -194,11 +223,13 @@ namespace Cinar.DBTools.Tools
                     dragDelta = (Size)(e.Location - (Size)selectedTV.Position);
                     dragging = true;
                     selectedTV.Selected = true;
-                    currentSchema.Tables.Remove(selectedTV);
-                    currentSchema.Tables.Add(selectedTV);
-                    Field selectedField = currentSchema.HitTestField(e.Location);
+                    CurrentSchema.Tables.Remove(selectedTV);
+                    CurrentSchema.Tables.Add(selectedTV);
+                    Field selectedField = CurrentSchema.HitTestField(e.Location);
                     selectedTV.SelectedField = selectedField == null ? null : selectedField.Name;
                 }
+                else
+                    selectedTV = null;
             }
         }
 
@@ -207,10 +238,10 @@ namespace Cinar.DBTools.Tools
             if (dragging)
             {
                 selectedTV.Position = e.Location - dragDelta;
-                currentSchema.ConnectionLines.FindAll(cl => cl.FromTable == selectedTV.TableName || cl.ToTable == selectedTV.TableName).ForEach(cl =>
+                CurrentSchema.ConnectionLines.FindAll(cl => cl.FromTable == selectedTV.TableName || cl.ToTable == selectedTV.TableName).ForEach(cl =>
                 {
-                    TableView tv1 = currentSchema.GetTableView(cl.FromTable);
-                    TableView tv2 = currentSchema.GetTableView(cl.ToTable);
+                    TableView tv1 = CurrentSchema.GetTableView(cl.FromTable);
+                    TableView tv2 = CurrentSchema.GetTableView(cl.ToTable);
                     cl.StartPoint = tv1.Rectangle.FindClosestSideCenterTo(tv2.Rectangle);
                     cl.EndPoint = tv2.Rectangle.FindClosestSideCenterTo(tv1.Rectangle);
                 });
@@ -224,12 +255,14 @@ namespace Cinar.DBTools.Tools
             dragging = false;
             if (selectedTV != null)
             {
-                if(selectedTV.SelectedField!=null)
+                if (selectedTV.SelectedField != null)
                     propertyGrid.SelectedObject = conn.Database.Tables[selectedTV.TableName].Fields[selectedTV.SelectedField];
                 else
                     propertyGrid.SelectedObject = conn.Database.Tables[selectedTV.TableName];
                 panelPaint(false);
             }
+            else
+                propertyGrid.SelectedObject = CurrentSchema;
         }
 
         private void cmdToggleTableView(string arg)
@@ -245,7 +278,7 @@ namespace Cinar.DBTools.Tools
             SelectTableDialog std = new SelectTableDialog();
             if (std.ShowDialog() == DialogResult.OK)
             {
-                addTablesToSchema(std.SelectedTables.Except(currentSchema.Tables.ConvertAll<Table>(tv => conn.Database.Tables[tv.TableName])).ToList(), false);
+                addTablesToSchema(std.SelectedTables.Except(CurrentSchema.Tables.ConvertAll<Table>(tv => conn.Database.Tables[tv.TableName])).ToList(), false);
                 correctPanelSize();
                 panelPaint(true);
             }
@@ -260,7 +293,7 @@ namespace Cinar.DBTools.Tools
 
         private void cmdRemoveTable(string arg)
         {
-            currentSchema.Tables.Remove(selectedTV);
+            CurrentSchema.Tables.Remove(selectedTV);
             correctPanelSize();
             panelPaint(true);
         }
@@ -293,7 +326,7 @@ namespace Cinar.DBTools.Tools
         {
             if (e.ChangedItem.Label == "Name")
             {
-                currentSchema.GetTableView(e.OldValue.ToString()).TableName = e.ChangedItem.Value.ToString();
+                CurrentSchema.GetTableView(e.OldValue.ToString()).TableName = e.ChangedItem.Value.ToString();
                 panelPaint(false);
             }
         }

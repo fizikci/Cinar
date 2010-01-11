@@ -47,7 +47,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,36 +148,36 @@
             this.menuSetAsDisplayField,
             this.menuSetAsPrimaryKey});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(168, 114);
+            this.contextMenu.Size = new System.Drawing.Size(179, 114);
             // 
             // menuArrangeTables
             // 
             this.menuArrangeTables.Name = "menuArrangeTables";
-            this.menuArrangeTables.Size = new System.Drawing.Size(167, 22);
+            this.menuArrangeTables.Size = new System.Drawing.Size(178, 22);
             this.menuArrangeTables.Text = "Arrange Tables";
             // 
             // menuAddTables
             // 
             this.menuAddTables.Name = "menuAddTables";
-            this.menuAddTables.Size = new System.Drawing.Size(167, 22);
+            this.menuAddTables.Size = new System.Drawing.Size(178, 22);
             this.menuAddTables.Text = "Add Tables...";
             // 
             // menuRemove
             // 
             this.menuRemove.Name = "menuRemove";
-            this.menuRemove.Size = new System.Drawing.Size(167, 22);
+            this.menuRemove.Size = new System.Drawing.Size(178, 22);
             this.menuRemove.Text = "Remove";
             // 
             // menuSetAsDisplayField
             // 
             this.menuSetAsDisplayField.Name = "menuSetAsDisplayField";
-            this.menuSetAsDisplayField.Size = new System.Drawing.Size(167, 22);
+            this.menuSetAsDisplayField.Size = new System.Drawing.Size(178, 22);
             this.menuSetAsDisplayField.Text = "Set As Display Field";
             // 
             // menuSetAsPrimaryKey
             // 
             this.menuSetAsPrimaryKey.Name = "menuSetAsPrimaryKey";
-            this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(167, 22);
+            this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(178, 22);
             this.menuSetAsPrimaryKey.Text = "Set As Primary Key";
             // 
             // menuStrip1
@@ -194,7 +194,7 @@
             // 
             this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNew,
-            this.menuOpen,
+            this.menuSave,
             this.toolStripMenuItem2,
             this.menuExit});
             this.menuFile.Name = "menuFile";
@@ -204,24 +204,24 @@
             // menuNew
             // 
             this.menuNew.Name = "menuNew";
-            this.menuNew.Size = new System.Drawing.Size(112, 22);
+            this.menuNew.Size = new System.Drawing.Size(152, 22);
             this.menuNew.Text = "New...";
             // 
-            // menuOpen
+            // menuSave
             // 
-            this.menuOpen.Name = "menuOpen";
-            this.menuOpen.Size = new System.Drawing.Size(112, 22);
-            this.menuOpen.Text = "Open...";
+            this.menuSave.Name = "menuSave";
+            this.menuSave.Size = new System.Drawing.Size(152, 22);
+            this.menuSave.Text = "Save";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(109, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(112, 22);
+            this.menuExit.Size = new System.Drawing.Size(152, 22);
             this.menuExit.Text = "Exit";
             // 
             // fileToolStripMenuItem
@@ -304,7 +304,6 @@
         private System.Windows.Forms.ToolStripMenuItem exToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuFile;
         private System.Windows.Forms.ToolStripMenuItem menuNew;
-        private System.Windows.Forms.ToolStripMenuItem menuOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem menuExit;
         private System.Windows.Forms.Panel panel;
@@ -315,6 +314,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayField;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsPrimaryKey;
         private System.Windows.Forms.ImageList imageListTree;
+        private System.Windows.Forms.ToolStripMenuItem menuSave;
 
     }
 }

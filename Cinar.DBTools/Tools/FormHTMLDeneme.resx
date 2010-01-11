@@ -117,4 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBox.Text" xml:space="preserve">
+    <value>&lt;div style="color:red;font-family:Verdana;font-size:30px"&gt;
+Bir iki üç dört beş altı yedi
+&lt;div style="color:green;font-size:50px"&gt;
+100 200 100 200 100 &lt;span style="color:orange;font-weight:bold"&gt;200 100&lt;/span&gt; 200 
+&lt;/div&gt;
+sekiz dokuz on bin beş yüz seksen altı
+&lt;/div&gt;
+</value>
+  </data>
 </root>
