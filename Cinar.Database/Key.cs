@@ -21,20 +21,17 @@ namespace Cinar.Database
             set { name = value; }
         }
 
-        private FieldCollection fields;
         /// <summary>
         /// Key ile ilgili fieldlar
         /// </summary>
         [XmlIgnore]
         public FieldCollection Fields
         {
-            get {
-                if (fields == null)
-                {
-                    fields = new FieldCollection(parent.table);
-                    foreach (string strField in fieldNames)
-                        fields.Add(parent.table.Fields[strField]);
-                }
+            get
+            {
+                FieldCollection fields = new FieldCollection(parent.table);
+                foreach (string strField in fieldNames)
+                    fields.Add(parent.table.Fields[strField]);
                 return fields;
             }
             //set { fields = value; }
@@ -72,7 +69,7 @@ namespace Cinar.Database
     }
 
     [Serializable]
-    public class KeyCollection : CollectionBase
+    public class KeyCollection : List<Key>
     {
         internal Table table;
         public KeyCollection()
@@ -82,35 +79,29 @@ namespace Cinar.Database
         {
             this.table = table;
         }
-        public int Add(Key key)
+        public new int Add(Key key)
         {
             key.parent = this;
-            return this.List.Add(key);
-        }
-        public Key this[int index]
-        {
-            get
-            {
-                return (Key)this.List[index];
-            }
+            base.Add(key);
+            return base.Count;
         }
         public Key this[string name]
         {
             get
             {
-                foreach (Key key in this.List)
+                foreach (Key key in this)
                     if (key.Name == name)
                         return key;
                 return null;
             }
         }
-        public Field Find(DbType fieldType)
-        {
-            foreach (Field fld in this.List)
-                if (fld.FieldType == fieldType)
-                    return fld;
-            return null;
-        }
+        //public Field Find(DbType fieldType)
+        //{
+        //    foreach (Field fld in this)
+        //        if (fld.FieldType == fieldType)
+        //            return fld;
+        //    return null;
+        //}
 
         public string[] ToStringArray()
         {

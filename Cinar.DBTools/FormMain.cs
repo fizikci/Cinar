@@ -148,6 +148,10 @@ namespace Cinar.DBTools
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
                                  },
                      new Command {
+                                     Execute = cmdTryAndSee,
+                                     Trigger = new CommandTrigger{ Control = btnTryAndSee}
+                                 },
+                     new Command {
                                      Execute = cmdGenerateSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuGenerateSQL, Argument="-"},
@@ -186,6 +190,11 @@ namespace Cinar.DBTools
                 }
             }
             treeView.Sort();
+            if (rootNode.Nodes.Count > 0 && rootNode.Nodes[0].Nodes.Count > 0)
+            {
+                rootNode.Nodes[0].Expand();
+                treeView.SelectedNode = rootNode.Nodes[0];
+            }
         }
 
         private void saveConnections()
@@ -540,6 +549,12 @@ namespace Cinar.DBTools
             form.Show();
         }
 
+        private void cmdTryAndSee(string arg)
+        {
+            FormHTMLDeneme form = new FormHTMLDeneme();
+            form.Show();
+        }
+
         private void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Label))
@@ -594,7 +609,7 @@ namespace Cinar.DBTools
                 toStr += " @ " + parts[parts.Length - 2]  + "." + parts[parts.Length - 1];
             }
             else
-                toStr += Host;
+                toStr += " @ " + Host;
             toStr += ")";
 
             return toStr;

@@ -117,12 +117,29 @@ namespace Cinar.HTMLParser
         }
 
         public HTMLElement RootNode { get; internal set; }
+       
+        public HTMLElement CreateElement(string tagName)
+        {
+            switch (tagName)
+            {
+                case "IMG":
+                    return new ImageElement();
+                case "SPAN":
+                    return new SpanElement();
+                case "SCRIPT":
+                    return new ScriptElement();
+                default:
+                    return new DivElement();
+            }
+        }
 
         Stack<HTMLElement> stack = new Stack<HTMLElement>();
+
         
         private void statementFound(OpenTag stm)
         {
-            HTMLElement elm = new HTMLElement();
+            HTMLElement elm = CreateElement(stm.Text.ToUpperInvariant());
+
             elm.TagName = stm.Text;
 
             HTMLElement parent = null;
@@ -143,7 +160,7 @@ namespace Cinar.HTMLParser
         }
         private void statementFound(StandaloneTag stm)
         {
-            HTMLElement elm = new HTMLElement();
+            HTMLElement elm = CreateElement(stm.Text.ToUpperInvariant());
             elm.TagName = stm.Text;
 
             HTMLElement parent = stack.Peek();
@@ -157,11 +174,11 @@ namespace Cinar.HTMLParser
         private void statementFound(Attribute stm)
         {
             HTMLElement elm = stack.Peek();
-            elm.Attributes.Add(stm.Name, stm.Value);
+            elm.SetAttribute(stm.Name, stm.Value);
         }
         private void statementFound(InnerText stm)
         {
-            HTMLElement elm = new HTMLElement();
+            InnerTextElement elm = new InnerTextElement();
             elm.TagName = "InnerText";
             elm.InnerText = stm.Text;
 

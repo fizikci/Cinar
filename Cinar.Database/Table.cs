@@ -72,9 +72,16 @@ namespace Cinar.Database
             {
                 foreach(Key key in this.Keys)
                     if(key.IsPrimary && key.FieldNames.Count==1)
-                        return key.Fields[0];
+                        return this.Fields[key.FieldNames[0]];
                 return null;
             }
+        }
+
+        private string stringFieldName;
+        public string StringFieldName
+        {
+            get { return stringFieldName; }
+            set { stringFieldName = value; }
         }
 
         /// <summary>
@@ -86,11 +93,16 @@ namespace Cinar.Database
         {
             get
             {
-                Field res = this.Fields.Find(DbType.VarChar);
-                if (res == null) res = this.Fields.Find(DbType.Char);
-                if (res == null) res = this.Fields.Find(DbType.NVarChar);
-                if (res == null) res = this.Fields.Find(DbType.NChar);
-                return res;
+                if (String.IsNullOrEmpty(stringFieldName))
+                {
+                    Field res = this.Fields.Find(DbType.VarChar);
+                    if (res == null) res = this.Fields.Find(DbType.Char);
+                    if (res == null) res = this.Fields.Find(DbType.NVarChar);
+                    if (res == null) res = this.Fields.Find(DbType.NChar);
+                    return res;
+                }
+                else
+                    return this.Fields[stringFieldName];
             }
         }
 
@@ -111,7 +123,28 @@ namespace Cinar.Database
                         if (f.ReferenceField != null)
                             referenceTables.Add(f.ReferenceField.Table);
                 }
-                return referenceTables; 
+                return referenceTables;
+            }
+        }
+
+        private TableCollection referencedByTables;
+        /// <summary>
+        /// Bu tabloya bağımlı başka tablolardaki fieldlar.
+        /// </summary>
+        [XmlIgnore]
+        public TableCollection ReferencedByTables
+        {
+            get
+            {
+                if (referencedByTables == null)
+                {
+                    referencedByTables = new TableCollection(this.Database);
+                    foreach (Table tbl in this.Database.Tables)
+                        foreach (Field f in tbl.Fields)
+                            if (f.ReferenceField == this.PrimaryField)
+                                referencedByTables.Add(f.Table);
+                }
+                return referencedByTables;
             }
         }
 
@@ -200,7 +233,7 @@ namespace Cinar.Database
     }
 
     [Serializable]
-    public class TableCollection : CollectionBase
+    public class TableCollection : List<Table>
     {
         internal Database db;
 
@@ -212,23 +245,17 @@ namespace Cinar.Database
             this.db = db;
         }
 
-        public int Add(Table table)
+        public new int Add(Table table)
         {
             table.parent = this;
-            return this.List.Add(table);
-        }
-        public Table this[int index]
-        {
-            get
-            {
-                return (Table)this.List[index];
-            }
+            base.Add(table);
+            return base.Count;
         }
         public Table this[string name]
         {
             get
             {
-                foreach(Table tbl in this.List)
+                foreach(Table tbl in this)
                     if(tbl.Name.ToLowerInvariant() == name.ToLowerInvariant())
                         return tbl;
                 return null;
