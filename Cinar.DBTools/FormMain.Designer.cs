@@ -86,6 +86,7 @@
             this.btnCheckDatabaseSchema = new System.Windows.Forms.ToolStripButton();
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.gridResults = new Cinar.DBTools.Controls.MyDataGrid();
+            this.menuViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -467,7 +468,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuCodeGenerator,
             this.menuCheckDatabaseSchema,
-            this.menuDBTransfer});
+            this.menuDBTransfer,
+            this.menuViewERDiagram});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -629,6 +631,12 @@
             this.gridResults.Size = new System.Drawing.Size(582, 382);
             this.gridResults.TabIndex = 0;
             // 
+            // menuViewERDiagram
+            // 
+            this.menuViewERDiagram.Name = "menuViewERDiagram";
+            this.menuViewERDiagram.Size = new System.Drawing.Size(215, 22);
+            this.menuViewERDiagram.Text = "View ER Diagram...";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -725,6 +733,7 @@
         private System.Windows.Forms.ToolStripStatusLabel statusExecTime;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel statusNumberOfRows;
+        private System.Windows.Forms.ToolStripMenuItem menuViewERDiagram;
 
     }
 }

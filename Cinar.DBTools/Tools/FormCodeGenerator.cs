@@ -123,15 +123,20 @@ namespace Cinar.DBTools.Tools
                     engine.Parse();
                     engine.Execute();
 
-                    Interpreter engine2 = new Interpreter(tmp.FileNameFormat.Replace("\\", "|"), null);
-                    engine2.SetAttribute("table", selectedTable);
-                    engine2.SetAttribute("util", new Util());
-                    engine2.Parse();
-                    engine2.Execute();
+                    string path = "";
+                    if (!string.IsNullOrEmpty(tmp.FileNameFormat))
+                    {
+                        Interpreter engine2 = new Interpreter(tmp.FileNameFormat.Replace("\\", "|"), null);
+                        engine2.SetAttribute("table", selectedTable);
+                        engine2.SetAttribute("util", new Util());
+                        engine2.Parse();
+                        engine2.Execute();
+                        path = "E:\\kodlar\\projects\\Interpress\\" + engine2.Output.Replace("|", "\\");
+                    }
 
                     FormGeneratedCode form = new FormGeneratedCode(engine.Output);
                     form.Text += " - " + tmp.Name + " code for " + selectedTable.Name;
-                    form.Path = "E:\\kodlar\\projects\\Interpress\\" + engine2.Output.Replace("|", "\\");
+                    form.Path = path;
                     form.Show();
                 }
             }

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.TemplateDesign", "Cin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.UICommands", "Cinar.UICommands\Cinar.UICommands.csproj", "{90107230-692B-4EEF-9308-31D954AE722E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Extensions", "Cinar.Extensions\Cinar.Extensions.csproj", "{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{90107230-692B-4EEF-9308-31D954AE722E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90107230-692B-4EEF-9308-31D954AE722E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90107230-692B-4EEF-9308-31D954AE722E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -97,6 +97,13 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdViewERDiagram,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuViewERDiagram},
+                                         //new CommandTrigger{ Control = btnDatabaseTransfer},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdSetActiveConnection,
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "AfterSelect"}
                                  },
@@ -331,8 +338,10 @@ namespace Cinar.DBTools
             executeSQL(txtSQL.Text);
         }
 
-        private void executeSQL(string sql)
+        private void executeSQL(string sql, params object[] args)
         {
+            sql = String.Format(sql, args);
+
             Stopwatch watch = new Stopwatch();
             watch.Start();
             DataTable dt = Provider.Database.GetDataTable(sql);
@@ -486,7 +495,25 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from " + field.Table.Name + " group by "+field.Name+" order by RecordCount desc");
+            if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
+                executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from " + field.Table.Name + " group by " + field.Name + " order by RecordCount desc");
+            else
+                executeSQL(@"
+                    select top 100 
+                        t.{0}, 
+                        tRef.{4},
+                        count(*) as RecordCount 
+                    from 
+                        {1} t
+                        left join {3} tRef on t.{0} = tRef.{2}
+                    group by t.{0}, tRef.{4}
+                    order by RecordCount desc",
+                                              field.Name,
+                                              field.Table.Name,
+                                              field.ReferenceField.Name,
+                                              field.ReferenceField.Table.Name,
+                                              field.ReferenceField.Table.StringField.Name);
+            
         }
 
         private void cmdGenerateCode(string arg)
@@ -504,6 +531,12 @@ namespace Cinar.DBTools
         private void cmdDBTransfer(string arg)
         {
             FormDBTransfer form = new FormDBTransfer();
+            form.Show();
+        }
+
+        private void cmdViewERDiagram(string arg)
+        {
+            FormERDiagram form = new FormERDiagram();
             form.Show();
         }
 
