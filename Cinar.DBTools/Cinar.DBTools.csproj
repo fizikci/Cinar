@@ -89,11 +89,6 @@
     <EmbeddedResource Include="FormConnect.resx">
       <DependentUpon>FormConnect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCheckDatabaseSchema.resx">
       <DependentUpon>FormCheckDatabaseSchema.cs</DependentUpon>
     </EmbeddedResource>
@@ -106,14 +101,15 @@
     <EmbeddedResource Include="Tools\FormGeneratedCode.resx">
       <DependentUpon>FormGeneratedCode.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormERDiagram.resx">
+      <DependentUpon>FormERDiagram.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormTemplate.resx">
       <DependentUpon>FormTemplate.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <EmbeddedResource Include="Tools\SelectTableDialog.resx">
+      <DependentUpon>SelectTableDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -148,17 +144,33 @@
     <Compile Include="Tools\FormGeneratedCode.Designer.cs">
       <DependentUpon>FormGeneratedCode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\FormERDiagram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormERDiagram.Designer.cs">
+      <DependentUpon>FormERDiagram.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\FormTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tools\FormTemplate.Designer.cs">
       <DependentUpon>FormTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\SelectTableDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\SelectTableDialog.Designer.cs">
+      <DependentUpon>SelectTableDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
       <Project>{255C4AA9-75A1-4458-882D-35A7F02DE307}</Project>
       <Name>Cinar.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Name>Cinar.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
