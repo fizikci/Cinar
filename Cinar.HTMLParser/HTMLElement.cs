@@ -129,6 +129,17 @@ namespace Cinar.HTMLParser
         }
 
         internal PointF cursor;
+        internal float lastLineHeight;
+
+        public HTMLElement FindBlockParent() {
+            if (Parent == null) 
+                return null;
+
+            if (Parent.style["display"] == "block")
+                return Parent;
+            else
+                return Parent.FindBlockParent();
+        }
 
         public abstract void Draw(Graphics g);
     }
@@ -161,11 +172,20 @@ namespace Cinar.HTMLParser
 
         public override void Draw(Graphics g)
         {
+            HTMLElement blockParent = this.FindBlockParent();
+            if (blockParent != null)
+            {
+                this.Layout.Location = new PointF(blockParent.Layout.X, blockParent.cursor.Y + blockParent.lastLineHeight);
+                this.Layout.Width = blockParent.Layout.Width;
+            }
             foreach (HTMLElement elm in this.ChildNodes)
             {
-                elm.Layout.Location = elm.Parent.cursor;
-                elm.Layout.Width = elm.Parent.Layout.Width;
                 elm.Draw(g);
+            }
+            if (blockParent != null)
+            {
+                blockParent.Layout.Height += this.Layout.Height;
+                blockParent.cursor += new SizeF(0, this.Layout.Height);
             }
         }
     }
@@ -187,25 +207,34 @@ namespace Cinar.HTMLParser
 
     public class InnerTextElement : HTMLElement
     {
+        public InnerTextElement()
+        {
+            style["display"] = "inline";
+        }
+
         public override void Draw(Graphics g)
         {
             Font font = this.GetFont();
-            PointF startCursor = Parent.cursor;
+            HTMLElement blockParent = this.FindBlockParent();
+            PointF startCursor = blockParent.cursor;
             string str = this.InnerText;
             SolidBrush brush = new SolidBrush(this.GetColor());
             string[] words = str.Split(' ');
+            float lineHeight = 0;
             for (int i = 0; i < words.Length; i++ )
             {
                 SizeF charRect = g.MeasureString(words[i], font);
-                if (Parent.cursor.X + charRect.Width > Parent.Layout.Width)
-                    Parent.cursor = new PointF(0, Parent.cursor.Y + charRect.Height);
-                g.DrawString(words[i], font, brush, Parent.cursor+Parent.Layout.Location.ToSizeF());
-                Parent.cursor.X += charRect.Width;
-                System.Threading.Thread.Sleep(100);
+                if (charRect.Height > lineHeight) lineHeight = charRect.Height;
+                if (blockParent.cursor.X + charRect.Width > blockParent.Layout.Width)
+                {
+                    blockParent.cursor = new PointF(0, blockParent.cursor.Y + lineHeight);
+                    blockParent.Layout.Height += lineHeight;
+                }
+                g.DrawString(words[i], font, brush, blockParent.cursor + blockParent.Layout.Location.ToSizeF());
+                blockParent.cursor.X += charRect.Width;
+                //System.Threading.Thread.Sleep(100);
             }
-            //this.Layout = new RectangleF(startCursor, 
-            //this.Layout = new Rectangle(new Point(Parent.cursorLeft,  textSize.ToSize();
-            //g.DrawString(this.InnerText, font, new SolidBrush(cl), this.Layout.Location.ToPointF());
+            blockParent.lastLineHeight = lineHeight;
         }
     }
 

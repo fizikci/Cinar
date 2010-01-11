@@ -28,13 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormHTMLDeneme));
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.btnParse = new System.Windows.Forms.Button();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.htmlDocument = new Cinar.HTMLParser.HTMLDocument();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer
@@ -52,15 +58,15 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.htmlDocument);
-            this.splitContainer.Size = new System.Drawing.Size(694, 476);
-            this.splitContainer.SplitterDistance = 231;
+            this.splitContainer.Panel2.Controls.Add(this.splitContainer1);
+            this.splitContainer.Size = new System.Drawing.Size(915, 483);
+            this.splitContainer.SplitterDistance = 147;
             this.splitContainer.TabIndex = 0;
             // 
             // btnParse
             // 
             this.btnParse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnParse.Location = new System.Drawing.Point(577, 201);
+            this.btnParse.Location = new System.Drawing.Point(798, 117);
             this.btnParse.Name = "btnParse";
             this.btnParse.Size = new System.Drawing.Size(103, 23);
             this.btnParse.TabIndex = 1;
@@ -75,12 +81,37 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.Location = new System.Drawing.Point(0, 0);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(694, 195);
+            this.richTextBox.Size = new System.Drawing.Size(915, 111);
             this.richTextBox.TabIndex = 0;
-            this.richTextBox.Text = "<div style=\"color:red;font-family:Verdana;font-size:30px\">\nBir iki üç dört beş al" +
-                "tı yedi\n<span style=\"color:green;font-size:50px\">\n100 200 300 400\n</span>\nsekiz " +
-                "dokuz on bin beş yüz seksen altı\n</div>";
+            this.richTextBox.Text = resources.GetString("richTextBox.Text");
             this.richTextBox.WordWrap = false;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.htmlDocument);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.webBrowser);
+            this.splitContainer1.Size = new System.Drawing.Size(915, 332);
+            this.splitContainer1.SplitterDistance = 449;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(458, 328);
+            this.webBrowser.TabIndex = 0;
             // 
             // htmlDocument
             // 
@@ -88,20 +119,23 @@
             this.htmlDocument.HTMLCode = null;
             this.htmlDocument.Location = new System.Drawing.Point(0, 0);
             this.htmlDocument.Name = "htmlDocument";
-            this.htmlDocument.Size = new System.Drawing.Size(690, 237);
+            this.htmlDocument.Size = new System.Drawing.Size(445, 328);
             this.htmlDocument.TabIndex = 0;
             // 
             // FormHTMLDeneme
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(694, 476);
+            this.ClientSize = new System.Drawing.Size(915, 483);
             this.Controls.Add(this.splitContainer);
             this.Name = "FormHTMLDeneme";
             this.Text = "FormHTMLDeneme";
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -112,5 +146,7 @@
         private System.Windows.Forms.Button btnParse;
         private System.Windows.Forms.RichTextBox richTextBox;
         private Cinar.HTMLParser.HTMLDocument htmlDocument;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.WebBrowser webBrowser;
     }
 }

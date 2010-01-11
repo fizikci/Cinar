@@ -43,7 +43,7 @@ namespace Cinar.DBTools.Tools
                     }
             }
             for (int i = 0; i < lbProblems.Items.Count; i++)
-                if (!lbProblems.Items[i].ToString().Contains("??"))
+                if (lbProblems.Items[i] is PossibleForeignKey && !lbProblems.Items[i].ToString().Contains("??"))
                     lbProblems.SetSelected(i, true);
         }
 

@@ -204,13 +204,16 @@ namespace Cinar.UICommands
                 {
                     if (trigger.Event == eventName && trigger.Control == target)
                     {
-                        this.LastEventArgs = e;
-                        this.LastSender = target;
-                        if (this.BeforeCommandExecute != null)
-                            this.BeforeCommandExecute();
-                        command.Execute(trigger.Argument);
-                        if (this.AfterCommandExecute != null)
-                            this.AfterCommandExecute();
+                        if (command.IsEnabled())
+                        {
+                            this.LastEventArgs = e;
+                            this.LastSender = target;
+                            if (this.BeforeCommandExecute != null)
+                                this.BeforeCommandExecute();
+                            command.Execute(trigger.Argument);
+                            if (this.AfterCommandExecute != null)
+                                this.AfterCommandExecute();
+                        }
                         this.SetCommandControlsEnable();
                     }
                 }

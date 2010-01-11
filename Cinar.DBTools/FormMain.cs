@@ -36,7 +36,9 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuNewConnection},
                                          new CommandTrigger{ Control = btnNewConnection},
-                                     }
+                                         new CommandTrigger{ Control = menuNewConnectionContext},
+                                     },
+                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode==treeView.Nodes[0]
                                  },
                      new Command {
                                      Execute = cmdExit,
@@ -97,13 +99,6 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
-                                     Execute = cmdViewERDiagram,
-                                     Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuViewERDiagram},
-                                         //new CommandTrigger{ Control = btnDatabaseTransfer},
-                                     }
-                                 },
-                     new Command {
                                      Execute = cmdSetActiveConnection,
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "AfterSelect"}
                                  },
@@ -148,6 +143,30 @@ namespace Cinar.DBTools
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
                                  },
                      new Command {
+                                     Execute = cmdRefreshMetadata,
+                                     Trigger = new CommandTrigger{ Control = menuRefreshMetadata},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                 },
+                     new Command {
+                                     Execute = cmdOpenERDiagram,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuOpenERDiagram},
+                                     },
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Schema,
+                                 },
+                     new Command {
+                                     Execute = cmdDeleteERDiagram,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuDeleteERDiagram},
+                                     },
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Schema,
+                                 },
+                     new Command {
+                                     Execute = cmdNewERDiagram,
+                                     Trigger = new CommandTrigger{ Control = menuNewERDiagram},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is List<Schema>
+                                 },
+                     new Command {
                                      Execute = cmdTryAndSee,
                                      Trigger = new CommandTrigger{ Control = btnTryAndSee}
                                  },
@@ -185,6 +204,7 @@ namespace Cinar.DBTools
 
                         TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
                         node.Tag = cs;
+
                         populateTreeNodesForDatabase(node);
                     }
                 }
@@ -197,7 +217,8 @@ namespace Cinar.DBTools
             }
         }
 
-        private void saveConnections()
+        #region methods
+        public void SaveConnections()
         {
             string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
             XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
@@ -207,15 +228,111 @@ namespace Cinar.DBTools
             }
             statusText.Text = "Connections saved.";
         }
+        private void executeSQL(string sql, params object[] args)
+        {
+            sql = String.Format(sql, args);
+
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            DataTable dt = Provider.Database.GetDataTable(sql);
+            watch.Stop();
+            statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
+            statusNumberOfRows.Text = (dt == null ? 0 : dt.Rows.Count) + " rows";
+            statusText.Text = "Query executed succesfully.";
+            bindGridResults(dt);
+        }
+        private bool checkConnection()
+        {
+            if (Provider.Database == null)
+            {
+                MessageBox.Show("Please select a database first", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+            return true;
+        }
+        private void populateTreeNodesForDatabase(TreeNode parentNode)
+        {
+            ConnectionSettings cs = parentNode.Tag as ConnectionSettings;
+            if (cs == null)
+                return; //***
+
+            TreeNode schemasNode = parentNode.Nodes.Add("ER Diagrams", "ER Diagrams", "Diagram", "Diagram");
+            schemasNode.Tag = cs.Schemas;
+
+            TreeNode tablesNode = parentNode.Nodes.Add("Tables", "Tables", "Table", "Table");
+            tablesNode.Tag = cs.Database.Tables;
+
+            foreach (Table tbl in cs.Database.Tables)
+            {
+                TreeNode tnTable = tablesNode.Nodes.Add(tbl.Name, tbl.Name, "Table", "Table");
+                tnTable.Tag = tbl;
+                foreach (Field fld in tbl.Fields)
+                {
+                    TreeNode tnField = tnTable.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
+                    tnField.Tag = fld;
+                }
+            }
+
+            foreach (Schema schema in cs.Schemas)
+            {
+                TreeNode tnSchema = schemasNode.Nodes.Add(schema.Name, schema.Name, "Diagram", "Diagram");
+                tnSchema.Tag = schema;
+            }
+        }
+        private ConnectionSettings findConnection(TreeNode treeNode)
+        {
+            while (treeNode.Parent != null)
+            {
+                if (treeNode.Tag is ConnectionSettings)
+                    return (ConnectionSettings)treeNode.Tag;
+                treeNode = treeNode.Parent;
+            }
+            return null;
+        }
+        private TreeNode findSelectedDBNode()
+        {
+            TreeNode treeNode = treeView.SelectedNode;
+            while (treeNode != null)
+            {
+                if (treeNode.Tag is ConnectionSettings)
+                    return treeNode;
+                treeNode = treeNode.Parent;
+            }
+            return null;
+        }
+        private void bindGridResults(DataTable dt)
+        {
+            tabControl.SelectedTab = tpResults;
+            gridResults.DataSource = dt;
+        }
+        private void showInfoText(string txt)
+        {
+            tabControl.SelectedTab = tpInfo;
+            txtInfo.Text = txt;
+        }
+        #endregion
+
+        #region Commands
         private void cmdRefresh(string arg)
         {
-            Provider.ActiveConnection.RefreshDatabaseSchema();
             TreeNode dbNode = findSelectedDBNode();
             dbNode.Nodes.Clear();
             populateTreeNodesForDatabase(dbNode);
-            saveConnections();
             treeView.Sort();
         }
+        private void cmdRefreshMetadata(string arg)
+        {
+            if (MessageBox.Show("Metada will be reread from database and all changes made to metadata will be lost. Continue?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                Provider.ActiveConnection.RefreshDatabaseSchema();
+                TreeNode dbNode = findSelectedDBNode();
+                dbNode.Nodes.Clear();
+                populateTreeNodesForDatabase(dbNode);
+                SaveConnections();
+                treeView.Sort();
+            }
+        }
+
         private void cmdNewConnection(string arg)
         {
             FormConnect f = new FormConnect();
@@ -239,13 +356,9 @@ namespace Cinar.DBTools
                 cs.UserName = f.txtUserName.Text;
                 cs.RefreshDatabaseSchema();
                 Provider.Connections.Add(cs);
-                saveConnections();
+                SaveConnections();
                 rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database").Tag = cs;
             }
-        }
-        private void cmdExit(string arg)
-        {
-            Close();
         }
         private void cmdEditConnection(string arg)
         {
@@ -263,7 +376,7 @@ namespace Cinar.DBTools
                 cs.Password = f.txtPassword.Text;
                 cs.Provider = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), f.cbProvider.SelectedItem.ToString());
                 cs.UserName = f.txtUserName.Text;
-                saveConnections();
+                SaveConnections();
                 treeView.SelectedNode.Name = treeView.SelectedNode.Text = cs.ToString();
                 cs.RefreshDatabaseSchema();
             }
@@ -279,13 +392,77 @@ namespace Cinar.DBTools
                 else if (currNode.NextNode != null)
                     treeView.SelectedNode = currNode.NextNode;
                 Provider.Connections.Remove(cs);
-                saveConnections();
+                SaveConnections();
                 currNode.Remove();
 
                 statusText.Text = "Connection deleted.";
             }
         }
 
+        private void cmdCheckDatabaseSchema(string arg)
+        {
+            FormCheckDatabaseSchema form = new FormCheckDatabaseSchema(SaveConnections);
+            form.Show();
+        }
+
+        private void cmdExecuteSQL(string arg)
+        {
+            if(!checkConnection()) return;
+            executeSQL(txtSQL.Text);
+        }
+        private void cmdExecuteScript(string arg)
+        {
+            Interpreter engine = new Interpreter(txtSQL.Text, null);
+            engine.SetAttribute("db", Provider.Database);
+            engine.SetAttribute("util", new Util());
+            engine.Parse();
+            engine.Execute();
+
+            showInfoText(engine.Output);
+
+            statusText.Text = "Script executed succesfully.";
+        }
+
+        private void cmdSetActiveConnection(string arg)
+        {
+            if (treeView.SelectedNode.Tag is ConnectionSettings)
+            {
+                Provider.ActiveConnection = (ConnectionSettings)treeView.SelectedNode.Tag;
+
+                if (treeView.SelectedNode.Nodes.Count == 0)
+                    populateTreeNodesForDatabase(treeView.SelectedNode);
+            }
+            else
+            {
+                Provider.ActiveConnection = findConnection(treeView.SelectedNode);
+            }
+
+            statusText.Text = "Active connection: " + Provider.ActiveConnection;
+        }
+
+        private void cmdTableTop10(string arg)
+        {
+            if (!checkConnection()) return;
+            string tableName = treeView.SelectedNode.Name;
+            executeSQL("select top 10 * from " + tableName);
+        }
+        private void cmdTableDrop(string arg)
+        {
+            if (!checkConnection()) return;
+            string tableName = treeView.SelectedNode.Name;
+            if (MessageBox.Show("Are you sure to drop table " + tableName + "? All data will be lost!", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
+                showInfoText("Table " + tableName + " dropped succesfully.");
+            }
+            cmdRefresh(null);
+        }
+        private void cmdTableCount(string arg)
+        {
+            if (!checkConnection()) return;
+            string tableName = treeView.SelectedNode.Name;
+            executeSQL("select count(*) AS number_of_rows from " + tableName);
+        }
         private void cmdGenerateSQL(string arg)
         {
             Table table = (Table)treeView.SelectedNode.Tag;
@@ -318,7 +495,7 @@ namespace Cinar.DBTools
                     sb = sb.Remove(sb.Length - 3, 3);
                     sb.AppendLine();
                     sb.AppendLine("where");
-                    if(table.PrimaryField!=null)
+                    if (table.PrimaryField != null)
                         sb.AppendLine("\t@" + table.PrimaryField.Name + " = @" + table.PrimaryField.Name);
                     else
                         sb.AppendLine("\t1 = 2");
@@ -341,143 +518,6 @@ namespace Cinar.DBTools
             statusText.Text = "SQL generated.";
             showInfoText(sb.ToString());
         }
-        private void cmdExecuteSQL(string arg)
-        {
-            if(!checkConnection()) return;
-            executeSQL(txtSQL.Text);
-        }
-
-        private void executeSQL(string sql, params object[] args)
-        {
-            sql = String.Format(sql, args);
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            DataTable dt = Provider.Database.GetDataTable(sql);
-            watch.Stop();
-            statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
-            statusNumberOfRows.Text = (dt==null ? 0 : dt.Rows.Count) + " rows";
-            statusText.Text = "Query executed succesfully.";
-            bindGridResults(dt);
-        }
-
-        private bool checkConnection()
-        {
-            if (Provider.Database == null)
-            {
-                MessageBox.Show("Please select a database first", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return false;
-            }
-            return true;
-        }
-
-        private void cmdExecuteScript(string arg)
-        {
-            Interpreter engine = new Interpreter(txtSQL.Text, null);
-            engine.SetAttribute("db", Provider.Database);
-            engine.SetAttribute("util", new Util());
-            engine.Parse();
-            engine.Execute();
-
-            showInfoText(engine.Output);
-
-            statusText.Text = "Script executed succesfully.";
-        }
-
-        private void cmdSetActiveConnection(string arg)
-        {
-            if (treeView.SelectedNode.Tag is ConnectionSettings)
-            {
-                Provider.ActiveConnection = (ConnectionSettings)treeView.SelectedNode.Tag;
-
-                if (treeView.SelectedNode.Nodes.Count == 0)
-                    populateTreeNodesForDatabase(treeView.SelectedNode);
-            }
-            else
-            {
-                Provider.ActiveConnection = findConnection(treeView.SelectedNode);
-            }
-
-            statusText.Text = "Active connection: " + Provider.ActiveConnection;
-        }
-
-        private void populateTreeNodesForDatabase(TreeNode parentNode)
-        {
-            ConnectionSettings cs = parentNode.Tag as ConnectionSettings;
-            if (cs == null)
-                return; //***
-
-            foreach (Table tbl in cs.Database.Tables)
-            {
-                TreeNode tnTable = parentNode.Nodes.Add(tbl.Name, tbl.Name, "Table", "Table");
-                tnTable.Tag = tbl;
-                foreach (Field fld in tbl.Fields)
-                {
-                    TreeNode tnField = tnTable.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
-                    tnField.Tag = fld;
-                }
-            }
-        }
-
-        private ConnectionSettings findConnection(TreeNode treeNode)
-        {
-            while (treeNode.Parent!=null)
-            {
-                if(treeNode.Tag is ConnectionSettings)
-                    return (ConnectionSettings)treeNode.Tag;
-                treeNode = treeNode.Parent;
-            }
-            return null;
-        }
-        private TreeNode findSelectedDBNode()
-        {
-            TreeNode treeNode = treeView.SelectedNode;
-            while (treeNode != null)
-            {
-                if (treeNode.Tag is ConnectionSettings)
-                    return treeNode;
-                treeNode = treeNode.Parent;
-            }
-            return null;
-        }
-
-        private void cmdTableTop10(string arg)
-        {
-            if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
-            executeSQL("select top 10 * from " + tableName);
-        }
-
-        private void cmdTableDrop(string arg)
-        {
-            if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
-            if (MessageBox.Show("Are you sure to drop table " + tableName + "? All data will be lost!", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
-                showInfoText("Table " + tableName + " dropped succesfully.");
-            }
-            cmdRefresh(null);
-        }
-
-        private void bindGridResults(DataTable dt)
-        {
-            tabControl.SelectedTab = tpResults;
-            gridResults.DataSource = dt;
-        }
-
-        private void showInfoText(string txt)
-        {
-            tabControl.SelectedTab = tpInfo;
-            txtInfo.Text = txt;
-        }
-
-        private void cmdTableCount(string arg)
-        {
-            if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
-            executeSQL("select count(*) AS number_of_rows from " + tableName);
-        }
 
         private void cmdFieldDistinct(string arg)
         {
@@ -485,21 +525,18 @@ namespace Cinar.DBTools
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL("select distinct top 100 " + field.Name + " from " + field.Table.Name);
         }
-
         private void cmdFieldMax(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL("select max(" + field.Name + ") AS " + field.Name + "_MAX_value from " + field.Table.Name);
         }
-
         private void cmdFieldMin(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL("select min(" + field.Name + ") AS " + field.Name + "_MIN_value from " + field.Table.Name);
         }
-
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
@@ -525,15 +562,32 @@ namespace Cinar.DBTools
             
         }
 
+        private void cmdNewERDiagram(string arg)
+        {
+            FormERDiagram form = new FormERDiagram();
+            form.Opener = this;
+            form.Show();
+        }
+        private void cmdOpenERDiagram(string arg)
+        {
+            Schema schema = treeView.SelectedNode.Tag as Schema;
+            schema.conn = Provider.ActiveConnection;
+            FormERDiagram form = new FormERDiagram();
+            form.Opener = this;
+            form.CurrentSchema = schema;
+            form.Show();
+        }
+        private void cmdDeleteERDiagram(string arg)
+        {
+            Schema schema = treeView.SelectedNode.Tag as Schema;
+            Provider.ActiveConnection.Schemas.Remove(schema);
+            SaveConnections();
+            cmdRefresh(null);
+        }
+
         private void cmdGenerateCode(string arg)
         {
             FormCodeGenerator form = new FormCodeGenerator();
-            form.Show();
-        }
-
-        private void cmdCheckDatabaseSchema(string arg)
-        {
-            FormCheckDatabaseSchema form = new FormCheckDatabaseSchema(saveConnections);
             form.Show();
         }
 
@@ -543,17 +597,16 @@ namespace Cinar.DBTools
             form.Show();
         }
 
-        private void cmdViewERDiagram(string arg)
+        private void cmdExit(string arg)
         {
-            FormERDiagram form = new FormERDiagram();
-            form.Show();
+            Close();
         }
-
         private void cmdTryAndSee(string arg)
         {
             FormHTMLDeneme form = new FormHTMLDeneme();
             form.Show();
         }
+        #endregion
 
         private void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
@@ -564,6 +617,17 @@ namespace Cinar.DBTools
                 else if (e.Node.Tag is Field)
                     (e.Node.Tag as Field).Name = e.Label;
             }
+        }
+        private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Tag is Schema)
+                cmdOpenERDiagram(null);
+            else if (e.Node.Tag is ConnectionSettings)
+                cmdEditConnection(null);
+            else if (e.Node.Tag is Table)
+                cmdTableTop10(null);
+            else if (e.Node.Tag is Field)
+                cmdFieldDistinct(null);
         }
     }
 
@@ -590,6 +654,7 @@ namespace Cinar.DBTools
         public string UserName { get; set; }
         public string Password { get; set; }
         public Database.Database Database;
+        public List<Schema> Schemas = new List<Schema>();
 
         public void RefreshDatabaseSchema()
         {
