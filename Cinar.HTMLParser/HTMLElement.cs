@@ -8,14 +8,12 @@ using Cinar.Extensions;
 
 namespace Cinar.HTMLParser
 {
-    public abstract class HTMLElement
+    public abstract class HTMLElement : IDisposable
     {
         public HTMLElement()
         {
             this.ChildNodes = new List<HTMLElement>();
         }
-
-        public RectangleF Layout;
 
         public string TagName { get; internal set; }
         protected Dictionary<string, string> attributes = new Dictionary<string, string>();
@@ -128,8 +126,16 @@ namespace Cinar.HTMLParser
             return strColor.ToUpperInvariant().ToColor();
         }
 
-        internal PointF cursor;
+        public HTMLDocument Document;
         internal float lastLineHeight;
+
+        public RectangleF Layout;
+        internal RectangleF InnerLayout;
+
+        internal float AvailableWidth;
+        internal PointF CursorPos;
+        //internal List<Word> Words = new List<Word>();
+        //internal List<Line> Lines = new List<Line>();
 
         public HTMLElement FindBlockParent() {
             if (Parent == null) 
@@ -141,7 +147,40 @@ namespace Cinar.HTMLParser
                 return Parent.FindBlockParent();
         }
 
-        public abstract void Draw(Graphics g);
+        public virtual void CalculateLayout(Graphics g)
+        {
+            AvailableWidth = Parent == null ? Document.Width : Parent.InnerLayout.Width;
+        }
+        public virtual void Draw(Graphics g)
+        {
+            HTMLElement blockParent = this.FindBlockParent();
+            if (blockParent != null)
+            {
+                this.Layout.Location = new PointF(blockParent.Layout.X, blockParent.CursorPos.Y + blockParent.lastLineHeight);
+                this.Layout.Width = blockParent.Layout.Width;
+            }
+            foreach (HTMLElement elm in this.ChildNodes)
+            {
+                elm.Draw(g);
+                elm.DrawPrivate(g);
+            }
+            if (blockParent != null)
+            {
+                blockParent.Layout.Height += this.Layout.Height;
+                blockParent.CursorPos += new SizeF(0, this.Layout.Height);
+            }
+        }
+        public virtual void DrawPrivate(Graphics g) { }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (font != null)
+                font.Dispose();
+        }
+
+        #endregion
     }
 
     public class ImageElement : DivElement
@@ -157,9 +196,9 @@ namespace Cinar.HTMLParser
             set { attributes["src"] = value; }
         }
 
-        public override void Draw(Graphics g)
+        public override void DrawPrivate(Graphics g)
         {
-            throw new NotImplementedException();
+            
         }
     }
 
@@ -169,39 +208,12 @@ namespace Cinar.HTMLParser
         {
             style["display"] = "block";
         }
-
-        public override void Draw(Graphics g)
-        {
-            HTMLElement blockParent = this.FindBlockParent();
-            if (blockParent != null)
-            {
-                this.Layout.Location = new PointF(blockParent.Layout.X, blockParent.cursor.Y + blockParent.lastLineHeight);
-                this.Layout.Width = blockParent.Layout.Width;
-            }
-            foreach (HTMLElement elm in this.ChildNodes)
-            {
-                elm.Draw(g);
-            }
-            if (blockParent != null)
-            {
-                blockParent.Layout.Height += this.Layout.Height;
-                blockParent.cursor += new SizeF(0, this.Layout.Height);
-            }
-        }
     }
     public class SpanElement : HTMLElement
     {
         public SpanElement()
         {
             style["display"] = "inline";
-        }
-
-        public override void Draw(Graphics g)
-        {
-            foreach (HTMLElement elm in this.ChildNodes)
-            {
-                elm.Draw(g);
-            }
         }
     }
 
@@ -212,11 +224,11 @@ namespace Cinar.HTMLParser
             style["display"] = "inline";
         }
 
-        public override void Draw(Graphics g)
+        public override void DrawPrivate(Graphics g)
         {
             Font font = this.GetFont();
             HTMLElement blockParent = this.FindBlockParent();
-            PointF startCursor = blockParent.cursor;
+            PointF startCursor = blockParent.CursorPos;
             string str = this.InnerText;
             SolidBrush brush = new SolidBrush(this.GetColor());
             string[] words = str.Split(' ');
@@ -225,13 +237,13 @@ namespace Cinar.HTMLParser
             {
                 SizeF charRect = g.MeasureString(words[i], font);
                 if (charRect.Height > lineHeight) lineHeight = charRect.Height;
-                if (blockParent.cursor.X + charRect.Width > blockParent.Layout.Width)
+                if (blockParent.CursorPos.X + charRect.Width > blockParent.Layout.Width)
                 {
-                    blockParent.cursor = new PointF(0, blockParent.cursor.Y + lineHeight);
+                    blockParent.CursorPos = new PointF(0, blockParent.CursorPos.Y + lineHeight);
                     blockParent.Layout.Height += lineHeight;
                 }
-                g.DrawString(words[i], font, brush, blockParent.cursor + blockParent.Layout.Location.ToSizeF());
-                blockParent.cursor.X += charRect.Width;
+                g.DrawString(words[i], font, brush, blockParent.CursorPos + blockParent.Layout.Location.ToSizeF());
+                blockParent.CursorPos.X += charRect.Width;
                 //System.Threading.Thread.Sleep(100);
             }
             blockParent.lastLineHeight = lineHeight;
