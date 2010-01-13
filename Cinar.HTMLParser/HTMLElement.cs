@@ -126,16 +126,38 @@ namespace Cinar.HTMLParser
             return strColor.ToUpperInvariant().ToColor();
         }
 
-        public HTMLDocument Document;
+        public HTMLDocument IDocument;
         internal float lastLineHeight;
 
         public RectangleF Layout;
-        internal RectangleF InnerLayout;
+        internal RectangleF InnerLayout
+        {
+            get {
+                float paddingLeft = GetRecursiveStyleValue("padding-left").ToFloat();
+                float paddingRight = GetRecursiveStyleValue("padding-right").ToFloat();
+                float paddingBottom = GetRecursiveStyleValue("padding-bottom").ToFloat();
+                float paddingTop = GetRecursiveStyleValue("padding-top").ToFloat();
+                float marginLeft = GetRecursiveStyleValue("margin-left").ToFloat();
+                float marginRight = GetRecursiveStyleValue("margin-right").ToFloat();
+                float marginBottom = GetRecursiveStyleValue("margin-bottom").ToFloat();
+                float marginTop = GetRecursiveStyleValue("margin-top").ToFloat();
+                float borderLeftWidth = GetRecursiveStyleValue("border-left-width").ToFloat();
+                float borderRightWidth = GetRecursiveStyleValue("border-right-width").ToFloat();
+                float borderBottomWidth = GetRecursiveStyleValue("border-bottom-width").ToFloat();
+                float borderTopWidth = GetRecursiveStyleValue("border-top-width").ToFloat();
+                RectangleF innerLayout = new RectangleF();
+                innerLayout.Location = new PointF(
+                    Layout.Location.X + paddingLeft + marginLeft + borderLeftWidth,
+                    Layout.Location.Y + paddingTop + marginTop + borderTopWidth);
+                innerLayout.Width = Layout.Width - (paddingRight + marginRight + borderRightWidth);
+                innerLayout.Height = Layout.Height - (paddingBottom + marginBottom + borderBottomWidth);
+                return innerLayout;
+            }
+        }
 
         internal float AvailableWidth;
         internal PointF CursorPos;
-        //internal List<Word> Words = new List<Word>();
-        //internal List<Line> Lines = new List<Line>();
+        internal List<Line> Lines = new List<Line>();
 
         public HTMLElement FindBlockParent() {
             if (Parent == null) 
@@ -149,7 +171,7 @@ namespace Cinar.HTMLParser
 
         public virtual void CalculateLayout(Graphics g)
         {
-            AvailableWidth = Parent == null ? Document.Width : Parent.InnerLayout.Width;
+            AvailableWidth = Parent == null ? IDocument.Width : Parent.InnerLayout.Width;
         }
         public virtual void Draw(Graphics g)
         {
@@ -181,6 +203,19 @@ namespace Cinar.HTMLParser
         }
 
         #endregion
+
+        public class Line
+        {
+            public RectangleF Layout;
+            public List<Word> Words = new List<Word>();
+        }
+
+        public class Word
+        {
+            public RectangleF Layout;
+            public string WordString;
+            public HtmlElement IElement;
+        }
     }
 
     public class ImageElement : DivElement
