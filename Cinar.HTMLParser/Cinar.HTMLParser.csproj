@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -53,22 +53,280 @@
     <Compile Include="HTMLDocument.Designer.cs">
       <DependentUpon>HTMLDocument.cs</DependentUpon>
     </Compile>
-    <Compile Include="HTMLElement.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="HTMLElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\Attr.cs" />
+    <Compile Include="dom\CDATASection.cs" />
+    <Compile Include="dom\CharacterData.cs" />
+    <Compile Include="dom\Comment.cs" />
+    <Compile Include="dom\css\Counter.cs" />
+    <Compile Include="dom\css\CSS2Properties.cs" />
+    <Compile Include="dom\css\CSSCharsetRule.cs" />
+    <Compile Include="dom\css\CSSFontFaceRule.cs" />
+    <Compile Include="dom\css\CSSImportRule.cs" />
+    <Compile Include="dom\css\CSSMediaRule.cs" />
+    <Compile Include="dom\css\CSSPageRule.cs" />
+    <Compile Include="dom\css\CSSPrimitiveValue.cs" />
+    <Compile Include="dom\css\CSSRule.cs" />
+    <Compile Include="dom\css\CSSRuleList.cs" />
+    <Compile Include="dom\css\CSSStyleDeclaration.cs" />
+    <Compile Include="dom\css\CSSStyleRule.cs" />
+    <Compile Include="dom\css\CSSStyleSheet.cs" />
+    <Compile Include="dom\css\CSSUnknownRule.cs" />
+    <Compile Include="dom\css\CSSValue.cs" />
+    <Compile Include="dom\css\CSSValueList.cs" />
+    <Compile Include="dom\css\DocumentCSS.cs" />
+    <Compile Include="dom\css\DOMImplementationCSS.cs" />
+    <Compile Include="dom\css\ElementCSSInlineStyle.cs" />
+    <Compile Include="dom\css\Rect.cs" />
+    <Compile Include="dom\css\RGBColor.cs" />
+    <Compile Include="dom\css\ViewCSS.cs" />
+    <Compile Include="dom\Document.cs" />
+    <Compile Include="dom\DocumentFragment.cs" />
+    <Compile Include="dom\DocumentType.cs" />
+    <Compile Include="dom\DOMException.cs" />
+    <Compile Include="dom\DOMImplementation.cs" />
+    <Compile Include="dom\Element.cs" />
+    <Compile Include="dom\Entity.cs" />
+    <Compile Include="dom\EntityReference.cs" />
+    <Compile Include="dom\events\DocumentEvent.cs" />
+    <Compile Include="dom\events\Event.cs" />
+    <Compile Include="dom\events\EventException.cs" />
+    <Compile Include="dom\events\EventListener.cs" />
+    <Compile Include="dom\events\EventTarget.cs" />
+    <Compile Include="dom\events\MouseEvent.cs" />
+    <Compile Include="dom\events\MutationEvent.cs" />
+    <Compile Include="dom\events\UIEvent.cs" />
+    <Compile Include="dom\html2\HTMLAnchorElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLAppletElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLAreaElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLBaseElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLBaseFontElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLBodyElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLBRElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLButtonElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLDirectoryElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLDivElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLDListElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLDocument.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLFieldSetElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLFontElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLFormElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLFrameElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLFrameSetElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLHeadElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLHeadingElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLHRElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLHtmlElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLIFrameElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLImageElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLInputElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLIsIndexElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLLabelElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLLegendElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLLIElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLLinkElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLMapElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLMenuElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLMetaElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLModElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLObjectElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLOListElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLOptGroupElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLOptionElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLOptionsCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLParagraphElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLParamElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLPreElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLQuoteElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLScriptElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLSelectElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLStyleElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableCaptionElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableCellElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableColElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableRowElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTableSectionElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTextAreaElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLTitleElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\html2\HTMLUListElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="dom\ls\DocumentLS.cs" />
+    <Compile Include="dom\ls\DOMBuilder.cs" />
+    <Compile Include="dom\ls\DOMBuilderFilter.cs" />
+    <Compile Include="dom\ls\DOMEntityResolver.cs" />
+    <Compile Include="dom\ls\DOMImplementationLS.cs" />
+    <Compile Include="dom\ls\DOMInputSource.cs" />
+    <Compile Include="dom\ls\DOMWriter.cs" />
+    <Compile Include="dom\ls\DOMWriterFilter.cs" />
+    <Compile Include="dom\ls\LSLoadEvent.cs" />
+    <Compile Include="dom\ls\LSProgressEvent.cs" />
+    <Compile Include="dom\NamedNodeMap.cs" />
+    <Compile Include="dom\Node.cs" />
+    <Compile Include="dom\NodeList.cs" />
+    <Compile Include="dom\Notation.cs" />
+    <Compile Include="dom\ProcessingInstruction.cs" />
+    <Compile Include="dom\ranges\DocumentRange.cs" />
+    <Compile Include="dom\ranges\Range.cs" />
+    <Compile Include="dom\ranges\RangeException.cs" />
+    <Compile Include="dom\stylesheets\DocumentStyle.cs" />
+    <Compile Include="dom\stylesheets\LinkStyle.cs" />
+    <Compile Include="dom\stylesheets\MediaList.cs" />
+    <Compile Include="dom\stylesheets\StyleSheet.cs" />
+    <Compile Include="dom\stylesheets\StyleSheetList.cs" />
+    <Compile Include="dom\Text.cs" />
+    <Compile Include="dom\traversal\DocumentTraversal.cs" />
+    <Compile Include="dom\traversal\NodeFilter.cs" />
+    <Compile Include="dom\traversal\NodeIterator.cs" />
+    <Compile Include="dom\traversal\TreeWalker.cs" />
+    <Compile Include="dom\views\AbstractView.cs" />
+    <Compile Include="dom\views\DocumentView.cs" />
+    <Compile Include="imp\CDATASection.cs" />
+    <Compile Include="imp\CharacterData.cs" />
+    <Compile Include="imp\Comment.cs" />
+    <Compile Include="imp\Document.cs" />
+    <Compile Include="imp\DocumentFragment.cs" />
+    <Compile Include="imp\DocumentType.cs" />
+    <Compile Include="imp\DOMImplementation.cs" />
+    <Compile Include="imp\Element.cs" />
+    <Compile Include="imp\html2\HTMLDivElement.cs" />
+    <Compile Include="imp\html2\HTMLElement.cs" />
+    <Compile Include="imp\Node.cs" />
+    <Compile Include="imp\Text.cs" />
+    <Compile Include="Parser.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebPageBitmap.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HTMLDocument.resx">
-      <DependentUpon>HTMLDocument.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="WebPageBitmap.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HTMLDocument.resx">
+      <DependentUpon>HTMLDocument.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
