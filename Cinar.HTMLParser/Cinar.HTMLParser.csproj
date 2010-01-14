@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -47,21 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormTest.Designer.cs">
-      <DependentUpon>FormTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CinarBrowser.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CinarBrowser.Designer.cs">
-      <DependentUpon>CinarBrowser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="HTMLElement.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="dom\ErrorMessages.cs" />
     <Compile Include="dom\Attr.cs" />
     <Compile Include="dom\CDATASection.cs" />
     <Compile Include="dom\CharacterData.cs" />
@@ -272,16 +258,6 @@
     <Compile Include="dom\html2\HTMLUListElement.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="dom\ls\DocumentLS.cs" />
-    <Compile Include="dom\ls\DOMBuilder.cs" />
-    <Compile Include="dom\ls\DOMBuilderFilter.cs" />
-    <Compile Include="dom\ls\DOMEntityResolver.cs" />
-    <Compile Include="dom\ls\DOMImplementationLS.cs" />
-    <Compile Include="dom\ls\DOMInputSource.cs" />
-    <Compile Include="dom\ls\DOMWriter.cs" />
-    <Compile Include="dom\ls\DOMWriterFilter.cs" />
-    <Compile Include="dom\ls\LSLoadEvent.cs" />
-    <Compile Include="dom\ls\LSProgressEvent.cs" />
     <Compile Include="dom\NamedNodeMap.cs" />
     <Compile Include="dom\Node.cs" />
     <Compile Include="dom\NodeList.cs" />
@@ -302,42 +278,13 @@
     <Compile Include="dom\traversal\TreeWalker.cs" />
     <Compile Include="dom\views\AbstractView.cs" />
     <Compile Include="dom\views\DocumentView.cs" />
-    <Compile Include="imp\Attr.cs" />
-    <Compile Include="imp\CDATASection.cs" />
-    <Compile Include="imp\CharacterData.cs" />
-    <Compile Include="imp\Comment.cs" />
-    <Compile Include="imp\Document.cs" />
-    <Compile Include="imp\DocumentFragment.cs" />
-    <Compile Include="imp\DocumentType.cs" />
-    <Compile Include="imp\DOMImplementation.cs" />
-    <Compile Include="imp\Element.cs" />
-    <Compile Include="imp\html2\HTMLDivElement.cs" />
-    <Compile Include="imp\html2\HTMLElement.cs" />
-    <Compile Include="imp\Node.cs" />
-    <Compile Include="imp\Text.cs" />
-    <Compile Include="Parser.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebPageBitmap.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FormTest.resx">
-      <DependentUpon>FormTest.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CinarBrowser.resx">
-      <DependentUpon>CinarBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

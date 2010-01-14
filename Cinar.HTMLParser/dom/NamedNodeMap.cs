@@ -1,37 +1,22 @@
-/*
- * Copyright (c) 2000 World Wide Web Consortium,
- * (Massachusetts Institute of Technology, Institut National de
- * Recherche en Informatique et en Automatique, Keio University). All
- * Rights Reserved. This program is distributed under the W3C's Software
- * Intellectual Property License. This program is distributed in the
- * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
- * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
 
 namespace org.w3c.dom
 {
-
-    /// <summary>Objects implementing the NamedNodeMap interface are used to 
-    /// represent collections of nodes that can be accessed by name. Note that 
-    /// NamedNodeMap does not inherit from NodeList; 
-    /// NamedNodeMaps are not maintained in any particular order. 
-    /// Objects contained in an object implementing NamedNodeMap may 
-    /// also be accessed by an ordinal index, but this is simply to allow 
-    /// convenient enumeration of the contents of a NamedNodeMap, 
-    /// and does not imply that the DOM specifies an order to these Nodes. 
-    /// NamedNodeMap objects in the DOM are live.
-    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-    /// </summary>
-    public interface INamedNodeMap
+    public class NamedNodeMap : List<Node>
     {
         /// <summary>Retrieves a node specified by name.</summary>
         /// <param name="name">The nodeName of a node to retrieve.</param>
         /// <returns>A INode (of any type) with the specified 
         ///   nodeName, or null if it does not identify 
         ///   any node in this map.</returns>
-        INode getNamedItem(string name);
+        public Node getNamedItem(string name)
+        {
+            return this.Find(n => n.nodeName == name);
+        }
 
         /// <summary>Adds a node using its nodeName attribute. If a node with 
         /// that name is already present in this map, it is replaced by the new 
@@ -55,8 +40,20 @@ namespace org.w3c.dom
         ///   IElement object. The DOM user must explicitly clone 
         ///   Attr nodes to re-use them in other elements.
         /// </exception>
-        INode setNamedItem(INode arg)
-                                 ; // throws DOMException;
+        public Node setNamedItem(Node arg)
+        {
+            Node node = getNamedItem(arg.nodeName);
+            if (node == null)
+            {
+                this.Add(arg);
+            }
+            else
+            {
+                this[this.IndexOf(node)] = arg;
+            }
+
+            return node;
+        }
 
         /// <summary>Removes a node specified by name. When this map contains the attributes 
         /// attached to an element, if the removed attribute is known to have a 
@@ -71,8 +68,14 @@ namespace org.w3c.dom
         ///   this map.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this map is readonly.
         /// </exception>
-        INode removeNamedItem(string name)
-                                    ; // throws DOMException;
+        public Node removeNamedItem(string name)
+        {
+            Node node = getNamedItem(name);
+            if(node==null)
+                throw ErrorMessages.Get(DOMExceptionCodes.NOT_FOUND_ERR);
+            this.Remove(node);
+            return node;
+        }
 
         /// <summary>Returns the indexth item in the map. If index 
         /// is greater than or equal to the number of nodes in this map, this 
@@ -81,12 +84,20 @@ namespace org.w3c.dom
         /// <returns>The node at the indexth position in the map, or 
         ///   null if that is not a valid index.
         /// </returns>
-        INode item(int index);
+        public Node item(int index)
+        {
+            if (index < 0 || index >= this.Count)
+                return null;
+            return this[index];
+        }
 
         /// <summary>The number of nodes in this map. The range of valid child node indices 
         /// is 0 to length-1 inclusive. 
         /// </summary>
-        int length { get; }
+        public int length
+        {
+            get { return this.Count; }
+        }
 
         /// <summary>Retrieves a node specified by local name and namespace URI. HTML-only 
         /// DOM implementations do not need to implement this method.</summary>
@@ -95,8 +106,10 @@ namespace org.w3c.dom
         /// <returns>A INode (of any type) with the specified local 
         ///   name and namespace URI, or null if they do not 
         ///   identify any node in this map.</returns>
-        INode getNamedItemNS(string namespaceURI,
-                                   string localName);
+        public Node getNamedItemNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Adds a node using its namespaceURI and 
         /// localName. If a node with that namespace URI and that 
@@ -117,8 +130,10 @@ namespace org.w3c.dom
         ///   Attr that is already an attribute of another 
         ///   IElement object. The DOM user must explicitly clone 
         ///   Attr nodes to re-use them in other elements.</exception>
-        INode setNamedItemNS(INode arg)
-                                   ; // throws DOMException;
+        public Node setNamedItemNS(Node arg)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Removes a node specified by local name and namespace URI. A removed 
         /// attribute may be known to have a default value when this map contains 
@@ -135,9 +150,9 @@ namespace org.w3c.dom
         ///   NOT_FOUND_ERR: Raised if there is no node with the specified 
         ///   namespaceURI and localName in this map.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this map is readonly.</exception>
-        INode removeNamedItemNS(string namespaceURI,
-                                      string localName)
-                                      ; // throws DOMException;
-
+        public Node removeNamedItemNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

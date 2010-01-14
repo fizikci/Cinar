@@ -57,7 +57,7 @@ namespace org.w3c.dom.ls
     /// and continuing with the serialization. DocumentFragment nodes are 
     /// serialized by serializing the children of the document fragment in the 
     /// order they appear in the document fragment.  All other node types 
-    /// (IElement, Text, etc.) are serialized to their corresponding XML source 
+    /// (Element, Text, etc.) are serialized to their corresponding XML source 
     /// form.  The serialization of a DOM INode does not always generate a 
     /// well-formed XML document, i.e. a DOMBuilder might through 
     /// fatal errors when parsing the resulting serialization. 
@@ -191,7 +191,7 @@ namespace org.w3c.dom.ls
     /// </dl>
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMWriter
+    public class DOMWriter
     {
         /// <summary>Set the state of a feature.
         /// The feature name has the same form as a DOM hasFeature string.
@@ -206,7 +206,7 @@ namespace org.w3c.dom.ls
         ///   Raise a NOT_FOUND_ERR When the DOMWriter does not 
         ///   recognize the feature name.
         /// </exception>
-        void setFeature(string name,
+        public void setFeature(string name,
                                bool state)
                                ; // throws DOMException;
 
@@ -220,7 +220,7 @@ namespace org.w3c.dom.ls
         ///   recognized or the requested value is not supported. The value of 
         ///   the feature itself is not changed.
         /// </returns>
-        bool canSetFeature(string name,
+        public bool canSetFeature(string name,
                                      bool state);
 
         /// <summary>Look up the value of a feature.
@@ -233,7 +233,7 @@ namespace org.w3c.dom.ls
         ///   NOT_FOUND_ERR: Raised when the DOMWriter does not 
         ///   recognize the feature name.
         /// </exception>
-        bool getFeature(string name)
+        public bool getFeature(string name)
                                   ; // throws DOMException;
 
         /// <summary> The character encoding in which the output will be written. 
@@ -246,7 +246,7 @@ namespace org.w3c.dom.ls
         /// name, a default encoding of "UTF-8" will be used.
         /// The default value is null.
         /// </summary>
-        string encoding { get; set; }
+        public string encoding { get; set; }
 
         /// <summary> The end-of-line sequence of characters to be used in the XML being 
         /// written out. Any string is supported, but these are the recommended 
@@ -273,14 +273,14 @@ namespace org.w3c.dom.ls
         /// </dl>
         /// The default value for this attribute is null.
         /// </summary>
-        string newLine { get; set; }
+        public string newLine { get; set; }
 
         /// <summary> When the application provides a filter, the serializer will call out 
         /// to the filter before serializing each INode. Attribute nodes are never 
         /// passed to the filter. The filter implementation can choose to remove 
         /// the node from the stream or to terminate the serialization early. 
         /// </summary>
-        IDOMWriterFilter filter { get; set; }
+        public DOMWriterFilter filter { get; set; }
 
         /// <summary> The error handler that will receive error notifications during 
         /// serialization. The node where the error occured is passed to this 
@@ -307,8 +307,8 @@ namespace org.w3c.dom.ls
         ///   successfully serialized and false in case a failure 
         ///   occured and the failure wasn't canceled by the error handler. 
         /// </returns>
-        bool writeNode(StreamWriter destination,
-                                 INode wnode);
+        public bool writeNode(StreamWriter destination,
+                                 Node wnode);
 
         /// <summary> Serialize the specified node as described above in the description of 
         /// DOMWriter. The result of serializing the node is 
@@ -327,7 +327,7 @@ namespace org.w3c.dom.ls
         ///    DOMSTRING_SIZE_ERR: Raised if the resulting string is too long to 
         ///   fit in a DOMString. 
         /// </exception>
-        string writeToString(INode wnode)
+        public string writeToString(Node wnode)
                                     ; // throws DOMException;
 
     }

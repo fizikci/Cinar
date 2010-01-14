@@ -1,42 +1,32 @@
-/*
- * Copyright (c) 2000 World Wide Web Consortium,
- * (Massachusetts Institute of Technology, Institut National de
- * Recherche en Informatique et en Automatique, Keio University). All
- * Rights Reserved. This program is distributed under the W3C's Software
- * Intellectual Property License. This program is distributed in the
- * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
- * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
 
 namespace org.w3c.dom
 {
-
-    /// <summary>The INode interface is the primary datatype for the entire 
-    /// IDocument Object Model. It represents a single node in the document tree. 
-    /// While all objects implementing the INode interface expose 
-    /// methods for dealing with children, not all objects implementing the 
-    /// INode interface may have children. For example, 
-    /// Text nodes may not have children, and adding children to 
-    /// such nodes results in a DOMException being raised.
-    /// The attributes nodeName, nodeValue and 
-    /// attributes are included as a mechanism to get at node 
-    /// information without casting down to the specific derived interface. In 
-    /// cases where there is no obvious mapping of these attributes for a 
-    /// specific nodeType (e.g., nodeValue for an 
-    /// IElement or attributes for a Comment
-    /// ), this returns null. Note that the specialized interfaces 
-    /// may contain additional and more convenient mechanisms to get and set the 
-    /// relevant information.
-    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-    /// </summary>
-    public interface INode
+    public class Node
     {
+        internal string _nodeName;
+        private string _nodeValue;
+        internal NodeType _nodeType;
+        internal Node _parentNode;
+        internal NodeList _childNodes;
+        internal Node _firstChild;
+        internal Node _lastChild;
+        internal Node _previousSibling;
+        internal Node _nextSibling;
+        internal NamedNodeMap _attributes;
+        internal Document _ownerDocument;
+        private string _prefix;
 
         /// <summary>The name of this node, depending on its type; see the table above. 
         /// </summary>
-        string nodeName { get; }
+        public string nodeName
+        {
+            get { return _nodeName; }
+        }
 
         /// <summary>The value of this node, depending on its type; see the table above. 
         /// When it is defined to be null, setting it has no effect.</summary>
@@ -47,11 +37,18 @@ namespace org.w3c.dom
         ///   fit in a DOMString variable on the implementation 
         ///   platform.
         /// </summary>
-        string nodeValue{get;set;}
+        public string nodeValue
+        {
+            get { return _nodeValue; }
+            set { _nodeValue = value; }
+        }
 
         /// <summary>A code representing the type of the underlying object, as defined above.
         /// </summary>
-        NodeType nodeType { get; }
+        public NodeType nodeType
+        {
+            get { return _nodeType; }
+        }
 
         /// <summary>The parent of this node. All nodes, except Attr, 
         /// IDocument, DocumentFragment, 
@@ -60,38 +57,59 @@ namespace org.w3c.dom
         /// tree, or if it has been removed from the tree, this is 
         /// null.
         /// </summary>
-        INode parentNode{ get;}
+        public Node parentNode
+        {
+            get { return _parentNode; }
+        }
 
         /// <summary>A NodeList that contains all children of this node. If 
         /// there are no children, this is a NodeList containing no 
         /// nodes.
         /// </summary>
-        INodeList childNodes{get;}
+        public NodeList childNodes
+        {
+            get { return _childNodes; }
+        }
 
         /// <summary>The first child of this node. If there is no such node, this returns 
         /// null.
         /// </summary>
-        INode firstChild { get; }
+        public Node firstChild
+        {
+            get { return _firstChild; }
+        }
 
         /// <summary>The last child of this node. If there is no such node, this returns 
         /// null.
         /// </summary>
-        INode lastChild { get; }
+        public Node lastChild
+        {
+            get { return _lastChild; }
+        }
 
         /// <summary>The node immediately preceding this node. If there is no such node, 
         /// this returns null.
         /// </summary>
-        INode previousSibling { get; }
+        public Node previousSibling
+        {
+            get { return _previousSibling; }
+        }
 
         /// <summary>The node immediately following this node. If there is no such node, 
         /// this returns null.
         /// </summary>
-        INode nextSibling { get; }
+        public Node nextSibling
+        {
+            get { return _nextSibling; }
+        }
 
         /// <summary>A NamedNodeMap containing the attributes of this node (if 
         /// it is an IElement) or null otherwise. 
         /// </summary>
-        INamedNodeMap attributes { get; }
+        public NamedNodeMap attributes
+        {
+            get { return _attributes; }
+        }
 
         /// <summary>The IDocument object associated with this node. This is 
         /// also the IDocument object used to create new nodes. When 
@@ -100,7 +118,10 @@ namespace org.w3c.dom
         /// null.
         /// @version DOM Level 2
         /// </summary>
-        IDocument ownerDocument { get; }
+        public virtual Document ownerDocument
+        {
+            get { return _ownerDocument; }
+        }
 
         /// <summary>Inserts the node newChild before the existing child node 
         /// refChild. If refChild is null, 
@@ -124,9 +145,10 @@ namespace org.w3c.dom
         ///   NOT_FOUND_ERR: Raised if refChild is not a child of 
         ///   this node.
         /// </exception>
-        INode insertBefore(INode newChild,
-                                 INode refChild)
-                                 ; // throws DOMException;
+        public Node insertBefore(Node newChild, Node refChild)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Replaces the child node oldChild with newChild
         ///  in the list of children, and returns the oldChild node.
@@ -149,9 +171,10 @@ namespace org.w3c.dom
         ///   NOT_FOUND_ERR: Raised if oldChild is not a child of 
         ///   this node.
         /// </exception>
-        INode replaceChild(INode newChild,
-                                 INode oldChild)
-                                 ; // throws DOMException;
+        public Node replaceChild(Node newChild, Node oldChild)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Removes the child node indicated by oldChild from the list 
         /// of children, and returns it.</summary>
@@ -162,8 +185,10 @@ namespace org.w3c.dom
         ///   NOT_FOUND_ERR: Raised if oldChild is not a child of 
         ///   this node.
         /// </exception>
-        INode removeChild(INode oldChild)
-                                ; // throws DOMException;
+        public Node removeChild(Node oldChild)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Adds the node newChild to the end of the list of children 
         /// of this node. If the newChild is already in the tree, it 
@@ -180,14 +205,19 @@ namespace org.w3c.dom
         ///   from a different document than the one that created this node.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
         /// </exception>
-        INode appendChild(INode newChild)
-                                ; // throws DOMException;
+        public Node appendChild(Node newChild)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns whether this node has any children.</summary>
         /// <returns> true if this node has any children, 
         ///   false otherwise.
         /// </returns>
-        bool hasChildNodes();
+        public bool hasChildNodes()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns a duplicate of this node, i.e., serves as a generic copy 
         /// constructor for nodes. The duplicate node has no parent; (
@@ -211,7 +241,10 @@ namespace org.w3c.dom
         ///   the specified node; if false, clone only the node 
         ///   itself (and its attributes, if it is an IElement).</param>
         /// <returns>The duplicate node.</returns>
-        INode cloneNode(bool deep);
+        public Node cloneNode(bool deep)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Puts all Text nodes in the full depth of the sub-tree 
         /// underneath this INode, including attribute nodes, into a 
@@ -227,7 +260,10 @@ namespace org.w3c.dom
         /// sufficient, since XPointers do not differentiate between 
         /// Text nodes and CDATASection nodes.
         /// </summary>
-        void normalize();
+        public void normalize()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Tests whether the DOM implementation implements a specific feature and 
         /// that feature is supported by this node.</summary>
@@ -240,8 +276,10 @@ namespace org.w3c.dom
         ///   method to return true.</param>
         /// <returns>Returns true if the specified feature is 
         ///   supported on this node, false otherwise.</returns>
-        bool isSupported(string feature,
-                                   string version);
+        public bool isSupported(string feature, string version)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>The namespace URI of this node, or null if it is 
         /// unspecified.
@@ -256,7 +294,10 @@ namespace org.w3c.dom
         /// its namespace from the element it is attached to. If an attribute is 
         /// not explicitly given a namespace, it simply has no namespace.
         /// </summary>
-        string getNamespaceURI();
+        public string getNamespaceURI()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>The namespace prefix of this node, or null if it is 
         /// unspecified.
@@ -287,7 +328,11 @@ namespace org.w3c.dom
         ///   http://www.w3.org/2000/xmlns/", or if this node is an attribute and 
         ///   the qualifiedName of this node is "xmlns" .
         /// </exception>
-        string prefix{get;set;}
+        public string prefix
+        {
+            get { return _prefix; }
+            set { _prefix = value; }
+        }
 
         /// <summary>Returns the local part of the qualified name of this node.
         /// For nodes of any type other than ELEMENT_NODE and 
@@ -295,16 +340,20 @@ namespace org.w3c.dom
         /// method, such as createElement from the 
         /// IDocument interface, this is always null.
         /// </summary>
-        string getLocalName();
+        public string getLocalName()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns whether this node (if it is an element) has any attributes.</summary>
         /// <returns>true if this node has any attributes, 
         ///   false otherwise.
         /// </returns>
-        bool hasAttributes();
-
+        public bool hasAttributes()
+        {
+            throw new NotImplementedException();
+        }
     }
-
     public enum NodeType
     {
         /// <summary>The node is an IElement.
@@ -344,4 +393,5 @@ namespace org.w3c.dom
         /// </summary>
         NOTATION_NODE = 12
     }
+
 }

@@ -19,7 +19,7 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IMutationEvent : IEvent
+    public class MutationEvent : Event
     {
         /// <summary> relatedNode is used to identify a secondary node related 
         /// to a mutation event. For example, if a mutation event is dispatched 
@@ -30,30 +30,30 @@ namespace org.w3c.dom.events
         /// the DOMAttrModified event it indicates the Attr node 
         /// which was modified, added, or removed. 
         /// </summary>
-        INode relatedNode { get; }
+        public Node relatedNode { get; internal set; }
 
         /// <summary> prevValue indicates the previous value of the 
         /// Attr node in DOMAttrModified events, and of the 
         /// CharacterData node in DOMCharDataModified events. 
         /// </summary>
-        string prevValue { get; }
+        public string prevValue { get; internal set; }
 
         /// <summary> newValue indicates the new value of the Attr 
         /// node in DOMAttrModified events, and of the CharacterData 
         /// node in DOMCharDataModified events. 
         /// </summary>
-        string newValue { get; }
+        public string newValue { get; internal set; }
 
         /// <summary> attrName indicates the name of the changed 
         /// Attr node in a DOMAttrModified event. 
         /// </summary>
-        string attrName { get; }
+        public string attrName { get; internal set; }
 
         /// <summary> attrChange indicates the type of change which triggered 
         /// the DOMAttrModified event. The values can be MODIFICATION
         /// , ADDITION, or REMOVAL. 
         /// </summary>
-        AttrChangeType attrChange { get; }
+        public AttrChangeType attrChange { get; internal set; }
 
         /// <summary>The initMutationEvent method is used to initialize the 
         /// value of a MutationEvent created through the 
@@ -75,10 +75,10 @@ namespace org.w3c.dom.events
         ///   attrName attribute. This value may be null.</param>
         /// <param name="attrChangeArg">Specifies the IEvent's 
         ///   attrChange attribute</param>
-        void initMutationEvent(string typeArg,
+        public void initMutationEvent(string typeArg,
                                       bool canBubbleArg,
                                       bool cancelableArg,
-                                      INode relatedNodeArg,
+                                      Node relatedNodeArg,
                                       string prevValueArg,
                                       string newValueArg,
                                       string attrNameArg,

@@ -17,13 +17,13 @@ namespace org.w3c.dom.html2
     /// definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLFieldSetElement : IHTMLElement
+    public class HTMLFieldSetElement : HTMLElement
     {
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
         /// form. 
         /// </summary>
-        IHTMLFormElement Form { get; set; }
+        public HTMLFormElement Form { get; set; }
 
     }
 }

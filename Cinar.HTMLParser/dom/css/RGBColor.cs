@@ -28,19 +28,19 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IRGBColor
+    public class RGBColor
     {
         /// <summary> This attribute is used for the red value of the RGB color. 
         /// </summary>
-        ICSSPrimitiveValue red { get; }
+        public CSSPrimitiveValue red { get; internal set; }
 
         /// <summary> This attribute is used for the green value of the RGB color. 
         /// </summary>
-        ICSSPrimitiveValue green { get; }
+        public CSSPrimitiveValue green { get; internal set; }
 
         /// <summary> This attribute is used for the blue value of the RGB color. 
         /// </summary>
-        ICSSPrimitiveValue blue { get; }
+        public CSSPrimitiveValue blue { get; internal set; }
 
     }
 }

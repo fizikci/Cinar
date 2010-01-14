@@ -20,22 +20,22 @@ namespace org.w3c.dom.ls
     /// IEvent interface defined in .
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface ILSProgressEvent : IEvent
+    public class LSProgressEvent : Event
     {
         /// <summary>The input source that is being parsed.
         /// </summary>
-        IDOMInputSource inputSource { get; }
+        public DOMInputSource inputSource { get; internal set; }
 
         /// <summary>The current position in the input source, including all external 
         /// entities and other resources that have been read.
         /// </summary>
-        int position { get; }
+        public int position { get; internal set; }
 
         /// <summary>The total size of the document including all external resources, this 
         /// number might change as a document is being parsed if references to 
         /// more external resources are seen.
         /// </summary>
-        int totalSize { get; }
+        public int totalSize { get; internal set; }
 
     }
 }

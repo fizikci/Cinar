@@ -21,23 +21,23 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSImportRule : ICSSRule
+    public class CSSImportRule : CSSRule
     {
         /// <summary> The location of the style sheet to be imported. The attribute will not 
         /// contain the "url(...)" specifier around the URI. 
         /// </summary>
-        string href { get; }
+        public string href { get; internal set; }
 
         /// <summary> A list of media types for which this style sheet may be used. 
         /// </summary>
-        IMediaList media { get;}
+        public MediaList media { get; internal set; }
 
         /// <summary>The style sheet referred to by this rule, if it has been loaded. The 
         /// value of this attribute is null if the style sheet has 
         /// not yet been loaded or if it will not be loaded (e.g. if the style 
         /// sheet is for a media type not supported by the user agent). 
         /// </summary>
-        ICSSStyleSheet styleSheet { get; }
+        public CSSStyleSheet styleSheet { get; internal set; }
 
     }
 }

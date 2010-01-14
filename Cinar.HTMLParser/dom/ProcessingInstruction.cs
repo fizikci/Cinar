@@ -18,13 +18,14 @@ namespace org.w3c.dom
     /// in the text of the document.
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
     /// </summary>
-    public interface IProcessingInstruction : INode
+    public class ProcessingInstruction : Node
     {
+        internal string _target;
         /// <summary>The target of this processing instruction. XML defines this as being 
         /// the first token following the markup that begins the processing 
         /// instruction.
         /// </summary>
-        string target { get; }
+        public string target { get { return _target; } }
 
         /// <summary>The content of this processing instruction. This is from the first non 
         /// white space character after the target to the character immediately 
@@ -32,7 +33,7 @@ namespace org.w3c.dom
         /// <exception cref="DOMException">
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
         /// </exception>
-        string data { get; set; }
+        public string data { get; set; }
 
     }
 }

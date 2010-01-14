@@ -16,12 +16,12 @@ namespace org.w3c.dom.html2
     /// <summary>Root of an HTML document. See the HTML element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLHtmlElement : IHTMLElement
+    public class HTMLHtmlElement : HTMLElement
     {
         /// <summary>Version information about the document's DTD. See the version attribute 
         /// definition in HTML 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string version { get; set; }
+        public string version { get; set; }
 
 
     }

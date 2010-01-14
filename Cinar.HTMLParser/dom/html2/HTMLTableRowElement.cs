@@ -16,7 +16,7 @@ namespace org.w3c.dom.html2
     /// <summary>A row in a table. See the TR element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLTableRowElement : IHTMLElement
+    public class HTMLTableRowElement : HTMLElement
     {
         /// <summary>This is in logical order and not in document order. The 
         /// rowIndex does take into account sections (
@@ -26,48 +26,48 @@ namespace org.w3c.dom.html2
         /// rows.
         /// @version DOM Level 2
         /// </summary>
-        int rowIndex { get; set; }
+        public int rowIndex { get; set; }
 
         /// <summary>The index of this row, relative to the current section (
         /// THEAD, TFOOT, or TBODY), 
         /// starting from 0.
         /// @version DOM Level 2
         /// </summary>
-        int sectionRowIndex { get; set; }
+        public int sectionRowIndex { get; set; }
 
         /// <summary>The collection of cells in this row. 
         /// @version DOM Level 2
         /// </summary>
-        IHTMLCollection Cells { get; set; }
+        public HTMLCollection Cells { get; set; }
 
         /// <summary>Horizontal alignment of data within cells of this row. See the align 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
         /// <summary>Background color for rows. See the bgcolor attribute definition in HTML 
         /// 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string bgColor { get; set; }
+        public string bgColor { get; set; }
 
 
         /// <summary>Alignment character for cells in a column. See the char attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string ch { get; set; }
+        public string ch { get; set; }
 
 
         /// <summary>Offset of alignment character. See the charoff attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string chOff { get; set; }
+        public string chOff { get; set; }
 
 
         /// <summary>Vertical alignment of data within cells of this row. See the valign 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string vAlign { get; set; }
+        public string vAlign { get; set; }
 
 
         /// <summary>Insert an empty TD cell into this row. If 
@@ -81,7 +81,7 @@ namespace org.w3c.dom.html2
         ///   than -1.
         /// @version DOM Level 2
         /// </summary>
-        IHTMLElement insertCell(int index); //; // throws DOMException;
+        public HTMLElement insertCell(int index); //; // throws DOMException;
 
         /// <summary>Delete a cell from the current row.
         /// <param name="index"> The index of the cell to delete, starting from 0. If the 
@@ -92,7 +92,7 @@ namespace org.w3c.dom.html2
         ///   number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        void deleteCell(int index); // ; // throws DOMException;
+        public void deleteCell(int index); // ; // throws DOMException;
 
     }
 }

@@ -17,12 +17,12 @@ namespace org.w3c.dom.html2
     /// element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLQuoteElement : IHTMLElement
+    public class HTMLQuoteElement : HTMLElement
     {
         /// <summary>A URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating a source document or message. See the cite attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string cite { get; set; }
+        public string cite { get; set; }
 
 
     }

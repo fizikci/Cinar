@@ -16,18 +16,18 @@ namespace org.w3c.dom.html2
     /// <summary>Unordered list. See the UL element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLUListElement : IHTMLElement
+    public class HTMLUListElement : HTMLElement
     {
         /// <summary>Reduce spacing between list items. See the compact attribute definition 
         /// in HTML 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        bool compact { get; set; }
+        public bool compact { get; set; }
 
 
         /// <summary>Bullet style. See the type attribute definition in HTML 4.01. This 
         /// attribute is deprecated in HTML 4.01.
         /// </summary>
-        string type { get; set; }
+        public string type { get; set; }
 
 
     }

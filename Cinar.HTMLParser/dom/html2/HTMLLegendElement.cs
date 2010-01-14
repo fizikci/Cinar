@@ -17,25 +17,25 @@ namespace org.w3c.dom.html2
     /// element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLLegendElement : IHTMLElement
+    public class HTMLLegendElement : HTMLElement
     {
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
         /// form. 
         /// </summary>
-        IHTMLFormElement Form { get; set; }
+        public HTMLFormElement Form { get; set; }
 
         /// <summary>A single character access key to give access to the form control. See 
         /// the accesskey attribute definition in HTML 4.01.
         /// </summary>
-        string accessKey { get; set; }
+        public string accessKey { get; set; }
 
 
         /// <summary>Text alignment relative to FIELDSET. See the align 
         /// attribute definition in HTML 4.01. This attribute is deprecated in 
         /// HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
     }

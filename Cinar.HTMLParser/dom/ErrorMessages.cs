@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
+
+namespace org.w3c.dom
+{
+    public class ErrorMessages
+    {
+        public static DOMException Get(DOMExceptionCodes code)
+        {
+            return new DOMException(code, code.ToString());
+        }
+    }
+}

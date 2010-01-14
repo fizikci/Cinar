@@ -17,18 +17,18 @@ namespace org.w3c.dom.html2
     /// definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLOptGroupElement : IHTMLElement
+    public class HTMLOptGroupElement : HTMLElement
     {
         /// <summary>The control is unavailable in this context. See the disabled attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        bool disabled { get; set; }
+        public bool disabled { get; set; }
 
 
         /// <summary>Assigns a label to this option group. See the label attribute definition
         ///  in HTML 4.01.
         /// </summary>
-        string label { get; set; }
+        public string label { get; set; }
 
 
     }

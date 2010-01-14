@@ -19,7 +19,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSPageRule : ICSSRule
+    public class CSSPageRule : CSSRule
     {
         /// <summary> The parsable textual representation of the page selector for the rule.</summary>
         /// <exception cref="DOMException">
@@ -27,11 +27,11 @@ namespace org.w3c.dom.css
         ///   error and is unparsable.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this rule is readonly.
         /// </exception>
-        string selectorText { get; set; } // throws DOMException;
+        public string selectorText { get; set; } // throws DOMException;
 
         /// <summary> The declaration-block of this rule. 
         /// </summary>
-        ICSSStyleDeclaration style { get; }
+        public CSSStyleDeclaration style { get; internal set; }
 
     }
 }

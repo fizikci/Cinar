@@ -39,7 +39,7 @@ namespace org.w3c.dom.ls
     /// the DOM implementation is expected to never mutate a IDOMInputSource. 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMInputSource
+    public class DOMInputSource
     {
         /// <summary>An attribute of a language-binding dependent type that represents a 
         /// stream of bytes.
@@ -79,7 +79,7 @@ namespace org.w3c.dom.ls
         /// ignore the character stream and the byte stream and will not attempt 
         /// to open a URI connection to the system identifier.
         /// </summary>
-        string stringData { get; set; }
+        public string stringData { get; set; }
 
         /// <summary> The character encoding, if known. The encoding must be a string 
         /// acceptable for an XML encoding declaration ( section 4.3.3 "Character 
@@ -90,13 +90,13 @@ namespace org.w3c.dom.ls
         /// the XML declaration or the Text declaration, or an encoding obtained 
         /// from a higher level protocol, such as HTTP .
         /// </summary>
-        string encoding { get; set; }
+        public string encoding { get; set; }
 
         /// <summary>The public identifier for this input source. The public identifier is 
         /// always optional: if the application writer includes one, it will be 
         /// provided as part of the location information.
         /// </summary>
-        string publicId { get; set; }
+        public string publicId { get; set; }
 
         /// <summary>The system identifier, a URI reference , for this input source. The 
         /// system identifier is optional if there is a byte stream or a 
@@ -111,12 +111,12 @@ namespace org.w3c.dom.ls
         /// If the system ID is a relative URI reference (see section 5 in ), 
         /// the behavior is implementation dependent.
         /// </summary>
-        string systemId { get; set; }
+        public string systemId { get; set; }
 
         /// <summary> The base URI to be used (see section 5.1.4 in ) for resolving relative 
         /// URIs to absolute URIs. If the baseURI is itself a relative URI, the 
         /// behavior is implementation dependent. 
         /// </summary>
-        string baseURI { get; set; }
+        public string baseURI { get; set; }
     }
 }

@@ -24,17 +24,17 @@ namespace org.w3c.dom
     /// A Notation node does not have any parent.
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
     /// </summary>
-    public interface INotation : INode
+    public class Notation : Node
     {
         /// <summary>The public identifier of this notation. If the public identifier was 
         /// not specified, this is null.
         /// </summary>
-        string publicId { get; }
+        public string publicId { get; internal set; }
 
         /// <summary>The system identifier of this notation. If the system identifier was 
         /// not specified, this is null.
         /// </summary>
-        string systemId { get; }
+        public string systemId { get; internal set; }
 
     }
 }

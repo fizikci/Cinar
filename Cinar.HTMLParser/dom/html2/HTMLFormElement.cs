@@ -19,31 +19,31 @@ namespace org.w3c.dom.html2
     /// definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLFormElement : IHTMLElement
+    public class HTMLFormElement : HTMLElement
     {
         /// <summary>Returns a collection of all form control elements in the form. 
         /// </summary>
-        IHTMLCollection Elements { get; set; }
+        public HTMLCollection Elements { get; set; }
 
         /// <summary>The number of form controls in the form.
         /// </summary>
-        int length { get; set; }
+        public int length { get; set; }
 
         /// <summary>Names the form. 
         /// </summary>
-        string name { get; set; }
+        public string name { get; set; }
 
 
         /// <summary>List of character sets supported by the server. See the accept-charset 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string acceptCharset { get; set; }
+        public string acceptCharset { get; set; }
 
 
         /// <summary>Server-side form handler. See the action attribute definition in HTML 
         /// 4.01.
         /// </summary>
-        string action { get; set; }
+        public string action { get; set; }
 
 
         /// <summary>The content type of the submitted form, generally 
@@ -53,29 +53,29 @@ namespace org.w3c.dom.html2
         /// inconsistent for historical reasons and authors should not rely on a 
         /// particular one. 
         /// </summary>
-        string enctype { get; set; }
+        public string enctype { get; set; }
 
 
         /// <summary>HTTP method [<a href='http://www.ietf.org/rfc/rfc2616.txt'>IETF RFC 2616</a>] used to submit form. See the method attribute definition 
         /// in HTML 4.01.
         /// </summary>
-        string method { get; set; }
+        public string method { get; set; }
 
 
         /// <summary>Frame to render the resource in. See the target attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string target { get; set; }
+        public string target { get; set; }
 
 
         /// <summary>Submits the form. It performs the same action as a submit button.
         /// </summary>
-        void submit();
+        public void submit();
 
         /// <summary>Restores a form element's default values. It performs the same action 
         /// as a reset button.
         /// </summary>
-        void reset();
+        public void reset();
 
     }
 }

@@ -27,6 +27,6 @@ namespace org.w3c.dom.events
         {
             this.code = code;
         }
-        short code;
+        public short code;
     }
 }

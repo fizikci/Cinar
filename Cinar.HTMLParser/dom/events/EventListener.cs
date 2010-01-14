@@ -27,7 +27,7 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IEventListener
+    public class EventListener
     {
         /// <summary> This method is called whenever an event occurs of the type for which 
         /// the  EventListener interface was registered.</summary>
@@ -36,7 +36,7 @@ namespace org.w3c.dom.events
         ///   and preventDefault methods which are used in 
         ///   determining the event's flow and default action. 
         /// </param>
-        void handleEvent(IEvent evt);
+        public void handleEvent(Event evt);
 
     }
 }

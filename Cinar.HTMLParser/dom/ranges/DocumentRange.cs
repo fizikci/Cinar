@@ -16,7 +16,7 @@ namespace org.w3c.dom.ranges
     /// <summary>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentRange
+    public class DocumentRange
     {
         /// <summary>This interface can be obtained from the object implementing the 
         /// IDocument interface using binding-specific casting 
@@ -28,7 +28,7 @@ namespace org.w3c.dom.ranges
         ///   this IDocument, or with DocumentFragments and Attrs for which this 
         ///   IDocument is the ownerDocument.
         /// </returns>
-        IRange createRange();
+        public Range createRange();
 
     }
 }

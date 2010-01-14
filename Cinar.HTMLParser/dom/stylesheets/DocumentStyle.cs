@@ -21,7 +21,7 @@ namespace org.w3c.dom.stylesheets
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentStyle
+    public class DocumentStyle
     {
         /// <summary> A list containing all the style sheets explicitly linked into or 
         /// embedded in a document. For HTML documents, this includes external 
@@ -29,7 +29,7 @@ namespace org.w3c.dom.stylesheets
         /// elements. In XML, this includes external style sheets, included via 
         /// style sheet processing instructions (see ). 
         /// </summary>
-        IStyleSheetList styleSheets { get; }
+        public StyleSheetList styleSheets { get; internal set; }
 
     }
 }

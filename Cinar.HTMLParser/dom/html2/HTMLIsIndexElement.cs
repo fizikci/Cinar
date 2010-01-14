@@ -17,18 +17,18 @@ namespace org.w3c.dom.html2
     /// definition in HTML 4.01. This element is deprecated in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLIsIndexElement : IHTMLElement
+    public class HTMLIsIndexElement : HTMLElement
     {
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
         /// form. 
         /// </summary>
-        IHTMLFormElement Form { get; set; }
+        public HTMLFormElement Form { get; set; }
 
         /// <summary>The prompt message. See the prompt attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string prompt { get; set; }
+        public string prompt { get; set; }
 
 
     }

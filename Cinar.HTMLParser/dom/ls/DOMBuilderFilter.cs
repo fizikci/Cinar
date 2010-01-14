@@ -35,7 +35,7 @@ namespace org.w3c.dom.ls
     /// DOMBuilder. The description of these methods is not complete
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMBuilderFilter
+    public class DOMBuilderFilter
     {
         /// <summary>This method will be called by the parser after each IElement
         ///  start tag has been scanned, but before the remainder of the 
@@ -68,7 +68,7 @@ namespace org.w3c.dom.ls
         ///   document does no longer guarantee that the entire is XML well-formed
         ///   .  Returning any other values will result in unspecified behavior. 
         /// </returns>
-        DOMBuilderFilterType startElement(IElement elt);
+        DOMBuilderFilterType startElement(Element elt);
 
         /// <summary>This method will be called by the parser at the completion of the 
         /// parsing of each node. The node and all of its descendants will exist 
@@ -99,7 +99,7 @@ namespace org.w3c.dom.ls
         ///   processing of the document. Interrupting the processing of the 
         ///   document does no longer guarantee that the entire is XML well-formed
         /// </returns>
-        DOMBuilderFilterType acceptNode(INode enode);
+        DOMBuilderFilterType acceptNode(Node enode);
 
         /// <summary> Tells the DOMBuilder what types of nodes to show to the 
         /// filter. See NodeFilter for definition of the constants. 
@@ -107,7 +107,7 @@ namespace org.w3c.dom.ls
         /// attribute nodes will never be passed to a 
         /// DOMBuilderFilter. 
         /// </summary>
-        int getWhatToShow();
+        public int getWhatToShow();
 
     }
 

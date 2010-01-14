@@ -16,13 +16,13 @@ namespace org.w3c.dom.html2
     /// <summary>A selectable choice. See the OPTION element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLOptionElement : IHTMLElement
+    public class HTMLOptionElement : HTMLElement
     {
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
         /// form. 
         /// </summary>
-        IHTMLFormElement Form { get; set; }
+        public HTMLFormElement Form { get; set; }
 
         /// <summary>Represents the value of the HTML selected attribute. The value of this 
         /// attribute does not change if the state of the corresponding form 
@@ -30,29 +30,29 @@ namespace org.w3c.dom.html2
         /// attribute definition in HTML 4.01.
         /// @version DOM Level 2
         /// </summary>
-        bool defaultSelected { get; set; }
+        public bool defaultSelected { get; set; }
 
 
         /// <summary>The text contained within the option element. 
         /// </summary>
-        string text { get; set; }
+        public string text { get; set; }
 
         /// <summary>The index of this OPTION in its parent SELECT
         /// , starting from 0.
         /// @version DOM Level 2
         /// </summary>
-        int index { get; set; }
+        public int index { get; set; }
 
         /// <summary>The control is unavailable in this context. See the disabled attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        bool disabled { get; set; }
+        public bool disabled { get; set; }
 
 
         /// <summary>Option label for use in hierarchical menus. See the label attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string label { get; set; }
+        public string label { get; set; }
 
 
         /// <summary>Represents the current state of the corresponding form control, in an 
@@ -60,13 +60,13 @@ namespace org.w3c.dom.html2
         /// the form control, but does not change the value of the HTML selected 
         /// attribute of the element.
         /// </summary>
-        bool selected { get; set; }
+        public bool selected { get; set; }
 
 
         /// <summary>The current form control value. See the value attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string value { get; set; }
+        public string value { get; set; }
 
 
     }

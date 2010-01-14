@@ -25,7 +25,7 @@ namespace org.w3c.dom.ls
     /// "LS-Load" and "3.0" (respectively). 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDocumentLS
+    public class DocumentLS
     {
         /// <summary>Indicates whether the method load should be synchronous or 
         /// asynchronous. When the async attribute is set to true 
@@ -39,14 +39,14 @@ namespace org.w3c.dom.ls
         ///   NOT_SUPPORTED_ERR: Raised if the implementation doesn't support the 
         ///   mode the attribute is being set to.
         /// </exception>
-        bool async { get; set; }
+        public bool async { get; set; }
 
         /// <summary>If the document is currently being loaded as a result of the method 
         /// load being invoked the loading and parsing is 
         /// immediately aborted. The possibly partial result of parsing the 
         /// document is discarded and the document is cleared.
         /// </summary>
-        void abort();
+        public void abort();
 
         /// <summary>Replaces the content of the document with the result of parsing the 
         /// given URI. Invoking this method will either block the caller or 
@@ -72,7 +72,7 @@ namespace org.w3c.dom.ls
         ///   occurred when either loading or parsing the URI load 
         ///   returns false.
         /// </returns>
-        bool load(string uri);
+        public bool load(string uri);
 
         /// <summary> Replace the content of the document with the result of parsing the 
         /// input string, this method is always synchronous. This method always 
@@ -84,7 +84,7 @@ namespace org.w3c.dom.ls
         /// <returns>true if parsing the input string succeeded 
         ///   without errors, otherwise false.
         /// </returns>
-        bool loadXML(string source);
+        public bool loadXML(string source);
 
         /// <summary>Save the document or the given node and all its descendants to a string 
         /// (i.e. serialize the document or node). 
@@ -99,7 +99,7 @@ namespace org.w3c.dom.ls
         ///   WRONG_DOCUMENT_ERR: Raised if the node passed in as the node 
         ///   parameter is from an other document.
         /// </exception>
-        string saveXML(INode snode)
+        public string saveXML(Node snode)
                               ; // throws DOMException;
 
     }

@@ -16,45 +16,45 @@ namespace org.w3c.dom.html2
     /// <summary>Script statements. See the SCRIPT element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLScriptElement : IHTMLElement
+    public class HTMLScriptElement : HTMLElement
     {
         /// <summary>The script content of the element. 
         /// </summary>
-        string text { get; set; }
+        public string text { get; set; }
 
 
         /// <summary>Reserved for future use. 
         /// </summary>
-        string htmlFor { get; set; }
+        public string htmlFor { get; set; }
 
 
         /// <summary>Reserved for future use. 
         /// </summary>
-        string IEvent { get; set; }
+        public string IEvent { get; set; }
 
 
         /// <summary>The character encoding of the linked resource. See the charset 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string charset { get; set; }
+        public string charset { get; set; }
 
 
         /// <summary>Indicates that the user agent can defer processing of the script. See 
         /// the defer attribute definition in HTML 4.01.
         /// </summary>
-        bool defer { get; set; }
+        public bool defer { get; set; }
 
 
         /// <summary>URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating an external script. See the src attribute definition 
         /// in HTML 4.01.
         /// </summary>
-        string src { get; set; }
+        public string src { get; set; }
 
 
         /// <summary>The content type of the script language. See the type attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string type { get; set; }
+        public string type { get; set; }
 
 
     }

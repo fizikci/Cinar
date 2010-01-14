@@ -1,24 +1,12 @@
-/*
- * Copyright (c) 2000 World Wide Web Consortium,
- * (Massachusetts Institute of Technology, Institut National de
- * Recherche en Informatique et en Automatique, Keio University). All
- * Rights Reserved. This program is distributed under the W3C's Software
- * Intellectual Property License. This program is distributed in the
- * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
- * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
 
 namespace org.w3c.dom
 {
-
-    /// <summary>The DOMImplementation interface provides a number of methods 
-    /// for performing operations that are independent of any particular instance 
-    /// of the document object model.
-    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-    /// </summary>
-    public interface IDOMImplementation
+    public class DOMImplementation
     {
         /// <summary>Test if the DOM implementation implements a specific feature.</summary>
         /// <param name="feature">The name of the feature to test (case-insensitive). The 
@@ -38,7 +26,10 @@ namespace org.w3c.dom
         /// <returns>true if the feature is implemented in the 
         ///   specified version, false otherwise.
         /// </returns>
-        bool hasFeature(string feature, string version);
+        public bool hasFeature(string feature, string version)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an empty DocumentType node. Entity declarations 
         /// and notations are not made available. Entity reference expansions and 
@@ -58,7 +49,10 @@ namespace org.w3c.dom
         ///   NAMESPACE_ERR: Raised if the qualifiedName is 
         ///   malformed.
         /// </exception>
-        IDocumentType createDocumentType(string qualifiedName, string publicId, string systemId); // throws DOMException;
+        public DocumentType createDocumentType(string qualifiedName, string publicId, string systemId)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an XML IDocument object of the specified type with 
         /// its document element. HTML-only DOM implementations do not need to 
@@ -84,7 +78,9 @@ namespace org.w3c.dom
         ///   been used with a different document or was created from a different 
         ///   implementation.
         /// </exception>
-        IDocument createDocument(string namespaceURI, string qualifiedName, IDocumentType doctype); // throws DOMException;
-
+        public Document createDocument(string namespaceURI, string qualifiedName, DocumentType doctype)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

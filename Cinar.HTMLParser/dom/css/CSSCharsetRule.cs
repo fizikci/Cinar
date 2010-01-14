@@ -30,7 +30,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSCharsetRule : ICSSRule
+    public class CSSCharsetRule : CSSRule
     {
         /// <summary> The encoding information used in this @charset rule.</summary> 
         /// <exception cref="DOMException">
@@ -39,7 +39,7 @@ namespace org.w3c.dom.css
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this encoding rule is 
         ///   readonly.
         /// </exception>
-        string encoding { get; set; } // throws DOMException;
+        public string encoding { get; set; } // throws DOMException;
 
     }
 }

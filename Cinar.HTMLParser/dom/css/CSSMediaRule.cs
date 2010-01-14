@@ -21,15 +21,15 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSMediaRule : ICSSRule
+    public class CSSMediaRule : CSSRule
     {
         /// <summary> A list of media types for this rule. 
         /// </summary>
-        IMediaList media { get;}
+        public MediaList media { get; internal set; }
 
         /// <summary> A list of all CSS rules contained within the media block. 
         /// </summary>
-        ICSSRuleList cssRules { get; }
+        public CSSRuleList cssRules { get; internal set; }
 
         /// <summary> Used to insert a new rule into the media block.</summary> 
         /// <param name="rule"> The parsable text representing the rule. For rule sets 
@@ -52,7 +52,7 @@ namespace org.w3c.dom.css
         ///   readonly.
         ///   SYNTAX_ERR: Raised if the specified rule has a syntax error and 
         ///   is unparsable.</exception>
-        int insertRule(string rule,
+        public int insertRule(string rule,
                               int index)
                               ; // throws DOMException;
 
@@ -65,7 +65,7 @@ namespace org.w3c.dom.css
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this media rule is 
         ///   readonly.
         /// </exception>
-        void deleteRule(int index)
+        public void deleteRule(int index)
                                ; // throws DOMException;
 
     }

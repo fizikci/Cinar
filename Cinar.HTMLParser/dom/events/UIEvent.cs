@@ -21,17 +21,17 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IUIEvent : IEvent
+    public class UIEvent : Event
     {
         /// <summary>The view attribute identifies the IAbstractView
         ///  from which the event was generated.
         /// </summary>
-        IAbstractView view { get; }
+        public AbstractView view { get; internal set; }
 
         /// <summary>Specifies some detail information about the IEvent, 
         /// depending on the type of event.
         /// </summary>
-        int detail { get; }
+        public int detail { get; internal set; }
 
         /// <summary>The initUIEvent method is used to initialize the value of 
         /// a UIEvent created through the DocumentEvent 
@@ -47,10 +47,10 @@ namespace org.w3c.dom.events
         /// <param name="viewArg">Specifies the IEvent's 
         ///   IAbstractView.</param>
         /// <param name="detailArg">Specifies the IEvent's detail.</param>
-        void initUIEvent(string typeArg,
+        public void initUIEvent(string typeArg,
                                 bool canBubbleArg,
                                 bool cancelableArg,
-                                IAbstractView viewArg,
+                                AbstractView viewArg,
                                 int detailArg);
 
     }

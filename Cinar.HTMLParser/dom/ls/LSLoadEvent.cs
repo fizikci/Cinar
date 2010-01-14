@@ -20,15 +20,15 @@ namespace org.w3c.dom.ls
     /// of a document load. 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface ILSLoadEvent : IEvent
+    public class LSLoadEvent : Event
     {
         /// <summary>The document that finished loading.
         /// </summary>
-        IDocument newDocument { get; }
+        public Document newDocument { get; internal set; }
 
         /// <summary>The input source that was parsed.
         /// </summary>
-        IDOMInputSource inputSource { get; }
+        public DOMInputSource inputSource { get; internal set; }
 
     }
 }

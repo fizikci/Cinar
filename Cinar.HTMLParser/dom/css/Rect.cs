@@ -20,23 +20,23 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IRect
+    public class Rect
     {
         /// <summary> This attribute is used for the top of the rect. 
         /// </summary>
-        ICSSPrimitiveValue top { get; }
+        public CSSPrimitiveValue top { get; internal set; }
 
         /// <summary> This attribute is used for the right of the rect. 
         /// </summary>
-        ICSSPrimitiveValue right { get; }
+        public CSSPrimitiveValue right { get; internal set; }
 
         /// <summary> This attribute is used for the bottom of the rect. 
         /// </summary>
-        ICSSPrimitiveValue bottom { get; }
+        public CSSPrimitiveValue bottom { get; internal set; }
 
         /// <summary> This attribute is used for the left of the rect. 
         /// </summary>
-        ICSSPrimitiveValue left { get; }
+        public CSSPrimitiveValue left { get; internal set; }
 
     }
 }

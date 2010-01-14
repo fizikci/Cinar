@@ -22,7 +22,7 @@ namespace org.w3c.dom.stylesheets
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IStyleSheet
+    public class StyleSheet
     {
         /// <summary> This specifies the style sheet language for this style sheet. The 
         /// style sheet language is specified as a content type (e.g. 
@@ -31,7 +31,7 @@ namespace org.w3c.dom.stylesheets
         /// the LINK element in HTML 4.0, and the type 
         /// pseudo-attribute for the XML style sheet processing instruction. 
         /// </summary>
-        string type { get; }
+        public string type { get; internal set; }
 
         /// <summary> false if the style sheet is applied to the document. 
         /// true if it is not. Modifying this attribute may cause a 
@@ -40,7 +40,7 @@ namespace org.w3c.dom.stylesheets
         /// attribute is false. So, if the media doesn't apply to the current 
         /// user agent, the disabled attribute is ignored. 
         /// </summary>
-        bool disabled { get; set; }
+        public bool disabled { get; set; }
 
         /// <summary> The node that associates this style sheet with the document. For HTML, 
         /// this may be the corresponding LINK or STYLE 
@@ -48,7 +48,7 @@ namespace org.w3c.dom.stylesheets
         /// style sheets that are included by other style sheets, the value of 
         /// this attribute is null. 
         /// </summary>
-        INode ownerNode { get; }
+        public Node ownerNode { get; internal set; }
 
         /// <summary> For style sheet languages that support the concept of style sheet 
         /// inclusion, this attribute represents the including style sheet, if 
@@ -56,7 +56,7 @@ namespace org.w3c.dom.stylesheets
         /// style sheet language does not support inclusion, the value of this 
         /// attribute is null. 
         /// </summary>
-        IStyleSheet parentStyleSheet { get; }
+        public StyleSheet parentStyleSheet { get; internal set; }
 
         /// <summary> If the style sheet is a linked style sheet, the value of its attribute 
         /// is its location. For inline style sheets, the value of this attribute 
@@ -64,14 +64,14 @@ namespace org.w3c.dom.stylesheets
         /// LINK element in HTML 4.0, and the href pseudo-attribute 
         /// for the XML style sheet processing instruction. 
         /// </summary>
-        string href { get; }
+        public string href { get; internal set; }
 
         /// <summary> The advisory title. The title is often specified in the 
         /// ownerNode. See the title attribute definition for the 
         /// LINK element in HTML 4.0, and the title pseudo-attribute 
         /// for the XML style sheet processing instruction. 
         /// </summary>
-        string title { get; }
+        public string title { get; internal set; }
 
         /// <summary> The intended destination media for style information. The media is 
         /// often specified in the ownerNode. If no media has been 
@@ -81,7 +81,7 @@ namespace org.w3c.dom.stylesheets
         /// instruction . Modifying the media list may cause a change to the 
         /// attribute disabled. 
         /// </summary>
-        IMediaList media { get; }
+        public MediaList media { get; internal set; }
 
     }
 }

@@ -21,136 +21,136 @@ namespace org.w3c.dom.html2
     /// TFoot element. See the TABLE element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLTableElement : IHTMLElement
+    public class HTMLTableElement : HTMLElement
     {
         /// <summary>Returns the table's CAPTION, or void if none exists. 
         /// @version DOM Level 2
         /// </summary>
-        IHTMLTableCaptionElement Caption { get; set; }
+        public HTMLTableCaptionElement Caption { get; set; }
         /// <summary>Returns the table's CAPTION, or void if none exists. 
         /// <exception cref="DOMException">
         ///    HIERARCHY_REQUEST_ERR: if the element is not a CAPTION. 
         /// @version DOM Level 2
         /// </summary>
-        void setCaption(IHTMLTableCaptionElement caption); //; // throws DOMException;
+        public void setCaption(HTMLTableCaptionElement caption); //; // throws DOMException;
 
         /// <summary>Returns the table's THEAD, or null if none 
         /// exists. 
         /// @version DOM Level 2
         /// </summary>
-        IHTMLTableSectionElement THead { get; set; }
+        public HTMLTableSectionElement THead { get; set; }
         /// <summary>Returns the table's THEAD, or null if none 
         /// exists. 
         /// <exception cref="DOMException">
         ///    HIERARCHY_REQUEST_ERR: if the element is not a THEAD. 
         /// @version DOM Level 2
         /// </summary>
-        void setTHead(IHTMLTableSectionElement tHead); //; // throws DOMException;
+        public void setTHead(HTMLTableSectionElement tHead); //; // throws DOMException;
 
         /// <summary>Returns the table's TFOOT, or null if none 
         /// exists. 
         /// @version DOM Level 2
         /// </summary>
-        IHTMLTableSectionElement TFoot { get; set; }
+        public HTMLTableSectionElement TFoot { get; set; }
         /// <summary>Returns the table's TFOOT, or null if none 
         /// exists. 
         /// <exception cref="DOMException">
         ///    HIERARCHY_REQUEST_ERR: if the element is not a TFOOT. 
         /// @version DOM Level 2
         /// </summary>
-        void setTFoot(IHTMLTableSectionElement tFoot); //; // throws DOMException;
+        public void setTFoot(HTMLTableSectionElement tFoot); //; // throws DOMException;
 
         /// <summary>Returns a collection of all the rows in the table, including all in 
         /// THEAD, TFOOT, all TBODY 
         /// elements. 
         /// </summary>
-        IHTMLCollection Rows { get; set; }
+        public HTMLCollection Rows { get; set; }
 
         /// <summary>Returns a collection of the table bodies (including implicit ones).
         /// </summary>
-        IHTMLCollection TBodies { get; set; }
+        public HTMLCollection TBodies { get; set; }
 
         /// <summary>Specifies the table's position with respect to the rest of the 
         /// document. See the align attribute definition in HTML 4.01. This 
         /// attribute is deprecated in HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
         /// <summary>Cell background color. See the bgcolor attribute definition in HTML 
         /// 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string bgColor { get; set; }
+        public string bgColor { get; set; }
 
 
         /// <summary>The width of the border around the table. See the border attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string border { get; set; }
+        public string border { get; set; }
 
 
         /// <summary>Specifies the horizontal and vertical space between cell content and 
         /// cell borders. See the cellpadding attribute definition in HTML 4.01.
         /// </summary>
-        string cellPadding { get; set; }
+        public string cellPadding { get; set; }
 
 
         /// <summary>Specifies the horizontal and vertical separation between cells. See the 
         /// cellspacing attribute definition in HTML 4.01.
         /// </summary>
-        string cellSpacing { get; set; }
+        public string cellSpacing { get; set; }
 
 
         /// <summary>Specifies which external table borders to render. See the frame 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string frame { get; set; }
+        public string frame { get; set; }
 
 
         /// <summary>Specifies which internal table borders to render. See the rules 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string rules { get; set; }
+        public string rules { get; set; }
 
 
         /// <summary>Description about the purpose or structure of a table. See the summary 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string summary { get; set; }
+        public string summary { get; set; }
 
 
         /// <summary>Specifies the desired table width. See the width attribute definition 
         /// in HTML 4.01.
         /// </summary>
-        string Width { get; set; }
+        public string Width { get; set; }
 
 
         /// <summary>Create a table header row or return an existing one.
         /// <returns>A new table header element (THEAD).
         /// </summary>
-        IHTMLElement createTHead();
+        public HTMLElement createTHead();
 
         /// <summary>Delete the header from the table, if one exists.
         /// </summary>
-        void deleteTHead();
+        public void deleteTHead();
 
         /// <summary>Create a table footer row or return an existing one.
         /// <returns>A footer element (TFOOT).
         /// </summary>
-        IHTMLElement createTFoot();
+        public HTMLElement createTFoot();
 
         /// <summary>Delete the footer from the table, if one exists.
         /// </summary>
-        void deleteTFoot();
+        public void deleteTFoot();
 
         /// <summary>Create a new table caption object or return an existing one.
         /// <returns>A CAPTION element.
         /// </summary>
-        IHTMLElement createCaption();
+        public HTMLElement createCaption();
 
         /// <summary>Delete the table caption, if one exists.
         /// </summary>
-        void deleteCaption();
+        public void deleteCaption();
 
         /// <summary>Insert a new empty row in the table. The new row is inserted 
         /// immediately before and in the same section as the current 
@@ -168,7 +168,7 @@ namespace org.w3c.dom.html2
         ///   number of rows or if the index is a negative number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        IHTMLElement insertRow(int index); //; // throws DOMException;
+        public HTMLElement insertRow(int index); //; // throws DOMException;
 
         /// <summary>Delete a table row.
         /// <param name="index"> The index of the row to be deleted. This index starts 
@@ -181,7 +181,7 @@ namespace org.w3c.dom.html2
         ///   other than -1.
         /// @version DOM Level 2
         /// </summary>
-        void deleteRow(int index); // ; // throws DOMException;
+        public void deleteRow(int index); // ; // throws DOMException;
 
     }
 }

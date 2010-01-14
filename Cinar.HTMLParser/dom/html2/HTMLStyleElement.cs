@@ -18,23 +18,23 @@ namespace org.w3c.dom.html2
     /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLStyleElement : IHTMLElement
+    public class HTMLStyleElement : HTMLElement
     {
         /// <summary>Enables/disables the style sheet. 
         /// </summary>
-        bool disabled { get; set; }
+        public bool disabled { get; set; }
 
 
         /// <summary>Designed for use with one or more target media. See the media attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string media { get; set; }
+        public string media { get; set; }
 
 
         /// <summary>The content type of the style sheet language. See the type attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string type { get; set; }
+        public string type { get; set; }
 
 
     }

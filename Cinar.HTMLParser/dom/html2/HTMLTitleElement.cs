@@ -16,11 +16,11 @@ namespace org.w3c.dom.html2
     /// <summary>The document title. See the TITLE element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLTitleElement : IHTMLElement
+    public class HTMLTitleElement : HTMLElement
     {
         /// <summary>The specified title as a string. 
         /// </summary>
-        string text { get; set; }
+        public string text { get; set; }
 
 
     }

@@ -32,12 +32,12 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSPrimitiveValue : ICSSValue
+    public class CSSPrimitiveValue : CSSValue
     {
 
         /// <summary>The type of the value as defined by the constants specified above.
         /// </summary>
-        UnitType primitiveType { get; }
+        public UnitType primitiveType { get; internal set; }
 
         /// <summary> A method to set the float value with a specified unit. If the property 
         /// attached with this value can not accept the specified unit or the 
@@ -58,7 +58,7 @@ namespace org.w3c.dom.css
         ///   the float value or the unit type.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
         /// </exception>
-        void setFloatValue(UnitType unitType,
+        public void setFloatValue(UnitType unitType,
                                   float floatValue)
                                   ; // throws DOMException;
 
@@ -80,7 +80,7 @@ namespace org.w3c.dom.css
         ///   value or if the float value can't be converted into the specified 
         ///   unit. 
         /// </exception>
-        float getFloatValue(UnitType unitType)
+        public float getFloatValue(UnitType unitType)
                                    ; // throws DOMException;
 
         /// <summary> A method to set the string value with the specified unit. If the 
@@ -98,7 +98,7 @@ namespace org.w3c.dom.css
         ///   unit.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
         /// </exception>
-        void setStringValue(short stringType,
+        public void setStringValue(short stringType,
                                    string stringValue)
                                    ; // throws DOMException;
 
@@ -114,7 +114,7 @@ namespace org.w3c.dom.css
         ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
         ///   value. 
         /// </summary>
-        string stringValue { get; } // throws DOMException;
+        public string stringValue { get; internal set; } // throws DOMException;
 
         /// <summary> This method is used to get the Counter value. If this CSS value 
         /// doesn't contain a counter value, a DOMException is 
@@ -125,7 +125,7 @@ namespace org.w3c.dom.css
         ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a 
         ///   Counter value (e.g. this is not CSS_COUNTER). 
         /// </exception>
-        ICounter counterValue { get; } // throws DOMException;
+        public Counter counterValue { get; internal set; } // throws DOMException;
 
         /// <summary> This method is used to get the Rect value. If this CSS value doesn't 
         /// contain a rect value, a DOMException is raised. 
@@ -136,7 +136,7 @@ namespace org.w3c.dom.css
         ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a Rect 
         ///   value. (e.g. this is not CSS_RECT). 
         /// </exception>
-        IRect rectValue { get; } // throws DOMException;
+        public Rect rectValue { get; internal set; } // throws DOMException;
 
         /// <summary> This method is used to get the RGB color. If this CSS value doesn't 
         /// contain a RGB color value, a DOMException is raised. 
@@ -147,7 +147,7 @@ namespace org.w3c.dom.css
         ///    INVALID_ACCESS_ERR: Raised if the attached property can't return a 
         ///   RGB color value (e.g. this is not CSS_RGBCOLOR). 
         /// </exception>
-        IRGBColor rgbColorValue { get; } // throws DOMException;
+        public RGBColor rgbColorValue { get; internal set; } // throws DOMException;
 
     }
 

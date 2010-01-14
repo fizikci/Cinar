@@ -16,31 +16,31 @@ namespace org.w3c.dom.html2
     /// <summary>Create a horizontal rule. See the HR element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLHRElement : IHTMLElement
+    public class HTMLHRElement : HTMLElement
     {
         /// <summary>Align the rule on the page. See the align attribute definition in HTML 
         /// 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
         /// <summary>Indicates to the user agent that there should be no shading in the 
         /// rendering of this element. See the noshade attribute definition in 
         /// HTML 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        bool noShade { get; set; }
+        public bool noShade { get; set; }
 
 
         /// <summary>The height of the rule. See the size attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string size { get; set; }
+        public string size { get; set; }
 
 
         /// <summary>The width of the rule. See the width attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string Width { get; set; }
+        public string Width { get; set; }
 
 
     }

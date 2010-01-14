@@ -22,7 +22,7 @@ namespace org.w3c.dom.ranges
     /// </summary>
     public class RangeException : Exception
     {
-        RangeException(RangeExceptionCode code, string message)
+        public RangeException(RangeExceptionCode code, string message)
             : base(message)
         {
             this.code = code;
