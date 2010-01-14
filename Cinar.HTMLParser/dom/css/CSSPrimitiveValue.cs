@@ -98,7 +98,7 @@ namespace org.w3c.dom.css
         ///   unit.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
         /// </exception>
-        public void setStringValue(short stringType,
+        public void setStringValue(UnitType stringType,
                                    string stringValue)
                                    ; // throws DOMException;
 
