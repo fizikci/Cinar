@@ -23,7 +23,7 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IEventTarget
+    public class EventTarget
     {
         /// <summary>This method allows the registration of event listeners on the event 
         /// target. If an EventListener is added to an 
@@ -48,8 +48,8 @@ namespace org.w3c.dom.events
         ///   are bubbling upward through the tree will not trigger an 
         ///   EventListener designated to use capture.
         /// </param>
-        void addEventListener(string type,
-                                     IEventListener listener,
+        public void addEventListener(string type,
+                                     EventListener listener,
                                      bool useCapture);
 
         /// <summary>This method allows the removal of event listeners from the event 
@@ -71,8 +71,8 @@ namespace org.w3c.dom.events
         ///   does not affect a non-capturing version of the same listener, and 
         ///   vice versa. 
         /// </param>
-        void removeEventListener(string type,
-                                        IEventListener listener,
+        public void removeEventListener(string type,
+                                        EventListener listener,
                                         bool useCapture);
 
         /// <summary>This method allows the dispatch of events into the implementations 
@@ -94,7 +94,7 @@ namespace org.w3c.dom.events
         ///   IEvent's type as null or an empty string 
         ///   will also trigger this exception.
         /// </exception>
-        bool dispatchEvent(IEvent evt)
+        public bool dispatchEvent(Event evt)
                                      ; // throws EventException;
 
     }

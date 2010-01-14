@@ -22,7 +22,7 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentEvent
+    public class DocumentEvent
     {
         /// <summary></summary>
         /// <param name="eventType">The eventType parameter specifies the 
@@ -48,7 +48,7 @@ namespace org.w3c.dom.events
         /// <exception cref="DOMException">
         ///   NOT_SUPPORTED_ERR: Raised if the implementation does not support the 
         ///   type of IEvent interface requested</exception>
-        IEvent createEvent(string eventType)
+        public Event createEvent(string eventType)
                                  ; // throws DOMException;
 
     }

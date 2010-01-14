@@ -16,12 +16,12 @@ namespace org.w3c.dom.html2
     /// <summary>Table caption See the CAPTION element definition in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLTableCaptionElement : IHTMLElement
+    public class HTMLTableCaptionElement : HTMLElement
     {
         /// <summary>Caption alignment with respect to the table. See the align attribute 
         /// definition in HTML 4.01. This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
     }

@@ -19,7 +19,7 @@ namespace org.w3c.dom.html2
     /// masked to prevent unauthorized use. See the INPUT element definition in [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>].
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLInputElement : IHTMLElement
+    public class HTMLInputElement : HTMLElement
     {
         /// <summary>When the type attribute of the element has the value 
         /// "text", "file" or "password", this represents the HTML value 
@@ -27,7 +27,7 @@ namespace org.w3c.dom.html2
         /// if the contents of the corresponding form control, in an interactive 
         /// user agent, changes. See the value attribute definition in HTML 4.01.
         /// </summary>
-        string defaultValue { get; set; }
+        public string defaultValue { get; set; }
 
 
         /// <summary>When type has the value "radio" or "checkbox", this 
@@ -36,39 +36,39 @@ namespace org.w3c.dom.html2
         /// control, in an interactive user agent, changes. See the checked 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        bool defaultChecked { get; set; }
+        public bool defaultChecked { get; set; }
 
 
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
         /// form. 
         /// </summary>
-        IHTMLFormElement Form { get; set; }
+        public HTMLFormElement Form { get; set; }
 
         /// <summary>A comma-separated list of content types that a server processing this 
         /// form will handle correctly. See the accept attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string accept { get; set; }
+        public string accept { get; set; }
 
 
         /// <summary>A single character access key to give access to the form control. See 
         /// the accesskey attribute definition in HTML 4.01.
         /// </summary>
-        string accessKey { get; set; }
+        public string accessKey { get; set; }
 
 
         /// <summary>Aligns this object (vertically or horizontally) with respect to its 
         /// surrounding text. See the align attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
         /// <summary>Alternate text for user agents not rendering the normal content of this 
         /// element. See the alt attribute definition in HTML 4.01.
         /// </summary>
-        string alt { get; set; }
+        public string alt { get; set; }
 
 
         /// <summary>When the type attribute of the element has the value 
@@ -84,40 +84,40 @@ namespace org.w3c.dom.html2
         /// that the value of this property during the handling of click events 
         /// is implementation dependent.
         /// </summary>
-        bool Checked { get; set; }
+        public bool Checked { get; set; }
 
 
         /// <summary>The control is unavailable in this context. See the disabled attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        bool disabled { get; set; }
+        public bool disabled { get; set; }
 
 
         /// <summary>Maximum number of characters for text fields, when type 
         /// has the value "text" or "password". See the maxlength attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        int maxLength { get; set; }
+        public int maxLength { get; set; }
 
 
         /// <summary>Form control or object name when submitted with a form. See the name 
         /// attribute definition in HTML 4.01.
         /// </summary>
-        string name { get; set; }
+        public string name { get; set; }
 
 
         /// <summary>This control is read-only. Relevant only when type has the 
         /// value "text" or "password". See the readonly attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        bool readOnly { get; set; }
+        public bool readOnly { get; set; }
 
 
         /// <summary>Size information. The precise meaning is specific to each type of 
         /// field. See the size attribute definition in HTML 4.01.
         /// @version DOM Level 2
         /// </summary>
-        int size { get; set; }
+        public int size { get; set; }
 
 
         /// <summary>When the type attribute has the value "image", this 
@@ -125,26 +125,26 @@ namespace org.w3c.dom.html2
         /// the graphical submit button. See the src attribute definition in HTML 
         /// 4.01.
         /// </summary>
-        string src { get; set; }
+        public string src { get; set; }
 
 
         /// <summary>Index that represents the element's position in the tabbing order. See 
         /// the tabindex attribute definition in HTML 4.01.
         /// </summary>
-        int tabIndex { get; set; }
+        public int tabIndex { get; set; }
 
 
         /// <summary>The type of control created (all lower case). See the type attribute 
         /// definition in HTML 4.01.
         /// @version DOM Level 2
         /// </summary>
-        string type { get; set; }
+        public string type { get; set; }
 
 
         /// <summary>Use client-side image map. See the usemap attribute definition in HTML 
         /// 4.01.
         /// </summary>
-        string useMap { get; set; }
+        public string useMap { get; set; }
 
 
         /// <summary>When the type attribute of the element has the value 
@@ -157,28 +157,28 @@ namespace org.w3c.dom.html2
         /// "radio", this represents the HTML value attribute of the element. See 
         /// the value attribute definition in HTML 4.01.
         /// </summary>
-        string value { get; set; }
+        public string value { get; set; }
 
 
         /// <summary>Removes keyboard focus from this element.
         /// </summary>
-        void blur();
+        public void blur();
 
         /// <summary>Gives keyboard focus to this element.
         /// </summary>
-        void focus();
+        public void focus();
 
         /// <summary>Select the contents of the text area. For INPUT elements 
         /// whose type attribute has one of the following values: 
         /// "text", "file", or "password".
         /// </summary>
-        void select();
+        public void select();
 
         /// <summary>Simulate a mouse-click. For INPUT elements whose 
         /// type attribute has one of the following values: 
         /// "button", "checkbox", "radio", "reset", or "submit".
         /// </summary>
-        void click();
+        public void click();
 
     }
 }

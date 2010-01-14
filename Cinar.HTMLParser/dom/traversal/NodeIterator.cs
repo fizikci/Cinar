@@ -25,12 +25,12 @@ namespace org.w3c.dom.traversal
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface INodeIterator
+    public class NodeIterator
     {
         /// <summary>The root node of the NodeIterator, as specified when it 
         /// was created.
         /// </summary>
-        INode root { get; }
+        public Node root { get; internal set; }
 
         /// <summary>This attribute determines which node types are presented via the 
         /// iterator. The available set of constants is defined in the 
@@ -39,11 +39,11 @@ namespace org.w3c.dom.traversal
         /// be considered. Note that this skip takes precedence over the filter, 
         /// if any. 
         /// </summary>
-        NodeFilterType whatToShow { get; }
+        public NodeFilterType whatToShow { get; internal set; }
 
         /// <summary>The NodeFilter used to screen nodes.
         /// </summary>
-        INodeFilter filter { get; }
+        public NodeFilter filter { get; internal set; }
 
         /// <summary> The value of this flag determines whether the children of entity 
         /// reference nodes are visible to the iterator. If false, they  and 
@@ -62,7 +62,7 @@ namespace org.w3c.dom.traversal
         /// to show the entity reference node and set 
         /// expandEntityReferences to false.
         /// </summary>
-        bool expandEntityReferences { get; }
+        public bool expandEntityReferences { get; internal set; }
 
         /// <summary>Returns the next node in the set and advances the position of the 
         /// iterator in the set. After a NodeIterator is created, 
@@ -74,7 +74,7 @@ namespace org.w3c.dom.traversal
         ///   INVALID_STATE_ERR: Raised if this method is called after the 
         ///   detach method was invoked.
         /// </exception>
-        INode nextNode(); // throws DOMException;
+        public Node nextNode(); // throws DOMException;
 
         /// <summary>Returns the previous node in the set and moves the position of the 
         /// NodeIterator backwards in the set.</summary>
@@ -84,7 +84,7 @@ namespace org.w3c.dom.traversal
         ///   INVALID_STATE_ERR: Raised if this method is called after the 
         ///   detach method was invoked.
         /// </exception>
-        INode previousNode(); // throws DOMException;
+        public Node previousNode(); // throws DOMException;
 
         /// <summary>Detaches the NodeIterator from the set which it iterated 
         /// over, releasing any computational resources and placing the iterator 
@@ -92,7 +92,7 @@ namespace org.w3c.dom.traversal
         /// calls to nextNode or previousNode will 
         /// raise the exception INVALID_STATE_ERR.
         /// </summary>
-        void detach();
+        public void detach();
 
     }
 }

@@ -23,7 +23,7 @@ namespace org.w3c.dom.ls
     /// the filter. 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMWriterFilter : INodeFilter
+    public class DOMWriterFilter : NodeFilter
     {
         /// <summary> Tells the DOMWriter what types of nodes to show to the 
         /// filter. See NodeFilter for definition of the constants. 
@@ -33,7 +33,7 @@ namespace org.w3c.dom.ls
         /// will never be passed to a DOMWriterFilter. 
         /// Entity nodes are not passed to the filter. 
         /// </summary>
-        int whatToShow { get; }
+        public int whatToShow { get; internal set; }
 
     }
 }

@@ -1,36 +1,15 @@
-/*
- * Copyright (c) 2000 World Wide Web Consortium,
- * (Massachusetts Institute of Technology, Institut National de
- * Recherche en Informatique et en Automatique, Keio University). All
- * Rights Reserved. This program is distributed under the W3C's Software
- * Intellectual Property License. This program is distributed in the
- * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
- * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
 
 namespace org.w3c.dom
 {
-
-    /// <summary>The IElement interface represents an element in an HTML or XML 
-    /// document. Elements may have attributes associated with them; since the 
-    /// IElement interface inherits from INode, the 
-    /// generic INode interface attribute attributes may 
-    /// be used to retrieve the set of all attributes for an element. There are 
-    /// methods on the IElement interface to retrieve either an 
-    /// Attr object by name or an attribute value by name. In XML, 
-    /// where an attribute value may contain entity references, an 
-    /// Attr object should be retrieved to examine the possibly 
-    /// fairly complex sub-tree representing the attribute value. On the other 
-    /// hand, in HTML, where all attributes have simple string values, methods to 
-    /// directly access an attribute value can safely be used as a convenience.In 
-    /// DOM Level 2, the method normalize is inherited from the 
-    /// INode interface where it was moved.
-    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-    /// </summary>
-    public interface IElement : INode
+    public abstract class Element : Node
     {
+        internal string _tagName;
+
         /// <summary>The name of the element. For example, in: 
         /// <pre> &lt;elementExample 
         /// id="demo"&gt; ... &lt;/elementExample&gt; , </pre>
@@ -41,14 +20,26 @@ namespace org.w3c.dom
         /// canonical uppercase form, regardless of the case in the source HTML 
         /// document. 
         /// </summary>
-        string tagName { get; }
+        public string tagName
+        {
+            get { return _tagName; }
+        }
+
+        public abstract string getDefaultAttributeValue(string name);
 
         /// <summary>Retrieves an attribute value by name.</summary>
         /// <param name="name">The name of the attribute to retrieve.</param>
         /// <returns>The Attr value as a string, or the empty string 
         ///   if that attribute does not have a specified or default value.
         /// </returns>
-        string getAttribute(string name);
+        public virtual string getAttribute(string name)
+        {
+            Node node = this.attributes.getNamedItem(name);
+            if (node == null)
+                return getDefaultAttributeValue(name);
+            else
+                return node.nodeValue;
+        }
 
         /// <summary>Adds a new attribute. If an attribute with that name is already present 
         /// in the element, its value is changed to be that of the value 
@@ -70,7 +61,17 @@ namespace org.w3c.dom
         ///   illegal character.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
         /// </exception>
-        void setAttribute(string name, string value); // throws DOMException;
+        public void setAttribute(string name, string value)
+        {
+            this.attributes.setNamedItem(
+                new Attr
+                {
+                    _name = name,
+                    value = value,
+                    _ownerElement = this,
+                }
+            );
+        }
 
         /// <summary>Removes an attribute by name. If the removed attribute is known to have 
         /// a default value, an attribute immediately appears containing the 
@@ -82,7 +83,10 @@ namespace org.w3c.dom
         /// <exception cref="DOMException">
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
         /// </exception>
-        void removeAttribute(string name); // throws DOMException;
+        public void removeAttribute(string name)
+        {
+            this.attributes.removeNamedItem(name);
+        }
 
         /// <summary>Retrieves an attribute node by name.
         /// To retrieve an attribute node by qualified name and namespace URI, 
@@ -92,7 +96,10 @@ namespace org.w3c.dom
         /// <returns>The Attr node with the specified name (
         ///   nodeName) or null if there is no such 
         ///   attribute.</returns>
-        IAttr getAttributeNode(string name);
+        public Attr getAttributeNode(string name)
+        {
+            return (Attr)this.attributes.getNamedItem(name);
+        }
 
         /// <summary>Adds a new attribute node. If an attribute with that name (
         /// nodeName) is already present in the element, it is 
@@ -112,7 +119,10 @@ namespace org.w3c.dom
         ///   explicitly clone Attr nodes to re-use them in other 
         ///   elements.
         /// </exception>
-        IAttr setAttributeNode(IAttr newAttr); // throws DOMException;
+        public Attr setAttributeNode(Attr newAttr)
+        {
+            return (Attr)this.attributes.setNamedItem(newAttr);
+        }
 
         /// <summary>Removes the specified attribute node. If the removed Attr 
         /// has a default value it is immediately replaced. The replacing 
@@ -126,7 +136,10 @@ namespace org.w3c.dom
         ///   NOT_FOUND_ERR: Raised if oldAttr is not an attribute 
         ///   of the element.
         /// </exception>
-        IAttr removeAttributeNode(IAttr oldAttr); // throws DOMException;
+        public Attr removeAttributeNode(Attr oldAttr)
+        {
+            return (Attr)this.attributes.removeNamedItem(oldAttr.name);
+        }
 
         /// <summary>Returns a NodeList of all descendant Elements 
         /// with a given tag name, in the order in which they are encountered in 
@@ -134,7 +147,12 @@ namespace org.w3c.dom
         /// <param name="name">The name of the tag to match on. The special value "*" 
         ///   matches all tags.</param>
         /// <returns>A list of matching IElement nodes.</returns>
-        INodeList getElementsByTagName(string name);
+        public NodeList getElementsByTagName(string name)
+        {
+            NodeList nodeList = new NodeList();
+            nodeList.AddRange(this.childNodes.FindAll(n => n.nodeName == name));
+            return nodeList;
+        }
 
         /// <summary>Retrieves an attribute value by local name and namespace URI. HTML-only 
         /// DOM implementations do not need to implement this method.</summary>
@@ -142,7 +160,10 @@ namespace org.w3c.dom
         /// <param name="localName">The local name of the attribute to retrieve.</param>
         /// <returns>The Attr value as a string, or the empty string 
         ///   if that attribute does not have a specified or default value.</returns>
-        string getAttributeNS(string namespaceURI, string localName);
+        public string getAttributeNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Adds a new attribute. If an attribute with the same local name and 
         /// namespace URI is already present on the element, its prefix is 
@@ -178,7 +199,10 @@ namespace org.w3c.dom
         ///   namespaceURI is different from "
         ///   http://www.w3.org/2000/xmlns/".
         /// </exception>
-        void setAttributeNS(string namespaceURI, string qualifiedName, string value); // throws DOMException;
+        public void setAttributeNS(string namespaceURI, string qualifiedName, string value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Removes an attribute by local name and namespace URI. If the removed 
         /// attribute has a default value it is immediately replaced. The 
@@ -190,9 +214,10 @@ namespace org.w3c.dom
         /// <exception cref="DOMException">
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
         /// </exception>
-        void removeAttributeNS(string namespaceURI,
-                                      string localName)
-                                      ; // throws DOMException;
+        public void removeAttributeNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Retrieves an Attr node by local name and namespace URI. 
         /// HTML-only DOM implementations do not need to implement this method.</summary>
@@ -201,8 +226,10 @@ namespace org.w3c.dom
         /// <returns>The Attr node with the specified attribute local 
         ///   name and namespace URI or null if there is no such 
         ///   attribute.</returns>
-        IAttr getAttributeNodeNS(string namespaceURI,
-                                       string localName);
+        public Attr getAttributeNodeNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Adds a new attribute. If an attribute with that local name and that 
         /// namespace URI is already present in the element, it is replaced by 
@@ -221,8 +248,10 @@ namespace org.w3c.dom
         ///   attribute of another IElement object. The DOM user must 
         ///   explicitly clone Attr nodes to re-use them in other 
         ///   elements.</exception>
-        IAttr setAttributeNodeNS(IAttr newAttr)
-                                       ; // throws DOMException;
+        public Attr setAttributeNodeNS(Attr newAttr)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns a NodeList of all the descendant 
         /// Elements with a given local name and namespace URI in 
@@ -235,8 +264,10 @@ namespace org.w3c.dom
         ///   special value "*" matches all local names.</param>
         /// <returns>A new NodeList object containing all the matched 
         ///   Elements.</returns>
-        INodeList getElementsByTagNameNS(string namespaceURI,
-                                               string localName);
+        public NodeList getElementsByTagNameNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns true when an attribute with a given name is 
         /// specified on this element or has a default value, false 
@@ -245,7 +276,10 @@ namespace org.w3c.dom
         /// <returns>true if an attribute with the given name is 
         ///   specified on this element or has a default value, false
         ///    otherwise.</returns>
-        bool hasAttribute(string name);
+        public bool hasAttribute(string name)
+        {
+            return this.attributes.Find(n => n.nodeName == name) != null;
+        }
 
         /// <summary>Returns true when an attribute with a given local name and 
         /// namespace URI is specified on this element or has a default value, 
@@ -256,8 +290,9 @@ namespace org.w3c.dom
         /// <returns>true if an attribute with the given local name 
         ///   and namespace URI is specified or has a default value on this 
         ///   element, false otherwise.</returns>
-        bool hasAttributeNS(string namespaceURI,
-                                      string localName);
-
+        public bool hasAttributeNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

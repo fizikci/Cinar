@@ -23,7 +23,7 @@ namespace org.w3c.dom.traversal
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentTraversal
+    public class DocumentTraversal
     {
         /// <summary>Create a new NodeIterator over the subtree rooted at the 
         /// specified node.</summary>
@@ -46,9 +46,9 @@ namespace org.w3c.dom.traversal
         ///   NOT_SUPPORTED_ERR: Raised if the specified root is 
         ///   null.
         /// </exception>
-        INodeIterator createNodeIterator(INode root,
+        public NodeIterator createNodeIterator(Node root,
                                                int whatToShow,
-                                               INodeFilter filter,
+                                               NodeFilter filter,
                                                bool entityReferenceExpansion); // throws DOMException;
 
         /// <summary>Create a new TreeWalker over the subtree rooted at the 
@@ -77,9 +77,9 @@ namespace org.w3c.dom.traversal
         ///    NOT_SUPPORTED_ERR: Raised if the specified root is 
         ///   null.
         /// </exception>
-        ITreeWalker createTreeWalker(INode root,
+        public TreeWalker createTreeWalker(Node root,
                                            int whatToShow,
-                                           INodeFilter filter,
+                                           NodeFilter filter,
                                            bool entityReferenceExpansion); // throws DOMException;
 
     }

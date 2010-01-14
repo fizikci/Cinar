@@ -29,7 +29,7 @@ namespace org.w3c.dom.ls
     /// EntityResolver interface. 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMEntityResolver
+    public class DOMEntityResolver
     {
         /// <summary>Allow the application to resolve external entities. 
         /// The DOMBuilder will call this method before opening 
@@ -58,7 +58,7 @@ namespace org.w3c.dom.ls
         ///   source, or null to request that the parser open a 
         ///   regular URI connection to the system identifier. 
         /// </returns>
-        IDOMInputSource resolveEntity(string publicId,
+        public DOMInputSource resolveEntity(string publicId,
                                             string systemId,
                                             string baseURI);
 

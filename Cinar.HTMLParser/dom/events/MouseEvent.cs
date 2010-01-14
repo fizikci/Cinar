@@ -32,49 +32,49 @@ namespace org.w3c.dom.events
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IMouseEvent : IUIEvent
+    public class MouseEvent : UIEvent
     {
         /// <summary>The horizontal coordinate at which the event occurred relative to the 
         /// origin of the screen coordinate system.
         /// </summary>
-        int screenX { get; }
+        public int screenX { get; internal set; }
 
         /// <summary>The vertical coordinate at which the event occurred relative to the 
         /// origin of the screen coordinate system.
         /// </summary>
-        int screenY { get; }
+        public int screenY { get; internal set; }
 
         /// <summary>The horizontal coordinate at which the event occurred relative to the 
         /// DOM implementation's client area.
         /// </summary>
-        int clientX { get; }
+        public int clientX { get; internal set; }
 
         /// <summary>The vertical coordinate at which the event occurred relative to the DOM 
         /// implementation's client area.
         /// </summary>
-        int clientY { get; }
+        public int clientY { get; internal set; }
 
         /// <summary>Used to indicate whether the 'ctrl' key was depressed during the firing 
         /// of the event.
         /// </summary>
-        bool ctrlKey { get; }
+        public bool ctrlKey { get; internal set; }
 
         /// <summary>Used to indicate whether the 'shift' key was depressed during the 
         /// firing of the event.
         /// </summary>
-        bool shiftKey { get; }
+        public bool shiftKey { get; internal set; }
 
         /// <summary>Used to indicate whether the 'alt' key was depressed during the firing 
         /// of the event. On some platforms this key may map to an alternative 
         /// key name.
         /// </summary>
-        bool altKey { get; }
+        public bool altKey { get; internal set; }
 
         /// <summary>Used to indicate whether the 'meta' key was depressed during the firing 
         /// of the event. On some platforms this key may map to an alternative 
         /// key name.
         /// </summary>
-        bool metaKey { get; }
+        public bool metaKey { get; internal set; }
 
         /// <summary>During mouse events caused by the depression or release of a mouse 
         /// button, button is used to indicate which mouse button 
@@ -84,7 +84,7 @@ namespace org.w3c.dom.events
         /// configured for left handed use in which the button actions are 
         /// reversed the values are instead read from right to left.
         /// </summary>
-        short button { get; }
+        public short button { get; internal set; }
 
         /// <summary>Used to identify a secondary EventTarget related to a UI 
         /// event. Currently this attribute is used with the mouseover event to 
@@ -92,7 +92,7 @@ namespace org.w3c.dom.events
         /// exited and with the mouseout event to indicate the 
         /// EventTarget which the pointing device entered.
         /// </summary>
-        IEventTarget relatedTarget { get; }
+        public EventTarget relatedTarget { get; internal set; }
 
         /// <summary>The initMouseEvent method is used to initialize the value 
         /// of a MouseEvent created through the 
@@ -123,10 +123,10 @@ namespace org.w3c.dom.events
         /// <param name="buttonArg">Specifies the IEvent's mouse button.</param>
         /// <param name="relatedTargetArg">Specifies the IEvent's related 
         ///   EventTarget.</param>
-        void initMouseEvent(string typeArg,
+        public void initMouseEvent(string typeArg,
                                    bool canBubbleArg,
                                    bool cancelableArg,
-                                   IAbstractView viewArg,
+                                   AbstractView viewArg,
                                    int detailArg,
                                    int screenXArg,
                                    int screenYArg,
@@ -137,7 +137,7 @@ namespace org.w3c.dom.events
                                    bool shiftKeyArg,
                                    bool metaKeyArg,
                                    short buttonArg,
-                                   IEventTarget relatedTargetArg);
+                                   EventTarget relatedTargetArg);
 
     }
 }

@@ -19,7 +19,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSValue
+    public class CSSValue
     {
         /// <summary> A string representation of the current value.</summary>
         /// <exception cref="DOMException">
@@ -30,11 +30,11 @@ namespace org.w3c.dom.css
         ///   by the CSS property.
         ///    NO_MODIFICATION_ALLOWED_ERR: Raised if this value is readonly. 
         /// </exception>
-        string cssText { get; set; } // throws DOMException;
+        public string cssText { get; set; } // throws DOMException;
 
         /// <summary> A code defining the type of the value as defined above. 
         /// </summary>
-        CSSValueType cssValueType { get; }
+        public CSSValueType cssValueType { get; internal set; }
 
     }
 

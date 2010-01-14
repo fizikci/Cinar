@@ -176,7 +176,7 @@ namespace org.w3c.dom.ls
     /// </dl>
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMBuilder
+    public class DOMBuilder
     {
         /// <summary>If a DOMEntityResolver has been specified, each time a 
         /// reference to an external entity is encountered the 
@@ -186,7 +186,7 @@ namespace org.w3c.dom.ls
         ///  If this attribute is null, the resolution of entities 
         /// in the document is implementation dependent. 
         /// </summary>
-        IDOMEntityResolver entityResolver { get; set; }
+        public DOMEntityResolver entityResolver { get; set; }
         /// <summary>If a DOMEntityResolver has been specified, each time a 
         /// reference to an external entity is encountered the 
         /// DOMBuilder will pass the public and system IDs to the 
@@ -195,7 +195,7 @@ namespace org.w3c.dom.ls
         ///  If this attribute is null, the resolution of entities 
         /// in the document is implementation dependent. 
         /// </summary>
-        //void setEntityResolver(IDOMEntityResolver entityResolver);
+        //void setEntityResolver(DOMEntityResolver entityResolver);
 
         /// <summary> In the event that an error is encountered in the XML document being 
         /// parsed, the DOMDocumentBuilder will call back to the 
@@ -220,7 +220,7 @@ namespace org.w3c.dom.ls
         /// the document is being validated when it's loaded the validation 
         /// happens before the filter is called. 
         /// </summary>
-        IDOMBuilderFilter filter { get; set; }
+        public DOMBuilderFilter filter { get; set; }
 
         /// <summary>Set the state of a feature.
         /// The feature name has the same form as a DOM hasFeature string.
@@ -235,7 +235,7 @@ namespace org.w3c.dom.ls
         ///   NOT_FOUND_ERR: Raised when the DOMBuilder does not 
         ///   recognize the feature name.
         /// </exception>
-        void setFeature(string name,
+        public void setFeature(string name,
                                bool state)
                                ; // throws DOMException;
 
@@ -249,7 +249,7 @@ namespace org.w3c.dom.ls
         ///   recognized or the requested value is not supported. The value of 
         ///   the feature itself is not changed.
         /// </returns>
-        bool canSetFeature(string name,
+        public bool canSetFeature(string name,
                                      bool state);
 
         /// <summary>Look up the value of a feature.
@@ -262,7 +262,7 @@ namespace org.w3c.dom.ls
         ///   NOT_FOUND_ERR: Raised when the DOMBuilder does not 
         ///   recognize the feature name.
         /// </exception>
-        bool getFeature(string name)
+        public bool getFeature(string name)
                                   ; // throws DOMException;
 
         /// <summary> Parse an XML document from a location identified by a URI reference . 
@@ -276,7 +276,7 @@ namespace org.w3c.dom.ls
         ///   is asynchronous then null is returned since the 
         ///   document object is not yet parsed when this method returns.
         /// </returns>
-        IDocument parseURI(string uri);
+        public Document parseURI(string uri);
 
         /// <summary>Parse an XML document from a resource identified by a 
         /// IDOMInputSource.</summary>
@@ -288,7 +288,7 @@ namespace org.w3c.dom.ls
         ///   is asynchronous then null is returned since the 
         ///   document object is not yet parsed when this method returns.
         /// </returns>
-        IDocument parse(IDOMInputSource inputSource);
+        public Document parse(DOMInputSource inputSource);
 
 
         /// <summary> Parse an XML fragment from a resource identified by a 
@@ -322,8 +322,8 @@ namespace org.w3c.dom.ls
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if the context node is 
         ///   readonly.
         /// </exception>
-        void parseWithContext(IDOMInputSource inputSource,
-                                     INode cnode,
+        public void parseWithContext(DOMInputSource inputSource,
+                                     Node cnode,
                                      ActionTypes action)
                                      ; // throws DOMException;
 

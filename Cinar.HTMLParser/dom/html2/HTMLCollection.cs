@@ -21,11 +21,11 @@ namespace org.w3c.dom.html2
     /// document is changed. 
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLCollection
+    public class HTMLCollection
     {
         /// <summary>This attribute specifies the length or size of the list. 
         /// </summary>
-        int length { get; set; }
+        public int length { get; set; }
 
         /// <summary>This method retrieves a node specified by ordinal index. Nodes are 
         /// numbered in tree order (depth-first traversal order).
@@ -35,7 +35,7 @@ namespace org.w3c.dom.html2
         ///   success. A value of null is returned if the index is 
         ///   out of range. 
         /// </summary>
-        INode item(int index);
+        public Node item(int index);
 
         /// <summary>This method retrieves a INode using a name. With [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>] 
         /// documents, it first searches for a INode with a matching 
@@ -51,7 +51,7 @@ namespace org.w3c.dom.html2
         ///   string. Upon failure (e.g., no node with this name exists), returns 
         ///   null.
         /// </summary>
-        INode namedItem(string name);
+        public Node namedItem(string name);
 
     }
 }

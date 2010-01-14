@@ -26,7 +26,7 @@ namespace org.w3c.dom.ls
     /// (respectively). 
     /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
     /// </summary>
-    public interface IDOMImplementationLS
+    public class DOMImplementationLS
     {
         /// <summary>Create a new DOMBuilder. The newly constructed parser may 
         /// then be configured by means of its setFeature method, 
@@ -66,7 +66,7 @@ namespace org.w3c.dom.ls
         ///    NOT_SUPPORTED_ERR: Raised if the requested mode or schema type is 
         ///   not supported. 
         /// </exception>
-        IDOMBuilder createDOMBuilder(DOMImplementationLSMode mode,
+        public DOMBuilder createDOMBuilder(DOMImplementationLSMode mode,
                                            string schemaType)
                                            ; // throws DOMException;
 
@@ -82,11 +82,11 @@ namespace org.w3c.dom.ls
         ///   DOMWriter contains a reference to the default error 
         ///   handler. 
         /// </returns>
-        IDOMWriter createDOMWriter();
+        public DOMWriter createDOMWriter();
 
         /// <summary> Create a new "empty" IDOMInputSource.</summary>
         /// <returns> The newly created IDOMInputSource object. </returns>
-        IDOMInputSource createDOMInputSource();
+        public DOMInputSource createDOMInputSource();
 
     }
     public enum DOMImplementationLSMode

@@ -33,12 +33,12 @@ namespace org.w3c.dom
     /// </summary>
     public class DOMException : Exception
     {
-        DOMException(DOMExceptionCodes code, string message)
+        public DOMException(DOMExceptionCodes code, string message)
             : base(message)
         {
             this.code = code;
         }
-        DOMExceptionCodes code;
+        public readonly DOMExceptionCodes code;
 
     }
 

@@ -20,7 +20,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM   Level 2
     /// </summary>
-    public interface IDOMImplementationCSS : IDOMImplementation
+    public class DOMImplementationCSS : DOMImplementation
     {
         /// <summary>Creates a new CSSStyleSheet.</summary>
         /// <param name="title"> The advisory title. See also the  section.</param>
@@ -31,7 +31,7 @@ namespace org.w3c.dom.css
         ///    SYNTAX_ERR: Raised if the specified media string value has a syntax 
         ///   error and is unparsable. 
         /// </exception>
-        ICSSStyleSheet createCSSStyleSheet(string title,
+        public CSSStyleSheet createCSSStyleSheet(string title,
                                                  string media)
                                                  ; // throws DOMException;
 

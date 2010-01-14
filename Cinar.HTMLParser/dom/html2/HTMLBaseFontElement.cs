@@ -17,25 +17,25 @@ namespace org.w3c.dom.html2
     /// is deprecated in HTML 4.01.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLBaseFontElement : IHTMLElement
+    public class HTMLBaseFontElement : HTMLElement
     {
         /// <summary>Font color. See the color attribute definition in HTML 4.01. This 
         /// attribute is deprecated in HTML 4.01.
         /// </summary>
-        string color { get; set; }
+        public string color { get; set; }
 
 
         /// <summary>Font face identifier. See the face attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// </summary>
-        string face { get; set; }
+        public string face { get; set; }
 
 
         /// <summary>Computed font size. See the size attribute definition in HTML 4.01. 
         /// This attribute is deprecated in HTML 4.01.
         /// @version DOM Level 2
         /// </summary>
-        int size { get; set; }
+        public int size { get; set; }
 
 
     }

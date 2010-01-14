@@ -21,14 +21,14 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSRule
+    public class CSSRule
     {
         /// <summary> The type of the rule, as defined above. The expectation is that 
         /// binding-specific casting methods can be used to cast down from an 
         /// instance of the CSSRule interface to the specific 
         /// derived interface implied by the type. 
         /// </summary>
-        CSSRuleType type { get; }
+        public CSSRuleType type { get; internal set; }
 
         /// <summary> The parsable textual representation of the rule. This reflects the 
         /// current state of the rule and not its initial value. </summary>
@@ -41,17 +41,17 @@ namespace org.w3c.dom.css
         ///   this point in the style sheet.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if the rule is readonly.
         /// </exception>
-        string cssText { get; set; } // throws DOMException;
+        public string cssText { get; set; } // throws DOMException;
 
         /// <summary> The style sheet that contains this rule. 
         /// </summary>
-        ICSSStyleSheet parentStyleSheet { get; }
+        public CSSStyleSheet parentStyleSheet { get; internal set; }
 
         /// <summary> If this rule is contained inside another rule (e.g. a style rule 
         /// inside an @media block), this is the containing rule. If this rule is 
         /// not nested inside any other rules, this returns null. 
         /// </summary>
-        ICSSRule parentRule { get; }
+        public CSSRule parentRule { get; internal set; }
 
     }
 

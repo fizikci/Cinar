@@ -23,13 +23,13 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSValueList : ICSSValue
+    public class CSSValueList : CSSValue
     {
         /// <summary>The number of CSSValues in the list. The range of valid 
         /// values of the indices is 0 to length-1 
         /// inclusive.
         /// </summary>
-        int length { get; }
+        public int length { get; internal set; }
 
         /// <summary>Used to retrieve a CSSValue by ordinal index. The order in 
         /// this collection represents the order of the values in the CSS style 
@@ -40,7 +40,7 @@ namespace org.w3c.dom.css
         ///   in the CSSValueList, or null if that is 
         ///   not a valid index.
         /// </returns>
-        ICSSValue item(int index);
+        public CSSValue item(int index);
 
     }
 }

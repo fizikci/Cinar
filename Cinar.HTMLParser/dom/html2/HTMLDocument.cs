@@ -24,36 +24,36 @@ namespace org.w3c.dom.html2
     /// interface where it was moved to.
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLDocument : IDocument
+    public class HTMLDocument : Document
     {
         /// <summary>The title of a document as specified by the TITLE element 
         /// in the head of the document. 
         /// </summary>
-        string title { get; set; }
+        public string title { get; set; }
 
 
         /// <summary>Returns the URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] of the page that linked to this page. The value is an 
         /// empty string if the user navigated to the page directly (not through 
         /// a link, but, for example, via a bookmark). 
         /// </summary>
-        string referrer { get; set; }
+        public string referrer { get; set; }
 
         /// <summary>The domain name of the server that served the document, or 
         /// null if the server cannot be identified by a domain 
         /// name. 
         /// </summary>
-        string domain { get; set; }
+        public string domain { get; set; }
 
         /// <summary>The absolute URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] of the document. 
         /// </summary>
-        string url { get; set; }
+        public string url { get; set; }
 
         /// <summary>The element that contains the content for the document. In documents 
         /// with BODY contents, returns the BODY 
         /// element. In frameset documents, this returns the outermost 
         /// FRAMESET element. 
         /// </summary>
-        IHTMLElement Body { get; set; }
+        public HTMLElement body { get; set; }
 
 
         /// <summary>A collection of all the IMG elements in a document. The 
@@ -64,22 +64,22 @@ namespace org.w3c.dom.html2
         /// images in the document but getElementsByTagName with 
         /// HTML 4.01 or getElementsByTagNameNS with XHTML 1.0.
         /// </summary>
-        IHTMLCollection Images { get; set; }
+        public HTMLCollection images { get; set; }
 
         /// <summary>A collection of all the OBJECT elements that include 
         /// applets and APPLET (deprecated) elements in a document. 
         /// </summary>
-        IHTMLCollection Applets { get; set; }
+        public HTMLCollection applets { get; set; }
 
         /// <summary>A collection of all AREA elements and anchor (
         /// A) elements in a document with a value for the 
         /// href attribute. 
         /// </summary>
-        IHTMLCollection Links { get; set; }
+        public HTMLCollection links { get; set; }
 
         /// <summary>A collection of all the forms of a document. 
         /// </summary>
-        IHTMLCollection Forms { get; set; }
+        public HTMLCollection forms { get; set; }
 
         /// <summary> A collection of all the anchor (A) elements in a document 
         /// with a value for the name attribute. For reasons of 
@@ -91,7 +91,7 @@ namespace org.w3c.dom.html2
         /// is used instead. Users should prefer the iterator mechanisms provided 
         /// by [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>DOM Level 2 Traversal</a>] instead. 
         /// </summary>
-        IHTMLCollection Anchors { get; set; }
+        public HTMLCollection anchors { get; set; }
 
         /// <summary> This mutable string attribute denotes persistent state information 
         /// that (1) is associated with the current frame or document and (2) is 
@@ -123,7 +123,7 @@ namespace org.w3c.dom.html2
         /// pairs.  The precise nature of a user agent session is not defined by 
         /// this specification. 
         /// </summary>
-        string cookie { get; set; }
+        public string cookie { get; set; }
         /// <summary> This mutable string attribute denotes persistent state information 
         /// that (1) is associated with the current frame or document and (2) is 
         /// composed of information described by the cookies 
@@ -157,7 +157,7 @@ namespace org.w3c.dom.html2
         ///    SYNTAX_ERR: If the new value does not adhere to the cookie syntax 
         ///   specified by [<a href='http://www.ietf.org/rfc/rfc2965.txt'>IETF RFC 2965</a>]. 
         /// </summary>
-        void setCookie(string cookie); //; // throws DOMException;
+        //void setCookie(string cookie); //; // throws DOMException;
 
         /// <summary>Open a document stream for writing. If a document exists in the target, 
         /// this method clears it. This method and the ones following allow a 
@@ -166,12 +166,12 @@ namespace org.w3c.dom.html2
         /// for providing similar functionality for both HTML and XML documents 
         /// were being considered (see [<a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>DOM Level 3 Load and Save</a>]).
         /// </summary>
-        void open();
+        public void open();
 
         /// <summary>Closes a document stream opened by open() and forces 
         /// rendering.
         /// </summary>
-        void close();
+        public void close();
 
         /// <summary>Write a string of text to a document stream opened by 
         /// open(). Note that the function will produce a document 
@@ -180,7 +180,7 @@ namespace org.w3c.dom.html2
         /// <param name="text"> The string to be parsed into some structure in the 
         ///   document structure model.
         /// </summary>
-        void write(string text);
+        public void write(string text);
 
         /// <summary>Write a string of text followed by a newline character to a document 
         /// stream opened by open(). Note that the function will 
@@ -190,7 +190,7 @@ namespace org.w3c.dom.html2
         /// <param name="text"> The string to be parsed into some structure in the 
         ///   document structure model.
         /// </summary>
-        void writeln(string text);
+        public void writeln(string text);
 
         /// <summary> With [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>] documents, this method returns the (possibly empty) collection 
         /// of elements whose name value is given by 
@@ -201,7 +201,7 @@ namespace org.w3c.dom.html2
         ///   element.
         /// <returns>The matching elements.
         /// </summary>
-        INodeList getElementsByName(string elementName);
+        public NodeList getElementsByName(string elementName);
 
     }
 }

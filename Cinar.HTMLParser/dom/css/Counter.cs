@@ -19,19 +19,19 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICounter
+    public class Counter
     {
         /// <summary> This attribute is used for the identifier of the counter. 
         /// </summary>
-        string identifier { get; }
+        public string identifier { get; set;}
 
         /// <summary> This attribute is used for the style of the list. 
         /// </summary>
-        string listStyle { get; }
+        public string listStyle { get; internal set; }
 
         /// <summary> This attribute is used for the separator of the nested counters. 
         /// </summary>
-        string separator { get; }
+        public string separator { get; internal set; }
 
     }
 }

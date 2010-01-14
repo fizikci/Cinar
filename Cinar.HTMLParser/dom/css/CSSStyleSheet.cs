@@ -22,7 +22,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSStyleSheet : IStyleSheet
+    public class CSSStyleSheet : StyleSheet
     {
         /// <summary> If this style sheet comes from an @import rule, the 
         /// ownerRule attribute will contain the 
@@ -33,12 +33,12 @@ namespace org.w3c.dom.css
         /// null and the ownerNode attribute will 
         /// contain the INode. 
         /// </summary>
-        ICSSRule ownerRule { get; }
+        public CSSRule ownerRule { get; internal set; }
 
         /// <summary> The list of all CSS rules contained within the style sheet. This 
         /// includes both rule sets and at-rules. 
         /// </summary>
-        ICSSRuleList cssRules { get; }
+        public CSSRuleList cssRules { get; internal set; }
 
         /// <summary> Used to insert a new rule into the style sheet. The new rule now 
         /// becomes part of the cascade.</summary>
@@ -63,7 +63,7 @@ namespace org.w3c.dom.css
         ///   SYNTAX_ERR: Raised if the specified rule has a syntax error and 
         ///   is unparsable.
         /// </exception>
-        int insertRule(string rule,
+        public int insertRule(string rule,
                               int index)
                               ; // throws DOMException;
 
@@ -76,7 +76,7 @@ namespace org.w3c.dom.css
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this style sheet is 
         ///   readonly.
         /// </exception>
-        void deleteRule(int index)
+        public void deleteRule(int index)
                                ; // throws DOMException;
 
     }

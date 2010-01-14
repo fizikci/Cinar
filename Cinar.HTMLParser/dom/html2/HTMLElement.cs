@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -25,38 +27,42 @@ namespace org.w3c.dom.html2
     /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLElement : IElement
+    public class HTMLElement : Element
     {
         /// <summary>The element's identifier. See the id attribute definition in HTML 4.01.
         /// </summary>
-        string id { get; set; }
+        public string id { get; set; }
 
 
         /// <summary>The element's advisory title. See the title attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string title { get; set; }
+        public string title { get; set; }
 
 
         /// <summary>Language code defined in RFC 1766. See the lang attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string lang { get; set; }
+        public string lang { get; set; }
 
 
         /// <summary>Specifies the base direction of directionally neutral text and the 
         /// directionality of tables. See the dir attribute definition in HTML 
         /// 4.01.
         /// </summary>
-        string dir { get; set; }
+        public string dir { get; set; }
 
 
         /// <summary>The class attribute of the element. This attribute has been renamed due 
         /// to conflicts with the "class" keyword exposed by many languages. See 
         /// the class attribute definition in HTML 4.01.
         /// </summary>
-        string className { get; set; }
+        public string className { get; set; }
 
 
+        public override string getDefaultAttributeValue(string name)
+        {
+            return String.Empty;
+        }
     }
 }

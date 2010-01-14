@@ -22,17 +22,17 @@ namespace org.w3c.dom.html2
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IHTMLOptionsCollection
+    public class HTMLOptionsCollection
     {
         /// <summary> This attribute specifies the length or size of the list. 
         /// </summary>
-        int length { get; set; }
+        public int length { get; set; }
         /// <summary> This attribute specifies the length or size of the list. 
         /// <exception cref="DOMException">
         ///    NOT_SUPPORTED_ERR: if setting the length is not allowed by the 
         ///   implementation. 
         /// </summary>
-        void setLength(int length); //; // throws DOMException;
+        public void setLength(int length); //; // throws DOMException;
 
         /// <summary> This method retrieves a node specified by ordinal index. Nodes are 
         /// numbered in tree order (depth-first traversal order). 
@@ -42,7 +42,7 @@ namespace org.w3c.dom.html2
         ///   success. A value of null is returned if the index is 
         ///   out of range. 
         /// </summary>
-        INode item(int index);
+        public Node item(int index);
 
         /// <summary>This method retrieves a INode using a name. It first 
         /// searches for a INode with a matching id 
@@ -57,7 +57,7 @@ namespace org.w3c.dom.html2
         ///   string. Upon failure (e.g., no node with this name exists), returns 
         ///   null.
         /// </summary>
-        INode namedItem(string name);
+        public Node namedItem(string name);
 
     }
 }

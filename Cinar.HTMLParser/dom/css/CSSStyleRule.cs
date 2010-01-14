@@ -19,7 +19,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ICSSStyleRule : ICSSRule
+    public class CSSStyleRule : CSSRule
     {
         /// <summary> The textual representation of the selector for the rule set. The 
         /// implementation may have stripped out insignificant whitespace while 
@@ -29,11 +29,11 @@ namespace org.w3c.dom.css
         ///   error and is unparsable.
         ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this rule is readonly.
         /// </exception>
-        string selectorText { get; set; } // throws DOMException;
+        public string selectorText { get; set; } // throws DOMException;
 
         /// <summary> The declaration-block of this rule set. 
         /// </summary>
-        ICSSStyleDeclaration style { get; }
+        public CSSStyleDeclaration style { get; internal set; }
 
     }
 }

@@ -20,12 +20,12 @@ namespace org.w3c.dom.views
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Views-20001113'>IDocument Object Model (DOM) Level 2 Views Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentView
+    public class DocumentView
     {
         /// <summary>The default IAbstractView for this IDocument, 
         /// or null if none available.
         /// </summary>
-        IAbstractView defaultView { get; }
+        public AbstractView defaultView { get; internal set; }
 
     }
 }

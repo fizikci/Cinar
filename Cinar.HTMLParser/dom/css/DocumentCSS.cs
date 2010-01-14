@@ -35,7 +35,7 @@ namespace org.w3c.dom.css
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface IDocumentCSS : IDocumentStyle
+    public class DocumentCSS : DocumentStyle
     {
         /// <summary> This method is used to retrieve the override style declaration for a 
         /// specified element and a specified pseudo-element.</summary>
@@ -44,7 +44,7 @@ namespace org.w3c.dom.css
         /// <param name="pseudoElt"> The pseudo-element or null if none.</param>
         /// <returns> The override style declaration. 
         /// </returns>
-        ICSSStyleDeclaration getOverrideStyle(IElement elt,
+        public CSSStyleDeclaration getOverrideStyle(Element elt,
                                                     string pseudoElt);
 
     }

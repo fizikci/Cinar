@@ -30,12 +30,12 @@ namespace org.w3c.dom.traversal
     /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
     /// @since DOM Level 2
     /// </summary>
-    public interface ITreeWalker
+    public class TreeWalker
     {
         /// <summary>The root node of the TreeWalker, as specified 
         /// when it was created.
         /// </summary>
-        INode root { get; }
+        public Node root { get; internal set; }
 
         /// <summary>This attribute determines which node types are presented via the 
         /// TreeWalker. The available set of constants is defined in 
@@ -44,11 +44,11 @@ namespace org.w3c.dom.traversal
         /// be considered. Note that this skip takes precedence over the filter, 
         /// if any. 
         /// </summary>
-        NodeFilterType whatToShow { get; }
+        public NodeFilterType whatToShow { get; internal set; }
 
         /// <summary>The filter used to screen nodes.
         /// </summary>
-        INodeFilter filter { get; }
+        public NodeFilter filter { get; internal set; }
 
         /// <summary>The value of this flag determines whether the children of entity 
         /// reference nodes are visible to the TreeWalker. If false, 
@@ -64,7 +64,7 @@ namespace org.w3c.dom.traversal
         /// whatToShow flags to show the entity reference node and 
         /// set expandEntityReferences to false.
         /// </summary>
-        bool expandEntityReferences { get; }
+        public bool expandEntityReferences { get; internal set; }
 
         /// <summary>The node at which the TreeWalker is currently positioned.
         /// Alterations to the DOM tree may cause the current node to no longer 
@@ -80,7 +80,7 @@ namespace org.w3c.dom.traversal
         ///   NOT_SUPPORTED_ERR: Raised if an attempt is made to set 
         ///   currentNode to null.
         /// </exception>
-        INode currentNode { get; set;} // throws DOMException;
+        public Node currentNode { get; set;} // throws DOMException;
 
         /// <summary>Moves to and returns the closest visible ancestor node of the current 
         /// node. If the search for parentNode attempts to step 
@@ -90,7 +90,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new parent node, or null if the current node 
         ///   has no parent  in the TreeWalker's logical view.  
         /// </returns>
-        INode parentNode();
+        public Node parentNode();
 
         /// <summary>Moves the TreeWalker to the first visible child of the 
         /// current node, and returns the new node. If the current node has no 
@@ -99,7 +99,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   visible children  in the TreeWalker's logical view.  
         /// </returns>
-        INode firstChild();
+        public Node firstChild();
 
         /// <summary>Moves the TreeWalker to the last visible child of the 
         /// current node, and returns the new node. If the current node has no 
@@ -108,7 +108,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   children  in the TreeWalker's logical view.  
         /// </returns>
-        INode lastChild();
+        public Node lastChild();
 
         /// <summary>Moves the TreeWalker to the previous sibling of the 
         /// current node, and returns the new node. If the current node has no 
@@ -117,7 +117,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   previous sibling.  in the TreeWalker's logical view.  
         /// </returns>
-        INode previousSibling();
+        public Node previousSibling();
 
         /// <summary>Moves the TreeWalker to the next sibling of the current 
         /// node, and returns the new node. If the current node has no visible 
@@ -125,7 +125,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   next sibling.  in the TreeWalker's logical view.  
         /// </returns>
-        INode nextSibling();
+        public Node nextSibling();
 
         /// <summary>Moves the TreeWalker to the previous visible node in 
         /// document order relative to the current node, and returns the new 
@@ -136,7 +136,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   previous node  in the TreeWalker's logical view.  
         /// </returns>
-        INode previousNode();
+        public Node previousNode();
 
         /// <summary>Moves the TreeWalker to the next visible node in document 
         /// order relative to the current node, and returns the new node. If the 
@@ -146,7 +146,7 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   next node  in the TreeWalker's logical view.  
         /// </returns>
-        INode nextNode();
+        public Node nextNode();
 
     }
 }

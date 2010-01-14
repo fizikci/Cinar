@@ -17,35 +17,35 @@ namespace org.w3c.dom.html2
     /// elements. 
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public interface IHTMLTableSectionElement : IHTMLElement
+    public class HTMLTableSectionElement : HTMLElement
     {
         /// <summary>Horizontal alignment of data in cells. See the align 
         /// attribute for HTMLTheadElement for details. 
         /// </summary>
-        string align { get; set; }
+        public string align { get; set; }
 
 
         /// <summary>Alignment character for cells in a column. See the char attribute 
         /// definition in HTML 4.01.
         /// </summary>
-        string ch { get; set; }
+        public string ch { get; set; }
 
 
         /// <summary>Offset of alignment character. See the charoff attribute definition in 
         /// HTML 4.01.
         /// </summary>
-        string chOff { get; set; }
+        public string chOff { get; set; }
 
 
         /// <summary>Vertical alignment of data in cells. See the valign 
         /// attribute for HTMLTheadElement for details. 
         /// </summary>
-        string vAlign { get; set; }
+        public string vAlign { get; set; }
 
 
         /// <summary>The collection of rows in this table section. 
         /// </summary>
-        IHTMLCollection Rows { get; set; }
+        public HTMLCollection Rows { get; set; }
 
         /// <summary>Insert a row into this section. The new row is inserted immediately 
         /// before the current indexth row in this section. If 
@@ -60,7 +60,7 @@ namespace org.w3c.dom.html2
         ///   number of rows of if the index is a negative number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        IHTMLElement insertRow(int index); //; // throws DOMException;
+        public HTMLElement insertRow(int index); //; // throws DOMException;
 
         /// <summary>Delete a row from this section.
         /// <param name="index"> The index of the row to be deleted, or -1 to delete the 
@@ -72,7 +72,7 @@ namespace org.w3c.dom.html2
         ///   other than -1.
         /// @version DOM Level 2
         /// </summary>
-        void deleteRow(int index); // ; // throws DOMException;
+        public void deleteRow(int index); // ; // throws DOMException;
 
     }
 }

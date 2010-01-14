@@ -1,31 +1,17 @@
-/*
- * Copyright (c) 2000 World Wide Web Consortium,
- * (Massachusetts Institute of Technology, Institut National de
- * Recherche en Informatique et en Automatique, Keio University). All
- * Rights Reserved. This program is distributed under the W3C's Software
- * Intellectual Property License. This program is distributed in the
- * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE.
- * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using org.w3c.dom;
 
 namespace org.w3c.dom
 {
-
-    /// <summary>The IDocument interface represents the entire HTML or XML 
-    /// document. Conceptually, it is the root of the document tree, and provides 
-    /// the primary access to the document's data.
-    /// Since elements, text nodes, comments, processing instructions, etc. 
-    /// cannot exist outside the context of a IDocument, the 
-    /// IDocument interface also contains the factory methods needed 
-    /// to create these objects. The INode objects created have a 
-    /// ownerDocument attribute which associates them with the 
-    /// IDocument within whose context they were created.
-    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-    /// </summary>
-    public interface IDocument : INode
+    public class Document : Node
     {
+        private DocumentType _doctype;
+        private DOMImplementation _implementation;
+        private Element _documentElement;
+
         /// <summary>The IDocument Type Declaration (see DocumentType) 
         /// associated with this document. For HTML documents as well as XML 
         /// documents without a document type declaration this returns 
@@ -35,18 +21,27 @@ namespace org.w3c.dom
         /// INode interface, such as insertNode or 
         /// removeNode.
         /// </summary>
-        IDocumentType doctype { get; }
+        public DocumentType doctype
+        {
+            get { return _doctype; }
+        }
 
         /// <summary>The DOMImplementation object that handles this document. A 
         /// DOM application may use objects from multiple implementations.
         /// </summary>
-        IDOMImplementation implementation { get; }
+        public DOMImplementation implementation
+        {
+            get { return _implementation; }
+        }
 
         /// <summary>This is a convenience attribute that allows direct access to the child 
         /// node that is the root element of the document. For HTML documents, 
         /// this is the element with the tagName "HTML".
         /// </summary>
-        IElement documentElement { get; }
+        public Element documentElement
+        {
+            get { return _documentElement; }
+        }
 
         /// <summary>Creates an element of the type specified. Note that the instance 
         /// returned implements the IElement interface, so attributes 
@@ -68,22 +63,33 @@ namespace org.w3c.dom
         ///   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
         ///   illegal character.
         /// </exception>
-        IElement createElement(string tagName)
-                                     ; // throws DOMException;
+        public Element createElement(string tagName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an empty DocumentFragment object. </summary>
         /// <returns>A new DocumentFragment.</returns>
-        IDocumentFragment createDocumentFragment();
+        public DocumentFragment createDocumentFragment()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates a Text node given the specified string.</summary>
         /// <param name="data">The data for the node.</param>
         /// <returns>The new Text object.</returns>
-        IText createTextNode(string data);
+        public Text createTextNode(string data)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates a Comment node given the specified string.</summary>
         /// <param name="data">The data for the node.</param>
         /// <returns>The new Comment object.</returns>
-        IComment createComment(string data);
+        public Comment createComment(string data)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates a CDATASection node whose value is the specified 
         /// string.</summary>
@@ -92,8 +98,10 @@ namespace org.w3c.dom
         /// <exception cref="DOMException">
         ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
         /// </exception>
-        ICDATASection createCDATASection(string data)
-                                               ; // throws DOMException;
+        public CDATASection createCDATASection(string data)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates a ProcessingInstruction node given the specified 
         /// name and data strings.</summary>
@@ -105,9 +113,10 @@ namespace org.w3c.dom
         ///   illegal character.
         ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
         /// </exception>
-        IProcessingInstruction createProcessingInstruction(string target,
-                                                                 string data)
-                                                                 ; // throws DOMException;
+        public ProcessingInstruction createProcessingInstruction(string target, string data)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an Attr of the given name. Note that the 
         /// Attr instance can then be set on an IElement 
@@ -123,7 +132,10 @@ namespace org.w3c.dom
         ///   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
         ///   illegal character.
         /// </exception>
-        IAttr createAttribute(string name); // throws DOMException;
+        public Attr createAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an EntityReference object. In addition, if the 
         /// referenced entity is known, the child list of the 
@@ -141,7 +153,10 @@ namespace org.w3c.dom
         ///   illegal character.
         ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
         /// </exception>
-        IEntityReference createEntityReference(string name); // throws DOMException;
+        public EntityReference createEntityReference(string name)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns a NodeList of all the Elements with a 
         /// given tag name in the order in which they are encountered in a 
@@ -151,7 +166,10 @@ namespace org.w3c.dom
         /// <returns>A new NodeList object containing all the matched 
         ///   Elements.
         /// </returns>
-        INodeList getElementsByTagName(string tagname);
+        public NodeList getElementsByTagName(string tagname)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Imports a node from another document to this document. The returned 
         /// node has no parent; (parentNode is null). 
@@ -249,7 +267,10 @@ namespace org.w3c.dom
         ///   NOT_SUPPORTED_ERR: Raised if the type of node being imported is not 
         ///   supported.
         /// </summary>
-        INode importNode(INode importedNode, bool deep); // throws DOMException;
+        public Node importNode(Node importedNode, bool deep)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an element of the given qualified name and namespace URI. 
         /// HTML-only DOM implementations do not need to implement this method.</summary>
@@ -273,7 +294,10 @@ namespace org.w3c.dom
         ///   qualifiedName has a prefix that is "xml" and the 
         ///   namespaceURI is different from "http://www.w3.org/XML/1998/namespace" .
         /// </exception>
-        IElement createElementNS(string namespaceURI, string qualifiedName); // throws DOMException;
+        public Element createElementNS(string namespaceURI, string qualifiedName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Creates an attribute of the given qualified name and namespace URI. 
         /// HTML-only DOM implementations do not need to implement this method.</summary>
@@ -301,7 +325,10 @@ namespace org.w3c.dom
         ///   namespaceURI is different from "
         ///   http://www.w3.org/2000/xmlns/".
         /// </exception>
-        IAttr createAttributeNS(string namespaceURI, string qualifiedName); // throws DOMException;
+        public Attr createAttributeNS(string namespaceURI, string qualifiedName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns a NodeList of all the Elements with a 
         /// given local name and namespace URI in the order in which they are 
@@ -313,7 +340,10 @@ namespace org.w3c.dom
         /// <returns>A new NodeList object containing all the matched 
         ///   Elements.
         /// </returns>
-        INodeList getElementsByTagNameNS(string namespaceURI, string localName);
+        public NodeList getElementsByTagNameNS(string namespaceURI, string localName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns the IElement whose ID is given by 
         /// elementId. If no such element exists, returns 
@@ -325,7 +355,9 @@ namespace org.w3c.dom
         /// not are expected to return null.</summary>
         /// <param name="elementId">The unique id value for an element.</param>
         /// <returns>The matching element.</returns>
-        IElement getElementById(string elementId);
-
+        public Element getElementById(string elementId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
