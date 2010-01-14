@@ -14,75 +14,67 @@ namespace org.w3c.dom.events
 {
 
 
-    /**
-     * The <code>MutationEvent</code> interface provides specific contextual 
-     * information associated with Mutation events. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>The MutationEvent interface provides specific contextual 
+    /// information associated with Mutation events. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IMutationEvent : IEvent
     {
-        /**
-         *  <code>relatedNode</code> is used to identify a secondary node related 
-         * to a mutation event. For example, if a mutation event is dispatched 
-         * to a node indicating that its parent has changed, the 
-         * <code>relatedNode</code> is the changed parent. If an event is 
-         * instead dispatched to a subtree indicating a node was changed within 
-         * it, the <code>relatedNode</code> is the changed node. In the case of 
-         * the DOMAttrModified event it indicates the <code>Attr</code> node 
-         * which was modified, added, or removed. 
-         */
+        /// <summary> relatedNode is used to identify a secondary node related 
+        /// to a mutation event. For example, if a mutation event is dispatched 
+        /// to a node indicating that its parent has changed, the 
+        /// relatedNode is the changed parent. If an event is 
+        /// instead dispatched to a subtree indicating a node was changed within 
+        /// it, the relatedNode is the changed node. In the case of 
+        /// the DOMAttrModified event it indicates the Attr node 
+        /// which was modified, added, or removed. 
+        /// </summary>
         INode relatedNode { get; }
 
-        /**
-         *  <code>prevValue</code> indicates the previous value of the 
-         * <code>Attr</code> node in DOMAttrModified events, and of the 
-         * <code>CharacterData</code> node in DOMCharDataModified events. 
-         */
+        /// <summary> prevValue indicates the previous value of the 
+        /// Attr node in DOMAttrModified events, and of the 
+        /// CharacterData node in DOMCharDataModified events. 
+        /// </summary>
         string prevValue { get; }
 
-        /**
-         *  <code>newValue</code> indicates the new value of the <code>Attr</code> 
-         * node in DOMAttrModified events, and of the <code>CharacterData</code> 
-         * node in DOMCharDataModified events. 
-         */
+        /// <summary> newValue indicates the new value of the Attr 
+        /// node in DOMAttrModified events, and of the CharacterData 
+        /// node in DOMCharDataModified events. 
+        /// </summary>
         string newValue { get; }
 
-        /**
-         *  <code>attrName</code> indicates the name of the changed 
-         * <code>Attr</code> node in a DOMAttrModified event. 
-         */
+        /// <summary> attrName indicates the name of the changed 
+        /// Attr node in a DOMAttrModified event. 
+        /// </summary>
         string attrName { get; }
 
-        /**
-         *  <code>attrChange</code> indicates the type of change which triggered 
-         * the DOMAttrModified event. The values can be <code>MODIFICATION</code>
-         * , <code>ADDITION</code>, or <code>REMOVAL</code>. 
-         */
-        MutationEventType attrChange { get; }
+        /// <summary> attrChange indicates the type of change which triggered 
+        /// the DOMAttrModified event. The values can be MODIFICATION
+        /// , ADDITION, or REMOVAL. 
+        /// </summary>
+        AttrChangeType attrChange { get; }
 
-        /**
-         * The <code>initMutationEvent</code> method is used to initialize the 
-         * value of a <code>MutationEvent</code> created through the 
-         * <code>DocumentEvent</code> interface. This method may only be called 
-         * before the <code>MutationEvent</code> has been dispatched via the 
-         * <code>dispatchEvent</code> method, though it may be called multiple 
-         * times during that phase if necessary. If called multiple times, the 
-         * final invocation takes precedence.
-         * @param typeArgSpecifies the event type.
-         * @param canBubbleArgSpecifies whether or not the event can bubble.
-         * @param cancelableArgSpecifies whether or not the event's default 
-         *   action can be prevented.
-         * @param relatedNodeArgSpecifies the <code>IEvent</code>'s related INode.
-         * @param prevValueArgSpecifies the <code>IEvent</code>'s 
-         *   <code>prevValue</code> attribute. This value may be null.
-         * @param newValueArgSpecifies the <code>IEvent</code>'s 
-         *   <code>newValue</code> attribute. This value may be null.
-         * @param attrNameArgSpecifies the <code>IEvent</code>'s 
-         *   <code>attrName</code> attribute. This value may be null.
-         * @param attrChangeArgSpecifies the <code>IEvent</code>'s 
-         *   <code>attrChange</code> attribute
-         */
+        /// <summary>The initMutationEvent method is used to initialize the 
+        /// value of a MutationEvent created through the 
+        /// DocumentEvent interface. This method may only be called 
+        /// before the MutationEvent has been dispatched via the 
+        /// dispatchEvent method, though it may be called multiple 
+        /// times during that phase if necessary. If called multiple times, the 
+        /// final invocation takes precedence.</summary>
+        /// <param name="typeArg">Specifies the event type.</param>
+        /// <param name="canBubbleArg">Specifies whether or not the event can bubble.</param>
+        /// <param name="cancelableArg">Specifies whether or not the event's default 
+        ///   action can be prevented.</param>
+        /// <param name="relatedNodeArg">Specifies the IEvent's related INode.</param>
+        /// <param name="prevValueArg">Specifies the IEvent's 
+        ///   prevValue attribute. This value may be null.</param>
+        /// <param name="newValueArg">Specifies the IEvent's 
+        ///   newValue attribute. This value may be null.</param>
+        /// <param name="attrNameArg">Specifies the IEvent's 
+        ///   attrName attribute. This value may be null.</param>
+        /// <param name="attrChangeArg">Specifies the IEvent's 
+        ///   attrChange attribute</param>
         void initMutationEvent(string typeArg,
                                       bool canBubbleArg,
                                       bool cancelableArg,
@@ -90,24 +82,20 @@ namespace org.w3c.dom.events
                                       string prevValueArg,
                                       string newValueArg,
                                       string attrNameArg,
-                                      MutationEventType attrChangeArg);
+                                      AttrChangeType attrChangeArg);
 
     }
 
-    public enum MutationEventType
+    public enum AttrChangeType
     { 
-            // attrChangeType
-        /**
-         * The <code>Attr</code> was modified in place.
-         */
+        /// <summary>The Attr was modified in place.
+        /// </summary>
         MODIFICATION = 1,
-        /**
-         * The <code>Attr</code> was just added.
-         */
+        /// <summary>The Attr was just added.
+        /// </summary>
         ADDITION = 2,
-        /**
-         * The <code>Attr</code> was just removed.
-         */
+        /// <summary>The Attr was just removed.
+        /// </summary>
         REMOVAL = 3
     }
 }

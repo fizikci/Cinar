@@ -13,194 +13,171 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Form control.Depending upon the environment in which the page is being 
-     * viewed, the value property may be read-only for the file upload input 
-     * type. For the "password" input type, the actual value returned may be 
-     * masked to prevent unauthorized use. See the INPUT element definition in [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>].
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Form control.Depending upon the environment in which the page is being 
+    /// viewed, the value property may be read-only for the file upload input 
+    /// type. For the "password" input type, the actual value returned may be 
+    /// masked to prevent unauthorized use. See the INPUT element definition in [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>].
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLInputElement : IHTMLElement
     {
-        /**
-         * When the <code>type</code> attribute of the element has the value 
-         * "text", "file" or "password", this represents the HTML value 
-         * attribute of the element. The value of this attribute does not change 
-         * if the contents of the corresponding form control, in an interactive 
-         * user agent, changes. See the value attribute definition in HTML 4.01.
-         */
+        /// <summary>When the type attribute of the element has the value 
+        /// "text", "file" or "password", this represents the HTML value 
+        /// attribute of the element. The value of this attribute does not change 
+        /// if the contents of the corresponding form control, in an interactive 
+        /// user agent, changes. See the value attribute definition in HTML 4.01.
+        /// </summary>
         string defaultValue { get; set; }
 
 
-        /**
-         * When <code>type</code> has the value "radio" or "checkbox", this 
-         * represents the HTML checked attribute of the element. The value of 
-         * this attribute does not change if the state of the corresponding form 
-         * control, in an interactive user agent, changes. See the checked 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>When type has the value "radio" or "checkbox", this 
+        /// represents the HTML checked attribute of the element. The value of 
+        /// this attribute does not change if the state of the corresponding form 
+        /// control, in an interactive user agent, changes. See the checked 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         bool defaultChecked { get; set; }
 
 
-        /**
-         * Returns the <code>FORM</code> element containing this control. Returns 
-         * <code>null</code> if this control is not within the context of a 
-         * form. 
-         */
+        /// <summary>Returns the FORM element containing this control. Returns 
+        /// null if this control is not within the context of a 
+        /// form. 
+        /// </summary>
         IHTMLFormElement Form { get; set; }
 
-        /**
-         * A comma-separated list of content types that a server processing this 
-         * form will handle correctly. See the accept attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>A comma-separated list of content types that a server processing this 
+        /// form will handle correctly. See the accept attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string accept { get; set; }
 
 
-        /**
-         * A single character access key to give access to the form control. See 
-         * the accesskey attribute definition in HTML 4.01.
-         */
+        /// <summary>A single character access key to give access to the form control. See 
+        /// the accesskey attribute definition in HTML 4.01.
+        /// </summary>
         string accessKey { get; set; }
 
 
-        /**
-         * Aligns this object (vertically or horizontally) with respect to its 
-         * surrounding text. See the align attribute definition in HTML 4.01. 
-         * This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Aligns this object (vertically or horizontally) with respect to its 
+        /// surrounding text. See the align attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string align { get; set; }
 
 
-        /**
-         * Alternate text for user agents not rendering the normal content of this 
-         * element. See the alt attribute definition in HTML 4.01.
-         */
+        /// <summary>Alternate text for user agents not rendering the normal content of this 
+        /// element. See the alt attribute definition in HTML 4.01.
+        /// </summary>
         string alt { get; set; }
 
 
-        /**
-         * When the <code>type</code> attribute of the element has the value 
-         * "radio" or "checkbox", this represents the current state of the form 
-         * control, in an interactive user agent. Changes to this attribute 
-         * change the state of the form control, but do not change the value of 
-         * the HTML checked attribute of the INPUT element.During the handling 
-         * of a click event on an input element with a type attribute that has 
-         * the value "radio" or "checkbox", some implementations may change the 
-         * value of this property before the event is being dispatched in the 
-         * document. If the default action of the event is canceled, the value 
-         * of the property may be changed back to its original value. This means 
-         * that the value of this property during the handling of click events 
-         * is implementation dependent.
-         */
+        /// <summary>When the type attribute of the element has the value 
+        /// "radio" or "checkbox", this represents the current state of the form 
+        /// control, in an interactive user agent. Changes to this attribute 
+        /// change the state of the form control, but do not change the value of 
+        /// the HTML checked attribute of the INPUT element.During the handling 
+        /// of a click event on an input element with a type attribute that has 
+        /// the value "radio" or "checkbox", some implementations may change the 
+        /// value of this property before the event is being dispatched in the 
+        /// document. If the default action of the event is canceled, the value 
+        /// of the property may be changed back to its original value. This means 
+        /// that the value of this property during the handling of click events 
+        /// is implementation dependent.
+        /// </summary>
         bool Checked { get; set; }
 
 
-        /**
-         * The control is unavailable in this context. See the disabled attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The control is unavailable in this context. See the disabled attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         bool disabled { get; set; }
 
 
-        /**
-         * Maximum number of characters for text fields, when <code>type</code> 
-         * has the value "text" or "password". See the maxlength attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Maximum number of characters for text fields, when type 
+        /// has the value "text" or "password". See the maxlength attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         int maxLength { get; set; }
 
 
-        /**
-         * Form control or object name when submitted with a form. See the name 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Form control or object name when submitted with a form. See the name 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * This control is read-only. Relevant only when <code>type</code> has the 
-         * value "text" or "password". See the readonly attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>This control is read-only. Relevant only when type has the 
+        /// value "text" or "password". See the readonly attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         bool readOnly { get; set; }
 
 
-        /**
-         * Size information. The precise meaning is specific to each type of 
-         * field. See the size attribute definition in HTML 4.01.
-         * @version DOM Level 2
-         */
+        /// <summary>Size information. The precise meaning is specific to each type of 
+        /// field. See the size attribute definition in HTML 4.01.
+        /// @version DOM Level 2
+        /// </summary>
         int size { get; set; }
 
 
-        /**
-         * When the <code>type</code> attribute has the value "image", this 
-         * attribute specifies the location of the image to be used to decorate 
-         * the graphical submit button. See the src attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>When the type attribute has the value "image", this 
+        /// attribute specifies the location of the image to be used to decorate 
+        /// the graphical submit button. See the src attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string src { get; set; }
 
 
-        /**
-         * Index that represents the element's position in the tabbing order. See 
-         * the tabindex attribute definition in HTML 4.01.
-         */
+        /// <summary>Index that represents the element's position in the tabbing order. See 
+        /// the tabindex attribute definition in HTML 4.01.
+        /// </summary>
         int tabIndex { get; set; }
 
 
-        /**
-         * The type of control created (all lower case). See the type attribute 
-         * definition in HTML 4.01.
-         * @version DOM Level 2
-         */
+        /// <summary>The type of control created (all lower case). See the type attribute 
+        /// definition in HTML 4.01.
+        /// @version DOM Level 2
+        /// </summary>
         string type { get; set; }
 
 
-        /**
-         * Use client-side image map. See the usemap attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Use client-side image map. See the usemap attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string useMap { get; set; }
 
 
-        /**
-         * When the <code>type</code> attribute of the element has the value 
-         * "text", "file" or "password", this represents the current contents of 
-         * the corresponding form control, in an interactive user agent. 
-         * Changing this attribute changes the contents of the form control, but 
-         * does not change the value of the HTML value attribute of the element. 
-         * When the <code>type</code> attribute of the element has the value 
-         * "button", "hidden", "submit", "reset", "image", "checkbox" or 
-         * "radio", this represents the HTML value attribute of the element. See 
-         * the value attribute definition in HTML 4.01.
-         */
+        /// <summary>When the type attribute of the element has the value 
+        /// "text", "file" or "password", this represents the current contents of 
+        /// the corresponding form control, in an interactive user agent. 
+        /// Changing this attribute changes the contents of the form control, but 
+        /// does not change the value of the HTML value attribute of the element. 
+        /// When the type attribute of the element has the value 
+        /// "button", "hidden", "submit", "reset", "image", "checkbox" or 
+        /// "radio", this represents the HTML value attribute of the element. See 
+        /// the value attribute definition in HTML 4.01.
+        /// </summary>
         string value { get; set; }
 
 
-        /**
-         * Removes keyboard focus from this element.
-         */
+        /// <summary>Removes keyboard focus from this element.
+        /// </summary>
         void blur();
 
-        /**
-         * Gives keyboard focus to this element.
-         */
+        /// <summary>Gives keyboard focus to this element.
+        /// </summary>
         void focus();
 
-        /**
-         * Select the contents of the text area. For <code>INPUT</code> elements 
-         * whose <code>type</code> attribute has one of the following values: 
-         * "text", "file", or "password".
-         */
+        /// <summary>Select the contents of the text area. For INPUT elements 
+        /// whose type attribute has one of the following values: 
+        /// "text", "file", or "password".
+        /// </summary>
         void select();
 
-        /**
-         * Simulate a mouse-click. For <code>INPUT</code> elements whose 
-         * <code>type</code> attribute has one of the following values: 
-         * "button", "checkbox", "radio", "reset", or "submit".
-         */
+        /// <summary>Simulate a mouse-click. For INPUT elements whose 
+        /// type attribute has one of the following values: 
+        /// "button", "checkbox", "radio", "reset", or "submit".
+        /// </summary>
         void click();
 
     }

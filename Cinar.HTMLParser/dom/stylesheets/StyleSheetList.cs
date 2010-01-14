@@ -13,32 +13,29 @@
 namespace org.w3c.dom.stylesheets
 {
 
-    /**
-     * The <code>IStyleSheetList</code> interface provides the abstraction of an 
-     * ordered collection of style sheets. 
-     * <p> The items in the <code>IStyleSheetList</code> are accessible via an 
-     * integral index, starting from 0. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>The IStyleSheetList interface provides the abstraction of an 
+    /// ordered collection of style sheets. 
+    ///  The items in the IStyleSheetList are accessible via an 
+    /// integral index, starting from 0. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IStyleSheetList
     {
-        /**
-         *  The number of <code>StyleSheets</code> in the list. The range of valid 
-         * child stylesheet indices is <code>0</code> to <code>length-1</code> 
-         * inclusive. 
-         */
+        /// <summary> The number of StyleSheets in the list. The range of valid 
+        /// child stylesheet indices is 0 to length-1 
+        /// inclusive. 
+        /// </summary>
         int length { get; }
 
-        /**
-         *  Used to retrieve a style sheet by ordinal index. If index is greater 
-         * than or equal to the number of style sheets in the list, this returns 
-         * <code>null</code>. 
-         * @param indexIndex into the collection
-         * @return The style sheet at the <code>index</code> position in the 
-         *   <code>IStyleSheetList</code>, or <code>null</code> if that is not a 
-         *   valid index. 
-         */
+        /// <summary> Used to retrieve a style sheet by ordinal index. If index is greater 
+        /// than or equal to the number of style sheets in the list, this returns 
+        /// null. </summary>
+        /// <param name="index">Index into the collection</param>
+        /// <returns>The style sheet at the index position in the 
+        ///   IStyleSheetList, or null if that is not a 
+        ///   valid index. 
+        /// </returns>
         IStyleSheet item(int index);
 
     }

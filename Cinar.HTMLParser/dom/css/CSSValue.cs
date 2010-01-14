@@ -13,58 +13,50 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>CSSValue</code> interface represents a simple or a complex 
-     * value. A <code>CSSValue</code> object only occurs in a context of a CSS 
-     * property. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The CSSValue interface represents a simple or a complex 
+    /// value. A CSSValue object only occurs in a context of a CSS 
+    /// property. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICSSValue
     {
-        /**
-         *  A string representation of the current value. 
-         * @exception DOMException
-         *    SYNTAX_ERR: Raised if the specified CSS string value has a syntax 
-         *   error (according to the attached property) or is unparsable. 
-         *   <br>INVALID_MODIFICATION_ERR: Raised if the specified CSS string 
-         *   value represents a different type of values than the values allowed 
-         *   by the CSS property.
-         *   <br> NO_MODIFICATION_ALLOWED_ERR: Raised if this value is readonly. 
-         */
+        /// <summary> A string representation of the current value.</summary>
+        /// <exception cref="DOMException">
+        ///    SYNTAX_ERR: Raised if the specified CSS string value has a syntax 
+        ///   error (according to the attached property) or is unparsable. 
+        ///   INVALID_MODIFICATION_ERR: Raised if the specified CSS string 
+        ///   value represents a different type of values than the values allowed 
+        ///   by the CSS property.
+        ///    NO_MODIFICATION_ALLOWED_ERR: Raised if this value is readonly. 
+        /// </exception>
         string cssText { get; set; } // throws DOMException;
 
-        /**
-         *  A code defining the type of the value as defined above. 
-         */
+        /// <summary> A code defining the type of the value as defined above. 
+        /// </summary>
         CSSValueType cssValueType { get; }
 
     }
 
     public enum CSSValueType
     { 
-        // UnitTypes
-        /**
-         * The value is inherited and the <code>cssText</code> contains "inherit".
-         */
+        /// <summary>The value is inherited and the cssText contains "inherit".
+        /// </summary>
         CSS_INHERIT = 0,
-        /**
-         * The value is a primitive value and an instance of the 
-         * <code>ICSSPrimitiveValue</code> interface can be obtained by using 
-         * binding-specific casting methods on this instance of the 
-         * <code>CSSValue</code> interface.
-         */
+        /// <summary>The value is a primitive value and an instance of the 
+        /// ICSSPrimitiveValue interface can be obtained by using 
+        /// binding-specific casting methods on this instance of the 
+        /// CSSValue interface.
+        /// </summary>
         CSS_PRIMITIVE_VALUE = 1,
-        /**
-         * The value is a <code>CSSValue</code> list and an instance of the 
-         * <code>CSSValueList</code> interface can be obtained by using 
-         * binding-specific casting methods on this instance of the 
-         * <code>CSSValue</code> interface.
-         */
+        /// <summary>The value is a CSSValue list and an instance of the 
+        /// CSSValueList interface can be obtained by using 
+        /// binding-specific casting methods on this instance of the 
+        /// CSSValue interface.
+        /// </summary>
         CSS_VALUE_LIST = 2,
-        /**
-         * The value is a custom value.
-         */
+        /// <summary>The value is a custom value.
+        /// </summary>
         CSS_CUSTOM = 3
     }
 }

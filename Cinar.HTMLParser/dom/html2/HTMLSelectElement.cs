@@ -12,134 +12,117 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * The select element allows the selection of an option. The contained options 
-     * can be directly accessed through the select element as a collection. See 
-     * the SELECT element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>The select element allows the selection of an option. The contained options 
+    /// can be directly accessed through the select element as a collection. See 
+    /// the SELECT element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLSelectElement : IHTMLElement
     {
-        /**
-         * The type of this form control. This is the string "select-multiple" 
-         * when the multiple attribute is <code>true</code> and the string 
-         * "select-one" when <code>false</code>.
-         */
+        /// <summary>The type of this form control. This is the string "select-multiple" 
+        /// when the multiple attribute is true and the string 
+        /// "select-one" when false.
+        /// </summary>
         string type { get; set; }
 
-        /**
-         * The ordinal index of the selected option, starting from 0. The value -1 
-         * is returned if no element is selected. If multiple options are 
-         * selected, the index of the first selected option is returned. 
-         */
+        /// <summary>The ordinal index of the selected option, starting from 0. The value -1 
+        /// is returned if no element is selected. If multiple options are 
+        /// selected, the index of the first selected option is returned. 
+        /// </summary>
         int selectedIndex { get; set; }
 
 
-        /**
-         *  The current form control value (i.e. the value of the currently 
-         * selected option), if multiple options are selected this is the value 
-         * of the first selected option. 
-         */
+        /// <summary> The current form control value (i.e. the value of the currently 
+        /// selected option), if multiple options are selected this is the value 
+        /// of the first selected option. 
+        /// </summary>
         string value { get; set; }
 
 
-        /**
-         *  The number of options in this <code>SELECT</code>. 
-         * @version DOM Level 2
-         */
+        /// <summary> The number of options in this SELECT. 
+        /// @version DOM Level 2
+        /// </summary>
         int length { get; set; }
-        /**
-         *  The number of options in this <code>SELECT</code>. 
-         * @exception DOMException
-         *    NOT_SUPPORTED_ERR: if setting the length is not allowed by the 
-         *   implementation. 
-         * @version DOM Level 2
-         */
+        /// <summary> The number of options in this SELECT. 
+        /// <exception cref="DOMException">
+        ///    NOT_SUPPORTED_ERR: if setting the length is not allowed by the 
+        ///   implementation. 
+        /// @version DOM Level 2
+        /// </summary>
         void setLength(int length); //; // throws DOMException;
 
-        /**
-         * Returns the <code>FORM</code> element containing this control. Returns 
-         * <code>null</code> if this control is not within the context of a 
-         * form. 
-         */
+        /// <summary>Returns the FORM element containing this control. Returns 
+        /// null if this control is not within the context of a 
+        /// form. 
+        /// </summary>
         IHTMLFormElement Form { get; set; }
 
-        /**
-         * The collection of <code>OPTION</code> elements contained by this 
-         * element. 
-         * @version DOM Level 2
-         */
+        /// <summary>The collection of OPTION elements contained by this 
+        /// element. 
+        /// @version DOM Level 2
+        /// </summary>
         IHTMLOptionsCollection Options { get; set; }
 
-        /**
-         * The control is unavailable in this context. See the disabled attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The control is unavailable in this context. See the disabled attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         bool disabled { get; set; }
 
 
-        /**
-         * If true, multiple <code>OPTION</code> elements may be selected in this 
-         * <code>SELECT</code>. See the multiple attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>If true, multiple OPTION elements may be selected in this 
+        /// SELECT. See the multiple attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         bool multiple { get; set; }
 
 
-        /**
-         * Form control or object name when submitted with a form. See the name 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Form control or object name when submitted with a form. See the name 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * Number of visible rows. See the size attribute definition in HTML 4.01.
-         */
+        /// <summary>Number of visible rows. See the size attribute definition in HTML 4.01.
+        /// </summary>
         int size { get; set; }
 
 
-        /**
-         * Index that represents the element's position in the tabbing order. See 
-         * the tabindex attribute definition in HTML 4.01.
-         */
+        /// <summary>Index that represents the element's position in the tabbing order. See 
+        /// the tabindex attribute definition in HTML 4.01.
+        /// </summary>
         int tabIndex { get; set; }
 
 
-        /**
-         * Add a new element to the collection of <code>OPTION</code> elements for 
-         * this <code>SELECT</code>. This method is the equivalent of the 
-         * <code>appendChild</code> method of the <code>INode</code> interface if 
-         * the <code>before</code> parameter is <code>null</code>. It is 
-         * equivalent to the <code>insertBefore</code> method on the parent of 
-         * <code>before</code> in all other cases. This method may have no 
-         * effect if the new element is not an <code>OPTION</code> or an 
-         * <code>OPTGROUP</code>.
-         * @param element The element to add.
-         * @param before The element to insert before, or <code>null</code> for 
-         *   the tail of the list.
-         * @exception DOMException
-         *   NOT_FOUND_ERR: Raised if <code>before</code> is not a descendant of 
-         *   the <code>SELECT</code> element. 
-         */
+        /// <summary>Add a new element to the collection of OPTION elements for 
+        /// this SELECT. This method is the equivalent of the 
+        /// appendChild method of the INode interface if 
+        /// the before parameter is null. It is 
+        /// equivalent to the insertBefore method on the parent of 
+        /// before in all other cases. This method may have no 
+        /// effect if the new element is not an OPTION or an 
+        /// OPTGROUP.
+        /// <param name="element"> The element to add.
+        /// <param name="before"> The element to insert before, or null for 
+        ///   the tail of the list.
+        /// <exception cref="DOMException">
+        ///   NOT_FOUND_ERR: Raised if before is not a descendant of 
+        ///   the SELECT element. 
+        /// </summary>
         void add(IHTMLElement element, IHTMLElement before); //; // throws DOMException;
 
-        /**
-         * Remove an element from the collection of <code>OPTION</code> elements 
-         * for this <code>SELECT</code>. Does nothing if no element has the 
-         * given index.
-         * @param index The index of the item to remove, starting from 0.
-         */
+        /// <summary>Remove an element from the collection of OPTION elements 
+        /// for this SELECT. Does nothing if no element has the 
+        /// given index.
+        /// <param name="index"> The index of the item to remove, starting from 0.
+        /// </summary>
         void remove(int index);
 
-        /**
-         * Removes keyboard focus from this element.
-         */
+        /// <summary>Removes keyboard focus from this element.
+        /// </summary>
         void blur();
 
-        /**
-         * Gives keyboard focus to this element.
-         */
+        /// <summary>Gives keyboard focus to this element.
+        /// </summary>
         void focus();
 
     }

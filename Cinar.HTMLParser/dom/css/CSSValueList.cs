@@ -13,36 +13,33 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     * The <code>CSSValueList</code> interface provides the abstraction of an 
-     * ordered collection of CSS values.
-     * <p> Some properties allow an empty list into their syntax. In that case, 
-     * these properties take the <code>none</code> identifier. So, an empty list 
-     * means that the property has the value <code>none</code>. 
-     * <p> The items in the <code>CSSValueList</code> are accessible via an 
-     * integral index, starting from 0. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>The CSSValueList interface provides the abstraction of an 
+    /// ordered collection of CSS values.
+    ///  Some properties allow an empty list into their syntax. In that case, 
+    /// these properties take the none identifier. So, an empty list 
+    /// means that the property has the value none. 
+    ///  The items in the CSSValueList are accessible via an 
+    /// integral index, starting from 0. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICSSValueList : ICSSValue
     {
-        /**
-         * The number of <code>CSSValues</code> in the list. The range of valid 
-         * values of the indices is <code>0</code> to <code>length-1</code> 
-         * inclusive.
-         */
+        /// <summary>The number of CSSValues in the list. The range of valid 
+        /// values of the indices is 0 to length-1 
+        /// inclusive.
+        /// </summary>
         int length { get; }
 
-        /**
-         * Used to retrieve a <code>CSSValue</code> by ordinal index. The order in 
-         * this collection represents the order of the values in the CSS style 
-         * property. If index is greater than or equal to the number of values 
-         * in the list, this returns <code>null</code>.
-         * @param indexIndex into the collection.
-         * @return The <code>CSSValue</code> at the <code>index</code> position 
-         *   in the <code>CSSValueList</code>, or <code>null</code> if that is 
-         *   not a valid index.
-         */
+        /// <summary>Used to retrieve a CSSValue by ordinal index. The order in 
+        /// this collection represents the order of the values in the CSS style 
+        /// property. If index is greater than or equal to the number of values 
+        /// in the list, this returns null.</summary>
+        /// <param name="indexIndex"> into the collection.</param>
+        /// <returns>The CSSValue at the index position 
+        ///   in the CSSValueList, or null if that is 
+        ///   not a valid index.
+        /// </returns>
         ICSSValue item(int index);
 
     }

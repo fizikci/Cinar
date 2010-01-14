@@ -13,24 +13,22 @@
 namespace org.w3c.dom.stylesheets
 {
 
-    /**
-     *  The <code>DocumentStyle</code> interface provides a mechanism by which the 
-     * style sheets embedded in a document can be retrieved. The expectation is 
-     * that an instance of the <code>DocumentStyle</code> interface can be 
-     * obtained by using binding-specific casting methods on an instance of the 
-     * <code>IDocument</code> interface. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The DocumentStyle interface provides a mechanism by which the 
+    /// style sheets embedded in a document can be retrieved. The expectation is 
+    /// that an instance of the DocumentStyle interface can be 
+    /// obtained by using binding-specific casting methods on an instance of the 
+    /// IDocument interface. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IDocumentStyle
     {
-        /**
-         *  A list containing all the style sheets explicitly linked into or 
-         * embedded in a document. For HTML documents, this includes external 
-         * style sheets, included via the HTML  LINK element, and inline  STYLE 
-         * elements. In XML, this includes external style sheets, included via 
-         * style sheet processing instructions (see ). 
-         */
+        /// <summary> A list containing all the style sheets explicitly linked into or 
+        /// embedded in a document. For HTML documents, this includes external 
+        /// style sheets, included via the HTML  LINK element, and inline  STYLE 
+        /// elements. In XML, this includes external style sheets, included via 
+        /// style sheet processing instructions (see ). 
+        /// </summary>
         IStyleSheetList styleSheets { get; }
 
     }

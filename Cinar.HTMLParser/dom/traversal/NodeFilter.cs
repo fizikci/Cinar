@@ -13,135 +13,116 @@
 namespace org.w3c.dom.traversal
 {
 
-    /**
-     * Filters are objects that know how to "filter out" nodes. If a 
-     * <code>NodeIterator</code> or <code>TreeWalker</code> is given a 
-     * <code>NodeFilter</code>, it applies the filter before it returns the next 
-     * node. If the filter says to accept the node, the traversal logic returns 
-     * it; otherwise, traversal looks for the next node and pretends that the 
-     * node that was rejected was not there.
-     * <p>The DOM does not provide any filters. <code>NodeFilter</code> is just an 
-     * interface that users can implement to provide their own filters. 
-     * <p><code>NodeFilters</code> do not need to know how to traverse from node 
-     * to node, nor do they need to know anything about the data structure that 
-     * is being traversed. This makes it very easy to write filters, since the 
-     * only thing they have to know how to do is evaluate a single node. One 
-     * filter may be used with a number of different kinds of traversals, 
-     * encouraging code reuse.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>Filters are objects that know how to "filter out" nodes. If a 
+    /// NodeIterator or TreeWalker is given a 
+    /// NodeFilter, it applies the filter before it returns the next 
+    /// node. If the filter says to accept the node, the traversal logic returns 
+    /// it; otherwise, traversal looks for the next node and pretends that the 
+    /// node that was rejected was not there.
+    /// The DOM does not provide any filters. NodeFilter is just an 
+    /// interface that users can implement to provide their own filters. 
+    /// NodeFilters do not need to know how to traverse from node 
+    /// to node, nor do they need to know anything about the data structure that 
+    /// is being traversed. This makes it very easy to write filters, since the 
+    /// only thing they have to know how to do is evaluate a single node. One 
+    /// filter may be used with a number of different kinds of traversals, 
+    /// encouraging code reuse.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface INodeFilter
     {
 
-        /**
-         * Test whether a specified node is visible in the logical view of a 
-         * <code>TreeWalker</code> or <code>NodeIterator</code>. This function 
-         * will be called by the implementation of <code>TreeWalker</code> and 
-         * <code>NodeIterator</code>; it is not normally called directly from 
-         * user code. (Though you could do so if you wanted to use the same 
-         * filter to guide your own application logic.)
-         * @param nThe node to check to see if it passes the filter or not.
-         * @return a constant to determine whether the node is accepted, .
-         *   rejected, or skipped, as defined above.
-         */
+        /// <summary>Test whether a specified node is visible in the logical view of a 
+        /// TreeWalker or NodeIterator. This function 
+        /// will be called by the implementation of TreeWalker and 
+        /// NodeIterator; it is not normally called directly from 
+        /// user code. (Though you could do so if you wanted to use the same 
+        /// filter to guide your own application logic.)</summary>
+        /// <param name="n">The node to check to see if it passes the filter or not.</param>
+        /// <returns>a constant to determine whether the node is accepted, .
+        ///   rejected, or skipped, as defined above.
+        /// </returns>
         NodeFilterType acceptNode(INode n);
 
     }
 
     public enum NodeFilterType : uint
     { 
-        // Constants returned by acceptNode
-        /**
-         * Accept the node. Navigation methods defined for 
-         * <code>NodeIterator</code> or <code>TreeWalker</code> will return this 
-         * node.
-         */
+        /// <summary>Accept the node. Navigation methods defined for 
+        /// NodeIterator or TreeWalker will return this 
+        /// node.
+        /// </summary>
         FILTER_ACCEPT = 1,
-        /**
-         * Reject the node. Navigation methods defined for 
-         * <code>NodeIterator</code> or <code>TreeWalker</code> will not return 
-         * this node. For <code>TreeWalker</code>, the children of this node 
-         * will also be rejected. <code>NodeIterators</code> treat this as a 
-         * synonym for <code>FILTER_SKIP</code>.
-         */
+        /// <summary>Reject the node. Navigation methods defined for 
+        /// NodeIterator or TreeWalker will not return 
+        /// this node. For TreeWalker, the children of this node 
+        /// will also be rejected. NodeIterators treat this as a 
+        /// synonym for FILTER_SKIP.
+        /// </summary>
         FILTER_REJECT = 2,
-        /**
-         * Skip this single node. Navigation methods defined for 
-         * <code>NodeIterator</code> or <code>TreeWalker</code> will not return 
-         * this node. For both <code>NodeIterator</code> and 
-         * <code>TreeWalker</code>, the children of this node will still be 
-         * considered. 
-         */
+        /// <summary>Skip this single node. Navigation methods defined for 
+        /// NodeIterator or TreeWalker will not return 
+        /// this node. For both NodeIterator and 
+        /// TreeWalker, the children of this node will still be 
+        /// considered. 
+        /// </summary>
         FILTER_SKIP = 3,
 
         // Constants for whatToShow
-        /**
-         * Show all <code>Nodes</code>.
-         */
+        /// <summary>Show all Nodes.
+        /// </summary>
         SHOW_ALL = 0xFFFFFFFF,
-        /**
-         * Show <code>IElement</code> nodes.
-         */
+        /// <summary>Show IElement nodes.
+        /// </summary>
         SHOW_ELEMENT = 0x00000001,
-        /**
-         * Show <code>Attr</code> nodes. This is meaningful only when creating an 
-         * iterator or tree-walker with an attribute node as its 
-         * <code>root</code>; in this case, it means that the attribute node 
-         * will appear in the first position of the iteration or traversal. 
-         * Since attributes are never children of other nodes, they do not 
-         * appear when traversing over the document tree.
-         */
+        /// <summary>Show Attr nodes. This is meaningful only when creating an 
+        /// iterator or tree-walker with an attribute node as its 
+        /// root; in this case, it means that the attribute node 
+        /// will appear in the first position of the iteration or traversal. 
+        /// Since attributes are never children of other nodes, they do not 
+        /// appear when traversing over the document tree.
+        /// </summary>
         SHOW_ATTRIBUTE = 0x00000002,
-        /**
-         * Show <code>Text</code> nodes.
-         */
+        /// <summary>Show Text nodes.
+        /// </summary>
         SHOW_TEXT = 0x00000004,
-        /**
-         * Show <code>CDATASection</code> nodes.
-         */
+        /// <summary>Show CDATASection nodes.
+        /// </summary>
         SHOW_CDATA_SECTION = 0x00000008,
-        /**
-         * Show <code>EntityReference</code> nodes.
-         */
+        /// <summary>Show EntityReference nodes.
+        /// </summary>
         SHOW_ENTITY_REFERENCE = 0x00000010,
-        /**
-         * Show <code>Entity</code> nodes. This is meaningful only when creating 
-         * an iterator or tree-walker with an<code> Entity</code> node as its 
-         * <code>root</code>; in this case, it means that the <code>Entity</code>
-         *  node will appear in the first position of the traversal. Since 
-         * entities are not part of the document tree, they do not appear when 
-         * traversing over the document tree.
-         */
+        /// <summary>Show Entity nodes. This is meaningful only when creating 
+        /// an iterator or tree-walker with an Entity node as its 
+        /// root; in this case, it means that the Entity
+        ///  node will appear in the first position of the traversal. Since 
+        /// entities are not part of the document tree, they do not appear when 
+        /// traversing over the document tree.
+        /// </summary>
         SHOW_ENTITY = 0x00000020,
-        /**
-         * Show <code>ProcessingInstruction</code> nodes.
-         */
+        /// <summary>Show ProcessingInstruction nodes.
+        /// </summary>
         SHOW_PROCESSING_INSTRUCTION = 0x00000040,
-        /**
-         * Show <code>Comment</code> nodes.
-         */
+        /// <summary>Show Comment nodes.
+        /// </summary>
         SHOW_COMMENT = 0x00000080,
-        /**
-         * Show <code>IDocument</code> nodes.
-         */
+        /// <summary>Show IDocument nodes.
+        /// </summary>
         SHOW_DOCUMENT = 0x00000100,
-        /**
-         * Show <code>DocumentType</code> nodes.
-         */
+        /// <summary>Show DocumentType nodes.
+        /// </summary>
         SHOW_DOCUMENT_TYPE = 0x00000200,
-        /**
-         * Show <code>DocumentFragment</code> nodes.
-         */
+        /// <summary>Show DocumentFragment nodes.
+        /// </summary>
         SHOW_DOCUMENT_FRAGMENT = 0x00000400,
-        /**
-         * Show <code>Notation</code> nodes. This is meaningful only when creating 
-         * an iterator or tree-walker with a <code>Notation</code> node as its 
-         * <code>root</code>; in this case, it means that the 
-         * <code>Notation</code> node will appear in the first position of the 
-         * traversal. Since notations are not part of the document tree, they do 
-         * not appear when traversing over the document tree.
-         */
+        /// <summary>Show Notation nodes. This is meaningful only when creating 
+        /// an iterator or tree-walker with a Notation node as its 
+        /// root; in this case, it means that the 
+        /// Notation node will appear in the first position of the 
+        /// traversal. Since notations are not part of the document tree, they do 
+        /// not appear when traversing over the document tree.
+        /// </summary>
         SHOW_NOTATION = 0x00000800
     }
 }

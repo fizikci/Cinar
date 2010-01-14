@@ -13,28 +13,24 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>Counter</code> interface is used to represent any counter or 
-     * counters function value. This interface reflects the values in the 
-     * underlying style property. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The Counter interface is used to represent any counter or 
+    /// counters function value. This interface reflects the values in the 
+    /// underlying style property. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICounter
     {
-        /**
-         *  This attribute is used for the identifier of the counter. 
-         */
+        /// <summary> This attribute is used for the identifier of the counter. 
+        /// </summary>
         string identifier { get; }
 
-        /**
-         *  This attribute is used for the style of the list. 
-         */
+        /// <summary> This attribute is used for the style of the list. 
+        /// </summary>
         string listStyle { get; }
 
-        /**
-         *  This attribute is used for the separator of the nested counters. 
-         */
+        /// <summary> This attribute is used for the separator of the nested counters. 
+        /// </summary>
         string separator { get; }
 
     }

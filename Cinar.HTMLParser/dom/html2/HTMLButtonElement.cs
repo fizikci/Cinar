@@ -13,57 +13,49 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Push button. See the BUTTON element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Push button. See the BUTTON element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLButtonElement : IHTMLElement
     {
-        /**
-         * Returns the <code>FORM</code> element containing this control. Returns 
-         * <code>null</code> if this control is not within the context of a 
-         * form. 
-         */
+        /// <summary>Returns the FORM element containing this control. Returns 
+        /// null if this control is not within the context of a 
+        /// form. 
+        /// </summary>
         IHTMLFormElement Form { get; set; }
 
-        /**
-         * A single character access key to give access to the form control. See 
-         * the accesskey attribute definition in HTML 4.01.
-         */
+        /// <summary>A single character access key to give access to the form control. See 
+        /// the accesskey attribute definition in HTML 4.01.
+        /// </summary>
         string accessKey { get; set; }
 
 
-        /**
-         * The control is unavailable in this context. See the disabled attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The control is unavailable in this context. See the disabled attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         bool disabled { get; set; }
 
 
-        /**
-         * Form control or object name when submitted with a form. See the name 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Form control or object name when submitted with a form. See the name 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * Index that represents the element's position in the tabbing order. See 
-         * the tabindex attribute definition in HTML 4.01.
-         */
+        /// <summary>Index that represents the element's position in the tabbing order. See 
+        /// the tabindex attribute definition in HTML 4.01.
+        /// </summary>
         int tabIndex { get; set; }
 
 
-        /**
-         * The type of button (all lower case). See the type attribute definition 
-         * in HTML 4.01.
-         */
+        /// <summary>The type of button (all lower case). See the type attribute definition 
+        /// in HTML 4.01.
+        /// </summary>
         string type { get; set; }
 
-        /**
-         * The current form control value. See the value attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>The current form control value. See the value attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string value { get; set; }
 
 

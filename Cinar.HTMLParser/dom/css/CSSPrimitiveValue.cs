@@ -13,285 +13,249 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>ICSSPrimitiveValue</code> interface represents a single CSS value
-     * . This interface may be used to determine the value of a specific style 
-     * property currently set in a block or to set a specific style property 
-     * explicitly within the block. An instance of this interface might be 
-     * obtained from the <code>getPropertyCSSValue</code> method of the 
-     * <code>ICSSStyleDeclaration</code> interface. A 
-     * <code>ICSSPrimitiveValue</code> object only occurs in a context of a CSS 
-     * property. 
-     * <p> Conversions are allowed between absolute values (from millimeters to 
-     * centimeters, from degrees to radians, and so on) but not between relative 
-     * values. (For example, a pixel value cannot be converted to a centimeter 
-     * value.) Percentage values can't be converted since they are relative to 
-     * the parent value (or another property value). There is one exception for 
-     * color percentage values: since a color percentage value is relative to 
-     * the range 0-255, a color percentage value can be converted to a number; 
-     * (see also the <code>RGBColor</code> interface). 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The ICSSPrimitiveValue interface represents a single CSS value
+    /// . This interface may be used to determine the value of a specific style 
+    /// property currently set in a block or to set a specific style property 
+    /// explicitly within the block. An instance of this interface might be 
+    /// obtained from the getPropertyCSSValue method of the 
+    /// ICSSStyleDeclaration interface. A 
+    /// ICSSPrimitiveValue object only occurs in a context of a CSS 
+    /// property. 
+    ///  Conversions are allowed between absolute values (from millimeters to 
+    /// centimeters, from degrees to radians, and so on) but not between relative 
+    /// values. (For example, a pixel value cannot be converted to a centimeter 
+    /// value.) Percentage values can't be converted since they are relative to 
+    /// the parent value (or another property value). There is one exception for 
+    /// color percentage values: since a color percentage value is relative to 
+    /// the range 0-255, a color percentage value can be converted to a number; 
+    /// (see also the RGBColor interface). 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICSSPrimitiveValue : ICSSValue
     {
 
-        /**
-         * The type of the value as defined by the constants specified above.
-         */
+        /// <summary>The type of the value as defined by the constants specified above.
+        /// </summary>
         UnitType primitiveType { get; }
 
-        /**
-         *  A method to set the float value with a specified unit. If the property 
-         * attached with this value can not accept the specified unit or the 
-         * float value, the value will be unchanged and a 
-         * <code>DOMException</code> will be raised. 
-         * @param unitType A unit code as defined above. The unit code can only 
-         *   be a float unit type (i.e. <code>CSS_NUMBER</code>, 
-         *   <code>CSS_PERCENTAGE</code>, <code>CSS_EMS</code>, 
-         *   <code>CSS_EXS</code>, <code>CSS_PX</code>, <code>CSS_CM</code>, 
-         *   <code>CSS_MM</code>, <code>CSS_IN</code>, <code>CSS_PT</code>, 
-         *   <code>CSS_PC</code>, <code>CSS_DEG</code>, <code>CSS_RAD</code>, 
-         *   <code>CSS_GRAD</code>, <code>CSS_MS</code>, <code>CSS_S</code>, 
-         *   <code>CSS_HZ</code>, <code>CSS_KHZ</code>, 
-         *   <code>CSS_DIMENSION</code>). 
-         * @param floatValue The new float value. 
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the attached property doesn't support 
-         *   the float value or the unit type.
-         *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
-         */
+        /// <summary> A method to set the float value with a specified unit. If the property 
+        /// attached with this value can not accept the specified unit or the 
+        /// float value, the value will be unchanged and a 
+        /// DOMException will be raised. </summary>
+        /// <param name="unitType"> A unit code as defined above. The unit code can only 
+        ///   be a float unit type (i.e. CSS_NUMBER, 
+        ///   CSS_PERCENTAGE, CSS_EMS, 
+        ///   CSS_EXS, CSS_PX, CSS_CM, 
+        ///   CSS_MM, CSS_IN, CSS_PT, 
+        ///   CSS_PC, CSS_DEG, CSS_RAD, 
+        ///   CSS_GRAD, CSS_MS, CSS_S, 
+        ///   CSS_HZ, CSS_KHZ, 
+        ///   CSS_DIMENSION).</param>
+        /// <param name="floatValue"> The new float value.</param>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the attached property doesn't support 
+        ///   the float value or the unit type.
+        ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
+        /// </exception>
         void setFloatValue(UnitType unitType,
                                   float floatValue)
                                   ; // throws DOMException;
 
-        /**
-         *  This method is used to get a float value in a specified unit. If this 
-         * CSS value doesn't contain a float value or can't be converted into 
-         * the specified unit, a <code>DOMException</code> is raised. 
-         * @param unitType A unit code to get the float value. The unit code can 
-         *   only be a float unit type (i.e. <code>CSS_NUMBER</code>, 
-         *   <code>CSS_PERCENTAGE</code>, <code>CSS_EMS</code>, 
-         *   <code>CSS_EXS</code>, <code>CSS_PX</code>, <code>CSS_CM</code>, 
-         *   <code>CSS_MM</code>, <code>CSS_IN</code>, <code>CSS_PT</code>, 
-         *   <code>CSS_PC</code>, <code>CSS_DEG</code>, <code>CSS_RAD</code>, 
-         *   <code>CSS_GRAD</code>, <code>CSS_MS</code>, <code>CSS_S</code>, 
-         *   <code>CSS_HZ</code>, <code>CSS_KHZ</code>, 
-         *   <code>CSS_DIMENSION</code>). 
-         * @return  The float value in the specified unit. 
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a float 
-         *   value or if the float value can't be converted into the specified 
-         *   unit. 
-         */
+        /// <summary> This method is used to get a float value in a specified unit. If this 
+        /// CSS value doesn't contain a float value or can't be converted into 
+        /// the specified unit, a DOMException is raised. </summary>
+        /// <param name="unitType"> A unit code to get the float value. The unit code can 
+        ///   only be a float unit type (i.e. CSS_NUMBER, 
+        ///   CSS_PERCENTAGE, CSS_EMS, 
+        ///   CSS_EXS, CSS_PX, CSS_CM, 
+        ///   CSS_MM, CSS_IN, CSS_PT, 
+        ///   CSS_PC, CSS_DEG, CSS_RAD, 
+        ///   CSS_GRAD, CSS_MS, CSS_S, 
+        ///   CSS_HZ, CSS_KHZ, 
+        ///   CSS_DIMENSION).</param>
+        /// <returns> The float value in the specified unit. </returns>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a float 
+        ///   value or if the float value can't be converted into the specified 
+        ///   unit. 
+        /// </exception>
         float getFloatValue(UnitType unitType)
                                    ; // throws DOMException;
 
-        /**
-         *  A method to set the string value with the specified unit. If the 
-         * property attached to this value can't accept the specified unit or 
-         * the string value, the value will be unchanged and a 
-         * <code>DOMException</code> will be raised. 
-         * @param stringType A string code as defined above. The string code can 
-         *   only be a string unit type (i.e. <code>CSS_STRING</code>, 
-         *   <code>CSS_URI</code>, <code>CSS_IDENT</code>, and 
-         *   <code>CSS_ATTR</code>). 
-         * @param stringValue The new string value. 
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
-         *   value or if the string value can't be converted into the specified 
-         *   unit.
-         *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
-         */
+        /// <summary> A method to set the string value with the specified unit. If the 
+        /// property attached to this value can't accept the specified unit or 
+        /// the string value, the value will be unchanged and a 
+        /// DOMException will be raised.</summary>
+        /// <param name="stringType"> A string code as defined above. The string code can 
+        ///   only be a string unit type (i.e. CSS_STRING, 
+        ///   CSS_URI, CSS_IDENT, and 
+        ///   CSS_ATTR).</param>
+        /// <param name="stringValue"> The new string value.</param>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
+        ///   value or if the string value can't be converted into the specified 
+        ///   unit.
+        ///   NO_MODIFICATION_ALLOWED_ERR: Raised if this property is readonly.
+        /// </exception>
         void setStringValue(short stringType,
                                    string stringValue)
                                    ; // throws DOMException;
 
-        /**
-         *  This method is used to get the string value. If the CSS value doesn't 
-         * contain a string value, a <code>DOMException</code> is raised.  Some 
-         * properties (like 'font-family' or 'voice-family') convert a 
-         * whitespace separated list of idents to a string. 
-         * @return  The string value in the current unit. The current 
-         *   <code>primitiveType</code> can only be a string unit type (i.e. 
-         *   <code>CSS_STRING</code>, <code>CSS_URI</code>, 
-         *   <code>CSS_IDENT</code> and <code>CSS_ATTR</code>). 
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
-         *   value. 
-         */
+        /// <summary> This method is used to get the string value. If the CSS value doesn't 
+        /// contain a string value, a DOMException is raised.  Some 
+        /// properties (like 'font-family' or 'voice-family') convert a 
+        /// whitespace separated list of idents to a string. 
+        /// <returns> The string value in the current unit. The current 
+        ///   primitiveType can only be a string unit type (i.e. 
+        ///   CSS_STRING, CSS_URI, 
+        ///   CSS_IDENT and CSS_ATTR). 
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
+        ///   value. 
+        /// </summary>
         string stringValue { get; } // throws DOMException;
 
-        /**
-         *  This method is used to get the Counter value. If this CSS value 
-         * doesn't contain a counter value, a <code>DOMException</code> is 
-         * raised. Modification to the corresponding style property can be 
-         * achieved using the <code>Counter</code> interface. 
-         * @return The Counter value.
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a 
-         *   Counter value (e.g. this is not <code>CSS_COUNTER</code>). 
-         */
+        /// <summary> This method is used to get the Counter value. If this CSS value 
+        /// doesn't contain a counter value, a DOMException is 
+        /// raised. Modification to the corresponding style property can be 
+        /// achieved using the Counter interface.</summary>
+        /// <returns>The Counter value.</returns>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a 
+        ///   Counter value (e.g. this is not CSS_COUNTER). 
+        /// </exception>
         ICounter counterValue { get; } // throws DOMException;
 
-        /**
-         *  This method is used to get the Rect value. If this CSS value doesn't 
-         * contain a rect value, a <code>DOMException</code> is raised. 
-         * Modification to the corresponding style property can be achieved 
-         * using the <code>Rect</code> interface. 
-         * @return The Rect value.
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a Rect 
-         *   value. (e.g. this is not <code>CSS_RECT</code>). 
-         */
+        /// <summary> This method is used to get the Rect value. If this CSS value doesn't 
+        /// contain a rect value, a DOMException is raised. 
+        /// Modification to the corresponding style property can be achieved 
+        /// using the Rect interface.</summary>
+        /// <returns>The Rect value.</returns>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a Rect 
+        ///   value. (e.g. this is not CSS_RECT). 
+        /// </exception>
         IRect rectValue { get; } // throws DOMException;
 
-        /**
-         *  This method is used to get the RGB color. If this CSS value doesn't 
-         * contain a RGB color value, a <code>DOMException</code> is raised. 
-         * Modification to the corresponding style property can be achieved 
-         * using the <code>RGBColor</code> interface. 
-         * @return the RGB color value.
-         * @exception DOMException
-         *    INVALID_ACCESS_ERR: Raised if the attached property can't return a 
-         *   RGB color value (e.g. this is not <code>CSS_RGBCOLOR</code>). 
-         */
+        /// <summary> This method is used to get the RGB color. If this CSS value doesn't 
+        /// contain a RGB color value, a DOMException is raised. 
+        /// Modification to the corresponding style property can be achieved 
+        /// using the RGBColor interface.</summary>
+        /// <returns>the RGB color value.</returns>
+        /// <exception cref="DOMException">
+        ///    INVALID_ACCESS_ERR: Raised if the attached property can't return a 
+        ///   RGB color value (e.g. this is not CSS_RGBCOLOR). 
+        /// </exception>
         IRGBColor rgbColorValue { get; } // throws DOMException;
 
     }
 
     public enum UnitType
     {
-        // UnitTypes
-        /**
-         * The value is not a recognized CSS2 value. The value can only be 
-         * obtained by using the <code>cssText</code> attribute.
-         */
+        /// <summary>The value is not a recognized CSS2 value. The value can only be 
+        /// obtained by using the cssText attribute.
+        /// </summary>
         CSS_UNKNOWN = 0,
-        /**
-         * The value is a simple number. The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a simple number. The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_NUMBER = 1,
-        /**
-         * The value is a percentage. The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a percentage. The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_PERCENTAGE = 2,
-        /**
-         * The value is a length (ems). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (ems). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_EMS = 3,
-        /**
-         * The value is a length (exs). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (exs). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_EXS = 4,
-        /**
-         * The value is a length (px). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (px). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_PX = 5,
-        /**
-         * The value is a length (cm). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (cm). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_CM = 6,
-        /**
-         * The value is a length (mm). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (mm). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_MM = 7,
-        /**
-         * The value is a length (in). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (in). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_IN = 8,
-        /**
-         * The value is a length (pt). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (pt). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_PT = 9,
-        /**
-         * The value is a length (pc). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a length (pc). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_PC = 10,
-        /**
-         * The value is an angle (deg). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is an angle (deg). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_DEG = 11,
-        /**
-         * The value is an angle (rad). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is an angle (rad). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_RAD = 12,
-        /**
-         * The value is an angle (grad). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is an angle (grad). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_GRAD = 13,
-        /**
-         * The value is a time (ms). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a time (ms). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_MS = 14,
-        /**
-         * The value is a time (s). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a time (s). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_S = 15,
-        /**
-         * The value is a frequency (Hz). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a frequency (Hz). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_HZ = 16,
-        /**
-         * The value is a frequency (kHz). The value can be obtained by using the 
-         * <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a frequency (kHz). The value can be obtained by using the 
+        /// getFloatValue method.
+        /// </summary>
         CSS_KHZ = 17,
-        /**
-         * The value is a number with an unknown dimension. The value can be 
-         * obtained by using the <code>getFloatValue</code> method.
-         */
+        /// <summary>The value is a number with an unknown dimension. The value can be 
+        /// obtained by using the getFloatValue method.
+        /// </summary>
         CSS_DIMENSION = 18,
-        /**
-         * The value is a STRING. The value can be obtained by using the 
-         * <code>getStringValue</code> method.
-         */
+        /// <summary>The value is a STRING. The value can be obtained by using the 
+        /// getStringValue method.
+        /// </summary>
         CSS_STRING = 19,
-        /**
-         * The value is a URI. The value can be obtained by using the 
-         * <code>getStringValue</code> method.
-         */
+        /// <summary>The value is a URI. The value can be obtained by using the 
+        /// getStringValue method.
+        /// </summary>
         CSS_URI = 20,
-        /**
-         * The value is an identifier. The value can be obtained by using the 
-         * <code>getStringValue</code> method.
-         */
+        /// <summary>The value is an identifier. The value can be obtained by using the 
+        /// getStringValue method.
+        /// </summary>
         CSS_IDENT = 21,
-        /**
-         * The value is a attribute function. The value can be obtained by using 
-         * the <code>getStringValue</code> method.
-         */
+        /// <summary>The value is a attribute function. The value can be obtained by using 
+        /// the getStringValue method.
+        /// </summary>
         CSS_ATTR = 22,
-        /**
-         * The value is a counter or counters function. The value can be obtained 
-         * by using the <code>getCounterValue</code> method.
-         */
+        /// <summary>The value is a counter or counters function. The value can be obtained 
+        /// by using the getCounterValue method.
+        /// </summary>
         CSS_COUNTER = 23,
-        /**
-         * The value is a rect function. The value can be obtained by using the 
-         * <code>getRectValue</code> method.
-         */
+        /// <summary>The value is a rect function. The value can be obtained by using the 
+        /// getRectValue method.
+        /// </summary>
         CSS_RECT = 24,
-        /**
-         * The value is a RGB color. The value can be obtained by using the 
-         * <code>getRGBColorValue</code> method.
-         */
+        /// <summary>The value is a RGB color. The value can be obtained by using the 
+        /// getRGBColorValue method.
+        /// </summary>
         CSS_RGBCOLOR = 25
     }
 }

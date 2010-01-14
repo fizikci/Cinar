@@ -10,9 +10,9 @@ using System.IO;
 
 namespace Cinar.HTMLParser
 {
-    public partial class HTMLDocument : UserControl
+    public partial class CinarBrowser : UserControl
     {
-        public HTMLDocument()
+        public CinarBrowser()
         {
             InitializeComponent();
         }

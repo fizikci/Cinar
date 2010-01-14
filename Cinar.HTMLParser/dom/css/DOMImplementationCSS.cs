@@ -14,25 +14,23 @@ namespace org.w3c.dom.css
 {
 
 
-    /**
-     *  This interface allows the DOM user to create a <code>CSSStyleSheet</code> 
-     * outside the context of a document. There is no way to associate the new 
-     * <code>CSSStyleSheet</code> with a document in DOM Level 2. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM   Level 2
-     */
+    /// <summary> This interface allows the DOM user to create a CSSStyleSheet 
+    /// outside the context of a document. There is no way to associate the new 
+    /// CSSStyleSheet with a document in DOM Level 2. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM   Level 2
+    /// </summary>
     public interface IDOMImplementationCSS : IDOMImplementation
     {
-        /**
-         * Creates a new <code>CSSStyleSheet</code>.
-         * @param title The advisory title. See also the  section. 
-         * @param media The comma-separated list of media associated with the new 
-         *   style sheet. See also the  section. 
-         * @return A new CSS style sheet.
-         * @exception DOMException
-         *    SYNTAX_ERR: Raised if the specified media string value has a syntax 
-         *   error and is unparsable. 
-         */
+        /// <summary>Creates a new CSSStyleSheet.</summary>
+        /// <param name="title"> The advisory title. See also the  section.</param>
+        /// <param name="media"> The comma-separated list of media associated with the new 
+        ///   style sheet. See also the  section.</param>
+        /// <returns>A new CSS style sheet.</returns>
+        /// <exception cref="DOMException">
+        ///    SYNTAX_ERR: Raised if the specified media string value has a syntax 
+        ///   error and is unparsable. 
+        /// </exception>
         ICSSStyleSheet createCSSStyleSheet(string title,
                                                  string media)
                                                  ; // throws DOMException;

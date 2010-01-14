@@ -16,22 +16,18 @@ namespace org.w3c.dom.ls
 {
 
 
-    /**
-     *  This interface represents a load event object that signals the completion 
-     * of a document load. 
-     * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load
-    and Save Specification</a>.
-     */
+    /// <summary> This interface represents a load event object that signals the completion 
+    /// of a document load. 
+    /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
+    /// </summary>
     public interface ILSLoadEvent : IEvent
     {
-        /**
-         * The document that finished loading.
-         */
+        /// <summary>The document that finished loading.
+        /// </summary>
         IDocument newDocument { get; }
 
-        /**
-         * The input source that was parsed.
-         */
+        /// <summary>The input source that was parsed.
+        /// </summary>
         IDOMInputSource inputSource { get; }
 
     }

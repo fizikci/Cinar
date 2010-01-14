@@ -13,51 +13,44 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Regroups the <code>COL</code> and <code>COLGROUP</code> elements. See the 
-     * COL element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Regroups the COL and COLGROUP elements. See the 
+    /// COL element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLTableColElement : IHTMLElement
     {
-        /**
-         * Horizontal alignment of cell data in column. See the align attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Horizontal alignment of cell data in column. See the align attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string align { get; set; }
 
 
-        /**
-         * Alignment character for cells in a column. See the char attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Alignment character for cells in a column. See the char attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string ch { get; set; }
 
 
-        /**
-         * Offset of alignment character. See the charoff attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>Offset of alignment character. See the charoff attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string chOff { get; set; }
 
 
-        /**
-         * Indicates the number of columns in a group or affected by a grouping. 
-         * See the span attribute definition in HTML 4.01.
-         */
+        /// <summary>Indicates the number of columns in a group or affected by a grouping. 
+        /// See the span attribute definition in HTML 4.01.
+        /// </summary>
         int span { get; set; }
 
 
-        /**
-         * Vertical alignment of cell data in column. See the valign attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Vertical alignment of cell data in column. See the valign attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string vAlign { get; set; }
 
 
-        /**
-         * Default column width. See the width attribute definition in HTML 4.01.
-         */
+        /// <summary>Default column width. See the width attribute definition in HTML 4.01.
+        /// </summary>
         string Width { get; set; }
 
 

@@ -13,39 +13,34 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Parameters fed to the <code>OBJECT</code> element. See the PARAM element 
-     * definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Parameters fed to the OBJECT element. See the PARAM element 
+    /// definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLParamElement : IHTMLElement
     {
-        /**
-         * The name of a run-time parameter. See the name attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>The name of a run-time parameter. See the name attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * Content type for the <code>value</code> attribute when 
-         * <code>valuetype</code> has the value "ref". See the type attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Content type for the value attribute when 
+        /// valuetype has the value "ref". See the type attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string type { get; set; }
 
 
-        /**
-         * The value of a run-time parameter. See the value attribute definition 
-         * in HTML 4.01.
-         */
+        /// <summary>The value of a run-time parameter. See the value attribute definition 
+        /// in HTML 4.01.
+        /// </summary>
         string value { get; set; }
 
 
-        /**
-         * Information about the meaning of the <code>value</code> attribute 
-         * value. See the valuetype attribute definition in HTML 4.01.
-         */
+        /// <summary>Information about the meaning of the value attribute 
+        /// value. See the valuetype attribute definition in HTML 4.01.
+        /// </summary>
         string valueType { get; set; }
 
 

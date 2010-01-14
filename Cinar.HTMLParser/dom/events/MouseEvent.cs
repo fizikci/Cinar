@@ -16,126 +16,113 @@ namespace org.w3c.dom.events
 {
 
 
-    /**
-     * The <code>MouseEvent</code> interface provides specific contextual 
-     * information associated with Mouse events.
-     * <p>The <code>detail</code> attribute inherited from <code>UIEvent</code> 
-     * indicates the number of times a mouse button has been pressed and 
-     * released over the same screen location during a user action. The 
-     * attribute value is 1 when the user begins this action and increments by 1 
-     * for each full sequence of pressing and releasing. If the user moves the 
-     * mouse between the mousedown and mouseup the value will be set to 0, 
-     * indicating that no click is occurring.
-     * <p>In the case of nested elements mouse events are always targeted at the 
-     * most deeply nested element. Ancestors of the targeted element may use 
-     * bubbling to obtain notification of mouse events which occur within its 
-     * descendent elements.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>The MouseEvent interface provides specific contextual 
+    /// information associated with Mouse events.
+    /// The detail attribute inherited from UIEvent 
+    /// indicates the number of times a mouse button has been pressed and 
+    /// released over the same screen location during a user action. The 
+    /// attribute value is 1 when the user begins this action and increments by 1 
+    /// for each full sequence of pressing and releasing. If the user moves the 
+    /// mouse between the mousedown and mouseup the value will be set to 0, 
+    /// indicating that no click is occurring.
+    /// In the case of nested elements mouse events are always targeted at the 
+    /// most deeply nested element. Ancestors of the targeted element may use 
+    /// bubbling to obtain notification of mouse events which occur within its 
+    /// descendent elements.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IMouseEvent : IUIEvent
     {
-        /**
-         * The horizontal coordinate at which the event occurred relative to the 
-         * origin of the screen coordinate system.
-         */
+        /// <summary>The horizontal coordinate at which the event occurred relative to the 
+        /// origin of the screen coordinate system.
+        /// </summary>
         int screenX { get; }
 
-        /**
-         * The vertical coordinate at which the event occurred relative to the 
-         * origin of the screen coordinate system.
-         */
+        /// <summary>The vertical coordinate at which the event occurred relative to the 
+        /// origin of the screen coordinate system.
+        /// </summary>
         int screenY { get; }
 
-        /**
-         * The horizontal coordinate at which the event occurred relative to the 
-         * DOM implementation's client area.
-         */
+        /// <summary>The horizontal coordinate at which the event occurred relative to the 
+        /// DOM implementation's client area.
+        /// </summary>
         int clientX { get; }
 
-        /**
-         * The vertical coordinate at which the event occurred relative to the DOM 
-         * implementation's client area.
-         */
+        /// <summary>The vertical coordinate at which the event occurred relative to the DOM 
+        /// implementation's client area.
+        /// </summary>
         int clientY { get; }
 
-        /**
-         * Used to indicate whether the 'ctrl' key was depressed during the firing 
-         * of the event.
-         */
+        /// <summary>Used to indicate whether the 'ctrl' key was depressed during the firing 
+        /// of the event.
+        /// </summary>
         bool ctrlKey { get; }
 
-        /**
-         * Used to indicate whether the 'shift' key was depressed during the 
-         * firing of the event.
-         */
+        /// <summary>Used to indicate whether the 'shift' key was depressed during the 
+        /// firing of the event.
+        /// </summary>
         bool shiftKey { get; }
 
-        /**
-         * Used to indicate whether the 'alt' key was depressed during the firing 
-         * of the event. On some platforms this key may map to an alternative 
-         * key name.
-         */
+        /// <summary>Used to indicate whether the 'alt' key was depressed during the firing 
+        /// of the event. On some platforms this key may map to an alternative 
+        /// key name.
+        /// </summary>
         bool altKey { get; }
 
-        /**
-         * Used to indicate whether the 'meta' key was depressed during the firing 
-         * of the event. On some platforms this key may map to an alternative 
-         * key name.
-         */
+        /// <summary>Used to indicate whether the 'meta' key was depressed during the firing 
+        /// of the event. On some platforms this key may map to an alternative 
+        /// key name.
+        /// </summary>
         bool metaKey { get; }
 
-        /**
-         * During mouse events caused by the depression or release of a mouse 
-         * button, <code>button</code> is used to indicate which mouse button 
-         * changed state. The values for <code>button</code> range from zero to 
-         * indicate the left button of the mouse, one to indicate the middle 
-         * button if present, and two to indicate the right button. For mice 
-         * configured for left handed use in which the button actions are 
-         * reversed the values are instead read from right to left.
-         */
+        /// <summary>During mouse events caused by the depression or release of a mouse 
+        /// button, button is used to indicate which mouse button 
+        /// changed state. The values for button range from zero to 
+        /// indicate the left button of the mouse, one to indicate the middle 
+        /// button if present, and two to indicate the right button. For mice 
+        /// configured for left handed use in which the button actions are 
+        /// reversed the values are instead read from right to left.
+        /// </summary>
         short button { get; }
 
-        /**
-         * Used to identify a secondary <code>EventTarget</code> related to a UI 
-         * event. Currently this attribute is used with the mouseover event to 
-         * indicate the <code>EventTarget</code> which the pointing device 
-         * exited and with the mouseout event to indicate the 
-         * <code>EventTarget</code> which the pointing device entered.
-         */
+        /// <summary>Used to identify a secondary EventTarget related to a UI 
+        /// event. Currently this attribute is used with the mouseover event to 
+        /// indicate the EventTarget which the pointing device 
+        /// exited and with the mouseout event to indicate the 
+        /// EventTarget which the pointing device entered.
+        /// </summary>
         IEventTarget relatedTarget { get; }
 
-        /**
-         * The <code>initMouseEvent</code> method is used to initialize the value 
-         * of a <code>MouseEvent</code> created through the 
-         * <code>DocumentEvent</code> interface. This method may only be called 
-         * before the <code>MouseEvent</code> has been dispatched via the 
-         * <code>dispatchEvent</code> method, though it may be called multiple 
-         * times during that phase if necessary. If called multiple times, the 
-         * final invocation takes precedence.
-         * @param typeArgSpecifies the event type.
-         * @param canBubbleArgSpecifies whether or not the event can bubble.
-         * @param cancelableArgSpecifies whether or not the event's default 
-         *   action can be prevented.
-         * @param viewArgSpecifies the <code>IEvent</code>'s 
-         *   <code>IAbstractView</code>.
-         * @param detailArgSpecifies the <code>IEvent</code>'s mouse click count.
-         * @param screenXArgSpecifies the <code>IEvent</code>'s screen x coordinate
-         * @param screenYArgSpecifies the <code>IEvent</code>'s screen y coordinate
-         * @param clientXArgSpecifies the <code>IEvent</code>'s client x coordinate
-         * @param clientYArgSpecifies the <code>IEvent</code>'s client y coordinate
-         * @param ctrlKeyArgSpecifies whether or not control key was depressed 
-         *   during the <code>IEvent</code>.
-         * @param altKeyArgSpecifies whether or not alt key was depressed during 
-         *   the <code>IEvent</code>.
-         * @param shiftKeyArgSpecifies whether or not shift key was depressed 
-         *   during the <code>IEvent</code>.
-         * @param metaKeyArgSpecifies whether or not meta key was depressed 
-         *   during the <code>IEvent</code>.
-         * @param buttonArgSpecifies the <code>IEvent</code>'s mouse button.
-         * @param relatedTargetArgSpecifies the <code>IEvent</code>'s related 
-         *   <code>EventTarget</code>.
-         */
+        /// <summary>The initMouseEvent method is used to initialize the value 
+        /// of a MouseEvent created through the 
+        /// DocumentEvent interface. This method may only be called 
+        /// before the MouseEvent has been dispatched via the 
+        /// dispatchEvent method, though it may be called multiple 
+        /// times during that phase if necessary. If called multiple times, the 
+        /// final invocation takes precedence.</summary>
+        /// <param name="typeArg">Specifies the event type.</param>
+        /// <param name="canBubbleArg">Specifies whether or not the event can bubble.</param>
+        /// <param name="cancelableArg">Specifies whether or not the event's default 
+        ///   action can be prevented.</param>
+        /// <param name="viewArg">Specifies the IEvent's 
+        ///   IAbstractView.</param>
+        /// <param name="detailArg">Specifies the IEvent's mouse click count.</param>
+        /// <param name="screenXArg">Specifies the IEvent's screen x coordinate</param>
+        /// <param name="screenYArg">Specifies the IEvent's screen y coordinate</param>
+        /// <param name="clientXArg">Specifies the IEvent's client x coordinate</param>
+        /// <param name="clientYArg">Specifies the IEvent's client y coordinate</param>
+        /// <param name="ctrlKeyArg">Specifies whether or not control key was depressed 
+        ///   during the IEvent.</param>
+        /// <param name="altKeyArg">Specifies whether or not alt key was depressed during 
+        ///   the IEvent.</param>
+        /// <param name="shiftKeyArg">Specifies whether or not shift key was depressed 
+        ///   during the IEvent.</param>
+        /// <param name="metaKeyArg">Specifies whether or not meta key was depressed 
+        ///   during the IEvent.</param>
+        /// <param name="buttonArg">Specifies the IEvent's mouse button.</param>
+        /// <param name="relatedTargetArg">Specifies the IEvent's related 
+        ///   EventTarget.</param>
         void initMouseEvent(string typeArg,
                                    bool canBubbleArg,
                                    bool cancelableArg,

@@ -13,17 +13,15 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * For the <code>H1</code> to <code>H6</code> elements. See the H1 element 
-     * definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>For the H1 to H6 elements. See the H1 element 
+    /// definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLHeadingElement : IHTMLElement
     {
-        /**
-         * Horizontal text alignment. See the align attribute definition in HTML 
-         * 4.01. This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Horizontal text alignment. See the align attribute definition in HTML 
+        /// 4.01. This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string align { get; set; }
 
 

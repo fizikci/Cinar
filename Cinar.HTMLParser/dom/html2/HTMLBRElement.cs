@@ -13,16 +13,14 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Force a line break. See the BR element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Force a line break. See the BR element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLBRElement : IHTMLElement
     {
-        /**
-         * Control flow of text around floats. See the clear attribute definition 
-         * in HTML 4.01. This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Control flow of text around floats. See the clear attribute definition 
+        /// in HTML 4.01. This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string clear { get; set; }
 
 

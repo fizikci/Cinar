@@ -15,27 +15,24 @@ using org.w3c.dom.traversal;
 namespace org.w3c.dom.ls
 {
 
-    /**
-     *  <code>DOMWriterFilter</code>s provide applications the ability to examine 
-     * nodes as they are being serialized. <code>DOMWriterFilter</code> lets the 
-     * application decide what nodes should be serialized or not. 
-     * <p> The <code>IDocument</code>, <code>DocumentType</code>, 
-     * <code>Notation</code>, and <code>Entity</code> nodes are not passed to 
-     * the filter. 
-     * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load
-    and Save Specification</a>.
-     */
+    /// <summary> DOMWriterFilters provide applications the ability to examine 
+    /// nodes as they are being serialized. DOMWriterFilter lets the 
+    /// application decide what nodes should be serialized or not. 
+    ///  The IDocument, DocumentType, 
+    /// Notation, and Entity nodes are not passed to 
+    /// the filter. 
+    /// See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>IDocument Object Model (DOM) Level 3 Load and Save Specification</a>.
+    /// </summary>
     public interface IDOMWriterFilter : INodeFilter
     {
-        /**
-         *  Tells the <code>DOMWriter</code> what types of nodes to show to the 
-         * filter. See <code>NodeFilter</code> for definition of the constants. 
-         * The constants <code>SHOW_ATTRIBUTE</code>, <code>SHOW_DOCUMENT</code>
-         * , <code>SHOW_DOCUMENT_TYPE</code>, <code>SHOW_NOTATION</code>, and 
-         * <code>SHOW_DOCUMENT_FRAGMENT</code> are meaningless here, those nodes 
-         * will never be passed to a <code>DOMWriterFilter</code>. 
-         * <code>Entity</code> nodes are not passed to the filter. 
-         */
+        /// <summary> Tells the DOMWriter what types of nodes to show to the 
+        /// filter. See NodeFilter for definition of the constants. 
+        /// The constants SHOW_ATTRIBUTE, SHOW_DOCUMENT
+        /// , SHOW_DOCUMENT_TYPE, SHOW_NOTATION, and 
+        /// SHOW_DOCUMENT_FRAGMENT are meaningless here, those nodes 
+        /// will never be passed to a DOMWriterFilter. 
+        /// Entity nodes are not passed to the filter. 
+        /// </summary>
         int whatToShow { get; }
 
     }

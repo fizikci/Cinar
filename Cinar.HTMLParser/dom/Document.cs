@@ -13,346 +13,318 @@
 namespace org.w3c.dom
 {
 
-    /**
-     * The <code>IDocument</code> interface represents the entire HTML or XML 
-     * document. Conceptually, it is the root of the document tree, and provides 
-     * the primary access to the document's data.
-     * <p>Since elements, text nodes, comments, processing instructions, etc. 
-     * cannot exist outside the context of a <code>IDocument</code>, the 
-     * <code>IDocument</code> interface also contains the factory methods needed 
-     * to create these objects. The <code>INode</code> objects created have a 
-     * <code>ownerDocument</code> attribute which associates them with the 
-     * <code>IDocument</code> within whose context they were created.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-     */
+    /// <summary>The IDocument interface represents the entire HTML or XML 
+    /// document. Conceptually, it is the root of the document tree, and provides 
+    /// the primary access to the document's data.
+    /// Since elements, text nodes, comments, processing instructions, etc. 
+    /// cannot exist outside the context of a IDocument, the 
+    /// IDocument interface also contains the factory methods needed 
+    /// to create these objects. The INode objects created have a 
+    /// ownerDocument attribute which associates them with the 
+    /// IDocument within whose context they were created.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
+    /// </summary>
     public interface IDocument : INode
     {
-        /**
-         * The IDocument Type Declaration (see <code>DocumentType</code>) 
-         * associated with this document. For HTML documents as well as XML 
-         * documents without a document type declaration this returns 
-         * <code>null</code>. The DOM Level 2 does not support editing the 
-         * IDocument Type Declaration. <code>docType</code> cannot be altered in 
-         * any way, including through the use of methods inherited from the 
-         * <code>INode</code> interface, such as <code>insertNode</code> or 
-         * <code>removeNode</code>.
-         */
+        /// <summary>The IDocument Type Declaration (see DocumentType) 
+        /// associated with this document. For HTML documents as well as XML 
+        /// documents without a document type declaration this returns 
+        /// null. The DOM Level 2 does not support editing the 
+        /// IDocument Type Declaration. docType cannot be altered in 
+        /// any way, including through the use of methods inherited from the 
+        /// INode interface, such as insertNode or 
+        /// removeNode.
+        /// </summary>
         IDocumentType doctype { get; }
 
-        /**
-         * The <code>DOMImplementation</code> object that handles this document. A 
-         * DOM application may use objects from multiple implementations.
-         */
+        /// <summary>The DOMImplementation object that handles this document. A 
+        /// DOM application may use objects from multiple implementations.
+        /// </summary>
         IDOMImplementation implementation { get; }
 
-        /**
-         * This is a convenience attribute that allows direct access to the child 
-         * node that is the root element of the document. For HTML documents, 
-         * this is the element with the tagName "HTML".
-         */
+        /// <summary>This is a convenience attribute that allows direct access to the child 
+        /// node that is the root element of the document. For HTML documents, 
+        /// this is the element with the tagName "HTML".
+        /// </summary>
         IElement documentElement { get; }
 
-        /**
-         * Creates an element of the type specified. Note that the instance 
-         * returned implements the <code>IElement</code> interface, so attributes 
-         * can be specified directly on the returned object.
-         * <br>In addition, if there are known attributes with default values, 
-         * <code>Attr</code> nodes representing them are automatically created 
-         * and attached to the element.
-         * <br>To create an element with a qualified name and namespace URI, use 
-         * the <code>createElementNS</code> method.
-         * @param tagNameThe name of the element type to instantiate. For XML, 
-         *   this is case-sensitive. For HTML, the <code>tagName</code> 
-         *   parameter may be provided in any case, but it must be mapped to the 
-         *   canonical uppercase form by the DOM implementation. 
-         * @return A new <code>IElement</code> object with the 
-         *   <code>nodeName</code> attribute set to <code>tagName</code>, and 
-         *   <code>localName</code>, <code>prefix</code>, and 
-         *   <code>namespaceURI</code> set to <code>null</code>.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
-         *   illegal character.
-         */
+        /// <summary>Creates an element of the type specified. Note that the instance 
+        /// returned implements the IElement interface, so attributes 
+        /// can be specified directly on the returned object.
+        /// In addition, if there are known attributes with default values, 
+        /// Attr nodes representing them are automatically created 
+        /// and attached to the element.
+        /// To create an element with a qualified name and namespace URI, use 
+        /// the createElementNS method.</summary>
+        /// <param name="tagName">The name of the element type to instantiate. For XML, 
+        ///   this is case-sensitive. For HTML, the tagName 
+        ///   parameter may be provided in any case, but it must be mapped to the 
+        ///   canonical uppercase form by the DOM implementation. </param>
+        /// <returns>A new IElement object with the 
+        ///   nodeName attribute set to tagName, and 
+        ///   localName, prefix, and 
+        ///   namespaceURI set to null.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
+        ///   illegal character.
+        /// </exception>
         IElement createElement(string tagName)
                                      ; // throws DOMException;
 
-        /**
-         * Creates an empty <code>DocumentFragment</code> object. 
-         * @return A new <code>DocumentFragment</code>.
-         */
+        /// <summary>Creates an empty DocumentFragment object. </summary>
+        /// <returns>A new DocumentFragment.</returns>
         IDocumentFragment createDocumentFragment();
 
-        /**
-         * Creates a <code>Text</code> node given the specified string.
-         * @param dataThe data for the node.
-         * @return The new <code>Text</code> object.
-         */
+        /// <summary>Creates a Text node given the specified string.</summary>
+        /// <param name="data">The data for the node.</param>
+        /// <returns>The new Text object.</returns>
         IText createTextNode(string data);
 
-        /**
-         * Creates a <code>Comment</code> node given the specified string.
-         * @param dataThe data for the node.
-         * @return The new <code>Comment</code> object.
-         */
+        /// <summary>Creates a Comment node given the specified string.</summary>
+        /// <param name="data">The data for the node.</param>
+        /// <returns>The new Comment object.</returns>
         IComment createComment(string data);
 
-        /**
-         * Creates a <code>CDATASection</code> node whose value is the specified 
-         * string.
-         * @param dataThe data for the <code>CDATASection</code> contents.
-         * @return The new <code>CDATASection</code> object.
-         * @exception DOMException
-         *   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
-         */
+        /// <summary>Creates a CDATASection node whose value is the specified 
+        /// string.</summary>
+        /// <param name="data">The data for the CDATASection contents.</param>
+        /// <returns>The new CDATASection object.</returns>
+        /// <exception cref="DOMException">
+        ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
+        /// </exception>
         ICDATASection createCDATASection(string data)
                                                ; // throws DOMException;
 
-        /**
-         * Creates a <code>ProcessingInstruction</code> node given the specified 
-         * name and data strings.
-         * @param targetThe target part of the processing instruction.
-         * @param dataThe data for the node.
-         * @return The new <code>ProcessingInstruction</code> object.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified target contains an 
-         *   illegal character.
-         *   <br>NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
-         */
+        /// <summary>Creates a ProcessingInstruction node given the specified 
+        /// name and data strings.</summary>
+        /// <param name="target">The target part of the processing instruction.</param>
+        /// <param name="data">The data for the node.</param>
+        /// <returns>The new ProcessingInstruction object.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified target contains an 
+        ///   illegal character.
+        ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
+        /// </exception>
         IProcessingInstruction createProcessingInstruction(string target,
                                                                  string data)
                                                                  ; // throws DOMException;
 
-        /**
-         * Creates an <code>Attr</code> of the given name. Note that the 
-         * <code>Attr</code> instance can then be set on an <code>IElement</code> 
-         * using the <code>setAttributeNode</code> method. 
-         * <br>To create an attribute with a qualified name and namespace URI, use 
-         * the <code>createAttributeNS</code> method.
-         * @param nameThe name of the attribute.
-         * @return A new <code>Attr</code> object with the <code>nodeName</code> 
-         *   attribute set to <code>name</code>, and <code>localName</code>, 
-         *   <code>prefix</code>, and <code>namespaceURI</code> set to 
-         *   <code>null</code>. The value of the attribute is the empty string.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
-         *   illegal character.
-         */
+        /// <summary>Creates an Attr of the given name. Note that the 
+        /// Attr instance can then be set on an IElement 
+        /// using the setAttributeNode method. 
+        /// To create an attribute with a qualified name and namespace URI, use 
+        /// the createAttributeNS method.</summary>
+        /// <param name="name">The name of the attribute.</param>
+        /// <returns>A new Attr object with the nodeName 
+        ///   attribute set to name, and localName, 
+        ///   prefix, and namespaceURI set to 
+        ///   null. The value of the attribute is the empty string.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
+        ///   illegal character.
+        /// </exception>
         IAttr createAttribute(string name); // throws DOMException;
 
-        /**
-         * Creates an <code>EntityReference</code> object. In addition, if the 
-         * referenced entity is known, the child list of the 
-         * <code>EntityReference</code> node is made the same as that of the 
-         * corresponding <code>Entity</code> node.If any descendant of the 
-         * <code>Entity</code> node has an unbound namespace prefix, the 
-         * corresponding descendant of the created <code>EntityReference</code> 
-         * node is also unbound; (its <code>namespaceURI</code> is 
-         * <code>null</code>). The DOM Level 2 does not support any mechanism to 
-         * resolve namespace prefixes.
-         * @param nameThe name of the entity to reference. 
-         * @return The new <code>EntityReference</code> object.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
-         *   illegal character.
-         *   <br>NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
-         */
+        /// <summary>Creates an EntityReference object. In addition, if the 
+        /// referenced entity is known, the child list of the 
+        /// EntityReference node is made the same as that of the 
+        /// corresponding Entity node.If any descendant of the 
+        /// Entity node has an unbound namespace prefix, the 
+        /// corresponding descendant of the created EntityReference 
+        /// node is also unbound; (its namespaceURI is 
+        /// null). The DOM Level 2 does not support any mechanism to 
+        /// resolve namespace prefixes.</summary>
+        /// <param name="name">The name of the entity to reference. </param>
+        /// <returns>The new EntityReference object.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
+        ///   illegal character.
+        ///   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
+        /// </exception>
         IEntityReference createEntityReference(string name); // throws DOMException;
 
-        /**
-         * Returns a <code>NodeList</code> of all the <code>Elements</code> with a 
-         * given tag name in the order in which they are encountered in a 
-         * preorder traversal of the <code>IDocument</code> tree. 
-         * @param tagnameThe name of the tag to match on. The special value "*" 
-         *   matches all tags.
-         * @return A new <code>NodeList</code> object containing all the matched 
-         *   <code>Elements</code>.
-         */
+        /// <summary>Returns a NodeList of all the Elements with a 
+        /// given tag name in the order in which they are encountered in a 
+        /// preorder traversal of the IDocument tree.</summary>
+        /// <param name="tagname">The name of the tag to match on. The special value "*" 
+        ///   matches all tags.</param>
+        /// <returns>A new NodeList object containing all the matched 
+        ///   Elements.
+        /// </returns>
         INodeList getElementsByTagName(string tagname);
 
-        /**
-         * Imports a node from another document to this document. The returned 
-         * node has no parent; (<code>parentNode</code> is <code>null</code>). 
-         * The source node is not altered or removed from the original document; 
-         * this method creates a new copy of the source node.
-         * <br>For all nodes, importing a node creates a node object owned by the 
-         * importing document, with attribute values identical to the source 
-         * node's <code>nodeName</code> and <code>nodeType</code>, plus the 
-         * attributes related to namespaces (<code>prefix</code>, 
-         * <code>localName</code>, and <code>namespaceURI</code>). As in the 
-         * <code>cloneNode</code> operation on a <code>INode</code>, the source 
-         * node is not altered.
-         * <br>Additional information is copied as appropriate to the 
-         * <code>nodeType</code>, attempting to mirror the behavior expected if 
-         * a fragment of XML or HTML source was copied from one document to 
-         * another, recognizing that the two documents may have different DTDs 
-         * in the XML case. The following list describes the specifics for each 
-         * type of node. 
-         * <dl>
-         * <dt>ATTRIBUTE_NODE</dt>
-         * <dd>The <code>ownerElement</code> attribute 
-         * is set to <code>null</code> and the <code>specified</code> flag is 
-         * set to <code>true</code> on the generated <code>Attr</code>. The 
-         * descendants of the source <code>Attr</code> are recursively imported 
-         * and the resulting nodes reassembled to form the corresponding subtree.
-         * Note that the <code>deep</code> parameter has no effect on 
-         * <code>Attr</code> nodes; they always carry their children with them 
-         * when imported.</dd>
-         * <dt>DOCUMENT_FRAGMENT_NODE</dt>
-         * <dd>If the <code>deep</code> option 
-         * was set to <code>true</code>, the descendants of the source element 
-         * are recursively imported and the resulting nodes reassembled to form 
-         * the corresponding subtree. Otherwise, this simply generates an empty 
-         * <code>DocumentFragment</code>.</dd>
-         * <dt>DOCUMENT_NODE</dt>
-         * <dd><code>IDocument</code> 
-         * nodes cannot be imported.</dd>
-         * <dt>DOCUMENT_TYPE_NODE</dt>
-         * <dd><code>DocumentType</code> 
-         * nodes cannot be imported.</dd>
-         * <dt>ELEMENT_NODE</dt>
-         * <dd>Specified attribute nodes of the 
-         * source element are imported, and the generated <code>Attr</code> 
-         * nodes are attached to the generated <code>IElement</code>. Default 
-         * attributes are not copied, though if the document being imported into 
-         * defines default attributes for this element name, those are assigned. 
-         * If the <code>importNode</code> <code>deep</code> parameter was set to 
-         * <code>true</code>, the descendants of the source element are 
-         * recursively imported and the resulting nodes reassembled to form the 
-         * corresponding subtree.</dd>
-         * <dt>ENTITY_NODE</dt>
-         * <dd><code>Entity</code> nodes can be 
-         * imported, however in the current release of the DOM the 
-         * <code>DocumentType</code> is readonly. Ability to add these imported 
-         * nodes to a <code>DocumentType</code> will be considered for addition 
-         * to a future release of the DOM.On import, the <code>publicId</code>, 
-         * <code>systemId</code>, and <code>notationName</code> attributes are 
-         * copied. If a <code>deep</code> import is requested, the descendants 
-         * of the the source <code>Entity</code> are recursively imported and 
-         * the resulting nodes reassembled to form the corresponding subtree.</dd>
-         * <dt>
-         * ENTITY_REFERENCE_NODE</dt>
-         * <dd>Only the <code>EntityReference</code> itself is 
-         * copied, even if a <code>deep</code> import is requested, since the 
-         * source and destination documents might have defined the entity 
-         * differently. If the document being imported into provides a 
-         * definition for this entity name, its value is assigned.</dd>
-         * <dt>NOTATION_NODE</dt>
-         * <dd>
-         * <code>Notation</code> nodes can be imported, however in the current 
-         * release of the DOM the <code>DocumentType</code> is readonly. Ability 
-         * to add these imported nodes to a <code>DocumentType</code> will be 
-         * considered for addition to a future release of the DOM.On import, the 
-         * <code>publicId</code> and <code>systemId</code> attributes are copied.
-         * Note that the <code>deep</code> parameter has no effect on 
-         * <code>Notation</code> nodes since they never have any children.</dd>
-         * <dt>
-         * PROCESSING_INSTRUCTION_NODE</dt>
-         * <dd>The imported node copies its 
-         * <code>target</code> and <code>data</code> values from those of the 
-         * source node.</dd>
-         * <dt>TEXT_NODE, CDATA_SECTION_NODE, COMMENT_NODE</dt>
-         * <dd>These three 
-         * types of nodes inheriting from <code>CharacterData</code> copy their 
-         * <code>data</code> and <code>length</code> attributes from those of 
-         * the source node.</dd>
-         *  
-         * @param importedNodeThe node to import.
-         * @param deepIf <code>true</code>, recursively import the subtree under 
-         *   the specified node; if <code>false</code>, import only the node 
-         *   itself, as explained above. This has no effect on <code>Attr</code>
-         *   , <code>EntityReference</code>, and <code>Notation</code> nodes.
-         * @return The imported node that belongs to this <code>IDocument</code>.
-         * @exception DOMException
-         *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is not 
-         *   supported.
-         * @since DOM Level 2
-         */
+        /// <summary>Imports a node from another document to this document. The returned 
+        /// node has no parent; (parentNode is null). 
+        /// The source node is not altered or removed from the original document; 
+        /// this method creates a new copy of the source node.
+        /// For all nodes, importing a node creates a node object owned by the 
+        /// importing document, with attribute values identical to the source 
+        /// node's nodeName and nodeType, plus the 
+        /// attributes related to namespaces (prefix, 
+        /// localName, and namespaceURI). As in the 
+        /// cloneNode operation on a INode, the source 
+        /// node is not altered.
+        /// Additional information is copied as appropriate to the 
+        /// nodeType, attempting to mirror the behavior expected if 
+        /// a fragment of XML or HTML source was copied from one document to 
+        /// another, recognizing that the two documents may have different DTDs 
+        /// in the XML case. The following list describes the specifics for each 
+        /// type of node. 
+        /// <dl>
+        /// <dt>ATTRIBUTE_NODE</dt>
+        /// <dd>The ownerElement attribute 
+        /// is set to null and the specified flag is 
+        /// set to true on the generated Attr. The 
+        /// descendants of the source Attr are recursively imported 
+        /// and the resulting nodes reassembled to form the corresponding subtree.
+        /// Note that the deep parameter has no effect on 
+        /// Attr nodes; they always carry their children with them 
+        /// when imported.</dd>
+        /// <dt>DOCUMENT_FRAGMENT_NODE</dt>
+        /// <dd>If the deep option 
+        /// was set to true, the descendants of the source element 
+        /// are recursively imported and the resulting nodes reassembled to form 
+        /// the corresponding subtree. Otherwise, this simply generates an empty 
+        /// DocumentFragment.</dd>
+        /// <dt>DOCUMENT_NODE</dt>
+        /// <dd>IDocument 
+        /// nodes cannot be imported.</dd>
+        /// <dt>DOCUMENT_TYPE_NODE</dt>
+        /// <dd>DocumentType 
+        /// nodes cannot be imported.</dd>
+        /// <dt>ELEMENT_NODE</dt>
+        /// <dd>Specified attribute nodes of the 
+        /// source element are imported, and the generated Attr 
+        /// nodes are attached to the generated IElement. Default 
+        /// attributes are not copied, though if the document being imported into 
+        /// defines default attributes for this element name, those are assigned. 
+        /// If the importNode deep parameter was set to 
+        /// true, the descendants of the source element are 
+        /// recursively imported and the resulting nodes reassembled to form the 
+        /// corresponding subtree.</dd>
+        /// <dt>ENTITY_NODE</dt>
+        /// <dd>Entity nodes can be 
+        /// imported, however in the current release of the DOM the 
+        /// DocumentType is readonly. Ability to add these imported 
+        /// nodes to a DocumentType will be considered for addition 
+        /// to a future release of the DOM.On import, the publicId, 
+        /// systemId, and notationName attributes are 
+        /// copied. If a deep import is requested, the descendants 
+        /// of the the source Entity are recursively imported and 
+        /// the resulting nodes reassembled to form the corresponding subtree.</dd>
+        /// <dt>
+        /// ENTITY_REFERENCE_NODE</dt>
+        /// <dd>Only the EntityReference itself is 
+        /// copied, even if a deep import is requested, since the 
+        /// source and destination documents might have defined the entity 
+        /// differently. If the document being imported into provides a 
+        /// definition for this entity name, its value is assigned.</dd>
+        /// <dt>NOTATION_NODE</dt>
+        /// <dd>
+        /// Notation nodes can be imported, however in the current 
+        /// release of the DOM the DocumentType is readonly. Ability 
+        /// to add these imported nodes to a DocumentType will be 
+        /// considered for addition to a future release of the DOM.On import, the 
+        /// publicId and systemId attributes are copied.
+        /// Note that the deep parameter has no effect on 
+        /// Notation nodes since they never have any children.</dd>
+        /// <dt>
+        /// PROCESSING_INSTRUCTION_NODE</dt>
+        /// <dd>The imported node copies its 
+        /// target and data values from those of the 
+        /// source node.</dd>
+        /// <dt>TEXT_NODE, CDATA_SECTION_NODE, COMMENT_NODE</dt>
+        /// <dd>These three 
+        /// types of nodes inheriting from CharacterData copy their 
+        /// data and length attributes from those of 
+        /// the source node.</dd>
+        ///  
+        /// <param name="importedNode">The node to import.
+        /// <param name="deepIf"> true, recursively import the subtree under 
+        ///   the specified node; if false, import only the node 
+        ///   itself, as explained above. This has no effect on Attr
+        ///   , EntityReference, and Notation nodes.
+        /// <returns>The imported node that belongs to this IDocument.
+        /// <exception cref="DOMException">
+        ///   NOT_SUPPORTED_ERR: Raised if the type of node being imported is not 
+        ///   supported.
+        /// </summary>
         INode importNode(INode importedNode, bool deep); // throws DOMException;
 
-        /**
-         * Creates an element of the given qualified name and namespace URI. 
-         * HTML-only DOM implementations do not need to implement this method.
-         * @param namespaceURIThe namespace URI of the element to create.
-         * @param qualifiedNameThe qualified name of the element type to 
-         *   instantiate.
-         * @return A new <code>IElement</code> object with the following 
-         *   attributes:AttributeValue<code>INode.nodeName</code>
-         *   <code>qualifiedName</code><code>INode.namespaceURI</code>
-         *   <code>namespaceURI</code><code>INode.prefix</code>prefix, extracted 
-         *   from <code>qualifiedName</code>, or <code>null</code> if there is 
-         *   no prefix<code>INode.localName</code>local name, extracted from 
-         *   <code>qualifiedName</code><code>IElement.tagName</code>
-         *   <code>qualifiedName</code>
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
-         *   contains an illegal character.
-         *   <br>NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is 
-         *   malformed, if the <code>qualifiedName</code> has a prefix and the 
-         *   <code>namespaceURI</code> is <code>null</code>, or if the 
-         *   <code>qualifiedName</code> has a prefix that is "xml" and the 
-         *   <code>namespaceURI</code> is different from "
-         *   http://www.w3.org/XML/1998/namespace" .
-         * @since DOM Level 2
-         */
+        /// <summary>Creates an element of the given qualified name and namespace URI. 
+        /// HTML-only DOM implementations do not need to implement this method.</summary>
+        /// <param name="namespaceURI">The namespace URI of the element to create.</param>
+        /// <param name="qualifiedName">The qualified name of the element type to 
+        ///   instantiate.</param>
+        /// <returns>A new IElement object with the following 
+        ///   attributes:AttributeValueINode.nodeName
+        ///   qualifiedNameINode.namespaceURI
+        ///   namespaceURIINode.prefixprefix, extracted 
+        ///   from qualifiedName, or null if there is 
+        ///   no prefixINode.localNamelocal name, extracted from 
+        ///   qualifiedNameIElement.tagName
+        ///   qualifiedName</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
+        ///   contains an illegal character.
+        ///   NAMESPACE_ERR: Raised if the qualifiedName is 
+        ///   malformed, if the qualifiedName has a prefix and the 
+        ///   namespaceURI is null, or if the 
+        ///   qualifiedName has a prefix that is "xml" and the 
+        ///   namespaceURI is different from "http://www.w3.org/XML/1998/namespace" .
+        /// </exception>
         IElement createElementNS(string namespaceURI, string qualifiedName); // throws DOMException;
 
-        /**
-         * Creates an attribute of the given qualified name and namespace URI. 
-         * HTML-only DOM implementations do not need to implement this method.
-         * @param namespaceURIThe namespace URI of the attribute to create.
-         * @param qualifiedNameThe qualified name of the attribute to instantiate.
-         * @return A new <code>Attr</code> object with the following attributes:
-         *   AttributeValue<code>INode.nodeName</code>qualifiedName
-         *   <code>INode.namespaceURI</code><code>namespaceURI</code>
-         *   <code>INode.prefix</code>prefix, extracted from 
-         *   <code>qualifiedName</code>, or <code>null</code> if there is no 
-         *   prefix<code>INode.localName</code>local name, extracted from 
-         *   <code>qualifiedName</code><code>Attr.name</code>
-         *   <code>qualifiedName</code><code>INode.nodeValue</code>the empty 
-         *   string
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
-         *   contains an illegal character.
-         *   <br>NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is 
-         *   malformed, if the <code>qualifiedName</code> has a prefix and the 
-         *   <code>namespaceURI</code> is <code>null</code>, if the 
-         *   <code>qualifiedName</code> has a prefix that is "xml" and the 
-         *   <code>namespaceURI</code> is different from "
-         *   http://www.w3.org/XML/1998/namespace", or if the 
-         *   <code>qualifiedName</code> is "xmlns" and the 
-         *   <code>namespaceURI</code> is different from "
-         *   http://www.w3.org/2000/xmlns/".
-         * @since DOM Level 2
-         */
+        /// <summary>Creates an attribute of the given qualified name and namespace URI. 
+        /// HTML-only DOM implementations do not need to implement this method.</summary>
+        /// <param name="namespaceURI">The namespace URI of the attribute to create.</param>
+        /// <param name="qualifiedName">The qualified name of the attribute to instantiate.</param>
+        /// <returns>A new Attr object with the following attributes:
+        ///   AttributeValueINode.nodeNamequalifiedName
+        ///   INode.namespaceURInamespaceURI
+        ///   INode.prefixprefix, extracted from 
+        ///   qualifiedName, or null if there is no 
+        ///   prefixINode.localNamelocal name, extracted from 
+        ///   qualifiedNameAttr.name
+        ///   qualifiedNameINode.nodeValuethe empty 
+        ///   string</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
+        ///   contains an illegal character.
+        ///   NAMESPACE_ERR: Raised if the qualifiedName is 
+        ///   malformed, if the qualifiedName has a prefix and the 
+        ///   namespaceURI is null, if the 
+        ///   qualifiedName has a prefix that is "xml" and the 
+        ///   namespaceURI is different from "
+        ///   http://www.w3.org/XML/1998/namespace", or if the 
+        ///   qualifiedName is "xmlns" and the 
+        ///   namespaceURI is different from "
+        ///   http://www.w3.org/2000/xmlns/".
+        /// </exception>
         IAttr createAttributeNS(string namespaceURI, string qualifiedName); // throws DOMException;
 
-        /**
-         * Returns a <code>NodeList</code> of all the <code>Elements</code> with a 
-         * given local name and namespace URI in the order in which they are 
-         * encountered in a preorder traversal of the <code>IDocument</code> tree.
-         * @param namespaceURIThe namespace URI of the elements to match on. The 
-         *   special value "*" matches all namespaces.
-         * @param localNameThe local name of the elements to match on. The 
-         *   special value "*" matches all local names.
-         * @return A new <code>NodeList</code> object containing all the matched 
-         *   <code>Elements</code>.
-         * @since DOM Level 2
-         */
+        /// <summary>Returns a NodeList of all the Elements with a 
+        /// given local name and namespace URI in the order in which they are 
+        /// encountered in a preorder traversal of the IDocument tree.</summary>
+        /// <param name="namespaceURI">The namespace URI of the elements to match on. The 
+        ///   special value "*" matches all namespaces.</param>
+        /// <param name="localName">The local name of the elements to match on. The 
+        ///   special value "*" matches all local names.</param>
+        /// <returns>A new NodeList object containing all the matched 
+        ///   Elements.
+        /// </returns>
         INodeList getElementsByTagNameNS(string namespaceURI, string localName);
 
-        /**
-         * Returns the <code>IElement</code> whose <code>ID</code> is given by 
-         * <code>elementId</code>. If no such element exists, returns 
-         * <code>null</code>. Behavior is not defined if more than one element 
-         * has this <code>ID</code>. The DOM implementation must have 
-         * information that says which attributes are of type ID. Attributes 
-         * with the name "ID" are not of type ID unless so defined. 
-         * Implementations that do not know whether attributes are of type ID or 
-         * not are expected to return <code>null</code>.
-         * @param elementIdThe unique <code>id</code> value for an element.
-         * @return The matching element.
-         * @since DOM Level 2
-         */
+        /// <summary>Returns the IElement whose ID is given by 
+        /// elementId. If no such element exists, returns 
+        /// null. Behavior is not defined if more than one element 
+        /// has this ID. The DOM implementation must have 
+        /// information that says which attributes are of type ID. Attributes 
+        /// with the name "ID" are not of type ID unless so defined. 
+        /// Implementations that do not know whether attributes are of type ID or 
+        /// not are expected to return null.</summary>
+        /// <param name="elementId">The unique id value for an element.</param>
+        /// <returns>The matching element.</returns>
         IElement getElementById(string elementId);
 
     }

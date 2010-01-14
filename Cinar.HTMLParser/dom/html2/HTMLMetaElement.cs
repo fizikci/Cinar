@@ -13,37 +13,32 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * This contains generic meta-information about the document. See the META 
-     * element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>This contains generic meta-information about the document. See the META 
+    /// element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLMetaElement : IHTMLElement
     {
-        /**
-         * Associated information. See the content attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Associated information. See the content attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string content { get; set; }
 
 
-        /**
-         * HTTP response header name [<a href='http://www.ietf.org/rfc/rfc2616.txt'>IETF RFC 2616</a>]. See the http-equiv attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>HTTP response header name [<a href='http://www.ietf.org/rfc/rfc2616.txt'>IETF RFC 2616</a>]. See the http-equiv attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string httpEquiv { get; set; }
 
 
-        /**
-         * Meta information name. See the name attribute definition in HTML 4.01.
-         */
+        /// <summary>Meta information name. See the name attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * Select form of content. See the scheme attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Select form of content. See the scheme attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string scheme { get; set; }
 
 

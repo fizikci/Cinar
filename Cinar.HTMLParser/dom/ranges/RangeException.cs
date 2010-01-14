@@ -15,12 +15,11 @@ using System;
 namespace org.w3c.dom.ranges
 {
 
-    /**
-     * IRange operations may throw a <code>RangeException</code> as specified in 
-     * their method descriptions.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>IRange operations may throw a RangeException as specified in 
+    /// their method descriptions.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public class RangeException : Exception
     {
         RangeException(RangeExceptionCode code, string message)
@@ -33,16 +32,13 @@ namespace org.w3c.dom.ranges
 
     public enum RangeExceptionCode
     {
-        // RangeExceptionCode
-        /**
-         * If the boundary-points of a IRange do not meet specific requirements.
-         */
+        /// <summary>If the boundary-points of a IRange do not meet specific requirements.
+        /// </summary>
         BAD_BOUNDARYPOINTS_ERR = 1,
-        /**
-         * If the container of an boundary-point of a IRange is being set to either 
-         * a node of an invalid type or a node with an ancestor of an invalid 
-         * type.
-         */
+        /// <summary>If the container of an boundary-point of a IRange is being set to either 
+        /// a node of an invalid type or a node with an ancestor of an invalid 
+        /// type.
+        /// </summary>
         INVALID_NODE_TYPE_ERR = 2
     }
 }

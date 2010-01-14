@@ -13,20 +13,18 @@
 namespace org.w3c.dom.views
 {
 
-    /**
-     * The <code>DocumentView</code> interface is implemented by 
-     * <code>IDocument</code> objects in DOM implementations supporting DOM 
-     * Views. It provides an attribute to retrieve the default view of a 
-     * document.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Views-20001113'>IDocument Object Model (DOM) Level 2 Views Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>The DocumentView interface is implemented by 
+    /// IDocument objects in DOM implementations supporting DOM 
+    /// Views. It provides an attribute to retrieve the default view of a 
+    /// document.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Views-20001113'>IDocument Object Model (DOM) Level 2 Views Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IDocumentView
     {
-        /**
-         * The default <code>IAbstractView</code> for this <code>IDocument</code>, 
-         * or <code>null</code> if none available.
-         */
+        /// <summary>The default IAbstractView for this IDocument, 
+        /// or null if none available.
+        /// </summary>
         IAbstractView defaultView { get; }
 
     }

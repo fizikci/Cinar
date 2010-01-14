@@ -13,28 +13,25 @@
 namespace org.w3c.dom
 {
 
-    /**
-     * The <code>ProcessingInstruction</code> interface represents a "processing 
-     * instruction", used in XML as a way to keep processor-specific information 
-     * in the text of the document.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-     */
+    /// <summary>The ProcessingInstruction interface represents a "processing 
+    /// instruction", used in XML as a way to keep processor-specific information 
+    /// in the text of the document.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
+    /// </summary>
     public interface IProcessingInstruction : INode
     {
-        /**
-         * The target of this processing instruction. XML defines this as being 
-         * the first token following the markup that begins the processing 
-         * instruction.
-         */
+        /// <summary>The target of this processing instruction. XML defines this as being 
+        /// the first token following the markup that begins the processing 
+        /// instruction.
+        /// </summary>
         string target { get; }
 
-        /**
-         * The content of this processing instruction. This is from the first non 
-         * white space character after the target to the character immediately 
-         * preceding the <code>?&gt;</code>.
-         * @exception DOMException
-         *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-         */
+        /// <summary>The content of this processing instruction. This is from the first non 
+        /// white space character after the target to the character immediately 
+        /// preceding the ?&gt;.</summary>
+        /// <exception cref="DOMException">
+        ///   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
+        /// </exception>
         string data { get; set; }
 
     }

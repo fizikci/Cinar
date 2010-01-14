@@ -29,7 +29,7 @@ namespace Cinar.HTMLParser
 
         /// <summary>
         /// Fetches the image 
-        /// </summary>
+        /// </summaryEnds>
         /// <returns>true is the operation ended with a success</returns>
         public void Fetch()
         {

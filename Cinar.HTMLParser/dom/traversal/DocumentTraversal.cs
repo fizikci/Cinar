@@ -14,72 +14,69 @@ namespace org.w3c.dom.traversal
 {
 
 
-    /**
-     * <code>DocumentTraversal</code> contains methods that create iterators and 
-     * tree-walkers to traverse a node and its children in document order (depth 
-     * first, pre-order traversal, which is equivalent to the order in which the 
-     * start tags occur in the text representation of the document). In DOMs 
-     * which support the Traversal feature, <code>DocumentTraversal</code> will 
-     * be implemented by the same objects that implement the IDocument interface.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>DocumentTraversal contains methods that create iterators and 
+    /// tree-walkers to traverse a node and its children in document order (depth 
+    /// first, pre-order traversal, which is equivalent to the order in which the 
+    /// start tags occur in the text representation of the document). In DOMs 
+    /// which support the Traversal feature, DocumentTraversal will 
+    /// be implemented by the same objects that implement the IDocument interface.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IDocumentTraversal
     {
-        /**
-         * Create a new <code>NodeIterator</code> over the subtree rooted at the 
-         * specified node.
-         * @param rootThe node which will be iterated together with its children. 
-         *   The iterator is initially positioned just before this node. The 
-         *   <code>whatToShow</code> flags and the filter, if any, are not 
-         *   considered when setting this position. The root must not be 
-         *   <code>null</code>.
-         * @param whatToShowThis flag specifies which node types may appear in 
-         *   the logical view of the tree presented by the iterator. See the 
-         *   description of <code>NodeFilter</code> for the set of possible 
-         *   <code>SHOW_</code> values.These flags can be combined using 
-         *   <code>OR</code>.
-         * @param filterThe <code>NodeFilter</code> to be used with this 
-         *   <code>TreeWalker</code>, or <code>null</code> to indicate no filter.
-         * @param entityReferenceExpansionThe value of this flag determines 
-         *   whether entity reference nodes are expanded.
-         * @return The newly created <code>NodeIterator</code>.
-         * @exception DOMException
-         *   NOT_SUPPORTED_ERR: Raised if the specified <code>root</code> is 
-         *   <code>null</code>.
-         */
+        /// <summary>Create a new NodeIterator over the subtree rooted at the 
+        /// specified node.</summary>
+        /// <param name="root">The node which will be iterated together with its children. 
+        ///   The iterator is initially positioned just before this node. The 
+        ///   whatToShow flags and the filter, if any, are not 
+        ///   considered when setting this position. The root must not be 
+        ///   null.</param>
+        /// <param name="whatToShowThis"> flag specifies which node types may appear in 
+        ///   the logical view of the tree presented by the iterator. See the 
+        ///   description of NodeFilter for the set of possible 
+        ///   SHOW_ values.These flags can be combined using 
+        ///   OR.</param>
+        /// <param name="filter">The NodeFilter to be used with this 
+        ///   TreeWalker, or null to indicate no filter.</param>
+        /// <param name="entityReferenceExpansion">The value of this flag determines 
+        ///   whether entity reference nodes are expanded.</param>
+        /// <returns>The newly created NodeIterator.</returns>
+        /// <exception cref="DOMException">
+        ///   NOT_SUPPORTED_ERR: Raised if the specified root is 
+        ///   null.
+        /// </exception>
         INodeIterator createNodeIterator(INode root,
                                                int whatToShow,
                                                INodeFilter filter,
                                                bool entityReferenceExpansion); // throws DOMException;
 
-        /**
-         * Create a new <code>TreeWalker</code> over the subtree rooted at the 
-         * specified node.
-         * @param rootThe node which will serve as the <code>root</code> for the 
-         *   <code>TreeWalker</code>. The <code>whatToShow</code> flags and the 
-         *   <code>NodeFilter</code> are not considered when setting this value; 
-         *   any node type will be accepted as the <code>root</code>. The 
-         *   <code>currentNode</code> of the <code>TreeWalker</code> is 
-         *   initialized to this node, whether or not it is visible. The 
-         *   <code>root</code> functions as a stopping point for traversal 
-         *   methods that look upward in the document structure, such as 
-         *   <code>parentNode</code> and nextNode. The <code>root</code> must 
-         *   not be <code>null</code>.
-         * @param whatToShowThis flag specifies which node types may appear in 
-         *   the logical view of the tree presented by the tree-walker. See the 
-         *   description of <code>NodeFilter</code> for the set of possible 
-         *   SHOW_ values.These flags can be combined using <code>OR</code>.
-         * @param filterThe <code>NodeFilter</code> to be used with this 
-         *   <code>TreeWalker</code>, or <code>null</code> to indicate no filter.
-         * @param entityReferenceExpansionIf this flag is false, the contents of 
-         *   <code>EntityReference</code> nodes are not presented in the logical 
-         *   view.
-         * @return The newly created <code>TreeWalker</code>.
-         * @exception DOMException
-         *    NOT_SUPPORTED_ERR: Raised if the specified <code>root</code> is 
-         *   <code>null</code>.
-         */
+        /// <summary>Create a new TreeWalker over the subtree rooted at the 
+        /// specified node.</summary>
+        /// <param name="root">The node which will serve as the root for the 
+        ///   TreeWalker. The whatToShow flags and the 
+        ///   NodeFilter are not considered when setting this value; 
+        ///   any node type will be accepted as the root. The 
+        ///   currentNode of the TreeWalker is 
+        ///   initialized to this node, whether or not it is visible. The 
+        ///   root functions as a stopping point for traversal 
+        ///   methods that look upward in the document structure, such as 
+        ///   parentNode and nextNode. The root must 
+        ///   not be null.</param>
+        /// <param name="whatToShow">This flag specifies which node types may appear in 
+        ///   the logical view of the tree presented by the tree-walker. See the 
+        ///   description of NodeFilter for the set of possible 
+        ///   SHOW_ values.These flags can be combined using OR.</param>
+        /// <param name="filter">The NodeFilter to be used with this 
+        ///   TreeWalker, or null to indicate no filter.</param>
+        /// <param name="entityReferenceExpansion">If this flag is false, the contents of 
+        ///   EntityReference nodes are not presented in the logical 
+        ///   view.</param>
+        /// <returns>The newly created TreeWalker.</returns>
+        /// <exception cref="DOMException">
+        ///    NOT_SUPPORTED_ERR: Raised if the specified root is 
+        ///   null.
+        /// </exception>
         ITreeWalker createTreeWalker(INode root,
                                            int whatToShow,
                                            INodeFilter filter,

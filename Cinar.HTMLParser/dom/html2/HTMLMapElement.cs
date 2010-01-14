@@ -13,21 +13,18 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Client-side image map. See the MAP element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Client-side image map. See the MAP element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLMapElement : IHTMLElement
     {
-        /**
-         * The list of areas defined for the image map. 
-         */
+        /// <summary>The list of areas defined for the image map. 
+        /// </summary>
         IHTMLCollection Areas { get; set; }
 
-        /**
-         * Names the map (for use with <code>usemap</code>). See the name 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Names the map (for use with usemap). See the name 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
