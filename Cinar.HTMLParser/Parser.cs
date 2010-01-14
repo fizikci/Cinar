@@ -275,7 +275,7 @@ namespace Cinar.HTMLParser
 
     public class ParserException : Exception
     {
-        /// <summary>Initializes a new instance of the <see cref="ParserException"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ParserException"/> class.</summaryEnds>
         public ParserException() { }
 
         public ParserException(string message) : base(message) { }

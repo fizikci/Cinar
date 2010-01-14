@@ -13,31 +13,27 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Local change to font. See the FONT element definition in HTML 4.01. This 
-     * element is deprecated in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Local change to font. See the FONT element definition in HTML 4.01. This 
+    /// element is deprecated in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLFontElement : IHTMLElement
     {
-        /**
-         * Font color. See the color attribute definition in HTML 4.01. This 
-         * attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Font color. See the color attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
         string color { get; set; }
 
 
-        /**
-         * Font face identifier. See the face attribute definition in HTML 4.01. 
-         * This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Font face identifier. See the face attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string face { get; set; }
 
 
-        /**
-         * Font size. See the size attribute definition in HTML 4.01. This 
-         * attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Font size. See the size attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
         string size { get; set; }
 
 

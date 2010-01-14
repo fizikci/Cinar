@@ -10,103 +10,91 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
-namespace org.w3c.dom.html2 {
-
-/**
- * The anchor element. See the A element definition in HTML 4.01.
- * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
- */
-public interface IHTMLAnchorElement : IHTMLElement {
-    /**
-     * A single character access key to give access to the form control. See 
-     * the accesskey attribute definition in HTML 4.01.
-     */
-    string accessKey {get; set;}
-
+namespace org.w3c.dom.html2
+{
 
     /**
-     * The character encoding of the linked resource. See the charset 
-     * attribute definition in HTML 4.01.
+     * The anchor element. See the A element definition in HTML 4.01.
+     * See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
      */
-    string charset {get; set;}
+    public interface IHTMLAnchorElement : IHTMLElement
+    {
+        /// <summary>A single character access key to give access to the form control. See 
+        /// the accesskey attribute definition in HTML 4.01.
+        /// </summary>
+        string accessKey { get; set; }
 
 
-    /**
-     * Comma-separated list of lengths, defining an active region geometry. 
-     * See also <code>shape</code> for the shape of the region. See the 
-     * coords attribute definition in HTML 4.01.
-     */
-    string coords {get; set;}
+        /// <summary>The character encoding of the linked resource. See the charset 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
+        string charset { get; set; }
 
 
-    /**
-     * The absolute URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] of the linked resource. See the href attribute 
-     * definition in HTML 4.01.
-     */
-    string href {get; set;}
+        /// <summary>Comma-separated list of lengths, defining an active region geometry. 
+        /// See also shape for the shape of the region. See the 
+        /// coords attribute definition in HTML 4.01.
+        /// </summary>
+        string coords { get; set; }
 
 
-    /**
-     * Language code of the linked resource. See the hreflang attribute 
-     * definition in HTML 4.01.
-     */
-    string hreflang {get; set;}
+        /// <summary>The absolute URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] of the linked resource. See the href attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
+        string href { get; set; }
 
 
-    /**
-     * Anchor name. See the name attribute definition in HTML 4.01.
-     */
-    string name {get; set;}
+        /// <summary>Language code of the linked resource. See the hreflang attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
+        string hreflang { get; set; }
 
 
-    /**
-     * Forward link type. See the rel attribute definition in HTML 4.01.
-     */
-    string rel {get; set;}
+        /// <summary>Anchor name. See the name attribute definition in HTML 4.01.
+        /// </summary>
+        string name { get; set; }
 
 
-    /**
-     * Reverse link type. See the rev attribute definition in HTML 4.01.
-     */
-    string rev {get; set;}
+        /// <summary>Forward link type. See the rel attribute definition in HTML 4.01.
+        /// </summary>
+        string rel { get; set; }
 
 
-    /**
-     * The shape of the active area. The coordinates are given by 
-     * <code>coords</code>. See the shape attribute definition in HTML 4.01.
-     */
-    string shape {get; set;}
+        /// <summary>Reverse link type. See the rev attribute definition in HTML 4.01.
+        /// </summary>
+        string rev { get; set; }
 
 
-    /**
-     * Index that represents the element's position in the tabbing order. See 
-     * the tabindex attribute definition in HTML 4.01.
-     */
-    int tabIndex {get; set;}
+        /// <summary>The shape of the active area. The coordinates are given by 
+        /// coords. See the shape attribute definition in HTML 4.01.
+        /// </summary>
+        string shape { get; set; }
 
 
-    /**
-     * Frame to render the resource in. See the target attribute definition in 
-     * HTML 4.01.
-     */
-    string target {get; set;}
+        /// <summary>Index that represents the element's position in the tabbing order. See 
+        /// the tabindex attribute definition in HTML 4.01.
+        /// </summary>
+        int tabIndex { get; set; }
 
 
-    /**
-     * Advisory content type. See the type attribute definition in HTML 4.01.
-     */
-    string type {get; set;}
+        /// <summary>Frame to render the resource in. See the target attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
+        string target { get; set; }
 
 
-    /**
-     * Removes keyboard focus from this element.
-     */
-    void blur();
+        /// <summary>Advisory content type. See the type attribute definition in HTML 4.01.
+        /// </summary>
+        string type { get; set; }
 
-    /**
-     * Gives keyboard focus to this element.
-     */
-    void focus();
 
-}
+        /// <summary>Removes keyboard focus from this element.
+        /// </summary>
+        void blur();
+
+        /// <summary>Gives keyboard focus to this element.
+        /// </summary>
+        void focus();
+
+    }
 }

@@ -15,12 +15,11 @@ using System;
 namespace org.w3c.dom.events
 {
 
-    /**
-     *  IEvent operations may throw an <code>EventException</code> as specified in 
-     * their method descriptions. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> IEvent operations may throw an EventException as specified in 
+    /// their method descriptions. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113'>IDocument Object Model (DOM) Level 2 Events Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public class EventException : Exception
     {
         EventException(short code, string message)

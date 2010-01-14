@@ -13,34 +13,29 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>Rect</code> interface is used to represent any rect value. This 
-     * interface reflects the values in the underlying style property. Hence, 
-     * modifications made to the <code>ICSSPrimitiveValue</code> objects modify 
-     * the style property. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The Rect interface is used to represent any rect value. This 
+    /// interface reflects the values in the underlying style property. Hence, 
+    /// modifications made to the ICSSPrimitiveValue objects modify 
+    /// the style property. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IRect
     {
-        /**
-         *  This attribute is used for the top of the rect. 
-         */
+        /// <summary> This attribute is used for the top of the rect. 
+        /// </summary>
         ICSSPrimitiveValue top { get; }
 
-        /**
-         *  This attribute is used for the right of the rect. 
-         */
+        /// <summary> This attribute is used for the right of the rect. 
+        /// </summary>
         ICSSPrimitiveValue right { get; }
 
-        /**
-         *  This attribute is used for the bottom of the rect. 
-         */
+        /// <summary> This attribute is used for the bottom of the rect. 
+        /// </summary>
         ICSSPrimitiveValue bottom { get; }
 
-        /**
-         *  This attribute is used for the left of the rect. 
-         */
+        /// <summary> This attribute is used for the left of the rect. 
+        /// </summary>
         ICSSPrimitiveValue left { get; }
 
     }

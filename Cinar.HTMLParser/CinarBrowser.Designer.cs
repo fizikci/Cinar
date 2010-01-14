@@ -1,6 +1,6 @@
 ﻿namespace Cinar.HTMLParser
 {
-    partial class HTMLDocument
+    partial class CinarBrowser
     {
         /// <summary> 
         /// Required designer variable.

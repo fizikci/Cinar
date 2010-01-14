@@ -13,24 +13,21 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * This element is used for single-line text input. See the ISINDEX element 
-     * definition in HTML 4.01. This element is deprecated in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>This element is used for single-line text input. See the ISINDEX element 
+    /// definition in HTML 4.01. This element is deprecated in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLIsIndexElement : IHTMLElement
     {
-        /**
-         * Returns the <code>FORM</code> element containing this control. Returns 
-         * <code>null</code> if this control is not within the context of a 
-         * form. 
-         */
+        /// <summary>Returns the FORM element containing this control. Returns 
+        /// null if this control is not within the context of a 
+        /// form. 
+        /// </summary>
         IHTMLFormElement Form { get; set; }
 
-        /**
-         * The prompt message. See the prompt attribute definition in HTML 4.01. 
-         * This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>The prompt message. See the prompt attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string prompt { get; set; }
 
 

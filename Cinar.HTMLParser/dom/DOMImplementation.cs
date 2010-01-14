@@ -13,83 +13,77 @@
 namespace org.w3c.dom
 {
 
-    /**
-     * The <code>DOMImplementation</code> interface provides a number of methods 
-     * for performing operations that are independent of any particular instance 
-     * of the document object model.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-     */
+    /// <summary>The DOMImplementation interface provides a number of methods 
+    /// for performing operations that are independent of any particular instance 
+    /// of the document object model.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
+    /// </summary>
     public interface IDOMImplementation
     {
-        /**
-         * Test if the DOM implementation implements a specific feature.
-         * @param featureThe name of the feature to test (case-insensitive). The 
-         *   values used by DOM features are defined throughout the DOM Level 2 
-         *   specifications and listed in the  section. The name must be an XML 
-         *   name. To avoid possible conflicts, as a convention, names referring 
-         *   to features defined outside the DOM specification should be made 
-         *   unique by reversing the name of the Internet domain name of the 
-         *   person (or the organization that the person belongs to) who defines 
-         *   the feature, component by component, and using this as a prefix. 
-         *   For instance, the W3C SVG Working Group defines the feature 
-         *   "org.w3c.dom.svg".
-         * @param versionThis is the version number of the feature to test. In 
-         *   Level 2, the string can be either "2.0" or "1.0". If the version is 
-         *   not specified, supporting any version of the feature causes the 
-         *   method to return <code>true</code>.
-         * @return <code>true</code> if the feature is implemented in the 
-         *   specified version, <code>false</code> otherwise.
-         */
+        /// <summary>Test if the DOM implementation implements a specific feature.</summary>
+        /// <param name="feature">The name of the feature to test (case-insensitive). The 
+        ///   values used by DOM features are defined throughout the DOM Level 2 
+        ///   specifications and listed in the  section. The name must be an XML 
+        ///   name. To avoid possible conflicts, as a convention, names referring 
+        ///   to features defined outside the DOM specification should be made 
+        ///   unique by reversing the name of the Internet domain name of the 
+        ///   person (or the organization that the person belongs to) who defines 
+        ///   the feature, component by component, and using this as a prefix. 
+        ///   For instance, the W3C SVG Working Group defines the feature 
+        ///   "org.w3c.dom.svg".</param>
+        /// <param name="versionThis"> is the version number of the feature to test. In 
+        ///   Level 2, the string can be either "2.0" or "1.0". If the version is 
+        ///   not specified, supporting any version of the feature causes the 
+        ///   method to return true.</param>
+        /// <returns>true if the feature is implemented in the 
+        ///   specified version, false otherwise.
+        /// </returns>
         bool hasFeature(string feature, string version);
 
-        /**
-         * Creates an empty <code>DocumentType</code> node. Entity declarations 
-         * and notations are not made available. Entity reference expansions and 
-         * default attribute additions do not occur. It is expected that a 
-         * future version of the DOM will provide a way for populating a 
-         * <code>DocumentType</code>.
-         * <br>HTML-only DOM implementations do not need to implement this method.
-         * @param qualifiedNameThe qualified name of the document type to be 
-         *   created. 
-         * @param publicIdThe external subset public identifier.
-         * @param systemIdThe external subset system identifier.
-         * @return A new <code>DocumentType</code> node with 
-         *   <code>INode.ownerDocument</code> set to <code>null</code>.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
-         *   contains an illegal character.
-         *   <br>NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is 
-         *   malformed.
-         * @since DOM Level 2
-         */
+        /// <summary>Creates an empty DocumentType node. Entity declarations 
+        /// and notations are not made available. Entity reference expansions and 
+        /// default attribute additions do not occur. It is expected that a 
+        /// future version of the DOM will provide a way for populating a 
+        /// DocumentType.
+        /// HTML-only DOM implementations do not need to implement this method.</summary>
+        /// <param name="qualifiedName">The qualified name of the document type to be 
+        ///   created. </param>
+        /// <param name="publicId">The external subset public identifier.</param>
+        /// <param name="systemId">The external subset system identifier.</param>
+        /// <returns>A new DocumentType node with 
+        ///   INode.ownerDocument set to null.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
+        ///   contains an illegal character.
+        ///   NAMESPACE_ERR: Raised if the qualifiedName is 
+        ///   malformed.
+        /// </exception>
         IDocumentType createDocumentType(string qualifiedName, string publicId, string systemId); // throws DOMException;
 
-        /**
-         * Creates an XML <code>IDocument</code> object of the specified type with 
-         * its document element. HTML-only DOM implementations do not need to 
-         * implement this method.
-         * @param namespaceURIThe namespace URI of the document element to create.
-         * @param qualifiedNameThe qualified name of the document element to be 
-         *   created.
-         * @param doctypeThe type of document to be created or <code>null</code>.
-         *   When <code>doctype</code> is not <code>null</code>, its 
-         *   <code>INode.ownerDocument</code> attribute is set to the document 
-         *   being created.
-         * @return A new <code>IDocument</code> object.
-         * @exception DOMException
-         *   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
-         *   contains an illegal character.
-         *   <br>NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is 
-         *   malformed, if the <code>qualifiedName</code> has a prefix and the 
-         *   <code>namespaceURI</code> is <code>null</code>, or if the 
-         *   <code>qualifiedName</code> has a prefix that is "xml" and the 
-         *   <code>namespaceURI</code> is different from "
-         *   http://www.w3.org/XML/1998/namespace" .
-         *   <br>WRONG_DOCUMENT_ERR: Raised if <code>doctype</code> has already 
-         *   been used with a different document or was created from a different 
-         *   implementation.
-         * @since DOM Level 2
-         */
+        /// <summary>Creates an XML IDocument object of the specified type with 
+        /// its document element. HTML-only DOM implementations do not need to 
+        /// implement this method.</summary>
+        /// <param name="namespaceURI">The namespace URI of the document element to create.</param>
+        /// <param name="qualifiedName">The qualified name of the document element to be 
+        ///   created.</param>
+        /// <param name="doctype">The type of document to be created or null.
+        ///   When doctype is not null, its 
+        ///   INode.ownerDocument attribute is set to the document 
+        ///   being created.</param>
+        /// <returns>A new IDocument object.</returns>
+        /// <exception cref="DOMException">
+        ///   INVALID_CHARACTER_ERR: Raised if the specified qualified name 
+        ///   contains an illegal character.
+        ///   NAMESPACE_ERR: Raised if the qualifiedName is 
+        ///   malformed, if the qualifiedName has a prefix and the 
+        ///   namespaceURI is null, or if the 
+        ///   qualifiedName has a prefix that is "xml" and the 
+        ///   namespaceURI is different from "
+        ///   http://www.w3.org/XML/1998/namespace" .
+        ///   WRONG_DOCUMENT_ERR: Raised if doctype has already 
+        ///   been used with a different document or was created from a different 
+        ///   implementation.
+        /// </exception>
         IDocument createDocument(string namespaceURI, string qualifiedName, IDocumentType doctype); // throws DOMException;
 
     }

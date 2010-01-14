@@ -13,73 +13,65 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * The <code>THEAD</code>, <code>TFOOT</code>, and <code>TBODY</code> 
-     * elements. 
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>The THEAD, TFOOT, and TBODY 
+    /// elements. 
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLTableSectionElement : IHTMLElement
     {
-        /**
-         * Horizontal alignment of data in cells. See the <code>align</code> 
-         * attribute for HTMLTheadElement for details. 
-         */
+        /// <summary>Horizontal alignment of data in cells. See the align 
+        /// attribute for HTMLTheadElement for details. 
+        /// </summary>
         string align { get; set; }
 
 
-        /**
-         * Alignment character for cells in a column. See the char attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Alignment character for cells in a column. See the char attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string ch { get; set; }
 
 
-        /**
-         * Offset of alignment character. See the charoff attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>Offset of alignment character. See the charoff attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string chOff { get; set; }
 
 
-        /**
-         * Vertical alignment of data in cells. See the <code>valign</code> 
-         * attribute for HTMLTheadElement for details. 
-         */
+        /// <summary>Vertical alignment of data in cells. See the valign 
+        /// attribute for HTMLTheadElement for details. 
+        /// </summary>
         string vAlign { get; set; }
 
 
-        /**
-         * The collection of rows in this table section. 
-         */
+        /// <summary>The collection of rows in this table section. 
+        /// </summary>
         IHTMLCollection Rows { get; set; }
 
-        /**
-         * Insert a row into this section. The new row is inserted immediately 
-         * before the current <code>index</code>th row in this section. If 
-         * <code>index</code> is -1 or equal to the number of rows in this 
-         * section, the new row is appended.
-         * @param index The row number where to insert a new row. This index 
-         *   starts from 0 and is relative only to the rows contained inside 
-         *   this section, not all the rows in the table.
-         * @return The newly created row.
-         * @exception DOMException
-         *   INDEX_SIZE_ERR: Raised if the specified index is greater than the 
-         *   number of rows of if the index is a negative number other than -1.
-         * @version DOM Level 2
-         */
+        /// <summary>Insert a row into this section. The new row is inserted immediately 
+        /// before the current indexth row in this section. If 
+        /// index is -1 or equal to the number of rows in this 
+        /// section, the new row is appended.
+        /// <param name="index"> The row number where to insert a new row. This index 
+        ///   starts from 0 and is relative only to the rows contained inside 
+        ///   this section, not all the rows in the table.
+        /// <returns>The newly created row.
+        /// <exception cref="DOMException">
+        ///   INDEX_SIZE_ERR: Raised if the specified index is greater than the 
+        ///   number of rows of if the index is a negative number other than -1.
+        /// @version DOM Level 2
+        /// </summary>
         IHTMLElement insertRow(int index); //; // throws DOMException;
 
-        /**
-         * Delete a row from this section.
-         * @param index The index of the row to be deleted, or -1 to delete the 
-         *   last row. This index starts from 0 and is relative only to the rows 
-         *   contained inside this section, not all the rows in the table.
-         * @exception DOMException
-         *   INDEX_SIZE_ERR: Raised if the specified index is greater than or 
-         *   equal to the number of rows or if the index is a negative number 
-         *   other than -1.
-         * @version DOM Level 2
-         */
+        /// <summary>Delete a row from this section.
+        /// <param name="index"> The index of the row to be deleted, or -1 to delete the 
+        ///   last row. This index starts from 0 and is relative only to the rows 
+        ///   contained inside this section, not all the rows in the table.
+        /// <exception cref="DOMException">
+        ///   INDEX_SIZE_ERR: Raised if the specified index is greater than or 
+        ///   equal to the number of rows or if the index is a negative number 
+        ///   other than -1.
+        /// @version DOM Level 2
+        /// </summary>
         void deleteRow(int index); // ; // throws DOMException;
 
     }

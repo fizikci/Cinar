@@ -126,7 +126,7 @@ namespace Cinar.HTMLParser
             return strColor.ToUpperInvariant().ToColor();
         }
 
-        public HTMLDocument IDocument;
+        public CinarBrowser IDocument;
         internal float lastLineHeight;
 
         public RectangleF Layout;

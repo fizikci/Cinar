@@ -13,55 +13,47 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Script statements. See the SCRIPT element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Script statements. See the SCRIPT element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLScriptElement : IHTMLElement
     {
-        /**
-         * The script content of the element. 
-         */
+        /// <summary>The script content of the element. 
+        /// </summary>
         string text { get; set; }
 
 
-        /**
-         * Reserved for future use. 
-         */
+        /// <summary>Reserved for future use. 
+        /// </summary>
         string htmlFor { get; set; }
 
 
-        /**
-         * Reserved for future use. 
-         */
+        /// <summary>Reserved for future use. 
+        /// </summary>
         string IEvent { get; set; }
 
 
-        /**
-         * The character encoding of the linked resource. See the charset 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>The character encoding of the linked resource. See the charset 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string charset { get; set; }
 
 
-        /**
-         * Indicates that the user agent can defer processing of the script. See 
-         * the defer attribute definition in HTML 4.01.
-         */
+        /// <summary>Indicates that the user agent can defer processing of the script. See 
+        /// the defer attribute definition in HTML 4.01.
+        /// </summary>
         bool defer { get; set; }
 
 
-        /**
-         * URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating an external script. See the src attribute definition 
-         * in HTML 4.01.
-         */
+        /// <summary>URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating an external script. See the src attribute definition 
+        /// in HTML 4.01.
+        /// </summary>
         string src { get; set; }
 
 
-        /**
-         * The content type of the script language. See the type attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The content type of the script language. See the type attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string type { get; set; }
 
 

@@ -13,23 +13,20 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * Create a grid of frames. See the FRAMESET element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Create a grid of frames. See the FRAMESET element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLFrameSetElement : IHTMLElement
     {
-        /**
-         * The number of columns of frames in the frameset. See the cols attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The number of columns of frames in the frameset. See the cols attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string cols { get; set; }
 
 
-        /**
-         * The number of rows of frames in the frameset. See the rows attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The number of rows of frames in the frameset. See the rows attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string rows { get; set; }
 
 

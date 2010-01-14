@@ -10,97 +10,88 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
-namespace org.w3c.dom.html2 {
-
-/**
- * An embedded Java applet. See the APPLET element definition in HTML 4.01. 
- * This element is deprecated in HTML 4.01.
- * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
- */
-public interface IHTMLAppletElement : IHTMLElement {
-    /**
-     * Aligns this object (vertically or horizontally) with respect to its 
-     * surrounding text. See the align attribute definition in HTML 4.01. 
-     * This attribute is deprecated in HTML 4.01.
-     */
-    string align {get; set;}
-
+namespace org.w3c.dom.html2
+{
 
     /**
-     * Alternate text for user agents not rendering the normal content of this 
-     * element. See the alt attribute definition in HTML 4.01. This 
-     * attribute is deprecated in HTML 4.01.
+     * An embedded Java applet. See the APPLET element definition in HTML 4.01. 
+     * This element is deprecated in HTML 4.01.
+     * See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
      */
-    string alt {get; set;}
+    public interface IHTMLAppletElement : IHTMLElement
+    {
+        /// <summary>Aligns this object (vertically or horizontally) with respect to its 
+        /// surrounding text. See the align attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string align { get; set; }
 
 
-    /**
-     * Comma-separated archive list. See the archive attribute definition in 
-     * HTML 4.01. This attribute is deprecated in HTML 4.01.
-     */
-    string archive {get; set;}
+        /// <summary>Alternate text for user agents not rendering the normal content of this 
+        /// element. See the alt attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string alt { get; set; }
 
 
-    /**
-     * Applet class file. See the code attribute definition in HTML 4.01. This 
-     * attribute is deprecated in HTML 4.01.
-     */
-    string code {get; set;}
+        /// <summary>Comma-separated archive list. See the archive attribute definition in 
+        /// HTML 4.01. This attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string archive { get; set; }
 
 
-    /**
-     * Optional base URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] for applet. See the codebase attribute definition in 
-     * HTML 4.01. This attribute is deprecated in HTML 4.01.
-     */
-    string codeBase {get; set;}
+        /// <summary>Applet class file. See the code attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string code { get; set; }
 
 
-    /**
-     * Override height. See the height attribute definition in HTML 4.01. This 
-     * attribute is deprecated in HTML 4.01.
-     */
-    string height {get; set;}
+        /// <summary>Optional base URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] for applet. See the codebase attribute definition in 
+        /// HTML 4.01. This attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string codeBase { get; set; }
 
 
-    /**
-     * Horizontal space, in pixels, to the left and right of this image, 
-     * applet, or object. See the hspace attribute definition in HTML 4.01. 
-     * This attribute is deprecated in HTML 4.01.
-     * @version DOM Level 2
-     */
-    int hspace {get; set;}
+        /// <summary>Override height. See the height attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string height { get; set; }
 
 
-    /**
-     * The name of the applet. See the name attribute definition in HTML 4.01. 
-     * This attribute is deprecated in HTML 4.01.
-     */
-    string name {get; set;}
+        /// <summary>Horizontal space, in pixels, to the left and right of this image, 
+        /// applet, or object. See the hspace attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// @version DOM Level 2
+        /// </summary>
+        int hspace { get; set; }
 
 
-    /**
-     * The value of the "object" attribute. See the object attribute definition
-     *  in HTML 4.01. This attribute is deprecated in HTML 4.01. 
-     * @version DOM Level 2
-     */
-    string Object {get; set;}
+        /// <summary>The name of the applet. See the name attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string name { get; set; }
 
 
-    /**
-     * Vertical space, in pixels, above and below this image, applet, or 
-     * object. See the vspace attribute definition in HTML 4.01. This 
-     * attribute is deprecated in HTML 4.01.
-     * @version DOM Level 2
-     */
-    int vspace {get; set;}
+        /// <summary>The value of the "object" attribute. See the object attribute definition
+        ///  in HTML 4.01. This attribute is deprecated in HTML 4.01. 
+        /// @version DOM Level 2
+        /// </summary>
+        string Object { get; set; }
 
 
-    /**
-     * Override width. See the width attribute definition in HTML 4.01. This 
-     * attribute is deprecated in HTML 4.01.
-     */
-    string width {get;}
+        /// <summary>Vertical space, in pixels, above and below this image, applet, or 
+        /// object. See the vspace attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// @version DOM Level 2
+        /// </summary>
+        int vspace { get; set; }
 
 
-}
+        /// <summary>Override width. See the width attribute definition in HTML 4.01. This 
+        /// attribute is deprecated in HTML 4.01.
+        /// </summary>
+        string width { get; }
+
+
+    }
 }

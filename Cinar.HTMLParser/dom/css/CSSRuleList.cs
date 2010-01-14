@@ -13,33 +13,30 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>ICSSRuleList</code> interface provides the abstraction of an 
-     * ordered collection of CSS rules. 
-     * <p> The items in the <code>ICSSRuleList</code> are accessible via an 
-     * integral index, starting from 0. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The ICSSRuleList interface provides the abstraction of an 
+    /// ordered collection of CSS rules. 
+    ///  The items in the ICSSRuleList are accessible via an 
+    /// integral index, starting from 0. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICSSRuleList
     {
-        /**
-         *  The number of <code>CSSRules</code> in the list. The range of valid 
-         * child rule indices is <code>0</code> to <code>length-1</code> 
-         * inclusive. 
-         */
+        /// <summary> The number of CSSRules in the list. The range of valid 
+        /// child rule indices is 0 to length-1 
+        /// inclusive. 
+        /// </summary>
         int length { get; }
 
-        /**
-         *  Used to retrieve a CSS rule by ordinal index. The order in this 
-         * collection represents the order of the rules in the CSS style sheet. 
-         * If index is greater than or equal to the number of rules in the list, 
-         * this returns <code>null</code>. 
-         * @param indexIndex into the collection
-         * @return The style rule at the <code>index</code> position in the 
-         *   <code>ICSSRuleList</code>, or <code>null</code> if that is not a 
-         *   valid index. 
-         */
+        /// <summary> Used to retrieve a CSS rule by ordinal index. The order in this 
+        /// collection represents the order of the rules in the CSS style sheet. 
+        /// If index is greater than or equal to the number of rules in the list, 
+        /// this returns null.</summary>
+        /// <param name="indexIndex"> into the collection</param>
+        /// <returns>The style rule at the index position in the 
+        ///   ICSSRuleList, or null if that is not a 
+        ///   valid index. 
+        /// </returns>
         ICSSRule item(int index);
 
     }

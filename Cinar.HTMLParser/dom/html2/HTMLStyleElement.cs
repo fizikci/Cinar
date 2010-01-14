@@ -13,31 +13,27 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     *  Style information. See the STYLE element definition in HTML 4.01, the CSS 
-     * module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>] and the <code>LinkStyle</code> interface in the StyleSheets 
-     * module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary> Style information. See the STYLE element definition in HTML 4.01, the CSS 
+    /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>] and the LinkStyle interface in the StyleSheets 
+    /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLStyleElement : IHTMLElement
     {
-        /**
-         * Enables/disables the style sheet. 
-         */
+        /// <summary>Enables/disables the style sheet. 
+        /// </summary>
         bool disabled { get; set; }
 
 
-        /**
-         * Designed for use with one or more target media. See the media attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Designed for use with one or more target media. See the media attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string media { get; set; }
 
 
-        /**
-         * The content type of the style sheet language. See the type attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The content type of the style sheet language. See the type attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string type { get; set; }
 
 

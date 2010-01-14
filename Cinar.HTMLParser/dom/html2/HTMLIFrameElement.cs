@@ -14,86 +14,74 @@ namespace org.w3c.dom.html2
 {
 
 
-    /**
-     * Inline subwindows. See the IFRAME element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>Inline subwindows. See the IFRAME element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLIFrameElement : IHTMLElement
     {
-        /**
-         * Aligns this object (vertically or horizontally) with respect to its 
-         * surrounding text. See the align attribute definition in HTML 4.01. 
-         * This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Aligns this object (vertically or horizontally) with respect to its 
+        /// surrounding text. See the align attribute definition in HTML 4.01. 
+        /// This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string align { get; set; }
 
 
-        /**
-         * Request frame borders. See the frameborder attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Request frame borders. See the frameborder attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string frameBorder { get; set; }
 
 
-        /**
-         * Frame height. See the height attribute definition in HTML 4.01.
-         */
+        /// <summary>Frame height. See the height attribute definition in HTML 4.01.
+        /// </summary>
         string height { get; set; }
 
 
-        /**
-         * URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating a long description of this image or frame. See the 
-         * longdesc attribute definition in HTML 4.01.
-         */
+        /// <summary>URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating a long description of this image or frame. See the 
+        /// longdesc attribute definition in HTML 4.01.
+        /// </summary>
         string longDesc { get; set; }
 
 
-        /**
-         * Frame margin height, in pixels. See the marginheight attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Frame margin height, in pixels. See the marginheight attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string marginHeight { get; set; }
 
 
-        /**
-         * Frame margin width, in pixels. See the marginwidth attribute definition 
-         * in HTML 4.01.
-         */
+        /// <summary>Frame margin width, in pixels. See the marginwidth attribute definition 
+        /// in HTML 4.01.
+        /// </summary>
         string marginWidth { get; set; }
 
 
-        /**
-         * The frame name (object of the <code>target</code> attribute). See the 
-         * name attribute definition in HTML 4.01.
-         */
+        /// <summary>The frame name (object of the target attribute). See the 
+        /// name attribute definition in HTML 4.01.
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * Specify whether or not the frame should have scrollbars. See the 
-         * scrolling attribute definition in HTML 4.01.
-         */
+        /// <summary>Specify whether or not the frame should have scrollbars. See the 
+        /// scrolling attribute definition in HTML 4.01.
+        /// </summary>
         string scrolling { get; set; }
 
 
-        /**
-         * A URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating the initial frame contents. See the src attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>A URI [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>] designating the initial frame contents. See the src attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string src { get; set; }
 
 
-        /**
-         * Frame width. See the width attribute definition in HTML 4.01.
-         */
+        /// <summary>Frame width. See the width attribute definition in HTML 4.01.
+        /// </summary>
         string Width { get; set; }
 
 
-        /**
-         * The document this frame contains, if there is any and it is available, 
-         * or <code>null</code> otherwise.
-         * @since DOM Level 2
-         */
+        /// <summary>The document this frame contains, if there is any and it is available, 
+        /// or null otherwise.
+        /// @since DOM Level 2
+        /// </summary>
         IDocument ContentDocument { get; set; }
 
     }

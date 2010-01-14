@@ -13,14 +13,13 @@
 namespace org.w3c.dom
 {
 
-    /**
-     * This interface inherits from <code>CharacterData</code> and represents the 
-     * content of a comment, i.e., all the characters between the starting '
-     * <code>&lt;!--</code>' and ending '<code>--&gt;</code>'. Note that this is 
-     * the definition of a comment in XML, and, in practice, HTML, although some 
-     * HTML tools may implement the full SGML comment structure.
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
-     */
+    /// <summary>This interface inherits from CharacterData and represents the 
+    /// content of a comment, i.e., all the characters between the starting '
+    /// &lt;!--' and ending '--&gt;'. Note that this is 
+    /// the definition of a comment in XML, and, in practice, HTML, although some 
+    /// HTML tools may implement the full SGML comment structure.
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>IDocument Object Model (DOM) Level 2 Core Specification</a>.
+    /// </summary>
     public interface IComment : ICharacterData
     {
     }

@@ -603,7 +603,7 @@ namespace Cinar.DBTools
         }
         private void cmdTryAndSee(string arg)
         {
-            FormHTMLDeneme form = new FormHTMLDeneme();
+            Cinar.HTMLParser.FormTest form = new Cinar.HTMLParser.FormTest();
             form.Show();
         }
         #endregion

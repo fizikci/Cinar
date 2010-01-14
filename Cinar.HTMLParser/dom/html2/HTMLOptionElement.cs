@@ -13,68 +13,59 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * A selectable choice. See the OPTION element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>A selectable choice. See the OPTION element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLOptionElement : IHTMLElement
     {
-        /**
-         * Returns the <code>FORM</code> element containing this control. Returns 
-         * <code>null</code> if this control is not within the context of a 
-         * form. 
-         */
+        /// <summary>Returns the FORM element containing this control. Returns 
+        /// null if this control is not within the context of a 
+        /// form. 
+        /// </summary>
         IHTMLFormElement Form { get; set; }
 
-        /**
-         * Represents the value of the HTML selected attribute. The value of this 
-         * attribute does not change if the state of the corresponding form 
-         * control, in an interactive user agent, changes. See the selected 
-         * attribute definition in HTML 4.01.
-         * @version DOM Level 2
-         */
+        /// <summary>Represents the value of the HTML selected attribute. The value of this 
+        /// attribute does not change if the state of the corresponding form 
+        /// control, in an interactive user agent, changes. See the selected 
+        /// attribute definition in HTML 4.01.
+        /// @version DOM Level 2
+        /// </summary>
         bool defaultSelected { get; set; }
 
 
-        /**
-         * The text contained within the option element. 
-         */
+        /// <summary>The text contained within the option element. 
+        /// </summary>
         string text { get; set; }
 
-        /**
-         * The index of this <code>OPTION</code> in its parent <code>SELECT</code>
-         * , starting from 0.
-         * @version DOM Level 2
-         */
+        /// <summary>The index of this OPTION in its parent SELECT
+        /// , starting from 0.
+        /// @version DOM Level 2
+        /// </summary>
         int index { get; set; }
 
-        /**
-         * The control is unavailable in this context. See the disabled attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>The control is unavailable in this context. See the disabled attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         bool disabled { get; set; }
 
 
-        /**
-         * Option label for use in hierarchical menus. See the label attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Option label for use in hierarchical menus. See the label attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string label { get; set; }
 
 
-        /**
-         * Represents the current state of the corresponding form control, in an 
-         * interactive user agent. Changing this attribute changes the state of 
-         * the form control, but does not change the value of the HTML selected 
-         * attribute of the element.
-         */
+        /// <summary>Represents the current state of the corresponding form control, in an 
+        /// interactive user agent. Changing this attribute changes the state of 
+        /// the form control, but does not change the value of the HTML selected 
+        /// attribute of the element.
+        /// </summary>
         bool selected { get; set; }
 
 
-        /**
-         * The current form control value. See the value attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>The current form control value. See the value attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string value { get; set; }
 
 

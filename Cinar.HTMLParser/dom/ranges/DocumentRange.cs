@@ -13,23 +13,21 @@
 namespace org.w3c.dom.ranges
 {
 
-    /**
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-IRange-20001113'>IDocument Object Model (DOM) Level 2 Traversal and IRange Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface IDocumentRange
     {
-        /**
-         * This interface can be obtained from the object implementing the 
-         * <code>IDocument</code> interface using binding-specific casting 
-         * methods.
-         * @return The initial state of the IRange returned from this method is 
-         *   such that both of its boundary-points are positioned at the 
-         *   beginning of the corresponding IDocument, before any content. The 
-         *   IRange returned can only be used to select content associated with 
-         *   this IDocument, or with DocumentFragments and Attrs for which this 
-         *   IDocument is the <code>ownerDocument</code>.
-         */
+        /// <summary>This interface can be obtained from the object implementing the 
+        /// IDocument interface using binding-specific casting 
+        /// methods.</summary>
+        /// <returns>The initial state of the IRange returned from this method is 
+        ///   such that both of its boundary-points are positioned at the 
+        ///   beginning of the corresponding IDocument, before any content. The 
+        ///   IRange returned can only be used to select content associated with 
+        ///   this IDocument, or with DocumentFragments and Attrs for which this 
+        ///   IDocument is the ownerDocument.
+        /// </returns>
         IRange createRange();
 
     }

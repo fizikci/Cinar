@@ -14,53 +14,47 @@ namespace org.w3c.dom.html2
 {
 
 
-    /**
-     *  All HTML element interfaces derive from this class. Elements that only 
-     * expose the HTML core attributes are represented by the base 
-     * <code>HTMLElement</code> interface. These elements are as follows: 
-     * special: SUB, SUP, SPAN, BDOfont: TT, I, B, U, S, STRIKE, BIG, SMALL
-     * phrase: EM, STRONG, DFN, CODE, SAMP, KBD, VAR, CITE, ACRONYM, ABBRlist: 
-     * DD, DTNOFRAMES, NOSCRIPTADDRESS, CENTERThe <code>style</code> attribute 
-     * of an HTML element is accessible through the 
-     * <code>ElementCSSInlineStyle</code> interface which is defined in the CSS 
-     * module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary> All HTML element interfaces derive from this class. Elements that only 
+    /// expose the HTML core attributes are represented by the base 
+    /// HTMLElement interface. These elements are as follows: 
+    /// special: SUB, SUP, SPAN, BDOfont: TT, I, B, U, S, STRIKE, BIG, SMALL
+    /// phrase: EM, STRONG, DFN, CODE, SAMP, KBD, VAR, CITE, ACRONYM, ABBRlist: 
+    /// DD, DTNOFRAMES, NOSCRIPTADDRESS, CENTERThe style attribute 
+    /// of an HTML element is accessible through the 
+    /// ElementCSSInlineStyle interface which is defined in the CSS 
+    /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLElement : IElement
     {
-        /**
-         * The element's identifier. See the id attribute definition in HTML 4.01.
-         */
+        /// <summary>The element's identifier. See the id attribute definition in HTML 4.01.
+        /// </summary>
         string id { get; set; }
 
 
-        /**
-         * The element's advisory title. See the title attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>The element's advisory title. See the title attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string title { get; set; }
 
 
-        /**
-         * Language code defined in RFC 1766. See the lang attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>Language code defined in RFC 1766. See the lang attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string lang { get; set; }
 
 
-        /**
-         * Specifies the base direction of directionally neutral text and the 
-         * directionality of tables. See the dir attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Specifies the base direction of directionally neutral text and the 
+        /// directionality of tables. See the dir attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string dir { get; set; }
 
 
-        /**
-         * The class attribute of the element. This attribute has been renamed due 
-         * to conflicts with the "class" keyword exposed by many languages. See 
-         * the class attribute definition in HTML 4.01.
-         */
+        /// <summary>The class attribute of the element. This attribute has been renamed due 
+        /// to conflicts with the "class" keyword exposed by many languages. See 
+        /// the class attribute definition in HTML 4.01.
+        /// </summary>
         string className { get; set; }
 
 

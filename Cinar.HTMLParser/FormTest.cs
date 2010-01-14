@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Cinar.DBTools.Tools
+namespace Cinar.HTMLParser
 {
-    public partial class FormHTMLDeneme : Form
+    public partial class FormTest : Form
     {
-        public FormHTMLDeneme()
+        public FormTest()
         {
             InitializeComponent();
         }

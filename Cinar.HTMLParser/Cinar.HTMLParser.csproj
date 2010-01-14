@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -47,11 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HTMLDocument.cs">
+    <Compile Include="FormTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTest.Designer.cs">
+      <DependentUpon>FormTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CinarBrowser.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="HTMLDocument.Designer.cs">
-      <DependentUpon>HTMLDocument.cs</DependentUpon>
+    <Compile Include="CinarBrowser.Designer.cs">
+      <DependentUpon>CinarBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="HTMLElement.cs">
       <SubType>Code</SubType>
@@ -296,6 +302,7 @@
     <Compile Include="dom\traversal\TreeWalker.cs" />
     <Compile Include="dom\views\AbstractView.cs" />
     <Compile Include="dom\views\DocumentView.cs" />
+    <Compile Include="imp\Attr.cs" />
     <Compile Include="imp\CDATASection.cs" />
     <Compile Include="imp\CharacterData.cs" />
     <Compile Include="imp\Comment.cs" />
@@ -323,8 +330,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HTMLDocument.resx">
-      <DependentUpon>HTMLDocument.cs</DependentUpon>
+    <EmbeddedResource Include="FormTest.resx">
+      <DependentUpon>FormTest.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CinarBrowser.resx">
+      <DependentUpon>CinarBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

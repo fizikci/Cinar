@@ -13,12 +13,11 @@
 namespace org.w3c.dom.css
 {
 
-    /**
-     *  The <code>CSSUnknownRule</code> interface represents an at-rule not 
-     * supported by this user agent. 
-     * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
-     * @since DOM Level 2
-     */
+    /// <summary> The CSSUnknownRule interface represents an at-rule not 
+    /// supported by this user agent. 
+    /// See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>IDocument Object Model (DOM) Level 2 Style Specification</a>.
+    /// @since DOM Level 2
+    /// </summary>
     public interface ICSSUnknownRule : ICSSRule
     {
     }

@@ -13,96 +13,85 @@ namespace org.w3c.dom.html2
 {
 
 
-    /**
-     * A row in a table. See the TR element definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>A row in a table. See the TR element definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLTableRowElement : IHTMLElement
     {
-        /**
-         * This is in logical order and not in document order. The 
-         * <code>rowIndex</code> does take into account sections (
-         * <code>THEAD</code>, <code>TFOOT</code>, or <code>TBODY</code>) within 
-         * the table, placing <code>THEAD</code> rows first in the index, 
-         * followed by <code>TBODY</code> rows, followed by <code>TFOOT</code> 
-         * rows.
-         * @version DOM Level 2
-         */
+        /// <summary>This is in logical order and not in document order. The 
+        /// rowIndex does take into account sections (
+        /// THEAD, TFOOT, or TBODY) within 
+        /// the table, placing THEAD rows first in the index, 
+        /// followed by TBODY rows, followed by TFOOT 
+        /// rows.
+        /// @version DOM Level 2
+        /// </summary>
         int rowIndex { get; set; }
 
-        /**
-         * The index of this row, relative to the current section (
-         * <code>THEAD</code>, <code>TFOOT</code>, or <code>TBODY</code>), 
-         * starting from 0.
-         * @version DOM Level 2
-         */
+        /// <summary>The index of this row, relative to the current section (
+        /// THEAD, TFOOT, or TBODY), 
+        /// starting from 0.
+        /// @version DOM Level 2
+        /// </summary>
         int sectionRowIndex { get; set; }
 
-        /**
-         * The collection of cells in this row. 
-         * @version DOM Level 2
-         */
+        /// <summary>The collection of cells in this row. 
+        /// @version DOM Level 2
+        /// </summary>
         IHTMLCollection Cells { get; set; }
 
-        /**
-         * Horizontal alignment of data within cells of this row. See the align 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Horizontal alignment of data within cells of this row. See the align 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string align { get; set; }
 
 
-        /**
-         * Background color for rows. See the bgcolor attribute definition in HTML 
-         * 4.01. This attribute is deprecated in HTML 4.01.
-         */
+        /// <summary>Background color for rows. See the bgcolor attribute definition in HTML 
+        /// 4.01. This attribute is deprecated in HTML 4.01.
+        /// </summary>
         string bgColor { get; set; }
 
 
-        /**
-         * Alignment character for cells in a column. See the char attribute 
-         * definition in HTML 4.01.
-         */
+        /// <summary>Alignment character for cells in a column. See the char attribute 
+        /// definition in HTML 4.01.
+        /// </summary>
         string ch { get; set; }
 
 
-        /**
-         * Offset of alignment character. See the charoff attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>Offset of alignment character. See the charoff attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string chOff { get; set; }
 
 
-        /**
-         * Vertical alignment of data within cells of this row. See the valign 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>Vertical alignment of data within cells of this row. See the valign 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string vAlign { get; set; }
 
 
-        /**
-         * Insert an empty <code>TD</code> cell into this row. If 
-         * <code>index</code> is -1 or equal to the number of cells, the new 
-         * cell is appended.
-         * @param index The place to insert the cell, starting from 0.
-         * @return The newly created cell.
-         * @exception DOMException
-         *   INDEX_SIZE_ERR: Raised if the specified <code>index</code> is greater 
-         *   than the number of cells or if the index is a negative number other 
-         *   than -1.
-         * @version DOM Level 2
-         */
+        /// <summary>Insert an empty TD cell into this row. If 
+        /// index is -1 or equal to the number of cells, the new 
+        /// cell is appended.
+        /// <param name="index"> The place to insert the cell, starting from 0.
+        /// <returns>The newly created cell.
+        /// <exception cref="DOMException">
+        ///   INDEX_SIZE_ERR: Raised if the specified index is greater 
+        ///   than the number of cells or if the index is a negative number other 
+        ///   than -1.
+        /// @version DOM Level 2
+        /// </summary>
         IHTMLElement insertCell(int index); //; // throws DOMException;
 
-        /**
-         * Delete a cell from the current row.
-         * @param index The index of the cell to delete, starting from 0. If the 
-         *   index is -1 the last cell in the row is deleted.
-         * @exception DOMException
-         *   INDEX_SIZE_ERR: Raised if the specified <code>index</code> is greater 
-         *   than or equal to the number of cells or if the index is a negative 
-         *   number other than -1.
-         * @version DOM Level 2
-         */
+        /// <summary>Delete a cell from the current row.
+        /// <param name="index"> The index of the cell to delete, starting from 0. If the 
+        ///   index is -1 the last cell in the row is deleted.
+        /// <exception cref="DOMException">
+        ///   INDEX_SIZE_ERR: Raised if the specified index is greater 
+        ///   than or equal to the number of cells or if the index is a negative 
+        ///   number other than -1.
+        /// @version DOM Level 2
+        /// </summary>
         void deleteCell(int index); // ; // throws DOMException;
 
     }

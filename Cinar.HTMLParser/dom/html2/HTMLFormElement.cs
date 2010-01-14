@@ -13,79 +13,68 @@
 namespace org.w3c.dom.html2
 {
 
-    /**
-     * The <code>FORM</code> element encompasses behavior similar to a collection 
-     * and an element. It provides direct access to the contained form controls 
-     * as well as the attributes of the form element. See the FORM element 
-     * definition in HTML 4.01.
-     * <p>See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
-     */
+    /// <summary>The FORM element encompasses behavior similar to a collection 
+    /// and an element. It provides direct access to the contained form controls 
+    /// as well as the attributes of the form element. See the FORM element 
+    /// definition in HTML 4.01.
+    /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
+    /// </summary>
     public interface IHTMLFormElement : IHTMLElement
     {
-        /**
-         * Returns a collection of all form control elements in the form. 
-         */
+        /// <summary>Returns a collection of all form control elements in the form. 
+        /// </summary>
         IHTMLCollection Elements { get; set; }
 
-        /**
-         * The number of form controls in the form.
-         */
+        /// <summary>The number of form controls in the form.
+        /// </summary>
         int length { get; set; }
 
-        /**
-         * Names the form. 
-         */
+        /// <summary>Names the form. 
+        /// </summary>
         string name { get; set; }
 
 
-        /**
-         * List of character sets supported by the server. See the accept-charset 
-         * attribute definition in HTML 4.01.
-         */
+        /// <summary>List of character sets supported by the server. See the accept-charset 
+        /// attribute definition in HTML 4.01.
+        /// </summary>
         string acceptCharset { get; set; }
 
 
-        /**
-         * Server-side form handler. See the action attribute definition in HTML 
-         * 4.01.
-         */
+        /// <summary>Server-side form handler. See the action attribute definition in HTML 
+        /// 4.01.
+        /// </summary>
         string action { get; set; }
 
 
-        /**
-         * The content type of the submitted form, generally 
-         * "application/x-www-form-urlencoded". See the enctype attribute 
-         * definition in HTML 4.01. The onsubmit even handler is not guaranteed 
-         * to be triggered when invoking this method. The behavior is 
-         * inconsistent for historical reasons and authors should not rely on a 
-         * particular one. 
-         */
+        /// <summary>The content type of the submitted form, generally 
+        /// "application/x-www-form-urlencoded". See the enctype attribute 
+        /// definition in HTML 4.01. The onsubmit even handler is not guaranteed 
+        /// to be triggered when invoking this method. The behavior is 
+        /// inconsistent for historical reasons and authors should not rely on a 
+        /// particular one. 
+        /// </summary>
         string enctype { get; set; }
 
 
-        /**
-         * HTTP method [<a href='http://www.ietf.org/rfc/rfc2616.txt'>IETF RFC 2616</a>] used to submit form. See the method attribute definition 
-         * in HTML 4.01.
-         */
+        /// <summary>HTTP method [<a href='http://www.ietf.org/rfc/rfc2616.txt'>IETF RFC 2616</a>] used to submit form. See the method attribute definition 
+        /// in HTML 4.01.
+        /// </summary>
         string method { get; set; }
 
 
-        /**
-         * Frame to render the resource in. See the target attribute definition in 
-         * HTML 4.01.
-         */
+        /// <summary>Frame to render the resource in. See the target attribute definition in 
+        /// HTML 4.01.
+        /// </summary>
         string target { get; set; }
 
 
-        /**
-         * Submits the form. It performs the same action as a submit button.
-         */
+        /// <summary>Submits the form. It performs the same action as a submit button.
+        /// </summary>
         void submit();
 
-        /**
-         * Restores a form element's default values. It performs the same action 
-         * as a reset button.
-         */
+        /// <summary>Restores a form element's default values. It performs the same action 
+        /// as a reset button.
+        /// </summary>
         void reset();
 
     }
