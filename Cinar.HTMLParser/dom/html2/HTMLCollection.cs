@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -35,7 +37,10 @@ namespace org.w3c.dom.html2
         ///   success. A value of null is returned if the index is 
         ///   out of range. 
         /// </summary>
-        public Node item(int index);
+        public Node item(int index) 
+        { 
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>This method retrieves a INode using a name. With [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>] 
         /// documents, it first searches for a INode with a matching 
@@ -51,7 +56,11 @@ namespace org.w3c.dom.html2
         ///   string. Upon failure (e.g., no node with this name exists), returns 
         ///   null.
         /// </summary>
-        public Node namedItem(string name);
+        public Node namedItem(string name)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

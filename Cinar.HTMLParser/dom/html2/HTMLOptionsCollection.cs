@@ -11,6 +11,8 @@
  */
 
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -32,7 +34,7 @@ namespace org.w3c.dom.html2
         ///    NOT_SUPPORTED_ERR: if setting the length is not allowed by the 
         ///   implementation. 
         /// </summary>
-        public void setLength(int length); //; // throws DOMException;
+        public void setLength(int length) { throw new NotImplementedException(); }
 
         /// <summary> This method retrieves a node specified by ordinal index. Nodes are 
         /// numbered in tree order (depth-first traversal order). 
@@ -42,7 +44,11 @@ namespace org.w3c.dom.html2
         ///   success. A value of null is returned if the index is 
         ///   out of range. 
         /// </summary>
-        public Node item(int index);
+        public Node item(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>This method retrieves a INode using a name. It first 
         /// searches for a INode with a matching id 
@@ -57,7 +63,11 @@ namespace org.w3c.dom.html2
         ///   string. Upon failure (e.g., no node with this name exists), returns 
         ///   null.
         /// </summary>
-        public Node namedItem(string name);
+        public Node namedItem(string name)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

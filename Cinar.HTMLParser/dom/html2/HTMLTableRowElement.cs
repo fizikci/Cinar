@@ -9,6 +9,8 @@
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -81,7 +83,10 @@ namespace org.w3c.dom.html2
         ///   than -1.
         /// @version DOM Level 2
         /// </summary>
-        public HTMLElement insertCell(int index); //; // throws DOMException;
+        public HTMLElement insertCell(int index) 
+        {
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>Delete a cell from the current row.
         /// <param name="index"> The index of the cell to delete, starting from 0. If the 
@@ -92,7 +97,11 @@ namespace org.w3c.dom.html2
         ///   number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        public void deleteCell(int index); // ; // throws DOMException;
+        public void deleteCell(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

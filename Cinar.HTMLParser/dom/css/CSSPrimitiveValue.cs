@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.css
 {
 
@@ -60,7 +62,9 @@ namespace org.w3c.dom.css
         /// </exception>
         public void setFloatValue(UnitType unitType,
                                   float floatValue)
-                                  ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary> This method is used to get a float value in a specified unit. If this 
         /// CSS value doesn't contain a float value or can't be converted into 
@@ -81,7 +85,9 @@ namespace org.w3c.dom.css
         ///   unit. 
         /// </exception>
         public float getFloatValue(UnitType unitType)
-                                   ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary> A method to set the string value with the specified unit. If the 
         /// property attached to this value can't accept the specified unit or 
@@ -100,20 +106,22 @@ namespace org.w3c.dom.css
         /// </exception>
         public void setStringValue(UnitType stringType,
                                    string stringValue)
-                                   ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary> This method is used to get the string value. If the CSS value doesn't 
         /// contain a string value, a DOMException is raised.  Some 
         /// properties (like 'font-family' or 'voice-family') convert a 
-        /// whitespace separated list of idents to a string. 
+        /// whitespace separated list of idents to a string. </summary>
         /// <returns> The string value in the current unit. The current 
         ///   primitiveType can only be a string unit type (i.e. 
         ///   CSS_STRING, CSS_URI, 
-        ///   CSS_IDENT and CSS_ATTR). 
+        ///   CSS_IDENT and CSS_ATTR). </returns>
         /// <exception cref="DOMException">
         ///    INVALID_ACCESS_ERR: Raised if the CSS value doesn't contain a string 
         ///   value. 
-        /// </summary>
+        /// </exception>
         public string stringValue { get; internal set; } // throws DOMException;
 
         /// <summary> This method is used to get the Counter value. If this CSS value 

@@ -10,6 +10,7 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
 using org.w3c.dom.views;
 
 namespace org.w3c.dom.events
@@ -51,7 +52,11 @@ namespace org.w3c.dom.events
                                 bool canBubbleArg,
                                 bool cancelableArg,
                                 AbstractView viewArg,
-                                int detailArg);
+                                int detailArg)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

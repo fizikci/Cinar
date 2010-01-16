@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -90,11 +92,19 @@ namespace org.w3c.dom.html2
 
         /// <summary>Removes keyboard focus from this element.
         /// </summary>
-        public void blur();
+        public void blur()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Gives keyboard focus to this element.
         /// </summary>
-        public void focus();
+        public void focus()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

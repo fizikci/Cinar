@@ -21,6 +21,11 @@ namespace org.w3c.dom.css
     /// </summary>
     public class CSSStyleRule : CSSRule
     {
+        public CSSStyleRule()
+        {
+            this.type = CSSRuleType.STYLE_RULE;
+        }
+
         /// <summary> The textual representation of the selector for the rule set. The 
         /// implementation may have stripped out insignificant whitespace while 
         /// parsing the selector.</summary>

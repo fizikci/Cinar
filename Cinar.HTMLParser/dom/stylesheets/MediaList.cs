@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.stylesheets
 {
 
@@ -47,7 +49,11 @@ namespace org.w3c.dom.stylesheets
         ///   IMediaList, or null if that is not a valid 
         ///   index. 
         /// </returns>
-        public string item(int index);
+        public string item(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary> Deletes the medium indicated by oldMedium from the list. </summary>
         /// <param name="oldMedium">The medium to delete in the media list.</param>
@@ -56,7 +62,7 @@ namespace org.w3c.dom.stylesheets
         ///    NOT_FOUND_ERR: Raised if oldMedium is not in the 
         ///   list. 
         /// </exception>
-        public void deleteMedium(string oldMedium); // throws DOMException;
+        public void deleteMedium(string oldMedium) { throw new NotImplementedException(); }
 
         /// <summary> Adds the medium newMedium to the end of the list. If the 
         /// newMedium is already used, it is first removed.</summary>
@@ -66,7 +72,7 @@ namespace org.w3c.dom.stylesheets
         ///   invalid in the underlying style language. 
         ///    NO_MODIFICATION_ALLOWED_ERR: Raised if this list is readonly. 
         /// </exception>
-        public void appendMedium(string newMedium); // throws DOMException;
+        public void appendMedium(string newMedium) { throw new NotImplementedException(); }
 
     }
 }

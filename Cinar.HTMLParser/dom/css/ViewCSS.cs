@@ -10,6 +10,7 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
 using org.w3c.dom.views;
 
 namespace org.w3c.dom.css
@@ -37,7 +38,11 @@ namespace org.w3c.dom.css
         /// <returns> The computed style. The ICSSStyleDeclaration is 
         ///   read-only and contains only absolute values.</returns>
         public CSSStyleDeclaration getComputedStyle(Element elt,
-                                                    string pseudoElt);
+                                                    string pseudoElt)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

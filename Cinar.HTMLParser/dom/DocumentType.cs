@@ -8,19 +8,13 @@ namespace org.w3c.dom
 {
     public class DocumentType : Node
     {
-        private string _name;
-        private NamedNodeMap _entities;
-        private NamedNodeMap _notations;
-        private string _publicId;
-        private string _systemId;
-        private string _internalSubset;
-
         /// <summary>The name of DTD; i.e., the name immediately following the 
         /// DOCTYPE keyword.
         /// </summary>
         public string name
         {
-            get { return _name; }
+            get;
+            internal set;
         }
 
         /// <summary>A NamedNodeMap containing the general entities, both 
@@ -39,7 +33,8 @@ namespace org.w3c.dom
         /// </summary>
         public NamedNodeMap entities
         {
-            get { return _entities; }
+            get;
+            internal set;
         }
 
         /// <summary>A NamedNodeMap containing the notations declared in the 
@@ -50,21 +45,24 @@ namespace org.w3c.dom
         /// </summary>
         public NamedNodeMap notations
         {
-            get { return _notations; }
+            get;
+            internal set;
         }
 
         /// <summary>The public identifier of the external subset.
         /// </summary>
         public string publicId
         {
-            get { return _publicId; }
+            get;
+            internal set;
         }
 
         /// <summary>The system identifier of the external subset.
         /// </summary>
         public string systemId
         {
-            get { return _systemId; }
+            get;
+            internal set;
         }
 
         /// <summary>The internal subset as a string.The actual content returned depends on 
@@ -74,7 +72,8 @@ namespace org.w3c.dom
         /// </summary>
         public string internalSubset
         {
-            get { return _internalSubset; }
+            get;
+            internal set;
         }
     }
 }

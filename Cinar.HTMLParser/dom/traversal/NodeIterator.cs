@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.traversal
 {
 
@@ -74,7 +76,7 @@ namespace org.w3c.dom.traversal
         ///   INVALID_STATE_ERR: Raised if this method is called after the 
         ///   detach method was invoked.
         /// </exception>
-        public Node nextNode(); // throws DOMException;
+        public Node nextNode() { throw new NotImplementedException(); }
 
         /// <summary>Returns the previous node in the set and moves the position of the 
         /// NodeIterator backwards in the set.</summary>
@@ -84,7 +86,7 @@ namespace org.w3c.dom.traversal
         ///   INVALID_STATE_ERR: Raised if this method is called after the 
         ///   detach method was invoked.
         /// </exception>
-        public Node previousNode(); // throws DOMException;
+        public Node previousNode() { throw new NotImplementedException(); }
 
         /// <summary>Detaches the NodeIterator from the set which it iterated 
         /// over, releasing any computational resources and placing the iterator 
@@ -92,7 +94,11 @@ namespace org.w3c.dom.traversal
         /// calls to nextNode or previousNode will 
         /// raise the exception INVALID_STATE_ERR.
         /// </summary>
-        public void detach();
+        public void detach()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

@@ -169,6 +169,7 @@
             this.Name = "FormConnect";
             this.Text = " Connection Setting";
             this.ResumeLayout(false);
+
             this.PerformLayout();
 
         }

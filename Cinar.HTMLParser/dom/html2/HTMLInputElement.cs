@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -162,23 +164,39 @@ namespace org.w3c.dom.html2
 
         /// <summary>Removes keyboard focus from this element.
         /// </summary>
-        public void blur();
+        public void blur()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Gives keyboard focus to this element.
         /// </summary>
-        public void focus();
+        public void focus()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Select the contents of the text area. For INPUT elements 
         /// whose type attribute has one of the following values: 
         /// "text", "file", or "password".
         /// </summary>
-        public void select();
+        public void select()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Simulate a mouse-click. For INPUT elements whose 
         /// type attribute has one of the following values: 
         /// "button", "checkbox", "radio", "reset", or "submit".
         /// </summary>
-        public void click();
+        public void click()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

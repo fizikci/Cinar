@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+//using org.w3c.dom.html2;
 
 namespace Cinar.HTMLParser
 {
@@ -17,7 +18,13 @@ namespace Cinar.HTMLParser
             InitializeComponent();
         }
 
-        private Parser parser;
+        private org.w3c.dom.html2.HTMLDocument doc;
+        public org.w3c.dom.html2.HTMLDocument document
+        {
+            get {
+                return doc;
+            }
+        }
 
         private string htmlCode;
         public string HTMLCode 
@@ -29,10 +36,10 @@ namespace Cinar.HTMLParser
                 htmlCode = value;
                 if (htmlCode == null)
                     return;
-                parser = new Parser(new StringReader(htmlCode));
-                parser.Parse();
-                parser.RootNode.Layout.Width = this.Width;
-                parser.RootNode.Draw(this.CreateGraphics());
+
+                HtmlAgilityPack.HtmlDocument parser = new HtmlAgilityPack.HtmlDocument();
+                parser.Load(new StringReader(htmlCode));
+                doc = new org.w3c.dom.html2.HTMLDocument(parser, this.Width, this.Height);
             }
         }
     }

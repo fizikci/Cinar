@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,6 +68,11 @@ namespace Cinar.Extensions
             }
 
             return Color.Red;
+        }
+
+        public static bool ContainedBy(this string str, List<string> list)
+        {
+            return list.Any(s => s == str);
         }
     }
 }

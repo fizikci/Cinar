@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.ranges
 {
 
@@ -79,7 +81,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public void setStart(Node refNode, int offset); // throws RangeException, DOMException;
+        public void setStart(Node refNode, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Sets the attributes describing the end of a IRange.</summary>
         /// <param name="refNode">The refNode value. This parameter must be 
@@ -98,7 +104,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public void setEnd(Node refNode, int offset); // throws RangeException, DOMException;
+        public void setEnd(Node refNode, int offset)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Sets the start position to be before a node</summary>
         /// <param name="refNodeRange"> starts before refNode </param>
@@ -111,7 +121,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void setStartBefore(Node refNode); // throws RangeException, DOMException;
+        public void setStartBefore(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Sets the start position to be after a node</summary>
         /// <param name="refNodeRange"> starts after refNode </param>
@@ -124,7 +138,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void setStartAfter(Node refNode); // throws RangeException, DOMException;
+        public void setStartAfter(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Sets the end position to be before a node. </summary>
         /// <param name="refNodeRange"> ends before refNode </param>
@@ -137,7 +155,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void setEndBefore(Node refNode); // throws RangeException, DOMException;
+        public void setEndBefore(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Sets the end of a IRange to be after a node </summary>
         /// <param name="refNodeRange"> ends after refNode. </param>
@@ -150,7 +172,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void setEndAfter(Node refNode); // throws RangeException, DOMException;
+        public void setEndAfter(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Collapse a IRange onto one of its boundary-points </summary>
         /// <param name="toStartIf"> TRUE, collapses the IRange onto its start; if FALSE, 
@@ -159,7 +185,7 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void collapse(bool toStart); // throws DOMException;
+        public void collapse(bool toStart) { throw new NotImplementedException(); }
 
         /// <summary>Select a node and its contents </summary>
         /// <param name="refNode">The node to select. </param>
@@ -172,7 +198,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void selectNode(Node refNode); // throws RangeException, DOMException;
+        public void selectNode(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Select the contents within a node </summary>
         /// <param name="refNodeNode"> to select from </param>
@@ -183,7 +213,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void selectNodeContents(Node refNode); // throws RangeException, DOMException;
+        public void selectNodeContents(Node refNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Compare the boundary-points of two Ranges in a document.</summary>
         /// <param name="howA"> code representing the type of comparison, as defined above.</param>
@@ -198,7 +232,10 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public short compareBoundaryPoints(CompareHow how, Range sourceRange); // throws DOMException;
+        public short compareBoundaryPoints(CompareHow how, Range sourceRange) 
+        {
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>Removes the contents of a IRange from the containing document or 
         /// document fragment without returning a reference to the removed 
@@ -210,7 +247,10 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public void deleteContents(); // throws DOMException;
+        public void deleteContents() 
+        {
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>Moves the contents of a IRange from the containing document or document 
         /// fragment to a new DocumentFragment.</summary>
@@ -224,7 +264,10 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public DocumentFragment extractContents(); // throws DOMException;
+        public DocumentFragment extractContents() 
+        {
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>Duplicates the contents of a IRange </summary>
         /// <returns>A DocumentFragment that contains content equivalent to this 
@@ -235,7 +278,10 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already 
         ///   been invoked on this object.
         /// </exception>
-        public DocumentFragment cloneContents(); // throws DOMException;
+        public DocumentFragment cloneContents() 
+        {
+            throw new NotImplementedException(); 
+        }
 
         /// <summary>Inserts a node into the IDocument or DocumentFragment at the start of 
         /// the IRange. If the container is a Text node, this will be split at the 
@@ -262,7 +308,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_NODE_TYPE_ERR: Raised if newNode is an Attr, 
         ///   Entity, Notation, or IDocument node.
         /// </exception>
-        public void insertNode(Node newNode); // throws DOMException, RangeException;
+        public void insertNode(Node newNode)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Reparents the contents of the IRange to the given node and inserts the 
         /// node at the position of the start of the IRange.</summary>
@@ -286,7 +336,11 @@ namespace org.w3c.dom.ranges
         ///   INVALID_NODE_TYPE_ERR: Raised if  node is an Attr, 
         ///   Entity, DocumentType, Notation, Document, or DocumentFragment node.
         /// </exception>
-        public void surroundContents(Node newParent); // throws DOMException, RangeException;
+        public void surroundContents(Node newParent)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Produces a new IRange whose boundary-points are equal to the 
         /// boundary-points of the IRange. </summary>
@@ -295,7 +349,7 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public Range cloneRange(); // throws DOMException;
+        public Range cloneRange() { throw new NotImplementedException(); }
 
         /// <summary>Returns the contents of a IRange as a string. This string contains only 
         /// the data characters, not any markup. </summary>
@@ -304,7 +358,7 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public string toString(); // throws DOMException;
+        public string toString() { throw new NotImplementedException(); }
 
         /// <summary>Called to indicate that the IRange is no longer in use and that the 
         /// implementation may relinquish any resources associated with this 
@@ -315,7 +369,7 @@ namespace org.w3c.dom.ranges
         ///   INVALID_STATE_ERR: Raised if detach() has already been 
         ///   invoked on this object.
         /// </exception>
-        public void detach(); // throws DOMException;
+        public void detach() { throw new NotImplementedException(); }
 
     }
 

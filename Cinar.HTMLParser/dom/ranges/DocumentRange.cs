@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.ranges
 {
 
@@ -28,7 +30,10 @@ namespace org.w3c.dom.ranges
         ///   this IDocument, or with DocumentFragments and Attrs for which this 
         ///   IDocument is the ownerDocument.
         /// </returns>
-        public Range createRange();
+        public Range createRange()
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

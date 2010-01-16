@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -70,12 +72,20 @@ namespace org.w3c.dom.html2
 
         /// <summary>Submits the form. It performs the same action as a submit button.
         /// </summary>
-        public void submit();
+        public void submit()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Restores a form element's default values. It performs the same action 
         /// as a reset button.
         /// </summary>
-        public void reset();
+        public void reset()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

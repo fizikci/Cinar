@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.events
 {
 
@@ -49,7 +51,9 @@ namespace org.w3c.dom.events
         ///   NOT_SUPPORTED_ERR: Raised if the implementation does not support the 
         ///   type of IEvent interface requested</exception>
         public Event createEvent(string eventType)
-                                 ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

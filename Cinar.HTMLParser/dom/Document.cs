@@ -8,9 +8,6 @@ namespace org.w3c.dom
 {
     public class Document : Node
     {
-        private DocumentType _doctype;
-        private DOMImplementation _implementation;
-        private Element _documentElement;
 
         /// <summary>The IDocument Type Declaration (see DocumentType) 
         /// associated with this document. For HTML documents as well as XML 
@@ -23,7 +20,8 @@ namespace org.w3c.dom
         /// </summary>
         public DocumentType doctype
         {
-            get { return _doctype; }
+            get;
+            internal set;
         }
 
         /// <summary>The DOMImplementation object that handles this document. A 
@@ -31,7 +29,8 @@ namespace org.w3c.dom
         /// </summary>
         public DOMImplementation implementation
         {
-            get { return _implementation; }
+            get;
+            internal set;
         }
 
         /// <summary>This is a convenience attribute that allows direct access to the child 
@@ -40,7 +39,8 @@ namespace org.w3c.dom
         /// </summary>
         public Element documentElement
         {
-            get { return _documentElement; }
+            get;
+            internal set;
         }
 
         /// <summary>Creates an element of the type specified. Note that the instance 

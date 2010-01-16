@@ -10,7 +10,10 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Cinar.Extensions;
 
 namespace org.w3c.dom.css
 {
@@ -36,7 +39,7 @@ namespace org.w3c.dom.css
     /// </summary>
     public class CSSStyleDeclaration
     {
-        internal Dictionary<string, CSSValue> cssDict = new Dictionary<string, CSSValue>();
+        internal CSS2Properties cssProps = new CSS2Properties();
         internal string _cssText;
         /// <summary> The parsable textual representation of the declaration block 
         /// (excluding the surrounding curly braces). Setting this attribute will 
@@ -54,25 +57,22 @@ namespace org.w3c.dom.css
             get {
                 return _cssText;
             }
-            set {
+            set
+            {
                 _cssText = value;
-                foreach (string style in _cssText.Split(';'))
-                {
-                    string[] parts = style.Split(':');
-                    cssDict[parts[0]] = parseCSSValue(parts[1]);
-                }
+                parseStyleDeclaration();
             }
         }
 
-        private CSSValue parseCSSValue(string cssValueText)
+        internal void parseStyleDeclaration()
         {
-            CSSValue cv = new CSSValue();
-            cv.cssText = cssValueText;
-
-            return cv;
+            foreach (string style in _cssText.Split(';'))
+            {
+                string[] parts = style.Split(':');
+                cssProps.setStyle(parts[0].Trim(), parts[1].Trim());
+            }
         }
 
-// throws DOMException;
 
         /// <summary> Used to retrieve the value of a CSS property if it has been explicitly 
         /// set within this declaration block.</summary>
@@ -84,7 +84,7 @@ namespace org.w3c.dom.css
         /// </returns>
         public string getPropertyValue(string propertyName)
         {
-            return cssDict[propertyName];
+            return cssProps.getStyle(propertyName);
         }
 
         /// <summary> Used to retrieve the object representation of the value of a CSS 
@@ -99,7 +99,10 @@ namespace org.w3c.dom.css
         ///   set for this declaration block. Returns null if the 
         ///   property has not been set. 
         /// </returns>
-        public CSSValue getPropertyCSSValue(string propertyName);
+        public CSSValue getPropertyCSSValue(string propertyName)
+        {
+            return cssProps.getCSSValue(propertyName);
+        }
 
         /// <summary> Used to remove a CSS property if it has been explicitly set within 
         /// this declaration block.</summary>
@@ -114,7 +117,14 @@ namespace org.w3c.dom.css
         ///   or the property is readonly.
         /// </exception>
         public string removeProperty(string propertyName)
-                                     ; // throws DOMException;
+        {
+            if (!cssProps.styles.ContainsKey(propertyName))
+                return string.Empty;
+
+            CSSValue val = cssProps.getCSSValue(propertyName);
+            cssProps.styles.Remove(propertyName);
+            return val.cssText;
+        }
 
         /// <summary> Used to retrieve the priority of a CSS property (e.g. the 
         /// "important" qualifier) if the property has been 
@@ -124,7 +134,10 @@ namespace org.w3c.dom.css
         /// <returns> A string representing the priority (e.g. 
         ///   "important") if one exists. The empty string if none 
         ///   exists.</returns>
-        public string getPropertyPriority(string propertyName);
+        public string getPropertyPriority(string propertyName)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary> Used to set a property value and priority within this declaration 
         /// block.</summary>
@@ -142,13 +155,15 @@ namespace org.w3c.dom.css
         public void setProperty(string propertyName,
                                 string value,
                                 string priority)
-                                ; // throws DOMException;
+        {
+            cssProps.setStyle(propertyName, value);
+        }
 
         /// <summary> The number of properties that have been explicitly set in this 
         /// declaration block. The range of valid indices is 0 to length-1 
         /// inclusive. 
         /// </summary>
-        public int length { get; internal set; }
+        public int length { get { return cssProps.styles.Count; } }
 
         /// <summary> Used to retrieve the properties that have been explicitly set in this 
         /// declaration block. The order of the properties retrieved using this 
@@ -158,7 +173,16 @@ namespace org.w3c.dom.css
         /// <param name="index"> Index of the property name to retrieve.</param>
         /// <returns> The name of the property at this ordinal position. The empty 
         ///   string if no property exists at this position.</returns>
-        public string item(int index);
+        public string item(int index)
+        {
+            int counter = 0;
+            foreach (var item in this.cssProps.styles)
+                if (counter == index)
+                    return item.Key;
+                else
+                    counter++;
+            return string.Empty;
+        }
 
         /// <summary> The CSS rule that contains this declaration block or null 
         /// if this ICSSStyleDeclaration is not attached to a 

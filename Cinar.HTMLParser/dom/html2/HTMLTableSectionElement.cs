@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -60,7 +62,7 @@ namespace org.w3c.dom.html2
         ///   number of rows of if the index is a negative number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        public HTMLElement insertRow(int index); //; // throws DOMException;
+        public HTMLElement insertRow(int index) { throw new NotImplementedException(); }
 
         /// <summary>Delete a row from this section.
         /// <param name="index"> The index of the row to be deleted, or -1 to delete the 
@@ -72,7 +74,11 @@ namespace org.w3c.dom.html2
         ///   other than -1.
         /// @version DOM Level 2
         /// </summary>
-        public void deleteRow(int index); // ; // throws DOMException;
+        public void deleteRow(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

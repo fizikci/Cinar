@@ -63,9 +63,24 @@ namespace org.w3c.dom.css
         ///   SYNTAX_ERR: Raised if the specified rule has a syntax error and 
         ///   is unparsable.
         /// </exception>
-        public int insertRule(string rule,
-                              int index)
-                              ; // throws DOMException;
+        public int insertRule(string strRule, int index)
+        {
+            if (index < 0 || index >= cssRules.length)
+                throw ErrorMessages.Get(DOMExceptionCodes.INDEX_SIZE_ERR);
+
+            string[] parts = strRule.Trim().Split('{');
+            string selector = parts[0].Trim();
+            string styleDec = parts[1].Trim('}').Trim();
+            CSSStyleRule rule = new CSSStyleRule
+            {
+                cssText = strRule,
+                parentStyleSheet = this,
+                selectorText = selector,
+            };
+            rule.style = new CSSStyleDeclaration { cssText = styleDec, parentRule = rule };
+            this.cssRules.Insert(index, rule);
+            return this.cssRules.length - 1;
+        }
 
         /// <summary> Used to delete a rule from the style sheet.</summary>
         /// <param name="index"> The index within the style sheet's rule list of the rule 
@@ -77,7 +92,11 @@ namespace org.w3c.dom.css
         ///   readonly.
         /// </exception>
         public void deleteRule(int index)
-                               ; // throws DOMException;
+        {
+            if (index < 0 || index >= cssRules.length)
+                throw ErrorMessages.Get(DOMExceptionCodes.INDEX_SIZE_ERR);
+            this.cssRules.RemoveAt(index);
+        }
 
     }
 }

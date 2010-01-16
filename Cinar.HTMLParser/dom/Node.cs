@@ -8,24 +8,15 @@ namespace org.w3c.dom
 {
     public class Node
     {
-        internal string _nodeName;
         private string _nodeValue;
-        internal NodeType _nodeType;
-        internal Node _parentNode;
-        internal NodeList _childNodes;
-        internal Node _firstChild;
-        internal Node _lastChild;
-        internal Node _previousSibling;
-        internal Node _nextSibling;
-        internal NamedNodeMap _attributes;
-        internal Document _ownerDocument;
         private string _prefix;
 
         /// <summary>The name of this node, depending on its type; see the table above. 
         /// </summary>
         public string nodeName
         {
-            get { return _nodeName; }
+            get;
+            internal set;
         }
 
         /// <summary>The value of this node, depending on its type; see the table above. 
@@ -47,7 +38,8 @@ namespace org.w3c.dom
         /// </summary>
         public NodeType nodeType
         {
-            get { return _nodeType; }
+            get;
+            internal set;
         }
 
         /// <summary>The parent of this node. All nodes, except Attr, 
@@ -59,7 +51,8 @@ namespace org.w3c.dom
         /// </summary>
         public Node parentNode
         {
-            get { return _parentNode; }
+            get;
+            internal set;
         }
 
         /// <summary>A NodeList that contains all children of this node. If 
@@ -68,7 +61,8 @@ namespace org.w3c.dom
         /// </summary>
         public NodeList childNodes
         {
-            get { return _childNodes; }
+            get;
+            internal set;
         }
 
         /// <summary>The first child of this node. If there is no such node, this returns 
@@ -76,7 +70,8 @@ namespace org.w3c.dom
         /// </summary>
         public Node firstChild
         {
-            get { return _firstChild; }
+            get;
+            internal set;
         }
 
         /// <summary>The last child of this node. If there is no such node, this returns 
@@ -84,7 +79,8 @@ namespace org.w3c.dom
         /// </summary>
         public Node lastChild
         {
-            get { return _lastChild; }
+            get;
+            internal set;
         }
 
         /// <summary>The node immediately preceding this node. If there is no such node, 
@@ -92,7 +88,8 @@ namespace org.w3c.dom
         /// </summary>
         public Node previousSibling
         {
-            get { return _previousSibling; }
+            get;
+            internal set;
         }
 
         /// <summary>The node immediately following this node. If there is no such node, 
@@ -100,7 +97,8 @@ namespace org.w3c.dom
         /// </summary>
         public Node nextSibling
         {
-            get { return _nextSibling; }
+            get;
+            internal set;
         }
 
         /// <summary>A NamedNodeMap containing the attributes of this node (if 
@@ -108,7 +106,8 @@ namespace org.w3c.dom
         /// </summary>
         public NamedNodeMap attributes
         {
-            get { return _attributes; }
+            get;
+            internal set;
         }
 
         /// <summary>The IDocument object associated with this node. This is 
@@ -120,7 +119,8 @@ namespace org.w3c.dom
         /// </summary>
         public virtual Document ownerDocument
         {
-            get { return _ownerDocument; }
+            get;
+            internal set;
         }
 
         /// <summary>Inserts the node newChild before the existing child node 

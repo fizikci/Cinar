@@ -9,6 +9,8 @@
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -32,7 +34,10 @@ namespace org.w3c.dom.html2
         ///    HIERARCHY_REQUEST_ERR: if the element is not a CAPTION. 
         /// @version DOM Level 2
         /// </summary>
-        public void setCaption(HTMLTableCaptionElement caption); //; // throws DOMException;
+        public void setCaption(HTMLTableCaptionElement caption)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>Returns the table's THEAD, or null if none 
         /// exists. 
@@ -45,7 +50,7 @@ namespace org.w3c.dom.html2
         ///    HIERARCHY_REQUEST_ERR: if the element is not a THEAD. 
         /// @version DOM Level 2
         /// </summary>
-        public void setTHead(HTMLTableSectionElement tHead); //; // throws DOMException;
+        public void setTHead(HTMLTableSectionElement tHead) { throw new NotImplementedException(); }
 
         /// <summary>Returns the table's TFOOT, or null if none 
         /// exists. 
@@ -58,7 +63,7 @@ namespace org.w3c.dom.html2
         ///    HIERARCHY_REQUEST_ERR: if the element is not a TFOOT. 
         /// @version DOM Level 2
         /// </summary>
-        public void setTFoot(HTMLTableSectionElement tFoot); //; // throws DOMException;
+        public void setTFoot(HTMLTableSectionElement tFoot) { throw new NotImplementedException(); }
 
         /// <summary>Returns a collection of all the rows in the table, including all in 
         /// THEAD, TFOOT, all TBODY 
@@ -128,29 +133,53 @@ namespace org.w3c.dom.html2
         /// <summary>Create a table header row or return an existing one.
         /// <returns>A new table header element (THEAD).
         /// </summary>
-        public HTMLElement createTHead();
+        public HTMLElement createTHead()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Delete the header from the table, if one exists.
         /// </summary>
-        public void deleteTHead();
+        public void deleteTHead()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Create a table footer row or return an existing one.
         /// <returns>A footer element (TFOOT).
         /// </summary>
-        public HTMLElement createTFoot();
+        public HTMLElement createTFoot()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Delete the footer from the table, if one exists.
         /// </summary>
-        public void deleteTFoot();
+        public void deleteTFoot()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Create a new table caption object or return an existing one.
         /// <returns>A CAPTION element.
         /// </summary>
-        public HTMLElement createCaption();
+        public HTMLElement createCaption()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Delete the table caption, if one exists.
         /// </summary>
-        public void deleteCaption();
+        public void deleteCaption()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Insert a new empty row in the table. The new row is inserted 
         /// immediately before and in the same section as the current 
@@ -168,7 +197,7 @@ namespace org.w3c.dom.html2
         ///   number of rows or if the index is a negative number other than -1.
         /// @version DOM Level 2
         /// </summary>
-        public HTMLElement insertRow(int index); //; // throws DOMException;
+        public HTMLElement insertRow(int index) { throw new NotImplementedException(); }
 
         /// <summary>Delete a table row.
         /// <param name="index"> The index of the row to be deleted. This index starts 
@@ -181,7 +210,11 @@ namespace org.w3c.dom.html2
         ///   other than -1.
         /// @version DOM Level 2
         /// </summary>
-        public void deleteRow(int index); // ; // throws DOMException;
+        public void deleteRow(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

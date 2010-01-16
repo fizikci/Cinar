@@ -11,6 +11,7 @@
  */
 
 using System;
+using org.w3c.dom.css;
 
 namespace org.w3c.dom.html2
 {
@@ -27,7 +28,7 @@ namespace org.w3c.dom.html2
     /// module [<a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113'>DOM Level 2 Style Sheets and CSS</a>]. 
     /// See also the <a href='http://www.w3.org/TR/2003/REC-DOM-Level-2-HTML-20030109'>IDocument Object Model (DOM) Level 2 HTML Specification</a>.
     /// </summary>
-    public class HTMLElement : Element
+    public class HTMLElement : Element, IElementCSSInlineStyle
     {
         /// <summary>The element's identifier. See the id attribute definition in HTML 4.01.
         /// </summary>
@@ -63,6 +64,14 @@ namespace org.w3c.dom.html2
         public override string getDefaultAttributeValue(string name)
         {
             return String.Empty;
+        }
+
+        /// <summary> The style attribute. 
+        /// </summary>
+        public CSSStyleDeclaration style
+        {
+            get;
+            internal set;
         }
     }
 }

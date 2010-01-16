@@ -8,13 +8,10 @@ namespace org.w3c.dom
 {
     public class Attr : Node
     {
-        internal string _name;
-        internal bool _specified;
         private string _value;
-        internal Element _ownerElement;
 
         public Attr() {
-            _nodeType = NodeType.ATTRIBUTE_NODE;
+            this.nodeType = NodeType.ATTRIBUTE_NODE;
         }
 
         public override Document ownerDocument
@@ -28,7 +25,8 @@ namespace org.w3c.dom
         /// <summary>Returns the name of this attribute.</summary>
         public string name
         {
-            get { return _name; }
+            get;
+            internal set;
         }
 
         /// <summary>If this attribute was explicitly given a value in the original 
@@ -57,7 +55,8 @@ namespace org.w3c.dom
         /// </summary>
         public bool specified
         {
-            get { return _specified; }
+            get;
+            internal set;
         }
 
         /// <summary>On retrieval, the value of the attribute is returned as a string. 
@@ -84,7 +83,8 @@ namespace org.w3c.dom
         /// </summary>
         public Element ownerElement
         {
-            get { return _ownerElement; }
+            get;
+            internal set;
         }
     }
 }
