@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.events
 {
 
@@ -73,7 +75,11 @@ namespace org.w3c.dom.events
         /// on the current EventTarget before event flow stops. This 
         /// method may be used during any stage of event flow.
         /// </summary>
-        public void stopPropagation();
+        public void stopPropagation()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>If an event is cancelable, the preventDefault method is 
         /// used to signify that the event is to be canceled, meaning any default 
@@ -86,7 +92,11 @@ namespace org.w3c.dom.events
         /// throughout the remainder of the event's propagation. This method may 
         /// be used during any stage of event flow. 
         /// </summary>
-        public void preventDefault();
+        public void preventDefault()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>The initEvent method is used to initialize the value of an 
         /// IEvent created through the DocumentEvent 
@@ -111,7 +121,11 @@ namespace org.w3c.dom.events
         ///   action can be prevented.</param>
         public void initEvent(string eventTypeArg,
                               bool canBubbleArg,
-                              bool cancelableArg);
+                              bool cancelableArg)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 

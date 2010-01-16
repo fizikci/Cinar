@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.events
 {
 
@@ -36,7 +38,11 @@ namespace org.w3c.dom.events
         ///   and preventDefault methods which are used in 
         ///   determining the event's flow and default action. 
         /// </param>
-        public void handleEvent(Event evt);
+        public void handleEvent(Event evt)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

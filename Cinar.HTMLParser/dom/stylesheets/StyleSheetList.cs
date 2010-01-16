@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.stylesheets
 {
 
@@ -36,7 +38,11 @@ namespace org.w3c.dom.stylesheets
         ///   IStyleSheetList, or null if that is not a 
         ///   valid index. 
         /// </returns>
-        public StyleSheet item(int index);
+        public StyleSheet item(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

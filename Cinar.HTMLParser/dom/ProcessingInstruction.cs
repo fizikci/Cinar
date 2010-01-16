@@ -20,12 +20,15 @@ namespace org.w3c.dom
     /// </summary>
     public class ProcessingInstruction : Node
     {
-        internal string _target;
         /// <summary>The target of this processing instruction. XML defines this as being 
         /// the first token following the markup that begins the processing 
         /// instruction.
         /// </summary>
-        public string target { get { return _target; } }
+        public string target
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>The content of this processing instruction. This is from the first non 
         /// white space character after the target to the character immediately 

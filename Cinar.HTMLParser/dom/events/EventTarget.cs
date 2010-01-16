@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.events
 {
 
@@ -50,7 +52,11 @@ namespace org.w3c.dom.events
         /// </param>
         public void addEventListener(string type,
                                      EventListener listener,
-                                     bool useCapture);
+                                     bool useCapture)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>This method allows the removal of event listeners from the event 
         /// target. If an EventListener is removed from an 
@@ -73,7 +79,11 @@ namespace org.w3c.dom.events
         /// </param>
         public void removeEventListener(string type,
                                         EventListener listener,
-                                        bool useCapture);
+                                        bool useCapture)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>This method allows the dispatch of events into the implementations 
         /// event model. Events dispatched in this manner will have the same 
@@ -95,7 +105,8 @@ namespace org.w3c.dom.events
         ///   will also trigger this exception.
         /// </exception>
         public bool dispatchEvent(Event evt)
-                                     ; // throws EventException;
-
+        {
+            throw new NotImplementedException();
+        }
     }
 }

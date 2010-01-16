@@ -8,8 +8,6 @@ namespace org.w3c.dom
 {
     public abstract class Element : Node
     {
-        internal string _tagName;
-
         /// <summary>The name of the element. For example, in: 
         /// <pre> &lt;elementExample 
         /// id="demo"&gt; ... &lt;/elementExample&gt; , </pre>
@@ -22,7 +20,8 @@ namespace org.w3c.dom
         /// </summary>
         public string tagName
         {
-            get { return _tagName; }
+            get;
+            internal set;
         }
 
         public abstract string getDefaultAttributeValue(string name);
@@ -66,9 +65,9 @@ namespace org.w3c.dom
             this.attributes.setNamedItem(
                 new Attr
                 {
-                    _name = name,
+                    name = name,
                     value = value,
-                    _ownerElement = this,
+                    ownerElement = this,
                 }
             );
         }

@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.traversal
 {
 
@@ -49,7 +51,7 @@ namespace org.w3c.dom.traversal
         public NodeIterator createNodeIterator(Node root,
                                                int whatToShow,
                                                NodeFilter filter,
-                                               bool entityReferenceExpansion); // throws DOMException;
+                                               bool entityReferenceExpansion) { throw new NotImplementedException(); }
 
         /// <summary>Create a new TreeWalker over the subtree rooted at the 
         /// specified node.</summary>
@@ -80,7 +82,7 @@ namespace org.w3c.dom.traversal
         public TreeWalker createTreeWalker(Node root,
                                            int whatToShow,
                                            NodeFilter filter,
-                                           bool entityReferenceExpansion); // throws DOMException;
+                                           bool entityReferenceExpansion) { throw new NotImplementedException(); }
 
     }
 }

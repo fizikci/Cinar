@@ -10,6 +10,7 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
 using org.w3c.dom.stylesheets;
 
 namespace org.w3c.dom.css
@@ -54,7 +55,10 @@ namespace org.w3c.dom.css
         ///   is unparsable.</exception>
         public int insertRule(string rule,
                               int index)
-                              ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary> Used to delete a rule from the media block.</summary>
         /// <param name="index"> The index within the media block's rule collection of the 
@@ -66,7 +70,9 @@ namespace org.w3c.dom.css
         ///   readonly.
         /// </exception>
         public void deleteRule(int index)
-                               ; // throws DOMException;
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

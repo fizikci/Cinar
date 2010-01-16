@@ -10,6 +10,9 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+using HtmlAgilityPack;
+
 namespace org.w3c.dom.html2
 {
 
@@ -26,6 +29,17 @@ namespace org.w3c.dom.html2
     /// </summary>
     public class HTMLDocument : Document
     {
+        internal HtmlDocument document;
+        internal int width;
+        internal int height;
+
+        public HTMLDocument(HtmlDocument document, int width, int height)
+        {
+            this.document = document;
+            this.width = width;
+            this.height = height;
+        }
+
         /// <summary>The title of a document as specified by the TITLE element 
         /// in the head of the document. 
         /// </summary>
@@ -157,7 +171,7 @@ namespace org.w3c.dom.html2
         ///    SYNTAX_ERR: If the new value does not adhere to the cookie syntax 
         ///   specified by [<a href='http://www.ietf.org/rfc/rfc2965.txt'>IETF RFC 2965</a>]. 
         /// </summary>
-        //void setCookie(string cookie); //; // throws DOMException;
+        //void setCookie(string cookie) { throw new NotImplementedException(); }
 
         /// <summary>Open a document stream for writing. If a document exists in the target, 
         /// this method clears it. This method and the ones following allow a 
@@ -166,12 +180,20 @@ namespace org.w3c.dom.html2
         /// for providing similar functionality for both HTML and XML documents 
         /// were being considered (see [<a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-LS-20020725'>DOM Level 3 Load and Save</a>]).
         /// </summary>
-        public void open();
+        public void open()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Closes a document stream opened by open() and forces 
         /// rendering.
         /// </summary>
-        public void close();
+        public void close()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Write a string of text to a document stream opened by 
         /// open(). Note that the function will produce a document 
@@ -180,7 +202,11 @@ namespace org.w3c.dom.html2
         /// <param name="text"> The string to be parsed into some structure in the 
         ///   document structure model.
         /// </summary>
-        public void write(string text);
+        public void write(string text)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Write a string of text followed by a newline character to a document 
         /// stream opened by open(). Note that the function will 
@@ -190,7 +216,11 @@ namespace org.w3c.dom.html2
         /// <param name="text"> The string to be parsed into some structure in the 
         ///   document structure model.
         /// </summary>
-        public void writeln(string text);
+        public void writeln(string text)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary> With [<a href='http://www.w3.org/TR/1999/REC-html401-19991224'>HTML 4.01</a>] documents, this method returns the (possibly empty) collection 
         /// of elements whose name value is given by 
@@ -201,7 +231,11 @@ namespace org.w3c.dom.html2
         ///   element.
         /// <returns>The matching elements.
         /// </summary>
-        public NodeList getElementsByName(string elementName);
+        public NodeList getElementsByName(string elementName)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

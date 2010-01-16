@@ -10,6 +10,7 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
 using org.w3c.dom.stylesheets;
 
 namespace org.w3c.dom.css
@@ -45,7 +46,11 @@ namespace org.w3c.dom.css
         /// <returns> The override style declaration. 
         /// </returns>
         public CSSStyleDeclaration getOverrideStyle(Element elt,
-                                                    string pseudoElt);
+                                                    string pseudoElt)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

@@ -8,16 +8,13 @@ namespace org.w3c.dom
 {
     public class Entity : Node
     {
-        internal string _publicId;
-        internal string _systemId;
-        internal string _notationName;
-
         /// <summary>The public identifier associated with the entity, if specified. If the 
         /// public identifier was not specified, this is null.
         /// </summary>
         public string publicId
         {
-            get { return _publicId; }
+            get;
+            internal set;
         }
 
         /// <summary>The system identifier associated with the entity, if specified. If the 
@@ -25,7 +22,8 @@ namespace org.w3c.dom
         /// </summary>
         public string systemId
         {
-            get { return _systemId; }
+            get;
+            internal set;
         }
 
         /// <summary>For unparsed entities, the name of the notation for the entity. For 
@@ -33,7 +31,8 @@ namespace org.w3c.dom
         /// </summary>
         public string notationName
         {
-            get { return _notationName; }
+            get;
+            internal set;
         }
     }
 }

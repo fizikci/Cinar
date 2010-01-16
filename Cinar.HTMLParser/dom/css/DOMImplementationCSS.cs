@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.css
 {
 
@@ -33,7 +35,8 @@ namespace org.w3c.dom.css
         /// </exception>
         public CSSStyleSheet createCSSStyleSheet(string title,
                                                  string media)
-                                                 ; // throws DOMException;
-
+        {
+            throw new NotImplementedException();
+        }
     }
 }

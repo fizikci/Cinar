@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.traversal
 {
 
@@ -90,7 +92,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new parent node, or null if the current node 
         ///   has no parent  in the TreeWalker's logical view.  
         /// </returns>
-        public Node parentNode();
+        public Node parentNode()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the first visible child of the 
         /// current node, and returns the new node. If the current node has no 
@@ -99,7 +105,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   visible children  in the TreeWalker's logical view.  
         /// </returns>
-        public Node firstChild();
+        public Node firstChild()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the last visible child of the 
         /// current node, and returns the new node. If the current node has no 
@@ -108,7 +118,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   children  in the TreeWalker's logical view.  
         /// </returns>
-        public Node lastChild();
+        public Node lastChild()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the previous sibling of the 
         /// current node, and returns the new node. If the current node has no 
@@ -117,7 +131,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   previous sibling.  in the TreeWalker's logical view.  
         /// </returns>
-        public Node previousSibling();
+        public Node previousSibling()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the next sibling of the current 
         /// node, and returns the new node. If the current node has no visible 
@@ -125,7 +143,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   next sibling.  in the TreeWalker's logical view.  
         /// </returns>
-        public Node nextSibling();
+        public Node nextSibling()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the previous visible node in 
         /// document order relative to the current node, and returns the new 
@@ -136,7 +158,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   previous node  in the TreeWalker's logical view.  
         /// </returns>
-        public Node previousNode();
+        public Node previousNode()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Moves the TreeWalker to the next visible node in document 
         /// order relative to the current node, and returns the new node. If the 
@@ -146,7 +172,11 @@ namespace org.w3c.dom.traversal
         /// <returns>The new node, or null if the current node has no 
         ///   next node  in the TreeWalker's logical view.  
         /// </returns>
-        public Node nextNode();
+        public Node nextNode()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }

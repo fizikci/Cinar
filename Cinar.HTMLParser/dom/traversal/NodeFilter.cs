@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.traversal
 {
 
@@ -43,7 +45,11 @@ namespace org.w3c.dom.traversal
         /// <returns>a constant to determine whether the node is accepted, .
         ///   rejected, or skipped, as defined above.
         /// </returns>
-        NodeFilterType acceptNode(Node n);
+        NodeFilterType acceptNode(Node n)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 

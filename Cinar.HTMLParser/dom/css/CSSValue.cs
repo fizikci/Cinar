@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.css
 {
 
@@ -35,6 +37,95 @@ namespace org.w3c.dom.css
         /// <summary> A code defining the type of the value as defined above. 
         /// </summary>
         public CSSValueType cssValueType { get; internal set; }
+
+        public static CSSValue parseCSSValue(string cssValueText)
+        {
+            cssValueText = cssValueText.Trim().ToLowerInvariant();
+            float fVal;
+
+            if (cssValueText == "inherit")
+                return new CSSValue
+                {
+                    cssText = cssValueText,
+                    cssValueType = CSSValueType.CSS_INHERIT
+                };
+            else if (cssValueText.StartsWith("url"))
+                return new CSSPrimitiveValue
+                {
+                    cssText = cssValueText,
+                    cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE,
+                    primitiveType = UnitType.CSS_URI,
+                    stringValue = cssValueText.Substring(3).Trim('(', ')', '\'', '"')
+                };
+            else if (cssValueText.StartsWith("#"))
+                return new CSSPrimitiveValue
+                {
+                    cssText = cssValueText,
+                    cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE,
+                    primitiveType = UnitType.CSS_RGBCOLOR,
+                    stringValue = cssValueText
+                };
+            else if (cssValueText.StartsWith("rgb"))
+                return new CSSPrimitiveValue
+                {
+                    cssText = cssValueText,
+                    cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE,
+                    primitiveType = UnitType.CSS_RGBCOLOR,
+                    rgbColorValue = parseRGBColorValue(cssValueText)
+                };
+            else if (float.TryParse(cssValueText, out fVal))
+                return new CSSPrimitiveValue
+                {
+                    cssText = cssValueText,
+                    cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE,
+                    stringValue = fVal.ToString(),
+                    primitiveType = UnitType.CSS_NUMBER
+                };
+            else if (cssValueText.EndsWith("%"))
+            {
+                CSSPrimitiveValue val = (CSSPrimitiveValue)parseCSSValue(cssValueText.Substring(0, cssValueText.Length - 1));
+                val.primitiveType = UnitType.CSS_PERCENTAGE;
+                return val;
+            }
+            else if (Char.IsDigit(cssValueText[0]) && Char.IsLetter(cssValueText[cssValueText.Length - 1]))
+            {
+                return parseValueAndUnit(cssValueText);
+            }
+
+            throw ErrorMessages.Get(DOMExceptionCodes.SYNTAX_ERR);
+        }
+
+        public static CSSValue parseValueAndUnit(string cssValueText)
+        {
+            foreach (string name in Enum.GetNames(typeof(UnitType)))
+            {
+                string unit = name.Substring(4).ToLowerInvariant();
+                string number = cssValueText.Substring(0, cssValueText.Length - unit.Length);
+                float fVal;
+                if (float.TryParse(number, out fVal))
+                {
+                    return new CSSPrimitiveValue
+                    {
+                        cssText = cssValueText,
+                        cssValueType = CSSValueType.CSS_PRIMITIVE_VALUE,
+                        primitiveType = (UnitType)Enum.Parse(typeof(UnitType), name),
+                        stringValue = fVal.ToString()
+                    };
+                }
+            }
+            throw ErrorMessages.Get(DOMExceptionCodes.SYNTAX_ERR);
+        }
+
+        public static RGBColor parseRGBColorValue(string cssValueText)
+        {
+            string[] parts = cssValueText.Substring(3).Trim('(', ')').Split(',');
+            return new RGBColor
+            {
+                red = (CSSPrimitiveValue)parseCSSValue(parts[0]),
+                green = (CSSPrimitiveValue)parseCSSValue(parts[1]),
+                blue = (CSSPrimitiveValue)parseCSSValue(parts[2])
+            };
+        }
 
     }
 

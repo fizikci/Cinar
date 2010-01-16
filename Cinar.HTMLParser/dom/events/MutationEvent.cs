@@ -10,6 +10,8 @@
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
 
+using System;
+
 namespace org.w3c.dom.events
 {
 
@@ -82,7 +84,11 @@ namespace org.w3c.dom.events
                                       string prevValueArg,
                                       string newValueArg,
                                       string attrNameArg,
-                                      AttrChangeType attrChangeArg);
+                                      AttrChangeType attrChangeArg)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 

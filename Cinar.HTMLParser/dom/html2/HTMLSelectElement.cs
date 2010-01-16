@@ -9,6 +9,8 @@
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
+using System;
+
 namespace org.w3c.dom.html2
 {
 
@@ -49,7 +51,7 @@ namespace org.w3c.dom.html2
         ///   implementation. 
         /// @version DOM Level 2
         /// </summary>
-        public void setLength(int length); //; // throws DOMException;
+        //public void setLength(int length) { throw new NotImplementedException(); }
 
         /// <summary>Returns the FORM element containing this control. Returns 
         /// null if this control is not within the context of a 
@@ -108,22 +110,34 @@ namespace org.w3c.dom.html2
         ///   NOT_FOUND_ERR: Raised if before is not a descendant of 
         ///   the SELECT element. 
         /// </summary>
-        public void add(HTMLElement element, HTMLElement before); //; // throws DOMException;
+        public void add(HTMLElement element, HTMLElement before) { throw new NotImplementedException(); }
 
         /// <summary>Remove an element from the collection of OPTION elements 
         /// for this SELECT. Does nothing if no element has the 
         /// given index.
         /// <param name="index"> The index of the item to remove, starting from 0.
         /// </summary>
-        public void remove(int index);
+        public void remove(int index)
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Removes keyboard focus from this element.
         /// </summary>
-        public void blur();
+        public void blur()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>Gives keyboard focus to this element.
         /// </summary>
-        public void focus();
+        public void focus()
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }
