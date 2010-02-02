@@ -53,7 +53,9 @@ namespace Cinar.Scripting
                         arguments[func.Parameters[i]] = paramVal;
                     i++;
                 }
-                return func.Block.Execute(context, this, arguments).ReturnValue;
+                object res = func.Block.Execute(context, this, arguments).ReturnValue;
+                Context.breakLoop = false;
+                return res;
             }
             else
                 throw new Exception("Undefined function: " + this);

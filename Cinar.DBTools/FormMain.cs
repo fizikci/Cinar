@@ -444,7 +444,7 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            executeSQL("select top 10 * from " + tableName);
+            executeSQL("select top 10 * from [" + tableName + "]");
         }
         private void cmdTableDrop(string arg)
         {
@@ -461,7 +461,7 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            executeSQL("select count(*) AS number_of_rows from " + tableName);
+            executeSQL("select count(*) AS number_of_rows from [" + tableName + "]");
         }
         private void cmdGenerateSQL(string arg)
         {
@@ -523,26 +523,26 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select distinct top 100 " + field.Name + " from " + field.Table.Name);
+            executeSQL("select distinct top 100 " + field.Name + " from [" + field.Table.Name + "]");
         }
         private void cmdFieldMax(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select max(" + field.Name + ") AS " + field.Name + "_MAX_value from " + field.Table.Name);
+            executeSQL("select max(" + field.Name + ") AS " + field.Name + "_MAX_value from [" + field.Table.Name + "]");
         }
         private void cmdFieldMin(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select min(" + field.Name + ") AS " + field.Name + "_MIN_value from " + field.Table.Name);
+            executeSQL("select min(" + field.Name + ") AS " + field.Name + "_MIN_value from [" + field.Table.Name + "]");
         }
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
             if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
-                executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from " + field.Table.Name + " group by " + field.Name + " order by RecordCount desc");
+                executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from [" + field.Table.Name + "] group by " + field.Name + " order by RecordCount desc");
             else
                 executeSQL(@"
                     select top 100 
