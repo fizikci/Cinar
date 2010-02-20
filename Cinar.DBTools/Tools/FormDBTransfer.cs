@@ -84,5 +84,6 @@ namespace Cinar.DBTools.Tools
         {
             groupTransferData.Enabled = cbTransferData.Checked;
         }
+
     }
 }
