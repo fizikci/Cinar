@@ -514,6 +514,7 @@ namespace Cinar.Database
                 {
                     // if field is reference and the value equals 0, continue
                     if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType==DbType.Int32) {
+                        if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
                         int refId = (int) data[fld.Name];
                         if (refId == 0) continue; //***
                     }
@@ -537,6 +538,7 @@ namespace Cinar.Database
                     // if field is reference and the value equals 0, continue
                     if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
                     {
+                        if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
                         int refId = (int)data[fld.Name];
                         if (refId == 0) continue; //***
                     }
@@ -567,6 +569,7 @@ namespace Cinar.Database
                     // if field is reference and the value equals 0, continue
                     if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
                     {
+                        if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
                         int refId = (int)data[fld.Name];
                         if (refId == 0) continue; //***
                     }
@@ -701,6 +704,13 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
                     ht[pi.Name] = pi.GetValue(entity, null);
+            return ht;
+        }
+        public Hashtable DataRowToHashtable(DataRow dataRow)
+        {
+            Hashtable ht = new Hashtable();
+            foreach (DataColumn dc in dataRow.Table.Columns)
+                    ht[dc.ColumnName] = dataRow[dc];
             return ht;
         }
 

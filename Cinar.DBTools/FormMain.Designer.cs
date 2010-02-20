@@ -59,6 +59,7 @@
             this.menuNewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnectionContext = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRefreshMetadata = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
@@ -77,6 +78,7 @@
             this.menuCheckDatabaseSchema = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBTransfer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCopyTreeData = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -93,7 +95,7 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
-            this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -158,7 +160,7 @@
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusText.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(447, 17);
+            this.statusText.Size = new System.Drawing.Size(485, 17);
             this.statusText.Spring = true;
             this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -248,9 +250,10 @@
             this.menuNewERDiagram,
             this.menuNewConnectionContext,
             this.menuRefreshMetadata,
-            this.menuDeleteERDiagram});
+            this.menuDeleteERDiagram,
+            this.menuShowTableCounts});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(198, 356);
+            this.menuStripTree.Size = new System.Drawing.Size(198, 400);
             // 
             // menuCount
             // 
@@ -371,6 +374,12 @@
             this.menuRefreshMetadata.Size = new System.Drawing.Size(197, 22);
             this.menuRefreshMetadata.Text = "Refresh Metadata";
             // 
+            // menuDeleteERDiagram
+            // 
+            this.menuDeleteERDiagram.Name = "menuDeleteERDiagram";
+            this.menuDeleteERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuDeleteERDiagram.Text = "Delete ER Diagram";
+            // 
             // imageListTree
             // 
             this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
@@ -453,7 +462,7 @@
             this.tpInfo.Location = new System.Drawing.Point(4, 22);
             this.tpInfo.Name = "tpInfo";
             this.tpInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tpInfo.Size = new System.Drawing.Size(435, 197);
+            this.tpInfo.Size = new System.Drawing.Size(461, 176);
             this.tpInfo.TabIndex = 1;
             this.tpInfo.Text = "Info";
             this.tpInfo.UseVisualStyleBackColor = true;
@@ -469,7 +478,7 @@
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
             this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInfo.Size = new System.Drawing.Size(429, 191);
+            this.txtInfo.Size = new System.Drawing.Size(455, 170);
             this.txtInfo.TabIndex = 0;
             this.txtInfo.WordWrap = false;
             // 
@@ -519,7 +528,8 @@
             this.menuCodeGenerator,
             this.menuCheckDatabaseSchema,
             this.menuDBTransfer,
-            this.menuViewERDiagram});
+            this.menuViewERDiagram,
+            this.menuCopyTreeData});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -547,6 +557,12 @@
             this.menuViewERDiagram.Name = "menuViewERDiagram";
             this.menuViewERDiagram.Size = new System.Drawing.Size(215, 22);
             this.menuViewERDiagram.Text = "View ER Diagram...";
+            // 
+            // menuCopyTreeData
+            // 
+            this.menuCopyTreeData.Name = "menuCopyTreeData";
+            this.menuCopyTreeData.Size = new System.Drawing.Size(215, 22);
+            this.menuCopyTreeData.Text = "Copy Tree Data...";
             // 
             // helpToolStripMenuItem
             // 
@@ -690,11 +706,11 @@
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
             // 
-            // menuDeleteERDiagram
+            // menuShowTableCounts
             // 
-            this.menuDeleteERDiagram.Name = "menuDeleteERDiagram";
-            this.menuDeleteERDiagram.Size = new System.Drawing.Size(197, 22);
-            this.menuDeleteERDiagram.Text = "Delete ER Diagram";
+            this.menuShowTableCounts.Name = "menuShowTableCounts";
+            this.menuShowTableCounts.Size = new System.Drawing.Size(197, 22);
+            this.menuShowTableCounts.Text = "Show Table Counts";
             // 
             // FormMain
             // 
@@ -801,6 +817,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuNewConnectionContext;
         private System.Windows.Forms.ToolStripMenuItem menuRefreshMetadata;
         private System.Windows.Forms.ToolStripMenuItem menuDeleteERDiagram;
+        private System.Windows.Forms.ToolStripMenuItem menuCopyTreeData;
+        private System.Windows.Forms.ToolStripMenuItem menuShowTableCounts;
 
     }
 }

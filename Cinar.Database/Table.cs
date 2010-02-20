@@ -230,6 +230,14 @@ namespace Cinar.Database
                     return true;
             return false;
         }
+
+        public Field FindFieldWhichRefersTo(Table tblSrc)
+        {
+            foreach (Field f in this.Fields)
+                if (f.ReferenceField != null && f.ReferenceField.Table == tblSrc)
+                    return f;
+            return null;
+        }
     }
 
     [Serializable]

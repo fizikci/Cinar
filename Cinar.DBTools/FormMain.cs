@@ -65,6 +65,14 @@ namespace Cinar.DBTools
                                      IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
                                  },
                      new Command {
+                                     Execute = cmdShowTableCounts,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuShowTableCounts},
+                                     },
+                                     IsEnabled = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings,
+                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                 },
+                     new Command {
                                      Execute = cmdExecuteSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnExecuteSQL},
@@ -96,6 +104,13 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDBTransfer},
                                          new CommandTrigger{ Control = btnDatabaseTransfer},
+                                     }
+                                 },
+                     new Command {
+                                     Execute = cmdCopyTreeData,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuCopyTreeData},
+                                         //new CommandTrigger{ Control = btnCopyTreeData},
                                      }
                                  },
                      new Command {
@@ -399,6 +414,16 @@ namespace Cinar.DBTools
             }
         }
 
+        private void cmdShowTableCounts(string arg)
+        {
+            Database.Database db = (treeView.SelectedNode.Tag as ConnectionSettings).Database;
+            foreach (TreeNode node in treeView.SelectedNode.Nodes["Tables"].Nodes)
+            { 
+                Table tbl = node.Tag as Table;
+                node.Text = string.Format("{0} ({1})", tbl.Name, db.GetInt("select count(*) from [" + tbl + "]"));
+            }
+        }
+
         private void cmdCheckDatabaseSchema(string arg)
         {
             FormCheckDatabaseSchema form = new FormCheckDatabaseSchema(SaveConnections);
@@ -594,6 +619,12 @@ namespace Cinar.DBTools
         private void cmdDBTransfer(string arg)
         {
             FormDBTransfer form = new FormDBTransfer();
+            form.Show();
+        }
+
+        private void cmdCopyTreeData(string arg)
+        {
+            FormCopyTreeData form = new FormCopyTreeData();
             form.Show();
         }
 
