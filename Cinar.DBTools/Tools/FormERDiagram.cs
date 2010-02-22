@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
-using Cinar.Extensions;
 using Cinar.UICommands;
 using System.Drawing.Drawing2D;
 using System.Xml.Serialization;
@@ -151,8 +150,9 @@ namespace Cinar.DBTools.Tools
                         cl.FromTable = tbl.Name;
                         cl.ToTable = tv.TableName;
                         TableView fromTV = CurrentSchema.GetTableView(cl.FromTable);
-                        cl.StartPoint = fromTV.Rectangle.FindClosestSideCenterTo(tv.Rectangle);
-                        cl.EndPoint = tv.Rectangle.FindClosestSideCenterTo(fromTV.Rectangle);
+                        Pair<Point> pair = fromTV.Rectangle.FindClosestSideCenters(tv.Rectangle);
+                        cl.StartPoint = pair.First;
+                        cl.EndPoint = pair.Second;
                         CurrentSchema.ConnectionLines.Add(cl);
                     }
             }
@@ -242,8 +242,9 @@ namespace Cinar.DBTools.Tools
                 {
                     TableView tv1 = CurrentSchema.GetTableView(cl.FromTable);
                     TableView tv2 = CurrentSchema.GetTableView(cl.ToTable);
-                    cl.StartPoint = tv1.Rectangle.FindClosestSideCenterTo(tv2.Rectangle);
-                    cl.EndPoint = tv2.Rectangle.FindClosestSideCenterTo(tv1.Rectangle);
+                    Pair<Point> pair = tv1.Rectangle.FindClosestSideCenters(tv2.Rectangle);
+                    cl.StartPoint = pair.First;
+                    cl.EndPoint = pair.Second;
                 });
                 correctPanelSize();
                 panelPaint(false);
@@ -435,7 +436,7 @@ namespace Cinar.DBTools.Tools
         {
             Size size = RealSize;
             // bir önceki çizim alanını temizle (flicker engellemek için)
-            graphics.FillRectangle(Brushes.White, lastDrawRect);
+            graphics.FillRectangle(Brushes.White, new Rectangle(lastDrawRect.Location, lastDrawRect.Size+new Size(1,1)));
             
             // siyah çerçeve
             graphics.DrawRectangle(Pens.Black, new Rectangle(Position, size));

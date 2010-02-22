@@ -48,6 +48,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Menees, Version=2.0.3607.35554, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="MeneesDiffUtils, Version=2.1.0.1, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -226,6 +228,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="yaprak.ico" />
+    <Content Include="_library\Menees.dll" />
+    <Content Include="_library\MeneesDiffUtils.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

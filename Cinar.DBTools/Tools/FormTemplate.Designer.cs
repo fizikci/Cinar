@@ -35,8 +35,10 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.txtCode = new System.Windows.Forms.RichTextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.txtFileNameFormat = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtCategory = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtName
@@ -61,7 +63,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 104);
+            this.label2.Location = new System.Drawing.Point(12, 157);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 3;
@@ -97,22 +99,13 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCode.DetectUrls = false;
             this.txtCode.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtCode.Location = new System.Drawing.Point(15, 120);
+            this.txtCode.Location = new System.Drawing.Point(15, 173);
             this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(500, 312);
+            this.txtCode.Size = new System.Drawing.Size(500, 259);
             this.txtCode.TabIndex = 6;
             this.txtCode.Text = "";
             this.txtCode.WordWrap = false;
             this.txtCode.TextChanged += new System.EventHandler(this.txtCode_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 57);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "File Name Format";
             // 
             // txtFileNameFormat
             // 
@@ -124,11 +117,41 @@
             this.txtFileNameFormat.TabIndex = 7;
             this.txtFileNameFormat.TextChanged += new System.EventHandler(this.txtFileNameFormat_TextChanged);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 57);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(89, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "File Name Format";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 105);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(49, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Category";
+            // 
+            // txtCategory
+            // 
+            this.txtCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCategory.Location = new System.Drawing.Point(15, 121);
+            this.txtCategory.Name = "txtCategory";
+            this.txtCategory.Size = new System.Drawing.Size(503, 20);
+            this.txtCategory.TabIndex = 9;
+            this.txtCategory.TextChanged += new System.EventHandler(this.txtCategory_TextChanged);
+            // 
             // FormTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 466);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtCategory);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtFileNameFormat);
             this.Controls.Add(this.txtCode);
@@ -154,7 +177,9 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.RichTextBox txtCode;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtFileNameFormat;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtCategory;
     }
 }

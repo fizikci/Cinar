@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Cinar.Extensions;
 
 namespace org.w3c.dom.css
 {

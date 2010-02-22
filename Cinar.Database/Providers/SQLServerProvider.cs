@@ -38,18 +38,21 @@ namespace Cinar.Database.Providers
 
         private Database db = null;
 
-        public SQLServerProvider(Database db, bool createConnection)
+        public SQLServerProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
-            if (createConnection)
+            try
             {
-                try
+                con = new SqlConnection(db.ConnectionString);
+                if (createDatabaseIfNotExist)
                 {
-                    con = new SqlConnection(db.ConnectionString);
                     con.Open();
                     con.Close();
                 }
-                catch
+            }
+            catch
+            {
+                if (createDatabaseIfNotExist)
                 {
                     // ihtimal, veritabanı create edilmemiş. create edelim o zaman:
                     string newConnStr = "";

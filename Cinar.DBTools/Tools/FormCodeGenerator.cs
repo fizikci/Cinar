@@ -34,18 +34,31 @@ namespace Cinar.DBTools.Tools
                 }
             }
 
-            showList();
+            showCategories(null);
 
             foreach (Table tbl in Provider.Database.Tables)
                 lbEntities.Items.Add(tbl);
+        }
+
+        private void showCategories(string selectedCat)
+        {
+            lbCategories.Items.Clear();
+            foreach (string cat in gen.Templates.Select(c => c.Category).Distinct().OrderBy(s => s))
+                lbCategories.Items.Add(cat??"");
+
+            if (!string.IsNullOrEmpty(selectedCat))
+                lbCategories.SelectedIndex = lbCategories.Items.IndexOf(selectedCat);
+
+            showList();
         }
 
         private void showList()
         {
             int oldIndex = lbTemplates.SelectedIndex;
 
+            string selectedCat = (lbCategories.SelectedItem == null || lbCategories.SelectedItem.ToString()=="") ? null : lbCategories.SelectedItem.ToString();
             lbTemplates.Items.Clear();
-            foreach (Template tmp in gen.Templates)
+            foreach (Template tmp in gen.Templates.Where(t=>t.Category==selectedCat))
                 lbTemplates.Items.Add(tmp);
 
             if (lbTemplates.Items.Count > oldIndex)
@@ -61,7 +74,7 @@ namespace Cinar.DBTools.Tools
             {
                 gen.Templates.Remove(tmp);
                 save();
-                showList();
+                showCategories(tmp.Category);
             }
         }
 
@@ -83,8 +96,8 @@ namespace Cinar.DBTools.Tools
             FormTemplate form = new FormTemplate(tmp);
             if (form.ShowDialog() == DialogResult.OK)
             {
-                gen.Templates.Add(tmp);
-                showList();
+                gen.Templates.Add(form.Template);
+                showCategories(form.Template.Category);
                 save();
             }
         }
@@ -95,7 +108,8 @@ namespace Cinar.DBTools.Tools
             FormTemplate form = new FormTemplate(tmp);
             if (form.ShowDialog() == DialogResult.OK)
             {
-                showList();
+                gen.Templates[gen.Templates.IndexOf(tmp)] = form.Template;
+                showCategories(form.Template.Category);
                 save();
             }
         }
@@ -112,6 +126,8 @@ namespace Cinar.DBTools.Tools
                 MessageBox.Show("Please check one or more template first", "Warning");
                 return;
             }
+
+            List<GeneratedCode> generatedCodes = new List<GeneratedCode>();
 
             foreach (Template tmp in lbTemplates.SelectedItems)
             {
@@ -134,13 +150,19 @@ namespace Cinar.DBTools.Tools
                         path = "E:\\kodlar\\projects\\Interpress\\" + engine2.Output.Replace("|", "\\");
                     }
 
-                    FormGeneratedCode form = new FormGeneratedCode(engine.Output);
-                    form.Text += " - " + tmp.Name + " code for " + selectedTable.Name;
-                    form.Path = path;
-                    form.Show();
+                    generatedCodes.Add(new GeneratedCode { 
+                        Code = engine.Output,
+                        Path = path,
+                        Template = tmp
+                    });
+
                 }
             }
 
+            FormGeneratedCode form = new FormGeneratedCode(generatedCodes);
+            //form.Text = " - " + tmp.Name + " code for " + selectedTable.Name;
+            //form.Path = path;
+            form.Show();
         }
 
         private void btnGenerateAll_Click(object sender, EventArgs e)
@@ -211,6 +233,18 @@ namespace Cinar.DBTools.Tools
                 lbEntities.SetItemChecked(i, cbAll.Checked);
         }
 
+        private void lbCategories_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            showList();
+        }
+
+    }
+
+    public class GeneratedCode
+    {
+        public string Path { get; set; }
+        public Template Template { get; set; }
+        public string Code { get; set; }
     }
 
     public class Util
@@ -280,7 +314,7 @@ namespace Cinar.DBTools.Tools
                 case Cinar.Database.DbType.Date:
                 case Cinar.Database.DbType.DateTime:
                 case Cinar.Database.DbType.DateTimeSmall:
-                    return "datetime";
+                    return "DateTime";
                 
                 case Cinar.Database.DbType.Currency:
                 case Cinar.Database.DbType.CurrencySmall:
