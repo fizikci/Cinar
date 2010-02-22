@@ -39,10 +39,10 @@ namespace Cinar.Database.Providers
 
         private Database db = null;
 
-        public PostgreSQLProvider(Database db, bool createConnection)
+        public PostgreSQLProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
-            if (createConnection)
+            if (createDatabaseIfNotExist)
             {
                 try
                 {

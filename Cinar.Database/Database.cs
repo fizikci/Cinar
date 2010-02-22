@@ -62,12 +62,20 @@ namespace Cinar.Database
         public string Name 
         { 
             get {
+                if (!string.IsNullOrEmpty(temporaryDbName))
+                    return temporaryDbName;
+
                 if (this.dbProvider != null && this.dbProvider.Connection != null)
                     return this.dbProvider.Connection.Database;
                 else
                     return "";
             }
+            set 
+            {
+                temporaryDbName = value;
+            }
         }
+        private string temporaryDbName = ""; // bu sadece Database.Name'i geçici olarak değiştirmek için kullanılır.
 
         [XmlIgnore]
         public List<string> SQLLog
@@ -145,7 +153,7 @@ namespace Cinar.Database
             this.connectionString = connectionString;
             this.provider = provider;
 
-            CreateDbProvider();
+            CreateDbProvider(true);
 
             if (HttpContext.Current != null)
             {
@@ -169,18 +177,18 @@ namespace Cinar.Database
             }
         }
 
-        public void CreateDbProvider()
+        public void CreateDbProvider(bool createDatabaseIfNotExist)
         {
             switch (this.provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    dbProvider = new Providers.PostgreSQLProvider(this, true);
+                    dbProvider = new Providers.PostgreSQLProvider(this, createDatabaseIfNotExist);
                     break;
                 case DatabaseProvider.MySQL:
-                    dbProvider = new Providers.MySqlProvider(this, true);
+                    dbProvider = new Providers.MySqlProvider(this, createDatabaseIfNotExist);
                     break;
                 case DatabaseProvider.SQLServer:
-                    dbProvider = new Providers.SQLServerProvider(this, true);
+                    dbProvider = new Providers.SQLServerProvider(this, createDatabaseIfNotExist);
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");

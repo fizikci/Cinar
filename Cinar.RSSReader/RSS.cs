@@ -13,132 +13,14 @@ namespace Cinar.RSSReader
 
         public RSS(string url)
         {
-            WebRequest req = WebRequest.Create(url);
-            req.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
-            string xml = this.downloadPage(url);
+            string xml = url.DownloadPage(ref SourceEncoding);
 
             this.doc = new XmlDocument();
             doc.Load(new System.IO.StringReader(xml));
         }
 
-        public Encoding SourceEncoding
-        {
-            get {
-                return e;
-            }
-        }
+        public Encoding SourceEncoding = null;
 
-        #region download page with proper encoding
-        Encoding e = null;
-        private string downloadPage(string url)
-        {
-            byte[] buffer = null;
-
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
-            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
-            {
-
-                using (Stream s = resp.GetResponseStream())
-                {
-                    buffer = readStream(s);
-                }
-
-                string pageEncoding = "";
-                e = Encoding.UTF8;
-                if (resp.ContentEncoding != "")
-                    pageEncoding = resp.ContentEncoding;
-                else if (resp.CharacterSet != "")
-                    pageEncoding = resp.CharacterSet;
-                else if (resp.ContentType != "")
-                    pageEncoding = getCharacterSet(resp.ContentType);
-
-                if (pageEncoding == "")
-                    pageEncoding = getCharacterSet(buffer);
-
-                if (pageEncoding != "")
-                {
-                    try
-                    {
-                        e = Encoding.GetEncoding(pageEncoding);
-                    }
-                    catch
-                    {
-                        //throw new Exception("Invalid encoding: " + pageEncoding);
-                    }
-                }
-
-                return e.GetString(buffer);
-            }
-        }
-        private string getCharacterSet(string s)
-        {
-            s = s.ToUpperInvariant();
-            int start = s.LastIndexOf("CHARSET");
-            if (start == -1)
-            {
-                start = s.LastIndexOf("ENCODING");
-                if (start == -1)
-                    return "";
-            }
-
-            start = s.IndexOf("=", start);
-            if (start == -1)
-                return "";
-
-            start++;
-            s = s.Substring(start).Trim().Trim('"');
-            int end = s.Length;
-
-            int i = s.IndexOf(";");
-            if (i != -1)
-                end = i;
-            i = s.IndexOf("\"");
-            if (i != -1 && i < end)
-                end = i;
-            i = s.IndexOf("'");
-            if (i != -1 && i < end)
-                end = i;
-            i = s.IndexOf("/");
-            if (i != -1 && i < end)
-                end = i;
-
-            return s.Substring(0, end).Trim();
-        }
-        private string getCharacterSet(byte[] data)
-        {
-            string s = Encoding.Default.GetString(data);
-            return getCharacterSet(s);
-        }
-        private byte[] readStream(Stream s)
-        {
-            long curLength = 0;
-            try
-            {
-                byte[] buffer = new byte[8096];
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    while (true)
-                    {
-                        int read = s.Read(buffer, 0, buffer.Length);
-                        if (read <= 0)
-                        {
-                            curLength = 0;
-                            return ms.ToArray();
-                        }
-                        ms.Write(buffer, 0, read);
-                        curLength = ms.Length;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-        #endregion
 
 
         public string Title

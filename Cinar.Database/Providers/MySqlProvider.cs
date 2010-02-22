@@ -39,18 +39,21 @@ namespace Cinar.Database.Providers
 
         private Database db = null;
 
-        public MySqlProvider(Database db, bool createConnection)
+        public MySqlProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
-            if (createConnection)
+            try
             {
-                try
+                con = new MySqlConnection(db.ConnectionString);
+                if (createDatabaseIfNotExist)
                 {
-                    con = new MySqlConnection(db.ConnectionString);
                     con.Open();
                     con.Close();
                 }
-                catch
+            }
+            catch
+            {
+                if (createDatabaseIfNotExist)
                 {
                     // ihtimal, veritabaný create edilmemiþ. create edelim o zaman:
                     string newConnStr = "";
@@ -76,6 +79,7 @@ namespace Cinar.Database.Providers
                 }
             }
         }
+        
 
         /// <summary>
         /// Metada okuma iþini yapan asýl metod. Sýrayla bütün veritabaný nesnelerini okur.

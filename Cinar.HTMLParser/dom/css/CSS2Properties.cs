@@ -9,9 +9,8 @@
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
  */
-
+using System;
 using System.Collections.Generic;
-using Cinar.Extensions;
 
 namespace org.w3c.dom.css
 {

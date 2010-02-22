@@ -215,7 +215,7 @@ namespace Cinar.DBTools
                             cs.RefreshDatabaseSchema();
                         cs.Database.SetCollectionParents();
                         cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 1000);
-                        cs.Database.CreateDbProvider();
+                        cs.Database.CreateDbProvider(false);
 
                         TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
                         node.Tag = cs;
@@ -647,6 +647,8 @@ namespace Cinar.DBTools
                     (e.Node.Tag as Table).Name = e.Label;
                 else if (e.Node.Tag is Field)
                     (e.Node.Tag as Field).Name = e.Label;
+                else if (e.Node.Tag is ConnectionSettings)
+                    (e.Node.Tag as ConnectionSettings).Database.Name = e.Label;
             }
         }
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

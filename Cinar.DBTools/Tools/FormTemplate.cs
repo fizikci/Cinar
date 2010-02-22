@@ -15,11 +15,13 @@ namespace Cinar.DBTools.Tools
 
         public FormTemplate(Template tmp)
         {
-            this.tmp = tmp;
+            this.tmp = (Template)tmp.Clone();
             InitializeComponent();
+
             txtName.Text = tmp.Name;
             txtFileNameFormat.Text = tmp.FileNameFormat;
             txtCode.Text = tmp.Code;
+            txtCategory.Text = tmp.Category;
         }
 
         private void txtName_TextChanged(object sender, EventArgs e)
@@ -37,6 +39,11 @@ namespace Cinar.DBTools.Tools
             tmp.FileNameFormat = txtFileNameFormat.Text;
         }
 
+        public Template Template { get { return this.tmp; } }
 
+        private void txtCategory_TextChanged(object sender, EventArgs e)
+        {
+            tmp.Category = txtCategory.Text;
+        }
     }
 }

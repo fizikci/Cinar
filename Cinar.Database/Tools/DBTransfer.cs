@@ -89,7 +89,12 @@ namespace Cinar.Database.Tools
 
                     int transferedRows = 0;
 
-                    DataTable dt = dbSrc.GetDataTable("select * from " + tableName + " limit " + pageSize + " offset " + i);
+                    DataTable dt;
+                    if(dbSrc.Provider== DatabaseProvider.MySQL)
+                    dt = dbSrc.GetDataTable("select * from " + tableName + " limit " + pageSize + " offset " + i);
+                    else
+                        dt = dbSrc.GetDataTable("select top " + pageSize + " * from " + tableName);
+
                     DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + tableName);
                     foreach (DataRow dr in dt.Rows)
                     {

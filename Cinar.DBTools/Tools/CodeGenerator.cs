@@ -22,6 +22,7 @@ namespace Cinar.DBTools.Tools
         public string Name { get; set; }
         public string FileNameFormat { get; set; }
         public string Code { get; set; }
+        public string Category { get; set; }
 
         public override string ToString()
         {
