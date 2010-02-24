@@ -192,13 +192,13 @@ namespace Cinar.Database
             foreach (Field f in this.Fields)
             {
                 Field newField = new Field();
-                newField.DefaultValue = f.DefaultValue;
+                //newField.DefaultValue = f.DefaultValue;
                 newField.FieldType = f.FieldType;
                 if (f.FieldType == DbType.Timestamp && dbDst.Provider == DatabaseProvider.SQLServer)
                     newField.FieldType = DbType.DateTime;
                 newField.IsAutoIncrement = f.IsAutoIncrement;
                 newField.IsNullable = f.IsNullable;
-                newField.Length = f.Length;
+                newField.Length = f.Length <= 0 ? 1000 : f.Length;
                 newField.Name = f.Name;
                 newField.parent = newTable.Fields;
                 newTable.Fields.Add(newField);

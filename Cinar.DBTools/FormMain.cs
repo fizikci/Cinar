@@ -276,10 +276,12 @@ namespace Cinar.DBTools
 
             TreeNode tablesNode = parentNode.Nodes.Add("Tables", "Tables", "Table", "Table");
             tablesNode.Tag = cs.Database.Tables;
+            TreeNode viewsNode = parentNode.Nodes.Add("Views", "Views", "View", "View");
+            viewsNode.Tag = cs.Database.Tables;
 
             foreach (Table tbl in cs.Database.Tables)
             {
-                TreeNode tnTable = tablesNode.Nodes.Add(tbl.Name, tbl.Name, "Table", "Table");
+                TreeNode tnTable = (tbl.IsView ? viewsNode : tablesNode).Nodes.Add(tbl.Name, tbl.Name, tbl.IsView ? "View" : "Table", tbl.IsView ? "View" : "Table");
                 tnTable.Tag = tbl;
                 foreach (Field fld in tbl.Fields)
                 {

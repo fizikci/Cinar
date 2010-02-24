@@ -103,6 +103,9 @@
     <EmbeddedResource Include="Tools\FormCopyTreeData.resx">
       <DependentUpon>FormCopyTreeData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormDBIntegration.resx">
+      <DependentUpon>FormDBIntegration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBTransfer.resx">
       <DependentUpon>FormDBTransfer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -150,6 +153,12 @@
     </Compile>
     <Compile Include="Tools\FormCopyTreeData.Designer.cs">
       <DependentUpon>FormCopyTreeData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormDBIntegration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormDBIntegration.Designer.cs">
+      <DependentUpon>FormDBIntegration.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FormDBTransfer.cs">
       <SubType>Form</SubType>

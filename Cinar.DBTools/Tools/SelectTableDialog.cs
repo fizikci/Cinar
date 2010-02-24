@@ -10,26 +10,18 @@ using Cinar.Database;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class SelectTableDialog : Form
+    public partial class ListBoxDialog : Form
     {
-        public SelectTableDialog()
+        public ListBoxDialog()
         {
             InitializeComponent();
-
-            if (Provider.Database != null)
-                foreach (Table tbl in Provider.Database.Tables)
-                    lbTables.Items.Add(tbl);
         }
 
-        public List<Table> SelectedTables 
+        public ListBox ListBox { get{ return lbTables;} }
+
+        public List<T> GetSelectedItems<T>() 
         {
-            get
-            {
-                List<Table> list = new List<Table>();
-                foreach (Table item in lbTables.SelectedItems)
-                    list.Add(item);
-                return list;
-            }
+            return lbTables.SelectedItems.Cast<T>().ToList();
         }
     }
 }

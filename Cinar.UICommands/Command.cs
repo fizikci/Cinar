@@ -142,6 +142,7 @@ namespace Cinar.UICommands
         public Component Control { get; set; }
         public string Event { get; set; }
         public string Argument { get; set; }
+        public Predicate<EventArgs> Predicate;
     }
 
     public class CommandCollection : List<Command>
@@ -199,15 +200,19 @@ namespace Cinar.UICommands
         }
         private void onEventTriggered(object sender, object target, string eventName, EventArgs e)
         {
+            this.LastEventArgs = e;
+            this.LastSender = target;
+
             foreach (Command command in commands)
                 foreach (CommandTrigger trigger in command.Triggers)
                 {
                     if (trigger.Event == eventName && trigger.Control == target)
                     {
+                        if (trigger.Predicate != null && !trigger.Predicate(e))
+                            continue;
+
                         if (command.IsEnabled())
                         {
-                            this.LastEventArgs = e;
-                            this.LastSender = target;
                             if (this.BeforeCommandExecute != null)
                                 this.BeforeCommandExecute();
                             command.Execute(trigger.Argument);
