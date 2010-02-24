@@ -49,7 +49,15 @@ namespace Cinar.Database
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set {
+                string oldName = name;
+                name = value;
+                
+                if (oldName != name && this.parent != null && this.parent.table != null && this.parent.table.Keys != null && parent.table.Keys.Count > 0)
+                    this.parent.table.Keys.
+                        FindAll(k => k.FieldNames.Contains(oldName)).
+                        ForEach(k => { k.FieldNames.Remove(oldName); k.FieldNames.Add(name); });
+            }
         }
 
         private DbType fieldType;

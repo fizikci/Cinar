@@ -60,6 +60,7 @@
             this.menuNewConnectionContext = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRefreshMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
@@ -95,7 +96,6 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
-            this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -254,7 +254,7 @@
             this.menuDeleteERDiagram,
             this.menuShowTableCounts});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(198, 400);
+            this.menuStripTree.Size = new System.Drawing.Size(198, 378);
             // 
             // menuCount
             // 
@@ -381,6 +381,12 @@
             this.menuDeleteERDiagram.Size = new System.Drawing.Size(197, 22);
             this.menuDeleteERDiagram.Text = "Delete ER Diagram";
             // 
+            // menuShowTableCounts
+            // 
+            this.menuShowTableCounts.Name = "menuShowTableCounts";
+            this.menuShowTableCounts.Size = new System.Drawing.Size(197, 22);
+            this.menuShowTableCounts.Text = "Show Table Counts";
+            // 
             // imageListTree
             // 
             this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
@@ -390,6 +396,7 @@
             this.imageListTree.Images.SetKeyName(2, "Table");
             this.imageListTree.Images.SetKeyName(3, "Field");
             this.imageListTree.Images.SetKeyName(4, "Key");
+            this.imageListTree.Images.SetKeyName(5, "View");
             // 
             // splitContainer2
             // 
@@ -706,12 +713,6 @@
             this.btnTryAndSee.Name = "btnTryAndSee";
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
-            // 
-            // menuShowTableCounts
-            // 
-            this.menuShowTableCounts.Name = "menuShowTableCounts";
-            this.menuShowTableCounts.Size = new System.Drawing.Size(197, 22);
-            this.menuShowTableCounts.Text = "Show Table Counts";
             // 
             // FormMain
             // 

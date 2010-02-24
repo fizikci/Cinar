@@ -1218,6 +1218,65 @@ namespace Cinar.Database
         {
             return dbProvider.GetFieldDDL(field);
         }
+
+        public void AlterTableRename(string oldName, string newName)
+        {
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                case DatabaseProvider.MySQL:
+                    this.ExecuteNonQuery("ALTER TABLE [" + oldName + "] RENAME TO [" + newName + "]");
+                    break;
+                case DatabaseProvider.SQLServer:
+                    this.ExecuteNonQuery("EXEC sp_rename {0}, {1}", oldName, newName);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        public void AlterTableRenameColumn(string tableName, string oldColumnName, string newColumnName)
+        {
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                    this.ExecuteNonQuery("ALTER TABLE [" + tableName + "] RENAME [" + oldColumnName + "] TO [" + newColumnName + "]");
+                    break;
+                case DatabaseProvider.MySQL:
+                    this.ExecuteNonQuery("ALTER TABLE [" + tableName + "] CHANGE [" + oldColumnName + "] " + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName));
+                    break;
+                case DatabaseProvider.SQLServer:
+                    this.ExecuteNonQuery(string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", tableName, oldColumnName, newColumnName));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        public void AlterTableAddColumn(Field field)
+        {
+            this.ExecuteNonQuery("alter table [" + field.Table.Name + "] add " + GetFieldDDL(field));
+        }
+        public void AlterTableDropColumn(Field field)
+        {
+            this.ExecuteNonQuery("alter table [" + field.Table.Name + "] drop [" + field.Name + "]");
+        }
+
+        public void AlterTableChangeColumn(Field field)
+        {
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                    throw new Exception("Alter column is not implemented for Postgre SQL!");
+                    break;
+                case DatabaseProvider.MySQL:
+                    this.ExecuteNonQuery("alter table [" + field.Table.Name + "] modify column " + GetFieldDDL(field));
+                    break;
+                case DatabaseProvider.SQLServer:
+                    this.ExecuteNonQuery("alter table [" + field.Table.Name + "] alter column " + GetFieldDDL(field));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 
     public delegate void DbAction();

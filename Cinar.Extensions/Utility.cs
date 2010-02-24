@@ -88,9 +88,9 @@ namespace System
         {
             return new Point((int)p.X, (int)p.Y);
         }
-        public static double FindDistanceTo(this Point p, Point point)
+        public static float FindDistanceTo(this Point p, Point point)
         {
-            return Math.Sqrt((double)Math.Abs((point.X - p.X) * (point.X - p.X) + (point.Y - p.Y) * (point.Y - p.Y)));
+            return (float)Math.Sqrt((double)Math.Abs((point.X - p.X) * (point.X - p.X) + (point.Y - p.Y) * (point.Y - p.Y)));
         }
         public static Point FindMidPointTo(this Point p, Point point)
         {
@@ -99,6 +99,35 @@ namespace System
         public static SizeF ToSizeF(this PointF p)
         {
             return new SizeF(p.X, p.Y);
+        }
+        public static Size Subtract(this Point p, Point p2)
+        {
+            return new Size(p.X - p2.X, p.Y - p2.Y);
+        }
+        public static Rectangle CreateRect(this Point p1, Point p2)
+        {
+            Size size = new Size(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+            Point start = new Point(p1.X < p2.X ? p1.X : p2.X, p1.Y < p2.Y ? p1.Y : p2.Y);
+            return new Rectangle(start, size);
+        }
+        public static Pair<Point> GetLinePart(this Point p1, Point p2, float length, LinePart linePart)
+        {
+            float L = (float)p1.FindDistanceTo(p2);
+            float l = length;
+            PointF a = new PointF(p1.X + (p2.X - p1.X) * (L - l) / (2 * L), p1.Y + (p2.Y - p1.Y) * (L - l) / (2 * L));
+            PointF b = new PointF(p1.X + (p2.X - p1.X) * (L + l) / (2 * L), p1.Y + (p2.Y - p1.Y) * (L + l) / (2 * L));
+
+            switch (linePart)
+            {
+                case LinePart.Near:
+                    return new Pair<Point> { First = p1, Second = a.ToPoint() };
+                case LinePart.Center:
+                    return new Pair<Point> { First = a.ToPoint(), Second = b.ToPoint() };
+                case LinePart.Far:
+                    return new Pair<Point> { First = b.ToPoint(), Second = p2 };
+                default:
+                    throw new ArgumentOutOfRangeException("linePart");
+            }
         }
 
         public static SizeF ToSizeF(this Size p)
@@ -924,4 +953,10 @@ namespace System
         public bool Visible { get; set; }
     }
 
+    public enum LinePart
+    {
+        Near,
+        Center,
+        Far
+    }
 }

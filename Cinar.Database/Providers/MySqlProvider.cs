@@ -82,7 +82,7 @@ namespace Cinar.Database.Providers
         
 
         /// <summary>
-        /// Metada okuma işini yapan asıl metod. Sırayla bütün veritabanı nesnelerini okur.
+        /// Metadata okuma işini yapan asıl metod. Sırayla bütün veritabanı nesnelerini okur.
         /// </summary>
         /// <param name="db"></param>
         public void ReadDatabaseMetadata()

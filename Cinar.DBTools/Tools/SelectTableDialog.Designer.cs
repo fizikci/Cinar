@@ -1,6 +1,6 @@
 ﻿namespace Cinar.DBTools.Tools
 {
-    partial class SelectTableDialog
+    partial class ListBoxDialog
     {
         /// <summary>
         /// Required designer variable.
