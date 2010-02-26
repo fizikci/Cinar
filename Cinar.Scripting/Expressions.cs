@@ -770,13 +770,16 @@ namespace Cinar.Scripting
                 if (obj == null)
                     throw new Exception(LeftChildExpression + " is null");
                 MemberInfo[] members = obj.GetType().GetMember((RightChildExpression as Variable).Name);
-                if(members==null || members.Length==0)
-                    throw new Exception("Undefined member: " + this);
-                MemberInfo mi = members[0];
-                if (mi is FieldInfo)
-                    (mi as FieldInfo).SetValue(obj, val);
-                else if (mi is PropertyInfo)
-                    (mi as PropertyInfo).SetValue(obj, val, null);
+                if (members == null || members.Length == 0)
+                    obj.SetIndexedValue((RightChildExpression as Variable).Name, false, val);
+                else
+                {
+                    MemberInfo mi = members[0];
+                    if (mi is FieldInfo)
+                        (mi as FieldInfo).SetValue(obj, val);
+                    else if (mi is PropertyInfo)
+                        (mi as PropertyInfo).SetValue(obj, val, null);
+                }
             }
             else
                 throw new Exception(this + " cannot be set!");

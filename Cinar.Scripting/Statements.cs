@@ -206,25 +206,25 @@ namespace Cinar.Scripting
             switch (Op)
             {
                 case "=":
-                    fMember.SetValue(null, fValue.Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), fValue.Calculate(context, this), context);
                     break;
                 case "+=":
-                    fMember.SetValue(null, new Addition(fMember, fValue).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Addition(fMember, fValue).Calculate(context, this), context);
                     break;
                 case "-=":
-                    fMember.SetValue(null, new Subtraction(fMember, fValue).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Subtraction(fMember, fValue).Calculate(context, this), context);
                     break;
                 case "/=":
-                    fMember.SetValue(null, new Division(fMember, fValue).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Division(fMember, fValue).Calculate(context, this), context);
                     break;
                 case "*=":
-                    fMember.SetValue(null, new Multiplication(fMember, fValue).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Multiplication(fMember, fValue).Calculate(context, this), context);
                     break;
                 case "++":
-                    fMember.SetValue(null, new Addition(fMember, new IntegerConstant(1)).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Addition(fMember, new IntegerConstant(1)).Calculate(context, this), context);
                     break;
                 case "--":
-                    fMember.SetValue(null, new Subtraction(fMember, new IntegerConstant(1)).Calculate(context, this), context);
+                    fMember.SetValue(fMember.LeftChildExpression.Calculate(context, this), new Subtraction(fMember, new IntegerConstant(1)).Calculate(context, this), context);
                     break;
             }
         }

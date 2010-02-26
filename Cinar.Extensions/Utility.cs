@@ -691,13 +691,8 @@ namespace System
                 PropertyInfo pi = mi as PropertyInfo;
                 if (indexer != null)
                 {
-                    object collectionObject = pi.GetValue(member, null);
-                    MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                    pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                    if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-                    ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                    object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-                    result = pi.GetValue(collectionObject, new object[] { indexerParam });
+                    object collectionObject = pi.GetValue(obj, null);
+                    result = GetIndexedValue(collectionObject, indexer, stringIndexer);
                 }
                 else
                 {
@@ -723,12 +718,7 @@ namespace System
                     if (indexer != null)
                     {
                         object collectionObject = pi.GetValue(member, null);
-                        MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                        pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                        if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-                        ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                        object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-                        pi.SetValue(collectionObject, val, new object[] { indexerParam });
+                        SetIndexedValue(collectionObject, indexer, stringIndexer, val);
                     }
                     else
                     {
@@ -742,6 +732,28 @@ namespace System
 
                 return val;
             }
+        }
+
+        public static void SetIndexedValue(this object obj, string indexer, bool stringIndexer, object val)
+        {
+            MemberInfo[] indexers = obj.GetType().GetMember("Item");
+            PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
+            if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            ParameterInfo[] indexerParams = pi.GetIndexParameters();
+            object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
+            pi.SetValue(obj, val, new object[] { indexerParam });
+        }
+
+        public static object GetIndexedValue(this object obj, string indexer, bool stringIndexer)
+        {
+            object result;
+            MemberInfo[] indexers = obj.GetType().GetMember("Item");
+            PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
+            if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            ParameterInfo[] indexerParams = pi.GetIndexParameters();
+            object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
+            result = pi.GetValue(obj, new object[] { indexerParam });
+            return result;
         }
 
         public static T ToEnum<T>(this int val)

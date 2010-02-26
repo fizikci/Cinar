@@ -70,6 +70,12 @@
     <Compile Include="Controls\MyDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\TextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\TextInputDialog.Designer.cs">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\TextInputDialog.resx">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -105,6 +114,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBIntegration.resx">
       <DependentUpon>FormDBIntegration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormDBIntegrationTask.resx">
+      <DependentUpon>FormDBIntegrationTask.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBTransfer.resx">
       <DependentUpon>FormDBTransfer.cs</DependentUpon>
@@ -136,6 +148,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Tools\CodeGenerator.cs" />
+    <Compile Include="Tools\DBIntegration.cs" />
     <Compile Include="Tools\FormCheckDatabaseSchema.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +172,12 @@
     </Compile>
     <Compile Include="Tools\FormDBIntegration.Designer.cs">
       <DependentUpon>FormDBIntegration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormDBIntegrationTask.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormDBIntegrationTask.Designer.cs">
+      <DependentUpon>FormDBIntegrationTask.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FormDBTransfer.cs">
       <SubType>Form</SubType>
@@ -184,6 +203,7 @@
     <Compile Include="Tools\FormTemplate.Designer.cs">
       <DependentUpon>FormTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Schema.cs" />
     <Compile Include="Tools\SelectTableDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -203,6 +223,10 @@
     <ProjectReference Include="..\Cinar.HTMLParser\Cinar.HTMLParser.csproj">
       <Project>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</Project>
       <Name>Cinar.HTMLParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Scheduler\Cinar.Scheduler.csproj">
+      <Project>{4D1F4DCA-8D81-4274-B784-B0A5C372D2C9}</Project>
+      <Name>Cinar.Scheduler</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
