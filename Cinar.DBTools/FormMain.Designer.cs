@@ -80,6 +80,9 @@
             this.menuDBTransfer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopyTreeData = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSimpleIntegrationService = new System.Windows.Forms.ToolStripMenuItem();
+            this.quickScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuDeleteFromTables = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -126,11 +129,11 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(707, 299);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(813, 539);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(707, 370);
+            this.toolStripContainer1.Size = new System.Drawing.Size(813, 610);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -150,7 +153,7 @@
             this.statusNumberOfRows});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(707, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(813, 22);
             this.statusStrip1.TabIndex = 0;
             // 
             // statusText
@@ -160,7 +163,7 @@
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusText.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(485, 17);
+            this.statusText.Size = new System.Drawing.Size(591, 17);
             this.statusText.Spring = true;
             this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -214,8 +217,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(707, 299);
-            this.splitContainer1.SplitterDistance = 234;
+            this.splitContainer1.Size = new System.Drawing.Size(813, 539);
+            this.splitContainer1.SplitterDistance = 269;
             this.splitContainer1.TabIndex = 0;
             // 
             // treeView
@@ -228,7 +231,7 @@
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(234, 299);
+            this.treeView.Size = new System.Drawing.Size(269, 539);
             this.treeView.TabIndex = 0;
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
             this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
@@ -254,7 +257,7 @@
             this.menuDeleteERDiagram,
             this.menuShowTableCounts});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(198, 378);
+            this.menuStripTree.Size = new System.Drawing.Size(198, 400);
             // 
             // menuCount
             // 
@@ -266,7 +269,7 @@
             // 
             this.menuTop10.Name = "menuTop10";
             this.menuTop10.Size = new System.Drawing.Size(197, 22);
-            this.menuTop10.Text = "Top 10";
+            this.menuTop10.Text = "Top 1000";
             // 
             // menuDistinct
             // 
@@ -412,8 +415,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl);
-            this.splitContainer2.Size = new System.Drawing.Size(469, 299);
-            this.splitContainer2.SplitterDistance = 93;
+            this.splitContainer2.Size = new System.Drawing.Size(540, 539);
+            this.splitContainer2.SplitterDistance = 167;
             this.splitContainer2.TabIndex = 0;
             // 
             // txtSQL
@@ -424,7 +427,7 @@
             this.txtSQL.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtSQL.Location = new System.Drawing.Point(0, 0);
             this.txtSQL.Name = "txtSQL";
-            this.txtSQL.Size = new System.Drawing.Size(469, 93);
+            this.txtSQL.Size = new System.Drawing.Size(540, 167);
             this.txtSQL.TabIndex = 0;
             this.txtSQL.Text = "";
             this.txtSQL.WordWrap = false;
@@ -437,7 +440,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(469, 202);
+            this.tabControl.Size = new System.Drawing.Size(540, 368);
             this.tabControl.TabIndex = 0;
             // 
             // tpResults
@@ -446,7 +449,7 @@
             this.tpResults.Location = new System.Drawing.Point(4, 22);
             this.tpResults.Name = "tpResults";
             this.tpResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResults.Size = new System.Drawing.Size(461, 176);
+            this.tpResults.Size = new System.Drawing.Size(532, 342);
             this.tpResults.TabIndex = 0;
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
@@ -461,7 +464,7 @@
             this.gridResults.Location = new System.Drawing.Point(3, 3);
             this.gridResults.Name = "gridResults";
             this.gridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridResults.Size = new System.Drawing.Size(455, 170);
+            this.gridResults.Size = new System.Drawing.Size(526, 336);
             this.gridResults.TabIndex = 0;
             // 
             // tpInfo
@@ -470,7 +473,7 @@
             this.tpInfo.Location = new System.Drawing.Point(4, 22);
             this.tpInfo.Name = "tpInfo";
             this.tpInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tpInfo.Size = new System.Drawing.Size(461, 176);
+            this.tpInfo.Size = new System.Drawing.Size(532, 342);
             this.tpInfo.TabIndex = 1;
             this.tpInfo.Text = "Info";
             this.tpInfo.UseVisualStyleBackColor = true;
@@ -486,7 +489,7 @@
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
             this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInfo.Size = new System.Drawing.Size(455, 170);
+            this.txtInfo.Size = new System.Drawing.Size(526, 336);
             this.txtInfo.TabIndex = 0;
             this.txtInfo.WordWrap = false;
             // 
@@ -499,7 +502,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(707, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(813, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -537,7 +540,9 @@
             this.menuCheckDatabaseSchema,
             this.menuDBTransfer,
             this.menuViewERDiagram,
-            this.menuCopyTreeData});
+            this.menuCopyTreeData,
+            this.menuSimpleIntegrationService,
+            this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -545,32 +550,52 @@
             // menuCodeGenerator
             // 
             this.menuCodeGenerator.Name = "menuCodeGenerator";
-            this.menuCodeGenerator.Size = new System.Drawing.Size(215, 22);
+            this.menuCodeGenerator.Size = new System.Drawing.Size(222, 22);
             this.menuCodeGenerator.Text = "Code Generator...";
             // 
             // menuCheckDatabaseSchema
             // 
             this.menuCheckDatabaseSchema.Name = "menuCheckDatabaseSchema";
-            this.menuCheckDatabaseSchema.Size = new System.Drawing.Size(215, 22);
+            this.menuCheckDatabaseSchema.Size = new System.Drawing.Size(222, 22);
             this.menuCheckDatabaseSchema.Text = "Check Database Schema...";
             // 
             // menuDBTransfer
             // 
             this.menuDBTransfer.Name = "menuDBTransfer";
-            this.menuDBTransfer.Size = new System.Drawing.Size(215, 22);
+            this.menuDBTransfer.Size = new System.Drawing.Size(222, 22);
             this.menuDBTransfer.Text = "Database Transfer...";
             // 
             // menuViewERDiagram
             // 
             this.menuViewERDiagram.Name = "menuViewERDiagram";
-            this.menuViewERDiagram.Size = new System.Drawing.Size(215, 22);
+            this.menuViewERDiagram.Size = new System.Drawing.Size(222, 22);
             this.menuViewERDiagram.Text = "View ER Diagram...";
             // 
             // menuCopyTreeData
             // 
             this.menuCopyTreeData.Name = "menuCopyTreeData";
-            this.menuCopyTreeData.Size = new System.Drawing.Size(215, 22);
+            this.menuCopyTreeData.Size = new System.Drawing.Size(222, 22);
             this.menuCopyTreeData.Text = "Copy Tree Data...";
+            // 
+            // menuSimpleIntegrationService
+            // 
+            this.menuSimpleIntegrationService.Name = "menuSimpleIntegrationService";
+            this.menuSimpleIntegrationService.Size = new System.Drawing.Size(222, 22);
+            this.menuSimpleIntegrationService.Text = "Simple Integration Service...";
+            // 
+            // quickScriptToolStripMenuItem
+            // 
+            this.quickScriptToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuDeleteFromTables});
+            this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
+            this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.quickScriptToolStripMenuItem.Text = "Quick Script";
+            // 
+            // menuDeleteFromTables
+            // 
+            this.menuDeleteFromTables.Name = "menuDeleteFromTables";
+            this.menuDeleteFromTables.Size = new System.Drawing.Size(177, 22);
+            this.menuDeleteFromTables.Text = "Delete From Tables";
             // 
             // helpToolStripMenuItem
             // 
@@ -607,7 +632,7 @@
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(707, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(813, 25);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 1;
             // 
@@ -718,7 +743,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 370);
+            this.ClientSize = new System.Drawing.Size(813, 610);
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
@@ -821,6 +846,9 @@
         private System.Windows.Forms.ToolStripMenuItem menuDeleteERDiagram;
         private System.Windows.Forms.ToolStripMenuItem menuCopyTreeData;
         private System.Windows.Forms.ToolStripMenuItem menuShowTableCounts;
+        private System.Windows.Forms.ToolStripMenuItem menuSimpleIntegrationService;
+        private System.Windows.Forms.ToolStripMenuItem quickScriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuDeleteFromTables;
 
     }
 }

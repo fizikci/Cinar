@@ -151,6 +151,8 @@ namespace Cinar.Scripting
             return sb.ToString();
         }
 
+        public bool LastExecutionSuccessful { get; set; }
+
         public void Execute(TextWriter output)
         {
             context = new Context();
@@ -171,9 +173,11 @@ namespace Cinar.Scripting
             {
                 StatementCollection coll = new StatementCollection(statements);
                 coll.Execute(context, null, null);
+                this.LastExecutionSuccessful = true;
             }
             catch (Exception ex)
             {
+                this.LastExecutionSuccessful = false;
                 context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : ""));
             }
             watch.Stop();

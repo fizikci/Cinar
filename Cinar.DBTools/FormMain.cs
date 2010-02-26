@@ -114,6 +114,23 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdSimpleIntegrationService,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuSimpleIntegrationService},
+                                         //new CommandTrigger{ Control = btnCopyTreeData},
+                                     }
+                                 },
+                     new Command {
+                                     Execute = cmdQuickScript,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuDeleteFromTables, Argument=@"
+foreach(table in db.Tables)
+    echo('delete from ' + table.Name + ';\r\n');
+"},
+                                         //new CommandTrigger{ Control = btnCopyTreeData},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdSetActiveConnection,
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "AfterSelect"}
                                  },
@@ -435,7 +452,14 @@ namespace Cinar.DBTools
         private void cmdExecuteSQL(string arg)
         {
             if(!checkConnection()) return;
-            executeSQL(txtSQL.Text);
+
+            Interpreter engine = new Interpreter(txtSQL.Text, null);
+            engine.SetAttribute("db", Provider.Database);
+            engine.SetAttribute("util", new Util());
+            engine.Parse();
+            engine.Execute();
+
+            executeSQL(engine.Output);
         }
         private void cmdExecuteScript(string arg)
         {
@@ -471,7 +495,7 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            executeSQL("select top 10 * from [" + tableName + "]");
+            executeSQL("select top 1000 * from [" + tableName + "]");
         }
         private void cmdTableDrop(string arg)
         {
@@ -630,6 +654,17 @@ namespace Cinar.DBTools
             form.Show();
         }
 
+        private void cmdSimpleIntegrationService(string arg)
+        {
+            FormDBIntegration form = new FormDBIntegration();
+            form.Show();
+        }
+
+        private void cmdQuickScript(string arg)
+        {
+            txtSQL.Text = arg;
+        }
+
         private void cmdExit(string arg)
         {
             Close();
@@ -679,6 +714,14 @@ namespace Cinar.DBTools
 
                 return ActiveConnection.Database;
             }
+        }
+
+        public static ConnectionSettings GetConnection(string connectionName)
+        {
+            foreach (ConnectionSettings cs in Connections)
+                if (connectionName == cs.ToString())
+                    return cs;
+            return null;
         }
     }
     public class ConnectionSettings

@@ -826,6 +826,10 @@ namespace Cinar.Database
         {
             return GetDataTable(new DataSet(), "Table", sql, parameters);
         }
+        public DataTable GetDataTable(string sql)
+        {
+            return GetDataTable(sql, new object[0]);
+        }
         public DataRow GetDataRow(string sql, params object[] parameters)
         {
             DataTable dt = this.GetDataTable(sql, parameters);
@@ -835,6 +839,10 @@ namespace Cinar.Database
                 return dt.Rows[0];
             else
                 throw new ApplicationException("There is more than one row returned by that sql. (" + sql + ")");
+        }
+        public DataRow GetDataRow(string sql)
+        {
+            return GetDataRow(sql, new object[0]);
         }
         public object GetValue(string sql, params object[] parameters)
         {
@@ -849,9 +857,17 @@ namespace Cinar.Database
             else
                 return null;
         }
+        public object GetValue(string sql)
+        {
+            return this.GetValue(sql, new object[0]);
+        }
         public string GetString(string sql, params object[] parameters)
         {
             return Convert.ToString(GetValue(sql, parameters));
+        }
+        public string GetString(string sql)
+        {
+            return Convert.ToString(GetValue(sql));
         }
         public DateTime GetDateTime(string sql, params object[] parameters)
         {
@@ -861,13 +877,29 @@ namespace Cinar.Database
             else
                 return new DateTime();
         }
+        public DateTime GetDateTime(string sql)
+        {
+            object obj = GetValue(sql);
+            if (obj != null)
+                return Convert.ToDateTime(obj);
+            else
+                return new DateTime();
+        }
         public bool GetBool(string sql, params object[] parameters)
         {
             return Convert.ToBoolean(GetValue(sql, parameters));
         }
+        public bool GetBool(string sql)
+        {
+            return Convert.ToBoolean(GetValue(sql));
+        }
         public int GetInt(string sql, params object[] parameters)
         {
             return Convert.ToInt32(GetValue(sql, parameters));
+        }
+        public int GetInt(string sql)
+        {
+            return Convert.ToInt32(GetValue(sql));
         }
 
         public IDatabaseEntity Read(Type entityType, int id)

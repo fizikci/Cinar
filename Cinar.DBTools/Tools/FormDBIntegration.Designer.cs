@@ -30,223 +30,212 @@
         {
             this.lbTasks = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbSrcDb = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cbDstTable = new System.Windows.Forms.ComboBox();
-            this.cbDstDb = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.label3 = new System.Windows.Forms.Label();
-            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.lbLog = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.groupBox1.SuspendLayout();
+            this.btnStart = new System.Windows.Forms.LinkLabel();
+            this.btnStop = new System.Windows.Forms.LinkLabel();
+            this.btnAddNewTask = new System.Windows.Forms.LinkLabel();
+            this.btnDeleteSelectedTask = new System.Windows.Forms.LinkLabel();
+            this.cbCategories = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnEditSelectedTask = new System.Windows.Forms.LinkLabel();
+            this.btnScriptInclude = new System.Windows.Forms.LinkLabel();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbTasks
             // 
+            this.lbTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbTasks.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbTasks.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.lbTasks.FormattingEnabled = true;
-            this.lbTasks.Location = new System.Drawing.Point(13, 22);
+            this.lbTasks.IntegralHeight = false;
+            this.lbTasks.ItemHeight = 12;
+            this.lbTasks.Location = new System.Drawing.Point(6, 23);
             this.lbTasks.Name = "lbTasks";
-            this.lbTasks.Size = new System.Drawing.Size(568, 108);
+            this.lbTasks.Size = new System.Drawing.Size(560, 127);
             this.lbTasks.TabIndex = 0;
+            this.lbTasks.DoubleClick += new System.EventHandler(this.lbTasks_DoubleClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 6);
+            this.label1.Location = new System.Drawing.Point(3, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Integration Tasks :";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.cbDstTable);
-            this.groupBox1.Controls.Add(this.cbDstDb);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.cbSrcDb);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(13, 137);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(568, 205);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Selected Task Properties";
-            // 
-            // cbSrcDb
-            // 
-            this.cbSrcDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSrcDb.FormattingEnabled = true;
-            this.cbSrcDb.Location = new System.Drawing.Point(56, 46);
-            this.cbSrcDb.Name = "cbSrcDb";
-            this.cbSrcDb.Size = new System.Drawing.Size(140, 21);
-            this.cbSrcDb.TabIndex = 28;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 49);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
-            this.label2.TabIndex = 27;
-            this.label2.Text = "From :";
-            // 
-            // cbDstTable
-            // 
-            this.cbDstTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDstTable.FormattingEnabled = true;
-            this.cbDstTable.Location = new System.Drawing.Point(421, 46);
-            this.cbDstTable.Name = "cbDstTable";
-            this.cbDstTable.Size = new System.Drawing.Size(140, 21);
-            this.cbDstTable.TabIndex = 31;
-            // 
-            // cbDstDb
-            // 
-            this.cbDstDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDstDb.FormattingEnabled = true;
-            this.cbDstDb.Location = new System.Drawing.Point(275, 46);
-            this.cbDstDb.Name = "cbDstDb";
-            this.cbDstDb.Size = new System.Drawing.Size(140, 21);
-            this.cbDstDb.TabIndex = 30;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(241, 49);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(26, 13);
-            this.label6.TabIndex = 29;
-            this.label6.Text = "To :";
-            // 
-            // textBox1
-            // 
-            this.textBox1.AcceptsReturn = true;
-            this.textBox1.AcceptsTab = true;
-            this.textBox1.Location = new System.Drawing.Point(56, 74);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(505, 125);
-            this.textBox1.TabIndex = 32;
-            this.textBox1.WordWrap = false;
             // 
             // backgroundWorker
             // 
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
             // 
-            // label3
+            // lbLog
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 77);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 33;
-            this.label3.Text = "SQL :";
-            // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(13, 369);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(568, 160);
-            this.listBox2.TabIndex = 4;
+            this.lbLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbLog.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lbLog.FormattingEnabled = true;
+            this.lbLog.IntegralHeight = false;
+            this.lbLog.ItemHeight = 12;
+            this.lbLog.Location = new System.Drawing.Point(5, 24);
+            this.lbLog.Name = "lbLog";
+            this.lbLog.Size = new System.Drawing.Size(562, 377);
+            this.lbLog.TabIndex = 4;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 353);
+            this.label4.Location = new System.Drawing.Point(3, 8);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(84, 13);
             this.label4.TabIndex = 5;
             this.label4.Text = "Integration Log :";
             // 
-            // linkLabel1
+            // btnStart
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(518, 353);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(29, 13);
-            this.linkLabel1.TabIndex = 6;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Start";
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStart.AutoSize = true;
+            this.btnStart.Location = new System.Drawing.Point(504, 8);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(29, 13);
+            this.btnStart.TabIndex = 6;
+            this.btnStart.TabStop = true;
+            this.btnStart.Text = "Start";
+            this.btnStart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnStart_LinkClicked);
             // 
-            // linkLabel2
+            // btnStop
             // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(552, 353);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(29, 13);
-            this.linkLabel2.TabIndex = 7;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Stop";
+            this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStop.AutoSize = true;
+            this.btnStop.Enabled = false;
+            this.btnStop.Location = new System.Drawing.Point(538, 8);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(29, 13);
+            this.btnStop.TabIndex = 7;
+            this.btnStop.TabStop = true;
+            this.btnStop.Text = "Stop";
+            this.btnStop.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnStop_LinkClicked);
             // 
-            // label5
+            // btnAddNewTask
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 23);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 13);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "Name :";
+            this.btnAddNewTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAddNewTask.AutoSize = true;
+            this.btnAddNewTask.Location = new System.Drawing.Point(270, 7);
+            this.btnAddNewTask.Name = "btnAddNewTask";
+            this.btnAddNewTask.Size = new System.Drawing.Size(78, 13);
+            this.btnAddNewTask.TabIndex = 8;
+            this.btnAddNewTask.TabStop = true;
+            this.btnAddNewTask.Text = "Add New Task";
+            this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNewTask_Click);
             // 
-            // textBox2
+            // btnDeleteSelectedTask
             // 
-            this.textBox2.Location = new System.Drawing.Point(56, 20);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(505, 20);
-            this.textBox2.TabIndex = 35;
+            this.btnDeleteSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDeleteSelectedTask.AutoSize = true;
+            this.btnDeleteSelectedTask.Location = new System.Drawing.Point(456, 7);
+            this.btnDeleteSelectedTask.Name = "btnDeleteSelectedTask";
+            this.btnDeleteSelectedTask.Size = new System.Drawing.Size(110, 13);
+            this.btnDeleteSelectedTask.TabIndex = 9;
+            this.btnDeleteSelectedTask.TabStop = true;
+            this.btnDeleteSelectedTask.Text = "Delete Selected Task";
+            this.btnDeleteSelectedTask.Click += new System.EventHandler(this.btnDeleteSelectedTask_Click);
             // 
-            // linkLabel3
+            // cbCategories
             // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(384, 6);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(78, 13);
-            this.linkLabel3.TabIndex = 8;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "Add New Task";
+            this.cbCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCategories.FormattingEnabled = true;
+            this.cbCategories.Location = new System.Drawing.Point(151, 10);
+            this.cbCategories.Name = "cbCategories";
+            this.cbCategories.Size = new System.Drawing.Size(155, 21);
+            this.cbCategories.TabIndex = 42;
+            this.cbCategories.SelectedIndexChanged += new System.EventHandler(this.cbCategories_SelectedIndexChanged);
             // 
-            // linkLabel4
+            // label2
             // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.Location = new System.Drawing.Point(474, 6);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(110, 13);
-            this.linkLabel4.TabIndex = 9;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "Delete Selected Task";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(132, 13);
+            this.label2.TabIndex = 41;
+            this.label2.Text = "Select Integration Project :";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.splitContainer1.Location = new System.Drawing.Point(11, 48);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnEditSelectedTask);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.lbTasks);
+            this.splitContainer1.Panel1.Controls.Add(this.btnAddNewTask);
+            this.splitContainer1.Panel1.Controls.Add(this.btnDeleteSelectedTask);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.label4);
+            this.splitContainer1.Panel2.Controls.Add(this.lbLog);
+            this.splitContainer1.Panel2.Controls.Add(this.btnStart);
+            this.splitContainer1.Panel2.Controls.Add(this.btnStop);
+            this.splitContainer1.Size = new System.Drawing.Size(577, 574);
+            this.splitContainer1.SplitterDistance = 159;
+            this.splitContainer1.TabIndex = 43;
+            // 
+            // btnEditSelectedTask
+            // 
+            this.btnEditSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditSelectedTask.AutoSize = true;
+            this.btnEditSelectedTask.Location = new System.Drawing.Point(352, 7);
+            this.btnEditSelectedTask.Name = "btnEditSelectedTask";
+            this.btnEditSelectedTask.Size = new System.Drawing.Size(97, 13);
+            this.btnEditSelectedTask.TabIndex = 10;
+            this.btnEditSelectedTask.TabStop = true;
+            this.btnEditSelectedTask.Text = "Edit Selected Task";
+            this.btnEditSelectedTask.Click += new System.EventHandler(this.btnEditSelectedTask_Click);
+            // 
+            // btnScriptInclude
+            // 
+            this.btnScriptInclude.AutoSize = true;
+            this.btnScriptInclude.Location = new System.Drawing.Point(515, 17);
+            this.btnScriptInclude.Name = "btnScriptInclude";
+            this.btnScriptInclude.Size = new System.Drawing.Size(72, 13);
+            this.btnScriptInclude.TabIndex = 44;
+            this.btnScriptInclude.TabStop = true;
+            this.btnScriptInclude.Text = "Script Include";
+            this.btnScriptInclude.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnScriptInclude_LinkClicked);
             // 
             // FormDBIntegration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(594, 544);
-            this.Controls.Add(this.linkLabel4);
-            this.Controls.Add(this.linkLabel3);
-            this.Controls.Add(this.linkLabel2);
-            this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lbTasks);
+            this.ClientSize = new System.Drawing.Size(600, 634);
+            this.Controls.Add(this.btnScriptInclude);
+            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.cbCategories);
+            this.Controls.Add(this.label2);
             this.Name = "FormDBIntegration";
             this.Text = "Çınar Simple Database Integration";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,22 +245,17 @@
 
         private System.Windows.Forms.ListBox lbTasks;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox cbSrcDb;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ComboBox cbDstTable;
-        private System.Windows.Forms.ComboBox cbDstDb;
-        private System.Windows.Forms.Label label6;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.ListBox lbLog;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.LinkLabel linkLabel3;
-        private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.LinkLabel btnStart;
+        private System.Windows.Forms.LinkLabel btnStop;
+        private System.Windows.Forms.LinkLabel btnAddNewTask;
+        private System.Windows.Forms.LinkLabel btnDeleteSelectedTask;
+        private System.Windows.Forms.ComboBox cbCategories;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.LinkLabel btnEditSelectedTask;
+        private System.Windows.Forms.LinkLabel btnScriptInclude;
     }
 }
