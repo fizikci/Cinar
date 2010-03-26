@@ -66,26 +66,34 @@ namespace Cinar.Scripting
             try
             {
                 this.Code = preParse(this.Code);
+            }
+            catch (Exception ex)
+            {
+            }
 
-                statements = new List<Statement>();
+            statements = new List<Statement>();
 
-                using (StringReader lSource = new StringReader(this.Code))
+            using (StringReader lSource = new StringReader(this.Code))
+            {
+                Parser lParser = new Parser(lSource);
+                try
                 {
-                    Parser lParser = new Parser(lSource);
-
                     Statement lStatement = lParser.ReadNextStatement();
                     while (lStatement != null)
                     {
                         statements.Add(lStatement);
                         lStatement = lParser.ReadNextStatement();
                     }
+                    ParsingSuccessful = true;
+                }
+                catch (ParserException ex)
+                {
+                    ParsingSuccessful = false;
+                    statements = new List<Statement>();
+                    statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message + " at line " + lParser.CurrentLineNumber) })));
                 }
             }
-            catch (ParserException ex)
-            {
-                statements = new List<Statement>();
-                statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message) })));
-            }
+
             watch.Stop();
             this.ParsingTime = watch.ElapsedMilliseconds;
         }
@@ -109,10 +117,10 @@ namespace Cinar.Scripting
                             {
                                 if (shortcutWrite)
                                 {
-                                    codePart += ")";
+                                    codePart += ");";
                                     shortcutWrite = false;
                                 }
-                                sb.AppendLine(codePart);
+                                sb.Append(codePart);
                                 codePart = "";
                                 readingCode = false;
                                 i = sr.Read();
@@ -120,7 +128,12 @@ namespace Cinar.Scripting
                             else
                             {
                                 if (textPart != "")
-                                    sb.AppendLine("write(\"" + textPart.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\")");
+                                {
+                                    //if (textPart.Trim() == "")
+                                    //    sb.Append(textPart);
+                                    //else
+                                        sb.Append("write(\"" + textPart.Replace("\\", "\\\\")./*Replace("\r", "\\r").Replace("\n", "\\n").*/Replace("\"", "\\\"") + "\");");
+                                }
                                 textPart = "";
                                 readingCode = true;
 
@@ -143,15 +156,22 @@ namespace Cinar.Scripting
                     }
                 }
                 if (readingCode && codePart != "")
-                    sb.AppendLine(codePart);
+                    sb.Append(codePart);
                 if (!readingCode && textPart != "")
-                    sb.AppendLine("write(\"" + textPart.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\")");
+                {
+                    //if (textPart.Trim() == "")
+                    //    sb.Append(textPart);
+                    //else
+                        sb.Append("write(\"" + textPart.Replace("\\", "\\\\")./*Replace("\r", "\\r").Replace("\n", "\\n").*/Replace("\"", "\\\"") + "\");");
+                }
             }
             sb.Replace("__backSlashDollor__", "$");
             return sb.ToString();
         }
 
-        public bool LastExecutionSuccessful { get; set; }
+        public bool ExecutionSuccessful { get; set; }
+        public bool ParsingSuccessful { get; set; }
+        public bool Successful { get { return ExecutionSuccessful && ParsingSuccessful; } }
 
         public void Execute(TextWriter output)
         {
@@ -173,12 +193,12 @@ namespace Cinar.Scripting
             {
                 StatementCollection coll = new StatementCollection(statements);
                 coll.Execute(context, null, null);
-                this.LastExecutionSuccessful = true;
+                this.ExecutionSuccessful = true;
             }
             catch (Exception ex)
             {
-                this.LastExecutionSuccessful = false;
-                context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : ""));
+                this.ExecutionSuccessful = false;
+                context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "") + " at line " + context.CurrentStatement.LineNumber);
             }
             watch.Stop();
             this.ExecutingTime = watch.ElapsedMilliseconds;
@@ -217,12 +237,28 @@ namespace Cinar.Scripting
                 {
                     t = Assembly.GetEntryAssembly().GetType(fullClassName);
                     if (t != null) return t;
+                    foreach (AssemblyName asmblyName in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+                    {
+                        t = Assembly.Load(asmblyName).GetType(fullClassName);
+                        if (t != null) return t;
+                    }
                 }
                 t = Assembly.GetCallingAssembly().GetType(fullClassName);
                 if (t != null) return t;
             }
             return t;
         }
+        public Context RootContext
+        {
+            get {
+                Context currContext = this;
+                while (currContext.parent != null)
+                    currContext = currContext.parent;
+                return currContext;
+            }
+        }
+        internal Statement CurrentStatement { get; set; }
+
         public object GetVariableValue(string name)
         {
             Context currContext = this;

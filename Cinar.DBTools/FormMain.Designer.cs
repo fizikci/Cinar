@@ -61,14 +61,16 @@
             this.menuRefreshMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGenerateUIMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpResults = new System.Windows.Forms.TabPage();
-            this.gridResults = new Cinar.DBTools.Controls.MyDataGrid();
             this.tpInfo = new System.Windows.Forms.TabPage();
             this.txtInfo = new System.Windows.Forms.TextBox();
+            this.tpSQLLog = new System.Windows.Forms.TabPage();
+            this.txtSQLLog = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnection = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,9 +83,14 @@
             this.menuViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopyTreeData = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSimpleIntegrationService = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCompareDatabases = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.quickScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDeleteFromTables = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSelectCountsFromTables = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnNewConnection = new System.Windows.Forms.ToolStripButton();
@@ -99,6 +106,7 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -112,11 +120,11 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.tabControl.SuspendLayout();
-            this.tpResults.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).BeginInit();
             this.tpInfo.SuspendLayout();
+            this.tpSQLLog.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -255,7 +263,8 @@
             this.menuNewConnectionContext,
             this.menuRefreshMetadata,
             this.menuDeleteERDiagram,
-            this.menuShowTableCounts});
+            this.menuShowTableCounts,
+            this.menuGenerateUIMetadata});
             this.menuStripTree.Name = "contextMenuStrip1";
             this.menuStripTree.Size = new System.Drawing.Size(198, 400);
             // 
@@ -390,6 +399,12 @@
             this.menuShowTableCounts.Size = new System.Drawing.Size(197, 22);
             this.menuShowTableCounts.Text = "Show Table Counts";
             // 
+            // menuGenerateUIMetadata
+            // 
+            this.menuGenerateUIMetadata.Name = "menuGenerateUIMetadata";
+            this.menuGenerateUIMetadata.Size = new System.Drawing.Size(197, 22);
+            this.menuGenerateUIMetadata.Text = "Generate UI Metadata";
+            // 
             // imageListTree
             // 
             this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
@@ -436,6 +451,7 @@
             // 
             this.tabControl.Controls.Add(this.tpResults);
             this.tabControl.Controls.Add(this.tpInfo);
+            this.tabControl.Controls.Add(this.tpSQLLog);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -445,7 +461,7 @@
             // 
             // tpResults
             // 
-            this.tpResults.Controls.Add(this.gridResults);
+            this.tpResults.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.tpResults.Location = new System.Drawing.Point(4, 22);
             this.tpResults.Name = "tpResults";
             this.tpResults.Padding = new System.Windows.Forms.Padding(3);
@@ -453,19 +469,6 @@
             this.tpResults.TabIndex = 0;
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
-            // 
-            // gridResults
-            // 
-            this.gridResults.AllowUserToAddRows = false;
-            this.gridResults.AllowUserToDeleteRows = false;
-            this.gridResults.AllowUserToOrderColumns = true;
-            this.gridResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridResults.Location = new System.Drawing.Point(3, 3);
-            this.gridResults.Name = "gridResults";
-            this.gridResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridResults.Size = new System.Drawing.Size(526, 336);
-            this.gridResults.TabIndex = 0;
             // 
             // tpInfo
             // 
@@ -475,7 +478,7 @@
             this.tpInfo.Padding = new System.Windows.Forms.Padding(3);
             this.tpInfo.Size = new System.Drawing.Size(532, 342);
             this.tpInfo.TabIndex = 1;
-            this.tpInfo.Text = "Info";
+            this.tpInfo.Text = "Output";
             this.tpInfo.UseVisualStyleBackColor = true;
             // 
             // txtInfo
@@ -492,6 +495,31 @@
             this.txtInfo.Size = new System.Drawing.Size(526, 336);
             this.txtInfo.TabIndex = 0;
             this.txtInfo.WordWrap = false;
+            // 
+            // tpSQLLog
+            // 
+            this.tpSQLLog.Controls.Add(this.txtSQLLog);
+            this.tpSQLLog.Location = new System.Drawing.Point(4, 22);
+            this.tpSQLLog.Name = "tpSQLLog";
+            this.tpSQLLog.Size = new System.Drawing.Size(532, 342);
+            this.tpSQLLog.TabIndex = 2;
+            this.tpSQLLog.Text = "SQL Log";
+            this.tpSQLLog.UseVisualStyleBackColor = true;
+            // 
+            // txtSQLLog
+            // 
+            this.txtSQLLog.AcceptsReturn = true;
+            this.txtSQLLog.AcceptsTab = true;
+            this.txtSQLLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSQLLog.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtSQLLog.Location = new System.Drawing.Point(0, 0);
+            this.txtSQLLog.Multiline = true;
+            this.txtSQLLog.Name = "txtSQLLog";
+            this.txtSQLLog.ReadOnly = true;
+            this.txtSQLLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtSQLLog.Size = new System.Drawing.Size(532, 342);
+            this.txtSQLLog.TabIndex = 1;
+            this.txtSQLLog.WordWrap = false;
             // 
             // menuStrip1
             // 
@@ -542,6 +570,8 @@
             this.menuViewERDiagram,
             this.menuCopyTreeData,
             this.menuSimpleIntegrationService,
+            this.menuCompareDatabases,
+            this.toolStripMenuItem2,
             this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -583,10 +613,22 @@
             this.menuSimpleIntegrationService.Size = new System.Drawing.Size(222, 22);
             this.menuSimpleIntegrationService.Text = "Simple Integration Service...";
             // 
+            // menuCompareDatabases
+            // 
+            this.menuCompareDatabases.Name = "menuCompareDatabases";
+            this.menuCompareDatabases.Size = new System.Drawing.Size(222, 22);
+            this.menuCompareDatabases.Text = "Compare Databases...";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(219, 6);
+            // 
             // quickScriptToolStripMenuItem
             // 
             this.quickScriptToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuDeleteFromTables});
+            this.menuDeleteFromTables,
+            this.menuSelectCountsFromTables});
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.quickScriptToolStripMenuItem.Text = "Quick Script";
@@ -594,21 +636,40 @@
             // menuDeleteFromTables
             // 
             this.menuDeleteFromTables.Name = "menuDeleteFromTables";
-            this.menuDeleteFromTables.Size = new System.Drawing.Size(177, 22);
+            this.menuDeleteFromTables.Size = new System.Drawing.Size(221, 22);
             this.menuDeleteFromTables.Text = "Delete From Tables";
+            // 
+            // menuSelectCountsFromTables
+            // 
+            this.menuSelectCountsFromTables.Name = "menuSelectCountsFromTables";
+            this.menuSelectCountsFromTables.Size = new System.Drawing.Size(221, 22);
+            this.menuSelectCountsFromTables.Text = "Select Count(*) From Tables";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuScriptingTest,
+            this.toolStripMenuItem1,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
+            // menuScriptingTest
+            // 
+            this.menuScriptingTest.Name = "menuScriptingTest";
+            this.menuScriptingTest.Size = new System.Drawing.Size(280, 22);
+            this.menuScriptingTest.Text = "Çınar Scripting Test && Learning Center...";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(277, 6);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             // 
             // toolStrip1
@@ -739,6 +800,10 @@
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -766,14 +831,15 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
-            this.tpResults.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).EndInit();
             this.tpInfo.ResumeLayout(false);
             this.tpInfo.PerformLayout();
+            this.tpSQLLog.ResumeLayout(false);
+            this.tpSQLLog.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -801,7 +867,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuCodeGenerator;
         private System.Windows.Forms.ToolStripMenuItem menuCheckDatabaseSchema;
-        private Cinar.DBTools.Controls.MyDataGrid gridResults;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton btnNewConnection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -849,6 +914,15 @@
         private System.Windows.Forms.ToolStripMenuItem menuSimpleIntegrationService;
         private System.Windows.Forms.ToolStripMenuItem quickScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuDeleteFromTables;
+        private System.Windows.Forms.ToolStripMenuItem menuScriptingTest;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem menuSelectCountsFromTables;
+        private System.Windows.Forms.ToolStripMenuItem menuCompareDatabases;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.TabPage tpSQLLog;
+        private System.Windows.Forms.TextBox txtSQLLog;
+        private System.Windows.Forms.ToolStripMenuItem menuGenerateUIMetadata;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
 
     }
 }

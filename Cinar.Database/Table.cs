@@ -19,9 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Collections;
 using System.Data;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace Cinar.Database
 {
@@ -74,6 +76,15 @@ namespace Cinar.Database
                     if(key.IsPrimary && key.FieldNames.Count==1)
                         return this.Fields[key.FieldNames[0]];
                 return null;
+            }
+        }
+
+        [XmlIgnore]
+        public TableTypes DiscoveredTableType
+        {
+            get
+            {
+                return this.ReferencedByTables.Count > 0 ? TableTypes.Account : TableTypes.Transaction;
             }
         }
 
@@ -238,6 +249,28 @@ namespace Cinar.Database
                     return f;
             return null;
         }
+
+        public void GenerateUIMetadata()
+        {
+            UIMetadata = new TableUIMetadata();
+            UIMetadata.DisplayName = Name;
+            UIMetadata.DisplayOrder = parent.IndexOf(this);
+            UIMetadata.ShortDisplayName = Name;
+            UIMetadata.TableType = this.ReferencedByTables.Count > 0 ? TableTypes.Account : TableTypes.Transaction;
+            UIMetadata.ModuleName = "";
+            UIMetadata.ShowInMainMenu = UIMetadata.TableType == TableTypes.Account;
+            UIMetadata.DefaultSortField = this.StringField == null ? null : this.StringField.Name;
+            UIMetadata.DefaultSortType = SortTypes.Ascending;
+            UIMetadata.ShowDetailGrids = "";
+            for (int i = 0; i < this.ReferencedByTables.Count; i++)
+                UIMetadata.ShowDetailGrids += this.ReferencedByTables[i].Name + ",";
+            UIMetadata.ShowDetailGrids = UIMetadata.ShowDetailGrids.Trim(',');
+
+            foreach (Field f in this.Fields)
+                f.GenerateUIMetadata();
+        }
+
+        public TableUIMetadata UIMetadata { get; set; }
     }
 
     [Serializable]
@@ -285,4 +318,23 @@ namespace Cinar.Database
         //}
     }
 
+    [Serializable, TypeConverter(typeof(ExpandableObjectConverter))]
+    public class TableUIMetadata
+    {
+        public string DisplayName { get; set; }
+        public string ShortDisplayName { get; set; }
+        public int DisplayOrder { get; set; }
+        public TableTypes TableType { get; set; }
+        public string ModuleName { get; set; }
+        public bool ShowInMainMenu { get; set; }
+        public string DefaultSortField { get; set; }
+        public SortTypes DefaultSortType { get; set; }
+        public string ShowDetailGrids { get; set; }
+    }
+
+    public enum SortTypes
+    {
+        Ascending,
+        Descending
+    }
 }

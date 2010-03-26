@@ -10,13 +10,12 @@ using Cinar.Database;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormCheckDatabaseSchema : Form
+    public partial class FormCheckDatabaseSchema : Form, IDBToolsForm
     {
-        private Action saveConnections;
+        public FormMain MainForm { get; set; }
 
-        public FormCheckDatabaseSchema(Action saveConnections)
+        public FormCheckDatabaseSchema()
         {
-            this.saveConnections = saveConnections;
             InitializeComponent();
             checkDatabaseSchema();
         }
@@ -51,7 +50,7 @@ namespace Cinar.DBTools.Tools
         {
             foreach (Problem problem in lbProblems.SelectedItems)
                 problem.Fix();
-            saveConnections();
+            MainForm.SaveConnections();
             checkDatabaseSchema();
         }
 

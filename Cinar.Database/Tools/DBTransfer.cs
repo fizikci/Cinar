@@ -100,7 +100,7 @@ namespace Cinar.Database.Tools
                     {
                         System.Collections.Hashtable drDest = new System.Collections.Hashtable();//newRow(dbDst, prefix + tableName);
                         foreach (DataColumn dc in dt.Columns)
-                            if (!dr.IsNull(dc))
+                            if (!dr.IsNull(dc) && dtDestSample.Columns[dc.ColumnName]!=null)
                                 drDest[dc.ColumnName] = Convert.ChangeType(dr[dc], dtDestSample.Columns[dc.ColumnName].DataType);
 
                         dbDst.Insert(prefix + tableName, drDest, false);

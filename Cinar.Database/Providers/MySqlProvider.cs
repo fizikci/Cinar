@@ -17,6 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
@@ -350,10 +351,10 @@ namespace Cinar.Database.Providers
             int len = ("," + Environment.NewLine).Length;
 
             StringBuilder sbFields = new StringBuilder();
-            foreach (Field f in table.Fields)
+            foreach (Field f in table.Fields.OrderBy(f=>f.Name))
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
-            foreach (Key k in table.Keys)
+            foreach (Key k in table.Keys.OrderBy(k=>k.Name))
                 sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
 
             sbFields = sbFields.Remove(sbFields.Length - len, len);

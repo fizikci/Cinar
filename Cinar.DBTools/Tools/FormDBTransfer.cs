@@ -11,8 +11,10 @@ using Cinar.Database.Tools;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormDBTransfer : Form
+    public partial class FormDBTransfer : Form, IDBToolsForm
     {
+        public FormMain MainForm { get; set; }
+
         public FormDBTransfer()
         {
             InitializeComponent();
@@ -84,6 +86,5 @@ namespace Cinar.DBTools.Tools
         {
             groupTransferData.Enabled = cbTransferData.Checked;
         }
-
     }
 }

@@ -13,14 +13,17 @@ namespace Cinar.Scripting
     public abstract class ParserNode
     {
         public static List<string> ReservedWords = new List<string>(new string[] { 
-            "if","for","while","else","break","continue","foreach","return"
+            "if","for","while","else","break","continue","foreach","return","throw","try","catch"
         });
     }
 
-    
     public abstract class Statement : ParserNode
     {
         public abstract void Execute(Context context, ParserNode parentNode);
+        internal int LineNumber { get; set; }
+
+        public virtual StatementCollection SubStatements1 { get { return null; } }
+        public virtual StatementCollection SubStatements2 { get { return null; } }
     }
     public class StatementCollection : ICollection<Statement>
     {
@@ -49,10 +52,14 @@ namespace Cinar.Scripting
                     Context.continueLoop = false;
                     break;
                 }
+
                 if (Context.breakLoop)
-                {
                     break;
-                }
+
+                if (fContext.ReturnValue != null)
+                    break;
+
+                fContext.RootContext.CurrentStatement = statement;
                 statement.Execute(fContext, parentNode);
             }
 
@@ -145,6 +152,7 @@ namespace Cinar.Scripting
                     break;
             }
         }
+
         public override string ToString()
         {
             return fVariable.Name + " " + fOp + " " + fValue;
@@ -277,6 +285,11 @@ namespace Cinar.Scripting
         {
             return String.Format("foreach({0} in {1}) {2}", fItem.Name, fCollection.ToString(), fBlock.ToString());
         }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fBlock; }
+        }
     }
     public class ForStatement : Statement
     {
@@ -330,6 +343,11 @@ namespace Cinar.Scripting
         {
             return String.Format("for({0}; {1}; {2}) {3}", fStart.ToString(), fCompare.ToString(), fEnd.ToString(), fBlock.ToString());
         }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fBlock; }
+        }
     }
     public class FunctionDefinitionStatement : Statement
     {
@@ -364,6 +382,11 @@ namespace Cinar.Scripting
                 sb.Remove(sb.Length - 2, 2);
 
             return String.Format("function {0}({1}) {2}", fName, sb.ToString(), fBlock.ToString());
+        }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fBlock; }
         }
     }
     public class FunctionCallStatement : Statement
@@ -441,6 +464,64 @@ namespace Cinar.Scripting
         {
             return String.Format("if({0}) {1} else {2}", fCondition.ToString(), fTrueBlock.ToString(), fFalseBlock.ToString());
         }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fTrueBlock; }
+        }
+
+        public override StatementCollection SubStatements2
+        {
+            get { return fFalseBlock; }
+        }
+    }
+    public class TryCatchStatement : Statement
+    {
+        public TryCatchStatement(StatementCollection tryBlock, string exVariableName, StatementCollection catchBlock)
+        {
+            if (tryBlock == null) throw new ArgumentNullException("tryBlock");
+            if (catchBlock == null) throw new ArgumentNullException("catchBlock");
+
+            fTryBlock = tryBlock;
+            fExVariableName = exVariableName;
+            fCatchBlock = catchBlock;
+        }
+
+        readonly string fExVariableName;
+        public string ExVariableName { get { return fExVariableName; } }
+
+        readonly StatementCollection fTryBlock;
+        public StatementCollection TryBlock { get { return fTryBlock; } }
+
+        readonly StatementCollection fCatchBlock;
+        public StatementCollection CatchBlock { get { return fCatchBlock; } }
+
+        public override void Execute(Context context, ParserNode parentNode)
+        {
+            try
+            {
+                TryBlock.Execute(context, this, null);
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(ExVariableName))
+                    context.Variables[ExVariableName] = ex is CinarScriptException ? (ex as CinarScriptException).Value : ex;
+                CatchBlock.Execute(context, this, null);
+            }
+        }
+        public override string ToString()
+        {
+            return String.Format("try {0} catch {1}", fTryBlock, fCatchBlock);
+        }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fTryBlock; }
+        }
+        public override StatementCollection SubStatements2
+        {
+            get { return fCatchBlock; }
+        }
     }
     public class WhileStatement : Statement
     {
@@ -475,6 +556,11 @@ namespace Cinar.Scripting
         public override string ToString()
         {
             return String.Format("while({0}) {1}", fCondition.ToString(), fBlock.ToString());
+        }
+
+        public override StatementCollection SubStatements1
+        {
+            get { return fBlock; }
         }
     }
     public class BreakStatement : Statement
@@ -535,11 +621,32 @@ namespace Cinar.Scripting
         public override void Execute(Context context, ParserNode parentNode)
         {
             context.ReturnValue = Value.Calculate(context, this);
-            Context.breakLoop = true;
         }
         public override string ToString()
         {
             return String.Format("return {0}", fValue.ToString());
+        }
+    }
+    public class ThrowStatement : Statement
+    {
+        public ThrowStatement(Expression value)
+        {
+            fValue = value;
+        }
+
+        readonly Expression fValue;
+        public Expression Value { get { return fValue; } }
+
+        public override void Execute(Context context, ParserNode parentNode)
+        {
+            CinarScriptException ex = new CinarScriptException();
+            ex.Value = Value.Calculate(context, this);
+            throw ex;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("throw {0}", fValue);
         }
     }
     public class UsingStatement : Statement
@@ -559,6 +666,31 @@ namespace Cinar.Scripting
         public override string ToString()
         {
             return String.Format("using {0}", fNamespace);
+        }
+    }
+
+
+    [Serializable]
+    public class CinarScriptException : Exception
+    {
+        public object Value { get; set; }
+
+        public CinarScriptException()
+        {
+        }
+
+        public CinarScriptException(string message) : base(message)
+        {
+        }
+
+        public CinarScriptException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected CinarScriptException(
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
+        {
         }
     }
 }

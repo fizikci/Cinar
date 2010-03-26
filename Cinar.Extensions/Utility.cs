@@ -786,7 +786,8 @@ namespace System
                 case "DateTime":
                     if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
                     DateTime d = (DateTime)val;
-                    return String.Format("'{0}-{1}-{2} {3}:{4}'", d.Day, d.Month, d.Year, d.Hour, d.Minute);
+                    return String.Format("new Date({0},{1},{2},{3},{4},{5})", d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second);
+                    //return String.Format("'{0}-{1}-{2} {3}:{4}'", d.Day, d.Month, d.Year, d.Hour, d.Minute);
                 case "Boolean":
                     return val.ToString().ToLower();
                 default:

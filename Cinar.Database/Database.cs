@@ -24,6 +24,7 @@ using System.Data.Common;
 using System.Collections;
 using System.Reflection;
 using System.Web;
+using System.Linq;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Xml.Serialization;
@@ -175,6 +176,12 @@ namespace Cinar.Database
                 else
                     this.tables = (TableCollection)Cache["databaseMetadata"];
             }
+        }
+
+        public void GenerateUIMetadata()
+        {
+            foreach (Table tbl in this.Tables)
+                tbl.GenerateUIMetadata();
         }
 
         public void CreateDbProvider(bool createDatabaseIfNotExist)
@@ -679,7 +686,7 @@ namespace Cinar.Database
                 this.Begin();
 
                 // first check the table existance
-                Table tbl = this.Tables[entity.GetType().Name];
+                Table tbl = GetTableForEntityType(entity.GetType());//this.Tables[entity.GetType().Name];
 
                 if (tbl == null)
                     tbl = this.CreateTableForType(entity.GetType());
@@ -711,7 +718,10 @@ namespace Cinar.Database
             Hashtable ht = new Hashtable();
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
-                    ht[pi.Name] = pi.GetValue(entity, null);
+                {
+                    Field f = GetFieldForProperty(pi);
+                    ht[f.Name] = pi.GetValue(entity, null);
+                }
             return ht;
         }
         public Hashtable DataRowToHashtable(DataRow dataRow)
@@ -732,12 +742,18 @@ namespace Cinar.Database
             DataTable dt = new DataTable();
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
-                    dt.Columns.Add(pi.Name, pi.PropertyType);
+                {
+                    Field f = GetFieldForProperty(pi);
+                    dt.Columns.Add(f.Name, pi.PropertyType);
+                }
 
             DataRow dr = dt.NewRow();
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
-                    dr[pi.Name] = pi.GetValue(entity, null);
+                {
+                    Field f = GetFieldForProperty(pi);
+                    dr[f.Name] = pi.GetValue(entity, null);
+                }
 
             return dr;
         }
@@ -760,6 +776,12 @@ namespace Cinar.Database
         public void FillEntity(IDatabaseEntity entity, DataRow dr)
         {
             Type entityType = entity.GetType();
+            
+            // first read entity mappings
+            Table table = GetTableForEntityType(entityType);
+            foreach (PropertyInfo pi in entityType.GetProperties())
+                if (canBeMappedToDBTable(pi))
+                    GetFieldForProperty(pi);
 
             DataRowVersion rowVersion = DataRowVersion.Default;
             if (dr.RowState == DataRowState.Deleted)
@@ -771,24 +793,32 @@ namespace Cinar.Database
                 entity.GetOriginalValues()[colName] = dr.IsNull(dc, rowVersion) ? null : dr[colName, rowVersion];
                 if (dr.IsNull(dc, rowVersion)) continue;
 
-                PropertyInfo pi = entityType.GetProperty(colName);
-                if (pi == null || pi.GetSetMethod() == null)
-                    entity[colName] = dr[colName, rowVersion];
-                else
+                if (table.Fields[colName] == null)
                 {
-                    object val = dr[colName, rowVersion];
-                    if (pi.PropertyType == typeof(string))
-                        pi.SetValue(entity, val.ToString(), null);
-                    else if (dc.DataType.Name.EndsWith("SByte"))
-                        pi.SetValue(entity, ((sbyte)val) == 1, null);
-                    else
-                        pi.SetValue(entity, val, null);
+                    entity[colName] = dr[colName, rowVersion];
+                    continue;
                 }
+
+                PropertyInfo pi = GetPropertyInfoForField(table.Fields[colName]);
+                if (pi == null) continue;
+
+                object val = dr[colName, rowVersion];
+                if (val.Equals(DBNull.Value))
+                    val = null;
+                val = Convert.ChangeType(val, pi.PropertyType);
+                pi.SetValue(entity, val, null);
+
+                //if (pi.PropertyType == typeof(string))
+                //    pi.SetValue(entity, val.ToString(), null);
+                //else if (dc.DataType.Name.EndsWith("SByte"))
+                //    pi.SetValue(entity, ((sbyte)val) == 1, null);
+                //else
+                //    pi.SetValue(entity, val, null);
             }
         }
         public void FillEntity(IDatabaseEntity entity)
         {
-            string tableName = entity.GetType().Name;
+            string tableName = GetTableForEntityType(entity.GetType()).Name;
             this.FillEntity(entity, GetDataRow("select * from " + tableName + " where Id={0}", entity.Id));
         }
         public void FillDataRow(IDatabaseEntity entity, DataRow dr)
@@ -797,12 +827,15 @@ namespace Cinar.Database
 
             foreach (PropertyInfo pi in entityType.GetProperties())
                 if (canBeMappedToDBTable(pi))
-                    dr[pi.Name] = pi.GetValue(entity, null);
+                {
+                    Field f = GetFieldForProperty(pi);
+                    dr[f.Name] = pi.GetValue(entity, null);
+                }
         }
         #endregion
 
         #region read data
-        public DataTable GetDataTable(DataSet ds, string tableName, string sql, params object[] parameters)
+        public DataSet GetDataSet(DataSet ds, string sql, params object[] parameters)
         {
             sql = editSQLAsForProvider(sql);
             DbDataAdapter da = this.dbProvider.CreateDataAdapter(sql, parameters);
@@ -813,7 +846,20 @@ namespace Cinar.Database
             }
             if(ds==null)
                 ds = new DataSet();
-            da.Fill(ds, tableName);
+            da.Fill(ds);
+            return ds;
+        }
+        public DataSet GetDataSet(string sql, params object[] parameters)
+        {
+            return GetDataSet(null, sql, parameters);
+        }
+        public DataSet GetDataSet(string sql)
+        {
+            return GetDataSet(null, sql, new object[0]);
+        }
+        public DataTable GetDataTable(DataSet ds, string tableName, string sql, params object[] parameters)
+        {
+            ds = GetDataSet(ds, sql, parameters);
             if (ds.Tables.Count >= 1)
             {
                 ds.Tables[tableName].AcceptChanges();
@@ -933,10 +979,11 @@ namespace Cinar.Database
                 this.Begin();
 
                 // first check the table existance
-                if (this.Tables[entityType.Name] == null)
-                    this.CreateTableForType(entityType);
+                Table table = GetTableForEntityType(entityType);
+                if (table == null)
+                    table = this.CreateTableForType(entityType);
 
-                result = DataRowToEntity(entityType, this.GetDataRow("select * from [" + entityType.Name + "] where " + where, parameters));
+                result = DataRowToEntity(entityType, this.GetDataRow("select * from [" + table.Name + "] where " + where, parameters));
 
                 this.Commit();
             }
@@ -992,8 +1039,9 @@ namespace Cinar.Database
                 this.Begin();
 
                 // first check the table existance
-                if (this.Tables[entityType.Name] == null)
-                    this.CreateTableForType(entityType);
+                Table table = GetTableForEntityType(entityType);
+                if (table == null)
+                    table = this.CreateTableForType(entityType);
 
                 dt = this.GetDataTable(selectSql, parameters);
 
@@ -1011,7 +1059,7 @@ namespace Cinar.Database
         public string GetFromWithJoin(Type entityType)
         { 
             // first check the table existance
-            Table tbl = this.Tables[entityType.Name];
+            Table tbl = GetTableForEntityType(entityType);
             if (tbl == null)
                 tbl = this.CreateTableForType(entityType);
 
@@ -1041,7 +1089,7 @@ namespace Cinar.Database
 
             DefaultDataAttribute[] defaultDataArr = (DefaultDataAttribute[])type.GetCustomAttributes(typeof(DefaultDataAttribute), false);
 
-            Table tbl = this.GetTableForType(type);
+            Table tbl = this.CreateTableMetadataForType(type);
 
             this.CreateTable(tbl, defaultDataArr, refreshMetadata);
 
@@ -1074,11 +1122,15 @@ namespace Cinar.Database
                 this.Refresh();
         }
 
-        public Table GetTableForType(Type type)
+        public Table CreateTableMetadataForType(Type type)
         {
+            object[] attribs = type.GetCustomAttributes(typeof(TableDetailAttribute), false);
+            TableDetailAttribute tableProps = new TableDetailAttribute();
+            if (attribs.Length > 0) tableProps = (TableDetailAttribute)attribs[0];
+
             Table tbl = new Table();
             tbl.IsView = false;
-            tbl.Name = type.Name;
+            tbl.Name = string.IsNullOrEmpty(tableProps.Name) ? type.Name : tableProps.Name;
             tbl.Fields = new FieldCollection(tbl);
             foreach (PropertyInfo pi in type.GetProperties())
                 if (canBeMappedToDBTable(pi))
@@ -1096,7 +1148,7 @@ namespace Cinar.Database
             FieldDetailAttribute fieldProps = new FieldDetailAttribute();
             if (attribs.Length > 0) fieldProps = (FieldDetailAttribute)attribs[0];
 
-            f.Name = pi.Name;
+            f.Name = string.IsNullOrEmpty(fieldProps.Name) ? pi.Name : fieldProps.Name;
             f.DefaultValue = fieldProps.DefaultValue;
             if (fieldProps.FieldType == DbType.Undefined)
                 f.FieldType = GetDbType(pi.PropertyType);
@@ -1184,7 +1236,7 @@ namespace Cinar.Database
                 if (type.IsAbstract || type.GetInterface("IDatabaseEntity") == null)
                     continue;
 
-                if(this.Tables[type.Name]==null)
+                if(GetTableForEntityType(type)==null)
                     this.CreateTableForType(type, false);
             }
 
@@ -1192,11 +1244,58 @@ namespace Cinar.Database
         }
         #endregion
 
+        #region mapping
+        //TODO: clear these dictionaries on refresh metadata
+        private Dictionary<Type, Table> tableMappingInfo = new Dictionary<Type, Table>();
+        private Dictionary<PropertyInfo, Field> fieldMappingInfo = new Dictionary<PropertyInfo, Field>();
+        public Table GetTableForEntityType(Type entityType)
+        {
+            if (tableMappingInfo.ContainsKey(entityType))
+                return tableMappingInfo[entityType];
+
+            object[] attribs = entityType.GetCustomAttributes(typeof(TableDetailAttribute), false);
+            if (attribs != null && attribs.Length >= 1)
+                tableMappingInfo[entityType] = this.Tables[(attribs[0] as TableDetailAttribute).Name];
+            if (!tableMappingInfo.ContainsKey(entityType))
+                tableMappingInfo[entityType] = this.Tables[entityType.Name];
+            return tableMappingInfo.ContainsKey(entityType) ? tableMappingInfo[entityType] : null;
+        }
+        public Field GetFieldForProperty(PropertyInfo propertyInfo)
+        {
+            if (fieldMappingInfo.ContainsKey(propertyInfo))
+                return fieldMappingInfo[propertyInfo];
+
+            Table table = GetTableForEntityType(propertyInfo.ReflectedType);
+            if (table == null)
+                return null;
+
+            object[] attribs = propertyInfo.GetCustomAttributes(typeof(FieldDetailAttribute), false);
+            if (attribs != null && attribs.Length >= 1)
+                fieldMappingInfo[propertyInfo] = table.Fields[(attribs[0] as FieldDetailAttribute).Name];
+            if (!fieldMappingInfo.ContainsKey(propertyInfo))
+                fieldMappingInfo[propertyInfo] = table.Fields[propertyInfo.Name];
+            return fieldMappingInfo.ContainsKey(propertyInfo) ? fieldMappingInfo[propertyInfo] : null;
+        }
+        public PropertyInfo GetPropertyInfoForField(Field field)
+        {
+            if(fieldMappingInfo.ContainsValue(field))
+                return fieldMappingInfo.First(p => p.Value == field).Key;
+            return null;
+        }
+        public Type GetEntityTypeForTable(Table table)
+        {
+            if(tableMappingInfo.ContainsValue(table))
+                return tableMappingInfo.First(p => p.Value == table).Key;
+            return null;
+        }
+        #endregion
+
+        #region DDL
         public string GetDatabaseDDL(bool addDropTable)
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Table tbl in this.Tables)
+            foreach (Table tbl in this.Tables.OrderBy(t=>t.Name))
             {
                 if (addDropTable)
                 {
@@ -1309,6 +1408,7 @@ namespace Cinar.Database
                     throw new ArgumentOutOfRangeException();
             }
         }
+        #endregion
     }
 
     public delegate void DbAction();

@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.Collections;
 using Cinar.Scripting;
 using System.Diagnostics;
+using Cinar.DBTools.Controls;
 
 namespace Cinar.DBTools
 {
@@ -26,7 +27,8 @@ namespace Cinar.DBTools
         {
             InitializeComponent();
 
-            cmdMan.AfterCommandExecute = () => {
+            cmdMan.AfterCommandExecute = () =>
+            {
                 cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
             };
 
@@ -85,49 +87,32 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
-                                     Execute = cmdGenerateCode,
+                                     Execute = cmdShowForm,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuCodeGenerator}, 
-                                         new CommandTrigger{ Control = btnCodeGenerator}, 
+                                         new CommandTrigger{ Control = menuCodeGenerator, Argument=typeof(FormCodeGenerator).FullName}, 
+                                         new CommandTrigger{ Control = btnCodeGenerator, Argument=typeof(FormCodeGenerator).FullName}, 
+                                         new CommandTrigger{ Control = menuCheckDatabaseSchema, Argument=typeof(FormCheckDatabaseSchema).FullName},
+                                         new CommandTrigger{ Control = btnCheckDatabaseSchema, Argument=typeof(FormCheckDatabaseSchema).FullName},
+                                         new CommandTrigger{ Control = menuDBTransfer, Argument=typeof(FormDBTransfer).FullName},
+                                         new CommandTrigger{ Control = btnDatabaseTransfer, Argument=typeof(FormDBTransfer).FullName},
+                                         new CommandTrigger{ Control = menuCopyTreeData, Argument=typeof(FormCopyTreeData).FullName},
+                                         new CommandTrigger{ Control = menuSimpleIntegrationService, Argument=typeof(FormDBIntegration).FullName},
+                                         new CommandTrigger{ Control = menuScriptingTest, Argument=typeof(FormScriptingTest).FullName},
+                                         new CommandTrigger{ Control = menuCompareDatabases, Argument=typeof(FormCompareDatabases).FullName},
                                      },
                                      IsEnabled = ()=> Provider.Database != null
                                  },
                      new Command {
-                                     Execute = cmdCheckDatabaseSchema,
-                                     Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuCheckDatabaseSchema},
-                                         new CommandTrigger{ Control = btnCheckDatabaseSchema},
-                                     }
-                                 },
-                     new Command {
-                                     Execute = cmdDBTransfer,
-                                     Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuDBTransfer},
-                                         new CommandTrigger{ Control = btnDatabaseTransfer},
-                                     }
-                                 },
-                     new Command {
-                                     Execute = cmdCopyTreeData,
-                                     Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuCopyTreeData},
-                                         //new CommandTrigger{ Control = btnCopyTreeData},
-                                     }
-                                 },
-                     new Command {
-                                     Execute = cmdSimpleIntegrationService,
-                                     Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuSimpleIntegrationService},
-                                         //new CommandTrigger{ Control = btnCopyTreeData},
-                                     }
-                                 },
-                     new Command {
                                      Execute = cmdQuickScript,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuDeleteFromTables, Argument=@"
+                                         new CommandTrigger{ Control = menuDeleteFromTables, Argument=@"$
 foreach(table in db.Tables)
     echo('delete from ' + table.Name + ';\r\n');
-"},
-                                         //new CommandTrigger{ Control = btnCopyTreeData},
+$"},
+                                         new CommandTrigger{ Control = menuSelectCountsFromTables, Argument=@"$
+foreach(table in db.Tables)
+    echo(""select '"" + table.Name + ""', count(*) from "" + table.Name + "" UNION \r\n"");
+$"},
                                      }
                                  },
                      new Command {
@@ -213,33 +198,24 @@ foreach(table in db.Tables)
                                      },
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
                                  },
+                     new Command {
+                                     Execute = cmdGenerateUIMetadata,
+                                     Trigger = new CommandTrigger{ Control = menuGenerateUIMetadata},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is ConnectionSettings || treeView.SelectedNode.Tag is Table || treeView.SelectedNode.Tag is Field)
+                                 },
              };
             cmdMan.SetCommandTriggers();
             //cmdMan.SetCommandControlsVisibility();
             cmdMan.SetCommandControlsEnable();
 
             rootNode = treeView.Nodes.Add("Database Connections");
-            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
-            if (File.Exists(path))
+            Provider.LoadConnectionsFromXML();
+            foreach (ConnectionSettings cs in Provider.Connections)
             {
-                XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    Provider.Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
-                    foreach (ConnectionSettings cs in Provider.Connections)
-                    {
-                        if (cs.Database == null)
-                            cs.RefreshDatabaseSchema();
-                        cs.Database.SetCollectionParents();
-                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 1000);
-                        cs.Database.CreateDbProvider(false);
+                TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
+                node.Tag = cs;
 
-                        TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
-                        node.Tag = cs;
-
-                        populateTreeNodesForDatabase(node);
-                    }
-                }
+                populateTreeNodesForDatabase(node);
             }
             treeView.Sort();
             if (rootNode.Nodes.Count > 0 && rootNode.Nodes[0].Nodes.Count > 0)
@@ -266,12 +242,20 @@ foreach(table in db.Tables)
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            DataTable dt = Provider.Database.GetDataTable(sql);
+            DataSet ds = Provider.Database.GetDataSet(sql);
+            
             watch.Stop();
             statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
-            statusNumberOfRows.Text = (dt == null ? 0 : dt.Rows.Count) + " rows";
+            statusNumberOfRows.Text = (ds.Tables.Count == 0 ? 0 : ds.Tables[0].Rows.Count) + " rows";
             statusText.Text = "Query executed succesfully.";
-            bindGridResults(dt);
+            txtSQLLog.Text += Environment.NewLine + sql + (sql.EndsWith(";") ? "" : ";");
+
+            if (ds.Tables.Count > 1)
+                bindGridResults(ds);
+            else if (ds.Tables.Count == 1)
+                bindGridResults(ds.Tables[0]);
+            else
+                bindGridResults(null);
         }
         private bool checkConnection()
         {
@@ -334,11 +318,64 @@ foreach(table in db.Tables)
             }
             return null;
         }
-        private void bindGridResults(DataTable dt)
+        private void bindGridResults(object data)
         {
             tabControl.SelectedTab = tpResults;
-            gridResults.DataSource = dt;
+            tpResults.Controls.Clear();
+
+            if (data is DataSet)
+            {
+                DataSet ds = data as DataSet;
+                if (ds == null || ds.Tables.Count == 0)
+                    return;
+
+                if (ds.Tables.Count == 1)
+                {
+                    MyDataGrid grid = createNewGrid();
+                    grid.DataSource = ds.Tables[0];
+                    tpResults.Controls.Add(grid);
+                    return;
+                }
+
+                Control currContainer = tpResults;
+                for (int i = 0; i < ds.Tables.Count - 1; i++)
+                {
+                    SplitContainer sc = new SplitContainer();
+                    sc.Dock = DockStyle.Fill;
+                    sc.Orientation = Orientation.Horizontal;
+                    MyDataGrid grid = createNewGrid();
+                    grid.DataSource = ds.Tables[i];
+                    sc.Panel1.Controls.Add(grid);
+                    if (i == ds.Tables.Count - 2)
+                    {
+                        MyDataGrid grid2 = createNewGrid();
+                        grid2.DataSource = ds.Tables[i + 1];
+                        sc.Panel2.Controls.Add(grid2);
+                    }
+                    currContainer.Controls.Add(sc);
+                    currContainer = sc.Panel2;
+                }
+            }
+            else
+            {
+                MyDataGrid gridResults = createNewGrid();
+                gridResults.DataSource = data;
+                tpResults.Controls.Add(gridResults);
+            }
         }
+
+        private MyDataGrid createNewGrid()
+        {
+            MyDataGrid grid = new MyDataGrid();
+            grid.Dock = DockStyle.Fill;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToOrderColumns = true;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            return grid;
+        }
+
         private void showInfoText(string txt)
         {
             tabControl.SelectedTab = tpInfo;
@@ -443,12 +480,6 @@ foreach(table in db.Tables)
             }
         }
 
-        private void cmdCheckDatabaseSchema(string arg)
-        {
-            FormCheckDatabaseSchema form = new FormCheckDatabaseSchema(SaveConnections);
-            form.Show();
-        }
-
         private void cmdExecuteSQL(string arg)
         {
             if(!checkConnection()) return;
@@ -458,8 +489,9 @@ foreach(table in db.Tables)
             engine.SetAttribute("util", new Util());
             engine.Parse();
             engine.Execute();
+            string sql = engine.Output;
 
-            executeSQL(engine.Output);
+            executeSQL(sql);
         }
         private void cmdExecuteScript(string arg)
         {
@@ -570,30 +602,82 @@ foreach(table in db.Tables)
             showInfoText(sb.ToString());
         }
 
+        private void cmdGenerateUIMetadata(string arg)
+        {
+            if (treeView.SelectedNode.Tag is ConnectionSettings)
+            {
+                ConnectionSettings cs = (ConnectionSettings)treeView.SelectedNode.Tag;
+                if (MessageBox.Show("UI metadata will be generated for database " + cs.DbName + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+                cs.Database.GenerateUIMetadata();
+            }
+            else if (treeView.SelectedNode.Tag is Table)
+            {
+                Table tbl = (Table)treeView.SelectedNode.Tag;
+                if (MessageBox.Show("UI metadata will be generated for table " + tbl.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+                tbl.GenerateUIMetadata();
+            }
+            else if (treeView.SelectedNode.Tag is Field)
+            {
+                Field fld = (Field)treeView.SelectedNode.Tag;
+                if (MessageBox.Show("UI metadata will be generated for field " + fld.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+                fld.GenerateUIMetadata();
+            }
+        }
+
         private void cmdFieldDistinct(string arg)
         {
-            if (!checkConnection()) return;
+            if (!checkConnection() || !(treeView.SelectedNode.Tag is Field)) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select distinct top 100 " + field.Name + " from [" + field.Table.Name + "]");
+            executeSQL(@"
+                select distinct top 1000 
+                    {0} 
+                from 
+                    [{1}]", 
+                          field.Name, 
+                          field.Table.Name);
         }
         private void cmdFieldMax(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select max(" + field.Name + ") AS " + field.Name + "_MAX_value from [" + field.Table.Name + "]");
+            executeSQL(@"
+                select 
+                    max({0}) AS {0}_MAX_value 
+                from 
+                    [{1}]",
+                          field.Name,
+                          field.Table.Name);
         }
         private void cmdFieldMin(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
-            executeSQL("select min(" + field.Name + ") AS " + field.Name + "_MIN_value from [" + field.Table.Name + "]");
+            executeSQL(@"
+                select 
+                    min({0}) AS {0}_MIN_value 
+                from 
+                    [{1}]", 
+                          field.Name, 
+                          field.Table.Name);
         }
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
             if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
-                executeSQL("select top 100 " + field.Name + ", count(*) as RecordCount from [" + field.Table.Name + "] group by " + field.Name + " order by RecordCount desc");
+                executeSQL(@"
+                    select top 100 
+                        {0}, 
+                        count(*) as RecordCount 
+                    from 
+                        [{1}] 
+                    group by {0} 
+                    order by RecordCount desc", 
+                                              field.Name, 
+                                              field.Table.Name);
             else
                 executeSQL(@"
                     select top 100 
@@ -616,7 +700,7 @@ foreach(table in db.Tables)
         private void cmdNewERDiagram(string arg)
         {
             FormERDiagram form = new FormERDiagram();
-            form.Opener = this;
+            form.MainForm = this;
             form.Show();
         }
         private void cmdOpenERDiagram(string arg)
@@ -624,7 +708,7 @@ foreach(table in db.Tables)
             Schema schema = treeView.SelectedNode.Tag as Schema;
             schema.conn = Provider.ActiveConnection;
             FormERDiagram form = new FormERDiagram();
-            form.Opener = this;
+            form.MainForm = this;
             form.CurrentSchema = schema;
             form.Show();
         }
@@ -636,27 +720,10 @@ foreach(table in db.Tables)
             cmdRefresh(null);
         }
 
-        private void cmdGenerateCode(string arg)
+        private void cmdShowForm(string arg)
         {
-            FormCodeGenerator form = new FormCodeGenerator();
-            form.Show();
-        }
-
-        private void cmdDBTransfer(string arg)
-        {
-            FormDBTransfer form = new FormDBTransfer();
-            form.Show();
-        }
-
-        private void cmdCopyTreeData(string arg)
-        {
-            FormCopyTreeData form = new FormCopyTreeData();
-            form.Show();
-        }
-
-        private void cmdSimpleIntegrationService(string arg)
-        {
-            FormDBIntegration form = new FormDBIntegration();
+            IDBToolsForm form = (IDBToolsForm)Activator.CreateInstance(Type.GetType(arg));
+            form.MainForm = this;
             form.Show();
         }
 
@@ -671,8 +738,7 @@ foreach(table in db.Tables)
         }
         private void cmdTryAndSee(string arg)
         {
-            Cinar.HTMLParser.FormTest form = new Cinar.HTMLParser.FormTest();
-            form.Show();
+            MessageBox.Show("TryAndSee");
         }
         #endregion
 
@@ -722,6 +788,33 @@ foreach(table in db.Tables)
                 if (connectionName == cs.ToString())
                     return cs;
             return null;
+        }
+
+        private static bool connectionsLooaded = false;
+
+        public static void LoadConnectionsFromXML()
+        {
+            if (connectionsLooaded)
+                return;
+
+            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+            if (File.Exists(path))
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
+                    foreach (ConnectionSettings cs in Connections)
+                    {
+                        if (cs.Database == null)
+                            cs.RefreshDatabaseSchema();
+                        cs.Database.SetCollectionParents();
+                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 1000);
+                        cs.Database.CreateDbProvider(false);
+                    }
+                }
+            }
+            connectionsLooaded = true;
         }
     }
     public class ConnectionSettings

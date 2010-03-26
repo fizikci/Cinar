@@ -48,6 +48,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Cinar.Scripting\_library\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
     <Reference Include="Menees, Version=2.0.3607.35554, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="MeneesDiffUtils, Version=2.1.0.1, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -101,6 +105,14 @@
       <DependentUpon>FormConnect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormCompareDatabases.resx">
+      <DependentUpon>FormCompareDatabases.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormScriptingTestDetail.resx">
+      <DependentUpon>FormScriptingTestDetail.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCheckDatabaseSchema.resx">
       <DependentUpon>FormCheckDatabaseSchema.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -130,6 +142,10 @@
       <DependentUpon>FormERDiagram.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormScriptingTest.resx">
+      <DependentUpon>FormScriptingTest.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormTemplate.resx">
       <DependentUpon>FormTemplate.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -148,6 +164,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Tools\CodeGenerator.cs" />
+    <Compile Include="Tools\FormCompareDatabases.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormCompareDatabases.Designer.cs">
+      <DependentUpon>FormCompareDatabases.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormScriptingTestDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormScriptingTestDetail.Designer.cs">
+      <DependentUpon>FormScriptingTestDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\DBIntegration.cs" />
     <Compile Include="Tools\FormCheckDatabaseSchema.cs">
       <SubType>Form</SubType>
@@ -197,12 +225,19 @@
     <Compile Include="Tools\FormERDiagram.Designer.cs">
       <DependentUpon>FormERDiagram.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\FormScriptingTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormScriptingTest.Designer.cs">
+      <DependentUpon>FormScriptingTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\FormTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tools\FormTemplate.Designer.cs">
       <DependentUpon>FormTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\IDBToolsForm.cs" />
     <Compile Include="Tools\Schema.cs" />
     <Compile Include="Tools\SelectTableDialog.cs">
       <SubType>Form</SubType>
@@ -219,10 +254,6 @@
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cinar.HTMLParser\Cinar.HTMLParser.csproj">
-      <Project>{9E8EED96-D3A0-45E9-B15D-72F0DF8BA517}</Project>
-      <Name>Cinar.HTMLParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Scheduler\Cinar.Scheduler.csproj">
       <Project>{4D1F4DCA-8D81-4274-B784-B0A5C372D2C9}</Project>
