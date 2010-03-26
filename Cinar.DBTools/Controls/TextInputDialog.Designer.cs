@@ -30,7 +30,7 @@
         {
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.txtCode = new System.Windows.Forms.RichTextBox();
+            this.txtCode = new Cinar.Scripting.CinarScriptEditor();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -57,18 +57,14 @@
             // 
             // txtCode
             // 
-            this.txtCode.AcceptsTab = true;
             this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCode.DetectUrls = false;
-            this.txtCode.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtCode.Location = new System.Drawing.Point(12, 12);
+            this.txtCode.IsReadOnly = false;
+            this.txtCode.Location = new System.Drawing.Point(13, 13);
             this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(553, 424);
+            this.txtCode.Size = new System.Drawing.Size(552, 426);
             this.txtCode.TabIndex = 56;
-            this.txtCode.Text = "";
-            this.txtCode.WordWrap = false;
             // 
             // TextInputDialog
             // 
@@ -79,7 +75,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Name = "TextInputDialog";
-            this.Text = "TextInputDialog";
+            this.Text = "Code";
             this.ResumeLayout(false);
 
         }
@@ -88,6 +84,6 @@
 
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.RichTextBox txtCode;
+        private Cinar.Scripting.CinarScriptEditor txtCode;
     }
 }

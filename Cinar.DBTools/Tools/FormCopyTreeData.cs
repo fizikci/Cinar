@@ -11,8 +11,10 @@ using System.Collections;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormCopyTreeData : Form
+    public partial class FormCopyTreeData : Form, IDBToolsForm
     {
+        public FormMain MainForm { get; set; }
+
         public FormCopyTreeData()
         {
             InitializeComponent();

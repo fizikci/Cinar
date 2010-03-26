@@ -53,8 +53,10 @@ namespace Cinar.DBTools.Tools
             task.Category = txtCategory.Text;
             task.ExecInterval = (int)numInterval.Value;
             task.Name = txtName.Text;
-            task.SourceDB = cbSrcDb.SelectedItem.ToString();
-            task.DestDB = cbDstDb.SelectedItem.ToString();
+            if(cbSrcDb.SelectedItem!=null)
+                task.SourceDB = cbSrcDb.SelectedItem.ToString();
+            if(cbDstDb.SelectedItem!=null)
+                task.DestDB = cbDstDb.SelectedItem.ToString();
             task.Code = txtCode.Text;
         }
 

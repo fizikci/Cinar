@@ -40,8 +40,10 @@
             this.cbCategories = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnToggleSelectedTask = new System.Windows.Forms.LinkLabel();
             this.btnEditSelectedTask = new System.Windows.Forms.LinkLabel();
             this.btnScriptInclude = new System.Windows.Forms.LinkLabel();
+            this.btnShowLog = new System.Windows.Forms.LinkLabel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -59,7 +61,7 @@
             this.lbTasks.ItemHeight = 12;
             this.lbTasks.Location = new System.Drawing.Point(6, 23);
             this.lbTasks.Name = "lbTasks";
-            this.lbTasks.Size = new System.Drawing.Size(560, 127);
+            this.lbTasks.Size = new System.Drawing.Size(547, 118);
             this.lbTasks.TabIndex = 0;
             this.lbTasks.DoubleClick += new System.EventHandler(this.lbTasks_DoubleClick);
             // 
@@ -89,7 +91,7 @@
             this.lbLog.ItemHeight = 12;
             this.lbLog.Location = new System.Drawing.Point(5, 24);
             this.lbLog.Name = "lbLog";
-            this.lbLog.Size = new System.Drawing.Size(562, 377);
+            this.lbLog.Size = new System.Drawing.Size(549, 343);
             this.lbLog.TabIndex = 4;
             // 
             // label4
@@ -105,7 +107,7 @@
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStart.AutoSize = true;
-            this.btnStart.Location = new System.Drawing.Point(504, 8);
+            this.btnStart.Location = new System.Drawing.Point(491, 8);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(29, 13);
             this.btnStart.TabIndex = 6;
@@ -118,7 +120,7 @@
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStop.AutoSize = true;
             this.btnStop.Enabled = false;
-            this.btnStop.Location = new System.Drawing.Point(538, 8);
+            this.btnStop.Location = new System.Drawing.Point(525, 8);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(29, 13);
             this.btnStop.TabIndex = 7;
@@ -130,7 +132,7 @@
             // 
             this.btnAddNewTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddNewTask.AutoSize = true;
-            this.btnAddNewTask.Location = new System.Drawing.Point(270, 7);
+            this.btnAddNewTask.Location = new System.Drawing.Point(133, 7);
             this.btnAddNewTask.Name = "btnAddNewTask";
             this.btnAddNewTask.Size = new System.Drawing.Size(78, 13);
             this.btnAddNewTask.TabIndex = 8;
@@ -142,7 +144,7 @@
             // 
             this.btnDeleteSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDeleteSelectedTask.AutoSize = true;
-            this.btnDeleteSelectedTask.Location = new System.Drawing.Point(456, 7);
+            this.btnDeleteSelectedTask.Location = new System.Drawing.Point(443, 7);
             this.btnDeleteSelectedTask.Name = "btnDeleteSelectedTask";
             this.btnDeleteSelectedTask.Size = new System.Drawing.Size(110, 13);
             this.btnDeleteSelectedTask.TabIndex = 9;
@@ -181,6 +183,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.btnToggleSelectedTask);
             this.splitContainer1.Panel1.Controls.Add(this.btnEditSelectedTask);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.lbTasks);
@@ -189,19 +192,32 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.btnShowLog);
             this.splitContainer1.Panel2.Controls.Add(this.label4);
             this.splitContainer1.Panel2.Controls.Add(this.lbLog);
             this.splitContainer1.Panel2.Controls.Add(this.btnStart);
             this.splitContainer1.Panel2.Controls.Add(this.btnStop);
-            this.splitContainer1.Size = new System.Drawing.Size(577, 574);
-            this.splitContainer1.SplitterDistance = 159;
+            this.splitContainer1.Size = new System.Drawing.Size(564, 544);
+            this.splitContainer1.SplitterDistance = 150;
             this.splitContainer1.TabIndex = 43;
+            // 
+            // btnToggleSelectedTask
+            // 
+            this.btnToggleSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnToggleSelectedTask.AutoSize = true;
+            this.btnToggleSelectedTask.Location = new System.Drawing.Point(327, 7);
+            this.btnToggleSelectedTask.Name = "btnToggleSelectedTask";
+            this.btnToggleSelectedTask.Size = new System.Drawing.Size(112, 13);
+            this.btnToggleSelectedTask.TabIndex = 11;
+            this.btnToggleSelectedTask.TabStop = true;
+            this.btnToggleSelectedTask.Text = "Toggle Selected Task";
+            this.btnToggleSelectedTask.Click += new System.EventHandler(this.btnToggleSelectedTask_Click);
             // 
             // btnEditSelectedTask
             // 
             this.btnEditSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEditSelectedTask.AutoSize = true;
-            this.btnEditSelectedTask.Location = new System.Drawing.Point(352, 7);
+            this.btnEditSelectedTask.Location = new System.Drawing.Point(223, 7);
             this.btnEditSelectedTask.Name = "btnEditSelectedTask";
             this.btnEditSelectedTask.Size = new System.Drawing.Size(97, 13);
             this.btnEditSelectedTask.TabIndex = 10;
@@ -211,8 +227,9 @@
             // 
             // btnScriptInclude
             // 
+            this.btnScriptInclude.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnScriptInclude.AutoSize = true;
-            this.btnScriptInclude.Location = new System.Drawing.Point(515, 17);
+            this.btnScriptInclude.Location = new System.Drawing.Point(505, 17);
             this.btnScriptInclude.Name = "btnScriptInclude";
             this.btnScriptInclude.Size = new System.Drawing.Size(72, 13);
             this.btnScriptInclude.TabIndex = 44;
@@ -220,11 +237,23 @@
             this.btnScriptInclude.Text = "Script Include";
             this.btnScriptInclude.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnScriptInclude_LinkClicked);
             // 
+            // btnShowLog
+            // 
+            this.btnShowLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShowLog.AutoSize = true;
+            this.btnShowLog.Location = new System.Drawing.Point(480, 370);
+            this.btnShowLog.Name = "btnShowLog";
+            this.btnShowLog.Size = new System.Drawing.Size(74, 13);
+            this.btnShowLog.TabIndex = 8;
+            this.btnShowLog.TabStop = true;
+            this.btnShowLog.Text = "Show Full Log";
+            this.btnShowLog.Click += new System.EventHandler(this.btnShowLog_Click);
+            // 
             // FormDBIntegration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 634);
+            this.ClientSize = new System.Drawing.Size(587, 604);
             this.Controls.Add(this.btnScriptInclude);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.cbCategories);
@@ -257,5 +286,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.LinkLabel btnEditSelectedTask;
         private System.Windows.Forms.LinkLabel btnScriptInclude;
+        private System.Windows.Forms.LinkLabel btnToggleSelectedTask;
+        private System.Windows.Forms.LinkLabel btnShowLog;
     }
 }

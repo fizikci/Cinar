@@ -13,10 +13,12 @@ using Cinar.Scripting;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormCodeGenerator : Form
+    public partial class FormCodeGenerator : Form, IDBToolsForm
     {
         CodeGenerator gen;
         string path;
+
+        public FormMain MainForm { get; set; }
 
         public FormCodeGenerator()
         {
@@ -237,7 +239,6 @@ namespace Cinar.DBTools.Tools
         {
             showList();
         }
-
     }
 
     public class GeneratedCode
@@ -315,15 +316,19 @@ namespace Cinar.DBTools.Tools
                 case Cinar.Database.DbType.DateTime:
                 case Cinar.Database.DbType.DateTimeSmall:
                     return "DateTime";
-                
+
                 case Cinar.Database.DbType.Currency:
                 case Cinar.Database.DbType.CurrencySmall:
                 case Cinar.Database.DbType.Decimal:
-                case Cinar.Database.DbType.Double:
-                case Cinar.Database.DbType.Float:
                 case Cinar.Database.DbType.Numeric:
                 case Cinar.Database.DbType.Real:
                     return "decimal";
+
+                case Cinar.Database.DbType.Double:
+                    return "double";
+
+                case Cinar.Database.DbType.Float:
+                    return "float";
 
                 case Cinar.Database.DbType.Int16:
                 case Cinar.Database.DbType.Int32:
@@ -381,14 +386,18 @@ namespace Cinar.DBTools.Tools
                 case Cinar.Database.DbType.DateTimeSmall:
                     return "DateTime.Now";
 
+                case Cinar.Database.DbType.Double:
+                    return "0d";
+
+                case Cinar.Database.DbType.Float:
+                    return "0f";
+
                 case Cinar.Database.DbType.Currency:
                 case Cinar.Database.DbType.CurrencySmall:
                 case Cinar.Database.DbType.Decimal:
-                case Cinar.Database.DbType.Double:
-                case Cinar.Database.DbType.Float:
                 case Cinar.Database.DbType.Numeric:
                 case Cinar.Database.DbType.Real:
-                    return "0d";
+                    return "0M";
 
                 case Cinar.Database.DbType.Int16:
                 case Cinar.Database.DbType.Int32:

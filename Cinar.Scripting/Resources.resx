@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CinarMode" xml:space="preserve">
+    <value>&lt;?xml version="1.0"?&gt;
+&lt;!-- syntaxdefinition for JavaScript 2.0 by Svante Lidman --&gt;
+
+&lt;SyntaxDefinition name ="Cinar" extensions = ".csc"&gt;
+	
+	&lt;Properties&gt;
+		&lt;Property name="LineComment" value="//"/&gt;
+	&lt;/Properties&gt;
+
+	&lt;Digits name ="Digits" bold ="false" italic ="false" color ="DarkBlue"/&gt;
+
+	&lt;RuleSets&gt;
+		&lt;RuleSet ignorecase = "false"&gt;
+			&lt;Delimiters&gt;=!&amp;gt;&amp;lt;+-/*%&amp;amp;|^~.}{,;][?:()&lt;/Delimiters&gt;
+			
+			&lt;Span name ="LineComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="true"&gt;
+				&lt;Begin&gt;//&lt;/Begin&gt;
+			&lt;/Span&gt;
+					
+			&lt;Span name ="BlockComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="false"&gt;
+				&lt;Begin&gt;/*&lt;/Begin&gt;
+				&lt;End&gt;*/&lt;/End&gt;
+			&lt;/Span&gt;
+			
+			&lt;Span name ="String" bold ="false" italic ="false" color ="Sienna" stopateol ="false" escapecharacter="\"&gt;
+				&lt;Begin&gt;&amp;quot;&lt;/Begin&gt;
+				&lt;End&gt;&amp;quot;&lt;/End&gt;
+			&lt;/Span&gt;
+	
+			&lt;Span name = "Character" bold = "false" italic = "false" color = "Sienna" stopateol = "true" escapecharacter="\"&gt;
+				&lt;Begin&gt;&amp;apos;&lt;/Begin&gt;
+				&lt;End&gt;&amp;apos;&lt;/End&gt;
+			&lt;/Span&gt;
+	
+			&lt;KeyWords name ="JavaScriptKeyWords" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "break" /&gt;
+				&lt;Key word =  "continue" /&gt;
+				&lt;Key word =  "delete" /&gt;
+				&lt;Key word =  "else" /&gt;
+				&lt;Key word =  "for" /&gt;
+				&lt;Key word =  "function" /&gt;
+				&lt;Key word =  "if" /&gt;
+				&lt;Key word =  "in" /&gt;
+				&lt;Key word =  "new" /&gt;
+				&lt;Key word =  "return" /&gt;
+				&lt;Key word =  "this" /&gt;
+				&lt;Key word =  "typeof" /&gt;
+				&lt;Key word =  "var" /&gt;
+				&lt;Key word =  "void" /&gt;
+				&lt;Key word =  "while" /&gt;
+				&lt;Key word =  "with" /&gt;
+				&lt;Key word =  "using" /&gt;
+				&lt;Key word =  "foreach" /&gt;
+				&lt;!--ECMAScript keywords--&gt;
+				&lt;!-- Reserved for future use 
+					(some are already used in some Javascript Engines) 
+				--&gt;
+				&lt;Key word =  "abstract" /&gt;
+				&lt;Key word =  "boolean" /&gt;
+				&lt;Key word =  "byte" /&gt;
+				&lt;Key word =  "case" /&gt;
+				&lt;Key word =  "catch" /&gt;
+				&lt;Key word =  "char" /&gt;
+				&lt;Key word =  "class" /&gt;
+				&lt;Key word =  "const" /&gt;
+				&lt;Key word =  "debugger" /&gt;
+				&lt;Key word =  "default" /&gt;
+				&lt;Key word =  "do" /&gt;
+				&lt;Key word =  "double" /&gt;
+				&lt;Key word =  "enum" /&gt;
+				&lt;Key word =  "export" /&gt;
+				&lt;Key word =  "extends" /&gt;
+				&lt;Key word =  "final" /&gt;
+				&lt;Key word =  "finally" /&gt;
+				&lt;Key word =  "float" /&gt;
+				&lt;Key word =  "goto" /&gt;
+				&lt;Key word =  "implements" /&gt;
+				&lt;Key word =  "import" /&gt;
+				&lt;Key word =  "instanceof" /&gt;
+				&lt;Key word =  "int" /&gt;
+				&lt;Key word =  "interface" /&gt;
+				&lt;Key word =  "long" /&gt;
+				&lt;Key word =  "native" /&gt;
+				&lt;Key word =  "package" /&gt;
+				&lt;Key word =  "private" /&gt;
+				&lt;Key word =  "protected" /&gt;
+				&lt;Key word =  "public" /&gt;
+				&lt;Key word =  "short" /&gt;
+				&lt;Key word =  "static" /&gt;
+				&lt;Key word =  "super" /&gt;
+				&lt;Key word =  "switch" /&gt;
+				&lt;Key word =  "synchronized" /&gt;
+				&lt;Key word =  "throw" /&gt;
+				&lt;Key word =  "throws" /&gt;
+				&lt;Key word =  "transient" /&gt;
+				&lt;Key word =  "try" /&gt;
+				&lt;Key word =  "volatile" /&gt;
+			&lt;/KeyWords&gt;
+	
+			&lt;KeyWords name ="JavaScriptIntrinsics" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "Array" /&gt;
+				&lt;Key word =  "Boolean" /&gt;
+				&lt;Key word =  "Date" /&gt;
+				&lt;Key word =  "Function" /&gt;
+				&lt;Key word =  "Global" /&gt;
+				&lt;Key word =  "Math" /&gt;
+				&lt;Key word =  "Number" /&gt;
+				&lt;Key word =  "Object" /&gt;
+				&lt;Key word =  "RegExp" /&gt;
+				&lt;Key word =  "String" /&gt;
+			&lt;/KeyWords&gt;
+			
+			&lt;KeyWords name ="JavaScriptLiterals" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "false" /&gt;
+				&lt;Key word =  "null" /&gt;
+				&lt;Key word =  "true" /&gt;
+				&lt;Key word =  "NaN" /&gt;
+				&lt;Key word =  "Infinity" /&gt;
+			&lt;/KeyWords&gt;
+	
+			&lt;KeyWords name ="JavaScriptLiterals" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "" /&gt;
+			&lt;/KeyWords&gt;
+	
+			&lt;KeyWords name ="JavaScriptGlobalFunctions" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "eval" /&gt;
+				&lt;Key word =  "parseInt" /&gt;
+				&lt;Key word =  "parseFloat" /&gt;
+				&lt;Key word =  "escape" /&gt;
+				&lt;Key word =  "unescape" /&gt;
+				&lt;Key word =  "isNaN" /&gt;
+				&lt;Key word =  "isFinite" /&gt;
+			&lt;/KeyWords&gt;		
+		&lt;/RuleSet&gt;
+	&lt;/RuleSets&gt;
+	
+&lt;/SyntaxDefinition&gt;</value>
+  </data>
+</root>

@@ -13,10 +13,12 @@ using Cinar.UICommands;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormERDiagram : Form
+    public partial class FormERDiagram : Form, IDBToolsForm
     {
         CommandManager cmdMan = new CommandManager();
         ConnectionSettings conn = null;
+
+        public FormMain MainForm { get; set; }
 
         public FormERDiagram()
         {
@@ -111,7 +113,6 @@ namespace Cinar.DBTools.Tools
                 panelPaint(true);
             }
         }
-        public FormMain Opener;
         private void cmdSaveSchema(string arg)
         {
             if (string.IsNullOrEmpty(CurrentSchema.Name))
@@ -122,7 +123,7 @@ namespace Cinar.DBTools.Tools
 
             if (conn.Schemas.IndexOf(CurrentSchema) == -1)
                 conn.Schemas.Add(CurrentSchema);
-            Opener.SaveConnections();
+            MainForm.SaveConnections();
         }
         private void createNewSchema(List<Table> tables)
         {

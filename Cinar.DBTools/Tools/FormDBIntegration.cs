@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,11 +17,13 @@ using Cinar.DBTools.Controls;
 
 namespace Cinar.DBTools.Tools
 {
-    public partial class FormDBIntegration : Form
+    public partial class FormDBIntegration : Form, IDBToolsForm
     {
         DBIntegration integData;
         string path;
         SchedulerEngine scheduler;
+
+        public FormMain MainForm { get; set; }
 
         public FormDBIntegration()
         {
@@ -43,6 +46,17 @@ namespace Cinar.DBTools.Tools
             }
 
             showCategories(null);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (autoStart)
+            {
+                cmdStart();
+                autoStart = false;
+            }
         }
 
         private void showCategories(string selectedCat)
@@ -127,6 +141,11 @@ namespace Cinar.DBTools.Tools
 
         private void btnStart_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            cmdStart();
+        }
+
+        private void cmdStart()
+        {
             scheduler.Interval = 100;
 
             for (int i = 0; i < lbTasks.Items.Count; i++)
@@ -134,22 +153,47 @@ namespace Cinar.DBTools.Tools
                 DBIntegrationTask task = lbTasks.Items[i] as DBIntegrationTask;
 
                 Job job = new Job
-                  {
-                      Interval = task.ExecInterval * 1000,
-                      Type = JobType.PeriodicMS,
-                      Handler = schedulerEngine => executeTask(task)
-                  };
+                              {
+                                  Interval = task.ExecInterval * 1000,
+                                  Type = JobType.PeriodicMS,
+                                  Handler = schedulerEngine => executeTask(task)
+                              };
                 scheduler.Jobs.Add(job);
             }
 
             scheduler.Start();
             
-            btnStart.Enabled = false;
+            btnStart.Enabled = 
+                btnAddNewTask.Enabled =
+                btnDeleteSelectedTask.Enabled = 
+                btnEditSelectedTask.Enabled =
+                btnScriptInclude.Enabled = 
+                btnShowLog.Enabled = 
+                btnToggleSelectedTask.Enabled = false;
+
             btnStop.Enabled = true;
+        }
+        private void cmdStop()
+        {
+            scheduler.Stop();
+            scheduler.Clear();
+
+            btnStart.Enabled =
+                btnAddNewTask.Enabled =
+                btnDeleteSelectedTask.Enabled =
+                btnEditSelectedTask.Enabled =
+                btnScriptInclude.Enabled =
+                btnShowLog.Enabled =
+                btnToggleSelectedTask.Enabled = true;
+
+            btnStop.Enabled = false;
         }
 
         private void executeTask(DBIntegrationTask task)
         {
+            if (task.Name.StartsWith("[DISABLED]"))
+                return;
+
             ConnectionSettings csSrc = Provider.GetConnection(task.SourceDB);
             ConnectionSettings csDst = Provider.GetConnection(task.DestDB);
             if(csSrc==null)
@@ -173,7 +217,7 @@ namespace Cinar.DBTools.Tools
             pret.Parse();
             pret.Execute();
 
-            if (!pret.LastExecutionSuccessful)
+            if (!pret.Successful)
                 Log(task, "Error: " + pret.Output);
             else
                 Log(task, "Executed successfully in " + pret.ExecutingTime + " ms.");
@@ -197,12 +241,17 @@ namespace Cinar.DBTools.Tools
             }
         }
 
+        private string logPath {
+            get {
+                return Path.GetDirectoryName(Application.ExecutablePath) + "\\dbintegration.log";
+            }
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             scheduler.Stop();
             scheduler.Clear();
 
-            string logPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\dbintegration.log";
             using (StreamWriter sw = new StreamWriter(logPath, true, Encoding.UTF8))
             {
                 while (lbLog.Items.Count > 0)
@@ -215,11 +264,7 @@ namespace Cinar.DBTools.Tools
 
         private void btnStop_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            scheduler.Stop();
-            scheduler.Clear();
-
-            btnStart.Enabled = true;
-            btnStop.Enabled = false;
+            cmdStop();
         }
 
         private void lbTasks_DoubleClick(object sender, EventArgs e)
@@ -239,5 +284,28 @@ namespace Cinar.DBTools.Tools
             }
         }
 
+        private void btnToggleSelectedTask_Click(object sender, EventArgs e)
+        {
+            DBIntegrationTask tmp = (DBIntegrationTask)lbTasks.SelectedItem;
+            if (tmp.Name.Contains("[DISABLED] - "))
+                tmp.Name = tmp.Name.Replace("[DISABLED] - ", "");
+            else
+                tmp.Name = "[DISABLED] - " + tmp.Name;
+            save();
+            showList();
+        }
+
+        private void btnShowLog_Click(object sender, EventArgs e)
+        {
+            Process.Start(logPath);
+        }
+
+        private bool autoStart = false;
+        public void StartIntegration(string categoryName)
+        {
+            Provider.LoadConnectionsFromXML();
+            cbCategories.SelectedItem = categoryName;
+            autoStart = true;
+        }
     }
 }

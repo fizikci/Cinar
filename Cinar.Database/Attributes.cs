@@ -28,6 +28,9 @@ namespace Cinar.Database
         public FieldDetailAttribute()
         {
         }
+
+        public string Name { get; set; }
+
         private DbType fieldType = DbType.Undefined;
         /// <summary>
         /// Bu field'ın tipi
@@ -117,6 +120,19 @@ namespace Cinar.Database
         ManyToOne
     }
 
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+    public class TableDetailAttribute : Attribute
+    {
+        public string Name { get; set; }
+        public TableTypes Type { get; set; }
+    }
+
+    public enum TableTypes
+    {
+        Account,
+        Transaction
+    }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class DefaultDataAttribute : Attribute

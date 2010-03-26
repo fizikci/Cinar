@@ -22,6 +22,7 @@ using System.Text;
 using System.Collections;
 using System.Data;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace Cinar.Database
 {
@@ -248,6 +249,33 @@ namespace Cinar.Database
                 fieldType == DbType.VarChar ||
                 fieldType == DbType.Xml;
         }
+
+        public void GenerateUIMetadata()
+        {
+            UIMetadata = new FieldUIMetadata();
+            UIMetadata.DisplayName = Name;
+            UIMetadata.DisplayOrder = parent.IndexOf(this);
+            if (this.ReferenceField != null)
+                UIMetadata.EditorType = EditorTypes.LookUp;
+            else if (this.IsDateType())
+                UIMetadata.EditorType = EditorTypes.DateEdit;
+            else if (this.IsStringType())
+                UIMetadata.EditorType = this.Length > 200 ? EditorTypes.MemoEdit : EditorTypes.TextEdit;
+            else if (this.IsNumericType())
+                UIMetadata.EditorType = EditorTypes.NumberEdit;
+            else if (fieldType == DbType.Boolean)
+                UIMetadata.EditorType = EditorTypes.CheckBox;
+            else
+                UIMetadata.EditorType = EditorTypes.TextEdit;
+            UIMetadata.GridColumnWidth = 150;
+            UIMetadata.ShortDisplayName = Name;
+            UIMetadata.ShowInFilterPanel = false;
+            UIMetadata.ShowInForm = !this.IsPrimaryKey;
+            UIMetadata.ShowInGrid = !this.IsPrimaryKey;
+            UIMetadata.SortableInGrid = true;
+        }
+
+        public FieldUIMetadata UIMetadata { get; set; }
     }
 
     public class FieldCollection : List<Field>
@@ -305,4 +333,32 @@ namespace Cinar.Database
         }
     }
 
+    [Serializable, TypeConverter(typeof(ExpandableObjectConverter))]
+    public class FieldUIMetadata
+    {
+        public string DisplayName { get; set; }
+        public string ShortDisplayName { get; set; }
+        public EditorTypes EditorType { get; set; }
+        public string GroupName { get; set; }
+        public int DisplayOrder { get; set; }
+        public int GridColumnWidth { get; set; }
+        public bool ShowInForm { get; set; }
+        public bool ShowInGrid { get; set; }
+        public bool SortableInGrid { get; set; }
+        public bool ShowInFilterPanel { get; set; }
+    }
+
+    public enum EditorTypes
+    {
+        Undefined,
+        TextEdit,
+        MemoEdit,
+        HTMLEdit,
+        CheckBox,
+        ComboBox,
+        LookUp,
+        DateEdit,
+        NumberEdit,
+        TimeEdit
+    }
 }

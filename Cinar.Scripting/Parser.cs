@@ -15,6 +15,8 @@ namespace Cinar.Scripting
         Tokenizer fTokenizer; // the tokenizer to read tokens from
         Token fCurrentToken; // the current token
 
+        public int CurrentLineNumber { get { return fTokenizer.CurrentLineNumber; } }
+
         public Parser(TextReader source)
         {
             if (source == null) throw new ArgumentNullException("source");
@@ -54,40 +56,40 @@ namespace Cinar.Scripting
             if (fCurrentToken.Type != TokenType.Word)
                 throw new ParserException("Expected a statement.");
 
+            Statement res = null;
+
             if (fCurrentToken.Value == "var")
-                return ParseVarStatement();
+                res = ParseVarStatement();
+            else if (fCurrentToken.Value == "if")
+                res = ParseIfStatement();
+            else if (fCurrentToken.Value == "try")
+                res = ParseTryStatement();
+            else if (fCurrentToken.Value == "while")
+                res = ParseWhileStatement();
+            else if (fCurrentToken.Value == "for")
+                res = ParseForStatement();
+            else if (fCurrentToken.Value == "foreach")
+                res = ParseForEachStatement();
+            else if (fCurrentToken.Value == "break")
+                res = ParseBreakStatement();
+            else if (fCurrentToken.Value == "continue")
+                res = ParseContinueStatement();
+            else if (fCurrentToken.Value == "debugger")
+                res = ParseDebuggerStatement();
+            else if (fCurrentToken.Value == "return")
+                res = ParseReturnStatement();
+            else if (fCurrentToken.Value == "throw")
+                res = ParseThrowStatement();
+            else if (fCurrentToken.Value == "function")
+                res = ParseFunctionDefinitionStatement();
+            else if (fCurrentToken.Value == "using")
+                res = ParseUsingStatement();
+            
+            if (res == null)
+                res = ParseAssignmentOrFunctionCallStatement();
 
-            if (fCurrentToken.Value == "if")
-                return ParseIfStatement();
-
-            if (fCurrentToken.Value == "while")
-                return ParseWhileStatement();
-
-            if (fCurrentToken.Value == "for")
-                return ParseForStatement();
-
-            if (fCurrentToken.Value == "foreach")
-                return ParseForEachStatement();
-
-            if (fCurrentToken.Value == "break")
-                return ParseBreakStatement();
-
-            if (fCurrentToken.Value == "continue")
-                return ParseContinueStatement();
-
-            if (fCurrentToken.Value == "debugger")
-                return ParseDebuggerStatement();
-
-            if (fCurrentToken.Value == "return")
-                return ParseReturnStatement();
-
-            if (fCurrentToken.Value == "function")
-                return ParseFunctionDefinitionStatement();
-
-            if (fCurrentToken.Value == "using")
-                return ParseUsingStatement();
-
-            return ParseAssignmentOrFunctionCallStatement();
+            res.LineNumber = fTokenizer.CurrentLineNumber;
+            return res;
         }
 
         VariableDefinition ParseVarStatement()
@@ -189,6 +191,57 @@ namespace Cinar.Scripting
             return new IfStatement(lCondition
                 , new StatementCollection(lTrueStatements)
                 , new StatementCollection(lFalseStatements));
+        }
+        TryCatchStatement ParseTryStatement()
+        {
+            List<Statement> lTryStatements = new List<Statement>();
+            List<Statement> lCatchStatements = new List<Statement>();
+            Statement lStatement;
+            string exVarName = null;
+
+            ReadNextToken(); // skip 'try'
+            SkipExpected(TokenType.Symbol, "{"); // skip '{'
+
+            CheckForUnexpectedEndOfSource();
+            while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
+            {
+                if ((lStatement = ReadNextStatement()) != null)
+                    lTryStatements.Add(lStatement);
+                else
+                    throw new ParserException("Unexpected end of source. Incomplete try statement.");
+            }
+
+            SkipExpected(TokenType.Symbol, "}"); // skip '}'
+            SkipExpected(TokenType.Word, "catch"); // skip 'catch'
+
+            if (fCurrentToken.Equals(TokenType.Symbol, "("))
+            {
+                ReadNextToken(); // skip '('
+                if (fCurrentToken.Type == TokenType.Word)
+                    exVarName = fCurrentToken.Value.ToString();
+                ReadNextToken();
+                SkipExpected(TokenType.Symbol, ")"); // skip ')'
+            }
+
+            SkipExpected(TokenType.Symbol, "{"); // skip '{'
+
+            CheckForUnexpectedEndOfSource();
+            while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
+            {
+                if ((lStatement = ReadNextStatement()) != null)
+                    lCatchStatements.Add(lStatement);
+                else
+                    throw new ParserException("Unexpected end of source. Incomplete catch statement.");
+            }
+
+            SkipExpected(TokenType.Symbol, "}"); // skip '}'
+
+            skipEmptyStatements();
+
+            return new TryCatchStatement(
+                new StatementCollection(lTryStatements),
+                exVarName,
+                new StatementCollection(lCatchStatements));
         }
 
         WhileStatement ParseWhileStatement()
@@ -300,7 +353,7 @@ namespace Cinar.Scripting
 
             ReadNextToken(); // skip 'foreach'
             CheckForUnexpectedEndOfSource();
-            ReadNextToken(); // skip '{'
+            ReadNextToken(); // skip '('
             CheckForUnexpectedEndOfSource();
 
             if (fCurrentToken.Type != TokenType.Word)
@@ -449,6 +502,18 @@ namespace Cinar.Scripting
             return new ReturnStatement(exp);
         }
 
+        ThrowStatement ParseThrowStatement()
+        {
+            // return-statement:
+            //   return expression
+
+            SkipExpected(TokenType.Word, "throw");
+            Expression exp = ParseExpression();
+            skipEmptyStatements();
+
+            return new ThrowStatement(exp);
+        }
+
         UsingStatement ParseUsingStatement()
         {
             // return-statement:
@@ -460,9 +525,9 @@ namespace Cinar.Scripting
             ReadNextToken();
             while (fCurrentToken.Equals(TokenType.Symbol, "."))
             {
-                str += fCurrentToken.Value;
                 ReadNextToken();
-                str += fCurrentToken.Value;
+                str += "." + fCurrentToken.Value;
+                ReadNextToken();
             }
             ReadNextToken();
             
@@ -951,6 +1016,7 @@ namespace Cinar.Scripting
         TextReader fSource; // the source to read characters from
         char fCurrentChar; // the current character
         StringBuilder fTokenValueBuffer; // a buffer for building the value of a token
+        public int CurrentLineNumber = 0;
 
         public Tokenizer(TextReader source)
         {
@@ -974,7 +1040,10 @@ namespace Cinar.Scripting
         void SkipWhitespace()
         {
             while (char.IsWhiteSpace(fCurrentChar))
+            {
+                if (fCurrentChar == '\n') CurrentLineNumber++;
                 ReadNextChar();
+            }
         }
 
         void SkipComment(string commentSymbol)
@@ -994,7 +1063,7 @@ namespace Cinar.Scripting
             {
                 while (fCurrentChar != '\n')
                     ReadNextChar();
-                ReadNextChar();
+                //ReadNextChar();
             }
         }
 
