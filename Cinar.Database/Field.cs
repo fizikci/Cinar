@@ -189,17 +189,20 @@ namespace Cinar.Database
                     defaultValue = "getdate()";
                 else if (dt < new DateTime(1753, 1, 1, 12, 0, 0))
                     defaultValue = "getdate()";
-                else if (defaultValue.StartsWith("'") && defaultValue.EndsWith("'"))
-                    ;
                 else
-                    defaultValue = "'" + defaultValue + "'";
+                {
+                    if (!defaultValue.StartsWith("'"))
+                        defaultValue = "'" + defaultValue;
+                    if (!defaultValue.EndsWith("'"))
+                        defaultValue = defaultValue + "'";
+                }
             }
             else
             {
-                if (defaultValue.StartsWith("'") && defaultValue.EndsWith("'"))
-                    ;
-                else
-                    defaultValue = "'" + defaultValue + "'";
+                if (!defaultValue.StartsWith("'"))
+                    defaultValue = "'" + defaultValue;
+                if (!defaultValue.EndsWith("'"))
+                    defaultValue = defaultValue + "'";
             }
 
             return defaultValue;

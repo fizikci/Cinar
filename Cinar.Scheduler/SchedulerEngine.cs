@@ -110,7 +110,7 @@ namespace Cinar.Scheduler
 
                 } while (index != orjinalValue);
             }
-            catch (Exception exception)
+            catch 
             {
                 //todo: log..
             }
@@ -124,7 +124,7 @@ namespace Cinar.Scheduler
                 System.Threading.Thread.Sleep(job.Delay);
                 job.Handler(this);
             }
-            catch (Exception exception)
+            catch
             {
                 //TODO: log...
             }
