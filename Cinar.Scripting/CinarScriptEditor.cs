@@ -92,7 +92,6 @@ namespace Cinar.Scripting
         {
             List<TextWord> words = textArea.Document.GetLineSegment(textArea.Caret.Line).Words;
             TextWord currentWord = textArea.Document.GetLineSegment(textArea.Caret.Line).GetWord(textArea.Caret.Column - 1);
-            bool showNamespaces = false;
             string namespaceStartsWith = "";
             int index = words.IndexOf(currentWord);
             List<string> wordsChain = new List<string>();
@@ -118,7 +117,6 @@ namespace Cinar.Scripting
                     currentWord = words[i];
                     if (currentWord.Word == "using")
                     {
-                        showNamespaces = true;
                         namespaceStartsWith = string.Join(".", wordsChain.ToArray());
                         return getNamespaceList(namespaceStartsWith);
                     }

@@ -272,16 +272,16 @@ namespace Cinar.Database.Providers
 											WHERE
 												TABLE_NAME='{0}'";
         // Tablolara Primary Key Alanları
-        private string SQLPrimaryKeys = @"
-											SELECT
-												TBL1.CONSTRAINT_NAME,
-												TBL2.TABLE_NAME,
-												TBL2.COLUMN_NAME
-											FROM
-												(select CONSTRAINT_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND TABLE_NAME<>'dtproperties') AS TBL1,
-												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE) AS TBL2
-											WHERE
-												TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
+//        private string SQLPrimaryKeys = @"
+//											SELECT
+//												TBL1.CONSTRAINT_NAME,
+//												TBL2.TABLE_NAME,
+//												TBL2.COLUMN_NAME
+//											FROM
+//												(select CONSTRAINT_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND TABLE_NAME<>'dtproperties') AS TBL1,
+//												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE) AS TBL2
+//											WHERE
+//												TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
         // Foreyn kiyler
         private string SQLForeignKeys = @"
 											SELECT
