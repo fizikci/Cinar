@@ -26,6 +26,8 @@ namespace Cinar.DBTools.Tools
 
             foreach (Table tbl in Provider.Database.Tables)
             {
+                if (tbl.IsView)
+                    continue;
                 if (tbl.PrimaryField == null)
                     lbProblems.Items.Add(new PrimaryKeyDoesntExist() { Table = tbl });
                 else if(!tbl.PrimaryField.IsAutoIncrement)

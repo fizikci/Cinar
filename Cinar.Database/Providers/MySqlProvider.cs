@@ -275,16 +275,16 @@ namespace Cinar.Database.Providers
 											WHERE
 												TABLE_NAME='{0}' and TABLE_SCHEMA='{1}'";
         // Tablolara Primary Key Alanlarý
-        private string SQLPrimaryKeys = @"
-											SELECT
-												TBL1.CONSTRAINT_NAME,
-												TBL2.TABLE_NAME,
-												TBL2.COLUMN_NAME
-											FROM
-												(select CONSTRAINT_NAME, TABLE_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND CONSTRAINT_SCHEMA='{0}') AS TBL1,
-												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA='{0}') AS TBL2
-											WHERE
-												TBL2.TABLE_NAME = TBL1.TABLE_NAME;";
+//        private string SQLPrimaryKeys = @"
+//											SELECT
+//												TBL1.CONSTRAINT_NAME,
+//												TBL2.TABLE_NAME,
+//												TBL2.COLUMN_NAME
+//											FROM
+//												(select CONSTRAINT_NAME, TABLE_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND CONSTRAINT_SCHEMA='{0}') AS TBL1,
+//												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA='{0}') AS TBL2
+//											WHERE
+//												TBL2.TABLE_NAME = TBL1.TABLE_NAME;";
         // Foreyn kiyler
         private string SQLForeignKeys = @"
                                             SELECT
@@ -336,7 +336,7 @@ namespace Cinar.Database.Providers
                 cmd = new MySqlCommand(cmdText, (MySqlConnection)this.Connection);
 
             for (int i = 0; i < parameters.Length; i++)
-                cmd.Parameters.Add("@_param" + i, parameters[i]);
+                cmd.Parameters.AddWithValue("@_param" + i, parameters[i]);
 
             return cmd;
         }

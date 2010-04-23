@@ -96,6 +96,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Controls\TextInputDialog.resx">
       <DependentUpon>TextInputDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -123,12 +124,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCopyTreeData.resx">
       <DependentUpon>FormCopyTreeData.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBIntegration.resx">
       <DependentUpon>FormDBIntegration.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBIntegrationTask.resx">
       <DependentUpon>FormDBIntegrationTask.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormDBTransfer.resx">
       <DependentUpon>FormDBTransfer.cs</DependentUpon>
@@ -266,6 +270,10 @@
     <ProjectReference Include="..\Cinar.UICommands\Cinar.UICommands.csproj">
       <Project>{90107230-692B-4EEF-9308-31D954AE722E}</Project>
       <Name>Cinar.UICommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.WebServer\Cinar.WebServer.csproj">
+      <Project>{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}</Project>
+      <Name>Cinar.WebServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

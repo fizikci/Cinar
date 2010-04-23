@@ -36,6 +36,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -47,6 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CinarDebugger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CinarDebugger.Designer.cs">
+      <DependentUpon>CinarDebugger.cs</DependentUpon>
+    </Compile>
     <Compile Include="CinarScriptEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -68,12 +76,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Class.PNG" />
+    <None Include="Resources\LocalVariable.PNG" />
+    <None Include="Resources\Method.PNG" />
+    <None Include="Resources\Property.PNG" />
+    <None Include="Resources\Struct.PNG" />
+    <None Include="Resources\Interface.PNG" />
     <Content Include="_library\ICSharpCode.TextEditor.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CinarDebugger.resx">
+      <DependentUpon>CinarDebugger.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CinarScriptEditor.resx">
+      <DependentUpon>CinarScriptEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

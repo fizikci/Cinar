@@ -1254,11 +1254,14 @@ namespace Cinar.Database
                 return tableMappingInfo[entityType];
 
             object[] attribs = entityType.GetCustomAttributes(typeof(TableDetailAttribute), false);
-            if (attribs != null && attribs.Length >= 1)
+            if (attribs != null && attribs.Length >= 1 && !string.IsNullOrEmpty((attribs[0] as TableDetailAttribute).Name))
                 tableMappingInfo[entityType] = this.Tables[(attribs[0] as TableDetailAttribute).Name];
             if (!tableMappingInfo.ContainsKey(entityType))
                 tableMappingInfo[entityType] = this.Tables[entityType.Name];
-            return tableMappingInfo.ContainsKey(entityType) ? tableMappingInfo[entityType] : null;
+            if (tableMappingInfo[entityType] == null)
+                throw new Exception(entityType.Name + " isimli tablo bulunamadı!");
+            return tableMappingInfo[entityType];
+            //return tableMappingInfo.ContainsKey(entityType) ? tableMappingInfo[entityType] : null;
         }
         public Field GetFieldForProperty(PropertyInfo propertyInfo)
         {
@@ -1270,11 +1273,14 @@ namespace Cinar.Database
                 return null;
 
             object[] attribs = propertyInfo.GetCustomAttributes(typeof(FieldDetailAttribute), false);
-            if (attribs != null && attribs.Length >= 1)
+            if (attribs != null && attribs.Length >= 1 && !string.IsNullOrEmpty((attribs[0] as FieldDetailAttribute).Name))
                 fieldMappingInfo[propertyInfo] = table.Fields[(attribs[0] as FieldDetailAttribute).Name];
             if (!fieldMappingInfo.ContainsKey(propertyInfo))
                 fieldMappingInfo[propertyInfo] = table.Fields[propertyInfo.Name];
-            return fieldMappingInfo.ContainsKey(propertyInfo) ? fieldMappingInfo[propertyInfo] : null;
+            if (fieldMappingInfo[propertyInfo] == null)
+                throw new Exception(propertyInfo.ReflectedType.Name + " veya " + propertyInfo.DeclaringType.Name + " isimli tabloya ait " + propertyInfo.Name + " isimli alan bulunamadı!");
+            return fieldMappingInfo[propertyInfo];
+            //return fieldMappingInfo.ContainsKey(propertyInfo) ? fieldMappingInfo[propertyInfo] : null;
         }
         public PropertyInfo GetPropertyInfoForField(Field field)
         {
@@ -1397,7 +1403,6 @@ namespace Cinar.Database
             {
                 case DatabaseProvider.PostgreSQL:
                     throw new Exception("Alter column is not implemented for Postgre SQL!");
-                    break;
                 case DatabaseProvider.MySQL:
                     this.ExecuteNonQuery("alter table [" + field.Table.Name + "] modify column " + GetFieldDDL(field));
                     break;

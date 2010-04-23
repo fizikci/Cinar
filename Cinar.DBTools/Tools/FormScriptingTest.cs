@@ -78,6 +78,12 @@ namespace Cinar.DBTools.Tools
 
         private void btnDeleteSelectedTask_Click(object sender, EventArgs e)
         {
+            if (grid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select a test.");
+                return;
+            }
+
             ScriptingTest task = (ScriptingTest)grid.SelectedRows[0].DataBoundItem;
             if (MessageBox.Show("Are you sure to delete " + task, "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
@@ -136,7 +142,7 @@ namespace Cinar.DBTools.Tools
 
                 test.Result = pret.Output;
 
-                if (pret.Successful && test.Result == "OK")
+                if (pret.Successful && test.Result.Trim() == "OK")
                     row.Cells["Result"].Style.BackColor = Color.Green;
                 else
                     row.Cells["Result"].Style.BackColor = Color.Red;

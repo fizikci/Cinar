@@ -1,0 +1,1194 @@
+<html>
+<head>
+<title>HTTP Made Really Easy</title>
+
+<meta name="description" 
+    content="Tutorial:  Quickly learn how to use HTTP in your network 
+        applications, if you know basic sockets programming.  Covers 
+        HTTP 1.0 and HTTP 1.1.  Includes sample clients in Perl.">
+        
+<meta name="keywords" content="HTTP, programming, sockets, network,
+    learning, learn, tutorial, primer, guide, lesson, teach, quick, 
+    fast, brief, concise, simple, easy, clear, straightforward, examples, 
+    HTTP clients, HTTP servers, HTTP 1.0, HTTP 1.1, HTTP/1.0, HTTP/1.1">
+
+</head>
+
+<body bgcolor="#FFF8E8" link="#0000FF" vlink="#007090" alink="#00A0FF">
+
+<h1>
+<a href="http://www.eff.org/blueribbon.html"><img 
+   border=0 src="/images/blueribbon.gif"
+   height=30 width=18 alt="Blue Ribbon Campaign for Free Speech"></a>
+HTTP Made Really Easy
+</h1>
+
+<h2>A Practical Guide to Writing Clients and Servers</h2>
+
+<p><a href="/">Home</a> &gt;
+   <a href="/easy/">Web Technology Made Really Easy</a> &gt;
+   HTTP Made Really Easy
+   <p><a href="/donations/">Donate</a>
+
+<hr>
+
+<a href="#toc">Table of Contents</a>
+<b>|</b>
+<a href="http_footnotes.html">Footnotes</a>
+
+<hr>
+
+<p>HTTP is the network protocol of the Web.  It is both simple and powerful.  
+Knowing HTTP enables you to write Web browsers, Web servers, 
+automatic page downloaders, link-checkers, and other useful tools.
+
+<p>This tutorial explains the simple, English-based structure of HTTP 
+communication, and teaches you the practical details of writing HTTP clients
+and servers.  It assumes you know basic socket programming. 
+HTTP is simple enough for a beginning sockets programmer, so this 
+page might be a good followup to a 
+<a href="http://world.std.com/~jimf/papers/sockets/sockets.html">sockets 
+tutorial</a>.  This 
+<!-- a href="http://www.auroraonline.com/sock-faq/html/unix-socket-faq.html" -->
+<!-- a href="http://www.cis.ohio-state.edu/hypertext/faq/bngusenet/comp/unix/programmer/_unix-faq%3asocket.html" -->
+<!-- a href="http://www.lcg.org/sock-faq/" -->
+<a href="http://www.developerweb.net/sock-faq/">Sockets FAQ</a>
+(hint: see "Categorized Questions" section at bottom)
+focuses on C, but the underlying concepts are language-independent.
+
+<p>Since you're reading this, you probably already use CGI.
+If not, it makes sense to 
+<a href="http://www.jmarshall.com/easy/cgi/">learn that first</a>.
+
+<p>The whole tutorial is about 15 printed pages long, including
+examples. The first half explains basic HTTP&nbsp;1.0, and the second
+half explains the new requirements and features of HTTP&nbsp;1.1. This
+tutorial doesn't cover everything about HTTP; it explains the basic
+framework, how to comply with the requirements, and where to find out
+more when you need it.  If you plan to use HTTP extensively, you
+should read <a href="#httpspec">the specification</a> as well-- see the
+end of this document for more details.
+
+<p>Before getting started, understand the following two 
+paragraphs:
+
+<p><tt>&lt;LECTURE&gt;</tt>
+<blockquote>
+
+<p><b><i>Writing HTTP or other network programs requires more care
+than programming for a single machine.</i></b>  Of course, you have to 
+follow standards, or no one will understand you.  But even more important
+is the burden you place on other machines.  Write a bad program for
+your own machine, and you waste your own resources (CPU time, bandwidth,
+memory).  Write a bad network program, and you waste other people's 
+resources.  Write a <i>really</i> bad network program, and you waste 
+many thousands of people's resources at the same time.  Sloppy and 
+malicious network programming forces network standards to be modified, 
+made safer but less efficient. So be careful, respectful, and cooperative, 
+for everyone's sake.
+
+<p><b><i>In particular, don't be tempted to write programs that automatically
+follow Web links</i></b> (called <i>robots</i> or <i>spiders</i>)
+before you really know what you're doing.  They can be useful, but a 
+badly-written robot is one of the worst kinds of programs on the Web,
+blindly following a rapidly increasing number of links and quickly draining
+server resources.  If you plan to write anything like a robot, please
+<a href="http://info.webcrawler.com/mak/projects/robots/robots.html">read 
+    more about them</a>.
+There may already be a working program to do what you want.  If you really 
+need to write your own, read these
+<a href="http://info.webcrawler.com/mak/projects/robots/guidelines.html">guidelines</a>.
+Definitely support the current
+<a href="http://info.webcrawler.com/mak/projects/robots/norobots.html">Standard
+    for Robot Exclusion</a>, and
+<a href="http://info.webcrawler.com/mak/projects/robots/exclusion.html">stay
+    tuned</a> for further developments.
+
+</blockquote>
+<p><tt>&lt;/LECTURE&gt;</tt>
+
+<p>OK, enough of that.  Let's get started.
+
+<p><hr><p>
+
+<a name="toc"></a>
+<h1>Table of Contents</h1>
+
+<p><a href="#">Top of Page</a>
+
+<h3>Using HTTP&nbsp;1.0</h3>
+
+<ol>
+<li><a href="#whatis">What is HTTP?</a>
+    <ol>
+    <li><a href="#resources">What are "Resources"?</a>
+    </ol>
+<li><a href="#structure">Structure of HTTP Transactions</a>
+    <ol>
+    <li><a href="#requestline">Initial Request Line</a>
+    <li><a href="#responseline">Initial Response Line (Status Line)</a>
+    <li><a href="#headerlines">Header Lines</a>
+    <li><a href="#messagebody">The Message Body</a>
+    </ol>
+<li><a href="#sample">Sample HTTP Exchange</a>
+<li><a href="#othermethods">Other HTTP Methods, Like HEAD and POST</a>
+    <ol>
+    <li><a href="#headmethod">The HEAD Method</a>
+    <li><a href="#postmethod">The POST Method</a>
+    </ol>
+<li><a href="#proxies">HTTP Proxies</a>
+<li><a href="#tolerant">Being Tolerant of Others</a>
+<li><a href="#conclusion">Conclusion</a>
+</ol>
+
+<h3>Upgrading to HTTP&nbsp;1.1</h3>
+
+<ol>
+<li><a href="#http1.1">HTTP&nbsp;1.1</a>
+<li><a href="#http1.1clients">HTTP&nbsp;1.1 Clients</a>
+    <ol>
+    <li><a href="#http1.1c1">Host: Header</a>
+    <li><a href="#http1.1c2">Chunked Transfer-Encoding</a>
+    <li><a href="#http1.1c3">Persistent Connections and the 
+        "Connection:&nbsp;close" Header</a>
+    <li><a href="#http1.1c4">The "100&nbsp;Continue" Response</a>
+    </ol>
+<li><a href="#http1.1servers">HTTP&nbsp;1.1 Servers</a>
+    <ol>
+    <li><a href="#http1.1s1">Requiring the Host: Header</a>
+    <li><a href="#http1.1s2">Accepting Absolute URL's</a>
+    <li><a href="#http1.1s3">Chunked Transfer-Encoding</a>
+    <li><a href="#http1.1s4">Persistent Connections and the 
+        "Connection:&nbsp;close" Header</a>
+    <li><a href="#http1.1s5">Using the "100&nbsp;Continue" Response</a>
+    <li><a href="#http1.1s6">The Date: Header</a>
+    <li><a href="#http1.1s7">Handling Requests with If-Modified-Since: or 
+        If-Unmodified-Since: Headers</a>
+    <li><a href="#http1.1s8">Supporting the GET and HEAD methods</a>
+    <li><a href="#http1.1s9">Supporting HTTP&nbsp;1.0 Requests</a>
+    </ol>
+</ol>
+
+<h3>Appendix</h3>
+<ol>
+<li><a href="#httpspec">The HTTP Specification</a>
+</ol>
+
+
+<p>Several related topics are discussed on a 
+<a href="http_footnotes.html">"footnotes" page</a>:
+<ol>
+<li><a href="http_footnotes.html#sample">Sample HTTP Client</a>
+<li><a href="http_footnotes.html#getsubmit">Using GET to Submit Query or 
+        Form Data</a>
+<li><a href="http_footnotes.html#urlencoding">URL-encoding</a>
+<li><a href="http_footnotes.html#manually">Manually Experimenting with HTTP</a>
+</ol>
+
+    
+
+<p><hr><p>
+
+<a name="whatis"></a>
+<h2>What is HTTP?</h2>
+
+<p>HTTP stands for <b>Hypertext Transfer Protocol</b>.  It's the network
+protocol used to deliver virtually all files and other data (collectively
+called <i>resources</i>) on the World Wide Web, whether they're HTML files, 
+image files, query results, or anything else.  Usually, HTTP takes place 
+through TCP/IP sockets (and this tutorial ignores other possibilities).  
+
+<p>A browser is an <i>HTTP client</i> because it sends requests to an 
+<i>HTTP server</i> (Web server), which then sends responses back to 
+the client.  The standard (and default) port for HTTP servers 
+to listen on is 80, though they can use any port.
+
+<a name="resources"></a>
+<h3>What are "Resources"?</h3>
+
+<p>HTTP is used to transmit <i>resources</i>, not just files.  A
+resource is some chunk of information that can be identified by a URL
+(it's the <b>R</b> in <b>URL</b>).  The most common kind of resource
+is a file, but a resource may also be a dynamically-generated query
+result, the output of a CGI script, a document that is available in 
+several languages, or something else.
+
+<p>While learning HTTP, it may help to think of a resource as similar to
+a file, but more general.  As a practical matter, almost all HTTP resources 
+are currently either files or server-side script output.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="structure"></a>
+<h2>Structure of HTTP Transactions</h2>
+
+<p>Like most network protocols, HTTP uses the client-server model:
+An <i>HTTP client</i> opens a connection and sends a <i>request message</i> 
+to an <i>HTTP server</i>; the server then returns a <i>response message</i>,
+usually containing the resource that was requested.  After delivering
+the response, the server closes the connection (making HTTP a 
+<i>stateless</i> protocol, i.e. not maintaining any connection information
+between transactions).
+
+<p>The format of the request and response messages are similar, and
+English-oriented.  Both kinds of messages consist of: 
+<ul>
+<li>an initial line, 
+<li>zero or more header lines, 
+<li>a blank line (i.e. a CRLF by itself), and 
+<li>an optional message body (e.g. a file, or query data, or query output).  
+</ul>
+
+<p>Put another way, the format of an HTTP message is:
+
+<blockquote><pre>
+&lt;initial line, different for request vs. response&gt;
+Header1: value1
+Header2: value2
+Header3: value3
+
+&lt;optional message body goes here, like file contents or query data;
+ it can be many lines long, or even binary data $&*%@!^$@&gt;
+</pre></blockquote>
+
+<p>Initial lines and headers should end in CRLF, though you should
+gracefully handle lines ending in just LF.  (More exactly, CR and LF
+here mean ASCII values 13 and 10, even though some platforms may use
+different characters.)
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+<a name="requestline"></a>
+<h3>Initial Request Line</h3>
+
+<p>The initial line is different for the request than for the response.
+A request line has three parts, separated by spaces: a <i>method</i> name, 
+the local path of the requested resource, and the version of HTTP being used.
+A typical request line is:
+
+<blockquote><pre>
+GET /path/to/file/index.html HTTP/1.0
+</pre></blockquote>
+
+<p>Notes:
+<ul>
+<li><b>GET</b> is the most common HTTP method; it says "give me this resource".  
+    Other methods include <b>POST</b> and <b>HEAD</b>-- more on those 
+    <a href="#othermethods">later</a>.
+    Method names are always uppercase.
+<li>The path is the part of the URL after the host name, also called the
+    <i>request URI</i> (a URI is like a URL, but more general).
+<li>The HTTP version always takes the form "<b>HTTP/x.x</b>", 
+    uppercase.
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+<a name="responseline"></a>
+<h3>Initial Response Line (Status Line)</h3>
+
+<p>The initial response line, called the <i>status line</i>, also has 
+three parts separated by spaces: the HTTP version, a
+<i>response status code</i> that gives the result of the request, 
+and an English <i>reason phrase</i> describing the status code.  
+Typical status lines are:
+
+<blockquote><pre>
+HTTP/1.0 200 OK
+</pre></blockquote>
+
+<p>or
+
+<blockquote><pre>
+HTTP/1.0 404 Not Found
+</pre></blockquote>
+
+<p>Notes:
+<ul>
+<li>The HTTP version is in the same format as in the request line,
+    "<b>HTTP/x.x</b>".
+<li>The status code is meant to be computer-readable; the reason
+    phrase is meant to be human-readable, and may vary.
+<li>The status code is a three-digit integer, and the first digit identifies
+    the general category of response:
+    <ul>
+    <li><b>1xx</b> indicates an informational message only
+    <li><b>2xx</b> indicates success of some kind
+    <li><b>3xx</b> redirects the client to another URL
+    <li><b>4xx</b> indicates an error on the client's part
+    <li><b>5xx</b> indicates an error on the server's part
+    </ul>
+</ul>
+
+The most common status codes are:
+<dl>
+<dt><b><tt>200 OK</tt></b>
+<dd>The request succeeded, and the resulting resource (e.g. file or script 
+    output) is returned in the message body.
+<dt><b><tt>404 Not Found</tt></b>
+<dd>The requested resource doesn't exist.
+<dt><b><tt>301 Moved Permanently
+    <br>302 Moved Temporarily
+    <br>303 See Other</tt></b> <i>(HTTP&nbsp;1.1 only)</i>
+<dd>The resource has moved to another URL (given by the 
+    <b><tt>Location:</tt></b> response header), and should be automatically 
+    retrieved by the client.  This is often used by a CGI script to redirect 
+    the browser to an existing file.
+<dt><b><tt>500 Server Error</tt></b>
+<dd>An unexpected server error.  The most common cause is a server-side 
+    script that has bad syntax, fails, or otherwise can't run correctly.
+</dl>
+
+<p>A complete list of status codes is in
+<a href="#httpspec">the HTTP specification</a>
+(section 9 for HTTP&nbsp;1.0, and section 10 for HTTP&nbsp;1.1).
+
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+<a name="headerlines"></a>
+<h3>Header Lines</h3>
+
+<p>Header lines provide information about the request or response, or 
+about the object sent in the message body.
+
+<p>The header lines are in the usual text header format, which is:  one line
+per header, of the form "<b><tt>Header-Name:&nbsp;value</tt></b>", ending
+with CRLF.  It's the same format used for email and news postings, defined in 
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc822.html">RFC&nbsp;822</a>,
+section 3.  Details about RFC&nbsp;822 header lines:
+<ul>
+<li>As noted above, they should end in CRLF, but you should handle LF
+    correctly.
+<li>The header name is not case-sensitive (though the value may be).
+<li>Any number of spaces or tabs may be between the ":" and the value.
+<li>Header lines beginning with space or tab are actually part of the
+    previous header line, folded into multiple lines for easy reading.
+</ul>
+
+<p>Thus, the following two headers are equivalent:
+
+<blockquote><pre>
+Header1: some-long-value-1a, some-long-value-1b
+</pre></blockquote>
+
+<blockquote><pre>
+HEADER1:    some-long-value-1a,
+            some-long-value-1b
+</pre></blockquote>
+
+<p>HTTP&nbsp;1.0 defines 16 headers, though none are required. 
+HTTP&nbsp;1.1 defines 46 headers, and one (<b><tt>Host:</tt></b>) is required in
+requests.
+For Net-politeness, consider including these headers in your requests:
+<ul>
+<li>The <b><tt>From:</tt></b> header gives the email address of
+    whoever's making the request, or running the program doing so.
+    (This <i>must</i> be user-configurable, for privacy concerns.)
+<li>The <b><tt>User-Agent:</tt></b> header identifies the program that's
+    making the request, in the form "<b>Program-name/x.xx</b>", where 
+    <b>x.xx</b> is the (mostly) alphanumeric version of the program.
+    For example, Netscape 3.0 sends the header 
+    "<b><tt>User-agent:&nbsp;Mozilla/3.0Gold</tt></b>".
+</ul>
+
+<p>These headers help webmasters troubleshoot problems.  They also 
+reveal information about the user.  When you decide which headers to 
+include, you must balance the webmasters' logging needs against your users'
+needs for privacy.
+
+<p>If you're writing servers, consider including these headers in your 
+responses:
+<ul>
+<li>The <b><tt>Server:</tt></b> header is analogous to the 
+    <b><tt>User-Agent:</tt></b> header:  it identifies the server software
+    in the form "<b>Program-name/x.xx</b>".  For example, one beta version
+    of <a href="http://www.apache.org/">Apache's</a> server returns 
+    "<b><tt>Server:&nbsp;Apache/1.2b3-dev</tt></b>".
+<li>The <b><tt>Last-Modified:</tt></b> header gives the modification date
+    of the resource that's being returned.  It's used in caching and
+    other bandwidth-saving activities.  Use Greenwich Mean Time, in the format
+    <blockquote><pre>
+    Last-Modified: Fri, 31 Dec 1999 23:59:59 GMT
+    </pre></blockquote>
+    <!-- section 14.29 of HTTP 1.1 -->
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="messagebody"></a>
+<h3>The Message Body</h3>
+
+<p>An HTTP message may have a body of data sent after the header
+lines.  In a response, this is where the requested resource is returned
+to the client (the most common use of the message body), or perhaps
+explanatory text if there's an error.  In a request, this is where
+user-entered data or uploaded files are sent to the server.
+
+<p>If an HTTP message includes a body, there are usually header lines in the
+message that describe the body.  In particular, 
+<ul>
+<li>The <b><tt>Content-Type:</tt></b> header gives the MIME-type of the data in
+    the body, such as <b><tt>text/html</tt></b> or <b><tt>image/gif</tt></b>.
+<li>The <b><tt>Content-Length:</tt></b> header gives the number of bytes 
+    in the body.
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="sample"></a>
+<h2>Sample HTTP Exchange</h2>
+
+<p>To retrieve the file at the URL
+<blockquote><pre>
+http://www.somehost.com/path/file.html
+</pre></blockquote>
+
+<p>first open a socket to the host <b>www.somehost.com</b>, port 80
+(use the default port of 80 because none is specified in the URL).
+Then, send something like the following through the socket:
+
+<blockquote><pre>
+GET /path/file.html HTTP/1.0
+From: someuser@jmarshall.com
+User-Agent: HTTPTool/1.0
+[blank line here]
+</pre></blockquote>
+
+<p>The server should respond with something like the following, sent
+back through the same socket:
+
+<blockquote><pre>
+HTTP/1.0 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/html
+Content-Length: 1354
+
+&lt;html&gt;
+&lt;body&gt;
+&lt;h1&gt;Happy New Millennium!&lt;/h1&gt;
+(more file contents)
+  .
+  .
+  .
+&lt;/body&gt;
+&lt;/html&gt;
+</pre></blockquote>
+
+After sending the response, the server closes the socket.
+
+<p>To familiarize yourself with requests and responses,
+<a href="http_footnotes.html#manually">manually experiment</a> with HTTP 
+using telnet.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="othermethods"></a>
+<h2>Other HTTP Methods, Like HEAD and POST</h2>
+
+<p>Besides GET, the two most commonly used methods are HEAD and POST.
+
+
+<a name="headmethod"></a>
+<h3>The HEAD Method</h3>
+
+<p>A HEAD request is just like a GET request, except it asks the server
+to return the response headers only, and not the actual resource (i.e. no
+message body).  This is useful to check characteristics of a resource 
+without actually downloading it, thus saving bandwidth.  Use HEAD when 
+you don't actually need a file's contents.
+
+<p>The response to a HEAD request must <i>never</i> contain a message body,
+just the status line and headers.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+<a name="postmethod"></a>
+<h3>The POST Method</h3>
+
+<p>A POST request is used to send data to the server to be processed
+in some way, like by a CGI script.  A POST request is different from a 
+GET request in the following ways:
+<ul>
+<li>There's a block of data sent with the request, in the message body.
+    There are usually extra headers to describe this message body, like
+    <b><tt>Content-Type:</tt></b> and <b><tt>Content-Length:</tt></b>.
+<li>The <i>request URI</i> is not a resource to retrieve; it's usually a 
+    program to handle the data you're sending.
+<li>The HTTP response is normally program output, not a static file.
+</ul>
+
+<p>The most common use of POST, by far, is to submit HTML form data to CGI
+scripts.  In this case, the <b><tt>Content-Type:</tt></b> header is usually
+<b><tt>application/x-www-form-urlencoded</tt></b>, and the 
+<b><tt>Content-Length:</tt></b> header gives the length of the URL-encoded 
+form data (here's a
+<a href="http_footnotes.html#urlencoding">note on URL-encoding</a>).  
+The CGI script receives the message body through STDIN, and decodes it.
+Here's a typical form submission, using POST:
+<blockquote><pre>
+POST /path/script.cgi HTTP/1.0
+From: frog@jmarshall.com
+User-Agent: HTTPTool/1.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 32
+
+home=Cosby&favorite+flavor=flies
+</pre></blockquote>
+
+<p>You can use a POST request to send whatever data you want, not just 
+form submissions.  Just make sure the sender and the receiving program
+agree on the format.
+
+<p>The GET method can also be used to submit forms.  The form data is
+<a href="http_footnotes.html#urlencoding">URL-encoded</a>
+and appended to the request URI.  Here are
+<a href="http_footnotes.html#getsubmit">more details</a>.
+
+<p>If you're writing HTTP servers that support CGI scripts, you should
+read the 
+<a href= "http://hoohoo.ncsa.uiuc.edu/cgi/">NCSA's CGI definition</a>
+if you haven't already, especially which
+<a href="http://hoohoo.ncsa.uiuc.edu/cgi/env.html">environment variables</a>
+you need to pass to the scripts.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="proxies"></a>
+<h2>HTTP Proxies</h2>
+
+<p>An <i>HTTP proxy</i> is a program that acts as an intermediary between
+a client and a server.  It receives requests from clients, and forwards 
+those requests to the intended servers.  The responses pass back through it
+in the same way.  Thus, a proxy has functions of both a client and a server.
+
+<p>Proxies are commonly used in firewalls, for LAN-wide caches, or in other
+situations.  If you're writing proxies, read the 
+<a href="#httpspec">HTTP specification</a>;
+it contains details about proxies not covered in this tutorial.
+
+<p>When a client uses a proxy, it typically sends all requests to 
+that proxy, instead of to the servers in the URLs.  Requests to a proxy 
+differ from normal requests in one way:  in the first line, they use the 
+complete URL of the resource being requested, instead of just the path.  
+For example,
+<blockquote><pre>
+GET http://www.somehost.com/path/file.html HTTP/1.0
+</pre></blockquote>
+
+<p>That way, the proxy knows which server to forward the request to (though
+the proxy itself may use another proxy).
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="tolerant"></a>
+<h2>Being Tolerant of Others</h2>
+<!-- section 19.3 -->
+
+<p>As the saying goes (in network programming, anyway), "Be strict in what 
+you send and tolerant in what you receive."  Other clients and servers you
+interact with may have minor flaws in their messages, but you should try to
+work gracefully with them.  In particular, the 
+<a href="#httpspec">HTTP specification</a> suggests the 
+following:
+<ul>
+<li>Even though header lines should end with CRLF, someone might use a 
+    single LF instead.  Accept either CRLF or LF.
+<li>The three fields in the initial message line should be separated by
+    a single space, but might instead use several spaces, or tabs.  Accept 
+    any number of spaces or tabs between these fields.
+</ul>
+
+<p>The specification has other suggestions too, like how to handle varying
+date formats.  If your program interprets dates from other programs, read
+the "Tolerant Applications" section of the specification.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="conclusion"</a>
+<h2>Conclusion</h2>
+
+<p>That's the basic structure of HTTP.  If you understand everything so far,
+you have a good overview of HTTP communication, and should be able to write 
+simple HTTP&nbsp;1.0 programs.  See this
+<a href="http_footnotes.html#sample">example</a> to get started.
+Again, before you do anything heavy-duty, read 
+<a href="#httpspec">the specification</a>.
+
+<p>The rest of this document tells how to upgrade your clients and servers 
+to use HTTP&nbsp;1.1.  There is a list of new client requirements, and a 
+list of new server requirements.  You can stop here if HTTP&nbsp;1.0
+satisfies your current needs (though you'll probably need HTTP&nbsp;1.1 in 
+the future).
+
+<p><i>Note:  As of early 1997, the Web is moving from HTTP&nbsp;1.0 to 
+HTTP&nbsp;1.1.  Whenever practical, use HTTP&nbsp;1.1.  It's more efficient 
+overall, and by using it, you'll help the Web perform better for everyone.</i>
+
+
+
+<p><hr><p>
+
+<a name="http1.1"></a>
+<h1>HTTP&nbsp;1.1</h1>
+
+<p>Like many protocols, HTTP is constantly evolving.  HTTP&nbsp;1.1 has 
+recently been defined, to address new needs and overcome shortcomings 
+of HTTP&nbsp;1.0.  Generally speaking, it is a superset of HTTP&nbsp;1.0.
+Improvements include:
+<ul>
+<li>Faster response, by allowing multiple transactions to take place
+    over a single <i>persistent connection</i>.
+<li>Faster response and great bandwidth savings, by adding cache support.
+<li>Faster response for dynamically-generated pages, by supporting
+    <i>chunked encoding</i>, which allows a response to be sent before
+    its total length is known.
+<li>Efficient use of IP addresses, by allowing multiple domains to be 
+    served from a single IP address.
+</ul>
+
+<p>HTTP&nbsp;1.1 requires a few extra things from both clients and servers.
+The next two sections detail how to make <a href="#http1.1clients">clients</a> 
+and <a href="#http1.1servers">servers</a> comply with HTTP&nbsp;1.1.  If 
+you're only writing clients, you can skip the section on servers.  If you're 
+writing servers, read both sections.
+
+<p>Only <i>requirements</i> for HTTP&nbsp;1.1 compliance are described here.  
+HTTP&nbsp;1.1 has many optional features you may find useful; read
+<a href="#httpspec">the specification</a> to learn more.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="http1.1clients"></a>
+<h2>HTTP&nbsp;1.1 Clients</h2>
+
+<p>To comply with HTTP&nbsp;1.1, clients must
+<ul>
+<li><a href="#http1.1c1">include the <b><tt>Host:</tt></b> header with each 
+    request</a>
+<li><a href="#http1.1c2">accept responses with <i>chunked</i> data</a>
+<li><a href="#http1.1c3">either support <i>persistent connections</i>, or include the
+    "<b><tt>Connection:&nbsp;close</tt></b>" header with each request</a>
+<li><a href="#http1.1c4">handle the "<b><tt>100&nbsp;Continue</tt></b>" 
+    response</a>
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+<a name="http1.1c1"></a>
+<h3>Host: Header</h3>
+
+<p>Starting with HTTP&nbsp;1.1, one server at one IP address can be 
+<i>multi-homed</i>, i.e. the home of several Web domains.  For example, 
+"www.host1.com" and "www.host2.com" can live on the same server.  
+
+<p>Several domains living on the same server is like several people 
+sharing one phone:  a caller knows who they're calling for, but whoever 
+answers the phone doesn't.  Thus, every HTTP request must specify which 
+host name (and possibly port) the request is intended for, with the 
+<b><tt>Host:</tt></b> header.  A complete HTTP&nbsp;1.1 request might be
+<blockquote><pre>
+GET /path/file.html HTTP/1.1
+Host: www.host1.com:80
+[blank line here]
+</pre></blockquote>
+
+except the "<tt>:80</tt>" isn't required, since that's the default HTTP port.
+
+<p><b><tt>Host:</tt></b> is the only required header in an HTTP&nbsp;1.1 request.
+<i>It's also the most urgently needed new feature in HTTP&nbsp;1.1.</i>  Without it,
+each host name requires a unique IP address, and we're
+quickly running out of IP addresses with the explosion of new domains.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1c2"></a>
+<h3>Chunked Transfer-Encoding</h3>
+
+<p>If a server wants to start sending a response before knowing its total
+length (like with long script output), it might use the simple
+<i>chunked transfer-encoding</i>, which breaks the complete response into
+smaller chunks and sends them in series.  You can identify such a response 
+because it contains the "<b><tt>Transfer-Encoding:&nbsp;chunked</tt></b>" header.
+All HTTP&nbsp;1.1 clients must be able to receive chunked messages.
+
+<p>A chunked message body contains a series of <i>chunks</i>, followed by a 
+line with "0" (zero), followed by optional footers (just like headers), and a 
+blank line.  Each chunk consists of two parts: 
+<ul>
+<li>a line with the size of the chunk data, in hex, possibly followed
+    by a semicolon and extra parameters you can ignore (none are currently
+    standard), and ending with CRLF.
+<li>the data itself, followed by CRLF.
+</ul>
+
+<p>So a chunked response might look like the following:
+<blockquote><pre>
+HTTP/1.1 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/plain
+Transfer-Encoding: chunked
+
+1a; ignore-stuff-here
+abcdefghijklmnopqrstuvwxyz
+10
+1234567890abcdef
+0
+some-footer: some-value
+another-footer: another-value
+[blank line here]
+</pre></blockquote>
+
+<p>Note the blank line after the last footer.  The length of the
+text data is 42 bytes (1a&nbsp;+&nbsp;10, in hex), and the data itself is
+<b>abcdefghijklmnopqrstuvwxyz1234567890abcdef</b>.  The footers should be
+treated like headers, as if they were at the top of the response.
+
+<p>The chunks can contain any binary data, and may be much larger than the 
+examples here.  The size-line parameters are rarely used, but you 
+should at least ignore them correctly.  Footers are also rare, but might
+be appropriate for things like checksums or digital signatures.
+
+<p>For comparison, here's the equivalent to the above response, without 
+using chunked encoding:
+<blockquote><pre>
+HTTP/1.1 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/plain
+Content-Length: 42
+some-footer: some-value
+another-footer: another-value
+
+abcdefghijklmnopqrstuvwxyz1234567890abcdef
+</pre></blockquote>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1c3"></a>
+<h3>Persistent Connections and the "Connection:&nbsp;close" Header</h3>
+<!-- sections 8.1, 14.10 -->
+
+<p>In HTTP&nbsp;1.0 and before, TCP connections are closed after each request 
+and response, so each resource to be retrieved requires its own connection.  
+Opening and closing TCP connections takes a substantial amount of CPU time, 
+bandwidth, and memory.  In practice, most Web pages consist of several 
+files on the same server, so much can be saved by allowing several requests 
+and responses to be sent through a single <i>persistent connection</i>.
+
+<p>Persistent connections are the default in HTTP&nbsp;1.1, so nothing special
+is required to use them.  Just open a connection and send several requests 
+in series (called <i>pipelining</i>), and read the responses in the same 
+order as the requests were sent.  If you do this, be very careful to read 
+the correct length of each response, to separate them correctly.
+
+<p>If a client includes the "<b><tt>Connection:&nbsp;close</tt></b>" header 
+in the request, then the connection will be closed after the corresponding 
+response.  <b>Use this if you don't support persistent connections</b>, 
+or if you know a request will be the last on its connection.  Similarly, 
+if a response contains this header, then the server will close the 
+connection following that response, and the client shouldn't send any 
+more requests through that connection.
+
+<p>A server might close the connection before all responses are sent, so
+a client must keep track of requests and resend them as needed.  When 
+resending, don't pipeline the requests until you know the connection is 
+persistent.  Don't pipeline at all if you know the server won't support 
+persistent connections (like if it uses HTTP&nbsp;1.0, based on a previous 
+response).
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1c4"></a>
+<h3>The "100&nbsp;Continue" Response</h3>
+
+<p>During the course of an HTTP&nbsp;1.1 client sending a request to a server,
+the server might respond with an interim "<b><tt>100&nbsp;Continue</tt></b>"
+response.  This means the server has received the first part of the request,
+and can be used to aid communication over slow links.  In any case, all
+HTTP&nbsp;1.1 clients must handle the 100 response correctly (perhaps 
+by just ignoring it).
+
+<p>The "<b><tt>100&nbsp;Continue</tt></b>" response is structured like 
+any HTTP response, i.e. consists of a status line, optional headers, 
+and a blank line.  Unlike other responses, it is always followed by 
+another complete, final response.
+
+<p>So, further extending the last example, the full data that comes
+back from the server might consist of two responses in series, like
+
+<blockquote><pre>
+HTTP/1.1 100 Continue
+
+HTTP/1.1 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/plain
+Content-Length: 42
+some-footer: some-value
+another-footer: another-value
+
+abcdefghijklmnoprstuvwxyz1234567890abcdef
+</pre></blockquote>
+
+<p>To handle this, a simple HTTP&nbsp;1.1 client might read one response from the 
+socket; if the status code is 100, discard the first response and read the 
+next one instead.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="http1.1servers"></a>
+<h2>HTTP&nbsp;1.1 Servers</h2>
+
+<p>To comply with HTTP&nbsp;1.1, servers must:
+<ul>
+<li><a href="#http1.1s1">require the <b><tt>Host:</tt></b> header from 
+    HTTP&nbsp;1.1 clients</a>
+<li><a href="#http1.1s2">accept absolute URL's in a request</a>
+<li><a href="#http1.1s3">accept requests with <i>chunked</i> data</a>
+<li><a href="#http1.1s4">either support <i>persistent connections</i>, or 
+    include the "<b><tt>Connection:&nbsp;close</tt></b>" header with each 
+    response</a>
+<li><a href="#http1.1s5">use the "<b><tt>100&nbsp;Continue</tt></b>" response 
+    appropriately</a>
+<li><a href="#http1.1s6">include the <b><tt>Date:</tt></b> header in each 
+    response</a>
+<li><a href="#http1.1s7">handle requests with <b><tt>If-Modified-Since:</tt></b>
+    or <b><tt>If-Unmodified-Since:</tt></b> headers</a>
+<li><a href="#http1.1s8">support at least the GET and HEAD methods</a>
+<li><a href="#http1.1s9">support HTTP&nbsp;1.0 requests</a>
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s1"></a>
+<h3>Requiring the Host: Header</h3>
+<!-- section 14.23 -->
+
+<p>Because of the urgency of implementing the new <b><tt>Host:</tt></b> 
+header, servers are not allowed to tolerate HTTP&nbsp;1.1 requests without it.  
+If a server receives such a request, it must return a
+"<b><tt>400&nbsp;Bad&nbsp;Request</tt></b>" response, like
+
+<blockquote><pre>
+HTTP/1.1 400 Bad Request
+Content-Type: text/html
+Content-Length: 111
+
+&lt;html&gt;&lt;body&gt;
+&lt;h2&gt;No Host: header received&lt;/h2&gt;
+HTTP&nbsp;1.1 requests must include the Host: header.
+&lt;/body&gt;&lt;/html&gt;
+</pre></blockquote>
+
+<p>This requirement applies <i>only</i> to clients using HTTP&nbsp;1.1, not
+any future version of HTTP.
+If the request uses an HTTP version later than 1.1, the server can
+accept an absolute URL instead of a <b><tt>Host:</tt></b> header (see 
+next section).  
+If the request uses HTTP&nbsp;1.0, the server may accept the request without
+any host identification.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s2"></a>
+<h3>Accepting Absolute URL's</h3>
+<!-- section 5.1.2 -->
+
+<p>The <b><tt>Host:</tt></b> header is actually an interim solution to
+the problem of host identification.  In future versions of HTTP, 
+requests will use an absolute URL instead of a pathname, like
+<blockquote><pre>
+GET http://www.somehost.com/path/file.html HTTP/1.2
+</pre></blockquote>
+
+<p>To enable this protocol transition, HTTP&nbsp;1.1 servers must accept this 
+form of request, even though HTTP&nbsp;1.1 clients won't send them.  The server 
+must still report an error if an HTTP&nbsp;1.1 client leaves out
+the <b><tt>Host:</tt></b> header, as described in the 
+<a href="#http1.1s1">previous section</a>.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s3"></a>
+<h3>Chunked Transfer-Encoding</h3>
+<!-- section 3.6 -->
+
+<p>Just as HTTP&nbsp;1.1 clients must accept chunked responses, servers must
+accept chunked requests (an unlikely scenario, but possible).  See the 
+earlier section on 
+<a href="#http1.1c2">HTTP&nbsp;1.1 Clients</a> 
+for details of the chunked data format.
+
+<p>Servers aren't required to generate chunked messages; they just have to
+be able to receive them.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s4"></a>
+<h3>Persistent Connections and the "Connection:&nbsp;close" Header</h3>
+<!-- sections 8.1, 14.10 -->
+
+<p>If an HTTP&nbsp;1.1 client sends multiple requests through a single connection, 
+the server should send responses back in the same order as the requests--
+this is all it takes for a server to support persistent connections.
+
+<p>If a request includes the "<b><tt>Connection:&nbsp;close</tt></b>" header, 
+that request is the final one for the connection and the server should 
+close the connection after sending the response.  Also, the server should
+close an idle connection after some timeout period (can be anything;
+10 seconds is fine).
+
+<p>If you don't want to support persistent connections, include the 
+"<b><tt>Connection:&nbsp;close</tt></b>" header in the response.  Use this 
+header whenever you want to close the connection, even if not all requests 
+have been fulfilled.  The header says that the connection will be closed 
+after the current response, and a valid HTTP&nbsp;1.1 client will handle it
+correctly.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s5"></a>
+<h3>Using the "100&nbsp;Continue" Response</h3>
+
+<p>As described in the section on 
+<a href="#http1.1c4">HTTP&nbsp;1.1 Clients</a>, 
+this response exists to help deal with slow links.
+
+<p>When an HTTP&nbsp;1.1 server receives the first line of an HTTP&nbsp;1.1
+(or later) request, it must respond with either 
+"<b><tt>100&nbsp;Continue</tt></b>" or an error.  If it sends the 
+"<b><tt>100&nbsp;Continue</tt></b>" response, it must also send another, 
+final response, once the request has been processed.  The 
+"<b><tt>100&nbsp;Continue</tt></b>" response requires no headers, but must 
+be followed by the usual blank line, like:
+
+<blockquote><pre>
+HTTP/1.1 100 Continue
+[blank line here]
+[another HTTP response will go here]
+</pre></blockquote>
+
+<p>Don't send "<b><tt>100&nbsp;Continue</tt></b>" to HTTP&nbsp;1.0 clients,
+since they don't know how to handle it.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s6"></a>
+<h3>The Date: Header</h3>
+<!-- section 14.19 -->
+
+<p>Caching is an important improvement in HTTP&nbsp;1.1, and can't work
+without timestamped responses.  So, servers must timestamp every response
+with a <b><tt>Date:</tt></b> header containing the current time, in the form
+<blockquote><pre>
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+</pre></blockquote>
+
+<p>All responses except those with 100-level status (but including error 
+responses) must include the <b><tt>Date:</tt></b> header.
+
+<p>All time values in HTTP use Greenwich Mean Time.
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s7"></a>
+<h3>Handling Requests with If-Modified-Since: or If-Unmodified-Since: 
+    Headers</h3>
+<!-- sections 14.24 and 14.28 -->
+    
+<p>To avoid sending resources that don't need to be sent, thus saving 
+bandwidth, HTTP&nbsp;1.1 defines the <b><tt>If-Modified-Since:</b></tt> and 
+<b><tt>If-Unmodified-Since:</b></tt> request headers.  
+The former says "only send the resource if it has changed since this date"; 
+the latter says the opposite.  Clients aren't required to use them, but 
+HTTP&nbsp;1.1 servers are required to honor requests that do use them.
+
+<p>Unfortunately, due to earlier HTTP versions, 
+the date value may be in any of three possible formats:
+<blockquote><pre>
+If-Modified-Since:  Fri, 31 Dec 1999 23:59:59 GMT
+If-Modified-Since:  Friday, 31-Dec-99 23:59:59 GMT
+If-Modified-Since:  Fri Dec 31 23:59:59 1999
+</pre></blockquote>
+
+<p>Again, all time values in HTTP use Greenwich Mean Time (though try to be 
+tolerant of non-GMT times).  If a date with a two-digit year seems to be more
+than 50 years in the future, treat it as being in the past-- this
+helps with the millennium bug.  In fact, do this with any date handling in
+HTTP&nbsp;1.1.
+
+<p><i>Although servers must accept all three date formats, HTTP&nbsp;1.1 
+clients and servers must only generate the first kind.</i>
+
+<p>If the date in either of these headers is invalid, or is in the future, 
+ignore the header.
+
+<p>If, without the header, the request would result in an unsuccessful
+(non-200-level) status code, ignore the header and send the non-200-level 
+response.  In other words, only apply these headers when you know the 
+resource would otherwise be sent.
+
+<p>The <b><tt>If-Modified-Since:</b></tt> header is used with a GET
+request.  If the requested resource has been modified since the given date, 
+ignore the header and return the resource as you normally would.  
+Otherwise, return a "<b><tt>304&nbsp;Not&nbsp;Modified</tt></b>" response, 
+including the <b><tt>Date:</tt></b> header and no message body, like
+<blockquote><pre>
+HTTP/1.1 304 Not Modified
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+[blank line here]
+</pre></blockquote>
+
+<p>The <b><tt>If-Unmodified-Since:</b></tt> header is similar, but can be
+used with any method.  If the requested resource has <i>not</i> been
+modified since the given date, ignore the header and return the resource as 
+you normally would.  Otherwise, return a 
+"<b><tt>412&nbsp;Precondition&nbsp;Failed</tt></b>" response, like
+<blockquote><pre>
+HTTP/1.1 412 Precondition Failed
+[blank line here]
+</pre></blockquote>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s8"></a>
+<h3>Supporting the GET and HEAD methods</h3>
+<!-- section 5.1.1 -->
+
+<p>To comply with HTTP&nbsp;1.1, a server must support at least the GET and HEAD
+methods.  If you're handling CGI scripts, you should probably support the
+POST method too.  
+
+<p>Four other methods (PUT, DELETE, OPTIONS, and TRACE) are defined in 
+HTTP&nbsp;1.1, but are rarely used.  If a client requests a method you don't
+support, respond with "<b><tt>501&nbsp;Not&nbsp;Implemented</tt></b>", like
+<blockquote><pre>
+HTTP/1.1 501 Not Implemented
+[blank line here]
+</pre></blockquote>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<a name="http1.1s9"></a>
+<h3>Supporting HTTP&nbsp;1.0 Requests</h3>
+
+<p>To be compatible with older browsers, HTTP&nbsp;1.1 servers must support
+HTTP&nbsp;1.0 requests.  In particular, when a request uses HTTP&nbsp;1.0 
+(as identified in the initial request line),
+<ul>
+<li>don't require the <b><tt>Host:</b></tt> header, and
+<li>don't send the "<b><tt>100&nbsp;Continue</tt></b>" response.
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr><p>
+
+<a name="httpspec"></a>
+<h1>The HTTP Specification</h1>
+
+<p>If you plan to do anything elaborate in HTTP, read the
+official specification.  HTTP&nbsp;1.0 was never made an official 
+Internet standard, but the <i>de facto</i> standard is described in 
+<a href="http://www.ics.uci.edu/pub/ietf/http/rfc1945.html">RFC&nbsp;1945</a>.
+HTTP&nbsp;1.1 was developed by a 
+<a href="http://www.ics.uci.edu/pub/ietf/http/">working group</a> of the 
+<a href="http://www.ietf.org">IETF</a>, openly gathering input from many 
+sources before reaching an approximate consensus.  The resulting specification
+is <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616</a>,
+released in June 1999.
+
+
+<p>These documents are available in various formats:
+<ul>
+<li><b>HTTP&nbsp;1.0 (RFC&nbsp;1945)--</b>
+    <a href="http://www.ics.uci.edu/pub/ietf/http/rfc1945.html">HTML</a>,
+    <a href="http://www.ics.uci.edu/pub/ietf/http/rfc1945.txt">text</a>, and
+    <a href="http://www.ics.uci.edu/pub/ietf/http/rfc1945.ps.gz">gzip'd PostScript</a>
+<li><b>HTTP&nbsp;1.1 (RFC&nbsp;2616)--</b>
+    <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">HTML</a>,
+    <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.txt">text</a>,
+    <a href="ftp://ftp.isi.edu/in-notes/rfc2616.ps">PostScript</a>, and
+    <a href="http://www.w3.org/Protocols/HTTP/1.1/rfc2616.pdf">PDF</a>.
+</ul>
+
+<p>Download and print the version you'll be using, for reference and
+bedtime reading.
+
+<p>The <a href="http://www.w3.org/">World Wide Web Consortium</a> 
+has a
+<a href="http://www.w3.org/Protocols/">page devoted to HTTP</a>
+including news and updates, and a page listing
+<a href="http://www.w3.org/Protocols/Specs.html">HTTP specifications,
+drafts, and reports</a>.
+
+<p>Other RFC's you might find useful:
+<ul>
+<li><a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc822.html">RFC 822</a>--</b>
+        structure of Internet text messages, including header fields
+<li><a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2396.html">RFC 2396</a>--
+        definition of URL/URI syntax (replaces 
+        <a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc1738.html">RFC 1738</a>
+        and
+        <a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc1808.html">RFC 1808</a>)
+
+<li><a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc1521.html">RFC 1521</a>--</b>
+        definition of MIME and of MIME types
+</ul>
+
+<p><a href="#toc">Return to Table of Contents</a>
+
+
+<p><hr>
+
+&copy; 1997 
+<a href="mailto:james@jmarshall.com?subject=HTTP Made Really Easy">James Marshall</a>
+(comments welcome)
+
+<p>
+<table width="100%"><tr>
+    <td><i>Last (significantly) modified: August 15, 1997</i></td>
+    <td align=right><i>http://www.jmarshall.com/easy/http/</i></td>
+</tr></table>
+
+
+<p>
+</body>
+</html>

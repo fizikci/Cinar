@@ -34,11 +34,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.txtCode = new System.Windows.Forms.RichTextBox();
             this.txtFileNameFormat = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtCategory = new System.Windows.Forms.TextBox();
+            this.txtCode = new Cinar.Scripting.CinarScriptEditor();
             this.SuspendLayout();
             // 
             // txtName
@@ -91,22 +91,6 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // txtCode
-            // 
-            this.txtCode.AcceptsTab = true;
-            this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCode.DetectUrls = false;
-            this.txtCode.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtCode.Location = new System.Drawing.Point(15, 173);
-            this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(500, 259);
-            this.txtCode.TabIndex = 6;
-            this.txtCode.Text = "";
-            this.txtCode.WordWrap = false;
-            this.txtCode.TextChanged += new System.EventHandler(this.txtCode_TextChanged);
-            // 
             // txtFileNameFormat
             // 
             this.txtFileNameFormat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -145,16 +129,28 @@
             this.txtCategory.TabIndex = 9;
             this.txtCategory.TextChanged += new System.EventHandler(this.txtCategory_TextChanged);
             // 
+            // txtCode
+            // 
+            this.txtCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCode.IsReadOnly = false;
+            this.txtCode.Location = new System.Drawing.Point(15, 174);
+            this.txtCode.Name = "txtCode";
+            this.txtCode.Size = new System.Drawing.Size(503, 258);
+            this.txtCode.TabIndex = 11;
+            this.txtCode.TextChanged += new System.EventHandler(this.txtCode_TextChanged);
+            // 
             // FormTemplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(530, 466);
+            this.Controls.Add(this.txtCode);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtCategory);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtFileNameFormat);
-            this.Controls.Add(this.txtCode);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.label2);
@@ -176,10 +172,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.RichTextBox txtCode;
         private System.Windows.Forms.TextBox txtFileNameFormat;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtCategory;
+        private Cinar.Scripting.CinarScriptEditor txtCode;
     }
 }

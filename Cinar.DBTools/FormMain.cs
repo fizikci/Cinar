@@ -155,6 +155,11 @@ $"},
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Field
                                  },
                      new Command {
+                                     Execute = cmdAnalyzeTable,
+                                     Trigger = new CommandTrigger{ Control = menuAnalyzeTable},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                 },
+                     new Command {
                                      Execute = cmdRefresh,
                                      Trigger = new CommandTrigger{ Control = menuRefresh},
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
@@ -304,6 +309,18 @@ $"},
                 if (treeNode.Tag is ConnectionSettings)
                     return (ConnectionSettings)treeNode.Tag;
                 treeNode = treeNode.Parent;
+            }
+            return null;
+        }
+        private TreeNode findNode(TreeNodeCollection nodes, Predicate<TreeNode> predicate)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                if (predicate(node))
+                    return node;
+                TreeNode n = findNode(node.Nodes, predicate);
+                if (n != null)
+                    return n;
             }
             return null;
         }
@@ -508,6 +525,13 @@ $"},
 
         private void cmdSetActiveConnection(string arg)
         {
+            TreeNode tnOld = findNode(treeView.Nodes, n => n.ForeColor == Color.White);
+            if (tnOld != null)
+            { 
+                tnOld.ForeColor = Color.Black; 
+                tnOld.BackColor = Color.White; 
+            }
+
             if (treeView.SelectedNode.Tag is ConnectionSettings)
             {
                 Provider.ActiveConnection = (ConnectionSettings)treeView.SelectedNode.Tag;
@@ -518,6 +542,13 @@ $"},
             else
             {
                 Provider.ActiveConnection = findConnection(treeView.SelectedNode);
+            }
+
+            TreeNode tnNew = findSelectedDBNode();
+            if (tnNew != null)
+            {
+                tnNew.ForeColor = Color.White;
+                tnNew.BackColor = Color.Green;
             }
 
             statusText.Text = "Active connection: " + Provider.ActiveConnection;
@@ -546,6 +577,54 @@ $"},
             string tableName = treeView.SelectedNode.Name;
             executeSQL("select count(*) AS number_of_rows from [" + tableName + "]");
         }
+        private void cmdAnalyzeTable(string arg)
+        {
+            if (!checkConnection()) return;
+            string tableName = treeView.SelectedNode.Name;
+            
+            int count = Provider.Database.GetInt("select count(*) from " + tableName);
+
+            DataTable dtMaxMin = null;
+            if (count > 0)
+            {
+                List<string> list = new List<string>();
+                foreach (Field f in Provider.Database.Tables[tableName].Fields)
+                    list.Add("select '" + f.Name + "' as [Field Name], min(" + f.Name + ") as [Min. Value], max(" + f.Name + ") as [Max. Value] from " + tableName);
+                string sql = string.Join("\nUNION\n", list.ToArray());
+                dtMaxMin = Provider.Database.GetDataTable(sql);
+            }
+
+            //Cinar.WebServer.WebServer server = new Cinar.WebServer.WebServer(3000);
+            //server.ProcessRequest = (string req) => {
+            //    MessageBox.Show(req);
+            //};
+            //server.Start();
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat(@"
+                <html>
+                <head>
+                    <style>
+                    body, td, th {{font-family:Microsoft Sans Serif; font-size:12px}}
+					div.header {{background:navy; color:white; font-size:16px}}
+                    </style>
+                </head>
+                <body>
+                    <div class=""header"">{0}</div>
+<a href=""http://localhost:3000/dnm?x=2"">Click me..</a>
+                    <b>Number of Rows:</b> {1}<br/>
+                    <br/>
+                    {2}
+                </body>
+                </html>", tableName, count, dtMaxMin.ToHtmlTable());
+
+            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\table_analyze.html";
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+
+            webBrowser.Navigate(path);
+            tabControl.SelectedTab = tpTableAnalyze;
+        }
+
         private void cmdGenerateSQL(string arg)
         {
             Table table = (Table)treeView.SelectedNode.Tag;

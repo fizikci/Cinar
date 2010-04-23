@@ -7,6 +7,9 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
+using System.Windows.Forms;
+using System.Web;
 
 namespace Cinar.Scripting
 {
@@ -21,21 +24,49 @@ namespace Cinar.Scripting
     {
         public abstract void Execute(Context context, ParserNode parentNode);
         internal int LineNumber { get; set; }
+        internal int LastLineNumber { get; set; }
+        internal int ColumnNumber { get; set; }
+        internal int LastColumnNumber { get; set; }
+        internal StatementCollection ParentBlock { get; set; }
 
         public virtual StatementCollection SubStatements1 { get { return null; } }
         public virtual StatementCollection SubStatements2 { get { return null; } }
+
+        internal bool canBeDebugged() 
+        {
+            return !(this is FunctionDefinitionStatement || this is TryCatchStatement || this is UsingStatement);
+        }
     }
     public class StatementCollection : ICollection<Statement>
     {
         readonly ICollection<Statement> fStatements;
-        public StatementCollection(ICollection<Statement> statements)
+        public bool HasBrace;
+        internal Statement ParentStatement;
+        internal int BlockIndent 
+        { 
+            get 
+            {
+                int res = 0;
+                StatementCollection coll = this;
+                while (coll != null)
+                {
+                    res++;
+                    coll = this.ParentStatement==null ? null : this.ParentStatement.ParentBlock;
+                }
+                return res;
+            } 
+        }
+
+        public StatementCollection(ICollection<Statement> statements, bool hasBrace)
         {
             if (statements == null) throw new ArgumentNullException("statements");
 
             fStatements = statements;
+            foreach (Statement s in fStatements) s.ParentBlock = this;
+            HasBrace = hasBrace;
         }
 
-        public Context Execute(Context context, ParserNode parentNode, Hashtable arguments)
+        public void Execute(Context context, ParserNode parentNode, Hashtable arguments)
         {
             Context fContext = new Context();
             fContext.parent = context;
@@ -56,29 +87,79 @@ namespace Cinar.Scripting
                 if (Context.breakLoop)
                     break;
 
-                if (fContext.ReturnValue != null)
-                    break;
+                if (Context.ReturnValue != null)
+                {
+                    if(!(parentNode is FunctionCall))
+                        break;
+                    return;// fContext;
+                }
 
-                fContext.RootContext.CurrentStatement = statement;
-                statement.Execute(fContext, parentNode);
+                Context.CurrentStatement = statement;
+
+                if (Context.debugRunToLine > 0)
+                {
+                    Context.debugging = Context.debugRunToLine == statement.LineNumber;
+                    if(Context.debugging)
+                        Context.debugRunToLine = 0;
+                }
+
+                if (Context.debugging && Context.debugRunToLine == 0 && HttpContext.Current == null) 
+                {
+                    if(Context.debuggerWindow != null)
+                        Context.debuggerWindow.SetMarker(fContext);
+
+                    if (!statement.canBeDebugged())
+                        Context.debugContinue = true;
+
+                    while (!Context.debugContinue)
+                        Application.DoEvents();
+
+                    Context.debugContinue = false;
+
+                    try
+                    {
+                        statement.Execute(fContext, parentNode);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Context.debugging)
+                        {
+                            MessageBox.Show((ex.InnerException != null ? ex.InnerException.Message : ex.Message), "Çınar Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Context.debugging = false;
+                        }
+                        throw ex;
+                    }
+                }
+                else
+                    statement.Execute(fContext, parentNode);
             }
 
-            return fContext;
+            //return fContext;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("{");
+            if(HasBrace)
+                sb.AppendLine("{");
             foreach (Statement statement in this)
                 sb.AppendLine(statement.ToString());
-            sb.AppendLine("}");
+            if(HasBrace)
+                sb.AppendLine("}");
             return sb.ToString();
         }
 
         #region ICollection<Statement> Members
+        internal void AddRange(ICollection<Statement> statements)
+        {
+            if (statements == null)
+                return;
 
-        void ICollection<Statement>.Add(Statement item) { throw new NotSupportedException(); }
+            foreach(var item in statements)
+                fStatements.Add(item);
+        }
+
+        void ICollection<Statement>.Add(Statement item) { fStatements.Add(item); item.ParentBlock = this; }
         void ICollection<Statement>.Clear() { throw new NotSupportedException(); }
         bool ICollection<Statement>.Remove(Statement item) { throw new NotSupportedException(); }
 
@@ -166,6 +247,8 @@ namespace Cinar.Scripting
 
             fVariable = variable;
             fValue = value;
+
+            Context.ParsedVariables.Add(this);
         }
 
         readonly Variable fVariable;
@@ -186,7 +269,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return "var " + fVariable.Name + (fValue != null ? " = " + fValue : "");
+            return fVariable.Type + " " + fVariable.Name + (fValue != null ? " = " + fValue : "");
         }
     }
     public class MemberAssignment : Statement
@@ -252,6 +335,7 @@ namespace Cinar.Scripting
             fItem = item;
             fCollection = collection;
             fBlock = block;
+            fBlock.ParentStatement = this;
         }
 
         readonly Variable fItem;
@@ -304,6 +388,7 @@ namespace Cinar.Scripting
             fCompare = compare;
             fEnd = end;
             fBlock = block;
+            fBlock.ParentStatement = this;
         }
 
         readonly Statement fStart;
@@ -324,7 +409,7 @@ namespace Cinar.Scripting
                 fStart.Execute(context, this);
             Expression compare = fCompare;
             if (compare == null)
-                compare = new Variable("true");
+                compare = new Variable("true", "var");
 
             for (; AndExpression.ParseBool(compare.Calculate(context, this)); )
             {
@@ -358,6 +443,9 @@ namespace Cinar.Scripting
             fName = name;
             fParameters = parameters;
             fBlock = block;
+            fBlock.ParentStatement = this;
+
+            Context.ParsedFunctions.Add(this);
         }
 
         readonly string fName;
@@ -441,7 +529,9 @@ namespace Cinar.Scripting
 
             fCondition = condition;
             fTrueBlock = trueBlock;
+            fTrueBlock.ParentStatement = this;
             fFalseBlock = falseBlock;
+            fFalseBlock.ParentStatement = this;
         }
 
         readonly Expression fCondition;
@@ -483,8 +573,10 @@ namespace Cinar.Scripting
             if (catchBlock == null) throw new ArgumentNullException("catchBlock");
 
             fTryBlock = tryBlock;
+            fTryBlock.ParentStatement = this;
             fExVariableName = exVariableName;
             fCatchBlock = catchBlock;
+            fCatchBlock.ParentStatement = this;
         }
 
         readonly string fExVariableName;
@@ -532,6 +624,7 @@ namespace Cinar.Scripting
 
             fCondition = condition;
             fBlock = block;
+            fBlock.ParentStatement = this;
         }
 
         readonly Expression fCondition;
@@ -601,7 +694,14 @@ namespace Cinar.Scripting
 
         public override void Execute(Context context, ParserNode parentNode)
         {
-            context.debugging = true;
+            if (HttpContext.Current==null && MessageBox.Show("Would you like to debug current execution?", "Çınar Script", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Context.debugging = true;
+                CinarDebugger cd = new CinarDebugger(context);
+                cd.WindowState = FormWindowState.Maximized;
+                Context.debuggerWindow = cd;
+                cd.Show();
+            }
         }
         public override string ToString()
         {
@@ -620,7 +720,7 @@ namespace Cinar.Scripting
 
         public override void Execute(Context context, ParserNode parentNode)
         {
-            context.ReturnValue = Value.Calculate(context, this);
+            Context.ReturnValue = Value.Calculate(context, this);
         }
         public override string ToString()
         {
@@ -654,6 +754,8 @@ namespace Cinar.Scripting
         public UsingStatement(string nameSpace)
         {
             fNamespace = nameSpace;
+
+            Context.ParsedUsing.Add(nameSpace);
         }
 
         readonly string fNamespace;
@@ -668,7 +770,45 @@ namespace Cinar.Scripting
             return String.Format("using {0}", fNamespace);
         }
     }
+    public class EchoBlockStatement : Statement
+    {
+        public EchoBlockStatement(string val)
+        {
+            fVal = val;
+        }
 
+        readonly string fVal;
+        public string Value { get { return fVal; } }
+
+        public override void Execute(Context context, ParserNode parentNode)
+        {
+            context.Output.Write(Value);
+        }
+        public override string ToString()
+        {
+            return Value;
+        }
+    }
+    public class ShortCutEchoStatement : Statement
+    {
+        public ShortCutEchoStatement(Expression value)
+        {
+            fValue = value;
+        }
+
+        readonly Expression fValue;
+        public Expression Value { get { return fValue; } }
+
+        public override void Execute(Context context, ParserNode parentNode)
+        {
+            context.Output.Write(Value.Calculate(context, this));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("$={0}$", fValue);
+        }
+    }
 
     [Serializable]
     public class CinarScriptException : Exception

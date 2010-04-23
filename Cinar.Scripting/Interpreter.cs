@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Runtime.Serialization;
@@ -58,19 +59,16 @@ namespace Cinar.Scripting
             }
         }
 
+        internal List<Statement> ParsedStatementsWithoutError;
+
         public void Parse()
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            try
-            {
-                this.Code = preParse(this.Code);
-            }
-            catch (Exception ex)
-            {
-            }
-
+            Context.ParsedFunctions = new List<FunctionDefinitionStatement>();
+            Context.ParsedUsing = new List<string> { "System"};
+            Context.ParsedVariables = new List<VariableDefinition>();
             statements = new List<Statement>();
 
             using (StringReader lSource = new StringReader(this.Code))
@@ -89,84 +87,16 @@ namespace Cinar.Scripting
                 catch (ParserException ex)
                 {
                     ParsingSuccessful = false;
+
+                    ParsedStatementsWithoutError = statements;
+
                     statements = new List<Statement>();
-                    statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message + " at line " + lParser.CurrentLineNumber) })));
+                    statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message + " at line " + (lParser.CurrentLineNumber + 1)) })));
                 }
             }
 
             watch.Stop();
             this.ParsingTime = watch.ElapsedMilliseconds;
-        }
-
-        private string preParse(string code)
-        {
-            code = code.Replace("\\$", "__backSlashDollor__");
-            StringBuilder sb = new StringBuilder(code.Length * 2);
-            using (StringReader sr = new StringReader(code))
-            {
-                string codePart = "", textPart = "";
-                bool readingCode = false, shortcutWrite = false;
-                int i = sr.Read();
-                while (i > 0)
-                {
-                    char c = (char)i;
-                    switch (c)
-                    {
-                        case '$':
-                            if (readingCode)
-                            {
-                                if (shortcutWrite)
-                                {
-                                    codePart += ");";
-                                    shortcutWrite = false;
-                                }
-                                sb.Append(codePart);
-                                codePart = "";
-                                readingCode = false;
-                                i = sr.Read();
-                            }
-                            else
-                            {
-                                if (textPart != "")
-                                {
-                                    //if (textPart.Trim() == "")
-                                    //    sb.Append(textPart);
-                                    //else
-                                        sb.Append("write(\"" + textPart.Replace("\\", "\\\\")./*Replace("\r", "\\r").Replace("\n", "\\n").*/Replace("\"", "\\\"") + "\");");
-                                }
-                                textPart = "";
-                                readingCode = true;
-
-                                i = sr.Read();
-                                if ((char)i == '=')
-                                {
-                                    codePart = "write(";
-                                    shortcutWrite = true;
-                                    i = sr.Read();
-                                }
-                            }
-                            break;
-                        default:
-                            if (readingCode)
-                                codePart += c;
-                            else
-                                textPart += c;
-                            i = sr.Read();
-                            break;
-                    }
-                }
-                if (readingCode && codePart != "")
-                    sb.Append(codePart);
-                if (!readingCode && textPart != "")
-                {
-                    //if (textPart.Trim() == "")
-                    //    sb.Append(textPart);
-                    //else
-                        sb.Append("write(\"" + textPart.Replace("\\", "\\\\")./*Replace("\r", "\\r").Replace("\n", "\\n").*/Replace("\"", "\\\"") + "\");");
-                }
-            }
-            sb.Replace("__backSlashDollor__", "$");
-            return sb.ToString();
         }
 
         public bool ExecutionSuccessful { get; set; }
@@ -186,22 +116,31 @@ namespace Cinar.Scripting
                 foreach (string nameSpace in this.Usings)
                     if(!string.IsNullOrEmpty(nameSpace))
                         context.Using.Add(nameSpace);
+            Context.code = this.Code;
+            context.Interpreter = this;
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
             try
             {
-                StatementCollection coll = new StatementCollection(statements);
+                StatementCollection coll = new StatementCollection(statements, false);
                 coll.Execute(context, null, null);
                 this.ExecutionSuccessful = true;
             }
             catch (Exception ex)
             {
                 this.ExecutionSuccessful = false;
-                context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "") + " at line " + context.CurrentStatement.LineNumber);
+                context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "") + " at line " + (Context.CurrentStatement.LineNumber + 1));
             }
             watch.Stop();
             this.ExecutingTime = watch.ElapsedMilliseconds;
+
+            if (Context.debuggerWindow != null)
+            {
+                Context.debugging = false;
+                Context.debuggerWindow.Close();
+                Context.debuggerWindow = null;
+            }
         }
         public void Execute()
         {
@@ -216,17 +155,23 @@ namespace Cinar.Scripting
         public Hashtable Functions = new Hashtable();
         public List<string> Using = new List<string>();
 
+        internal Interpreter Interpreter = null;
         public TextWriter Output = null;
-        public object ReturnValue = null;
+        internal static object ReturnValue = null;
         internal static bool breakLoop = false;
         internal static bool continueLoop = false;
-        internal bool debugging = false;
+        internal static bool debugging = false;
+        internal static bool debugContinue = false;
+        internal static int debugRunToLine = 0;
+        internal static Action debugStatementExecuted = null;
+        internal static CinarDebugger debuggerWindow = null;
+        internal static string code = "";
         internal Context parent = null;
 
-        public Type GetType(string className)
+        public static Type GetType(string className, List<string> usings)
         {
             Type t = null;
-            foreach (string nameSpace in this.Using)
+            foreach (string nameSpace in usings)
             {
                 string fullClassName = nameSpace + "." + className;
                 t = Type.GetType(fullClassName);
@@ -248,6 +193,56 @@ namespace Cinar.Scripting
             }
             return t;
         }
+        public static List<Type> GetTypeNames(string nameSpace)
+        {
+            List<Type> res = new List<Type>();
+            if (Assembly.GetEntryAssembly() != null)
+            {
+                Assembly asm = Assembly.GetEntryAssembly();
+                foreach (Type t in asm.GetTypes())
+                    if (t.Namespace == nameSpace && t.IsPublic && t.IsClass)
+                        res.Add(t);
+
+                foreach (AssemblyName asmblyName in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+                {
+                    Assembly asm2 = Assembly.Load(asmblyName);
+                    foreach (Type t in asm2.GetTypes())
+                        if (t.Namespace == nameSpace && t.IsPublic && !t.IsGenericType)
+                            res.Add(t);
+                }
+            }
+
+            return res;
+        }
+        public static List<string> GetNamespaceNames(string startsWith)
+        {
+            List<string> res = new List<string>();
+            if (Assembly.GetEntryAssembly() != null)
+            {
+                Assembly asm = Assembly.GetEntryAssembly();
+                foreach (Type t in asm.GetTypes())
+                    if (!string.IsNullOrEmpty(t.Namespace) && t.Namespace.StartsWith(startsWith) && t.Namespace.Length > startsWith.Length)
+                    {
+                        string ns = t.Namespace.Substring(startsWith.Length + 1).Split('.')[0];
+                        if(!res.Contains(ns))
+                            res.Add(ns);
+                    }
+
+                foreach (AssemblyName asmblyName in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+                {
+                    Assembly asm2 = Assembly.Load(asmblyName);
+                    foreach (Type t in asm2.GetTypes())
+                        if (!string.IsNullOrEmpty(t.Namespace) && t.Namespace.StartsWith(startsWith) && t.Namespace.Length > startsWith.Length)
+                        {
+                            string ns = t.Namespace.Substring(startsWith.Length + 1).Split('.')[0];
+                            if (!res.Contains(ns))
+                                res.Add(ns);
+                        }
+                }
+            }
+
+            return res;
+        }
         public Context RootContext
         {
             get {
@@ -257,7 +252,10 @@ namespace Cinar.Scripting
                 return currContext;
             }
         }
-        internal Statement CurrentStatement { get; set; }
+        internal static Statement CurrentStatement { get; set; }
+        internal static List<string> ParsedUsing = new List<string> {"System" };
+        internal static List<VariableDefinition> ParsedVariables = new List<VariableDefinition>();
+        internal static List<FunctionDefinitionStatement> ParsedFunctions = new List<FunctionDefinitionStatement>();
 
         public object GetVariableValue(string name)
         {
