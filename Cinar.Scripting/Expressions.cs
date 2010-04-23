@@ -12,7 +12,16 @@ namespace Cinar.Scripting
 {
     public abstract class Expression : ParserNode
     {
+        public bool InParanthesis;
         public abstract object Calculate(Context context, ParserNode parentNode);
+
+        protected string toString(string str) 
+        {
+            return string.Format("{0}{1}{2}", 
+                InParanthesis ? "(" : "", 
+                str, 
+                InParanthesis ? ")" : "");
+        }
     }
 
     public class FunctionCall : Expression
@@ -40,6 +49,20 @@ namespace Cinar.Scripting
                 foreach (Expression expression in fArguments)
                     context.Output.Write(expression.Calculate(context, this));
             }
+            else if (Name == "eval" && fArguments.Length>0)
+            {
+                Interpreter ip = new Interpreter("$" + fArguments[0].Calculate(context, this) + "$", null);
+                ip.Parse();
+                ip.Execute();
+                return ip.Output;
+            }
+            else if (Name == "typeof")
+            {
+                if (fArguments.Length == 0 || !(fArguments[0] is Variable))
+                    throw new Exception("typeof operator argument error. Usage: typeof(DateTime)");
+                string typeName = (fArguments[0] as Variable).Name;
+                return Context.GetType(typeName, Context.ParsedUsing);
+            }
             else if (context.Functions[Name] != null)
             {
                 FunctionDefinitionStatement func = (FunctionDefinitionStatement)context.Functions[Name];
@@ -53,7 +76,10 @@ namespace Cinar.Scripting
                         arguments[func.Parameters[i]] = paramVal;
                     i++;
                 }
-                return func.Block.Execute(context, this, arguments).ReturnValue;
+                func.Block.Execute(context, this, arguments);
+                object res = Context.ReturnValue;
+                Context.ReturnValue = null;
+                return res;
             }
             else
                 throw new Exception("Undefined function: " + this);
@@ -67,22 +93,26 @@ namespace Cinar.Scripting
             if(sb.Length>=2)
                 sb.Remove(sb.Length - 2, 2);
 
-            return String.Format("{0}({1})", fName, sb.ToString());
+            return toString(String.Format("{0}({1})", fName, sb.ToString()));
         }
     }
     public class Variable : Expression
     {
-        public Variable(string name)
+        public Variable(string name, string type)
         {
             if (name == null) throw new ArgumentNullException("name");
             if (name.Length == 0) throw new ArgumentException("name cannot be an empty string.", "name");
             if (ParserNode.ReservedWords.Contains(name)) throw new ArgumentException("name cannot be a variable name", "name");
 
             fName = name;
+            fType = type;
         }
 
         readonly string fName;
         public string Name { get { return fName; } }
+
+        readonly string fType;
+        public string Type { get { return fType; } }
 
         public override object Calculate(Context context, ParserNode parentNode)
         {
@@ -90,7 +120,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0}", fName);
+            return toString(String.Format("{0}", fName));
         }
     }
     public class VariableIncrement : Expression
@@ -115,7 +145,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0}{1}", fVar.Name, fAmount > 0 ? "++" : "--");
+            return toString(String.Format("{0}{1}", fVar.Name, fAmount > 0 ? "++" : "--"));
         }
     }
     public class IntegerConstant : Expression
@@ -131,7 +161,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0}", fValue);
+            return toString(String.Format("{0}", fValue));
         }
     }
     public class DecimalConstant : Expression
@@ -147,7 +177,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0}", fValue.ToString().Replace(",","."));
+            return toString(String.Format("{0}", fValue.ToString().Replace(",",".")));
         }
     }
     public class StringConstant : Expression
@@ -167,7 +197,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("\"{0}\"", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
+            return toString(String.Format("\"{0}\"", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r")));
         }
     }
     public class IfShortCut : Expression
@@ -195,7 +225,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0} ? {1} : {2}", boolExp.ToString(), trueExpression.ToString(), falseExpression.ToString());
+            return toString(String.Format("{0} ? {1} : {2}", boolExp.ToString(), trueExpression.ToString(), falseExpression.ToString()));
         }
     }
     public class IsNullShortCut : Expression
@@ -221,7 +251,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("{0} ?? {1}", nullableExp.ToString(), notNullExp.ToString());
+            return toString(String.Format("{0} ?? {1}", nullableExp.ToString(), notNullExp.ToString()));
         }
     }
 
@@ -252,38 +282,31 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            bool leftBool = AndExpression.ParseBool(left);
-            bool rightBool = AndExpression.ParseBool(right);
-
-            return leftBool && rightBool;
+            return ParseBool(left) && ParseBool(right);
         }
         public override string ToString()
         {
-            return String.Format("({0} && {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} && {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
 
         public static bool ParseBool(object obj)
         {
             if (obj == null)
                 return false;
+            
+            if (obj.Equals(DBNull.Value))
+                return false;
 
-            switch (obj.GetType().Name)
-            {
-                case "Boolean":
-                    return (bool)obj;
-                case "Int16":
-                case "Int32":
-                case "Int64":
-                case "Decimal":
-                case "Double":
-                case "Float":
-                case "Single":
-                    return Convert.ToDecimal(obj) > Decimal.Zero;
-                case "String":
-                    return obj.ToString().Trim() != "";
-                default:
-                    return true;
-            }
+            if (obj.GetType() == typeof(bool))
+                return (bool)obj;
+
+            if(obj.IsNumeric())
+                return Convert.ToDecimal(obj) > Decimal.Zero;
+
+            if(obj is string)
+                return obj.ToString().Trim() != "";
+
+            return true;
         }
     }
     public class OrExpression : BinaryExpression
@@ -296,19 +319,11 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            bool leftBool = AndExpression.ParseBool(left);
-            bool rightBool = AndExpression.ParseBool(right);
-
-            if (leftBool == true && rightBool == false)
-                return left;
-            else if (leftBool == false && rightBool == true)
-                return right;
-            else
-            return leftBool || rightBool;
+            return AndExpression.ParseBool(left) || AndExpression.ParseBool(right);
         }
         public override string ToString()
         {
-            return String.Format("({0} || {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} || {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
     public class Addition : BinaryExpression
@@ -322,32 +337,33 @@ namespace Cinar.Scripting
             object right = RightChildExpression.Calculate(context, this);
 
             if (left == null && right == null)
-            {
                 return "";
-            }
 
-            if (left == null)
-            {
-                if (right.GetType() == typeof(string)) left = ""; else left = 0;
-            }
+            if (left == null && right.GetType() == typeof(string)) 
+                return right;
 
-            if (right == null)
-            {
-                if (left.GetType() == typeof(string)) right = ""; else right = 0;
-            }
+            if (right == null && left.GetType() == typeof(string)) 
+                return left;
+
+            left = left ?? "";
+            right = right ?? "";
 
             if (left.GetType() == typeof(string) || right.GetType() == typeof(string))
                 return left.ToString() + right.ToString();
-            else if (left.GetType() == typeof(decimal) || right.GetType() == typeof(decimal))
-                return Convert.ToDecimal(left) + Convert.ToDecimal(right);
-            else if (left.GetType() == typeof(int) && right.GetType() == typeof(int))
-                return (int)left + (int)right;
-            else
-                return left.ToString() + right.ToString();
+
+            if (left.IsNumeric() && right.IsNumeric())
+            {
+                if (left.GetType() == typeof(int) && right.GetType() == typeof(int))
+                    return (int)left + (int)right;
+                else
+                    return Decimal.Add((decimal)left, (decimal)right);
+            }
+            
+            return left.ToString() + right.ToString();
         }
         public override string ToString()
         {
-            return String.Format("({0} + {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} + {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
     public class Mod : BinaryExpression
@@ -360,17 +376,33 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            left = left ?? 0;
-            right = right ?? 0;
+            left = left ?? Decimal.Zero;
+            right = right ?? Decimal.Zero;
+
+            if (!left.IsNumeric())
+            {
+                decimal res = decimal.Zero;
+                Decimal.TryParse(left.ToString(), out res);
+                left = res;
+            }
+
+            if (!right.IsNumeric())
+            {
+                decimal res = decimal.Zero;
+                Decimal.TryParse(right.ToString(), out res);
+                right = res;
+            }
+
+            var result = Decimal.Remainder(Convert.ToDecimal(left), Convert.ToDecimal(right));
 
             if (left.GetType() == typeof(int) && right.GetType() == typeof(int))
-                return (int)left % (int)right;
+                return (long)result;
             else
-                return Convert.ToDecimal(left) % Convert.ToDecimal(right);
+                return result;
         }
         public override string ToString()
         {
-            return String.Format("({0} % {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} % {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
     public class Subtraction : BinaryExpression
@@ -383,35 +415,33 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            if (left == null && right == null)
+            left = left ?? Decimal.Zero;
+            right = right ?? Decimal.Zero;
+
+            if (!left.IsNumeric())
             {
-                return 0;
+                decimal res = decimal.Zero;
+                Decimal.TryParse(left.ToString(), out res);
+                left = res;
             }
 
-            if (left == null)
+            if (!right.IsNumeric())
             {
-                if (right.GetType() == typeof(int))
-                    left = 0;
-                else
-                    left = 0m;
+                decimal res = decimal.Zero;
+                Decimal.TryParse(right.ToString(), out res);
+                right = res;
             }
 
-            if (right == null)
-            {
-                if (left.GetType() == typeof(int))
-                    right = 0;
-                else 
-                    right = 0m;
-            }
+            var result = Decimal.Subtract(Convert.ToDecimal(left), Convert.ToDecimal(right));
 
             if (left.GetType() == typeof(int) && right.GetType() == typeof(int))
-                return (int)left - (int)right;
+                return (int)result;
             else
-                return Convert.ToDecimal(left) - Convert.ToDecimal(right);
+                return result;
         }
         public override string ToString()
         {
-            return String.Format("({0} - {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} - {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
     public class Division : BinaryExpression
@@ -424,26 +454,28 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            if (left == null && right == null)
+            left = left ?? Decimal.Zero;
+            right = right ?? Decimal.One;
+
+            if (!left.IsNumeric())
             {
-                return 0m;
+                decimal res = decimal.Zero;
+                Decimal.TryParse(left.ToString(), out res);
+                left = res;
             }
 
-            if (left == null)
+            if (!right.IsNumeric())
             {
-                    left = 0m;
+                decimal res = decimal.Zero;
+                Decimal.TryParse(right.ToString(), out res);
+                right = res;
             }
 
-            if (right == null)
-            {
-                    right = 1m;
-            }
-
-            return Convert.ToDecimal(left) / Convert.ToDecimal(right);
+            return Decimal.Divide(Convert.ToDecimal(left), Convert.ToDecimal(right));
         }
         public override string ToString()
         {
-            return String.Format("({0} / {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} / {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
     public class Multiplication : BinaryExpression
@@ -456,17 +488,79 @@ namespace Cinar.Scripting
             object left = LeftChildExpression.Calculate(context, this);
             object right = RightChildExpression.Calculate(context, this);
 
-            left = left ?? 0;
-            right = right ?? 0;
+            left = left ?? Decimal.Zero;
+            right = right ?? Decimal.Zero;
+
+            if (!left.IsNumeric())
+            {
+                decimal res = decimal.Zero;
+                Decimal.TryParse(left.ToString(), out res);
+                left = res;
+            }
+
+            if (!right.IsNumeric())
+            {
+                decimal res = decimal.Zero;
+                Decimal.TryParse(right.ToString(), out res);
+                right = res;
+            }
+
+            var result = Decimal.Multiply(Convert.ToDecimal(left), Convert.ToDecimal(right));
 
             if (left.GetType() == typeof(int) && right.GetType() == typeof(int))
-                return (int)left * (int)right;
+                return (long)result;
             else
-                return Convert.ToDecimal(left) * Convert.ToDecimal(right);
+                return result;
         }
         public override string ToString()
         {
-            return String.Format("({0} * {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0} * {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
+        }
+    }
+    public class Indexer : BinaryExpression
+    {
+        public Indexer(Expression leftChildExpression, Expression rightChildExpression)
+            : base(leftChildExpression, rightChildExpression) { }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            object left = LeftChildExpression.Calculate(context, this);
+            object right = RightChildExpression.Calculate(context, this);
+
+            if(left!=null && left.GetType()==typeof(string))
+                return left.ToString()[Convert.ToInt32(right)];
+
+            return left.GetIndexedValue(right); 
+        }
+        public override string ToString()
+        {
+            return toString(String.Format("{0}[{1}]", LeftChildExpression.ToString(), RightChildExpression.ToString()));
+        }
+    }
+    public class Is : Expression
+    {
+        public Is(Expression exp, string typeName)
+        {
+            this.exp = exp;
+            this.typeName = typeName;
+        }
+
+        readonly Expression exp;
+        public Expression Exp { get { return exp; } }
+        readonly string typeName;
+        public string TypeName { get { return typeName; } }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            object left = Exp.Calculate(context, this);
+            Type type = Context.GetType(typeName, Context.ParsedUsing);
+            if (type == null)
+                throw new Exception("There is no such type name: " + typeName);
+            return left == null ? false : (left.GetType() == type);
+        }
+        public override string ToString()
+        {
+            return toString(String.Format("{0} is {1}", Exp.ToString(), typeName));
         }
     }
     public class Comparison : BinaryExpression
@@ -492,50 +586,65 @@ namespace Cinar.Scripting
 
             if (left == null)
             {
-                if (right.GetType() == typeof(string)) left = ""; else left = 0;
+                if (right.GetType() == typeof(string))
+                    left = "";
+                else if (right.GetType() == typeof(DateTime))
+                    left = new DateTime(0, 0, 0);
+                else 
+                    left = 0;
             }
 
             if (right == null)
             {
-                if (left.GetType() == typeof(string)) right = ""; else right = 0;
+                if (left.GetType() == typeof(string))
+                    right = "";
+                else if (left.GetType() == typeof(DateTime))
+                    right = new DateTime(1, 1, 1);
+                else
+                    right = 0;
             }
 
-            if (left.GetType() == typeof(string) && right.GetType() != typeof(string))
-                left = Convert.ChangeType(left, right.GetType());
+            try
+            {
+                if (left.GetType() == typeof(string) && right.GetType() != typeof(string))
+                    left = Convert.ChangeType(left, right.GetType());
 
-            if (right.GetType() == typeof(string) && left.GetType() != typeof(string))
-                right = Convert.ChangeType(right, left.GetType());
+                if (right.GetType() == typeof(string) && left.GetType() != typeof(string))
+                    right = Convert.ChangeType(right, left.GetType());
+            }
+            catch { }
 
-            IComparable leftC = (IComparable)(left ?? 0);
-            right = right ?? 0d;
+            if (left.IsNumeric() && right.IsNumeric())
+            {
+                left = Convert.ToDecimal(left);
+                right = Convert.ToDecimal(right);
+            }
+
+            if (left.GetType() != right.GetType())
+            {
+                left = left.ToString();
+                right = right.ToString();
+            }
+
+            IComparable leftC = (IComparable)left;
 
             switch (Operator)
             {
-                case ComparisonOperator.None:
-                    break;
                 case ComparisonOperator.Equal:
                     return leftC.CompareTo(right) == 0;
-                    break;
                 case ComparisonOperator.NotEqual:
                     return leftC.CompareTo(right) != 0;
-                    break;
                 case ComparisonOperator.LessThan:
                     return leftC.CompareTo(right) < 0;
-                    break;
                 case ComparisonOperator.GreaterThan:
                     return leftC.CompareTo(right) > 0;
-                    break;
                 case ComparisonOperator.LessThanOrEqual:
                     return leftC.CompareTo(right) < 0 || leftC.CompareTo(right) == 0;
-                    break;
                 case ComparisonOperator.GreaterThanOrEqual:
                     return leftC.CompareTo(right) > 0 || leftC.CompareTo(right) == 0;
-                    break;
                 default:
-                    break;
+                    throw new Exception("Undefined comparison operation: " + Operator);
             }
-
-            return true;
         }
         public override string ToString()
         {
@@ -565,7 +674,7 @@ namespace Cinar.Scripting
                 default:
                     break;
             }
-            return String.Format("({0} {2} {1})", LeftChildExpression.ToString(), RightChildExpression.ToString(), op);
+            return toString(String.Format("{0} {2} {1}", LeftChildExpression.ToString(), RightChildExpression.ToString(), op));
         }
     }
     public enum ComparisonOperator
@@ -591,7 +700,7 @@ namespace Cinar.Scripting
             if (res == null && LeftChildExpression is Variable)
             {
                 string className = (LeftChildExpression as Variable).Name;
-                Type t = context.GetType(className);
+                Type t = Context.GetType(className, context.Using);
                 if (t != null)
                 {
                     if (RightChildExpression is Variable)
@@ -601,7 +710,13 @@ namespace Cinar.Scripting
                         if (pi != null)
                             res = pi.GetValue(null, null);
                         else
-                            res = "";
+                        {
+                            FieldInfo fi = t.GetField(propName);
+                            if (fi != null)
+                                res = fi.GetValue(null);
+                            else
+                                res = "";
+                        }
                     }
                     else if (RightChildExpression is FunctionCall)
                     {
@@ -661,7 +776,7 @@ namespace Cinar.Scripting
                     res = mi.Invoke(res, paramValues);
                 }
             }
-            else
+            else if (RightChildExpression is Variable)
             {
                 Variable var = (Variable)RightChildExpression;
                 PropertyInfo pi = res.GetType().GetProperty(var.Name);
@@ -710,11 +825,19 @@ namespace Cinar.Scripting
                     }
                 }
             }
+            else
+            {
+                object val = RightChildExpression.Calculate(context, this);
+                if (val.IsNumeric() && res.GetType() == typeof(string))
+                    res = res.ToString()[Convert.ToInt32(val)];
+                else
+                    res = res.GetIndexedValue(val);
+            }
             return res;
         }
         public override string ToString()
         {
-            return String.Format("{0}.{1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return toString(String.Format("{0}.{1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
 
         public static void FindMethod(Type type, string methodName, Type[] parameterTypes, out MethodInfo methodInfo, out ParameterInfo[] parameters)
@@ -769,7 +892,16 @@ namespace Cinar.Scripting
                     throw new Exception(LeftChildExpression + " is null");
                 MemberInfo[] members = obj.GetType().GetMember((RightChildExpression as Variable).Name);
                 if (members == null || members.Length == 0)
-                    obj.SetIndexedValue((RightChildExpression as Variable).Name, false, val);
+                {
+                    try
+                    {
+                        obj.SetIndexedValue((RightChildExpression as Variable).Name, val);
+                    }
+                    catch 
+                    {
+                        obj.SetIndexedValue((RightChildExpression as Variable).Calculate(context, this), val);
+                    }
+                }
                 else
                 {
                     MemberInfo mi = members[0];
@@ -780,12 +912,19 @@ namespace Cinar.Scripting
                 }
             }
             else
-                throw new Exception(this + " cannot be set!");
+            {
+                obj.SetIndexedValue(RightChildExpression.Calculate(context, this), val);
+            }
         }
     }
     public class MethodCall : MemberAccess
     {
         public MethodCall(Expression leftChildExpression, Expression rightChildExpression)
+            : base(leftChildExpression, rightChildExpression) { }
+    }
+    public class IndexerAccess : MemberAccess
+    {
+        public IndexerAccess(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
     }
 
@@ -808,12 +947,25 @@ namespace Cinar.Scripting
 
         public override object Calculate(Context context, ParserNode parentNode)
         {
-            int res = Convert.ToInt32(ChildExpression.Calculate(context, this));
-            return -1 * res;
+            object val = ChildExpression.Calculate(context, this);
+            if (val == null)
+                return 0;
+            else if (val.GetType() == typeof(int))
+                return -1 * (int)val;
+            else if (val.GetType() == typeof(long))
+                return -1 * (long)val;
+            else if (val.GetType() == typeof(decimal))
+                return -1 * (decimal)val;
+            else if (val.GetType() == typeof(float))
+                return -1 * (float)val;
+            else if (val.GetType() == typeof(double))
+                return -1 * (float)val;
+            else
+                return 0;
         }
         public override string ToString()
         {
-            return String.Format("-{0}", ChildExpression.ToString());
+            return toString(String.Format("-{0}", ChildExpression.ToString()));
         }
     }
     public class NotExpression : UnaryExpression
@@ -823,12 +975,29 @@ namespace Cinar.Scripting
 
         public override object Calculate(Context context, ParserNode parentNode)
         {
-            bool b = Convert.ToBoolean(ChildExpression.Calculate(context, this));
-            return !b;
+            object val = ChildExpression.Calculate(context, this);
+            if (val == null)
+                return true;
+            else if (val.Equals(DBNull.Value))
+                return true;
+            else if (val.GetType() == typeof(bool))
+                return !((bool)val);
+            else if (val.GetType() == typeof(string))
+                return val.ToString().Trim() == "";
+            else if (val.Equals(0))
+                return true;
+            else if (val.Equals(0f))
+                return true;
+            else if (val.Equals(0d))
+                return true;
+            else if (val.Equals(0m))
+                return true;
+            else
+                return false;
         }
         public override string ToString()
         {
-            return String.Format("!{0}", ChildExpression.ToString());
+            return toString(String.Format("!{0}", ChildExpression.ToString()));
         }
     }
     public class NewExpression : UnaryExpression
@@ -840,8 +1009,8 @@ namespace Cinar.Scripting
         {
             FunctionCall fc = (FunctionCall)ChildExpression;
 
-            string className = (string)fc.Name;
-            Type t = context.GetType(className);
+            string className = fc.Name;
+            Type t = Context.GetType(className, context.Using);
             if (t == null)
                 throw new Exception("Undefined type: " + className);
 
@@ -859,7 +1028,7 @@ namespace Cinar.Scripting
         }
         public override string ToString()
         {
-            return String.Format("new {0}", ChildExpression.ToString());
+            return toString(String.Format("new {0}", ChildExpression.ToString()));
         }
     }
 }

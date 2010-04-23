@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.grid = new System.Windows.Forms.DataGridView();
             this.btnEditSelectedTask = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.cbCategories = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnRunTests = new System.Windows.Forms.LinkLabel();
+            this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -129,6 +131,12 @@
             this.btnRunTests.Text = "Run Tests";
             this.btnRunTests.Click += new System.EventHandler(this.btnRunTests_Click);
             // 
+            // ımageList1
+            // 
+            this.ımageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.ımageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.ımageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // FormScriptingTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -160,5 +168,6 @@
         private System.Windows.Forms.ComboBox cbCategories;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel btnRunTests;
+        private System.Windows.Forms.ImageList ımageList1;
     }
 }

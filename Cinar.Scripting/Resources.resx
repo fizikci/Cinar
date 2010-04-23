@@ -130,7 +130,20 @@
 	&lt;Digits name ="Digits" bold ="false" italic ="false" color ="DarkBlue"/&gt;
 
 	&lt;RuleSets&gt;
-		&lt;RuleSet ignorecase = "false"&gt;
+		&lt;RuleSet ignorecase = "true"&gt;
+			&lt;Delimiters&gt;&lt;/Delimiters&gt;
+		
+			&lt;Span name="WriteShortCut" bold = "true" italic = "false" color = "Black" stopateol = "false"&gt;
+				&lt;Begin bgcolor="LightBlue"&gt;$=&lt;/Begin&gt;
+				&lt;End bgcolor="LightBlue"&gt;$&lt;/End&gt;
+			&lt;/Span&gt;
+			&lt;Span name="ScriptTag" rule="CinarSet" bold="false" italic="false" color="Black" stopateol="false"&gt;
+				&lt;Begin bgcolor="LightBlue"&gt;$&lt;/Begin&gt;
+				&lt;End bgcolor="LightBlue"&gt;$&lt;/End&gt;
+			&lt;/Span&gt;
+
+		&lt;/RuleSet&gt;
+		&lt;RuleSet name="CinarSet" ignorecase = "false"&gt;
 			&lt;Delimiters&gt;=!&amp;gt;&amp;lt;+-/*%&amp;amp;|^~.}{,;][?:()&lt;/Delimiters&gt;
 			
 			&lt;Span name ="LineComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="true"&gt;
@@ -255,5 +268,24 @@
 	&lt;/RuleSets&gt;
 	
 &lt;/SyntaxDefinition&gt;</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Class" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Class.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Interface" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Interface.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LocalVariable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\LocalVariable.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Method" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Method.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Property.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Struct" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Struct.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

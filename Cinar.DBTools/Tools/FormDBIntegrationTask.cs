@@ -50,6 +50,8 @@ namespace Cinar.DBTools.Tools
         }
         private void updateTask()
         {
+            if (task == null)
+                return;
             task.Category = txtCategory.Text;
             task.ExecInterval = (int)numInterval.Value;
             task.Name = txtName.Text;

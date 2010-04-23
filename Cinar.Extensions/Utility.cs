@@ -320,6 +320,37 @@ namespace System
 
             return sb.ToString();
         }
+        public static string ToHtmlTable(this DataTable dt)
+        {
+            if (dt == null)
+                return "<div>No results.</div>";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<table border=\"1\" width=\"100%\">");
+            sb.Append("<tr>");
+            foreach (DataColumn dc in dt.Columns)
+                sb.AppendFormat("<th>{0}</th>", dc.ColumnName);;
+            sb.Append("</tr>");
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                sb.Append("<tr>");
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    string val = dr.IsNull(dc) ? "&nbsp;" : dr[dc].ToString();
+                    if (val == "System.Byte[]")
+                        val = Encoding.UTF8.GetString((byte[])dr[dc]);
+                    if (val == null)
+                        val = "";
+                    sb.AppendFormat("<td>{0}</td>", val.Replace("<","&lt;").Replace(">", "&gt;"));
+                }
+                sb.Append("</tr>");
+            }
+
+            sb.Append("</table>");
+            return sb.ToString();
+        }
         public static string MakePhoneNumber(this string number)
         {
             if (number == null)
@@ -521,7 +552,7 @@ namespace System
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -744,6 +775,24 @@ namespace System
             pi.SetValue(obj, val, new object[] { indexerParam });
         }
 
+        public static void SetIndexedValue(this object obj, object indexer, object val)
+        {
+            MemberInfo[] indexers = obj.GetType().GetMember("Item");
+            PropertyInfo pi = null;
+            foreach (PropertyInfo pInfo in indexers)
+            {
+                ParameterInfo[] indexerParams = pInfo.GetIndexParameters();
+                if (indexerParams.Length == 1 && (indexerParams[0].ParameterType==typeof(object) || indexerParams[0].ParameterType == indexer.GetType()))
+                {
+                    pi = pInfo;
+                    break;
+                }
+            }
+            if (pi == null)
+                throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            pi.SetValue(obj, val, new object[] { indexer });
+        }
+
         public static object GetIndexedValue(this object obj, string indexer, bool stringIndexer)
         {
             object result;
@@ -753,6 +802,26 @@ namespace System
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
             object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
             result = pi.GetValue(obj, new object[] { indexerParam });
+            return result;
+        }
+
+        public static object GetIndexedValue(this object obj, object indexer)
+        {
+            object result;
+            MemberInfo[] indexers = obj.GetType().GetMember("Item");
+            PropertyInfo pi = null;
+            foreach (PropertyInfo pInfo in indexers)
+            {
+                ParameterInfo[] indexerParams = pInfo.GetIndexParameters();
+                if (indexerParams.Length == 1 && (indexerParams[0].ParameterType==typeof(object) || indexerParams[0].ParameterType == indexer.GetType()))
+                {
+                    pi = pInfo;
+                    break;
+                }
+            }
+            if (pi == null) 
+                throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            result = pi.GetValue(obj, new object[] { indexer });
             return result;
         }
 
@@ -892,6 +961,17 @@ namespace System
             }
 
             return res;
+        }
+
+        public static bool IsNumeric(this object o)
+        {
+            if (o is IConvertible)
+            {
+                TypeCode tc = ((IConvertible)o).GetTypeCode();
+                if (TypeCode.Char <= tc && tc <= TypeCode.Decimal)
+                    return true;
+            }
+            return false;
         }
 
         public static void CopyDirectory(string src, string dst)

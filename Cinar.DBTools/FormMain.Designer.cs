@@ -107,6 +107,9 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.tpTableAnalyze = new System.Windows.Forms.TabPage();
+            this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.menuAnalyzeTable = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -125,6 +128,7 @@
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.tpTableAnalyze.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -264,9 +268,10 @@
             this.menuRefreshMetadata,
             this.menuDeleteERDiagram,
             this.menuShowTableCounts,
-            this.menuGenerateUIMetadata});
+            this.menuGenerateUIMetadata,
+            this.menuAnalyzeTable});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(198, 400);
+            this.menuStripTree.Size = new System.Drawing.Size(198, 422);
             // 
             // menuCount
             // 
@@ -452,6 +457,7 @@
             this.tabControl.Controls.Add(this.tpResults);
             this.tabControl.Controls.Add(this.tpInfo);
             this.tabControl.Controls.Add(this.tpSQLLog);
+            this.tabControl.Controls.Add(this.tpTableAnalyze);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -804,6 +810,31 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // tpTableAnalyze
+            // 
+            this.tpTableAnalyze.Controls.Add(this.webBrowser);
+            this.tpTableAnalyze.Location = new System.Drawing.Point(4, 22);
+            this.tpTableAnalyze.Name = "tpTableAnalyze";
+            this.tpTableAnalyze.Size = new System.Drawing.Size(532, 342);
+            this.tpTableAnalyze.TabIndex = 3;
+            this.tpTableAnalyze.Text = "Table Analyze";
+            this.tpTableAnalyze.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(532, 342);
+            this.webBrowser.TabIndex = 0;
+            // 
+            // menuAnalyzeTable
+            // 
+            this.menuAnalyzeTable.Name = "menuAnalyzeTable";
+            this.menuAnalyzeTable.Size = new System.Drawing.Size(197, 22);
+            this.menuAnalyzeTable.Text = "Analyze Table";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -840,6 +871,7 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.tpTableAnalyze.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -923,6 +955,9 @@
         private System.Windows.Forms.TextBox txtSQLLog;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateUIMetadata;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.ToolStripMenuItem menuAnalyzeTable;
+        private System.Windows.Forms.TabPage tpTableAnalyze;
+        private System.Windows.Forms.WebBrowser webBrowser;
 
     }
 }

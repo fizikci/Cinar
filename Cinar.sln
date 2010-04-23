@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.SQLParser", "Cinar.SQ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.DBApp", "Cinar.DBApp\Cinar.DBApp.csproj", "{1786AE6D-A507-4543-A04C-D0F9B7FB78CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.WebServer", "Cinar.WebServer\Cinar.WebServer.csproj", "{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{1786AE6D-A507-4543-A04C-D0F9B7FB78CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1786AE6D-A507-4543-A04C-D0F9B7FB78CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1786AE6D-A507-4543-A04C-D0F9B7FB78CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CEAEC92-9FC0-4FF5-9E53-147E1BCF6247}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

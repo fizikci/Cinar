@@ -41,25 +41,29 @@ namespace Cinar.Scripting
         {
             CheckForUnexpectedEndOfSource();
             if (!fCurrentToken.Equals(type, value))
-                throw new ParserException("Expected '" + value + "'.");
+                throw new ParserException("Expected " + value);
             ReadNextToken();
         }
 
         public Statement ReadNextStatement()
         {
-            skipEmptyStatements();
-
             if (AtEndOfSource)
                 return null;
 
             // all the statements start with a word
-            if (fCurrentToken.Type != TokenType.Word)
+            if (!(fCurrentToken.Type == TokenType.Word || fCurrentToken.Type==TokenType.EchoBlock || fCurrentToken.Value=="$="))
                 throw new ParserException("Expected a statement.");
 
             Statement res = null;
+            int currLineStart = fTokenizer.CurrentLineNumber;
+            int currColumnStart = fTokenizer.CurrentColumnNumber - (fCurrentToken.Type==TokenType.Word ? fCurrentToken.Value.Length + 1 : 0);
 
-            if (fCurrentToken.Value == "var")
-                res = ParseVarStatement();
+            if (fCurrentToken.Type == TokenType.EchoBlock)
+                res = ParseEchoBlockStatement();
+            else if (fCurrentToken.Value == "$=")
+                res = ParseShortCutEchoStatement();
+            else if (fCurrentToken.Value == "var")
+                res = ParseVarStatement(null);
             else if (fCurrentToken.Value == "if")
                 res = ParseIfStatement();
             else if (fCurrentToken.Value == "try")
@@ -88,18 +92,42 @@ namespace Cinar.Scripting
             if (res == null)
                 res = ParseAssignmentOrFunctionCallStatement();
 
-            res.LineNumber = fTokenizer.CurrentLineNumber;
+            if (res != null)
+            {
+                res.LineNumber = currLineStart;
+                res.ColumnNumber = currColumnStart;
+                res.LastLineNumber = fTokenizer.CurrentLineNumber;
+                res.LastColumnNumber = fTokenizer.CurrentColumnNumber;
+                skipEmptyStatements();
+            }
+
             return res;
         }
 
-        VariableDefinition ParseVarStatement()
+        ShortCutEchoStatement ParseShortCutEchoStatement()
+        {
+            ReadNextToken(); // skip $=
+            Expression exp = ParseExpression();
+            return new ShortCutEchoStatement(exp);
+        }
+
+        EchoBlockStatement ParseEchoBlockStatement()
+        {
+            string val = fCurrentToken.Value;
+            ReadNextToken();
+            return new EchoBlockStatement(val);
+        }
+
+        VariableDefinition ParseVarStatement(string varType)
         {
             // var-statement:
             //   var {assignment} | {variable}
+            //   DateTime {assignment} | {variable}
 
-            ReadNextToken(); // skip 'var'
+            if(string.IsNullOrEmpty(varType))
+                ReadNextToken(); // skip 'var'
 
-            Variable v = new Variable(fCurrentToken.Value);
+            Variable v = new Variable(fCurrentToken.Value, varType);
 
             ReadNextToken(); // skip variable name
 
@@ -107,14 +135,10 @@ namespace Cinar.Scripting
             {
                 ReadNextToken(); // skip '='
                 Expression value = ParseExpression();
-                skipEmptyStatements();
                 return new VariableDefinition(v, value);
             }
             else
-            {
-                skipEmptyStatements();
                 return new VariableDefinition(v, null);
-            }
         }
 
         IfStatement ParseIfStatement()
@@ -125,19 +149,22 @@ namespace Cinar.Scripting
             //   if {condition} then {true-statements} else {false-statements} end if
 
             ReadNextToken(); // skip 'if'
-            ReadNextToken(); // skip '('
+            SkipExpected(TokenType.Symbol, "(");
 
             Expression lCondition = ParseExpression();
 
             SkipExpected(TokenType.Symbol, ")"); // skip ')'
 
             List<Statement> lTrueStatements = new List<Statement>();
+            bool lTrueStatementsHasBracet = false;
             List<Statement> lFalseStatements = new List<Statement>();
+            bool lFalseStatementsHasBracet = false;
             List<Statement> lStatements = lTrueStatements;
             Statement lStatement;
 
             if (fCurrentToken.Equals(TokenType.Symbol, "{"))
             {
+                lTrueStatementsHasBracet = true;
                 SkipExpected(TokenType.Symbol, "{"); // skip '{'
 
                 CheckForUnexpectedEndOfSource();
@@ -145,7 +172,8 @@ namespace Cinar.Scripting
                 {
                     if ((lStatement = ReadNextStatement()) != null)
                         lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
+                    else 
+                        throw new ParserException("Unexpected end of source.");
                 }
 
                 ReadNextToken(); // skip '}'
@@ -154,7 +182,8 @@ namespace Cinar.Scripting
             {
                 if ((lStatement = ReadNextStatement()) != null)
                     lStatements.Add(lStatement);
-                else throw new ParserException("Unexpected end of source.");
+                else 
+                    throw new ParserException("Unexpected end of source.");
             }
 
             if (fCurrentToken != null)
@@ -167,6 +196,7 @@ namespace Cinar.Scripting
 
                     if (fCurrentToken.Equals(TokenType.Symbol, "{"))
                     {
+                        lFalseStatementsHasBracet = true;
                         ReadNextToken(); // skip '{'
                         CheckForUnexpectedEndOfSource();
                         while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
@@ -186,11 +216,9 @@ namespace Cinar.Scripting
                 }
             }
 
-            skipEmptyStatements();
-
             return new IfStatement(lCondition
-                , new StatementCollection(lTrueStatements)
-                , new StatementCollection(lFalseStatements));
+                , new StatementCollection(lTrueStatements, lTrueStatementsHasBracet)
+                , new StatementCollection(lFalseStatements, lFalseStatementsHasBracet));
         }
         TryCatchStatement ParseTryStatement()
         {
@@ -236,12 +264,10 @@ namespace Cinar.Scripting
 
             SkipExpected(TokenType.Symbol, "}"); // skip '}'
 
-            skipEmptyStatements();
-
             return new TryCatchStatement(
-                new StatementCollection(lTryStatements),
+                new StatementCollection(lTryStatements, true),
                 exVarName,
-                new StatementCollection(lCatchStatements));
+                new StatementCollection(lCatchStatements, true));
         }
 
         WhileStatement ParseWhileStatement()
@@ -258,10 +284,12 @@ namespace Cinar.Scripting
             SkipExpected(TokenType.Symbol, ")"); // skip ')'
 
             List<Statement> lStatements = new List<Statement>();
+            bool hasBrace = false;
             Statement lStatement;
 
             if (fCurrentToken.Equals(TokenType.Symbol, "{"))
             {
+                hasBrace = true;
                 SkipExpected(TokenType.Symbol, "{"); // skip '{'
 
                 CheckForUnexpectedEndOfSource();
@@ -281,9 +309,7 @@ namespace Cinar.Scripting
                 else throw new ParserException("Unexpected end of source.");
             }
 
-            skipEmptyStatements();
-
-            return new WhileStatement(lCondition, new StatementCollection(lStatements));
+            return new WhileStatement(lCondition, new StatementCollection(lStatements, hasBrace));
         }
 
         ForStatement ParseForStatement()
@@ -318,10 +344,12 @@ namespace Cinar.Scripting
             SkipExpected(TokenType.Symbol, ")"); // skip ')'
 
             List<Statement> lStatements = new List<Statement>();
+            bool hasBrace = false;
             Statement lStatement;
 
             if (fCurrentToken.Equals(TokenType.Symbol, "{"))
             {
+                hasBrace = true;
                 SkipExpected(TokenType.Symbol, "{"); // skip '{'
 
                 CheckForUnexpectedEndOfSource();
@@ -341,26 +369,32 @@ namespace Cinar.Scripting
                 else throw new ParserException("Unexpected end of source.");
             }
 
-            skipEmptyStatements();
-
-            return new ForStatement(lStart, lCompare, lEnd, new StatementCollection(lStatements));
+            return new ForStatement(lStart, lCompare, lEnd, new StatementCollection(lStatements, hasBrace));
         }
 
         ForEachStatement ParseForEachStatement()
         {
             // foreach-statement:
             //   foreach ({variable} in {end-value}) { {statements} }
+            //   foreach (var {variable} in {end-value}) { {statements} }
+            //   foreach (int {variable} in {end-value}) { {statements} }
 
             ReadNextToken(); // skip 'foreach'
             CheckForUnexpectedEndOfSource();
             ReadNextToken(); // skip '('
             CheckForUnexpectedEndOfSource();
 
-            if (fCurrentToken.Type != TokenType.Word)
-                throw new ParserException("Expected a variable.");
-
-            Variable lVariable = new Variable(fCurrentToken.Value);
+            Token lToken = fCurrentToken;
             ReadNextToken();
+
+            Variable lVariable;
+            if (fCurrentToken.Value == "in")
+                lVariable = new Variable(lToken.Value, "var");
+            else
+            {
+                lVariable = new Variable(fCurrentToken.Value, lToken.Value);
+                ReadNextToken();
+            }
 
             SkipExpected(TokenType.Word, "in"); // skip 'in'
 
@@ -369,10 +403,12 @@ namespace Cinar.Scripting
 
             SkipExpected(TokenType.Symbol, ")"); // skip ')'
             List<Statement> lStatements = new List<Statement>();
+            bool hasBrace = false;
             Statement lStatement;
 
             if (fCurrentToken.Equals(TokenType.Symbol, "{"))
             {
+                hasBrace = true;
                 SkipExpected(TokenType.Symbol, "{"); // skip '{'
 
                 CheckForUnexpectedEndOfSource();
@@ -392,9 +428,7 @@ namespace Cinar.Scripting
                 else throw new ParserException("Unexpected end of source.");
             }
 
-            skipEmptyStatements();
-
-            return new ForEachStatement(lVariable, lCollection, new StatementCollection(lStatements));
+            return new ForEachStatement(lVariable, lCollection, new StatementCollection(lStatements, hasBrace));
         }
 
         FunctionDefinitionStatement ParseFunctionDefinitionStatement()
@@ -430,31 +464,19 @@ namespace Cinar.Scripting
             List<Statement> lStatements = new List<Statement>();
             Statement lStatement;
 
-            if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-            {
-                SkipExpected(TokenType.Symbol, "{"); // skip '{'
+            SkipExpected(TokenType.Symbol, "{"); // skip '{'
 
-                CheckForUnexpectedEndOfSource();
-                while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                ReadNextToken(); // skip '}'
-            }
-            else
+            CheckForUnexpectedEndOfSource();
+            while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
             {
                 if ((lStatement = ReadNextStatement()) != null)
                     lStatements.Add(lStatement);
                 else throw new ParserException("Unexpected end of source.");
             }
 
-            // if this ends with ; skip it.
-            skipEmptyStatements();
+            ReadNextToken(); // skip '}'
 
-            return new FunctionDefinitionStatement(funcName, lParams, new StatementCollection(lStatements));
+            return new FunctionDefinitionStatement(funcName, lParams, new StatementCollection(lStatements, true));
         }
 
         BreakStatement ParseBreakStatement()
@@ -463,7 +485,6 @@ namespace Cinar.Scripting
             //   break
 
             SkipExpected(TokenType.Word, "break");
-            skipEmptyStatements();
 
             return new BreakStatement();
         }
@@ -474,7 +495,6 @@ namespace Cinar.Scripting
             //   continue
 
             SkipExpected(TokenType.Word, "continue");
-            skipEmptyStatements();
 
             return new ContinueStatement();
         }
@@ -485,7 +505,6 @@ namespace Cinar.Scripting
             //   continue
 
             SkipExpected(TokenType.Word, "debugger");
-            skipEmptyStatements();
 
             return new DebuggerStatement();
         }
@@ -497,7 +516,6 @@ namespace Cinar.Scripting
 
             SkipExpected(TokenType.Word, "return");
             Expression exp = ParseExpression();
-            skipEmptyStatements();
 
             return new ReturnStatement(exp);
         }
@@ -509,7 +527,6 @@ namespace Cinar.Scripting
 
             SkipExpected(TokenType.Word, "throw");
             Expression exp = ParseExpression();
-            skipEmptyStatements();
 
             return new ThrowStatement(exp);
         }
@@ -530,8 +547,6 @@ namespace Cinar.Scripting
                 ReadNextToken();
             }
             ReadNextToken();
-            
-            skipEmptyStatements();
 
             return new UsingStatement(str);
         }
@@ -544,24 +559,30 @@ namespace Cinar.Scripting
             CheckForUnexpectedEndOfSource();
 
             if (fCurrentToken.Equals(TokenType.Symbol, "="))
-                return ParseAssignment(new Variable(lToken.Value), "=");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "=");
             if (fCurrentToken.Equals(TokenType.Symbol, "+="))
-                return ParseAssignment(new Variable(lToken.Value), "+=");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "+=");
             if (fCurrentToken.Equals(TokenType.Symbol, "++"))
-                return ParseAssignment(new Variable(lToken.Value), "++");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "++");
             if (fCurrentToken.Equals(TokenType.Symbol, "-="))
-                return ParseAssignment(new Variable(lToken.Value), "-=");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "-=");
             if (fCurrentToken.Equals(TokenType.Symbol, "--"))
-                return ParseAssignment(new Variable(lToken.Value), "--");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "--");
             if (fCurrentToken.Equals(TokenType.Symbol, "/="))
-                return ParseAssignment(new Variable(lToken.Value), "/=");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "/=");
             if (fCurrentToken.Equals(TokenType.Symbol, "*="))
-                return ParseAssignment(new Variable(lToken.Value), "*=");
+                return ParseAssignment(new Variable(lToken.Value, "var"), "*=");
             if (fCurrentToken.Equals(TokenType.Symbol, "."))
                 return ParseMemberAssignmentOrMethodCallStatement(lToken.Value);
 
             if (fCurrentToken.Equals(TokenType.Symbol, "("))
                 return new FunctionCallStatement(ParseFunctionCall(lToken.Value));
+
+            if (fCurrentToken.Type == TokenType.Word)  // DateTime d = null; gibi VarStatement'ları bulur...
+                return ParseVarStatement(lToken.Value);
+
+            if (fCurrentToken.Equals(TokenType.Symbol, "["))
+                return ParseMemberAssignmentOrMethodCallStatement(lToken.Value);
 
             throw new ParserException("Expected a statement.");
         }
@@ -580,9 +601,6 @@ namespace Cinar.Scripting
             else
                 a = new Assignment(variable, op, ParseExpression());
 
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
             return a;
         }
         MemberAssignment ParseMemberAssignment(MemberAccess variable, string op)
@@ -599,9 +617,6 @@ namespace Cinar.Scripting
             else
                 a = new MemberAssignment(variable, op, ParseExpression());
 
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
             return a;
         }
 
@@ -610,12 +625,14 @@ namespace Cinar.Scripting
             // assignment:
             //   {variable} = {value}
 
+            string dotType = fCurrentToken.Value;
+                
             ReadNextToken(); // skip '.'
 
-            MemberAccess ma = new MemberAccess(new Variable(variable), ParseDotExpression());
+            MemberAccess ma = new MemberAccess(new Variable(variable, "var"), ParseDotExpression());
 
-            // if this ends with ; skip it.
-            skipEmptyStatements();
+            if (dotType == "[")
+                SkipExpected(TokenType.Symbol, "]");
 
             if (ma.RightChildExpression is MethodCall)
                 return new MethodCallStatement(ma);
@@ -803,21 +820,40 @@ namespace Cinar.Scripting
             //   {unary-expression} [* or /] {unary-expression}
             //   {unary-expression} [* or /] {unary-expression} [* or /] ...
 
-            Expression lNode = ParseDotExpression();
+            Expression lNode = ParseIsExpression();
 
             while (!AtEndOfSource)
             {
                 if (fCurrentToken.Equals(TokenType.Symbol, "*"))
                 {
                     ReadNextToken(); // skip '*'
-                    lNode = new Multiplication(lNode, ParseDotExpression());
+                    lNode = new Multiplication(lNode, ParseIsExpression());
                 }
                 else if (fCurrentToken.Equals(TokenType.Symbol, "/"))
                 {
                     ReadNextToken(); // skip '/'
-                    lNode = new Division(lNode, ParseDotExpression());
+                    lNode = new Division(lNode, ParseIsExpression());
                 }
                 else break;
+            }
+
+            return lNode;
+        }
+
+        Expression ParseIsExpression()
+        {
+            // is expression:
+            //   {unary-expression} [is] type-name
+
+            Expression lNode = ParseDotExpression();
+
+            if (!AtEndOfSource && fCurrentToken.Equals(TokenType.Word, "is"))
+            {
+                ReadNextToken(); // skip 'is'
+                if (fCurrentToken.Type != TokenType.Word)
+                    throw new ParserException("is operator must be followed by a type name");
+                lNode = new Is(lNode, fCurrentToken.Value);
+                ReadNextToken(); //skip type name
             }
 
             return lNode;
@@ -830,14 +866,25 @@ namespace Cinar.Scripting
 
             Expression lNode = ParseUnaryExpression();
 
-            while (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "."))
+            while (!AtEndOfSource && (fCurrentToken.Value == "." || fCurrentToken.Value == "["))
             {
-                ReadNextToken(); // skip '.'
-                Expression exp = ParseVariableOrFunctionCall();
-                if (exp is FunctionCall)
-                    lNode = new MethodCall(lNode, exp);
+                string currToken = fCurrentToken.Value;
+                if (currToken == ".")
+                {
+                    ReadNextToken(); // skip '.'
+
+                    Expression exp = ParseVariableOrFunctionCall();
+                    if (exp is FunctionCall)
+                        lNode = new MethodCall(lNode, exp);
+                    else
+                        lNode = new MemberAccess(lNode, exp);
+                }
                 else
-                    lNode = new MemberAccess(lNode, exp);
+                {
+                    ReadNextToken(); // skip '['
+                    lNode = new IndexerAccess(lNode, ParseExpression());
+                    SkipExpected(TokenType.Symbol, "]");
+                }
             }
 
             return lNode;
@@ -864,6 +911,8 @@ namespace Cinar.Scripting
             else if (fCurrentToken.Equals(TokenType.Word, "new"))
             {
                 ReadNextToken(); // skip 'new'
+                if (fCurrentToken.Type != TokenType.Word)
+                    throw new ParserException("Type name expected");
                 string constructorName = fCurrentToken.Value;
                 ReadNextToken(); // skip constructorName
                 return new NewExpression(ParseFunctionCall(constructorName));
@@ -901,6 +950,7 @@ namespace Cinar.Scripting
             ReadNextToken(); // skip '('
 
             Expression lExpression = ParseExpression();
+            lExpression.InParanthesis = true;
 
             SkipExpected(TokenType.Symbol, ")"); // skip ')'
 
@@ -913,20 +963,23 @@ namespace Cinar.Scripting
 
             ReadNextToken();
 
-            if (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "("))
+            if(AtEndOfSource)
+                return new Variable(lName, "var");
+
+            if (fCurrentToken.Equals(TokenType.Symbol, "("))
                 return ParseFunctionCall(lName);
             else if (fCurrentToken.Equals(TokenType.Symbol, "++"))
             {
                 ReadNextToken();
-                return new VariableIncrement(new Variable(lName), 1);
+                return new VariableIncrement(new Variable(lName, "var"), 1);
             }
             else if (fCurrentToken.Equals(TokenType.Symbol, "--"))
             {
                 ReadNextToken();
-                return new VariableIncrement(new Variable(lName), -1);
+                return new VariableIncrement(new Variable(lName, "var"), -1);
             }
             else
-                return new Variable(lName);
+                return new Variable(lName, "var");
         }
 
         Expression ParseStringConstant()
@@ -987,9 +1040,6 @@ namespace Cinar.Scripting
 
             ReadNextToken(); // skip ')'
 
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
             return new FunctionCall(name, lArguments.ToArray());
         }
 
@@ -1016,7 +1066,8 @@ namespace Cinar.Scripting
         TextReader fSource; // the source to read characters from
         char fCurrentChar; // the current character
         StringBuilder fTokenValueBuffer; // a buffer for building the value of a token
-        public int CurrentLineNumber = 0;
+        public int CurrentColumnNumber;
+        public int CurrentLineNumber;
 
         public Tokenizer(TextReader source)
         {
@@ -1032,18 +1083,23 @@ namespace Cinar.Scripting
         void ReadNextChar()
         {
             int lChar = fSource.Read();
+            CurrentColumnNumber++;
             if (lChar > 0)
                 fCurrentChar = (char)lChar;
-            else fCurrentChar = '\0';
+            else 
+                fCurrentChar = '\0';
+
+            if (fCurrentChar == '\n')
+            {
+                CurrentLineNumber++;
+                CurrentColumnNumber = 0;
+            }
         }
 
         void SkipWhitespace()
         {
             while (char.IsWhiteSpace(fCurrentChar))
-            {
-                if (fCurrentChar == '\n') CurrentLineNumber++;
                 ReadNextChar();
-            }
         }
 
         void SkipComment(string commentSymbol)
@@ -1102,33 +1158,82 @@ namespace Cinar.Scripting
 
         public Token ReadNextToken()
         {
-            SkipWhitespace();
+            return ReadNextToken(false);
+        }
 
+        private bool readingCode = false;
+
+        public Token ReadNextToken(bool keepWhitespaces)
+        {
             if (AtEndOfSource)
                 return null;
 
-            // if the first character is a letter, the token is a word
-            if (char.IsLetter(fCurrentChar))
-                return ReadWord();
-
-            // if the first character is a digit, the token is an integer constant
-            if (char.IsDigit(fCurrentChar))
-                return ReadIntegerOrDecimalConstant();
-
-            // if the first character is a quote, the token is a string constant
-            if (fCurrentChar == '"' || fCurrentChar == '\'')
-                return ReadStringConstant();
-
-            // in all other cases, the token should be a symbol
-            Token token = ReadSymbol();
-
-            if (token.Value == "/*" || token.Value == "//")
+            if (readingCode)
             {
-                SkipComment(token.Value);
-                token = ReadNextToken();
-            }
+                if (!keepWhitespaces)
+                    SkipWhitespace();
 
-            return token;
+                // if the first character is a letter, the token is a word
+                if (char.IsLetter(fCurrentChar))
+                    return ReadWord();
+
+                // if the first character is a digit, the token is an integer constant
+                if (char.IsDigit(fCurrentChar))
+                    return ReadIntegerOrDecimalConstant();
+
+                // if the first character is a quote, the token is a string constant
+                if (fCurrentChar == '"' || fCurrentChar == '\'')
+                    return ReadStringConstant();
+
+                // in all other cases, the token should be a symbol
+                Token token = ReadSymbol();
+
+                if (token.Value == "/*" || token.Value == "//")
+                {
+                    SkipComment(token.Value);
+                    token = ReadNextToken();
+                }
+
+                if (token.Value == "$")
+                {
+                    readingCode = false;
+                    //ReadNextChar();
+                    return ReadNextToken();
+                }
+                else
+                    return token;
+            }
+            else
+            {
+                if (fCurrentChar != '$')
+                    return ReadEchoBlock();
+                else
+                {
+                    Token t = ReadSymbol();
+                    readingCode = true;
+                    if (t.Value == "$")
+                        return ReadNextToken();
+                    else
+                        return t;
+                }
+            }
+        }
+
+        Token ReadEchoBlock()
+        {
+            do
+            {
+                StoreCurrentCharAndReadNext();
+                if (fCurrentChar == '\\')
+                {
+                    StoreCurrentCharAndReadNext();
+                    if (fCurrentChar == '$')
+                        StoreCurrentCharAndReadNext();
+                }
+            }
+            while (!(fCurrentChar == '$' || fCurrentChar=='\0'));
+
+            return new Token(TokenType.EchoBlock, ExtractStoredChars());
         }
 
         Token ReadWord()
@@ -1137,7 +1242,7 @@ namespace Cinar.Scripting
             {
                 StoreCurrentCharAndReadNext();
             }
-            while (char.IsLetterOrDigit(fCurrentChar) || fCurrentChar=='_');
+            while (char.IsLetterOrDigit(fCurrentChar) || fCurrentChar == '_');
 
             return new Token(TokenType.Word, ExtractStoredChars());
         }
@@ -1236,6 +1341,8 @@ namespace Cinar.Scripting
                     return new Token(TokenType.Symbol, ExtractStoredChars());
                 case '(':
                 case ')':
+                case '[':
+                case ']':
                 case ',':
                 case '.':
                 case '}':
@@ -1298,6 +1405,13 @@ namespace Cinar.Scripting
                         StoreCurrentCharAndReadNext();
                     }
                     return new Token(TokenType.Symbol, ExtractStoredChars());
+                case '$':
+                    StoreCurrentCharAndReadNext();
+                    if (fCurrentChar == '=')
+                    {
+                        StoreCurrentCharAndReadNext();
+                    }
+                    return new Token(TokenType.Symbol, ExtractStoredChars());
                 default:
                     CheckForUnexpectedEndOfSource();
                     ThrowInvalidCharException();
@@ -1340,6 +1454,7 @@ namespace Cinar.Scripting
         Integer,
         Decimal,
         String,
-        Symbol
+        Symbol,
+        EchoBlock
     }
 }
