@@ -34,7 +34,6 @@ namespace Cinar.DBTools.Tools
             cbDstDb.SelectedIndex = 0;
             cbSrcDb.SelectedIndex = 0;
         }
-
         private void BindSrcFields()
         {
             cbSrcField.Items.Clear();
@@ -45,7 +44,6 @@ namespace Cinar.DBTools.Tools
             foreach (Field fld in (cbSrcTable.SelectedItem as Table).Fields)
                 cbSrcStringField.Items.Add(fld);
         }
-
         private void BindDstFields()
         {
             cbDstField.Items.Clear();
@@ -56,7 +54,6 @@ namespace Cinar.DBTools.Tools
             foreach (Field fld in (cbDstTable.SelectedItem as Table).Fields)
                 cbDstStringField.Items.Add(fld);
         }
-
         private void BindSrcTables()
         {
             cbSrcTable.Items.Clear();
@@ -64,7 +61,6 @@ namespace Cinar.DBTools.Tools
                 cbSrcTable.Items.Add(tbl);
             cbSrcTable.SelectedIndex = 0;
         }
-
         private void BindDstTables()
         {
             cbDstTable.Items.Clear();
@@ -78,7 +74,6 @@ namespace Cinar.DBTools.Tools
             BindSrcTables();
             BindSrcFields();
         }
-
         private void cbSrcTable_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindSrcFields();
@@ -88,13 +83,11 @@ namespace Cinar.DBTools.Tools
                 if (!lbTables.Items.Contains(tbl))
                     lbTables.Items.Add(tbl);
         }
-
         private void cbDstDb_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindDstTables();
             BindDstFields();
         }
-
         private void cbDstTable_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindDstFields();
