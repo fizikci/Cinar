@@ -817,7 +817,8 @@ $"},
         }
         private void cmdTryAndSee(string arg)
         {
-            MessageBox.Show("TryAndSee");
+            //MessageBox.Show("TryAndSee");
+            new FormContentExtractor().Show();
         }
         #endregion
 
