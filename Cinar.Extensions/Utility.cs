@@ -456,6 +456,15 @@ namespace System
 
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            req.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; tr; rv:1.9.1.9) Gecko/20100315 Firefox/3.5.9 (.NET CLR 3.5.30729)";
+            req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            req.Headers["Accept-Language"] = "tr-TR,tr;q=0.8,en-us;q=0.5,en;q=0.3";
+            //req.Headers["Accept-Encoding"] = "gzip,deflate";
+            req.Headers["Accept-Charset"] = "ISO-8859-9,utf-8;q=0.7,*;q=0.7";
+            req.Headers["Keep-Alive"] = "300";
+            req.KeepAlive = true;
+            req.Headers["Cookie"] = "ASP.NET_SessionId=2n5drm45iqroub550diydu55";
+            req.Headers["Cache-Control"] = "max-age=0";
 
             using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
             {
