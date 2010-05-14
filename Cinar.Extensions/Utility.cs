@@ -762,12 +762,13 @@ namespace System
                     }
                     else
                     {
-                        pi.SetValue(member, val, null);
+                        pi.SetValue(member, Convert.ChangeType(val, pi.PropertyType), null);
                     }
                 }
                 else if (mi is FieldInfo)
                 {
-                    (mi as FieldInfo).SetValue(member, val);
+                    FieldInfo fi = mi as FieldInfo;
+                    fi.SetValue(member, Convert.ChangeType(val, fi.FieldType));
                 }
 
                 return val;
@@ -781,7 +782,7 @@ namespace System
             if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
             object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-            pi.SetValue(obj, val, new object[] { indexerParam });
+            pi.SetValue(obj, Convert.ChangeType(val, pi.PropertyType), new object[] { indexerParam });
         }
 
         public static void SetIndexedValue(this object obj, object indexer, object val)
@@ -799,7 +800,7 @@ namespace System
             }
             if (pi == null)
                 throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-            pi.SetValue(obj, val, new object[] { indexer });
+            pi.SetValue(obj, Convert.ChangeType(val, pi.PropertyType), new object[] { indexer });
         }
 
         public static object GetIndexedValue(this object obj, string indexer, bool stringIndexer)
@@ -885,6 +886,15 @@ namespace System
                 return sb.ToString();
             }
 
+            if (obj is DataRow)
+                return (obj as DataRow).ToJSON();
+
+            if (obj is Hashtable)
+                return (obj as Hashtable).ToJSON();
+
+            if (obj is DataTable)
+                return (obj as DataTable).ToJSON();
+
             sb.Append("{\n");
             ArrayList res = new ArrayList();
             foreach (PropertyInfo pi in obj.GetType().GetProperties())
@@ -940,6 +950,18 @@ namespace System
 
             foreach (DataColumn dc in dr.Table.Columns)
                 sb.AppendFormat("{0}:{1},", Utility.ToJS(dc.ColumnName), Utility.ToJS(dr[dc]));
+            sb.Remove(sb.Length - 1, 1);
+
+            sb.Append("}");
+            return sb.ToString();
+        }
+        public static string ToJSON(this Hashtable ht)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{\n");
+
+            foreach (object key in ht.Keys)
+                sb.AppendFormat("{0}:{1},", Utility.ToJS(key.ToString()), Utility.ToJS(ht[key]));
             sb.Remove(sb.Length - 1, 1);
 
             sb.Append("}");

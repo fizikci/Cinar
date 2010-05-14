@@ -229,7 +229,6 @@ namespace Cinar.DBTools.Tools
 
             if(lbLog.Items.Count>200)
             {
-                string logPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\dbintegration.log";
                 using (StreamWriter sw = new StreamWriter(logPath, true, Encoding.UTF8))
                 {
                     while (lbLog.Items.Count > 100)
@@ -243,7 +242,7 @@ namespace Cinar.DBTools.Tools
 
         private string logPath {
             get {
-                return Path.GetDirectoryName(Application.ExecutablePath) + "\\dbintegration.log";
+                return Path.GetDirectoryName(Application.ExecutablePath) + "\\dbint_" + DateTime.Now.ToString("Ymd") + ".log";
             }
         }
 
@@ -303,7 +302,7 @@ namespace Cinar.DBTools.Tools
         private bool autoStart = false;
         public void StartIntegration(string categoryName)
         {
-            Provider.LoadConnectionsFromXML();
+            Provider.LoadConnectionsFromXML("");
             cbCategories.SelectedItem = categoryName;
             autoStart = true;
         }

@@ -689,7 +689,7 @@ namespace Cinar.Database
                 Table tbl = GetTableForEntityType(entity.GetType());//this.Tables[entity.GetType().Name];
 
                 if (tbl == null)
-                    tbl = this.CreateTableForType(entity.GetType());
+                    tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(entity.GetType());
 
                 Hashtable ht = EntityToHashtable(entity);
 
@@ -720,7 +720,8 @@ namespace Cinar.Database
                 if (canBeMappedToDBTable(pi))
                 {
                     Field f = GetFieldForProperty(pi);
-                    ht[f.Name] = pi.GetValue(entity, null);
+                    if (f != null)
+                        ht[f.Name] = pi.GetValue(entity, null);
                 }
             return ht;
         }
@@ -744,7 +745,8 @@ namespace Cinar.Database
                 if (canBeMappedToDBTable(pi))
                 {
                     Field f = GetFieldForProperty(pi);
-                    dt.Columns.Add(f.Name, pi.PropertyType);
+                    if (f != null)
+                        dt.Columns.Add(f.Name, pi.PropertyType);
                 }
 
             DataRow dr = dt.NewRow();
@@ -752,7 +754,8 @@ namespace Cinar.Database
                 if (canBeMappedToDBTable(pi))
                 {
                     Field f = GetFieldForProperty(pi);
-                    dr[f.Name] = pi.GetValue(entity, null);
+                    if (f != null)
+                        dr[f.Name] = pi.GetValue(entity, null);
                 }
 
             return dr;
@@ -829,7 +832,8 @@ namespace Cinar.Database
                 if (canBeMappedToDBTable(pi))
                 {
                     Field f = GetFieldForProperty(pi);
-                    dr[f.Name] = pi.GetValue(entity, null);
+                    if (f != null)
+                        dr[f.Name] = pi.GetValue(entity, null);
                 }
         }
         #endregion
@@ -981,7 +985,7 @@ namespace Cinar.Database
                 // first check the table existance
                 Table table = GetTableForEntityType(entityType);
                 if (table == null)
-                    table = this.CreateTableForType(entityType);
+                    table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
                 result = DataRowToEntity(entityType, this.GetDataRow("select * from [" + table.Name + "] where " + where, parameters));
 
@@ -1041,7 +1045,7 @@ namespace Cinar.Database
                 // first check the table existance
                 Table table = GetTableForEntityType(entityType);
                 if (table == null)
-                    table = this.CreateTableForType(entityType);
+                    table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
                 dt = this.GetDataTable(selectSql, parameters);
 
@@ -1061,7 +1065,7 @@ namespace Cinar.Database
             // first check the table existance
             Table tbl = GetTableForEntityType(entityType);
             if (tbl == null)
-                tbl = this.CreateTableForType(entityType);
+                tbl = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("[{0}]\n", tbl.Name);
@@ -1160,7 +1164,7 @@ namespace Cinar.Database
             {
                 if (f.Table.Keys == null) f.Table.Keys = new KeyCollection(f.Table);
                 Key key = new Key();
-                key.FieldNames = new List<string>();
+                key.FieldNames = new List<string> { f.Name };
                 key.IsPrimary = true;
                 key.IsUnique = true;
                 key.Name = "PK_" + f.Name;
@@ -1237,7 +1241,7 @@ namespace Cinar.Database
                     continue;
 
                 if(GetTableForEntityType(type)==null)
-                    this.CreateTableForType(type, false);
+                    tableMappingInfo[type] = this.CreateTableForType(type, false);
             }
 
             this.Refresh();
@@ -1258,8 +1262,9 @@ namespace Cinar.Database
                 tableMappingInfo[entityType] = this.Tables[(attribs[0] as TableDetailAttribute).Name];
             if (!tableMappingInfo.ContainsKey(entityType))
                 tableMappingInfo[entityType] = this.Tables[entityType.Name];
-            if (tableMappingInfo[entityType] == null)
-                throw new Exception(entityType.Name + " isimli tablo bulunamadı!");
+            // Bunu yapmışız ama veritabanında henüz hiç tablo yokken, tabloların otomatik create edilebilmesi için commentlemem icap etti..
+            //if (tableMappingInfo[entityType] == null)
+            //    throw new Exception(entityType.Name + " isimli tablo bulunamadı!");
             return tableMappingInfo[entityType];
             //return tableMappingInfo.ContainsKey(entityType) ? tableMappingInfo[entityType] : null;
         }
@@ -1278,7 +1283,9 @@ namespace Cinar.Database
             if (!fieldMappingInfo.ContainsKey(propertyInfo))
                 fieldMappingInfo[propertyInfo] = table.Fields[propertyInfo.Name];
             if (fieldMappingInfo[propertyInfo] == null)
-                throw new Exception(propertyInfo.ReflectedType.Name + " veya " + propertyInfo.DeclaringType.Name + " isimli tabloya ait " + propertyInfo.Name + " isimli alan bulunamadı!");
+            {
+                //throw new Exception(propertyInfo.ReflectedType.Name + " veya " + propertyInfo.DeclaringType.Name + " isimli tabloya ait " + propertyInfo.Name + " isimli alan bulunamadı!");
+            }
             return fieldMappingInfo[propertyInfo];
             //return fieldMappingInfo.ContainsKey(propertyInfo) ? fieldMappingInfo[propertyInfo] : null;
         }

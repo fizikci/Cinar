@@ -50,6 +50,7 @@
             this.menuGenerateSQLInsert = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGenerateSQLUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGenerateSQLCreateTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGenerateSQLDump = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGroupedCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableDrop = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +63,7 @@
             this.menuDeleteERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGenerateUIMetadata = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAnalyzeTable = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
@@ -71,6 +73,8 @@
             this.txtInfo = new System.Windows.Forms.TextBox();
             this.tpSQLLog = new System.Windows.Forms.TabPage();
             this.txtSQLLog = new System.Windows.Forms.TextBox();
+            this.tpTableAnalyze = new System.Windows.Forms.TabPage();
+            this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnection = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,9 +111,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.tpTableAnalyze = new System.Windows.Forms.TabPage();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
-            this.menuAnalyzeTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenConnectionsFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -125,10 +127,10 @@
             this.tabControl.SuspendLayout();
             this.tpInfo.SuspendLayout();
             this.tpSQLLog.SuspendLayout();
+            this.tpTableAnalyze.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.tpTableAnalyze.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -309,7 +311,8 @@
             this.menuGenerateSQLSelect,
             this.menuGenerateSQLInsert,
             this.menuGenerateSQLUpdate,
-            this.menuGenerateSQLCreateTable});
+            this.menuGenerateSQLCreateTable,
+            this.menuGenerateSQLDump});
             this.menuGenerateSQL.Name = "menuGenerateSQL";
             this.menuGenerateSQL.Size = new System.Drawing.Size(197, 22);
             this.menuGenerateSQL.Text = "Generate SQL";
@@ -317,26 +320,32 @@
             // menuGenerateSQLSelect
             // 
             this.menuGenerateSQLSelect.Name = "menuGenerateSQLSelect";
-            this.menuGenerateSQLSelect.Size = new System.Drawing.Size(147, 22);
+            this.menuGenerateSQLSelect.Size = new System.Drawing.Size(211, 22);
             this.menuGenerateSQLSelect.Text = "Select";
             // 
             // menuGenerateSQLInsert
             // 
             this.menuGenerateSQLInsert.Name = "menuGenerateSQLInsert";
-            this.menuGenerateSQLInsert.Size = new System.Drawing.Size(147, 22);
+            this.menuGenerateSQLInsert.Size = new System.Drawing.Size(211, 22);
             this.menuGenerateSQLInsert.Text = "Insert";
             // 
             // menuGenerateSQLUpdate
             // 
             this.menuGenerateSQLUpdate.Name = "menuGenerateSQLUpdate";
-            this.menuGenerateSQLUpdate.Size = new System.Drawing.Size(147, 22);
+            this.menuGenerateSQLUpdate.Size = new System.Drawing.Size(211, 22);
             this.menuGenerateSQLUpdate.Text = "Update";
             // 
             // menuGenerateSQLCreateTable
             // 
             this.menuGenerateSQLCreateTable.Name = "menuGenerateSQLCreateTable";
-            this.menuGenerateSQLCreateTable.Size = new System.Drawing.Size(147, 22);
+            this.menuGenerateSQLCreateTable.Size = new System.Drawing.Size(211, 22);
             this.menuGenerateSQLCreateTable.Text = "Create Table";
+            // 
+            // menuGenerateSQLDump
+            // 
+            this.menuGenerateSQLDump.Name = "menuGenerateSQLDump";
+            this.menuGenerateSQLDump.Size = new System.Drawing.Size(211, 22);
+            this.menuGenerateSQLDump.Text = "Dump Schema && Metadata";
             // 
             // menuRefresh
             // 
@@ -409,6 +418,12 @@
             this.menuGenerateUIMetadata.Name = "menuGenerateUIMetadata";
             this.menuGenerateUIMetadata.Size = new System.Drawing.Size(197, 22);
             this.menuGenerateUIMetadata.Text = "Generate UI Metadata";
+            // 
+            // menuAnalyzeTable
+            // 
+            this.menuAnalyzeTable.Name = "menuAnalyzeTable";
+            this.menuAnalyzeTable.Size = new System.Drawing.Size(197, 22);
+            this.menuAnalyzeTable.Text = "Analyze Table";
             // 
             // imageListTree
             // 
@@ -527,6 +542,25 @@
             this.txtSQLLog.TabIndex = 1;
             this.txtSQLLog.WordWrap = false;
             // 
+            // tpTableAnalyze
+            // 
+            this.tpTableAnalyze.Controls.Add(this.webBrowser);
+            this.tpTableAnalyze.Location = new System.Drawing.Point(4, 22);
+            this.tpTableAnalyze.Name = "tpTableAnalyze";
+            this.tpTableAnalyze.Size = new System.Drawing.Size(532, 342);
+            this.tpTableAnalyze.TabIndex = 3;
+            this.tpTableAnalyze.Text = "Table Analyze";
+            this.tpTableAnalyze.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser
+            // 
+            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser.Name = "webBrowser";
+            this.webBrowser.Size = new System.Drawing.Size(532, 342);
+            this.webBrowser.TabIndex = 0;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
@@ -544,6 +578,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNewConnection,
+            this.menuOpenConnectionsFile,
             this.toolStripSeparator3,
             this.menuExit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -553,18 +588,18 @@
             // menuNewConnection
             // 
             this.menuNewConnection.Name = "menuNewConnection";
-            this.menuNewConnection.Size = new System.Drawing.Size(175, 22);
+            this.menuNewConnection.Size = new System.Drawing.Size(204, 22);
             this.menuNewConnection.Text = "New Connection...";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(201, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(175, 22);
+            this.menuExit.Size = new System.Drawing.Size(204, 22);
             this.menuExit.Text = "Exit";
             // 
             // toolsToolStripMenuItem
@@ -810,30 +845,11 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // tpTableAnalyze
+            // menuOpenConnectionsFile
             // 
-            this.tpTableAnalyze.Controls.Add(this.webBrowser);
-            this.tpTableAnalyze.Location = new System.Drawing.Point(4, 22);
-            this.tpTableAnalyze.Name = "tpTableAnalyze";
-            this.tpTableAnalyze.Size = new System.Drawing.Size(532, 342);
-            this.tpTableAnalyze.TabIndex = 3;
-            this.tpTableAnalyze.Text = "Table Analyze";
-            this.tpTableAnalyze.UseVisualStyleBackColor = true;
-            // 
-            // webBrowser
-            // 
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(0, 0);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(532, 342);
-            this.webBrowser.TabIndex = 0;
-            // 
-            // menuAnalyzeTable
-            // 
-            this.menuAnalyzeTable.Name = "menuAnalyzeTable";
-            this.menuAnalyzeTable.Size = new System.Drawing.Size(197, 22);
-            this.menuAnalyzeTable.Text = "Analyze Table";
+            this.menuOpenConnectionsFile.Name = "menuOpenConnectionsFile";
+            this.menuOpenConnectionsFile.Size = new System.Drawing.Size(204, 22);
+            this.menuOpenConnectionsFile.Text = "Open Connections File...";
             // 
             // FormMain
             // 
@@ -866,12 +882,12 @@
             this.tpInfo.PerformLayout();
             this.tpSQLLog.ResumeLayout(false);
             this.tpSQLLog.PerformLayout();
+            this.tpTableAnalyze.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.tpTableAnalyze.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -958,6 +974,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuAnalyzeTable;
         private System.Windows.Forms.TabPage tpTableAnalyze;
         private System.Windows.Forms.WebBrowser webBrowser;
+        private System.Windows.Forms.ToolStripMenuItem menuGenerateSQLDump;
+        private System.Windows.Forms.ToolStripMenuItem menuOpenConnectionsFile;
 
     }
 }
