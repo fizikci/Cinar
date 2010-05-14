@@ -148,6 +148,11 @@ namespace Cinar.Scripting
             TextWriter stringWriter = new StringWriter(sb);
             this.Execute(stringWriter);
         }
+
+        public void AddAssembly(Assembly assembly)
+        {
+            Context.AddAssembly(assembly);
+        }
     }
     public class Context
     {
@@ -168,6 +173,7 @@ namespace Cinar.Scripting
         internal static string code = "";
         internal Context parent = null;
 
+        internal static List<Assembly> AdditionalAssemblies = new List<Assembly>();
         public static Type GetType(string className, List<string> usings)
         {
             Type t = null;
@@ -190,6 +196,12 @@ namespace Cinar.Scripting
                 }
                 t = Assembly.GetCallingAssembly().GetType(fullClassName);
                 if (t != null) return t;
+
+                foreach (Assembly assembly in AdditionalAssemblies)
+                {
+                    t = assembly.GetType(fullClassName);
+                    if (t != null) return t;
+                }
             }
             return t;
         }
@@ -281,6 +293,12 @@ namespace Cinar.Scripting
                 currContext = currContext.parent;
             }
             this.Variables[name] = value;
+        }
+
+        internal static void AddAssembly(Assembly assembly)
+        {
+            if (!AdditionalAssemblies.Contains(assembly))
+                AdditionalAssemblies.Add(assembly);
         }
     }
 }

@@ -906,9 +906,9 @@ namespace Cinar.Scripting
                 {
                     MemberInfo mi = members[0];
                     if (mi is FieldInfo)
-                        (mi as FieldInfo).SetValue(obj, val);
+                        (mi as FieldInfo).SetValue(obj, Convert.ChangeType(val, (mi as FieldInfo).FieldType));
                     else if (mi is PropertyInfo)
-                        (mi as PropertyInfo).SetValue(obj, val, null);
+                        (mi as PropertyInfo).SetValue(obj, Convert.ChangeType(val, (mi as PropertyInfo).PropertyType), null);
                 }
             }
             else

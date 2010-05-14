@@ -108,6 +108,7 @@ namespace Cinar.Scripting
         {
             ReadNextToken(); // skip $=
             Expression exp = ParseExpression();
+            SkipExpected(TokenType.Symbol, "$");
             return new ShortCutEchoStatement(exp);
         }
 
@@ -873,6 +874,9 @@ namespace Cinar.Scripting
                 {
                     ReadNextToken(); // skip '.'
 
+                    //if (fCurrentToken.Value == "$=")
+                    //    return lNode;
+
                     Expression exp = ParseVariableOrFunctionCall();
                     if (exp is FunctionCall)
                         lNode = new MethodCall(lNode, exp);
@@ -1162,6 +1166,7 @@ namespace Cinar.Scripting
         }
 
         private bool readingCode = false;
+        private bool readingShortCutEcho = false;
 
         public Token ReadNextToken(bool keepWhitespaces)
         {
@@ -1174,7 +1179,7 @@ namespace Cinar.Scripting
                     SkipWhitespace();
 
                 // if the first character is a letter, the token is a word
-                if (char.IsLetter(fCurrentChar))
+                if (char.IsLetter(fCurrentChar) && fCurrentChar!='$')
                     return ReadWord();
 
                 // if the first character is a digit, the token is an integer constant
@@ -1196,8 +1201,14 @@ namespace Cinar.Scripting
 
                 if (token.Value == "$")
                 {
+                    if (readingShortCutEcho)
+                    {
+                        readingShortCutEcho = false;
+                        readingCode = false;
+                        return token;
+                    }
                     readingCode = false;
-                    //ReadNextChar();
+                    ReadNextChar();
                     return ReadNextToken();
                 }
                 else
@@ -1211,6 +1222,8 @@ namespace Cinar.Scripting
                 {
                     Token t = ReadSymbol();
                     readingCode = true;
+                    if (t.Value == "$=")
+                        readingShortCutEcho = true;
                     if (t.Value == "$")
                         return ReadNextToken();
                     else

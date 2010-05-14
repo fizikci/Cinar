@@ -43,6 +43,12 @@ namespace Cinar.DBTools
                                      IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode==treeView.Nodes[0]
                                  },
                      new Command {
+                                     Execute = cmdOpenConnectionsFile,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuOpenConnectionsFile},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdExit,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuExit},
@@ -200,6 +206,7 @@ $"},
                                          new CommandTrigger{ Control = menuGenerateSQLInsert, Argument="Insert"},
                                          new CommandTrigger{ Control = menuGenerateSQLSelect, Argument="Select"},
                                          new CommandTrigger{ Control = menuGenerateSQLUpdate, Argument="Update"},
+                                         new CommandTrigger{ Control = menuGenerateSQLDump, Argument="Dump"},
                                      },
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
                                  },
@@ -212,9 +219,16 @@ $"},
             cmdMan.SetCommandTriggers();
             //cmdMan.SetCommandControlsVisibility();
             cmdMan.SetCommandControlsEnable();
+        }
+
+        #region methods
+        private void showConnections(string path)
+        {
+            treeView.Nodes.Clear();
 
             rootNode = treeView.Nodes.Add("Database Connections");
-            Provider.LoadConnectionsFromXML();
+
+            Provider.LoadConnectionsFromXML(path);
             foreach (ConnectionSettings cs in Provider.Connections)
             {
                 TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
@@ -229,16 +243,9 @@ $"},
                 treeView.SelectedNode = rootNode.Nodes[0];
             }
         }
-
-        #region methods
         public void SaveConnections()
         {
-            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
-            XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
-            using (StreamWriter sr = new StreamWriter(path))
-            {
-                ser.Serialize(sr, Provider.Connections);
-            }
+            Provider.SaveConnections();
             statusText.Text = "Connections saved.";
         }
         private void executeSQL(string sql, params object[] args)
@@ -419,6 +426,14 @@ $"},
                 SaveConnections();
                 treeView.Sort();
             }
+        }
+
+        private void cmdOpenConnectionsFile(string arg)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Connection Files|*.xml";
+            if (ofd.ShowDialog() == DialogResult.OK)
+                showConnections(ofd.FileName);
         }
 
         private void cmdNewConnection(string arg)
@@ -671,6 +686,10 @@ $"},
                     sb.AppendLine("from");
                     sb.AppendLine("\t" + table.Name);
                     break;
+                case "Dump":
+                    sb.AppendLine(table.ToDDL());
+                    sb.AppendLine(table.Dump(table.Database.Provider));
+                    break;
                 case "-":
                     return;
                 default:
@@ -872,12 +891,15 @@ $"},
 
         private static bool connectionsLooaded = false;
 
-        public static void LoadConnectionsFromXML()
+        public static string ConnectionsPath;
+        public static void LoadConnectionsFromXML(string path)
         {
-            if (connectionsLooaded)
+            if (path==ConnectionsPath && connectionsLooaded)
                 return;
 
-            string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+            if(string.IsNullOrEmpty(path))
+                ConnectionsPath = path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+
             if (File.Exists(path))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
@@ -895,6 +917,16 @@ $"},
                 }
             }
             connectionsLooaded = true;
+        }
+        public static void SaveConnections()
+        {
+            if (string.IsNullOrEmpty(ConnectionsPath))
+                ConnectionsPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+            XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
+            using (StreamWriter sr = new StreamWriter(ConnectionsPath))
+            {
+                ser.Serialize(sr, Provider.Connections);
+            }
         }
     }
     public class ConnectionSettings

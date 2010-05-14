@@ -195,6 +195,48 @@ namespace Cinar.Database
             return this.parent.db.GetTableDDL(this);
         }
 
+        public string Dump(DatabaseProvider dbProvider)
+        {
+            string delimitL = "[", delimitR = "]";
+            switch (dbProvider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                    delimitL = "\""; delimitR = "\"";
+                    break;
+                case DatabaseProvider.MySQL:
+                    delimitL = "`"; delimitR = "`";
+                    break;
+                case DatabaseProvider.SQLServer:
+                    delimitL = "["; delimitR = "]";
+                    break;
+                default:
+                    break;
+            }
+
+            string fields = delimitL + String.Join(delimitR + ", " + delimitL, this.Fields.ToStringArray()) + delimitR;
+            string sql = String.Format("insert into {2}{0}{3} ({1}) values ({{0}});", this.Name, fields, delimitL, delimitR);
+
+            StringBuilder sb = new StringBuilder();
+            DataTable dt = this.Database.GetDataTable("select * from [" + this.Name + "]");
+            foreach (DataRow dr in dt.Rows)
+            {
+                string[] values = new string[this.Fields.Count];
+                for (int i = 0; i < this.Fields.Count; i++)
+                {
+                    string fieldName = this.Fields[i].Name;
+                    if (dt.Columns[i].DataType == typeof(bool))
+                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + (dr[this.Fields[i].Name].Equals(true) ? 1 : 0) + "'";
+                    else if (dt.Columns[i].DataType == typeof(DateTime))
+                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + ((DateTime)dr[this.Fields[i].Name]).ToString("yyyy-MM-dd HH:mm") + "'";
+                    else
+                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + dr[this.Fields[i].Name].ToString().Replace("'", "''").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
+                }
+                sb.AppendFormat(sql, String.Join(", ", values));
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
         public Table CloneForDatabase(Database dbDst, string tableName)
         {
             Table newTable = new Table();
