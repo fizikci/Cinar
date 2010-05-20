@@ -678,6 +678,16 @@ namespace Cinar.Database
             return this.Update(tableName, ht);
         }
 
+        public string GetIdFieldName(IDatabaseEntity entity)
+        {
+            return GetIdFieldName(entity.GetType());
+        }
+        public string GetIdFieldName(Type entityType)
+        {
+            PropertyInfo pi = entityType.GetProperty("Id");
+            return fieldMappingInfo[pi].Name;
+        }
+
         // ENTITY SAVE
         public void Save(IDatabaseEntity entity)
         {
@@ -696,7 +706,7 @@ namespace Cinar.Database
                 if (entity.Id == 0)
                 {
                     this.Insert(tbl.Name, ht);
-                    object id = this.GetValue("select max(Id) from [" + tbl.Name + "]");
+                    object id = this.GetValue("select max(" + GetIdFieldName(entity) + ") from [" + tbl.Name + "]");
                     if (id == null) id = 0;
                     entity.Id = Convert.ToInt32(id);
                 }
@@ -822,7 +832,7 @@ namespace Cinar.Database
         public void FillEntity(IDatabaseEntity entity)
         {
             string tableName = GetTableForEntityType(entity.GetType()).Name;
-            this.FillEntity(entity, GetDataRow("select * from " + tableName + " where Id={0}", entity.Id));
+            this.FillEntity(entity, GetDataRow("select * from " + tableName + " where " + GetIdFieldName(entity) + "={0}", entity.Id));
         }
         public void FillDataRow(IDatabaseEntity entity, DataRow dr)
         {
@@ -966,7 +976,7 @@ namespace Cinar.Database
             }
             else
             {
-                return Read(entityType, "Id=" + id);
+                return Read(entityType, "" + GetIdFieldName(entityType) + "=" + id);
             }
         }
         public T Read<T>(int id)
