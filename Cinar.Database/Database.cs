@@ -321,6 +321,9 @@ namespace Cinar.Database
         public void Refresh()
         {
             dbProvider.ReadDatabaseMetadata();
+            tableMappingInfo = new Dictionary<Type, Table>();
+            fieldMappingInfo = new Dictionary<PropertyInfo, Field>();
+
             if (HttpContext.Current != null)
             {
                 HttpContext.Current.Application.Remove("databaseMetadata");
@@ -685,7 +688,10 @@ namespace Cinar.Database
         public string GetIdFieldName(Type entityType)
         {
             PropertyInfo pi = entityType.GetProperty("Id");
-            return fieldMappingInfo[pi].Name;
+            if (fieldMappingInfo.ContainsKey(pi))
+                return fieldMappingInfo[pi].Name;
+            else
+                return "Id";
         }
 
         // ENTITY SAVE
@@ -970,7 +976,7 @@ namespace Cinar.Database
                     return (IDatabaseEntity)HttpContext.Current.Items[entityType.Name + "_" + id];
                 else
                 {
-                    HttpContext.Current.Items[entityType.Name + "_" + id] = Read(entityType, "Id=" + id);
+                    HttpContext.Current.Items[entityType.Name + "_" + id] = Read(entityType, GetIdFieldName(entityType) + "=" + id);
                     return (IDatabaseEntity)HttpContext.Current.Items[entityType.Name + "_" + id];
                 }
             }
