@@ -14,11 +14,13 @@ namespace Cinar.HTMLParser
         private WebBrowser webBrowser;
         private string url;
         private int width;
+        private int wait;
 
         public WebPageBitmap(string url, int width, bool scrollBarsEnabled, int wait)
         {
             this.width = width;
             this.url = url;
+            this.wait = wait;
 
             webBrowser = new WebBrowser();
             webBrowser.ScriptErrorsSuppressed = true;
@@ -33,9 +35,14 @@ namespace Cinar.HTMLParser
         /// <returns>true is the operation ended with a success</returns>
         public void Fetch()
         {
+            DateTime start = DateTime.Now;
             webBrowser.Navigate(url);
             while (webBrowser.ReadyState != WebBrowserReadyState.Complete)
+            {
+                if ((start - DateTime.Now).Milliseconds > wait)
+                    throw new Exception("Timeout reached. Try longer wait.");
                 Application.DoEvents();
+            }
         }
 
         private void documentCompletedEventHandler(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -61,9 +68,9 @@ namespace Cinar.HTMLParser
             return bitmap;
         }
 
-        public static Bitmap GetBitmap(string url, int width)
+        public static Bitmap GetBitmap(string url, int width, int waitMiliSeconds)
         {
-            WebPageBitmap webBitmap = new WebPageBitmap(url, width, false, 10000);
+            WebPageBitmap webBitmap = new WebPageBitmap(url, width, false, waitMiliSeconds);
             webBitmap.Fetch();
 
             Bitmap thumbnail = webBitmap.GetBitmap(width);

@@ -761,24 +761,28 @@ $"},
                           field.Name, 
                           field.Table.Name);
         }
+
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
             Field field = (Field)treeView.SelectedNode.Tag;
             if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
+            {
                 executeSQL(@"
-                    select top 100 
+                    select top 1000 
                         {0}, 
                         count(*) as RecordCount 
                     from 
                         [{1}] 
                     group by {0} 
-                    order by RecordCount desc", 
-                                              field.Name, 
+                    order by RecordCount desc",
+                                              field.Name,
                                               field.Table.Name);
+            }
             else
+            {
                 executeSQL(@"
-                    select top 100 
+                    select top 1000 
                         t.{0}, 
                         tRef.{4},
                         count(*) as RecordCount 
@@ -792,6 +796,25 @@ $"},
                                               field.ReferenceField.Name,
                                               field.ReferenceField.Table.Name,
                                               field.ReferenceField.Table.StringField.Name);
+            }
+
+            MyDataGrid grid = tpResults.Controls[0] as MyDataGrid;
+            grid.DoubleClick += delegate {
+                if (grid.SelectedRows.Count <= 0)
+                    return;
+                DataRow dr = (grid.SelectedRows[0].DataBoundItem as DataRowView).Row;
+                object keyVal = dr[field.Name];
+                string from = Provider.Database.GetFromWithJoin(field.Table);
+                executeSQL(@"
+                    select top 1000 
+                        * 
+                    from {1} 
+                    where [{3}].[{0}] = '{2}'",
+                                              field.Name,
+                                              from,
+                                              keyVal,
+                                              field.Table.Name);
+            };
             
         }
 
