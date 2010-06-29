@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Data;
 using System.Data.Common;
@@ -118,14 +119,19 @@ namespace Cinar.Database
                 Cache["sqlLog"] = null;
         }
 
+        public Database(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath)
+        {
+            createProviderAndReadMetadata(connectionString, provider, serializedMetadataFilePath);
+        }
+
         /// <summary>
         /// Database constructor
         /// </summary>
         /// <param name="connectionString">Bağlantı bilgisi</param>
         /// <param name="provider">Hangi veritabanı bu?</param>
         public Database(string connectionString, DatabaseProvider provider)
+            : this(connectionString, provider, null)
         {
-            createProviderAndReadMetadata(connectionString, provider);
         }
 
         public Database() 
@@ -149,7 +155,7 @@ namespace Cinar.Database
             }
         }
 
-        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider)
+        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath)
         {
             this.connectionString = connectionString;
             this.provider = provider;
@@ -160,7 +166,10 @@ namespace Cinar.Database
             {
                 if (HttpContext.Current.Application["databaseMetadata"] == null)
                 {
-                    dbProvider.ReadDatabaseMetadata();
+                    if (string.IsNullOrEmpty(serializedMetadataFilePath))
+                        dbProvider.ReadDatabaseMetadata();
+                    else
+                        readMetadataFromFile(serializedMetadataFilePath);
                     HttpContext.Current.Application["databaseMetadata"] = this.tables;
                 }
                 else
@@ -170,11 +179,34 @@ namespace Cinar.Database
             {
                 if (!Cache.ContainsKey("databaseMetadata"))
                 {
-                    dbProvider.ReadDatabaseMetadata();
+                    if (string.IsNullOrEmpty(serializedMetadataFilePath))
+                        dbProvider.ReadDatabaseMetadata();
+                    else
+                        readMetadataFromFile(serializedMetadataFilePath);
                     Cache["databaseMetadata"] = this.tables;
                 }
                 else
                     this.tables = (TableCollection)Cache["databaseMetadata"];
+            }
+        }
+
+        private void readMetadataFromFile(string serializedMetadataFilePath)
+        {
+            if (File.Exists(serializedMetadataFilePath))
+            {
+                XmlSerializer ser = new XmlSerializer(typeof(TableCollection));
+                using (StreamReader sr = new StreamReader(serializedMetadataFilePath))
+                {
+                    this.tables = (TableCollection)ser.Deserialize(sr);
+                    this.SetCollectionParents();
+                }
+            }
+            else
+            {
+                dbProvider.ReadDatabaseMetadata();
+                XmlSerializer ser = new XmlSerializer(typeof(TableCollection));
+                using (StreamWriter sr = new StreamWriter(serializedMetadataFilePath))
+                    ser.Serialize(sr, this.tables);
             }
         }
 
@@ -203,10 +235,14 @@ namespace Cinar.Database
         }
 
         public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
+            : this(provider, host, dbName, userName, password, defaultCommandTimeout, null)
+        {
+        }
+
+        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath)
         {
             SetConnectionString(provider, host, dbName, userName, password, defaultCommandTimeout);
-
-            createProviderAndReadMetadata(this.connectionString, provider);
+            createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath);
         }
 
         public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
@@ -1077,17 +1113,21 @@ namespace Cinar.Database
         }
 
         public string GetFromWithJoin(Type entityType)
-        { 
+        {
             // first check the table existance
             Table tbl = GetTableForEntityType(entityType);
             if (tbl == null)
                 tbl = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
+            return GetFromWithJoin(tbl);
+        }
+        public string GetFromWithJoin(Table tbl)
+        {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("[{0}]\n", tbl.Name);
             foreach (Field field in tbl.Fields)
                 if (field.ReferenceField != null)
-                    sb.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", field.ReferenceField.Table.Name, "T"+field.Name,  field.ReferenceField.Name, tbl.Name, field.Name);
+                    sb.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", field.ReferenceField.Table.Name, "T" + field.Name, field.ReferenceField.Name, tbl.Name, field.Name);
 
             return sb.ToString();
         }

@@ -264,7 +264,12 @@ namespace System
         }
         public static string MakeFileName(this string str)
         {
-            return Regex.Replace(str, @"[öçşığüÖÇŞİĞÜ\s\W]", "", RegexOptions.Singleline);
+            string replace = "öoçcşsıiğgüuÖOÇCŞSİIĞGÜU _\t_";
+            for (int i = 0; i < replace.Length; i += 2)
+                str = str.Replace(replace[i], replace[i + 1]);
+            string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
+            string invalidReStr = string.Format(@"[{0}]", invalidChars);
+            return Regex.Replace(str, invalidReStr, "_");
         }
         public static string ConvertToAbsoluteURL(this string relativeUrl, string baseUrl)
         {
@@ -865,7 +870,7 @@ namespace System
                 case "DateTime":
                     if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
                     DateTime d = (DateTime)val;
-                    return String.Format("new Date({0},{1},{2},{3},{4},{5})", d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second);
+                    return String.Format("new Date({0},{1},{2},{3},{4},{5})", d.Year, d.Month-1, d.Day, d.Hour, d.Minute, d.Second);
                     //return String.Format("'{0}-{1}-{2} {3}:{4}'", d.Day, d.Month, d.Year, d.Hour, d.Minute);
                 case "Boolean":
                     return val.ToString().ToLower();
