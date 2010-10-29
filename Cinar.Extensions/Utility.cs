@@ -847,6 +847,51 @@ namespace System
                     return (T)o;
             return (T)Enum.Parse(typeof(T), "");
         }
+
+        public static string ToXML(this object obj)
+        {
+            if (obj == null)
+                return "";
+
+            throw new NotImplementedException();
+
+            //StringBuilder sb = new StringBuilder();
+            //DataContractSerializer ser = new DataContractSerializer(obj.GetType());
+            //using (XmlWriter sw = XmlWriter.Create(sb))
+            //{
+            //    ser.WriteObject(sw, obj);
+            //    sw.Flush();
+            //    return sb.ToString();
+            //}
+        }
+
+        public static string CompareFields(this object obj1, object obj2, Func<PropertyInfo, bool> predicate)
+        {
+            if (obj1 == null && obj2 == null)
+                return "Objects are null";
+
+            if (obj1 == null)
+                return "Object 1 is null, object 2 is NOT null";
+
+            if (obj2 == null)
+                return "Object 1 is NOT null, object 2 is null";
+
+            StringBuilder sb = new StringBuilder();
+            foreach (PropertyInfo pi in obj1.GetProperties())
+                if (pi.PropertyType.IsValueType || pi.PropertyType == typeof(string))
+                {
+                    object val1 = pi.GetValue(obj1, null) ?? "null";
+                    object val2 = obj2.GetMemberValue(pi.Name) ?? "null";
+                    if (!val1.Equals(val2))
+                        sb.AppendLine(pi.Name + " : " + val1 + " ==>> " + val2);
+                }
+            return sb.ToString();
+        }
+        public static string CompareFields(this object obj1, object obj2)
+        {
+            return CompareFields(obj1, obj2, pi => true);
+        }
+
         #endregion
 
         #region JSON

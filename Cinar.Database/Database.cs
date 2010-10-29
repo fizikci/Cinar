@@ -1086,6 +1086,20 @@ namespace Cinar.Database
             return list;
 
         }
+        public List<T> ReadList<T>(FilterExpression fExp, int pageNo, int pageSize)
+        {
+            fExp.PageNo = pageNo;
+            fExp.PageSize = pageSize;
+            return ReadList<T>(fExp);
+        }
+        public List<T> ReadList<T>(FilterExpression filterExpression)
+        {
+            throw new NotImplementedException();
+        }
+        public IDatabaseEntity[] ReadList(Type EntityType, FilterExpression Filter)
+        {
+            throw new NotImplementedException();
+        }
         public DataTable ReadTable(Type entityType, string selectSql, params object[] parameters)
         {
             DataTable dt = null;
@@ -1477,6 +1491,7 @@ namespace Cinar.Database
             }
         }
         #endregion
+
     }
 
     public delegate void DbAction();
