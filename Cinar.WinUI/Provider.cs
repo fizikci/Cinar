@@ -12,9 +12,10 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraLayout;
 using Timer=System.Timers.Timer;
 using System.Reflection;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 using Cinar.Database;
 using System.Configuration;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {
@@ -281,9 +282,14 @@ namespace Cinar.WinUI
             return PromptDialog.Prompt(question, defaultAnswer);
         }
 
-        internal Type GetEntityType(string entityFullName)
+        public Type GetEntityType(string entityFullName)
         {
             return typeof(BaseEntity).Assembly.GetType(entityFullName);
+        }
+
+        public Type GetEntityType(string moduleName, string entityName)
+        {
+            return typeof(BaseEntity).Assembly.GetType("Cinar.Entities." + moduleName + "." + entityName);
         }
     }
 }

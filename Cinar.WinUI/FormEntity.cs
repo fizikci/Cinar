@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Cinar.UICommands;
 using DevExpress.XtraEditors;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {

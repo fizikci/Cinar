@@ -13,7 +13,7 @@ using Cinar.UICommands;
 using System.Linq;
 using DevExpress.XtraNavBar;
 using Cinar.WinUI;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinApp
 {

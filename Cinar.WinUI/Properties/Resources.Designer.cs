@@ -3252,6 +3252,34 @@ namespace Cinar.WinUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap go_first {
+            get {
+                object obj = ResourceManager.GetObject("go_first", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap go_last {
+            get {
+                object obj = ResourceManager.GetObject("go_last", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap go_next {
+            get {
+                object obj = ResourceManager.GetObject("go_next", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap go_prev {
+            get {
+                object obj = ResourceManager.GetObject("go_prev", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap group {
             get {
                 object obj = ResourceManager.GetObject("group", resourceCulture);
@@ -5285,34 +5313,6 @@ namespace Cinar.WinUI.Properties {
         public static System.Drawing.Bitmap report_word {
             get {
                 object obj = ResourceManager.GetObject("report_word", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap resultset_first {
-            get {
-                object obj = ResourceManager.GetObject("resultset_first", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap resultset_last {
-            get {
-                object obj = ResourceManager.GetObject("resultset_last", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap resultset_next {
-            get {
-                object obj = ResourceManager.GetObject("resultset_next", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap resultset_previous {
-            get {
-                object obj = ResourceManager.GetObject("resultset_previous", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

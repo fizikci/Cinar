@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.WinApp.DefaultPlugIn"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Entities", "Cinar.Entities\Cinar.Entities.csproj", "{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.WinApp.MediaSearch", "Cinar.WinApp.MediaSearch\Cinar.WinApp.MediaSearch.csproj", "{A47AB431-1671-4574-97F9-854CA5046E51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,15 @@ Global
 		{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}.Release64|Any CPU.ActiveCfg = Release|Any CPU
 		{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}.Release64|Any CPU.Build.0 = Release|Any CPU
 		{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}.Release64|x64.ActiveCfg = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release|x64.ActiveCfg = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

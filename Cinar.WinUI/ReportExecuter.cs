@@ -7,7 +7,7 @@ using System.Text;
 using System.Data;
 using Cinar.Scripting;
 using DevExpress.XtraReports.UI;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 using DevExpress.XtraPrinting;
 using System.Diagnostics;
 using System.Drawing.Imaging;

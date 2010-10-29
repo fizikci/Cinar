@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Cinar.UICommands;
 using DevExpress.XtraGrid.Views.Grid;
 using Cinar.Database;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {

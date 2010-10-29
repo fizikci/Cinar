@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cinar.Database;
 using Cinar.Entities.Standart;
 
-namespace Cinar.WinUI
+namespace Cinar.Entities.MediaSearch
 {
-    public interface IFormEntity
+    public class Tag : NamedEntity
     {
-        BaseEntity CurrentEntity { get; }
     }
 }

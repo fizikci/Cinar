@@ -1,6 +1,6 @@
 ﻿using Cinar.Database;
 
-namespace Cinar.Entities
+namespace Cinar.Entities.Standart
 {
     public class RoleRight : BaseEntity
     {
@@ -30,7 +30,7 @@ namespace Cinar.Entities
             set 
             {
                 role = value;
-                RoleId = role == null ? 0 : role.Id;
+                RoleId = value == null ? 0 : value.Id;
             }
         }
 

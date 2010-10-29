@@ -1,6 +1,6 @@
 ﻿using Cinar.Database;
 
-namespace Cinar.Entities
+namespace Cinar.Entities.Standart
 {
     public class Report : NamedEntity
     {
