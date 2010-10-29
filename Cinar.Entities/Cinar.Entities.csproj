@@ -45,19 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEntity.cs" />
+    <Compile Include="MediaSearch\Author.cs" />
+    <Compile Include="MediaSearch\Category.cs" />
+    <Compile Include="MediaSearch\Content.cs" />
+    <Compile Include="MediaSearch\ContentDefinition.cs" />
+    <Compile Include="MediaSearch\ContentTag.cs" />
+    <Compile Include="MediaSearch\ContentText.cs" />
+    <Compile Include="MediaSearch\Media.cs" />
+    <Compile Include="MediaSearch\Tag.cs" />
+    <Compile Include="Standart\BaseEntity.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="EntityHistory.cs" />
-    <Compile Include="NamedEntity.cs" />
-    <Compile Include="UsageReport.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Standart\EntityHistory.cs" />
+    <Compile Include="Standart\NamedEntity.cs" />
+    <Compile Include="Standart\UsageReport.cs" />
+    <Compile Include="Standart\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Right.cs" />
-    <Compile Include="Role.cs" />
-    <Compile Include="RoleRight.cs" />
-    <Compile Include="RoleUser.cs" />
-    <Compile Include="Report.cs" />
-    <Compile Include="ReportParam.cs" />
+    <Compile Include="Standart\Right.cs" />
+    <Compile Include="Standart\Role.cs" />
+    <Compile Include="Standart\RoleRight.cs" />
+    <Compile Include="Standart\RoleUser.cs" />
+    <Compile Include="Standart\Report.cs" />
+    <Compile Include="Standart\ReportParam.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">

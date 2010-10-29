@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Cinar.UICommands;
 using DevExpress.XtraEditors;
 using Cinar.Database;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {

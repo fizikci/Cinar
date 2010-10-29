@@ -8,6 +8,6 @@ namespace Cinar.Entities
     public class Context
     {
         public static Database.Database Db;
-        public static User ClientUser;
+        public static Standart.User ClientUser;
     }
 }

@@ -13,7 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using DevExpress.XtraGrid.Views.Grid;
 using Cinar.Database;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {
@@ -22,6 +22,15 @@ namespace Cinar.WinUI
         public ListEntitySimple()
         {
             InitializeComponent();
+
+            btnPrev.Image = Properties.Resources.go_prev;
+            btnNext.Image = Properties.Resources.go_next;
+            btnAddEntity.Image = menuAddEntity.Image = Properties.Resources.add;
+            btnDeleteEntity.Image = menuDeleteEntity.Image = Properties.Resources.delete;
+            btnEditEntity.Image = menuEditEntity.Image = Properties.Resources.application_form;
+            btnExcel.Image = menuExcel.Image = Properties.Resources.table;
+            menuHistory.Image = Properties.Resources.book_open;
+            menuCopy.Image = Properties.Resources.page_copy;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -231,7 +240,7 @@ namespace Cinar.WinUI
             filter.PageNo = pageNo;
             filter.PageSize = PageSize;
 
-            if (ShowTotalCount && PageSize != 0)
+            if (ShowTotalCount && PageSize == 0)
                 lastTotalRecordCount = DMT.Provider.Db.ReadCount(EntityType, filter);
 
             return DMT.Provider.Db.ReadList(EntityType, filter).ToList();
@@ -257,7 +266,6 @@ namespace Cinar.WinUI
                 DMT.Provider.PopulateGridColumns(getVisibleColumns(), gridView);
                 gridColumnsPopulated = true;
             }
-            grid.DataSource = null;
             grid.DataSource = list;
         }
 

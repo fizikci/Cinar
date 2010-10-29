@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {

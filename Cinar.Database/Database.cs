@@ -860,7 +860,17 @@ namespace Cinar.Database
                 object val = dr[colName, rowVersion];
                 if (val.Equals(DBNull.Value))
                     val = null;
-                val = Convert.ChangeType(val, pi.PropertyType);
+
+                if (pi.PropertyType.IsEnum)
+                {
+                    if (val!=null && val.GetType()==typeof(string))
+                        val = Enum.Parse(pi.PropertyType, val.ToString());
+                    else
+                        val = Enum.ToObject(pi.PropertyType, val);
+                }
+                else
+                    val = Convert.ChangeType(val, pi.PropertyType);
+
                 pi.SetValue(entity, val, null);
 
                 //if (pi.PropertyType == typeof(string))

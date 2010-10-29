@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Cinar.Entities
+namespace Cinar.Entities.Standart
 {
     public class UsageReport : BaseEntity
     {

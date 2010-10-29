@@ -16,7 +16,7 @@ using DevExpress.XtraEditors;
 using System.Web;
 using System.Xml.Serialization;
 using System.Xml;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {

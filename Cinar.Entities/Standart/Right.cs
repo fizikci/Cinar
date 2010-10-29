@@ -1,4 +1,4 @@
-﻿namespace Cinar.Entities
+﻿namespace Cinar.Entities.Standart
 {
     public class Right : NamedEntity
     {
@@ -8,11 +8,11 @@
     {
         public const string ExecuteReport = "Execute Report";
         public const string OpenUser = "Open User";
-        public const string OpenRole = "OpenRole";
-        public const string OpenReport = "OpenReport";
-        public const string Right3 = "Right3";
-        public const string Right4 = "Right4";
-        public const string Right5 = "Right5";
+        public const string OpenRole = "Open Role";
+        public const string OpenReport = "Open Report";
+        public const string OpenMedia = "Open Media";
+        public const string OpenCategory = "Open Category";
+        public const string OpenContentDefinition = "Open RSS";
         public const string Right6 = "Right6";
         public const string Right7 = "Right7";
         public const string Right8 = "Right8";

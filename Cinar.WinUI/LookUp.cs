@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
-using Cinar.Entities;
+using Cinar.Entities.Standart;
 using Cinar.Database;
 
 namespace Cinar.WinUI

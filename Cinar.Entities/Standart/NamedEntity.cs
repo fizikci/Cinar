@@ -1,4 +1,4 @@
-﻿namespace Cinar.Entities
+﻿namespace Cinar.Entities.Standart
 {
     public class NamedEntity : BaseEntity
     {

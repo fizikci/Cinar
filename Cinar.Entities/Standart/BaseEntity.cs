@@ -5,7 +5,7 @@ using System.Text;
 using Cinar.Database;
 using System.Collections;
 
-namespace Cinar.Entities
+namespace Cinar.Entities.Standart
 {
     public class BaseEntity : IDatabaseEntity
     {
