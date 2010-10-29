@@ -32,6 +32,7 @@
             this.label = new System.Windows.Forms.Label();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
+            this.cbMark = new DevExpress.XtraEditors.CheckButton();
             this.SuspendLayout();
             // 
             // webBrowser
@@ -50,7 +51,8 @@
             // 
             // label
             // 
-            this.label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label.Location = new System.Drawing.Point(2, 485);
             this.label.Name = "label";
@@ -78,11 +80,22 @@
             this.simpleButton2.TabIndex = 3;
             this.simpleButton2.Text = "Vazgeç";
             // 
+            // cbMark
+            // 
+            this.cbMark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbMark.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.HotFlat;
+            this.cbMark.Location = new System.Drawing.Point(5, 511);
+            this.cbMark.Name = "cbMark";
+            this.cbMark.Size = new System.Drawing.Size(52, 19);
+            this.cbMark.TabIndex = 4;
+            this.cbMark.Text = "İşaretle";
+            // 
             // FormCSSSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 533);
+            this.Controls.Add(this.cbMark);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.label);
@@ -99,5 +112,6 @@
         private System.Windows.Forms.Label label;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
+        private DevExpress.XtraEditors.CheckButton cbMark;
     }
 }

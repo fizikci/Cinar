@@ -15,6 +15,8 @@ namespace Cinar.RSSReader
         {
             string xml = url.DownloadPage(ref SourceEncoding);
 
+            xml = xml.Substring(xml.IndexOf("<rss"));
+
             this.doc = new XmlDocument();
             doc.Load(new System.IO.StringReader(xml));
         }
