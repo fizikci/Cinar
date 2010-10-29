@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Cinar.Database;
 namespace Cinar.Entities
 {
+    [DefaultData(FieldList="Username,Password", ValueList="'bulent','offoff'")]
     public class User : NamedEntity
     {
         string username;

@@ -55,7 +55,7 @@ namespace Cinar.WinUI
                     {
                         Cinar.Entities.Context.Db = Db;
 
-                        clientUser = Db.Read<User>("select * from [user]");// where [UserName]={0} AND [Password]={1}", giris.Username, giris.Password);
+                        clientUser = Db.Read<User>("[UserName]={0} AND [Password]={1}", giris.Username, giris.Password);
 
                         if (clientUser!=null)
                         {
@@ -121,6 +121,8 @@ namespace Cinar.WinUI
         {
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
             {
+                if (pi.Name == "Item") continue;
+
                 object val = pi.GetValue(entity, null);
 
                 BaseEdit c = controlContainer.Controls["edit" + pi.Name] as BaseEdit;
@@ -281,7 +283,7 @@ namespace Cinar.WinUI
 
         internal Type GetEntityType(string entityFullName)
         {
-            throw new NotImplementedException();
+            return typeof(BaseEntity).Assembly.GetType(entityFullName);
         }
     }
 }

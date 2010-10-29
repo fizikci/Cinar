@@ -227,15 +227,12 @@ namespace Cinar.WinUI
                 return list;
             }
 
-            if (ShowTotalCount && PageSize != 0)
-            {
-                throw new NotImplementedException();
-                lastTotalRecordCount = /* TODO: burada record countu hesapla*/0;
-            }
-
             FilterExpression filter = getFilter();
             filter.PageNo = pageNo;
             filter.PageSize = PageSize;
+
+            if (ShowTotalCount && PageSize != 0)
+                lastTotalRecordCount = DMT.Provider.Db.ReadCount(EntityType, filter);
 
             return DMT.Provider.Db.ReadList(EntityType, filter).ToList();
         }

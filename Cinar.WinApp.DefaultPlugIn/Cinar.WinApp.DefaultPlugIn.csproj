@@ -57,11 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\EditDbtUser.cs">
+    <Compile Include="Controls\EditUser.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\EditDbtUser.Designer.cs">
-      <DependentUpon>EditDbtUser.cs</DependentUpon>
+    <Compile Include="Controls\EditUser.Designer.cs">
+      <DependentUpon>EditUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditRole.cs">
       <SubType>UserControl</SubType>
@@ -74,12 +74,6 @@
     </Compile>
     <Compile Include="Controls\EditTemplate.Designer.cs">
       <DependentUpon>EditTemplate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormDbtWatcher.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormDbtWatcher.Designer.cs">
-      <DependentUpon>FormDbtWatcher.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormExecuteTemplate.cs">
       <SubType>Form</SubType>
@@ -106,17 +100,14 @@
       <DependentUpon>FormTemplateParam.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Controls\EditDbtUser.resx">
-      <DependentUpon>EditDbtUser.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\EditUser.resx">
+      <DependentUpon>EditUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EditRole.resx">
       <DependentUpon>EditRole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EditTemplate.resx">
       <DependentUpon>EditTemplate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormDbtWatcher.resx">
-      <DependentUpon>FormDbtWatcher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormExecuteTemplate.resx">
       <DependentUpon>FormExecuteTemplate.cs</DependentUpon>
@@ -130,6 +121,7 @@
     <EmbeddedResource Include="Forms\FormTemplateParam.resx">
       <DependentUpon>FormTemplateParam.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

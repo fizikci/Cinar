@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Linq;
 
 namespace Cinar.Database
 {
@@ -35,7 +36,7 @@ namespace Cinar.Database
 			return new FilterExpression
 			{
 				Criterias = new CriteriaList { 
-                    new Criteria(fieldName, criteriaType, fieldValue.ToString())
+                    new Criteria(fieldName, criteriaType, fieldValue)
                 }
 			};
 		}
@@ -63,17 +64,21 @@ namespace Cinar.Database
 
             return "";
         }
-        public string ToParamString(string tableNameAlias, string parameterPrefix)
+        public string ToParamString()
         {
             if (criterias != null && criterias.Count > 0)
             {
                 string[] sList = new string[criterias.Count];
                 for (int i = 0; i < sList.Length; i++)
-                    sList[i] = criterias[i].ToParamString(tableNameAlias, parameterPrefix + i);
+                    sList[i] = criterias[i].ToParamString(i);
                 return string.Join(" AND ", sList);
             }
 
             return "";
+        }
+        public object[] GetParamValues()
+        {
+            return this.Criterias.Select(c => c.FieldValue).ToArray();
         }
 
         public Criteria this[string fieldName]
@@ -92,7 +97,7 @@ namespace Cinar.Database
             return new FilterExpression
             {
                 Criterias = new CriteriaList { 
-                    new Criteria(fieldName, criteriaType, fieldValue.ToString())
+                    new Criteria(fieldName, criteriaType, fieldValue)
                 }
             };
         }
@@ -136,8 +141,8 @@ namespace Cinar.Database
             set { criteriaType = value; }
         }
 
-        string fieldValue = "-1";
-        public string FieldValue
+        object fieldValue = "-1";
+        public object FieldValue
         {
             get { return fieldValue; }
             set { fieldValue = value; }
@@ -148,31 +153,31 @@ namespace Cinar.Database
         {
             this.fieldName = fieldName;
             this.criteriaType = criteriaType;
-            this.fieldValue = fieldValue.ToString();
+            this.fieldValue = fieldValue;
         }
 
-        public string ToParamString(string tableNameAlias, string parameterName)
+        public string ToParamString(int index)
         {
-            string str = (!string.IsNullOrEmpty(tableNameAlias) ? tableNameAlias + "." : "") + fieldName + " ";
+            string str = fieldName + " ";
             switch (criteriaType)
             {
                 case CriteriaTypes.Eq:
-                    str += " = :" + parameterName;
+                    str += " = {" + index + "}";
                     break;
                 case CriteriaTypes.NotEq:
-                    str += " <> :" + parameterName;
+                    str += " <> {" + index + "}";
                     break;
                 case CriteriaTypes.Gt:
-                    str += " > :" + parameterName;
+                    str += " > {" + index + "}";
                     break;
                 case CriteriaTypes.Ge:
-                    str += " >= :" + parameterName;
+                    str += " >= {" + index + "}";
                     break;
                 case CriteriaTypes.Lt:
-                    str += " < :" + parameterName;
+                    str += " < {" + index + "}";
                     break;
                 case CriteriaTypes.Le:
-                    str += " <= :" + parameterName;
+                    str += " <= {" + index + "}";
                     break;
                 case CriteriaTypes.IsNull:
                     str += " is null ";
@@ -181,16 +186,16 @@ namespace Cinar.Database
                     str += " is not null ";
                     break;
                 case CriteriaTypes.Like:
-                    str += " like :" + parameterName;
+                    str += " like {" + index + "}";
                     break;
                 case CriteriaTypes.NotLike:
-                    str += " not like :" + parameterName;
+                    str += " not like {" + index + "}";
                     break;
                 case CriteriaTypes.In:
-                    str += " in :" + parameterName;
+                    str += " in {" + index + "}";
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " not in :" + parameterName;
+                    str += " not in {" + index + "}";
                     break;
             }
 
