@@ -87,29 +87,24 @@ namespace Cinar.WinUI
                         control.EditValue = criteria.FieldValue;
                         break;
                     case "SpinEdit":
-                        control.EditValue = int.Parse(criteria.FieldValue);
+                        control.EditValue = criteria.FieldValue;
                         break;
                     case "DateEdit":
-                        control.EditValue = DateTime.Parse(criteria.FieldValue);
+                        control.EditValue = criteria.FieldValue;
                         break;
                     case "ComboBoxEdit":
                         (control as ComboBoxEdit).Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
                         (control as ComboBoxEdit).Properties.Items.Clear();
                         (control as ComboBoxEdit).Properties.Items.Add("TÜMÜ");
                         (control as ComboBoxEdit).Properties.Items.AddRange((c as ComboBoxEdit).Properties.Items);
-                        if (piControl.PropertyType == typeof(long))
-                            control.EditValue = long.Parse(criteria.FieldValue);
-                        else if (piControl.PropertyType.IsEnum)
-                            control.EditValue = Enum.Parse(piControl.PropertyType, criteria.FieldValue);
-                        else if (piControl.PropertyType==typeof(string))
-                            control.EditValue = criteria.FieldValue;
+                        control.EditValue = criteria.FieldValue;
                         break;
                     case "LookUp":
                         if (piControl.PropertyType == typeof(string))
                         {
                             control = new TextEdit();
                             control.Name = "edit" + piControl.Name;
-                            control.Text = criteria.FieldValue;
+                            control.Text = criteria.FieldValue.ToString();
                         }
                         break;
                 }

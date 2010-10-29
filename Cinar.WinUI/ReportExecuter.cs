@@ -66,30 +66,29 @@ namespace Cinar.WinUI
 			}
 		}
 
-		public DataSet GetDataSource(string stringSql, Hashtable sqlParams)
-		{
+        public DataSet GetDataSource(string sql, Hashtable sqlParams)
+        {
             if (customDataSource != null)
                 return customDataSource;
 
-            throw new NotImplementedException();
 
-            //using (InterpressSQL sql = new InterpressSQL("mysql", InterpressSQL.IpnewConnectionString))
-            //{
-            //    sql.AddSql(stringSql);
+            IDbCommand cmd = DMT.Provider.Db.CreateCommand(sql);
 
-            //    if (sqlParams != null)
-            //        foreach (DictionaryEntry key in sqlParams)
-            //            sql.AddParameter("@" + key.Key.ToString(), key.Value);
+            if (sqlParams != null)
+                foreach (DictionaryEntry key in sqlParams)
+                    cmd.Parameters.Add(DMT.Provider.Db.CreateParameter("@" + key.Key.ToString(), key.Value));
 
-            //    return sql.ExecuteReader(50);
-            //}
+            IDbDataAdapter da = DMT.Provider.Db.CreateDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
 
-		}
+            return ds;
+        }
 
         public string ExecuteHTML()
         {
             Interpreter pret = new Interpreter(htmlTemplate, null);
-            pret.SetAttribute("ds", GetDataSource(customSQL, sqlParams));
+            pret.SetAttribute("ds", GetDataSource(customSQL ?? musTemp.SQLQuery, sqlParams));
             pret.Parse();
             pret.Execute();
             return pret.Output;

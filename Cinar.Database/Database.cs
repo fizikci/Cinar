@@ -1086,19 +1086,26 @@ namespace Cinar.Database
             return list;
 
         }
-        public List<T> ReadList<T>(FilterExpression fExp, int pageNo, int pageSize)
+        public List<T> ReadList<T>(FilterExpression fExp, int pageNo, int pageSize) where T : IDatabaseEntity
         {
             fExp.PageNo = pageNo;
             fExp.PageSize = pageSize;
             return ReadList<T>(fExp);
         }
-        public List<T> ReadList<T>(FilterExpression filterExpression)
+        public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
-            throw new NotImplementedException();
+            string selectSQL = "select * from [" + typeof(T).Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            return ReadList<T>(selectSQL, filterExpression.GetParamValues());
         }
-        public IDatabaseEntity[] ReadList(Type EntityType, FilterExpression Filter)
+        public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
-            throw new NotImplementedException();
+            string selectSQL = "select * from [" + entityType.Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            return ReadList(entityType, selectSQL, filterExpression.GetParamValues());
+        }
+        public int ReadCount(Type entityType, FilterExpression filterExpression)
+        {
+            string selectSQL = "select count(*) from [" + entityType.Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            return GetInt(selectSQL, filterExpression.GetParamValues());
         }
         public DataTable ReadTable(Type entityType, string selectSql, params object[] parameters)
         {
