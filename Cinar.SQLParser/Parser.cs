@@ -57,6 +57,7 @@ namespace Cinar.SQLParser
             if (fCurrentToken.Value == "select")
                 return ParseSelectStatement();
 
+            /*
             if (fCurrentToken.Value == "insert")
                 return ParseInsertStatement();
 
@@ -74,6 +75,7 @@ namespace Cinar.SQLParser
 
             if (fCurrentToken.Value == "var")
                 return ParseVarStatement();
+             * */
 
             return ParseAssignmentOrFunctionCallStatement();
         }
@@ -135,68 +137,11 @@ namespace Cinar.SQLParser
             if (fCurrentToken.Value == "from")
             {
                 ReadNextToken(); // skip 'from'
-
-                List<Statement> lTrueStatements = new List<Statement>();
-                List<Statement> lFalseStatements = new List<Statement>();
-                List<Statement> lStatements = lTrueStatements;
-                Statement lStatement;
-
-                if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-                {
-                    SkipExpected(TokenType.Symbol, "{"); // skip '{'
-
-                    CheckForUnexpectedEndOfSource();
-                    while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                    {
-                        if ((lStatement = ReadNextStatement()) != null)
-                            lStatements.Add(lStatement);
-                        else throw new ParserException("Unexpected end of source.");
-                    }
-
-                    ReadNextToken(); // skip '}'
-                }
-                else
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                if (fCurrentToken != null)
-                {
-                    lStatements = lFalseStatements;
-
-                    if (fCurrentToken.Equals(TokenType.Word, "else"))
-                    {
-                        ReadNextToken(); // skip 'else'
-
-                        if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-                        {
-                            ReadNextToken(); // skip '{'
-                            CheckForUnexpectedEndOfSource();
-                            while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                            {
-                                if ((lStatement = ReadNextStatement()) != null)
-                                    lStatements.Add(lStatement);
-                                else throw new ParserException("Unexpected end of source.");
-                            }
-                            SkipExpected(TokenType.Symbol, "}"); // skip '}'
-                        }
-                        else
-                        {
-                            if ((lStatement = ReadNextStatement()) != null)
-                                lStatements.Add(lStatement);
-                            else throw new ParserException("Unexpected end of source.");
-                        }
-                    }
-                }
             }
 
             skipEmptyStatements();
 
-            return new IfStatement(lCondition
-                , new StatementCollection(lTrueStatements)
-                , new StatementCollection(lFalseStatements));
+            return new SelectStatement();
         }
 
         WhileStatement ParseWhileStatement()

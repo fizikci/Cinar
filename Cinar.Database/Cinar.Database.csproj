@@ -38,10 +38,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>_dll\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=5.1.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>_dll\MySql.Data.dll</HintPath>
-    </Reference>
+    <Reference Include="MySql.Data, Version=6.2.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="Npgsql, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>_dll\Npgsql.dll</HintPath>
@@ -59,6 +56,7 @@
     <Compile Include="Field.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="FilterExpression.cs" />
     <Compile Include="IDatabaseEntity.cs" />
     <Compile Include="IDatabaseProvider.cs" />
     <Compile Include="Key.cs" />

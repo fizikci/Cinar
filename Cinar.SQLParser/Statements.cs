@@ -98,6 +98,14 @@ namespace Cinar.SQLParser
         #endregion
     }
 
+    public class SelectStatement : Statement
+    {
+        public override void Execute(Context context, ParserNode parentNode)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class Assignment : Statement
     {
         public Assignment(Variable variable, string op, Expression value)
