@@ -78,6 +78,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnection = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenConnectionsFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +96,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnNewConnection = new System.Windows.Forms.ToolStripButton();
             this.btnEditConnection = new System.Windows.Forms.ToolStripButton();
@@ -110,8 +111,8 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.menuOpenConnectionsFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuForEachTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuForEachField = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -130,7 +131,6 @@
             this.tpTableAnalyze.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -591,6 +591,12 @@
             this.menuNewConnection.Size = new System.Drawing.Size(204, 22);
             this.menuNewConnection.Text = "New Connection...";
             // 
+            // menuOpenConnectionsFile
+            // 
+            this.menuOpenConnectionsFile.Name = "menuOpenConnectionsFile";
+            this.menuOpenConnectionsFile.Size = new System.Drawing.Size(204, 22);
+            this.menuOpenConnectionsFile.Text = "Open Connections File...";
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -669,7 +675,9 @@
             // 
             this.quickScriptToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuDeleteFromTables,
-            this.menuSelectCountsFromTables});
+            this.menuSelectCountsFromTables,
+            this.menuForEachTable,
+            this.menuForEachField});
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.quickScriptToolStripMenuItem.Text = "Quick Script";
@@ -691,7 +699,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuScriptingTest,
             this.toolStripMenuItem1,
-            this.aboutToolStripMenuItem});
+            this.menuAbout});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -707,11 +715,11 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(277, 6);
             // 
-            // aboutToolStripMenuItem
+            // menuAbout
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(280, 22);
-            this.aboutToolStripMenuItem.Text = "About...";
+            this.menuAbout.Name = "menuAbout";
+            this.menuAbout.Size = new System.Drawing.Size(280, 22);
+            this.menuAbout.Text = "About...";
             // 
             // toolStrip1
             // 
@@ -841,15 +849,17 @@
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
             // 
-            // errorProvider1
+            // menuForEachTable
             // 
-            this.errorProvider1.ContainerControl = this;
+            this.menuForEachTable.Name = "menuForEachTable";
+            this.menuForEachTable.Size = new System.Drawing.Size(221, 22);
+            this.menuForEachTable.Text = "For Each Table";
             // 
-            // menuOpenConnectionsFile
+            // menuForEachField
             // 
-            this.menuOpenConnectionsFile.Name = "menuOpenConnectionsFile";
-            this.menuOpenConnectionsFile.Size = new System.Drawing.Size(204, 22);
-            this.menuOpenConnectionsFile.Text = "Open Connections File...";
+            this.menuForEachField.Name = "menuForEachField";
+            this.menuForEachField.Size = new System.Drawing.Size(221, 22);
+            this.menuForEachField.Text = "For Each Field";
             // 
             // FormMain
             // 
@@ -887,7 +897,6 @@
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -938,7 +947,7 @@
         private System.Windows.Forms.ToolStripButton btnDatabaseTransfer;
         private System.Windows.Forms.ToolStripButton btnEditConnection;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuAbout;
         private System.Windows.Forms.ToolStripButton btnDeleteConnection;
         private System.Windows.Forms.ToolStripMenuItem menuEditConnection;
         private System.Windows.Forms.ToolStripMenuItem menuDeleteConnection;
@@ -970,12 +979,13 @@
         private System.Windows.Forms.TabPage tpSQLLog;
         private System.Windows.Forms.TextBox txtSQLLog;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateUIMetadata;
-        private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.ToolStripMenuItem menuAnalyzeTable;
         private System.Windows.Forms.TabPage tpTableAnalyze;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateSQLDump;
         private System.Windows.Forms.ToolStripMenuItem menuOpenConnectionsFile;
+        private System.Windows.Forms.ToolStripMenuItem menuForEachTable;
+        private System.Windows.Forms.ToolStripMenuItem menuForEachField;
 
     }
 }
