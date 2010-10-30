@@ -207,7 +207,28 @@ namespace Cinar.WinApp.MediaSearch.Controls
 
         private void cmdTestSelector(string arg)
         {
-            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeye týklayýnýz", CurrentContentDefinition.RSSUrl);
+            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeyi iþaretleyiniz", CurrentContentDefinition.RSSUrl);
+            if (selector != null)
+            {
+                switch (arg)
+                {
+                    case "Baþlýk":
+                        editTitleSelector.EditValue = selector;
+                        break;
+                    case "Ýçerik":
+                        editContentSelector.EditValue = selector;
+                        break;
+                    case "Tarih":
+                        editDateSelector.EditValue = selector;
+                        break;
+                    case "Yazar":
+                        editAuthorSelector.EditValue = selector;
+                        break;
+                    case "Resim":
+                        editImageSelector.EditValue = selector;
+                        break;
+                }
+            }
         }
 
 

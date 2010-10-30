@@ -29,10 +29,15 @@
         private void InitializeComponent()
         {
             this.webBrowser = new System.Windows.Forms.WebBrowser();
-            this.label = new System.Windows.Forms.Label();
+            this.editSelector = new DevExpress.XtraEditors.ButtonEdit();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.cbMark = new DevExpress.XtraEditors.CheckButton();
+            this.comboUrls = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.lblSelectorFull = new DevExpress.XtraEditors.LabelControl();
+            ((System.ComponentModel.ISupportInitialize)(this.editSelector.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboUrls.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // webBrowser
@@ -42,23 +47,23 @@
             this.webBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowser.Location = new System.Drawing.Point(2, 1);
+            this.webBrowser.Location = new System.Drawing.Point(4, 26);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
             this.webBrowser.ScriptErrorsSuppressed = true;
-            this.webBrowser.Size = new System.Drawing.Size(757, 481);
+            this.webBrowser.Size = new System.Drawing.Size(754, 435);
             this.webBrowser.TabIndex = 0;
             // 
-            // label
+            // editSelector
             // 
-            this.label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.editSelector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label.Location = new System.Drawing.Point(2, 485);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(757, 20);
-            this.label.TabIndex = 1;
-            this.label.Text = "label1";
+            this.editSelector.Location = new System.Drawing.Point(2, 485);
+            this.editSelector.Name = "editSelector";
+            this.editSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.editSelector.Size = new System.Drawing.Size(757, 20);
+            this.editSelector.TabIndex = 1;
             // 
             // simpleButton1
             // 
@@ -90,28 +95,67 @@
             this.cbMark.TabIndex = 4;
             this.cbMark.Text = "İşaretle";
             // 
+            // comboUrls
+            // 
+            this.comboUrls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboUrls.Location = new System.Drawing.Point(131, 2);
+            this.comboUrls.Name = "comboUrls";
+            this.comboUrls.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboUrls.Size = new System.Drawing.Size(628, 20);
+            this.comboUrls.TabIndex = 5;
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Location = new System.Drawing.Point(5, 6);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(120, 13);
+            this.labelControl1.TabIndex = 6;
+            this.labelControl1.Text = "RSS\'ten bulunan adresler";
+            // 
+            // lblSelectorFull
+            // 
+            this.lblSelectorFull.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSelectorFull.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblSelectorFull.Location = new System.Drawing.Point(4, 467);
+            this.lblSelectorFull.Name = "lblSelectorFull";
+            this.lblSelectorFull.Size = new System.Drawing.Size(754, 14);
+            this.lblSelectorFull.TabIndex = 7;
+            this.lblSelectorFull.Text = "a > b";
+            // 
             // FormCSSSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 533);
+            this.Controls.Add(this.lblSelectorFull);
+            this.Controls.Add(this.labelControl1);
+            this.Controls.Add(this.comboUrls);
             this.Controls.Add(this.cbMark);
             this.Controls.Add(this.simpleButton2);
             this.Controls.Add(this.simpleButton1);
-            this.Controls.Add(this.label);
+            this.Controls.Add(this.editSelector);
             this.Controls.Add(this.webBrowser);
             this.Name = "FormCSSSelector";
             this.Text = "FormCSSSelector";
+            ((System.ComponentModel.ISupportInitialize)(this.editSelector.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboUrls.Properties)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.WebBrowser webBrowser;
-        private System.Windows.Forms.Label label;
+        private DevExpress.XtraEditors.ButtonEdit editSelector;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
         private DevExpress.XtraEditors.CheckButton cbMark;
+        private DevExpress.XtraEditors.ComboBoxEdit comboUrls;
+        private DevExpress.XtraEditors.LabelControl labelControl1;
+        private DevExpress.XtraEditors.LabelControl lblSelectorFull;
     }
 }
