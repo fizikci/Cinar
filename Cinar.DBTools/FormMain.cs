@@ -55,6 +55,12 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdAbout,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuAbout},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdEditConnection,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuEditConnection},
@@ -84,6 +90,7 @@ namespace Cinar.DBTools
                                      Execute = cmdExecuteSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnExecuteSQL},
+                                         new CommandTrigger{ Control = txtSQL, Event = "KeyUp", Predicate = (e)=>{KeyEventArgs k = (KeyEventArgs)e; return k.KeyCode==Keys.F5 || k.KeyCode==Keys.F9;}}
                                      }
                                  },
                      new Command {
@@ -113,11 +120,19 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDeleteFromTables, Argument=@"$
 foreach(table in db.Tables)
-    echo('delete from ' + table.Name + ';\r\n');
+    echo('truncate table ' + table.Name + ';\r\n');
 $"},
                                          new CommandTrigger{ Control = menuSelectCountsFromTables, Argument=@"$
 foreach(table in db.Tables)
     echo(""select '"" + table.Name + ""', count(*) from "" + table.Name + "" UNION \r\n"");
+$"},
+                                         new CommandTrigger{ Control = menuForEachTable, Argument=@"$
+foreach(table in db.Tables)
+    echo(table.Name + ""\r\n"");
+$"},
+                                         new CommandTrigger{ Control = menuForEachField, Argument=@"$
+foreach(field in db.Tables[""TABLE_NAME""].Fields)
+    echo(field.Name + ""\r\n"");
 $"},
                                      }
                                  },
@@ -516,7 +531,11 @@ $"},
         {
             if(!checkConnection()) return;
 
-            Interpreter engine = new Interpreter(txtSQL.Text, null);
+            string sel = txtSQL.SelectedText;
+            if (string.IsNullOrEmpty(sel))
+                sel = txtSQL.Text;
+
+            Interpreter engine = new Interpreter(sel, null);
             engine.SetAttribute("db", Provider.Database);
             engine.SetAttribute("util", new Util());
             engine.Parse();
@@ -856,6 +875,10 @@ $"},
         private void cmdExit(string arg)
         {
             Close();
+        }
+        private void cmdAbout(string arg)
+        {
+            new FormAbout().ShowDialog();
         }
         private void cmdTryAndSee(string arg)
         {
