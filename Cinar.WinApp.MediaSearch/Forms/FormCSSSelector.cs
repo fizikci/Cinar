@@ -40,10 +40,16 @@ namespace Cinar.WinApp.MediaSearch.Forms
             {
                 if (node.StartsWith("#"))
                     elm = webBrowser.Document.GetElementById(node.Substring(1));
-                else
+                else if (node.Contains("."))
                 {
                     string[] parts = node.Split('.');
                     elm = elm.GetElementsByTagName(parts[0]).Cast<HtmlElement>().First(e => e.GetAttribute("classname") == parts[1]);
+                }
+                else
+                {
+                    string[] parts = node.Split('[');
+                    int index = int.Parse(parts[1].Trim(']'));
+                    elm = elm.GetElementsByTagName(parts[0])[index];
                 }
             }
             return elm;
@@ -63,7 +69,6 @@ namespace Cinar.WinApp.MediaSearch.Forms
             }
             Rectangle rect = eps.Position;
             editSelector.Text = eps.Selector;
-            lblSelectorFull.Text = eps.SelectorFull;
 
             marker.Style = string.Format("position:absolute; left:{0}px; top:{1}px; width:{2}px; height:{3}px; border:1px solid blue;", rect.Left, rect.Top, rect.Width, rect.Height);
         }
@@ -119,24 +124,24 @@ namespace Cinar.WinApp.MediaSearch.Forms
                 size = elm.ScrollRectangle.Size;
             Point pos = elm.ClientRectangle.Location;
 
-            string s = "", sFull = "";
+            string sFull = "";
             while (elm != null)
             {
+                if (elm.TagName == "HTML")
+                    break;
+
                 string cls = elm.GetAttribute("classname");
                 string id = elm.GetAttribute("id");
 
                 if (!string.IsNullOrEmpty(id))
-                {
-                    s = "#" + id + " > " + s;
                     sFull = "#" + id + " > " + sFull;
-                }
                 else if (!string.IsNullOrEmpty(cls))
-                {
-                    s = elm.TagName + "." + cls + " > " + s;
                     sFull = elm.TagName + "." + cls + " > " + sFull;
+                else if(elm.OffsetParent!=null)
+                {
+                    int index = elm.OffsetParent.GetElementsByTagName(elm.TagName).OfType<HtmlElement>().IndexOf(e => e == elm);
+                    sFull = elm.TagName + "[" + index + "] > " + sFull;
                 }
-                else
-                    sFull = elm.TagName + " > " + sFull;
 
                 pos.X += elm.OffsetRectangle.Left;
                 pos.Y += elm.OffsetRectangle.Top;
@@ -145,15 +150,15 @@ namespace Cinar.WinApp.MediaSearch.Forms
             }
             return new ElementPositionAndSelector { 
                   Position = new Rectangle(pos, size),
-                  Selector = s,
-                  SelectorFull = sFull
+                  Selector = sFull.Trim(' ','>')
               };
         }
 
-        public static string GetSelector(string formTitle, string rssUrl)
+        public static string GetSelector(string formTitle, string rssUrl, string selector)
         {
             FormCSSSelector f = new FormCSSSelector(rssUrl);
             f.Text = formTitle;
+            f.editSelector.Text = selector;
             if (f.ShowDialog() == DialogResult.OK)
                 return f.editSelector.Text;
             else
@@ -165,7 +170,6 @@ namespace Cinar.WinApp.MediaSearch.Forms
     public class ElementPositionAndSelector
     {
         public string Selector { get; set; }
-        public string SelectorFull { get; set; }
         public Rectangle Position { get; set; }
     }
 }

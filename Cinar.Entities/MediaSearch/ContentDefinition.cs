@@ -9,7 +9,7 @@ namespace Cinar.Entities.MediaSearch
 {
     public class ContentDefinition : BaseEntity
     {
-        [FieldDetail(Length=500)]
+        [FieldDetail(Length=200)]
         public string RSSUrl { get; set; }
 
         [FieldDetail(References=typeof(Category))]
@@ -50,19 +50,28 @@ namespace Cinar.Entities.MediaSearch
             }
         }
 
-        [FieldDetail(Length=500)]
+        public ContentType ContentType { get; set; }
+        public string LinkSelector { get; set; }
+
+        [FieldDetail(Length=200)]
         public string TitleSelector { get; set; }
 
-        [FieldDetail(Length=500)]
+        [FieldDetail(Length=200)]
         public string ContentSelector { get; set; }
         
-        [FieldDetail(Length=500)]
+        [FieldDetail(Length=200)]
         public string AuthorSelector { get; set; }
 
-        [FieldDetail(Length=500)]
+        [FieldDetail(Length=200)]
         public string ImageSelector { get; set; }
 
-        [FieldDetail(Length=500)]
+        [FieldDetail(Length=200)]
         public string DateSelector { get; set; }
+    }
+
+    public enum ContentType
+    {
+        News,
+        Article
     }
 }

@@ -35,7 +35,6 @@
             this.cbMark = new DevExpress.XtraEditors.CheckButton();
             this.comboUrls = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.lblSelectorFull = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.editSelector.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboUrls.Properties)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +50,7 @@
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
             this.webBrowser.ScriptErrorsSuppressed = true;
-            this.webBrowser.Size = new System.Drawing.Size(754, 435);
+            this.webBrowser.Size = new System.Drawing.Size(754, 451);
             this.webBrowser.TabIndex = 0;
             // 
             // editSelector
@@ -114,23 +113,11 @@
             this.labelControl1.TabIndex = 6;
             this.labelControl1.Text = "RSS\'ten bulunan adresler";
             // 
-            // lblSelectorFull
-            // 
-            this.lblSelectorFull.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSelectorFull.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.lblSelectorFull.Location = new System.Drawing.Point(4, 467);
-            this.lblSelectorFull.Name = "lblSelectorFull";
-            this.lblSelectorFull.Size = new System.Drawing.Size(754, 14);
-            this.lblSelectorFull.TabIndex = 7;
-            this.lblSelectorFull.Text = "a > b";
-            // 
             // FormCSSSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 533);
-            this.Controls.Add(this.lblSelectorFull);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.comboUrls);
             this.Controls.Add(this.cbMark);
@@ -156,6 +143,5 @@
         private DevExpress.XtraEditors.CheckButton cbMark;
         private DevExpress.XtraEditors.ComboBoxEdit comboUrls;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.LabelControl lblSelectorFull;
     }
 }

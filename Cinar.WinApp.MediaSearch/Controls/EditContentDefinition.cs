@@ -27,7 +27,13 @@ namespace Cinar.WinApp.MediaSearch.Controls
 
             this.editCategory.EntityType = typeof(Category);
             this.editMedia.EntityType = typeof(Media);
+            editContentType.BindTo(Enum.GetValues(typeof(ContentType)));
             layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.feed;
+            btnAddContentDefinition.Image = Cinar.WinUI.Properties.Resources.add;
+            btnDeleteContentDefinition.Image = Cinar.WinUI.Properties.Resources.delete;
+            btnSaveContentDefinition.Image = Cinar.WinUI.Properties.Resources.disk;
+            btnTest.Image = Cinar.WinUI.Properties.Resources.television;
+            listEntityContent.ImageForEntity = Cinar.WinUI.Properties.Resources.newspaper;
         }
 
         public CommandCollection GetCommands()
@@ -56,6 +62,11 @@ namespace Cinar.WinApp.MediaSearch.Controls
                                     new CommandTrigger(){Control=editAuthorSelector, Event="ButtonClick", Argument="Yazar"},
                                     new CommandTrigger(){Control=editImageSelector, Event="ButtonClick", Argument="Resim"},
                                 }
+                            },
+                       new Command(){
+                                Execute = cmdTest,
+                                Trigger = new CommandTrigger(){Control=btnTest},
+                                IsEnabled = () => CurrentContentDefinition.Id != -1
                             },
                    };
         }
@@ -207,30 +218,37 @@ namespace Cinar.WinApp.MediaSearch.Controls
 
         private void cmdTestSelector(string arg)
         {
-            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeyi iþaretleyiniz", CurrentContentDefinition.RSSUrl);
-            if (selector != null)
+            ButtonEdit edit = null;
+            switch (arg)
             {
-                switch (arg)
-                {
-                    case "Baþlýk":
-                        editTitleSelector.EditValue = selector;
-                        break;
-                    case "Ýçerik":
-                        editContentSelector.EditValue = selector;
-                        break;
-                    case "Tarih":
-                        editDateSelector.EditValue = selector;
-                        break;
-                    case "Yazar":
-                        editAuthorSelector.EditValue = selector;
-                        break;
-                    case "Resim":
-                        editImageSelector.EditValue = selector;
-                        break;
-                }
+                case "Baþlýk":
+                    edit = editTitleSelector;
+                    break;
+                case "Ýçerik":
+                    edit = editContentSelector;
+                    break;
+                case "Tarih":
+                    edit = editDateSelector;
+                    break;
+                case "Yazar":
+                    edit = editAuthorSelector;
+                    break;
+                case "Resim":
+                    edit = editImageSelector;
+                    break;
             }
+
+            if (edit == null)
+                return;
+
+            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeyi iþaretleyiniz", CurrentContentDefinition.RSSUrl, edit.EditValue==null ? "" : edit.EditValue.ToString());
+            if (selector != null)
+                edit.EditValue = selector;
         }
 
-
+        private void cmdTest(string arg)
+        {
+            new Forms.FormTest(CurrentContentDefinition).ShowDialog();
+        }
     }
 }

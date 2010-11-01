@@ -1104,17 +1104,17 @@ namespace Cinar.Database
         }
         public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
-            string selectSQL = "select * from [" + typeof(T).Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            string selectSQL = "select * from [" + typeof(T).Name + "] " + filterExpression.ToParamString();
             return ReadList<T>(selectSQL, filterExpression.GetParamValues());
         }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
-            string selectSQL = "select * from [" + entityType.Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            string selectSQL = "select * from [" + entityType.Name + "] " + filterExpression.ToParamString();
             return ReadList(entityType, selectSQL, filterExpression.GetParamValues());
         }
         public int ReadCount(Type entityType, FilterExpression filterExpression)
         {
-            string selectSQL = "select count(*) from [" + entityType.Name + "]" + (filterExpression.Criterias.Count > 0 ? " where " + filterExpression.ToParamString() : "");
+            string selectSQL = "select count(*) from [" + entityType.Name + "] " + filterExpression.Criterias.ToParamString();
             return GetInt(selectSQL, filterExpression.GetParamValues());
         }
         public DataTable ReadTable(Type entityType, string selectSql, params object[] parameters)

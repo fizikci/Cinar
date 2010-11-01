@@ -117,25 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="contextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="contentBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="menuCopy.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAmtJREFUOE9900tP
-        E2EYBeCvJC40avwR/gzdEPEaXVCK7lwZY6Ir7aKJFxSLbpHYGKPEtRsTZaM1GqQ4TVugFZRA4ZWUSy9A
-        S2dooXM7nhmXtjY5eRczOX2/p18DZyLa26NHDhzv6lLHoOAoFVABQLVsNPSmOWpWqy8nXlzcV50+fdFU
-        FkC+bDhSYUq6Las1U4q6KU/jFQlFZ16dvDF2iO+odlH9Q+nF7YYrk2KLtmLJt6WWjM02xGi5kiiYMjK+
-        JWfvTQx0LAgNpfM7TVemCrZMrdqS/G3K54U9WS43ZNMwxdi35NrzqaX/FtT3XPmxbktuzZZMwZLEckte
-        T1QQ+7qBZ/E1Pzff5Bq3RrPNq7HMYnckcf/E9fcHvVLVxw30PcjPousnt+5IasWU2Jd1uHyDNqANaAPa
-        gDagDWjzgTaHVTDKI/gFkF9FR+Y2HMlykxF+K21AG9AGtAFtQBvQBrQBbUZU7+NUvs6ChTIkX/k751nm
-        rU0b0Aa0AW1AG9AGtAFtEBxMuap3MJOvNqy2BbQBbUAb0Aa0QXy+iXc5A2s8zpUnGVcFH81IsV77p2CY
-        G9AGdPFDG9AGCWn5mxR1B5e9gkt3k7Nbhi2lOi/PjinluiUV3ZLhTzyCXwDQBrQBbZBe9TxMlAwX/UMs
-        OB/RPl6IJKd7wsnlnrA2x8loc7QBbUAT0MaftOGRgHQB/rNQNO22vZ7e70sbizYdC2pNC6FBbtDphtEG
-        tOlYUNJr6H843f4P4pWei2jbtAFtQBvQBrTxs8lUdx30DaRaHTfovj053hP+vkETlyYGJ+NNzTgdTu6e
-        ujNZCj5I1f8Af5omEpoZlxEAAAAASUVORK5CYII=
-</value>
-  </data>
+  <metadata name="timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>177, 17</value>
+  </metadata>
 </root>
