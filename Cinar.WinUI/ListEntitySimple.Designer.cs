@@ -153,7 +153,7 @@ namespace Cinar.WinUI
             this.menuHistory,
             this.menuExcel});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(162, 158);
+            this.contextMenu.Size = new System.Drawing.Size(162, 136);
             // 
             // menuCopy
             // 
@@ -213,7 +213,6 @@ namespace Cinar.WinUI
             // btnExcel
             // 
             this.btnExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExcel.Image = ((System.Drawing.Image)(resources.GetObject("btnExcel.Image")));
             this.btnExcel.Location = new System.Drawing.Point(360, 197);
             this.btnExcel.Name = "btnExcel";
             this.btnExcel.Size = new System.Drawing.Size(100, 22);

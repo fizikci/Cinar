@@ -243,7 +243,7 @@ namespace Cinar.WinUI
             if (ShowTotalCount && PageSize == 0)
                 lastTotalRecordCount = DMT.Provider.Db.ReadCount(EntityType, filter);
 
-            return DMT.Provider.Db.ReadList(EntityType, filter).ToList();
+            return DMT.Provider.Db.ReadList(EntityType, filter);
         }
 
     	public IList DataSource
