@@ -1125,18 +1125,12 @@ namespace Cinar.Database
         }
         public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
-            string selectSQL = "select * from [" + typeof(T).Name + "] " + filterExpression.ToParamString();
-            if(filterExpression.PageSize>0)
-                selectSQL += " limit " + filterExpression.PageSize + " offset " + (filterExpression.PageSize*filterExpression.PageNo);
-
+            string selectSQL = "select * from [" + typeof(T).Name + "] " + filterExpression.ToParamString(); // limit-offset ToParamString() tarafından ekleniyor
             return ReadList<T>(selectSQL, filterExpression.GetParamValues());
         }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
-            string selectSQL = "select * from [" + entityType.Name + "] " + filterExpression.ToParamString();
-            if (filterExpression.PageSize > 0)
-                selectSQL += " limit " + filterExpression.PageSize + " offset " + (filterExpression.PageSize * filterExpression.PageNo);
-
+            string selectSQL = "select * from [" + entityType.Name + "] " + filterExpression.ToParamString(); // limit-offset ToParamString() tarafından ekleniyor
             return ReadList(entityType, selectSQL, filterExpression.GetParamValues());
         }
         public int ReadCount(Type entityType, FilterExpression filterExpression)
