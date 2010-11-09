@@ -14,7 +14,13 @@ namespace Cinar.Database
             Orders = new OrderList();
         }
 
-        public int PageNo { get; set; }
+        private int pageNo = 0;
+        public int PageNo
+        {
+            get { return pageNo; }
+            set { pageNo = value < 0 ? 0 : value; }
+        }
+
         public int PageSize { get; set; }
 
         CriteriaList criterias;

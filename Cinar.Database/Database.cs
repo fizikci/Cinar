@@ -942,6 +942,27 @@ namespace Cinar.Database
         {
             return GetDataTable(sql, new object[0]);
         }
+        public List<T> GetList<T>(string sql, params object[] parameters)
+        {
+            return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr=>(T)dr[0]).ToList();
+        }
+        public Dictionary<TKey, TValue> GetDictionary<TKey, TValue>(string sql, params object[] parameters)
+        {
+            DataTable dt = GetDataTable(sql, parameters);
+            if(dt.Columns.Count<2)
+                throw new Exception("select at least 2 columns for dictionary");
+
+            Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                TKey key = (TKey) Convert.ChangeType(dr[0], typeof (TKey));
+                if(!dict.ContainsKey(key))
+                    dict.Add(key, (TValue) Convert.ChangeType(dr[1], typeof (TValue)));
+            }
+
+            return dict;
+        }
+
         public DataRow GetDataRow(string sql, params object[] parameters)
         {
             DataTable dt = this.GetDataTable(sql, parameters);
@@ -1105,11 +1126,17 @@ namespace Cinar.Database
         public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
             string selectSQL = "select * from [" + typeof(T).Name + "] " + filterExpression.ToParamString();
+            if(filterExpression.PageSize>0)
+                selectSQL += " limit " + filterExpression.PageSize + " offset " + (filterExpression.PageSize*filterExpression.PageNo);
+
             return ReadList<T>(selectSQL, filterExpression.GetParamValues());
         }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
             string selectSQL = "select * from [" + entityType.Name + "] " + filterExpression.ToParamString();
+            if (filterExpression.PageSize > 0)
+                selectSQL += " limit " + filterExpression.PageSize + " offset " + (filterExpression.PageSize * filterExpression.PageNo);
+
             return ReadList(entityType, selectSQL, filterExpression.GetParamValues());
         }
         public int ReadCount(Type entityType, FilterExpression filterExpression)
