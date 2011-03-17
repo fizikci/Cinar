@@ -43,7 +43,8 @@ namespace Cinar.WinApp.MediaSearch.Forms
                 else if (node.Contains("."))
                 {
                     string[] parts = node.Split('.');
-                    elm = elm.GetElementsByTagName(parts[0]).Cast<HtmlElement>().First(e => e.GetAttribute("classname") == parts[1]);
+                    if(parts[1].Contains(" ")) parts[1] = parts[1].Split(' ')[0];
+                    elm = elm.GetElementsByTagName(parts[0]).Cast<HtmlElement>().First(e => e.GetAttribute("classname").Contains(parts[1]));
                 }
                 else
                 {

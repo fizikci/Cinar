@@ -49,7 +49,7 @@ namespace Cinar.WinUI
                     Invalidate();
                     Update();
                     fileName = ReportsHelper.GetReportPath(fReport, "repx");
-                    fReport.PrintingSystem = printingSystem;
+                    //fReport.PrintingSystem = printingSystem;
 
                     fReport.CreateDocument(true);
                 } 

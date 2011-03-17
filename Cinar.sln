@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Database", "Cinar.Database\Cinar.Database.csproj", "{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.DBTools", "Cinar.DBTools\Cinar.DBTools.csproj", "{047CE3A8-3319-4378-878E-C64F52797409}"
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Entities", "Cinar.Entities\Cinar.Entities.csproj", "{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.WinApp.MediaSearch", "Cinar.WinApp.MediaSearch\Cinar.WinApp.MediaSearch.csproj", "{A47AB431-1671-4574-97F9-854CA5046E51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.POP3", "Cinar.POP3\Cinar.POP3.csproj", "{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,6 +200,15 @@ Global
 		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|Any CPU.ActiveCfg = Release|Any CPU
 		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|Any CPU.Build.0 = Release|Any CPU
 		{A47AB431-1671-4574-97F9-854CA5046E51}.Release64|x64.ActiveCfg = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release|x64.ActiveCfg = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}.Release64|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

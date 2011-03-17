@@ -137,6 +137,8 @@ namespace Cinar.DBTools.Tools
                 ScriptingTest test = (ScriptingTest) row.DataBoundItem;
 
                 Interpreter pret = new Interpreter(test.Code, null);
+                pret.AddAssembly(typeof(POP3.Pop3Client).Assembly);
+                pret.SetAttribute("db", Provider.Database);
                 pret.Parse();
                 pret.Execute();
 

@@ -772,7 +772,16 @@ namespace Cinar.Scripting
                 else
                 {
                     for (int j = 0; j < paramTypes.Length; j++)
-                        paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
+                    {
+                        try
+                        {
+                            paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Cannot cast from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
+                        }
+                    }
                     res = mi.Invoke(res, paramValues);
                 }
             }
@@ -926,6 +935,21 @@ namespace Cinar.Scripting
     {
         public IndexerAccess(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            object res = LeftChildExpression.Calculate(context, this);
+            object val = RightChildExpression.Calculate(context, this);
+            if (val.IsNumeric() && res.GetType() == typeof(string))
+                res = res.ToString()[Convert.ToInt32(val)];
+            else
+                res = res.GetIndexedValue(val);
+            return res;
+        }
+        public override string ToString()
+        {
+            return toString(String.Format("{0}[{1}]", LeftChildExpression.ToString(), RightChildExpression.ToString()));
+        }
     }
 
     public abstract class UnaryExpression : Expression

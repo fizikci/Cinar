@@ -218,8 +218,10 @@ namespace Cinar.WinApp.MediaSearch.Controls
 
         private void cmdTestSelector(string arg)
         {
-            ButtonEdit edit = null;
-            switch (arg)
+            DMT.Provider.UpdateEntityWithEditControlValues(layoutEntity, CurrentContentDefinition);
+			ButtonEdit edit = null;
+            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeyi iþaretleyiniz", CurrentContentDefinition.RSSUrl);
+            if (selector != null)
             {
                 case "Baþlýk":
                     edit = editTitleSelector;

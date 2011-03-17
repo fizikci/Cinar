@@ -80,6 +80,16 @@ namespace Cinar.Database
         private string temporaryDbName = ""; // bu sadece Database.Name'i geçici olarak değiştirmek için kullanılır.
 
         [XmlIgnore]
+        public string Host
+        {
+            get
+            {
+                return this.host;
+            }
+        }
+        private string host;
+
+        [XmlIgnore]
         public List<string> SQLLog
         {
             get
@@ -247,6 +257,7 @@ namespace Cinar.Database
 
         public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
         {
+            this.host = host;
             this.provider = provider;
             switch (provider)
             {
@@ -271,6 +282,7 @@ namespace Cinar.Database
         public Database CreateNewInstance()
         {
             Database db = new Database();
+            db.host = this.host;
             db.connectionString = this.connectionString;
             db.provider = this.provider;
             db.tables = this.tables;
@@ -659,7 +671,7 @@ namespace Cinar.Database
             // validate parameters
             if (data.Count == 0) return -1;
             Table tbl = this.Tables[tableName];
-            if (tbl == null) throw new ApplicationException("There is no such database : " + tableName);
+            if (tbl == null) throw new ApplicationException("There is no such table : " + tableName);
             FieldCollection fields = tbl.Fields;
             int validFieldNumber = 0;
             foreach (Field fld in tbl.Fields)
@@ -779,6 +791,9 @@ namespace Cinar.Database
         }
         public Hashtable DataRowToHashtable(DataRow dataRow)
         {
+            if (dataRow == null)
+                return null;
+
             Hashtable ht = new Hashtable();
             foreach (DataColumn dc in dataRow.Table.Columns)
                     ht[dc.ColumnName] = dataRow[dc];
@@ -976,6 +991,14 @@ namespace Cinar.Database
         public DataRow GetDataRow(string sql)
         {
             return GetDataRow(sql, new object[0]);
+        }
+        public Hashtable GetHashtable(string sql)
+        {
+            return GetHashtable(sql, new object[0]);
+        }
+        public Hashtable GetHashtable(string sql, params object[] parameters)
+        {
+            return DataRowToHashtable(GetDataRow(sql, parameters));
         }
         public object GetValue(string sql, params object[] parameters)
         {

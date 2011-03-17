@@ -42,18 +42,6 @@ namespace Cinar.SQLParser
             }
             else if (context.Functions[Name] != null)
             {
-                FunctionDefinitionStatement func = (FunctionDefinitionStatement)context.Functions[Name];
-
-                Hashtable arguments = new Hashtable();
-                int i = 0;
-                foreach (Expression expression in fArguments)
-                {
-                    object paramVal = expression.Calculate(context, this);
-                    if (func.Parameters.Count > i)
-                        arguments[func.Parameters[i]] = paramVal;
-                    i++;
-                }
-                return func.Block.Execute(context, this, arguments).ReturnValue;
             }
             else
                 throw new Exception("Undefined function: " + this);
@@ -585,205 +573,12 @@ namespace Cinar.SQLParser
 
         public override object Calculate(Context context, ParserNode parentNode)
         {
-            object res = LeftChildExpression.Calculate(context, this);
-
-            // eğer sonuç null ve LeftExp variable ise static call olabilir
-            if (res == null && LeftChildExpression is Variable)
-            {
-                string className = (LeftChildExpression as Variable).Name;
-                Type t = context.GetType(className);
-                if (t != null)
-                {
-                    if (RightChildExpression is Variable)
-                    {
-                        string propName = (RightChildExpression as Variable).Name;
-                        PropertyInfo pi = t.GetProperty(propName, BindingFlags.Static | BindingFlags.Public);
-                        if (pi != null)
-                            res = pi.GetValue(null, null);
-                        else
-                            res = "";
-                    }
-                    else if (RightChildExpression is FunctionCall)
-                    {
-                        FunctionCall fc = (FunctionCall)RightChildExpression;
-
-                        object[] paramValues = new object[fc.Arguments.Length];
-                        Type[] paramTypes = new Type[fc.Arguments.Length];
-                        int i = 0;
-                        foreach (Expression exp in fc.Arguments)
-                        {
-                            paramValues[i] = exp.Calculate(context, this);
-                            paramTypes[i] = paramValues[i].GetType(); //TODO: paramValues[i] null ise ne olacak?
-                            i++;
-                        }
-
-                        MethodInfo mi = t.GetMethod(fc.Name, BindingFlags.Static | BindingFlags.Public, null, paramTypes, null);
-                        if (mi == null)
-                            throw new Exception("Undefined param types for static method: " + this);
-                        else
-                            res = mi.Invoke(null, paramValues);
-                    }
-                    else
-                        res = null;
-                }
-                else
-                    throw new Exception("Undefined static method: " + this);
-            }
-            else if (RightChildExpression is MemberAccess)
-            {
-                res = new MemberAccess(new MemberAccess(this.LeftChildExpression, (this.RightChildExpression as MemberAccess).LeftChildExpression), (this.RightChildExpression as MemberAccess).RightChildExpression).Calculate(context, this);
-            }
-            else if (RightChildExpression is FunctionCall)
-            {
-                FunctionCall fc = (FunctionCall)RightChildExpression;
-
-                object[] paramValues = new object[fc.Arguments.Length];
-                Type[] paramTypes = new Type[fc.Arguments.Length];
-                int i = 0;
-                foreach (Expression exp in fc.Arguments)
-                {
-                    paramValues[i] = exp.Calculate(context, this);
-                    paramTypes[i] = paramValues[i].GetType(); //TODO: paramValues[i] null ise ne olacak?
-                    i++;
-                }
-
-                //MethodInfo mi = res.GetType().GetMethod(fc.Name, paramTypes);
-                MethodInfo mi = null;
-                ParameterInfo[] pinfo = null;
-                FindMethod(res.GetType(), fc.Name, paramTypes, out mi, out pinfo);
-
-                if (mi == null)
-                    throw new Exception("Undefined method: " + this);
-                else
-                {
-                    for (int j = 0; j < paramTypes.Length; j++)
-                        paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
-                    res = mi.Invoke(res, paramValues);
-                }
-            }
-            else
-            {
-                Variable var = (Variable)RightChildExpression;
-                PropertyInfo pi = res.GetType().GetProperty(var.Name);
-                if (pi != null)
-                {
-                    try
-                    {
-                        res = pi.GetValue(res, null);
-                    }
-                    catch
-                    {
-                        throw new Exception("Property found but couldnt be read: " + this);
-                    }
-                }
-                else
-                {
-                    FieldInfo fi = res.GetType().GetField(var.Name);
-                    if (fi != null)
-                    {
-                        try
-                        {
-                            res = fi.GetValue(res);
-                        }
-                        catch
-                        {
-                            throw new Exception("Field found but couldnt be read: " + this);
-                        }
-                    }
-                    else
-                    {
-                        MethodInfo mi = res.GetType().GetMethod("get_Item", new Type[] { typeof(string) });
-                        if (mi != null)
-                        {
-                            try
-                            {
-                                object paramObj = Convert.ChangeType(var.Name, mi.GetParameters()[0].ParameterType);
-                                res = mi.Invoke(res, new object[] { paramObj });
-                            }
-                            catch
-                            {
-                                throw new Exception("Indexer found but couldnt be read: " + this);
-                            }
-                        }
-                        else
-                            throw new Exception("Undefined property, field or indexer parameter: " + this);
-                    }
-                }
-            }
-            return res;
+            throw new NotImplementedException();
         }
         public override string ToString()
         {
-            return String.Format("{0}.{1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0}.{1}", LeftChildExpression, RightChildExpression);
         }
-
-        public static void FindMethod(Type type, string methodName, Type[] parameterTypes, out MethodInfo methodInfo, out ParameterInfo[] parameters)
-        {
-            MethodInfo exactMatch = null; 
-            methodInfo = null;
-            parameters = null;
-            methodName = methodName.ToLowerInvariant();
-
-            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            foreach (MethodInfo method in methods)
-            {
-                if (method.Name.ToLowerInvariant() == methodName)
-                {
-                    parameters = method.GetParameters();
-
-                    // compare the method parameters
-                    if (parameters.Length == parameterTypes.Length)
-                    {
-                        bool birebir = true;
-                        for (int i = 0; i < parameters.Length; i++)
-                        {
-                            if (parameters[i].ParameterType != parameterTypes[i])
-                            {
-                                birebir = false;
-                                continue; // this is not the method we're looking for
-                            }
-
-                            // if we're here, we got the right method
-                            methodInfo = method;
-                            break;
-                        }
-                        if (birebir)
-                        {
-                            exactMatch = method;
-                            break;
-                        }
-                        methodInfo = method;
-                        //break;
-                    }
-                }
-            }
-            methodInfo = exactMatch ?? methodInfo;
-        }
-        public void SetValue(object obj, object val, Context context)
-        {
-            if (RightChildExpression is MemberAccess)
-                (RightChildExpression as MemberAccess).SetValue(LeftChildExpression.Calculate(context, this), val, context);
-            else if (RightChildExpression is Variable)
-            {
-                if (obj == null)
-                    throw new Exception(LeftChildExpression + " is null");
-                MemberInfo[] members = obj.GetType().GetMember((RightChildExpression as Variable).Name);
-                if(members==null || members.Length==0)
-                    throw new Exception("Undefined member: " + this);
-                MemberInfo mi = members[0];
-                if (mi is FieldInfo)
-                    (mi as FieldInfo).SetValue(obj, val);
-                else if (mi is PropertyInfo)
-                    (mi as PropertyInfo).SetValue(obj, val, null);
-            }
-            else
-                throw new Exception(this + " cannot be set!");
-        }
-    }
-    public class MethodCall : MemberAccess
-    {
-        public MethodCall(Expression leftChildExpression, Expression rightChildExpression)
-            : base(leftChildExpression, rightChildExpression) { }
     }
 
     public abstract class UnaryExpression : Expression
@@ -826,37 +621,6 @@ namespace Cinar.SQLParser
         public override string ToString()
         {
             return String.Format("!{0}", ChildExpression.ToString());
-        }
-    }
-    public class NewExpression : UnaryExpression
-    {
-        public NewExpression(FunctionCall childExpression)
-            : base(childExpression) { }
-
-        public override object Calculate(Context context, ParserNode parentNode)
-        {
-            FunctionCall fc = (FunctionCall)ChildExpression;
-
-            string className = (string)fc.Name;
-            Type t = context.GetType(className);
-            if (t == null)
-                throw new Exception("Undefined type: " + className);
-
-            object[] parameters = null;
-            if (fc.Arguments.Length > 0)
-            {
-                parameters = new object[fc.Arguments.Length];
-                for (int i = 0; i < fc.Arguments.Length; i++)
-                    parameters[i] = fc.Arguments[i].Calculate(context, this);
-            }
-            if (parameters == null)
-                return Activator.CreateInstance(t);
-            else
-                return Activator.CreateInstance(t, parameters);
-        }
-        public override string ToString()
-        {
-            return String.Format("new {0}", ChildExpression.ToString());
         }
     }
 }

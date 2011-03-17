@@ -192,7 +192,7 @@ namespace Cinar.WinUI
                         template.ExportToText(st, new TextExportOptions("", Encoding.UTF8));
                         break;
                     case "XLS":
-                        template.ExportToXls(st, new XlsExportOptions(true, true, true));
+                        template.ExportToXls(st, new XlsExportOptions(TextExportMode.Value, false, true));
                         break;
                 }
 

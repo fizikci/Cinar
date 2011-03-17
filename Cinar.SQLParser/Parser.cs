@@ -77,32 +77,7 @@ namespace Cinar.SQLParser
                 return ParseVarStatement();
              * */
 
-            return ParseAssignmentOrFunctionCallStatement();
-        }
-
-        VariableDefinition ParseVarStatement()
-        {
-            // var-statement:
-            //   var {assignment} | {variable}
-
-            ReadNextToken(); // skip 'var'
-
-            Variable v = new Variable(fCurrentToken.Value);
-
-            ReadNextToken(); // skip variable name
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "="))
-            {
-                ReadNextToken(); // skip '='
-                Expression value = ParseExpression();
-                skipEmptyStatements();
-                return new VariableDefinition(v, value);
-            }
-            else
-            {
-                skipEmptyStatements();
-                return new VariableDefinition(v, null);
-            }
+            throw new Exception("Undefined statement");
         }
 
         SelectStatement ParseSelectStatement()
@@ -120,386 +95,49 @@ namespace Cinar.SQLParser
 
             ReadNextToken(); // skip 'select'
 
-            List<Expression> fieldNames = new List<Expression>();
+            ListSelect fieldNames = new ListSelect();
 
             if (fCurrentToken.Value == "*")
             {
-                fieldNames.Add(new Variable("*"));
+                fieldNames.Add(new Select() { Field = new Variable("*") });
                 ReadNextToken(); // skip *
             }
 
             while (fCurrentToken.Value == ",")
             {
                 ReadNextToken(); // skip ,
-                fieldNames.Add(ParseExpression());
+                Expression field = ParseExpression();
+                string alias = field.ToString();
+                ReadNextToken();
+                if (fCurrentToken.Equals(TokenType.Word, "AS"))
+                {
+                    ReadNextToken();
+                    alias = fCurrentToken.Value; 
+                }
+                fieldNames.Add(new Select() { Field = ParseExpression(), Alias = alias});
             }
 
-            if (fCurrentToken.Value == "from")
-            {
+            if (fCurrentToken.Equals(TokenType.Word, "FROM"))
                 ReadNextToken(); // skip 'from'
+
+            if (fCurrentToken.Type == TokenType.Word)
+            {
+                ListJoin joins = new ListJoin();
+                // from kısmını sorgula
+                string firstTableName = fCurrentToken.Value;
+                string firstAlias = firstTableName;
+
+                ReadNextToken();
+                if (fCurrentToken.Equals(TokenType.Word, "AS"))
+                {
+                    ReadNextToken();
+                    firstAlias = fCurrentToken.Value;
+                }
             }
 
             skipEmptyStatements();
 
             return new SelectStatement();
-        }
-
-        WhileStatement ParseWhileStatement()
-        {
-            // while-statement:
-            //   while {condition} do {statements} end while
-            //   while ( {condition} ) { {statements} }
-
-            ReadNextToken(); // skip 'while'
-            ReadNextToken(); // skip '('
-
-            Expression lCondition = ParseExpression();
-
-            SkipExpected(TokenType.Symbol, ")"); // skip ')'
-
-            List<Statement> lStatements = new List<Statement>();
-            Statement lStatement;
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-            {
-                SkipExpected(TokenType.Symbol, "{"); // skip '{'
-
-                CheckForUnexpectedEndOfSource();
-                while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                ReadNextToken(); // skip '}'
-            }
-            else
-            {
-                if ((lStatement = ReadNextStatement()) != null)
-                    lStatements.Add(lStatement);
-                else throw new ParserException("Unexpected end of source.");
-            }
-
-            skipEmptyStatements();
-
-            return new WhileStatement(lCondition, new StatementCollection(lStatements));
-        }
-
-        ForStatement ParseForStatement()
-        {
-            // for-statement:
-            //   for ( {a-statement} ; {an-expression} ; {a-statement} ) { {statements} }
-
-            ReadNextToken(); // skip 'for'
-            CheckForUnexpectedEndOfSource();
-            ReadNextToken(); // skip '('
-            CheckForUnexpectedEndOfSource();
-
-            Statement lStart = null, lEnd = null;
-            Expression lCompare = null;
-
-
-            if (!fCurrentToken.Equals(TokenType.Symbol, ";"))
-                lStart = ReadNextStatement();
-
-            if(fCurrentToken.Equals(TokenType.Symbol, ";"))
-                ReadNextToken(); // skip ';'
-
-            if (!fCurrentToken.Equals(TokenType.Symbol, ";"))
-                lCompare = ParseExpression();
-
-            SkipExpected(TokenType.Symbol, ";"); // skip ';'
-
-            if (!fCurrentToken.Equals(TokenType.Symbol, ")"))
-                lEnd = ReadNextStatement();
-            CheckForUnexpectedEndOfSource();
-
-            SkipExpected(TokenType.Symbol, ")"); // skip ')'
-
-            List<Statement> lStatements = new List<Statement>();
-            Statement lStatement;
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-            {
-                SkipExpected(TokenType.Symbol, "{"); // skip '{'
-
-                CheckForUnexpectedEndOfSource();
-                while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                ReadNextToken(); // skip '}'
-            }
-            else
-            {
-                if ((lStatement = ReadNextStatement()) != null)
-                    lStatements.Add(lStatement);
-                else throw new ParserException("Unexpected end of source.");
-            }
-
-            skipEmptyStatements();
-
-            return new ForStatement(lStart, lCompare, lEnd, new StatementCollection(lStatements));
-        }
-
-        ForEachStatement ParseForEachStatement()
-        {
-            // foreach-statement:
-            //   foreach ({variable} in {end-value}) { {statements} }
-
-            ReadNextToken(); // skip 'foreach'
-            CheckForUnexpectedEndOfSource();
-            ReadNextToken(); // skip '{'
-            CheckForUnexpectedEndOfSource();
-
-            if (fCurrentToken.Type != TokenType.Word)
-                throw new ParserException("Expected a variable.");
-
-            Variable lVariable = new Variable(fCurrentToken.Value);
-            ReadNextToken();
-
-            SkipExpected(TokenType.Word, "in"); // skip 'in'
-
-            Expression lCollection = ParseExpression();
-            CheckForUnexpectedEndOfSource();
-
-            SkipExpected(TokenType.Symbol, ")"); // skip ')'
-            List<Statement> lStatements = new List<Statement>();
-            Statement lStatement;
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-            {
-                SkipExpected(TokenType.Symbol, "{"); // skip '{'
-
-                CheckForUnexpectedEndOfSource();
-                while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                ReadNextToken(); // skip '}'
-            }
-            else
-            {
-                if ((lStatement = ReadNextStatement()) != null)
-                    lStatements.Add(lStatement);
-                else throw new ParserException("Unexpected end of source.");
-            }
-
-            skipEmptyStatements();
-
-            return new ForEachStatement(lVariable, lCollection, new StatementCollection(lStatements));
-        }
-
-        FunctionDefinitionStatement ParseFunctionDefinitionStatement()
-        {
-            // function definition:
-            //   function {function-name} (  {expression}, {expression}, ... ) { {statements} }
-
-            ReadNextToken(); // skip 'function'
-
-            string funcName = fCurrentToken.Value;
-            ReadNextToken(); // skip function name
-            ReadNextToken(); // skip '('
-
-            List<string> lParams = new List<string>();
-            if (!fCurrentToken.Equals(TokenType.Symbol, ")"))
-            {
-                lParams.Add(fCurrentToken.Value);
-                ReadNextToken(); // skip param name
-
-                while (fCurrentToken.Equals(TokenType.Symbol, ","))
-                {
-                    ReadNextToken(); // skip ','
-                    lParams.Add(fCurrentToken.Value);
-                    ReadNextToken(); // skip lParam
-                }
-
-                if (!fCurrentToken.Equals(TokenType.Symbol, ")"))
-                    throw new ParserException("Expected ')'.");
-            }
-
-            ReadNextToken(); // skip ')'
-
-            List<Statement> lStatements = new List<Statement>();
-            Statement lStatement;
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "{"))
-            {
-                SkipExpected(TokenType.Symbol, "{"); // skip '{'
-
-                CheckForUnexpectedEndOfSource();
-                while (!fCurrentToken.Equals(TokenType.Symbol, "}"))
-                {
-                    if ((lStatement = ReadNextStatement()) != null)
-                        lStatements.Add(lStatement);
-                    else throw new ParserException("Unexpected end of source.");
-                }
-
-                ReadNextToken(); // skip '}'
-            }
-            else
-            {
-                if ((lStatement = ReadNextStatement()) != null)
-                    lStatements.Add(lStatement);
-                else throw new ParserException("Unexpected end of source.");
-            }
-
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
-            return new FunctionDefinitionStatement(funcName, lParams, new StatementCollection(lStatements));
-        }
-
-        BreakStatement ParseBreakStatement()
-        {
-            // break-statement:
-            //   break
-
-            SkipExpected(TokenType.Word, "break");
-            skipEmptyStatements();
-
-            return new BreakStatement();
-        }
-
-        ContinueStatement ParseContinueStatement()
-        {
-            // continue-statement:
-            //   continue
-
-            SkipExpected(TokenType.Word, "continue");
-            skipEmptyStatements();
-
-            return new ContinueStatement();
-        }
-
-        ReturnStatement ParseReturnStatement()
-        {
-            // return-statement:
-            //   return expression
-
-            SkipExpected(TokenType.Word, "return");
-            Expression exp = ParseExpression();
-            skipEmptyStatements();
-
-            return new ReturnStatement(exp);
-        }
-
-        UsingStatement ParseUsingStatement()
-        {
-            // return-statement:
-            //   return expression
-
-            SkipExpected(TokenType.Word, "using");
-
-            string str = fCurrentToken.Value;
-            ReadNextToken();
-            while (fCurrentToken.Equals(TokenType.Symbol, "."))
-            {
-                str += fCurrentToken.Value;
-                ReadNextToken();
-                str += fCurrentToken.Value;
-            }
-            ReadNextToken();
-            
-            skipEmptyStatements();
-
-            return new UsingStatement(str);
-        }
-
-        Statement ParseAssignmentOrFunctionCallStatement()
-        {
-            Token lToken = fCurrentToken;
-
-            ReadNextToken();
-            CheckForUnexpectedEndOfSource();
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "="))
-                return ParseAssignment(new Variable(lToken.Value), "=");
-            if (fCurrentToken.Equals(TokenType.Symbol, "+="))
-                return ParseAssignment(new Variable(lToken.Value), "+=");
-            if (fCurrentToken.Equals(TokenType.Symbol, "++"))
-                return ParseAssignment(new Variable(lToken.Value), "++");
-            if (fCurrentToken.Equals(TokenType.Symbol, "-="))
-                return ParseAssignment(new Variable(lToken.Value), "-=");
-            if (fCurrentToken.Equals(TokenType.Symbol, "--"))
-                return ParseAssignment(new Variable(lToken.Value), "--");
-            if (fCurrentToken.Equals(TokenType.Symbol, "/="))
-                return ParseAssignment(new Variable(lToken.Value), "/=");
-            if (fCurrentToken.Equals(TokenType.Symbol, "*="))
-                return ParseAssignment(new Variable(lToken.Value), "*=");
-            if (fCurrentToken.Equals(TokenType.Symbol, "."))
-                return ParseMemberAssignmentOrMethodCallStatement(lToken.Value);
-
-            if (fCurrentToken.Equals(TokenType.Symbol, "("))
-                return new FunctionCallStatement(ParseFunctionCall(lToken.Value));
-
-            throw new ParserException("Expected a statement.");
-        }
-
-        Assignment ParseAssignment(Variable variable, string op)
-        {
-            // assignment:
-            //   {variable} += {value}
-
-            ReadNextToken(); // skip '+='
-
-            Assignment a = null;
-
-            if (op == "++" || op == "--")
-                a = new Assignment(variable, op, null);
-            else
-                a = new Assignment(variable, op, ParseExpression());
-
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
-            return a;
-        }
-        MemberAssignment ParseMemberAssignment(MemberAccess variable, string op)
-        {
-            // assignment:
-            //   {variable} += {value}
-
-            ReadNextToken(); // skip '+='
-
-            MemberAssignment a = null;
-
-            if (op == "++" || op == "--")
-                a = new MemberAssignment(variable, op, null);
-            else
-                a = new MemberAssignment(variable, op, ParseExpression());
-
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
-            return a;
-        }
-
-        Statement ParseMemberAssignmentOrMethodCallStatement(string variable)
-        {
-            // assignment:
-            //   {variable} = {value}
-
-            ReadNextToken(); // skip '.'
-
-            MemberAccess ma = new MemberAccess(new Variable(variable), ParseDotExpression());
-
-            // if this ends with ; skip it.
-            skipEmptyStatements();
-
-            if (ma.RightChildExpression is MethodCall)
-                return new MethodCallStatement(ma);
-            else if(ma.RightChildExpression is FunctionCall)
-                return new MethodCallStatement(ma);
-            else
-                return ParseMemberAssignment(ma, fCurrentToken.Value);
         }
 
         Expression ParseExpression()
@@ -564,7 +202,7 @@ namespace Cinar.SQLParser
 
             Expression lNode = ParseOrExpression();
 
-            while (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "&&"))
+            while (!AtEndOfSource && (fCurrentToken.Equals(TokenType.Word, "AND") || fCurrentToken.Equals(TokenType.Symbol, "&&")))
             {
                 ReadNextToken(); // skip '&&'
                 lNode = new AndExpression(lNode, ParseOrExpression());
@@ -582,7 +220,7 @@ namespace Cinar.SQLParser
 
             Expression lNode = ParseComparison();
 
-            while (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "||"))
+            while (!AtEndOfSource && (fCurrentToken.Equals(TokenType.Word, "OR") || fCurrentToken.Equals(TokenType.Symbol, "||")))
             {
                 ReadNextToken(); // skip '||'
                 lNode = new OrExpression(lNode, ParseComparison());
@@ -609,7 +247,9 @@ namespace Cinar.SQLParser
                 ComparisonOperator lOperator;
                 switch (fCurrentToken.Value)
                 {
+                    case "=": lOperator = ComparisonOperator.Equal; break;
                     case "==": lOperator = ComparisonOperator.Equal; break;
+                    case "<>": lOperator = ComparisonOperator.NotEqual; break;
                     case "!=": lOperator = ComparisonOperator.NotEqual; break;
                     case "<": lOperator = ComparisonOperator.LessThan; break;
                     case ">": lOperator = ComparisonOperator.GreaterThan; break;
@@ -662,7 +302,7 @@ namespace Cinar.SQLParser
 
             while (!AtEndOfSource)
             {
-                if (fCurrentToken.Equals(TokenType.Symbol, "%"))
+                if (fCurrentToken.Equals(TokenType.Symbol, "%") || fCurrentToken.Equals(TokenType.Word, "MOD"))
                 {
                     ReadNextToken(); // skip '+'
                     lNode = new Mod(lNode, ParseMultiplicativeExpression());
@@ -711,10 +351,7 @@ namespace Cinar.SQLParser
             {
                 ReadNextToken(); // skip '.'
                 Expression exp = ParseVariableOrFunctionCall();
-                if (exp is FunctionCall)
-                    lNode = new MethodCall(lNode, exp);
-                else
-                    lNode = new MemberAccess(lNode, exp);
+                lNode = new MemberAccess(lNode, exp);
             }
 
             return lNode;
@@ -733,17 +370,10 @@ namespace Cinar.SQLParser
                 ReadNextToken(); // skip '-'
                 return new Negation(ParseBaseExpression());
             }
-            else if (fCurrentToken.Equals(TokenType.Symbol, "!"))
+            else if (fCurrentToken.Equals(TokenType.Symbol, "!") || fCurrentToken.Equals(TokenType.Word, "NOT"))
             {
                 ReadNextToken(); // skip '!'
                 return new NotExpression(ParseBaseExpression());
-            }
-            else if (fCurrentToken.Equals(TokenType.Word, "new"))
-            {
-                ReadNextToken(); // skip 'new'
-                string constructorName = fCurrentToken.Value;
-                ReadNextToken(); // skip constructorName
-                return new NewExpression(ParseFunctionCall(constructorName));
             }
             else if (fCurrentToken.Equals(TokenType.Symbol, "+"))
                 ReadNextToken(); // skip '+'
@@ -968,8 +598,8 @@ namespace Cinar.SQLParser
             else
             {
                 throw new ParserException("Invalid character '"
-                    + fCurrentChar.ToString() + "' after '"
-                    + fTokenValueBuffer.ToString() + "'.");
+                    + fCurrentChar + "' after '"
+                    + fTokenValueBuffer + "'.");
             }
         }
 
@@ -1003,7 +633,6 @@ namespace Cinar.SQLParser
 
             return token;
         }
-
         Token ReadWord()
         {
             do
@@ -1014,7 +643,6 @@ namespace Cinar.SQLParser
 
             return new Token(TokenType.Word, ExtractStoredChars());
         }
-
         Token ReadIntegerOrDecimalConstant()
         {
             do
@@ -1029,7 +657,6 @@ namespace Cinar.SQLParser
             else
                 return new Token(TokenType.Integer, val);
         }
-
         Token ReadStringConstant()
         {
             char quoteChar = fCurrentChar;
@@ -1069,7 +696,6 @@ namespace Cinar.SQLParser
 
             return new Token(TokenType.String, ExtractStoredChars());
         }
-
         Token ReadSymbol()
         {
             switch (fCurrentChar)
@@ -1141,13 +767,11 @@ namespace Cinar.SQLParser
                         StoreCurrentCharAndReadNext();
                     }
                     return new Token(TokenType.Symbol, ExtractStoredChars());
-                // the symbols < <=
+                // the symbols < <= <>
                 case '<':
                     StoreCurrentCharAndReadNext();
-                    if (fCurrentChar == '=')
-                    {
+                    if (fCurrentChar == '=' || fCurrentChar == '>')
                         StoreCurrentCharAndReadNext();
-                    }
                     return new Token(TokenType.Symbol, ExtractStoredChars());
                 // the symbols > >=
                 case '>':
@@ -1198,7 +822,7 @@ namespace Cinar.SQLParser
 
         public bool Equals(TokenType type, string value)
         {
-            return fType == type && fValue == value;
+            return fType == type && fValue.ToLowerInvariant() == value.ToLowerInvariant();
         }
 
         public override string ToString()
