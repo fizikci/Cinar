@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -28,6 +28,10 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <ApplicationIcon>yaprak.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -276,6 +280,10 @@
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
+      <Project>{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}</Project>
+      <Name>Cinar.POP3</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Scheduler\Cinar.Scheduler.csproj">
       <Project>{4D1F4DCA-8D81-4274-B784-B0A5C372D2C9}</Project>

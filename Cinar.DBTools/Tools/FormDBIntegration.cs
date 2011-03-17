@@ -210,6 +210,7 @@ namespace Cinar.DBTools.Tools
             string code = integData.ScriptIncludeCode + Environment.NewLine + task.Code;
 
             Interpreter pret = new Interpreter(code, null);
+            pret.AddAssembly(typeof(POP3.Pop3Client).Assembly);
             pret.SetAttribute("dbSrc", csSrc.Database);
             pret.SetAttribute("dbDst", csDst.Database);
             pret.SetAttribute("this", task);
@@ -220,7 +221,7 @@ namespace Cinar.DBTools.Tools
             if (!pret.Successful)
                 Log(task, "Error: " + pret.Output);
             else
-                Log(task, "Executed successfully in " + pret.ExecutingTime + " ms.");
+                Log(task, pret.Output.Trim() + " in " + pret.ExecutingTime + " ms.");
         }
 
         public void Log(DBIntegrationTask task, string message)
@@ -242,7 +243,7 @@ namespace Cinar.DBTools.Tools
 
         private string logPath {
             get {
-                return Path.GetDirectoryName(Application.ExecutablePath) + "\\dbint_" + DateTime.Now.ToString("Ymd") + ".log";
+                return Path.GetDirectoryName(Application.ExecutablePath) + "\\dbint_" + DateTime.Now.ToString("yyyyMMdd") + ".log";
             }
         }
 
