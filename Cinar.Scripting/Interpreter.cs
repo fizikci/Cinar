@@ -176,6 +176,16 @@ namespace Cinar.Scripting
         internal static List<Assembly> AdditionalAssemblies = new List<Assembly>();
         public static Type GetType(string className, List<string> usings)
         {
+            if (className == "int") return typeof(int);
+            else if (className == "long") return typeof(long);
+            else if (className == "byte") return typeof(byte);
+            else if (className == "decimal") return typeof(decimal);
+            else if (className == "double") return typeof(double);
+            else if (className == "float") return typeof(float);
+            else if (className == "string") return typeof(string);
+            else if (className == "char") return typeof(char);
+            else if (className == "bool") return typeof(bool);
+
             Type t = null;
             foreach (string nameSpace in usings)
             {

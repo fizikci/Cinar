@@ -794,6 +794,13 @@ namespace System
         {
             MemberInfo[] indexers = obj.GetType().GetMember("Item");
             PropertyInfo pi = null;
+
+            if (indexers.Length == 0 && obj is Array)
+            {
+                ((Array)obj).SetValue(val, (int)indexer);
+                return;
+            }
+            
             foreach (PropertyInfo pInfo in indexers)
             {
                 ParameterInfo[] indexerParams = pInfo.GetIndexParameters();
@@ -824,6 +831,10 @@ namespace System
         {
             object result;
             MemberInfo[] indexers = obj.GetType().GetMember("Item");
+
+            if (indexers.Length == 0 && obj is Array)
+                return ((Array)obj).GetValue((int)indexer);
+
             PropertyInfo pi = null;
             foreach (PropertyInfo pInfo in indexers)
             {

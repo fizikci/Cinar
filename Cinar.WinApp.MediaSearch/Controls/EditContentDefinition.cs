@@ -220,8 +220,7 @@ namespace Cinar.WinApp.MediaSearch.Controls
         {
             DMT.Provider.UpdateEntityWithEditControlValues(layoutEntity, CurrentContentDefinition);
 			ButtonEdit edit = null;
-            string selector = Forms.FormCSSSelector.GetSelector(arg + " öðesinin bulunduðu bölgeyi iþaretleyiniz", CurrentContentDefinition.RSSUrl);
-            if (selector != null)
+            switch(arg)
             {
                 case "Baþlýk":
                     edit = editTitleSelector;
