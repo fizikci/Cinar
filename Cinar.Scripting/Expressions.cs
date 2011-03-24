@@ -762,6 +762,14 @@ namespace Cinar.Scripting
                     i++;
                 }
 
+                if (res is string) {
+                    switch (fc.Name.ToLowerInvariant())
+                    { 
+                        case "split":
+                            return res.ToString().Split(new string[] { paramValues[0].ToString() }, StringSplitOptions.RemoveEmptyEntries);
+                    }
+                }
+
                 //MethodInfo mi = res.GetType().GetMethod(fc.Name, paramTypes);
                 MethodInfo mi = null;
                 ParameterInfo[] pinfo = null;
@@ -779,7 +787,7 @@ namespace Cinar.Scripting
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception("Cannot cast from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
+                            throw new Exception("Cannot convert from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
                         }
                     }
                     res = mi.Invoke(res, paramValues);
