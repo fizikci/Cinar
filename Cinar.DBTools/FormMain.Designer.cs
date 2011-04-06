@@ -64,6 +64,7 @@
             this.menuShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGenerateUIMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAnalyzeTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.ınsertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new System.Windows.Forms.RichTextBox();
@@ -113,7 +114,7 @@
             this.btnDatabaseTransfer = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnTryAndSee = new System.Windows.Forms.ToolStripButton();
-            this.ınsertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCompareDirectories = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -248,8 +249,8 @@
             this.treeView.SelectedImageIndex = 0;
             this.treeView.Size = new System.Drawing.Size(269, 537);
             this.treeView.TabIndex = 0;
-            this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
+            this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             // 
             // menuStripTree
             // 
@@ -441,6 +442,12 @@
             this.menuAnalyzeTable.Name = "menuAnalyzeTable";
             this.menuAnalyzeTable.Size = new System.Drawing.Size(197, 22);
             this.menuAnalyzeTable.Text = "Analyze Table";
+            // 
+            // ınsertToolStripMenuItem
+            // 
+            this.ınsertToolStripMenuItem.Name = "ınsertToolStripMenuItem";
+            this.ınsertToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.ınsertToolStripMenuItem.Text = "Insert...";
             // 
             // imageListTree
             // 
@@ -635,6 +642,7 @@
             this.menuCopyTreeData,
             this.menuSimpleIntegrationService,
             this.menuCompareDatabases,
+            this.menuCompareDirectories,
             this.toolStripMenuItem2,
             this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -878,11 +886,11 @@
             this.btnTryAndSee.Size = new System.Drawing.Size(23, 22);
             this.btnTryAndSee.Text = "toolStripButton1";
             // 
-            // ınsertToolStripMenuItem
+            // menuCompareDirectories
             // 
-            this.ınsertToolStripMenuItem.Name = "ınsertToolStripMenuItem";
-            this.ınsertToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.ınsertToolStripMenuItem.Text = "Insert...";
+            this.menuCompareDirectories.Name = "menuCompareDirectories";
+            this.menuCompareDirectories.Size = new System.Drawing.Size(220, 22);
+            this.menuCompareDirectories.Text = "Compare Directories...";
             // 
             // FormMain
             // 
@@ -1010,6 +1018,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuForEachTable;
         private System.Windows.Forms.ToolStripMenuItem menuForEachField;
         private System.Windows.Forms.ToolStripMenuItem ınsertToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuCompareDirectories;
 
     }
 }

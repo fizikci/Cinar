@@ -785,7 +785,7 @@ namespace Cinar.Scripting
                         {
                             paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             throw new Exception("Cannot convert from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
                         }

@@ -86,7 +86,7 @@ namespace Cinar.Database.Providers
         public void ReadDatabaseMetadata()
         {
             // tables and views
-            db.Tables = new TableCollection(db);
+            db.Tables = new TableCollection((Database)db);
 
             // columns
             DataTable dtTables = db.GetDataTable(this.SQLTables);

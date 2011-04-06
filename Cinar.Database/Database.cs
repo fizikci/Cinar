@@ -751,9 +751,13 @@ namespace Cinar.Database
 
                 // first check the table existance
                 Table tbl = GetTableForEntityType(entity.GetType());//this.Tables[entity.GetType().Name];
+                Type type = entity.GetType();
 
                 if (tbl == null)
-                    tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(entity.GetType());
+                    tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);
+
+                if (entity is ISerializeInheritedFields)
+                    serialize(entity as ISerializeInheritedFields);
 
                 Hashtable ht = EntityToHashtable(entity);
 
@@ -777,6 +781,61 @@ namespace Cinar.Database
                 throw ex;
             }
         }
+
+        private void serialize(ISerializeInheritedFields entity)
+        {
+            Type baseType = entity.GetType();
+            while (baseType.BaseType.GetInterface("ISerializeInheritedFields") != null)
+                baseType = baseType.BaseType;
+
+            StringBuilder sb = new StringBuilder();
+            foreach (PropertyInfo pi in entity.GetType().GetProperties())
+            {
+                if (pi.Name == "Item") continue;
+                if (pi.GetSetMethod() == null) continue;
+                if (!pi.DeclaringType.IsSubclassOf(baseType)) continue;
+
+                object val = pi.GetValue(entity, null);
+                if (val != null)
+                {
+                    string valStr = val.ToString();
+                    sb.AppendFormat("{0},{1},{2}", pi.Name, valStr.Length, valStr);
+                }
+            }
+            entity.Details = sb.ToString();
+            entity.TypeName = entity.GetType().Name;
+        }
+        private void deserialize(ISerializeInheritedFields entity)
+        {
+            string data = entity.Details;
+            try
+            {
+                while (data.Length > 0)
+                {
+                    string propName = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(propName.Length + 1);
+                    string valLengthStr = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(valLengthStr.Length + 1);
+                    int length = Int32.Parse(valLengthStr);
+                    string valStr = data.Substring(0, length);
+                    data = data.Substring(length);
+
+                    PropertyInfo pi = entity.GetType().GetProperty(propName);
+                    object val = null;
+                    if (pi.PropertyType.IsEnum)
+                        val = Enum.Parse(pi.PropertyType, valStr);
+                    else
+                        val = Convert.ChangeType(valStr, pi.PropertyType);
+
+                    pi.SetValue(entity, val, null);
+                }
+            }
+            catch
+            {
+                throw new Exception("Error while deserializing the module. This may be because module changed or database charset problem.");
+            }
+        }
+
         public Hashtable EntityToHashtable(IDatabaseEntity entity)
         {
             Hashtable ht = new Hashtable();
@@ -831,10 +890,18 @@ namespace Cinar.Database
         {
             if (dr == null) return null; //***
 
-            IDatabaseEntity entity = (IDatabaseEntity)entityType.GetConstructor(Type.EmptyTypes).Invoke(null);
+            IDatabaseEntity entity = null;
+            if (entityType.GetInterface("ISerializeInheritedFields")!=null)
+            {
+                string typeName = dr["TypeName"].ToString();
+                entity = (IDatabaseEntity)Activator.CreateInstance(entityType.Assembly.GetTypes().Where(t => t.Name == typeName).First());
+            }
+            else
+                entity = (IDatabaseEntity)Activator.CreateInstance(entityType);
+
             FillEntity(entity, dr);
             entity.Initialize();
-            
+
             return entity;
         }
         public T DataRowToEntity<T>(DataRow dr)
@@ -895,6 +962,9 @@ namespace Cinar.Database
                 //else
                 //    pi.SetValue(entity, val, null);
             }
+
+            if(entity is ISerializeInheritedFields)
+                deserialize(entity as ISerializeInheritedFields);
         }
         public void FillEntity(IDatabaseEntity entity)
         {
@@ -1224,6 +1294,12 @@ namespace Cinar.Database
 
             DefaultDataAttribute[] defaultDataArr = (DefaultDataAttribute[])type.GetCustomAttributes(typeof(DefaultDataAttribute), false);
 
+            if (type.GetInterface("ISerializeInheritedFields") != null) // bu tip base class ile map ediliyor olabilir
+            {
+                while (type.BaseType.GetInterface("ISerializeInheritedFields") != null)
+                    type = type.BaseType;
+            }
+
             Table tbl = this.CreateTableMetadataForType(type);
 
             this.CreateTable(tbl, defaultDataArr, refreshMetadata);
@@ -1387,17 +1463,36 @@ namespace Cinar.Database
         {
             if (tableMappingInfo.ContainsKey(entityType))
                 return tableMappingInfo[entityType];
+            else if (entityType.GetInterface("ISerializeInheritedFields") != null) // bu tip base class ile map ediliyor olabilir
+            {
+                Type baseType = entityType;
+                while (baseType.BaseType.GetInterface("ISerializeInheritedFields") != null)
+                    baseType = baseType.BaseType;
+                if (tableMappingInfo.ContainsKey(baseType))
+                {
+                    tableMappingInfo[entityType] = tableMappingInfo[baseType];
+                    return tableMappingInfo[entityType];
+                }
+                else
+                {
+                    object[] attribs2 = baseType.GetCustomAttributes(typeof(TableDetailAttribute), false);
+                    if (attribs2 != null && attribs2.Length >= 1 && !string.IsNullOrEmpty((attribs2[0] as TableDetailAttribute).Name))
+                        tableMappingInfo[baseType] = this.Tables[(attribs2[0] as TableDetailAttribute).Name];
+                    if (!tableMappingInfo.ContainsKey(baseType))
+                        tableMappingInfo[baseType] = this.Tables[baseType.Name];
+
+                    return tableMappingInfo[entityType] = tableMappingInfo[baseType];
+                }
+            }
+
 
             object[] attribs = entityType.GetCustomAttributes(typeof(TableDetailAttribute), false);
             if (attribs != null && attribs.Length >= 1 && !string.IsNullOrEmpty((attribs[0] as TableDetailAttribute).Name))
                 tableMappingInfo[entityType] = this.Tables[(attribs[0] as TableDetailAttribute).Name];
             if (!tableMappingInfo.ContainsKey(entityType))
                 tableMappingInfo[entityType] = this.Tables[entityType.Name];
-            // Bunu yapmışız ama veritabanında henüz hiç tablo yokken, tabloların otomatik create edilebilmesi için commentlemem icap etti..
-            //if (tableMappingInfo[entityType] == null)
-            //    throw new Exception(entityType.Name + " isimli tablo bulunamadı!");
+
             return tableMappingInfo[entityType];
-            //return tableMappingInfo.ContainsKey(entityType) ? tableMappingInfo[entityType] : null;
         }
         public Field GetFieldForProperty(PropertyInfo propertyInfo)
         {
