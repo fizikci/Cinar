@@ -914,6 +914,8 @@ namespace System
         public static string ToJS(this object val)
         {
             if (val == null) return "null";
+            if (val.GetType().IsEnum) return "'" + Enum.GetName(val.GetType(), val) + "'";
+
             switch (val.GetType().Name)
             {
                 case "String":
@@ -942,7 +944,8 @@ namespace System
                 sb.Append("[\n");
                 foreach (var item in (IEnumerable)obj)
                     sb.Append(item.ToJSON() + ",\n");
-                sb.Remove(sb.Length - 2, 2);
+                if (sb.ToString().EndsWith(",\n"))
+                    sb.Remove(sb.Length - 2, 2);
                 sb.Append("]");
                 return sb.ToString();
             }

@@ -110,10 +110,16 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = btnDatabaseTransfer, Argument=typeof(FormDBTransfer).FullName},
                                          new CommandTrigger{ Control = menuCopyTreeData, Argument=typeof(FormCopyTreeData).FullName},
                                          new CommandTrigger{ Control = menuSimpleIntegrationService, Argument=typeof(FormDBIntegration).FullName},
-                                         new CommandTrigger{ Control = menuScriptingTest, Argument=typeof(FormScriptingTest).FullName},
                                          new CommandTrigger{ Control = menuCompareDatabases, Argument=typeof(FormCompareDatabases).FullName},
                                      },
                                      IsEnabled = ()=> Provider.Database != null
+                                 },
+                     new Command {
+                                     Execute = cmdShowForm,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuScriptingTest, Argument=typeof(FormScriptingTest).FullName},
+                                         new CommandTrigger{ Control = menuCompareDirectories, Argument=typeof(FormCompareDirectories).FullName},
+                                     }
                                  },
                      new Command {
                                      Execute = cmdQuickScript,
