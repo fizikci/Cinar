@@ -73,7 +73,7 @@ namespace Cinar.Scripting
             {
                 interpreter = new Interpreter(this.Text, null);
                 interpreter.Parse();
-                //Document.FoldingManager.UpdateFoldings(null, interpreter);
+                Document.FoldingManager.UpdateFoldings(null, interpreter);
             }
             catch { }
         }
@@ -90,46 +90,49 @@ namespace Cinar.Scripting
 
         public ICompletionData[] GenerateCompletionData(string fileName, TextArea textArea, char charTyped)
         {
-            List<TextWord> words = textArea.Document.GetLineSegment(textArea.Caret.Line).Words;
-            TextWord currentWord = textArea.Document.GetLineSegment(textArea.Caret.Line).GetWord(textArea.Caret.Column - 1);
-            string namespaceStartsWith = "";
-            int index = words.IndexOf(currentWord);
-            List<string> wordsChain = new List<string>();
-
-            if (currentWord == null)
+            try
             {
-                return getTypeList();
-            }
+                List<TextWord> words = textArea.Document.GetLineSegment(textArea.Caret.Line).Words;
+                TextWord currentWord = textArea.Document.GetLineSegment(textArea.Caret.Line).GetWord(textArea.Caret.Column - 1);
+                string namespaceStartsWith = "";
+                int index = words.IndexOf(currentWord);
+                List<string> wordsChain = new List<string>();
 
-            if (currentWord.Word == ".")
-            {
-                int i = index;
-                while (currentWord.Word == ".")
+                if (currentWord == null)
                 {
-                    i--;
-                    while (words[i].IsWhiteSpace) i--;
-                    currentWord = words[i];
-                    wordsChain.Insert(0, currentWord.Word);
-                    i--;
-                    if (i < 0)
-                        break;
-                    while (words[i].IsWhiteSpace) i--;
-                    currentWord = words[i];
-                    if (currentWord.Word == "using")
-                    {
-                        namespaceStartsWith = string.Join(".", wordsChain.ToArray());
-                        return getNamespaceList(namespaceStartsWith);
-                    }
+                    return getTypeList();
                 }
 
-                return getTypeMemberList(wordsChain.Last());
-            }
-            
-            if (currentWord.IsWhiteSpace)
-            {
-                return getTypeList();
-            }
+                if (currentWord.Word == ".")
+                {
+                    int i = index;
+                    while (currentWord.Word == ".")
+                    {
+                        i--;
+                        while (words[i].IsWhiteSpace) i--;
+                        currentWord = words[i];
+                        wordsChain.Insert(0, currentWord.Word);
+                        i--;
+                        if (i < 0)
+                            break;
+                        while (words[i].IsWhiteSpace && i>0) i--;
+                        if (!words[i].IsWhiteSpace) currentWord = words[i];
+                        if (currentWord.Word == "using")
+                        {
+                            namespaceStartsWith = string.Join(".", wordsChain.ToArray());
+                            return getNamespaceList(namespaceStartsWith);
+                        }
+                    }
 
+                    return getTypeMemberList(wordsChain.Last());
+                }
+
+                if (currentWord.IsWhiteSpace)
+                {
+                    return getTypeList();
+                }
+            }
+            catch { }
             return null;
         }
 
@@ -172,10 +175,10 @@ namespace Cinar.Scripting
                 type = Context.GetType(varName, Context.ParsedUsing);
                 bf = BindingFlags.Static;
             }
-            else if (varDef.Variable.Type == "var")
-                type = typeof(object);
             else if (varDef.Variable.Type == "int")
                 type = typeof(int);
+            else if (varDef.Variable.Type == "bool")
+                type = typeof(bool);
             else if (varDef.Variable.Type == "long")
                 type = typeof(long);
             else if (varDef.Variable.Type == "decimal")
@@ -185,7 +188,16 @@ namespace Cinar.Scripting
             else if (varDef.Variable.Type == "float")
                 type = typeof(float);
             else
-                type = Context.GetType(varDef.Variable.Type, Context.ParsedUsing);
+            {
+                if (varDef.Value is StringConstant)
+                    type = typeof(string);
+                else if (varDef.Value is IntegerConstant)
+                    type = typeof(int);
+                else if (varDef.Value is DecimalConstant)
+                    type = typeof(decimal);
+                else
+                    type = Context.GetType(varDef.Variable.Type, Context.ParsedUsing);
+            }
             if (type != null)
             {
                 foreach (PropertyInfo pi in type.GetProperties(BindingFlags.Public | bf))
@@ -257,16 +269,23 @@ namespace Cinar.Scripting
         public List<FoldMarker> GenerateFoldMarkers(IDocument document, string fileName, object parseInformation)
         {
             List<FoldMarker> list = new List<FoldMarker>();
-            StatementCollection coll = new StatementCollection((parseInformation as Interpreter).StatementsTree, false);
-            foreach (Statement st in coll)
-                if (st is FunctionDefinitionStatement)
-                {
-                    LineSegment startLine = document.GetLineSegment(st.LineNumber);
-                    LineSegment endLine = document.GetLineSegment(st.LastLineNumber - 1);
+            try
+            {
+                StatementCollection coll = new StatementCollection((parseInformation as Interpreter).StatementsTree, false);
+                foreach (Statement st in coll)
+                    if (st is FunctionDefinitionStatement)
+                    {
+                        LineSegment startLine = document.GetLineSegment(st.LineNumber);
+                        LineSegment endLine = document.GetLineSegment(st.LastLineNumber - 1);
 
-                    if (startLine.LineNumber + 3 < endLine.LineNumber)
-                        list.Add(new FoldMarker(document, startLine.LineNumber, startLine.Length - 1, endLine.LineNumber, endLine.Length));
-                }
+                        while (endLine.Words.Count == 0)
+                            endLine = document.GetLineSegment(endLine.LineNumber - 1);
+
+                        if (startLine.LineNumber + 3 < endLine.LineNumber)
+                            list.Add(new FoldMarker(document, startLine.LineNumber, startLine.Length - 1, endLine.LineNumber, endLine.Length));
+                    }
+            }
+            catch { }
             return list;
         }
 
