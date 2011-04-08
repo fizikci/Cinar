@@ -756,8 +756,8 @@ namespace Cinar.Database
                 if (tbl == null)
                     tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);
 
-                if (entity is ISerializeInheritedFields)
-                    serialize(entity as ISerializeInheritedFields);
+                if (entity is ISerializeSubclassFields)
+                    serialize(entity as ISerializeSubclassFields);
 
                 Hashtable ht = EntityToHashtable(entity);
 
@@ -782,10 +782,10 @@ namespace Cinar.Database
             }
         }
 
-        private void serialize(ISerializeInheritedFields entity)
+        private void serialize(ISerializeSubclassFields entity)
         {
             Type baseType = entity.GetType();
-            while (baseType.BaseType.GetInterface("ISerializeInheritedFields") != null)
+            while (baseType.BaseType.GetInterface("ISerializeSubclassFields") != null)
                 baseType = baseType.BaseType;
 
             StringBuilder sb = new StringBuilder();
@@ -805,7 +805,7 @@ namespace Cinar.Database
             entity.Details = sb.ToString();
             entity.TypeName = entity.GetType().Name;
         }
-        private void deserialize(ISerializeInheritedFields entity)
+        private void deserialize(ISerializeSubclassFields entity)
         {
             string data = entity.Details;
             try
@@ -891,7 +891,7 @@ namespace Cinar.Database
             if (dr == null) return null; //***
 
             IDatabaseEntity entity = null;
-            if (entityType.GetInterface("ISerializeInheritedFields")!=null)
+            if (entityType.GetInterface("ISerializeSubclassFields")!=null)
             {
                 string typeName = dr["TypeName"].ToString();
                 entity = (IDatabaseEntity)Activator.CreateInstance(entityType.Assembly.GetTypes().Where(t => t.Name == typeName).First());
@@ -963,8 +963,8 @@ namespace Cinar.Database
                 //    pi.SetValue(entity, val, null);
             }
 
-            if(entity is ISerializeInheritedFields)
-                deserialize(entity as ISerializeInheritedFields);
+            if(entity is ISerializeSubclassFields)
+                deserialize(entity as ISerializeSubclassFields);
         }
         public void FillEntity(IDatabaseEntity entity)
         {
@@ -1294,9 +1294,9 @@ namespace Cinar.Database
 
             DefaultDataAttribute[] defaultDataArr = (DefaultDataAttribute[])type.GetCustomAttributes(typeof(DefaultDataAttribute), false);
 
-            if (type.GetInterface("ISerializeInheritedFields") != null) // bu tip base class ile map ediliyor olabilir
+            if (type.GetInterface("ISerializeSubclassFields") != null) // bu tip base class ile map ediliyor olabilir
             {
-                while (type.BaseType.GetInterface("ISerializeInheritedFields") != null)
+                while (type.BaseType.GetInterface("ISerializeSubclassFields") != null)
                     type = type.BaseType;
             }
 
@@ -1463,10 +1463,10 @@ namespace Cinar.Database
         {
             if (tableMappingInfo.ContainsKey(entityType))
                 return tableMappingInfo[entityType];
-            else if (entityType.GetInterface("ISerializeInheritedFields") != null) // bu tip base class ile map ediliyor olabilir
+            else if (entityType.GetInterface("ISerializeSubclassFields") != null) // bu tip base class ile map ediliyor olabilir
             {
                 Type baseType = entityType;
-                while (baseType.BaseType.GetInterface("ISerializeInheritedFields") != null)
+                while (baseType.BaseType.GetInterface("ISerializeSubclassFields") != null)
                     baseType = baseType.BaseType;
                 if (tableMappingInfo.ContainsKey(baseType))
                 {

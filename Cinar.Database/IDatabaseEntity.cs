@@ -30,10 +30,10 @@ namespace Cinar.Database
     }
 
     /// <summary>
-    /// Inherited classes mapped to the table which is mapped to the base class.
+    /// Inherited classes mapped to the table of the base class.
     /// Base class implements this interface.
     /// </summary>
-    public interface ISerializeInheritedFields
+    public interface ISerializeSubclassFields
     {
         [FieldDetail(IsNotNull = true, Length = 100)]
         string TypeName { get; set; }
