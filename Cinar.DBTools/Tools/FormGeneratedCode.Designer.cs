@@ -46,7 +46,7 @@
             this.btnSave.Location = new System.Drawing.Point(457, 550);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 7;
+            this.btnSave.TabIndex = 1;
             this.btnSave.Text = "Save...";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -57,7 +57,7 @@
             this.btnClose.Location = new System.Drawing.Point(619, 550);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 6;
+            this.btnClose.TabIndex = 3;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
@@ -71,7 +71,7 @@
             this.txtCode.Location = new System.Drawing.Point(3, 3);
             this.txtCode.Name = "txtCode";
             this.txtCode.Size = new System.Drawing.Size(668, 499);
-            this.txtCode.TabIndex = 8;
+            this.txtCode.TabIndex = 0;
             this.txtCode.Text = "";
             this.txtCode.WordWrap = false;
             // 
@@ -86,7 +86,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(682, 531);
-            this.tabControl1.TabIndex = 9;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -104,7 +104,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(192, 74);
+            this.tabPage2.Size = new System.Drawing.Size(674, 505);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             this.btnDiff.Location = new System.Drawing.Point(538, 550);
             this.btnDiff.Name = "btnDiff";
             this.btnDiff.Size = new System.Drawing.Size(75, 23);
-            this.btnDiff.TabIndex = 10;
+            this.btnDiff.TabIndex = 2;
             this.btnDiff.Text = "Diff...";
             this.btnDiff.UseVisualStyleBackColor = true;
             this.btnDiff.Click += new System.EventHandler(this.btnDiff_Click);

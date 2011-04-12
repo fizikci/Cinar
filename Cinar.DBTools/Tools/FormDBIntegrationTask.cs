@@ -41,6 +41,8 @@ namespace Cinar.DBTools.Tools
 
         private void showTask()
         {
+            if (task == null) return; //***
+
             txtCategory.Text = task.Category;
             numInterval.Value = task.ExecInterval;
             txtName.Text = task.Name;

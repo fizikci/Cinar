@@ -287,6 +287,8 @@ namespace Cinar.DBTools.Tools
         private void btnToggleSelectedTask_Click(object sender, EventArgs e)
         {
             DBIntegrationTask tmp = (DBIntegrationTask)lbTasks.SelectedItem;
+            if (tmp == null) return;//***
+
             if (tmp.Name.Contains("[DISABLED] - "))
                 tmp.Name = tmp.Name.Replace("[DISABLED] - ", "");
             else
@@ -297,7 +299,10 @@ namespace Cinar.DBTools.Tools
 
         private void btnShowLog_Click(object sender, EventArgs e)
         {
-            Process.Start(logPath);
+            if (File.Exists(logPath))
+                Process.Start(logPath);
+            else
+                MessageBox.Show("There is no log file", "Çınar");
         }
 
         private bool autoStart = false;

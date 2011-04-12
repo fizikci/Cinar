@@ -61,7 +61,7 @@
             this.groupBox2.Location = new System.Drawing.Point(308, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(529, 498);
-            this.groupBox2.TabIndex = 11;
+            this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Transfer Log";
             // 
@@ -71,7 +71,7 @@
             this.btnCancel.Location = new System.Drawing.Point(204, 461);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(126, 23);
-            this.btnCancel.TabIndex = 14;
+            this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel Transfer";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -92,8 +92,8 @@
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // groupTransferData
             // 
@@ -107,7 +107,7 @@
             this.groupTransferData.Location = new System.Drawing.Point(7, 78);
             this.groupTransferData.Name = "groupTransferData";
             this.groupTransferData.Size = new System.Drawing.Size(268, 69);
-            this.groupTransferData.TabIndex = 24;
+            this.groupTransferData.TabIndex = 5;
             this.groupTransferData.TabStop = false;
             this.groupTransferData.Text = "     ";
             // 
@@ -117,7 +117,7 @@
             this.label3.Location = new System.Drawing.Point(8, 22);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
-            this.label3.TabIndex = 4;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Page Size";
             // 
             // txtPrefix
@@ -125,7 +125,7 @@
             this.txtPrefix.Location = new System.Drawing.Point(200, 39);
             this.txtPrefix.Name = "txtPrefix";
             this.txtPrefix.Size = new System.Drawing.Size(57, 20);
-            this.txtPrefix.TabIndex = 15;
+            this.txtPrefix.TabIndex = 5;
             this.txtPrefix.Text = "new_";
             // 
             // editPageSize
@@ -143,7 +143,7 @@
             0});
             this.editPageSize.Name = "editPageSize";
             this.editPageSize.Size = new System.Drawing.Size(75, 20);
-            this.editPageSize.TabIndex = 5;
+            this.editPageSize.TabIndex = 1;
             this.editPageSize.Value = new decimal(new int[] {
             100,
             0,
@@ -156,7 +156,7 @@
             this.label6.Location = new System.Drawing.Point(194, 22);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(63, 13);
-            this.label6.TabIndex = 14;
+            this.label6.TabIndex = 4;
             this.label6.Text = "Table Prefix";
             // 
             // label4
@@ -165,7 +165,7 @@
             this.label4.Location = new System.Drawing.Point(92, 22);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(95, 13);
-            this.label4.TabIndex = 6;
+            this.label4.TabIndex = 2;
             this.label4.Text = "Row Transfer Limit";
             // 
             // editLimit
@@ -178,14 +178,14 @@
             0});
             this.editLimit.Name = "editLimit";
             this.editLimit.Size = new System.Drawing.Size(92, 20);
-            this.editLimit.TabIndex = 7;
+            this.editLimit.TabIndex = 3;
             // 
             // btnStart
             // 
             this.btnStart.Location = new System.Drawing.Point(77, 483);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(126, 23);
-            this.btnStart.TabIndex = 23;
+            this.btnStart.TabIndex = 8;
             this.btnStart.Text = "Start Transfer";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
@@ -196,7 +196,7 @@
             this.label1.Location = new System.Drawing.Point(4, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 13);
-            this.label1.TabIndex = 17;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Source DB";
             // 
             // label5
@@ -205,7 +205,7 @@
             this.label5.Location = new System.Drawing.Point(4, 168);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(118, 13);
-            this.label5.TabIndex = 22;
+            this.label5.TabIndex = 6;
             this.label5.Text = "Select tables to transfer";
             // 
             // cbDbSrc
@@ -215,7 +215,7 @@
             this.cbDbSrc.Location = new System.Drawing.Point(102, 11);
             this.cbDbSrc.Name = "cbDbSrc";
             this.cbDbSrc.Size = new System.Drawing.Size(173, 21);
-            this.cbDbSrc.TabIndex = 18;
+            this.cbDbSrc.TabIndex = 1;
             this.cbDbSrc.SelectedIndexChanged += new System.EventHandler(this.cbDbSrc_SelectedIndexChanged);
             // 
             // lbTables
@@ -225,7 +225,7 @@
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbTables.Size = new System.Drawing.Size(268, 290);
-            this.lbTables.TabIndex = 21;
+            this.lbTables.TabIndex = 7;
             // 
             // cbDbDest
             // 
@@ -234,7 +234,7 @@
             this.cbDbDest.Location = new System.Drawing.Point(102, 43);
             this.cbDbDest.Name = "cbDbDest";
             this.cbDbDest.Size = new System.Drawing.Size(173, 21);
-            this.cbDbDest.TabIndex = 20;
+            this.cbDbDest.TabIndex = 3;
             // 
             // label2
             // 
@@ -242,7 +242,7 @@
             this.label2.Location = new System.Drawing.Point(4, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(78, 13);
-            this.label2.TabIndex = 19;
+            this.label2.TabIndex = 2;
             this.label2.Text = "Destination DB";
             // 
             // cbTransferData
@@ -251,7 +251,7 @@
             this.cbTransferData.Location = new System.Drawing.Point(21, 76);
             this.cbTransferData.Name = "cbTransferData";
             this.cbTransferData.Size = new System.Drawing.Size(91, 17);
-            this.cbTransferData.TabIndex = 16;
+            this.cbTransferData.TabIndex = 4;
             this.cbTransferData.Text = "Transfer Data";
             this.cbTransferData.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.cbTransferData.UseVisualStyleBackColor = true;

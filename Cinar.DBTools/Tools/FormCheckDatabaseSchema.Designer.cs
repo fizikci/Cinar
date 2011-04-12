@@ -50,7 +50,7 @@
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 4;
             this.label1.Text = "Discovered Problems";
             // 
             // btnFix
@@ -78,7 +78,7 @@
             this.btnRefresh.Location = new System.Drawing.Point(15, 390);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);

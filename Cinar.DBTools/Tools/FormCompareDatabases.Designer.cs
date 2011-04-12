@@ -46,7 +46,7 @@
             this.cbDstDb.Location = new System.Drawing.Point(214, 12);
             this.cbDstDb.Name = "cbDstDb";
             this.cbDstDb.Size = new System.Drawing.Size(160, 21);
-            this.cbDstDb.TabIndex = 45;
+            this.cbDstDb.TabIndex = 1;
             // 
             // label6
             // 
@@ -64,14 +64,14 @@
             this.cbSrcDb.Location = new System.Drawing.Point(12, 12);
             this.cbSrcDb.Name = "cbSrcDb";
             this.cbSrcDb.Size = new System.Drawing.Size(170, 21);
-            this.cbSrcDb.TabIndex = 43;
+            this.cbSrcDb.TabIndex = 0;
             // 
             // btnCompare
             // 
             this.btnCompare.Location = new System.Drawing.Point(660, 12);
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Size = new System.Drawing.Size(75, 23);
-            this.btnCompare.TabIndex = 46;
+            this.btnCompare.TabIndex = 6;
             this.btnCompare.Text = "Compare";
             this.btnCompare.UseVisualStyleBackColor = true;
             this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
@@ -84,7 +84,7 @@
             this.panel.Location = new System.Drawing.Point(12, 41);
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(814, 446);
-            this.panel.TabIndex = 47;
+            this.panel.TabIndex = 7;
             // 
             // cbName
             // 
@@ -92,7 +92,7 @@
             this.cbName.Location = new System.Drawing.Point(392, 15);
             this.cbName.Name = "cbName";
             this.cbName.Size = new System.Drawing.Size(54, 17);
-            this.cbName.TabIndex = 48;
+            this.cbName.TabIndex = 2;
             this.cbName.Text = "Name";
             this.cbName.UseVisualStyleBackColor = true;
             // 
@@ -102,7 +102,7 @@
             this.cbType.Location = new System.Drawing.Point(452, 15);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(50, 17);
-            this.cbType.TabIndex = 49;
+            this.cbType.TabIndex = 3;
             this.cbType.Text = "Type";
             this.cbType.UseVisualStyleBackColor = true;
             // 
@@ -112,7 +112,7 @@
             this.cbLength.Location = new System.Drawing.Point(508, 15);
             this.cbLength.Name = "cbLength";
             this.cbLength.Size = new System.Drawing.Size(59, 17);
-            this.cbLength.TabIndex = 50;
+            this.cbLength.TabIndex = 4;
             this.cbLength.Text = "Length";
             this.cbLength.UseVisualStyleBackColor = true;
             // 
@@ -122,7 +122,7 @@
             this.cbNullable.Location = new System.Drawing.Point(573, 15);
             this.cbNullable.Name = "cbNullable";
             this.cbNullable.Size = new System.Drawing.Size(64, 17);
-            this.cbNullable.TabIndex = 51;
+            this.cbNullable.TabIndex = 5;
             this.cbNullable.Text = "Nullable";
             this.cbNullable.UseVisualStyleBackColor = true;
             // 

@@ -51,7 +51,7 @@
             this.btnCompare.Location = new System.Drawing.Point(550, 12);
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Size = new System.Drawing.Size(104, 46);
-            this.btnCompare.TabIndex = 1;
+            this.btnCompare.TabIndex = 2;
             this.btnCompare.Text = "Compare";
             this.btnCompare.UseVisualStyleBackColor = true;
             this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
@@ -63,7 +63,7 @@
             this.txtUrl2.Location = new System.Drawing.Point(12, 38);
             this.txtUrl2.Name = "txtUrl2";
             this.txtUrl2.Size = new System.Drawing.Size(522, 20);
-            this.txtUrl2.TabIndex = 2;
+            this.txtUrl2.TabIndex = 1;
             this.txtUrl2.Text = "http://www.zaman.com.tr/haber.do?haberno=976622&title=tbmm-baskani-sahin-de-cocuk" +
                 "-affi-istedi";
             // 
@@ -75,7 +75,7 @@
             this.panel.Location = new System.Drawing.Point(12, 74);
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(642, 413);
-            this.panel.TabIndex = 48;
+            this.panel.TabIndex = 3;
             // 
             // FormContentExtractor
             // 

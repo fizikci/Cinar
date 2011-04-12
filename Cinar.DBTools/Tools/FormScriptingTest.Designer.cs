@@ -52,7 +52,7 @@
             this.grid.Location = new System.Drawing.Point(12, 55);
             this.grid.Name = "grid";
             this.grid.Size = new System.Drawing.Size(482, 344);
-            this.grid.TabIndex = 0;
+            this.grid.TabIndex = 7;
             // 
             // btnEditSelectedTask
             // 
@@ -61,7 +61,7 @@
             this.btnEditSelectedTask.Location = new System.Drawing.Point(282, 39);
             this.btnEditSelectedTask.Name = "btnEditSelectedTask";
             this.btnEditSelectedTask.Size = new System.Drawing.Size(94, 13);
-            this.btnEditSelectedTask.TabIndex = 14;
+            this.btnEditSelectedTask.TabIndex = 5;
             this.btnEditSelectedTask.TabStop = true;
             this.btnEditSelectedTask.Text = "Edit Selected Test";
             this.btnEditSelectedTask.Click += new System.EventHandler(this.btnEditSelectedTask_Click);
@@ -72,7 +72,7 @@
             this.label1.Location = new System.Drawing.Point(13, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 13);
-            this.label1.TabIndex = 11;
+            this.label1.TabIndex = 3;
             this.label1.Text = "Scripting Tests :";
             // 
             // btnAddNewTask
@@ -82,7 +82,7 @@
             this.btnAddNewTask.Location = new System.Drawing.Point(200, 39);
             this.btnAddNewTask.Name = "btnAddNewTask";
             this.btnAddNewTask.Size = new System.Drawing.Size(75, 13);
-            this.btnAddNewTask.TabIndex = 12;
+            this.btnAddNewTask.TabIndex = 4;
             this.btnAddNewTask.TabStop = true;
             this.btnAddNewTask.Text = "Add New Test";
             this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNewTask_Click);
@@ -94,7 +94,7 @@
             this.btnDeleteSelectedTask.Location = new System.Drawing.Point(386, 39);
             this.btnDeleteSelectedTask.Name = "btnDeleteSelectedTask";
             this.btnDeleteSelectedTask.Size = new System.Drawing.Size(107, 13);
-            this.btnDeleteSelectedTask.TabIndex = 13;
+            this.btnDeleteSelectedTask.TabIndex = 6;
             this.btnDeleteSelectedTask.TabStop = true;
             this.btnDeleteSelectedTask.Text = "Delete Selected Test";
             this.btnDeleteSelectedTask.Click += new System.EventHandler(this.btnDeleteSelectedTask_Click);
@@ -106,7 +106,7 @@
             this.cbCategories.Location = new System.Drawing.Point(100, 6);
             this.cbCategories.Name = "cbCategories";
             this.cbCategories.Size = new System.Drawing.Size(155, 21);
-            this.cbCategories.TabIndex = 44;
+            this.cbCategories.TabIndex = 1;
             this.cbCategories.SelectedIndexChanged += new System.EventHandler(this.cbCategories_SelectedIndexChanged);
             // 
             // label2
@@ -115,7 +115,7 @@
             this.label2.Location = new System.Drawing.Point(13, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 13);
-            this.label2.TabIndex = 43;
+            this.label2.TabIndex = 0;
             this.label2.Text = "Select Subject :";
             // 
             // btnRunTests
@@ -126,7 +126,7 @@
             this.btnRunTests.Location = new System.Drawing.Point(261, 9);
             this.btnRunTests.Name = "btnRunTests";
             this.btnRunTests.Size = new System.Drawing.Size(65, 13);
-            this.btnRunTests.TabIndex = 45;
+            this.btnRunTests.TabIndex = 2;
             this.btnRunTests.TabStop = true;
             this.btnRunTests.Text = "Run Tests";
             this.btnRunTests.Click += new System.EventHandler(this.btnRunTests_Click);

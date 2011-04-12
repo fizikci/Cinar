@@ -67,7 +67,7 @@
             this.label1.Location = new System.Drawing.Point(10, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 21;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Database";
             // 
             // cbSrcDb
@@ -77,7 +77,7 @@
             this.cbSrcDb.Location = new System.Drawing.Point(108, 18);
             this.cbSrcDb.Name = "cbSrcDb";
             this.cbSrcDb.Size = new System.Drawing.Size(140, 21);
-            this.cbSrcDb.TabIndex = 22;
+            this.cbSrcDb.TabIndex = 1;
             this.cbSrcDb.SelectedIndexChanged += new System.EventHandler(this.cbSrcDb_SelectedIndexChanged);
             // 
             // cbSrcTable
@@ -87,7 +87,7 @@
             this.cbSrcTable.Location = new System.Drawing.Point(108, 45);
             this.cbSrcTable.Name = "cbSrcTable";
             this.cbSrcTable.Size = new System.Drawing.Size(140, 21);
-            this.cbSrcTable.TabIndex = 26;
+            this.cbSrcTable.TabIndex = 3;
             this.cbSrcTable.SelectedIndexChanged += new System.EventHandler(this.cbSrcTable_SelectedIndexChanged);
             // 
             // label3
@@ -96,7 +96,7 @@
             this.label3.Location = new System.Drawing.Point(10, 48);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 25;
+            this.label3.TabIndex = 2;
             this.label3.Text = "Table";
             // 
             // cbSrcField
@@ -106,7 +106,7 @@
             this.cbSrcField.Location = new System.Drawing.Point(108, 72);
             this.cbSrcField.Name = "cbSrcField";
             this.cbSrcField.Size = new System.Drawing.Size(140, 21);
-            this.cbSrcField.TabIndex = 28;
+            this.cbSrcField.TabIndex = 5;
             this.cbSrcField.SelectedIndexChanged += new System.EventHandler(this.cbSrcField_SelectedIndexChanged);
             // 
             // label4
@@ -115,7 +115,7 @@
             this.label4.Location = new System.Drawing.Point(10, 75);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(72, 13);
-            this.label4.TabIndex = 27;
+            this.label4.TabIndex = 4;
             this.label4.Text = "ParentId Field";
             // 
             // btnStart
@@ -123,7 +123,7 @@
             this.btnStart.Location = new System.Drawing.Point(85, 562);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(126, 23);
-            this.btnStart.TabIndex = 31;
+            this.btnStart.TabIndex = 8;
             this.btnStart.Text = "Start Transfer";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
@@ -134,7 +134,7 @@
             this.label7.Location = new System.Drawing.Point(12, 298);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(153, 13);
-            this.label7.TabIndex = 30;
+            this.label7.TabIndex = 2;
             this.label7.Text = "Select foreign tables to transfer";
             // 
             // lbTables
@@ -144,7 +144,7 @@
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbTables.Size = new System.Drawing.Size(268, 238);
-            this.lbTables.TabIndex = 29;
+            this.lbTables.TabIndex = 3;
             // 
             // groupBox3
             // 
@@ -152,7 +152,7 @@
             this.groupBox3.Location = new System.Drawing.Point(302, 298);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(529, 285);
-            this.groupBox3.TabIndex = 32;
+            this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Transfer Log";
             // 
@@ -175,8 +175,8 @@
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // groupBox1
             // 
@@ -191,7 +191,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(271, 133);
-            this.groupBox1.TabIndex = 27;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Source";
             // 
@@ -202,7 +202,7 @@
             this.cbSrcStringField.Location = new System.Drawing.Point(108, 100);
             this.cbSrcStringField.Name = "cbSrcStringField";
             this.cbSrcStringField.Size = new System.Drawing.Size(140, 21);
-            this.cbSrcStringField.TabIndex = 30;
+            this.cbSrcStringField.TabIndex = 7;
             this.cbSrcStringField.SelectedIndexChanged += new System.EventHandler(this.cbSrcField_SelectedIndexChanged);
             // 
             // label8
@@ -211,7 +211,7 @@
             this.label8.Location = new System.Drawing.Point(10, 103);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 13);
-            this.label8.TabIndex = 29;
+            this.label8.TabIndex = 6;
             this.label8.Text = "String Field";
             // 
             // label6
@@ -220,7 +220,7 @@
             this.label6.Location = new System.Drawing.Point(10, 25);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(53, 13);
-            this.label6.TabIndex = 21;
+            this.label6.TabIndex = 0;
             this.label6.Text = "Database";
             // 
             // label5
@@ -229,7 +229,7 @@
             this.label5.Location = new System.Drawing.Point(10, 52);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(34, 13);
-            this.label5.TabIndex = 25;
+            this.label5.TabIndex = 2;
             this.label5.Text = "Table";
             // 
             // cbDstDb
@@ -239,7 +239,7 @@
             this.cbDstDb.Location = new System.Drawing.Point(108, 22);
             this.cbDstDb.Name = "cbDstDb";
             this.cbDstDb.Size = new System.Drawing.Size(140, 21);
-            this.cbDstDb.TabIndex = 22;
+            this.cbDstDb.TabIndex = 1;
             this.cbDstDb.SelectedIndexChanged += new System.EventHandler(this.cbDstDb_SelectedIndexChanged);
             // 
             // cbDstTable
@@ -249,7 +249,7 @@
             this.cbDstTable.Location = new System.Drawing.Point(108, 49);
             this.cbDstTable.Name = "cbDstTable";
             this.cbDstTable.Size = new System.Drawing.Size(140, 21);
-            this.cbDstTable.TabIndex = 26;
+            this.cbDstTable.TabIndex = 3;
             this.cbDstTable.SelectedIndexChanged += new System.EventHandler(this.cbDstTable_SelectedIndexChanged);
             // 
             // label2
@@ -258,7 +258,7 @@
             this.label2.Location = new System.Drawing.Point(10, 79);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 13);
-            this.label2.TabIndex = 27;
+            this.label2.TabIndex = 4;
             this.label2.Text = "ParentId Field";
             // 
             // cbDstField
@@ -268,7 +268,7 @@
             this.cbDstField.Location = new System.Drawing.Point(108, 76);
             this.cbDstField.Name = "cbDstField";
             this.cbDstField.Size = new System.Drawing.Size(140, 21);
-            this.cbDstField.TabIndex = 28;
+            this.cbDstField.TabIndex = 5;
             this.cbDstField.SelectedIndexChanged += new System.EventHandler(this.cbDstField_SelectedIndexChanged);
             // 
             // groupBox2
@@ -284,7 +284,7 @@
             this.groupBox2.Location = new System.Drawing.Point(12, 151);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(271, 132);
-            this.groupBox2.TabIndex = 28;
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Destination";
             // 
@@ -295,7 +295,7 @@
             this.cbDstStringField.Location = new System.Drawing.Point(108, 102);
             this.cbDstStringField.Name = "cbDstStringField";
             this.cbDstStringField.Size = new System.Drawing.Size(140, 21);
-            this.cbDstStringField.TabIndex = 32;
+            this.cbDstStringField.TabIndex = 7;
             this.cbDstStringField.SelectedIndexChanged += new System.EventHandler(this.cbDstField_SelectedIndexChanged);
             // 
             // label9
@@ -304,7 +304,7 @@
             this.label9.Location = new System.Drawing.Point(10, 105);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(59, 13);
-            this.label9.TabIndex = 31;
+            this.label9.TabIndex = 6;
             this.label9.Text = "String Field";
             // 
             // tvSource
@@ -313,7 +313,7 @@
             this.tvSource.Location = new System.Drawing.Point(316, 30);
             this.tvSource.Name = "tvSource";
             this.tvSource.Size = new System.Drawing.Size(246, 253);
-            this.tvSource.TabIndex = 33;
+            this.tvSource.TabIndex = 5;
             this.tvSource.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvDest_BeforeExpand);
             // 
             // tvDest
@@ -322,7 +322,7 @@
             this.tvDest.Location = new System.Drawing.Point(584, 30);
             this.tvDest.Name = "tvDest";
             this.tvDest.Size = new System.Drawing.Size(246, 253);
-            this.tvDest.TabIndex = 34;
+            this.tvDest.TabIndex = 7;
             this.tvDest.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvDest_BeforeExpand);
             // 
             // label10
@@ -331,7 +331,7 @@
             this.label10.Location = new System.Drawing.Point(316, 12);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(149, 13);
-            this.label10.TabIndex = 35;
+            this.label10.TabIndex = 4;
             this.label10.Text = "Select source node to transfer";
             // 
             // label11
@@ -340,7 +340,7 @@
             this.label11.Location = new System.Drawing.Point(581, 12);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(168, 13);
-            this.label11.TabIndex = 36;
+            this.label11.TabIndex = 6;
             this.label11.Text = "Select destination node to transfer";
             // 
             // FormCopyTreeData
