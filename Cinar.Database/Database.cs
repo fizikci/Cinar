@@ -1113,7 +1113,8 @@ namespace Cinar.Database
         }
         public bool GetBool(string sql, params object[] parameters)
         {
-            return Convert.ToBoolean(GetValue(sql, parameters));
+            object o = GetValue(sql, parameters);
+            return Convert.ToBoolean(o ?? false);
         }
         public bool GetBool(string sql)
         {
@@ -1121,11 +1122,13 @@ namespace Cinar.Database
         }
         public int GetInt(string sql, params object[] parameters)
         {
-            return Convert.ToInt32(GetValue(sql, parameters));
+            object o = GetValue(sql, parameters);
+            return Convert.ToInt32(o ?? 0);
         }
         public int GetInt(string sql)
         {
-            return Convert.ToInt32(GetValue(sql));
+            object o = GetValue(sql);
+            return Convert.ToInt32(o ?? 0);
         }
 
         public IDatabaseEntity Read(Type entityType, int id)
