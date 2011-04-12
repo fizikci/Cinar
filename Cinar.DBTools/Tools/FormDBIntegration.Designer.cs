@@ -42,8 +42,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnToggleSelectedTask = new System.Windows.Forms.LinkLabel();
             this.btnEditSelectedTask = new System.Windows.Forms.LinkLabel();
-            this.btnScriptInclude = new System.Windows.Forms.LinkLabel();
             this.btnShowLog = new System.Windows.Forms.LinkLabel();
+            this.btnScriptInclude = new System.Windows.Forms.LinkLabel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -62,7 +62,7 @@
             this.lbTasks.Location = new System.Drawing.Point(6, 23);
             this.lbTasks.Name = "lbTasks";
             this.lbTasks.Size = new System.Drawing.Size(547, 118);
-            this.lbTasks.TabIndex = 0;
+            this.lbTasks.TabIndex = 5;
             this.lbTasks.DoubleClick += new System.EventHandler(this.lbTasks_DoubleClick);
             // 
             // label1
@@ -71,7 +71,7 @@
             this.label1.Location = new System.Drawing.Point(3, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Integration Tasks :";
             // 
             // backgroundWorker
@@ -92,7 +92,7 @@
             this.lbLog.Location = new System.Drawing.Point(5, 24);
             this.lbLog.Name = "lbLog";
             this.lbLog.Size = new System.Drawing.Size(549, 343);
-            this.lbLog.TabIndex = 4;
+            this.lbLog.TabIndex = 3;
             // 
             // label4
             // 
@@ -100,7 +100,7 @@
             this.label4.Location = new System.Drawing.Point(3, 8);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(84, 13);
-            this.label4.TabIndex = 5;
+            this.label4.TabIndex = 0;
             this.label4.Text = "Integration Log :";
             // 
             // btnStart
@@ -110,7 +110,7 @@
             this.btnStart.Location = new System.Drawing.Point(491, 8);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(29, 13);
-            this.btnStart.TabIndex = 6;
+            this.btnStart.TabIndex = 1;
             this.btnStart.TabStop = true;
             this.btnStart.Text = "Start";
             this.btnStart.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnStart_LinkClicked);
@@ -123,7 +123,7 @@
             this.btnStop.Location = new System.Drawing.Point(525, 8);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(29, 13);
-            this.btnStop.TabIndex = 7;
+            this.btnStop.TabIndex = 2;
             this.btnStop.TabStop = true;
             this.btnStop.Text = "Stop";
             this.btnStop.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnStop_LinkClicked);
@@ -135,7 +135,7 @@
             this.btnAddNewTask.Location = new System.Drawing.Point(133, 7);
             this.btnAddNewTask.Name = "btnAddNewTask";
             this.btnAddNewTask.Size = new System.Drawing.Size(78, 13);
-            this.btnAddNewTask.TabIndex = 8;
+            this.btnAddNewTask.TabIndex = 1;
             this.btnAddNewTask.TabStop = true;
             this.btnAddNewTask.Text = "Add New Task";
             this.btnAddNewTask.Click += new System.EventHandler(this.btnAddNewTask_Click);
@@ -147,7 +147,7 @@
             this.btnDeleteSelectedTask.Location = new System.Drawing.Point(443, 7);
             this.btnDeleteSelectedTask.Name = "btnDeleteSelectedTask";
             this.btnDeleteSelectedTask.Size = new System.Drawing.Size(110, 13);
-            this.btnDeleteSelectedTask.TabIndex = 9;
+            this.btnDeleteSelectedTask.TabIndex = 4;
             this.btnDeleteSelectedTask.TabStop = true;
             this.btnDeleteSelectedTask.Text = "Delete Selected Task";
             this.btnDeleteSelectedTask.Click += new System.EventHandler(this.btnDeleteSelectedTask_Click);
@@ -159,7 +159,7 @@
             this.cbCategories.Location = new System.Drawing.Point(151, 10);
             this.cbCategories.Name = "cbCategories";
             this.cbCategories.Size = new System.Drawing.Size(155, 21);
-            this.cbCategories.TabIndex = 42;
+            this.cbCategories.TabIndex = 1;
             this.cbCategories.SelectedIndexChanged += new System.EventHandler(this.cbCategories_SelectedIndexChanged);
             // 
             // label2
@@ -168,7 +168,7 @@
             this.label2.Location = new System.Drawing.Point(13, 13);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(132, 13);
-            this.label2.TabIndex = 41;
+            this.label2.TabIndex = 0;
             this.label2.Text = "Select Integration Project :";
             // 
             // splitContainer1
@@ -199,7 +199,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.btnStop);
             this.splitContainer1.Size = new System.Drawing.Size(564, 544);
             this.splitContainer1.SplitterDistance = 150;
-            this.splitContainer1.TabIndex = 43;
+            this.splitContainer1.TabIndex = 3;
             // 
             // btnToggleSelectedTask
             // 
@@ -208,7 +208,7 @@
             this.btnToggleSelectedTask.Location = new System.Drawing.Point(327, 7);
             this.btnToggleSelectedTask.Name = "btnToggleSelectedTask";
             this.btnToggleSelectedTask.Size = new System.Drawing.Size(112, 13);
-            this.btnToggleSelectedTask.TabIndex = 11;
+            this.btnToggleSelectedTask.TabIndex = 3;
             this.btnToggleSelectedTask.TabStop = true;
             this.btnToggleSelectedTask.Text = "Toggle Selected Task";
             this.btnToggleSelectedTask.Click += new System.EventHandler(this.btnToggleSelectedTask_Click);
@@ -220,22 +220,10 @@
             this.btnEditSelectedTask.Location = new System.Drawing.Point(223, 7);
             this.btnEditSelectedTask.Name = "btnEditSelectedTask";
             this.btnEditSelectedTask.Size = new System.Drawing.Size(97, 13);
-            this.btnEditSelectedTask.TabIndex = 10;
+            this.btnEditSelectedTask.TabIndex = 2;
             this.btnEditSelectedTask.TabStop = true;
             this.btnEditSelectedTask.Text = "Edit Selected Task";
             this.btnEditSelectedTask.Click += new System.EventHandler(this.btnEditSelectedTask_Click);
-            // 
-            // btnScriptInclude
-            // 
-            this.btnScriptInclude.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnScriptInclude.AutoSize = true;
-            this.btnScriptInclude.Location = new System.Drawing.Point(505, 17);
-            this.btnScriptInclude.Name = "btnScriptInclude";
-            this.btnScriptInclude.Size = new System.Drawing.Size(72, 13);
-            this.btnScriptInclude.TabIndex = 44;
-            this.btnScriptInclude.TabStop = true;
-            this.btnScriptInclude.Text = "Script Include";
-            this.btnScriptInclude.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnScriptInclude_LinkClicked);
             // 
             // btnShowLog
             // 
@@ -244,10 +232,22 @@
             this.btnShowLog.Location = new System.Drawing.Point(480, 370);
             this.btnShowLog.Name = "btnShowLog";
             this.btnShowLog.Size = new System.Drawing.Size(74, 13);
-            this.btnShowLog.TabIndex = 8;
+            this.btnShowLog.TabIndex = 4;
             this.btnShowLog.TabStop = true;
             this.btnShowLog.Text = "Show Full Log";
             this.btnShowLog.Click += new System.EventHandler(this.btnShowLog_Click);
+            // 
+            // btnScriptInclude
+            // 
+            this.btnScriptInclude.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnScriptInclude.AutoSize = true;
+            this.btnScriptInclude.Location = new System.Drawing.Point(505, 17);
+            this.btnScriptInclude.Name = "btnScriptInclude";
+            this.btnScriptInclude.Size = new System.Drawing.Size(72, 13);
+            this.btnScriptInclude.TabIndex = 2;
+            this.btnScriptInclude.TabStop = true;
+            this.btnScriptInclude.Text = "Script Include";
+            this.btnScriptInclude.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnScriptInclude_LinkClicked);
             // 
             // FormDBIntegration
             // 

@@ -44,7 +44,7 @@
             this.txtName.Location = new System.Drawing.Point(64, 13);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(362, 20);
-            this.txtName.TabIndex = 46;
+            this.txtName.TabIndex = 1;
             this.txtName.Text = "Ajans insert";
             // 
             // label5
@@ -53,7 +53,7 @@
             this.label5.Location = new System.Drawing.Point(7, 16);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
-            this.label5.TabIndex = 45;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Name :";
             // 
             // txtCategory
@@ -62,7 +62,7 @@
             this.txtCategory.Location = new System.Drawing.Point(484, 13);
             this.txtCategory.Name = "txtCategory";
             this.txtCategory.Size = new System.Drawing.Size(165, 20);
-            this.txtCategory.TabIndex = 51;
+            this.txtCategory.TabIndex = 3;
             // 
             // label1
             // 
@@ -71,7 +71,7 @@
             this.label1.Location = new System.Drawing.Point(432, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(49, 13);
-            this.label1.TabIndex = 50;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Subject :";
             // 
             // btnOK
@@ -81,7 +81,7 @@
             this.btnOK.Location = new System.Drawing.Point(482, 412);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 52;
+            this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
@@ -92,7 +92,7 @@
             this.btnCancel.Location = new System.Drawing.Point(574, 412);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 53;
+            this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -105,7 +105,7 @@
             this.txtCode.Location = new System.Drawing.Point(13, 39);
             this.txtCode.Name = "txtCode";
             this.txtCode.Size = new System.Drawing.Size(636, 367);
-            this.txtCode.TabIndex = 54;
+            this.txtCode.TabIndex = 4;
             // 
             // FormScriptingTestDetail
             // 

@@ -41,7 +41,7 @@
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbTables.Size = new System.Drawing.Size(267, 199);
-            this.lbTables.TabIndex = 0;
+            this.lbTables.TabIndex = 1;
             // 
             // btnOK
             // 
@@ -49,7 +49,7 @@
             this.btnOK.Location = new System.Drawing.Point(126, 231);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 1;
+            this.btnOK.TabIndex = 2;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
@@ -59,7 +59,7 @@
             this.button1.Location = new System.Drawing.Point(207, 231);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
+            this.button1.TabIndex = 3;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
             // 
@@ -69,10 +69,10 @@
             this.label1.Location = new System.Drawing.Point(13, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 13);
-            this.label1.TabIndex = 3;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Select one or more tables:";
             // 
-            // SelectTableDialog
+            // ListBoxDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -82,7 +82,7 @@
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lbTables);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "SelectTableDialog";
+            this.Name = "ListBoxDialog";
             this.Text = " Çınar DBTools";
             this.ResumeLayout(false);
             this.PerformLayout();

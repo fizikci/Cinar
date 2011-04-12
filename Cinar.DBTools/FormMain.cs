@@ -15,6 +15,7 @@ using System.Collections;
 using Cinar.Scripting;
 using System.Diagnostics;
 using Cinar.DBTools.Controls;
+using ICSharpCode.TextEditor.Document;
 
 namespace Cinar.DBTools
 {
@@ -22,6 +23,7 @@ namespace Cinar.DBTools
     {
         CommandManager cmdMan = new CommandManager();
         TreeNode rootNode;
+        string filePath = "";
 
         public FormMain()
         {
@@ -36,7 +38,6 @@ namespace Cinar.DBTools
                      new Command {
                                      Execute = cmdNewConnection,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuNewConnection},
                                          new CommandTrigger{ Control = btnNewConnection},
                                          new CommandTrigger{ Control = menuNewConnectionContext},
                                      },
@@ -49,6 +50,22 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdNewConnection,
+                                     Trigger = new CommandTrigger{ Control = menuNewConnection}
+                                 },
+                     new Command {
+                                     Execute = cmdOpen,
+                                     Trigger = new CommandTrigger{ Control = menuOpen}
+                                 },
+                     new Command {
+                                     Execute = cmdSave,
+                                     Trigger = new CommandTrigger{ Control = menuSave}
+                                 },
+                     new Command {
+                                     Execute = cmdSaveAs,
+                                     Trigger = new CommandTrigger{ Control = menuSaveAs}
+                                 },
+                     new Command {
                                      Execute = cmdExit,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuExit},
@@ -58,6 +75,19 @@ namespace Cinar.DBTools
                                      Execute = cmdAbout,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuAbout},
+                                     }
+                                 },
+                     new Command {
+                                     Execute = cmdEditorCommand,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuUndo, Argument = "Undo"},
+                                         new CommandTrigger{ Control = menuRedo, Argument = "Redo"},
+                                         new CommandTrigger{ Control = menuCut, Argument = "Cut"},
+                                         new CommandTrigger{ Control = menuCopy, Argument = "Copy"},
+                                         new CommandTrigger{ Control = menuPaste, Argument = "Paste"},
+                                         new CommandTrigger{ Control = menuSelectAll, Argument = "SelectAll"},
+                                         new CommandTrigger{ Control = menuFind, Argument = "Find"},
+                                         new CommandTrigger{ Control = menuReplace, Argument = "Replace"},
                                      }
                                  },
                      new Command {
@@ -187,6 +217,11 @@ $"},
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
                                  },
                      new Command {
+                                     Execute = cmdCreateTable,
+                                     Trigger = new CommandTrigger{ Control = menuCreateTable},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is TableCollection && treeView.SelectedNode.Name == "Tables"
+                                 },
+                     new Command {
                                      Execute = cmdRefresh,
                                      Trigger = new CommandTrigger{ Control = menuRefresh},
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
@@ -255,6 +290,7 @@ $"},
                 TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database");
                 node.Tag = cs;
 
+                cbActiveConnection.Items.Add(cs);
                 populateTreeNodesForDatabase(node);
             }
             treeView.Sort();
@@ -264,6 +300,14 @@ $"},
                 treeView.SelectedNode = rootNode.Nodes[0];
             }
         }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            txtSQL.Text = "SELECT 'Welcome to Cinar Database Tools' as Hi;";
+            cmdExecuteSQL(null);
+        }
+
+        #region methods
         public void SaveConnections()
         {
             Provider.SaveConnections();
@@ -429,6 +473,85 @@ $"},
         #endregion
 
         #region Commands
+        private void cmdSave(string arg)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                cmdSaveAs(null);
+            else
+                txtSQL.SaveFile(filePath);
+        }
+        private void cmdSaveAs(string arg)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                filePath = sfd.FileName;
+                txtSQL.SaveFile(sfd.FileName);
+            }
+        }
+        private void cmdOpen(string arg)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                filePath = ofd.FileName;
+                txtSQL.LoadFile(ofd.FileName);
+            }
+        }
+
+        private string copiedText = "";
+        private void cmdEditorCommand(string arg)
+        {
+            switch (arg)
+            {
+                case "Undo":
+                    txtSQL.Undo();
+                    break;
+                case "Redo":
+                    txtSQL.Redo();
+                    break;
+                case "Cut":
+                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    {
+                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        copiedText = sel.SelectedText;
+                        txtSQL.Document.Remove(sel.Offset, sel.Length);
+                        txtSQL.ActiveTextAreaControl.Caret.Position = sel.StartPosition;
+                        txtSQL.ActiveTextAreaControl.SelectionManager.ClearSelection();
+                    }
+                    break;
+                case "Copy":
+                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    {
+                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        copiedText = sel.SelectedText;
+                    }
+                    break;
+                case "Paste":
+                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    {
+                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        txtSQL.Document.Replace(sel.Offset, sel.Length, copiedText);
+                        txtSQL.ActiveTextAreaControl.SelectionManager.ClearSelection();
+                        txtSQL.ActiveTextAreaControl.Caret.Position = txtSQL.Document.OffsetToPosition(sel.Offset + copiedText.Length);
+                    }
+                    else
+                    {
+                        txtSQL.Document.Insert(txtSQL.ActiveTextAreaControl.Caret.Offset, copiedText);
+                        txtSQL.ActiveTextAreaControl.Caret.Position = txtSQL.Document.OffsetToPosition(txtSQL.ActiveTextAreaControl.Caret.Offset + copiedText.Length);
+                    }
+                    break;
+                case "SelectAll":
+                    txtSQL.ActiveTextAreaControl.SelectionManager.SetSelection(new ICSharpCode.TextEditor.TextLocation(0, 0), txtSQL.Document.OffsetToPosition(txtSQL.Text.Length));
+                    break;
+                case "Find":
+                case "Replace":
+                    FindDialog fd = new FindDialog(txtSQL);
+                    fd.Show();
+                    break;
+            }
+        }
+
         private void cmdRefresh(string arg)
         {
             TreeNode dbNode = findSelectedDBNode();
@@ -482,6 +605,7 @@ $"},
                 Provider.Connections.Add(cs);
                 SaveConnections();
                 rootNode.Nodes.Add(cs.ToString(), cs.ToString(), "Database", "Database").Tag = cs;
+                cbActiveConnection.Items.Add(cs);
             }
         }
         private void cmdEditConnection(string arg)
@@ -591,6 +715,8 @@ $"},
                 tnNew.BackColor = Color.Green;
             }
 
+            cbActiveConnection.SelectedItem = Provider.ActiveConnection;
+
             statusText.Text = "Active connection: " + Provider.ActiveConnection;
         }
 
@@ -607,9 +733,10 @@ $"},
             if (MessageBox.Show("Are you sure to drop table " + tableName + "? All data will be lost!", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
+                Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
+                cmdRefresh(null);
                 showInfoText("Table " + tableName + " dropped succesfully.");
             }
-            cmdRefresh(null);
         }
         private void cmdTableCount(string arg)
         {
@@ -663,6 +790,39 @@ $"},
 
             webBrowser.Navigate(path);
             tabControl.SelectedTab = tpTableAnalyze;
+        }
+        private void cmdCreateTable(string arg)
+        {
+            FormCreateTable fct = new FormCreateTable();
+            while (true)
+            {
+                if (fct.ShowDialog() == DialogResult.OK)
+                {
+                    Table tbl = fct.GetTable();
+                    try
+                    {
+                        Provider.Database.Tables.Add(tbl);
+
+                        if (string.IsNullOrEmpty(tbl.Name))
+                            throw new Exception("Enter a valid name for the table.");
+                        if (tbl.Fields == null || tbl.Fields.Count == 0)
+                            throw new Exception("Add minimum one field to the table.");
+
+                        string sql = tbl.ToDDL();
+                        Provider.Database.ExecuteNonQuery(sql);
+                        cmdRefresh("");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Çınar DBTools");
+                        Provider.Database.Tables.Remove(tbl);
+                        fct.DialogResult = DialogResult.None;
+                    }
+                }
+                else
+                    break;
+            }
         }
 
         private void cmdGenerateSQL(string arg)
@@ -916,6 +1076,12 @@ $"},
             else if (e.Node.Tag is Field)
                 cmdFieldDistinct(null);
         }
+
+        private void cbActiveConnection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TreeNode node = findNode(treeView.Nodes, n => n.Tag == cbActiveConnection.SelectedItem);
+            treeView.SelectedNode = node;
+        }
     }
 
     public class Provider
@@ -1001,16 +1167,15 @@ $"},
 
         public override string ToString()
         {
-            string toStr = DbName;
-            toStr += " (" + Provider;
+            string toStr = DbName + " @ ";
             if (Host.Contains('.'))
             {
                 string[] parts = Host.Split('.');
-                toStr += " @ " + parts[parts.Length - 2]  + "." + parts[parts.Length - 1];
+                toStr += parts[parts.Length - 2]  + "." + parts[parts.Length - 1];
             }
             else
-                toStr += " @ " + Host;
-            toStr += ")";
+                toStr += Host;
+            toStr += " (" + Provider + ")";
 
             return toStr;
         }

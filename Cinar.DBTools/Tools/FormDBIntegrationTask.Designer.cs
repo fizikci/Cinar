@@ -55,7 +55,7 @@
             0});
             this.numInterval.Name = "numInterval";
             this.numInterval.Size = new System.Drawing.Size(59, 20);
-            this.numInterval.TabIndex = 48;
+            this.numInterval.TabIndex = 9;
             this.numInterval.ThousandsSeparator = true;
             // 
             // label7
@@ -65,7 +65,7 @@
             this.label7.Location = new System.Drawing.Point(443, 45);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(92, 13);
-            this.label7.TabIndex = 47;
+            this.label7.TabIndex = 8;
             this.label7.Text = "Exec. Interval (s) :";
             // 
             // txtName
@@ -75,7 +75,7 @@
             this.txtName.Location = new System.Drawing.Point(64, 13);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(313, 20);
-            this.txtName.TabIndex = 46;
+            this.txtName.TabIndex = 1;
             this.txtName.Text = "Ajans insert";
             // 
             // label5
@@ -84,7 +84,7 @@
             this.label5.Location = new System.Drawing.Point(7, 16);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
-            this.label5.TabIndex = 45;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Name :";
             // 
             // cbDstDb
@@ -95,7 +95,7 @@
             this.cbDstDb.Location = new System.Drawing.Point(275, 41);
             this.cbDstDb.Name = "cbDstDb";
             this.cbDstDb.Size = new System.Drawing.Size(160, 21);
-            this.cbDstDb.TabIndex = 42;
+            this.cbDstDb.TabIndex = 7;
             // 
             // label6
             // 
@@ -104,7 +104,7 @@
             this.label6.Location = new System.Drawing.Point(243, 44);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
-            this.label6.TabIndex = 41;
+            this.label6.TabIndex = 6;
             this.label6.Text = "To :";
             // 
             // cbSrcDb
@@ -116,7 +116,7 @@
             this.cbSrcDb.Location = new System.Drawing.Point(64, 41);
             this.cbSrcDb.Name = "cbSrcDb";
             this.cbSrcDb.Size = new System.Drawing.Size(173, 21);
-            this.cbSrcDb.TabIndex = 40;
+            this.cbSrcDb.TabIndex = 5;
             // 
             // label2
             // 
@@ -124,7 +124,7 @@
             this.label2.Location = new System.Drawing.Point(7, 44);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(36, 13);
-            this.label2.TabIndex = 39;
+            this.label2.TabIndex = 4;
             this.label2.Text = "From :";
             // 
             // txtCategory
@@ -134,7 +134,7 @@
             this.txtCategory.Location = new System.Drawing.Point(435, 13);
             this.txtCategory.Name = "txtCategory";
             this.txtCategory.Size = new System.Drawing.Size(165, 20);
-            this.txtCategory.TabIndex = 51;
+            this.txtCategory.TabIndex = 3;
             // 
             // label1
             // 
@@ -142,7 +142,7 @@
             this.label1.Location = new System.Drawing.Point(383, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
-            this.label1.TabIndex = 50;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Project :";
             // 
             // btnOK
@@ -152,7 +152,7 @@
             this.btnOK.Location = new System.Drawing.Point(433, 441);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 52;
+            this.btnOK.TabIndex = 11;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
@@ -163,7 +163,7 @@
             this.btnCancel.Location = new System.Drawing.Point(525, 441);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 53;
+            this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -176,7 +176,7 @@
             this.txtCode.Location = new System.Drawing.Point(10, 73);
             this.txtCode.Name = "txtCode";
             this.txtCode.Size = new System.Drawing.Size(590, 362);
-            this.txtCode.TabIndex = 54;
+            this.txtCode.TabIndex = 10;
             // 
             // FormDBIntegrationTask
             // 

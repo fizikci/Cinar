@@ -138,8 +138,8 @@
             this.panel.TabIndex = 0;
             this.panel.TabStop = true;
             this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panelOnPaint);
-            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelMouseMove);
             this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelMouseDown);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelMouseMove);
             this.panel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelMouseUp);
             // 
             // contextMenu
@@ -204,7 +204,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(870, 24);
-            this.menuStrip1.TabIndex = 2;
+            this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // menuFile
@@ -215,30 +215,30 @@
             this.toolStripMenuItem2,
             this.menuExit});
             this.menuFile.Name = "menuFile";
-            this.menuFile.Size = new System.Drawing.Size(35, 20);
+            this.menuFile.Size = new System.Drawing.Size(37, 20);
             this.menuFile.Text = "File";
             // 
             // menuNew
             // 
             this.menuNew.Name = "menuNew";
-            this.menuNew.Size = new System.Drawing.Size(118, 22);
+            this.menuNew.Size = new System.Drawing.Size(107, 22);
             this.menuNew.Text = "New...";
             // 
             // menuSave
             // 
             this.menuSave.Name = "menuSave";
-            this.menuSave.Size = new System.Drawing.Size(118, 22);
+            this.menuSave.Size = new System.Drawing.Size(107, 22);
             this.menuSave.Text = "Save";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(115, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(118, 22);
+            this.menuExit.Size = new System.Drawing.Size(107, 22);
             this.menuExit.Text = "Exit";
             // 
             // fileToolStripMenuItem
