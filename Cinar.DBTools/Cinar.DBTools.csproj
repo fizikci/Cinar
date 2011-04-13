@@ -88,6 +88,12 @@
     <Compile Include="Controls\MyDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\SQLEditorAndResults.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SQLEditorAndResults.Designer.cs">
+      <DependentUpon>SQLEditorAndResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +123,9 @@
     <EmbeddedResource Include="CinarSQLEditor.resx">
       <DependentUpon>CinarSQLEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SQLEditorAndResults.resx">
+      <DependentUpon>SQLEditorAndResults.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TextInputDialog.resx">
       <DependentUpon>TextInputDialog.cs</DependentUpon>

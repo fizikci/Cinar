@@ -23,7 +23,6 @@ namespace Cinar.DBTools
     {
         CommandManager cmdMan = new CommandManager();
         TreeNode rootNode;
-        string filePath = "";
 
         public FormMain()
         {
@@ -113,14 +112,27 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuShowTableCounts},
                                      },
-                                     IsEnabled = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings,
-                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsEnabled = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is List<Table>,
+                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is List<Table>
                                  },
+                     new Command {
+                                     Execute = (s)=>{addSQLEditor("", "");},
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = btnAddEditor},
+                                     }
+                                 },
+                     new Command {
+                                     Execute = cmdCloseSQLEditor,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = btnCloseSQLEditor},
+                                     },
+                                     IsEnabled = ()=>tabControlEditors.TabCount>1
+                                },
                      new Command {
                                      Execute = cmdExecuteSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnExecuteSQL},
-                                         new CommandTrigger{ Control = txtSQL, Event = "KeyUp", Predicate = (e)=>{KeyEventArgs k = (KeyEventArgs)e; return k.KeyCode==Keys.F5 || k.KeyCode==Keys.F9;}}
+                                         //new CommandTrigger{ Control = CurrSQLEditor.SQLEditor, Event = "KeyUp", Predicate = (e)=>{KeyEventArgs k = (KeyEventArgs)e; return k.KeyCode==Keys.F5 || k.KeyCode==Keys.F9;}}
                                      }
                                  },
                      new Command {
@@ -294,11 +306,22 @@ $"},
 
             showConnections(null);
         }
+
+        private SQLEditorAndResults CurrSQLEditor
+        {
+            get
+            {
+                if (tabControlEditors.TabCount > 0)
+                    return (tabControlEditors.SelectedTab.Controls[0] as SQLEditorAndResults);
+                return null;
+            }
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             if (Provider.Database != null)
             {
-                txtSQL.Text = "SELECT 'Welcome to Cinar Database Tools' as Hi;";
+                addSQLEditor("", "SELECT 'Welcome to Cinar Database Tools' as Hi;");
                 cmdExecuteSQL(null);
             }
         }
@@ -345,14 +368,14 @@ $"},
             statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
             statusNumberOfRows.Text = (ds.Tables.Count == 0 ? 0 : ds.Tables[0].Rows.Count) + " rows";
             statusText.Text = "Query executed succesfully.";
-            txtSQLLog.Text += Environment.NewLine + sql + (sql.EndsWith(";") ? "" : ";");
+            CurrSQLEditor.SQLLog.Text += Environment.NewLine + sql + (sql.EndsWith(";") ? "" : ";");
 
             if (ds.Tables.Count > 1)
-                bindGridResults(ds);
+                CurrSQLEditor.BindGridResults(ds);
             else if (ds.Tables.Count == 1)
-                bindGridResults(ds.Tables[0]);
+                CurrSQLEditor.BindGridResults(ds.Tables[0]);
             else
-                bindGridResults(null);
+                CurrSQLEditor.BindGridResults(null);
         }
         private bool checkConnection()
         {
@@ -369,22 +392,31 @@ $"},
             if (cs == null)
                 return; //***
 
-            TreeNode schemasNode = parentNode.Nodes.Add("ER Diagrams", "ER Diagrams", "Diagram", "Diagram");
+            TreeNode schemasNode = parentNode.Nodes.Add("ER Diagrams", "ER Diagrams", "Folder", "Folder");
             schemasNode.Tag = cs.Schemas;
 
-            TreeNode tablesNode = parentNode.Nodes.Add("Tables", "Tables", "Table", "Table");
+            TreeNode tablesNode = parentNode.Nodes.Add("Tables", "Tables", "Folder", "Folder");
             tablesNode.Tag = cs.Database.Tables;
-            TreeNode viewsNode = parentNode.Nodes.Add("Views", "Views", "View", "View");
+            TreeNode viewsNode = parentNode.Nodes.Add("Views", "Views", "Folder", "Folder");
             viewsNode.Tag = cs.Database.Tables;
 
             foreach (Table tbl in cs.Database.Tables)
             {
                 TreeNode tnTable = (tbl.IsView ? viewsNode : tablesNode).Nodes.Add(tbl.Name, tbl.Name, tbl.IsView ? "View" : "Table", tbl.IsView ? "View" : "Table");
                 tnTable.Tag = tbl;
+                TreeNode fieldsNode = tnTable.Nodes.Add("Fields", "Fields", "Folder", "Folder");
+                fieldsNode.Tag = tbl.Fields;
                 foreach (Field fld in tbl.Fields)
                 {
-                    TreeNode tnField = tnTable.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
+                    TreeNode tnField = fieldsNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
                     tnField.Tag = fld;
+                }
+                TreeNode keysNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
+                keysNode.Tag = tbl.Keys;
+                foreach (var key in tbl.Keys)
+                {
+                    TreeNode tnKey = keysNode.Nodes.Add(key.Name, key.Name + " (" + string.Join(", ",key.FieldNames.ToArray()) + ")", key.IsPrimary ? "Key" : "Field", key.IsPrimary ? "Key" : "Field");
+                    tnKey.Tag = key;
                 }
             }
 
@@ -427,147 +459,90 @@ $"},
             }
             return null;
         }
-        private void bindGridResults(object data)
-        {
-            tabControl.SelectedTab = tpResults;
-            tpResults.Controls.Clear();
 
-            if (data is DataSet)
-            {
-                DataSet ds = data as DataSet;
-                if (ds == null || ds.Tables.Count == 0)
-                    return;
-
-                if (ds.Tables.Count == 1)
-                {
-                    MyDataGrid grid = createNewGrid();
-                    grid.DataSource = ds.Tables[0];
-                    tpResults.Controls.Add(grid);
-                    return;
-                }
-
-                Control currContainer = tpResults;
-                for (int i = 0; i < ds.Tables.Count - 1; i++)
-                {
-                    SplitContainer sc = new SplitContainer();
-                    sc.Dock = DockStyle.Fill;
-                    sc.Orientation = Orientation.Horizontal;
-                    MyDataGrid grid = createNewGrid();
-                    grid.DataSource = ds.Tables[i];
-                    sc.Panel1.Controls.Add(grid);
-                    if (i == ds.Tables.Count - 2)
-                    {
-                        MyDataGrid grid2 = createNewGrid();
-                        grid2.DataSource = ds.Tables[i + 1];
-                        sc.Panel2.Controls.Add(grid2);
-                    }
-                    currContainer.Controls.Add(sc);
-                    currContainer = sc.Panel2;
-                }
-            }
-            else
-            {
-                MyDataGrid gridResults = createNewGrid();
-                gridResults.DataSource = data;
-                tpResults.Controls.Add(gridResults);
-            }
-        }
-
-        private MyDataGrid createNewGrid()
-        {
-            MyDataGrid grid = new MyDataGrid();
-            grid.Dock = DockStyle.Fill;
-            grid.AllowUserToAddRows = false;
-            grid.AllowUserToDeleteRows = false;
-            grid.AllowUserToOrderColumns = true;
-            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            return grid;
-        }
-
-        private void showInfoText(string txt)
-        {
-            tabControl.SelectedTab = tpInfo;
-            txtInfo.Text = txt;
+        private void addSQLEditor(string filePath, string sql) {
+            TabPage tp = new TabPage();
+            SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
+            sqlEd.Dock = DockStyle.Fill;
+            tp.Controls.Add(sqlEd);
+            tp.Text = string.IsNullOrEmpty(filePath) ? "Query" : Path.GetFileName(filePath);
+            tabControlEditors.Controls.Add(tp);
+            tabControlEditors.SelectTab(tp);
         }
         #endregion
 
         #region Commands
         private void cmdSave(string arg)
         {
-            if (string.IsNullOrEmpty(filePath))
-                cmdSaveAs(null);
-            else
-                txtSQL.SaveFile(filePath);
+            if (CurrSQLEditor.Save())
+                tabControlEditors.SelectedTab.Text = Path.GetFileName(CurrSQLEditor.FilePath);
         }
         private void cmdSaveAs(string arg)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                filePath = sfd.FileName;
-                txtSQL.SaveFile(sfd.FileName);
-            }
+            if(CurrSQLEditor.SaveAs())
+                tabControlEditors.SelectedTab.Text = Path.GetFileName(CurrSQLEditor.FilePath);
         }
         private void cmdOpen(string arg)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                filePath = ofd.FileName;
-                txtSQL.LoadFile(ofd.FileName);
-            }
+                addSQLEditor(ofd.FileName, "");
+        }
+        private void cmdCloseSQLEditor(string arg)
+        {
+            if (CurrSQLEditor.Modified && MessageBox.Show("Would you like to save?", "Çınar DB Tools", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                cmdSave("");
+            tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
         }
 
-        //private string copiedText = "";
         private void cmdEditorCommand(string arg)
         {
             switch (arg)
             {
                 case "Undo":
-                    txtSQL.Undo();
+                    CurrSQLEditor.SQLEditor.Undo();
                     break;
                 case "Redo":
-                    txtSQL.Redo();
+                    CurrSQLEditor.SQLEditor.Redo();
                     break;
                 case "Cut":
-                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
-                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
                         Clipboard.SetData(DataFormats.Text, sel.SelectedText);
-                        txtSQL.Document.Remove(sel.Offset, sel.Length);
-                        txtSQL.ActiveTextAreaControl.Caret.Position = sel.StartPosition;
-                        txtSQL.ActiveTextAreaControl.SelectionManager.ClearSelection();
+                        CurrSQLEditor.SQLEditor.Document.Remove(sel.Offset, sel.Length);
+                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = sel.StartPosition;
+                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.ClearSelection();
                     }
                     break;
                 case "Copy":
-                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
-                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
                         Clipboard.SetData(DataFormats.Text, sel.SelectedText);
                     }
                     break;
                 case "Paste":
                     string copiedText = Clipboard.GetText();
-                    if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
-                        ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        txtSQL.Document.Replace(sel.Offset, sel.Length, copiedText);
-                        txtSQL.ActiveTextAreaControl.SelectionManager.ClearSelection();
-                        txtSQL.ActiveTextAreaControl.Caret.Position = txtSQL.Document.OffsetToPosition(sel.Offset + copiedText.Length);
+                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                        CurrSQLEditor.SQLEditor.Document.Replace(sel.Offset, sel.Length, copiedText);
+                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.ClearSelection();
+                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = CurrSQLEditor.SQLEditor.Document.OffsetToPosition(sel.Offset + copiedText.Length);
                     }
                     else
                     {
-                        txtSQL.Document.Insert(txtSQL.ActiveTextAreaControl.Caret.Offset, copiedText);
-                        txtSQL.ActiveTextAreaControl.Caret.Position = txtSQL.Document.OffsetToPosition(txtSQL.ActiveTextAreaControl.Caret.Offset + copiedText.Length);
+                        CurrSQLEditor.SQLEditor.Document.Insert(CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Offset, copiedText);
+                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = CurrSQLEditor.SQLEditor.Document.OffsetToPosition(CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Offset + copiedText.Length);
                     }
                     break;
                 case "SelectAll":
-                    txtSQL.ActiveTextAreaControl.SelectionManager.SetSelection(new ICSharpCode.TextEditor.TextLocation(0, 0), txtSQL.Document.OffsetToPosition(txtSQL.Text.Length));
+                    CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SetSelection(new ICSharpCode.TextEditor.TextLocation(0, 0), CurrSQLEditor.SQLEditor.Document.OffsetToPosition(CurrSQLEditor.SQLEditor.Text.Length));
                     break;
                 case "Find":
                 case "Replace":
-                    FindDialog fd = new FindDialog(txtSQL);
+                    FindDialog fd = new FindDialog(CurrSQLEditor.SQLEditor);
                     fd.Show();
                     break;
             }
@@ -582,15 +557,48 @@ $"},
         }
         private void cmdRefreshMetadata(string arg)
         {
-            if (MessageBox.Show("Metada will be reread from database and all changes made to metadata will be lost. Continue?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("Metada will be reread from database.\n This may result in loss of some of your later added metadata.\n (such as UI metadata, and foreign relationships)\n\n Continue?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
+                Database.Database oldDb = Provider.Database;
                 Provider.ActiveConnection.RefreshDatabaseSchema();
+
+                foreach (Table oldTable in oldDb.Tables)
+                {
+                    Table newTable = Provider.Database.Tables[oldTable.Name];
+                    if (newTable == null) continue;
+
+                    foreach (Field oldField in oldTable.Fields)
+                    {
+                        Field newField = newTable.Fields[oldField.Name];
+                        if (newField == null) continue;
+
+                        if (oldField.ReferenceField != null)
+                        {
+                            var isOk = newField.ReferenceField != null && oldField.ReferenceField.Table.Name == newField.ReferenceField.Table.Name && oldField.ReferenceField.Name == newField.ReferenceField.Name;
+                            if (!isOk)
+                            {
+                                newField.ReferenceField = getField(oldField.ReferenceField.Table.Name, oldField.ReferenceField.Name);
+                            }
+                        }
+
+                        newField.UIMetadata = oldField.UIMetadata;
+                    }
+
+                    newTable.UIMetadata = oldTable.UIMetadata;
+                }
+                
                 TreeNode dbNode = findSelectedDBNode();
                 dbNode.Nodes.Clear();
                 populateTreeNodesForDatabase(dbNode);
                 SaveConnections();
                 treeView.Sort();
             }
+        }
+        private Field getField(string tableName, string fieldName)
+        {
+            if (Provider.Database.Tables[tableName] != null)
+                return Provider.Database.Tables[tableName].Fields[fieldName];
+            return null;
         }
 
         private void cmdOpenConnectionsFile(string arg)
@@ -670,11 +678,13 @@ $"},
 
         private void cmdShowTableCounts(string arg)
         {
-            Database.Database db = (treeView.SelectedNode.Tag as ConnectionSettings).Database;
-            foreach (TreeNode node in treeView.SelectedNode.Nodes["Tables"].Nodes)
+            foreach (TreeNode node in findSelectedDBNode().Nodes["Tables"].Nodes)
             { 
                 Table tbl = node.Tag as Table;
-                node.Text = string.Format("{0} ({1})", tbl.Name, db.GetInt("select count(*) from [" + tbl + "]"));
+                string count = "?";
+                try { count = Provider.Database.GetString("select count(*) from [" + tbl + "]"); }
+                catch { }
+                node.Text = string.Format("{0} ({1})", tbl.Name, count);
             }
         }
 
@@ -682,9 +692,9 @@ $"},
         {
             if(!checkConnection()) return;
 
-            string sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectedText;
+            string sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
             if (string.IsNullOrEmpty(sel))
-                sel = txtSQL.Text;
+                sel = CurrSQLEditor.SQLEditor.Text;
 
             Interpreter engine = new Interpreter(sel, null);
             engine.SetAttribute("db", Provider.Database);
@@ -697,13 +707,13 @@ $"},
         }
         private void cmdExecuteScript(string arg)
         {
-            Interpreter engine = new Interpreter(txtSQL.Text, null);
+            Interpreter engine = new Interpreter(CurrSQLEditor.SQLEditor.Text, null);
             engine.SetAttribute("db", Provider.Database);
             engine.SetAttribute("util", new Util());
             engine.Parse();
             engine.Execute();
 
-            showInfoText(engine.Output);
+            CurrSQLEditor.ShowInfoText(engine.Output);
 
             statusText.Text = "Script executed succesfully.";
         }
@@ -756,7 +766,7 @@ $"},
                 int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
                 Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
                 cmdRefresh(null);
-                showInfoText("Table " + tableName + " dropped succesfully.");
+                CurrSQLEditor.ShowInfoText("Table " + tableName + " dropped succesfully.");
             }
         }
         private void cmdTableCount(string arg)
@@ -809,8 +819,7 @@ $"},
             string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\table_analyze.html";
             File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
 
-            webBrowser.Navigate(path);
-            tabControl.SelectedTab = tpTableAnalyze;
+            CurrSQLEditor.Navigate(path);
         }
         private void cmdCreateTable(string arg)
         {
@@ -903,7 +912,7 @@ $"},
                     break;
             }
             statusText.Text = "SQL generated.";
-            showInfoText(sb.ToString());
+            addSQLEditor("", sb.ToString());
         }
 
         private void cmdGenerateUIMetadata(string arg)
@@ -1004,7 +1013,7 @@ $"},
                                               field.ReferenceField.Table.StringField.Name);
             }
 
-            MyDataGrid grid = tpResults.Controls[0] as MyDataGrid;
+            MyDataGrid grid = CurrSQLEditor.Grid;
             grid.DoubleClick += delegate {
                 if (grid.SelectedRows.Count <= 0)
                     return;
@@ -1056,7 +1065,7 @@ $"},
 
         private void cmdQuickScript(string arg)
         {
-            txtSQL.Text = arg;
+            CurrSQLEditor.SQLEditor.Text = arg;
         }
 
         private void cmdExit(string arg)
@@ -1073,6 +1082,12 @@ $"},
             new FormContentExtractor().Show();
         }
         #endregion
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            while (CurrSQLEditor != null)
+                cmdCloseSQLEditor("");
+        }
 
         private void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
@@ -1191,10 +1206,10 @@ $"},
 
         public void RefreshDatabaseSchema()
         {
-            if (Database == null)
-                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 1000);
-            else
-                Database.Refresh();
+            //if (Database == null)
+                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30);
+            //else
+            //    Database.Refresh();
         }
 
         public override string ToString()
