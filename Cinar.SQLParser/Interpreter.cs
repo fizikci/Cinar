@@ -83,8 +83,8 @@ namespace Cinar.SQLParser
             }
             catch (ParserException ex)
             {
-                statements = new List<Statement>();
-                statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message) })));
+                //statements = new List<Statement>();
+                //statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message) })));
             }
             watch.Stop();
             this.ParsingTime = watch.ElapsedMilliseconds;

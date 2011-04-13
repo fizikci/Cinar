@@ -21,5 +21,10 @@ namespace Cinar.DBTools.Tools
         {
             Process.Start("mailto:bulentkeskin@gmail.com");
         }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://www.cinarteknoloji.com");
+        }
     }
 }
