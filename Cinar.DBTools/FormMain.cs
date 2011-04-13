@@ -28,7 +28,7 @@ namespace Cinar.DBTools
         public FormMain()
         {
             InitializeComponent();
-
+            #region commands
             cmdMan.AfterCommandExecute = () =>
             {
                 cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
@@ -140,6 +140,9 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = btnDatabaseTransfer, Argument=typeof(FormDBTransfer).FullName},
                                          new CommandTrigger{ Control = menuCopyTreeData, Argument=typeof(FormCopyTreeData).FullName},
                                          new CommandTrigger{ Control = menuSimpleIntegrationService, Argument=typeof(FormDBIntegration).FullName},
+                                         new CommandTrigger{ Control = btnSimpleIntegrationService, Argument=typeof(FormDBIntegration).FullName},
+                                         new CommandTrigger{ Control = menuSQLDump, Argument=typeof(FormSQLDump).FullName},
+                                         new CommandTrigger{ Control = btnSQLDump, Argument=typeof(FormSQLDump).FullName},
                                          new CommandTrigger{ Control = menuCompareDatabases, Argument=typeof(FormCompareDatabases).FullName},
                                      },
                                      IsEnabled = ()=> Provider.Database != null
@@ -159,8 +162,12 @@ foreach(table in db.Tables)
     echo('truncate table ' + table.Name + ';\r\n');
 $"},
                                          new CommandTrigger{ Control = menuSelectCountsFromTables, Argument=@"$
-foreach(table in db.Tables)
-    echo(""select '"" + table.Name + ""', count(*) from "" + table.Name + "" UNION \r\n"");
+for(int i=0; i<db.Tables.Count; i++)
+{
+	var table = db.Tables[i];
+    echo(""select '"" + table.Name + ""', count(*) from "" + table.Name);
+    if(i<db.Tables.Count-1) echo("" UNION \r\n"");
+}
 $"},
                                          new CommandTrigger{ Control = menuForEachTable, Argument=@"$
 foreach(table in db.Tables)
@@ -239,6 +246,14 @@ $"},
                                      IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Schema,
                                  },
                      new Command {
+                                     Execute = cmdNewERDiagram,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuViewERDiagram},
+                                         new CommandTrigger{ Control = btnViewERDiagram},
+                                     },
+                                     IsEnabled = ()=> Provider.Database!=null,
+                                 },
+                     new Command {
                                      Execute = cmdDeleteERDiagram,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDeleteERDiagram},
@@ -275,7 +290,19 @@ $"},
             cmdMan.SetCommandTriggers();
             //cmdMan.SetCommandControlsVisibility();
             cmdMan.SetCommandControlsEnable();
+            #endregion
+
+            showConnections(null);
         }
+        protected override void OnLoad(EventArgs e)
+        {
+            if (Provider.Database != null)
+            {
+                txtSQL.Text = "SELECT 'Welcome to Cinar Database Tools' as Hi;";
+                cmdExecuteSQL(null);
+            }
+        }
+
 
         #region methods
         private void showConnections(string path)
@@ -301,13 +328,6 @@ $"},
             }
         }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            txtSQL.Text = "SELECT 'Welcome to Cinar Database Tools' as Hi;";
-            cmdExecuteSQL(null);
-        }
-
-        #region methods
         public void SaveConnections()
         {
             Provider.SaveConnections();
@@ -499,7 +519,7 @@ $"},
             }
         }
 
-        private string copiedText = "";
+        //private string copiedText = "";
         private void cmdEditorCommand(string arg)
         {
             switch (arg)
@@ -514,7 +534,7 @@ $"},
                     if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
                         ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        copiedText = sel.SelectedText;
+                        Clipboard.SetData(DataFormats.Text, sel.SelectedText);
                         txtSQL.Document.Remove(sel.Offset, sel.Length);
                         txtSQL.ActiveTextAreaControl.Caret.Position = sel.StartPosition;
                         txtSQL.ActiveTextAreaControl.SelectionManager.ClearSelection();
@@ -524,10 +544,11 @@ $"},
                     if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
                         ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        copiedText = sel.SelectedText;
+                        Clipboard.SetData(DataFormats.Text, sel.SelectedText);
                     }
                     break;
                 case "Paste":
+                    string copiedText = Clipboard.GetText();
                     if (txtSQL.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
                     {
                         ISelection sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
@@ -661,7 +682,7 @@ $"},
         {
             if(!checkConnection()) return;
 
-            string sel = txtSQL.SelectedText;
+            string sel = txtSQL.ActiveTextAreaControl.SelectionManager.SelectedText;
             if (string.IsNullOrEmpty(sel))
                 sel = txtSQL.Text;
 
@@ -1076,11 +1097,16 @@ $"},
             else if (e.Node.Tag is Field)
                 cmdFieldDistinct(null);
         }
+        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            treeView.SelectedNode = e.Node;
+        }
 
         private void cbActiveConnection_SelectedIndexChanged(object sender, EventArgs e)
         {
             TreeNode node = findNode(treeView.Nodes, n => n.Tag == cbActiveConnection.SelectedItem);
-            treeView.SelectedNode = node;
+            TreeNode node2 = findSelectedDBNode();
+            if (node != node2) treeView.SelectedNode = node;
         }
     }
 
@@ -1123,7 +1149,13 @@ $"},
                 XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
                 using (StreamReader sr = new StreamReader(path))
                 {
-                    Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
+                    try
+                    {
+                        Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
+                    }
+                    catch {
+                        MessageBox.Show("This is not a valid connection file", "Çınar");
+                    }
                     foreach (ConnectionSettings cs in Connections)
                     {
                         if (cs.Database == null)

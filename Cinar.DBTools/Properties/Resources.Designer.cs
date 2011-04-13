@@ -59,5 +59,12 @@ namespace Cinar.DBTools.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap disk {
+            get {
+                object obj = ResourceManager.GetObject("disk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -137,6 +137,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormSQLDump.resx">
+      <DependentUpon>FormSQLDump.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCompareDirectories.resx">
       <DependentUpon>FormCompareDirectories.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -217,11 +226,17 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\CodeGenerator.cs" />
+    <Compile Include="Tools\FormSQLDump.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormSQLDump.Designer.cs">
+      <DependentUpon>FormSQLDump.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\FormCompareDirectories.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -397,6 +412,7 @@
     <None Include="Resources\Method.PNG" />
     <None Include="Resources\Property.PNG" />
     <None Include="Resources\Struct.PNG" />
+    <None Include="Resources\disk.png" />
     <Content Include="yaprak.ico" />
     <Content Include="_library\ICSharpCode.TextEditor.dll" />
     <Content Include="_library\Menees.dll" />
