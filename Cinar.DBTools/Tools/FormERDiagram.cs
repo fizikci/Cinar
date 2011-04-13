@@ -115,16 +115,23 @@ namespace Cinar.DBTools.Tools
         }
         private void cmdSaveSchema(string arg)
         {
+            saveSchema();
+        }
+
+        private bool saveSchema()
+        {
             if (string.IsNullOrEmpty(CurrentSchema.Name))
             {
                 MessageBox.Show("Please enter a name for the current schema", "Çınar Database Tools");
-                return;
+                return false;
             }
 
             if (conn.Schemas.IndexOf(CurrentSchema) == -1)
                 conn.Schemas.Add(CurrentSchema);
             MainForm.SaveConnections();
+            return true;
         }
+
         private void createNewSchema(List<Table> tables)
         {
             CurrentSchema = new Schema();
@@ -506,6 +513,16 @@ namespace Cinar.DBTools.Tools
             }
 
             panelPaint(false);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Would you like to save your changes?", "Çınar", MessageBoxButtons.YesNoCancel);
+            if (dr == DialogResult.Yes)
+                e.Cancel = !saveSchema();
+            else if (dr == DialogResult.Cancel)
+                e.Cancel = true;
+            base.OnClosing(e);
         }
     }
 }

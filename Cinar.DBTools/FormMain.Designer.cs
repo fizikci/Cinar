@@ -66,16 +66,8 @@
             this.menuAnalyzeTable = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCreateTable = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.txtSQL = new Cinar.DBTools.CinarSQLEditor();
-            this.tabControl = new System.Windows.Forms.TabControl();
-            this.tpResults = new System.Windows.Forms.TabPage();
-            this.tpInfo = new System.Windows.Forms.TabPage();
-            this.txtInfo = new System.Windows.Forms.TextBox();
-            this.tpSQLLog = new System.Windows.Forms.TabPage();
-            this.txtSQLLog = new System.Windows.Forms.TextBox();
-            this.tpTableAnalyze = new System.Windows.Forms.TabPage();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
+            this.btnCloseSQLEditor = new System.Windows.Forms.PictureBox();
+            this.tabControlEditors = new System.Windows.Forms.TabControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnection = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,6 +115,7 @@
             this.btnDeleteConnection = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cbActiveConnection = new System.Windows.Forms.ToolStripComboBox();
+            this.btnAddEditor = new System.Windows.Forms.ToolStripButton();
             this.btnExecuteSQL = new System.Windows.Forms.ToolStripButton();
             this.btnExecuteScript = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -144,13 +137,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.menuStripTree.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.tpInfo.SuspendLayout();
-            this.tpSQLLog.SuspendLayout();
-            this.tpTableAnalyze.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCloseSQLEditor)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -252,7 +239,8 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Panel2.Controls.Add(this.btnCloseSQLEditor);
+            this.splitContainer1.Panel2.Controls.Add(this.tabControlEditors);
             this.splitContainer1.Size = new System.Drawing.Size(951, 537);
             this.splitContainer1.SplitterDistance = 177;
             this.splitContainer1.TabIndex = 0;
@@ -298,41 +286,41 @@
             this.menuAnalyzeTable,
             this.menuCreateTable});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(198, 444);
+            this.menuStripTree.Size = new System.Drawing.Size(220, 466);
             // 
             // menuCount
             // 
             this.menuCount.Image = ((System.Drawing.Image)(resources.GetObject("menuCount.Image")));
             this.menuCount.Name = "menuCount";
-            this.menuCount.Size = new System.Drawing.Size(197, 22);
+            this.menuCount.Size = new System.Drawing.Size(219, 22);
             this.menuCount.Text = "Count";
             // 
             // menuTop10
             // 
             this.menuTop10.Image = ((System.Drawing.Image)(resources.GetObject("menuTop10.Image")));
             this.menuTop10.Name = "menuTop10";
-            this.menuTop10.Size = new System.Drawing.Size(197, 22);
+            this.menuTop10.Size = new System.Drawing.Size(219, 22);
             this.menuTop10.Text = "Top 1000";
             // 
             // menuDistinct
             // 
             this.menuDistinct.Image = ((System.Drawing.Image)(resources.GetObject("menuDistinct.Image")));
             this.menuDistinct.Name = "menuDistinct";
-            this.menuDistinct.Size = new System.Drawing.Size(197, 22);
+            this.menuDistinct.Size = new System.Drawing.Size(219, 22);
             this.menuDistinct.Text = "Distinct";
             // 
             // menuMax
             // 
             this.menuMax.Image = ((System.Drawing.Image)(resources.GetObject("menuMax.Image")));
             this.menuMax.Name = "menuMax";
-            this.menuMax.Size = new System.Drawing.Size(197, 22);
+            this.menuMax.Size = new System.Drawing.Size(219, 22);
             this.menuMax.Text = "Max()";
             // 
             // menuMin
             // 
             this.menuMin.Image = ((System.Drawing.Image)(resources.GetObject("menuMin.Image")));
             this.menuMin.Name = "menuMin";
-            this.menuMin.Size = new System.Drawing.Size(197, 22);
+            this.menuMin.Size = new System.Drawing.Size(219, 22);
             this.menuMin.Text = "Min()";
             // 
             // menuGenerateSQL
@@ -344,7 +332,7 @@
             this.menuGenerateSQLCreateTable,
             this.menuGenerateSQLDump});
             this.menuGenerateSQL.Name = "menuGenerateSQL";
-            this.menuGenerateSQL.Size = new System.Drawing.Size(197, 22);
+            this.menuGenerateSQL.Size = new System.Drawing.Size(219, 22);
             this.menuGenerateSQL.Text = "Generate SQL";
             // 
             // menuGenerateSQLSelect
@@ -381,234 +369,128 @@
             // 
             this.menuRefresh.Image = ((System.Drawing.Image)(resources.GetObject("menuRefresh.Image")));
             this.menuRefresh.Name = "menuRefresh";
-            this.menuRefresh.Size = new System.Drawing.Size(197, 22);
+            this.menuRefresh.Size = new System.Drawing.Size(219, 22);
             this.menuRefresh.Text = "Refresh Nodes";
             // 
             // menuGroupedCounts
             // 
             this.menuGroupedCounts.Image = ((System.Drawing.Image)(resources.GetObject("menuGroupedCounts.Image")));
             this.menuGroupedCounts.Name = "menuGroupedCounts";
-            this.menuGroupedCounts.Size = new System.Drawing.Size(197, 22);
+            this.menuGroupedCounts.Size = new System.Drawing.Size(219, 22);
             this.menuGroupedCounts.Text = "Grouped Counts";
             // 
             // menuTableDrop
             // 
             this.menuTableDrop.Image = ((System.Drawing.Image)(resources.GetObject("menuTableDrop.Image")));
             this.menuTableDrop.Name = "menuTableDrop";
-            this.menuTableDrop.Size = new System.Drawing.Size(197, 22);
+            this.menuTableDrop.Size = new System.Drawing.Size(219, 22);
             this.menuTableDrop.Text = "Drop Table";
             // 
             // menuEditConnection
             // 
             this.menuEditConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuEditConnection.Image")));
             this.menuEditConnection.Name = "menuEditConnection";
-            this.menuEditConnection.Size = new System.Drawing.Size(197, 22);
+            this.menuEditConnection.Size = new System.Drawing.Size(219, 22);
             this.menuEditConnection.Text = "Edit Connection...";
             // 
             // menuDeleteConnection
             // 
             this.menuDeleteConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuDeleteConnection.Image")));
             this.menuDeleteConnection.Name = "menuDeleteConnection";
-            this.menuDeleteConnection.Size = new System.Drawing.Size(197, 22);
+            this.menuDeleteConnection.Size = new System.Drawing.Size(219, 22);
             this.menuDeleteConnection.Text = "Delete Connection";
             // 
             // menuOpenERDiagram
             // 
             this.menuOpenERDiagram.Image = ((System.Drawing.Image)(resources.GetObject("menuOpenERDiagram.Image")));
             this.menuOpenERDiagram.Name = "menuOpenERDiagram";
-            this.menuOpenERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuOpenERDiagram.Size = new System.Drawing.Size(219, 22);
             this.menuOpenERDiagram.Text = "Open ER Diagram...";
             // 
             // menuNewERDiagram
             // 
             this.menuNewERDiagram.Image = ((System.Drawing.Image)(resources.GetObject("menuNewERDiagram.Image")));
             this.menuNewERDiagram.Name = "menuNewERDiagram";
-            this.menuNewERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuNewERDiagram.Size = new System.Drawing.Size(219, 22);
             this.menuNewERDiagram.Text = "New ER Diagram...";
             // 
             // menuNewConnectionContext
             // 
             this.menuNewConnectionContext.Image = ((System.Drawing.Image)(resources.GetObject("menuNewConnectionContext.Image")));
             this.menuNewConnectionContext.Name = "menuNewConnectionContext";
-            this.menuNewConnectionContext.Size = new System.Drawing.Size(197, 22);
+            this.menuNewConnectionContext.Size = new System.Drawing.Size(219, 22);
             this.menuNewConnectionContext.Text = "Add New Connection...";
             // 
             // menuRefreshMetadata
             // 
             this.menuRefreshMetadata.Image = ((System.Drawing.Image)(resources.GetObject("menuRefreshMetadata.Image")));
             this.menuRefreshMetadata.Name = "menuRefreshMetadata";
-            this.menuRefreshMetadata.Size = new System.Drawing.Size(197, 22);
+            this.menuRefreshMetadata.Size = new System.Drawing.Size(219, 22);
             this.menuRefreshMetadata.Text = "Refresh Metadata";
             // 
             // menuDeleteERDiagram
             // 
             this.menuDeleteERDiagram.Image = ((System.Drawing.Image)(resources.GetObject("menuDeleteERDiagram.Image")));
             this.menuDeleteERDiagram.Name = "menuDeleteERDiagram";
-            this.menuDeleteERDiagram.Size = new System.Drawing.Size(197, 22);
+            this.menuDeleteERDiagram.Size = new System.Drawing.Size(219, 22);
             this.menuDeleteERDiagram.Text = "Delete ER Diagram";
             // 
             // menuShowTableCounts
             // 
             this.menuShowTableCounts.Name = "menuShowTableCounts";
-            this.menuShowTableCounts.Size = new System.Drawing.Size(197, 22);
-            this.menuShowTableCounts.Text = "Show Table Counts";
+            this.menuShowTableCounts.Size = new System.Drawing.Size(219, 22);
+            this.menuShowTableCounts.Text = "Show Table Counts on Tree";
             // 
             // menuGenerateUIMetadata
             // 
             this.menuGenerateUIMetadata.Name = "menuGenerateUIMetadata";
-            this.menuGenerateUIMetadata.Size = new System.Drawing.Size(197, 22);
+            this.menuGenerateUIMetadata.Size = new System.Drawing.Size(219, 22);
             this.menuGenerateUIMetadata.Text = "Generate UI Metadata";
             // 
             // menuAnalyzeTable
             // 
             this.menuAnalyzeTable.Name = "menuAnalyzeTable";
-            this.menuAnalyzeTable.Size = new System.Drawing.Size(197, 22);
+            this.menuAnalyzeTable.Size = new System.Drawing.Size(219, 22);
             this.menuAnalyzeTable.Text = "Analyze Table";
             // 
             // menuCreateTable
             // 
             this.menuCreateTable.Image = ((System.Drawing.Image)(resources.GetObject("menuCreateTable.Image")));
             this.menuCreateTable.Name = "menuCreateTable";
-            this.menuCreateTable.Size = new System.Drawing.Size(197, 22);
+            this.menuCreateTable.Size = new System.Drawing.Size(219, 22);
             this.menuCreateTable.Text = "Create Table...";
             // 
             // imageListTree
             // 
             this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
             this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListTree.Images.SetKeyName(0, "Host");
-            this.imageListTree.Images.SetKeyName(1, "Database");
-            this.imageListTree.Images.SetKeyName(2, "Table");
-            this.imageListTree.Images.SetKeyName(3, "Field");
-            this.imageListTree.Images.SetKeyName(4, "Key");
-            this.imageListTree.Images.SetKeyName(5, "View");
-            this.imageListTree.Images.SetKeyName(6, "Diagram");
+            this.imageListTree.Images.SetKeyName(0, "Folder");
+            this.imageListTree.Images.SetKeyName(1, "Table");
+            this.imageListTree.Images.SetKeyName(2, "Field");
+            this.imageListTree.Images.SetKeyName(3, "Key");
+            this.imageListTree.Images.SetKeyName(4, "View");
+            this.imageListTree.Images.SetKeyName(5, "Diagram");
+            this.imageListTree.Images.SetKeyName(6, "Database");
             // 
-            // splitContainer2
+            // btnCloseSQLEditor
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.btnCloseSQLEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCloseSQLEditor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCloseSQLEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseSQLEditor.Image")));
+            this.btnCloseSQLEditor.Location = new System.Drawing.Point(751, 3);
+            this.btnCloseSQLEditor.Name = "btnCloseSQLEditor";
+            this.btnCloseSQLEditor.Size = new System.Drawing.Size(16, 16);
+            this.btnCloseSQLEditor.TabIndex = 1;
+            this.btnCloseSQLEditor.TabStop = false;
             // 
-            // splitContainer2.Panel1
+            // tabControlEditors
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.txtSQL);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.tabControl);
-            this.splitContainer2.Size = new System.Drawing.Size(770, 537);
-            this.splitContainer2.SplitterDistance = 166;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // txtSQL
-            // 
-            this.txtSQL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSQL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSQL.IsReadOnly = false;
-            this.txtSQL.Location = new System.Drawing.Point(0, 0);
-            this.txtSQL.Name = "txtSQL";
-            this.txtSQL.Size = new System.Drawing.Size(770, 166);
-            this.txtSQL.TabIndex = 0;
-            // 
-            // tabControl
-            // 
-            this.tabControl.Controls.Add(this.tpResults);
-            this.tabControl.Controls.Add(this.tpInfo);
-            this.tabControl.Controls.Add(this.tpSQLLog);
-            this.tabControl.Controls.Add(this.tpTableAnalyze);
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.ItemSize = new System.Drawing.Size(80, 18);
-            this.tabControl.Location = new System.Drawing.Point(0, 0);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(770, 367);
-            this.tabControl.TabIndex = 0;
-            // 
-            // tpResults
-            // 
-            this.tpResults.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tpResults.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpResults.Location = new System.Drawing.Point(4, 22);
-            this.tpResults.Name = "tpResults";
-            this.tpResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResults.Size = new System.Drawing.Size(762, 341);
-            this.tpResults.TabIndex = 0;
-            this.tpResults.Text = "Results";
-            this.tpResults.UseVisualStyleBackColor = true;
-            // 
-            // tpInfo
-            // 
-            this.tpInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpInfo.Controls.Add(this.txtInfo);
-            this.tpInfo.Location = new System.Drawing.Point(4, 22);
-            this.tpInfo.Name = "tpInfo";
-            this.tpInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tpInfo.Size = new System.Drawing.Size(762, 340);
-            this.tpInfo.TabIndex = 1;
-            this.tpInfo.Text = "Output";
-            this.tpInfo.UseVisualStyleBackColor = true;
-            // 
-            // txtInfo
-            // 
-            this.txtInfo.AcceptsReturn = true;
-            this.txtInfo.AcceptsTab = true;
-            this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtInfo.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtInfo.Location = new System.Drawing.Point(3, 3);
-            this.txtInfo.Multiline = true;
-            this.txtInfo.Name = "txtInfo";
-            this.txtInfo.ReadOnly = true;
-            this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInfo.Size = new System.Drawing.Size(754, 333);
-            this.txtInfo.TabIndex = 0;
-            this.txtInfo.WordWrap = false;
-            // 
-            // tpSQLLog
-            // 
-            this.tpSQLLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpSQLLog.Controls.Add(this.txtSQLLog);
-            this.tpSQLLog.Location = new System.Drawing.Point(4, 22);
-            this.tpSQLLog.Name = "tpSQLLog";
-            this.tpSQLLog.Size = new System.Drawing.Size(762, 340);
-            this.tpSQLLog.TabIndex = 2;
-            this.tpSQLLog.Text = "SQL Log";
-            this.tpSQLLog.UseVisualStyleBackColor = true;
-            // 
-            // txtSQLLog
-            // 
-            this.txtSQLLog.AcceptsReturn = true;
-            this.txtSQLLog.AcceptsTab = true;
-            this.txtSQLLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSQLLog.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtSQLLog.Location = new System.Drawing.Point(0, 0);
-            this.txtSQLLog.Multiline = true;
-            this.txtSQLLog.Name = "txtSQLLog";
-            this.txtSQLLog.ReadOnly = true;
-            this.txtSQLLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtSQLLog.Size = new System.Drawing.Size(760, 339);
-            this.txtSQLLog.TabIndex = 1;
-            this.txtSQLLog.WordWrap = false;
-            // 
-            // tpTableAnalyze
-            // 
-            this.tpTableAnalyze.Controls.Add(this.webBrowser);
-            this.tpTableAnalyze.Location = new System.Drawing.Point(4, 22);
-            this.tpTableAnalyze.Name = "tpTableAnalyze";
-            this.tpTableAnalyze.Size = new System.Drawing.Size(762, 340);
-            this.tpTableAnalyze.TabIndex = 3;
-            this.tpTableAnalyze.Text = "Table Analyze";
-            this.tpTableAnalyze.UseVisualStyleBackColor = true;
-            // 
-            // webBrowser
-            // 
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(0, 0);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(762, 341);
-            this.webBrowser.TabIndex = 0;
+            this.tabControlEditors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlEditors.Location = new System.Drawing.Point(0, 0);
+            this.tabControlEditors.Name = "tabControlEditors";
+            this.tabControlEditors.SelectedIndex = 0;
+            this.tabControlEditors.Size = new System.Drawing.Size(770, 537);
+            this.tabControlEditors.TabIndex = 1;
             // 
             // menuStrip1
             // 
@@ -939,6 +821,7 @@
             this.btnDeleteConnection,
             this.toolStripSeparator1,
             this.cbActiveConnection,
+            this.btnAddEditor,
             this.btnExecuteSQL,
             this.btnExecuteScript,
             this.toolStripSeparator2,
@@ -996,6 +879,15 @@
             this.cbActiveConnection.Name = "cbActiveConnection";
             this.cbActiveConnection.Size = new System.Drawing.Size(200, 25);
             this.cbActiveConnection.SelectedIndexChanged += new System.EventHandler(this.cbActiveConnection_SelectedIndexChanged);
+            // 
+            // btnAddEditor
+            // 
+            this.btnAddEditor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnAddEditor.Image")));
+            this.btnAddEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddEditor.Name = "btnAddEditor";
+            this.btnAddEditor.Size = new System.Drawing.Size(23, 22);
+            this.btnAddEditor.Text = "Add New SQL Editor";
             // 
             // btnExecuteSQL
             // 
@@ -1118,15 +1010,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.menuStripTree.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
-            this.tabControl.ResumeLayout(false);
-            this.tpInfo.ResumeLayout(false);
-            this.tpInfo.PerformLayout();
-            this.tpSQLLog.ResumeLayout(false);
-            this.tpSQLLog.PerformLayout();
-            this.tpTableAnalyze.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnCloseSQLEditor)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -1142,10 +1026,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tpResults;
-        private System.Windows.Forms.TabPage tpInfo;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuNewConnection;
         private System.Windows.Forms.ContextMenuStrip menuStripTree;
@@ -1161,7 +1041,6 @@
         private System.Windows.Forms.ToolStripButton btnNewConnection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton btnExecuteSQL;
-        private System.Windows.Forms.TextBox txtInfo;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateSQL;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateSQLSelect;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateSQLInsert;
@@ -1209,19 +1088,14 @@
         private System.Windows.Forms.ToolStripMenuItem menuSelectCountsFromTables;
         private System.Windows.Forms.ToolStripMenuItem menuCompareDatabases;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.TabPage tpSQLLog;
-        private System.Windows.Forms.TextBox txtSQLLog;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateUIMetadata;
         private System.Windows.Forms.ToolStripMenuItem menuAnalyzeTable;
-        private System.Windows.Forms.TabPage tpTableAnalyze;
-        private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.ToolStripMenuItem menuGenerateSQLDump;
         private System.Windows.Forms.ToolStripMenuItem menuOpenConnectionsFile;
         private System.Windows.Forms.ToolStripMenuItem menuForEachTable;
         private System.Windows.Forms.ToolStripMenuItem menuForEachField;
         private System.Windows.Forms.ToolStripMenuItem menuCompareDirectories;
         private System.Windows.Forms.ToolStripMenuItem menuCreateTable;
-        private CinarSQLEditor txtSQL;
         private System.Windows.Forms.ToolStripMenuItem menuOpen;
         private System.Windows.Forms.ToolStripMenuItem menuSave;
         private System.Windows.Forms.ToolStripMenuItem menuSaveAs;
@@ -1242,6 +1116,9 @@
         private System.Windows.Forms.ToolStripButton btnSimpleIntegrationService;
         private System.Windows.Forms.ToolStripMenuItem menuSQLDump;
         private System.Windows.Forms.ToolStripButton btnSQLDump;
+        private System.Windows.Forms.PictureBox btnCloseSQLEditor;
+        private System.Windows.Forms.TabControl tabControlEditors;
+        private System.Windows.Forms.ToolStripButton btnAddEditor;
 
     }
 }
