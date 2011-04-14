@@ -49,18 +49,19 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Location = new System.Drawing.Point(12, 55);
+            this.grid.Location = new System.Drawing.Point(14, 72);
+            this.grid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grid.Name = "grid";
-            this.grid.Size = new System.Drawing.Size(482, 344);
+            this.grid.Size = new System.Drawing.Size(562, 450);
             this.grid.TabIndex = 7;
             // 
             // btnEditSelectedTask
             // 
             this.btnEditSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEditSelectedTask.AutoSize = true;
-            this.btnEditSelectedTask.Location = new System.Drawing.Point(282, 39);
+            this.btnEditSelectedTask.Location = new System.Drawing.Point(329, 51);
             this.btnEditSelectedTask.Name = "btnEditSelectedTask";
-            this.btnEditSelectedTask.Size = new System.Drawing.Size(94, 13);
+            this.btnEditSelectedTask.Size = new System.Drawing.Size(111, 17);
             this.btnEditSelectedTask.TabIndex = 5;
             this.btnEditSelectedTask.TabStop = true;
             this.btnEditSelectedTask.Text = "Edit Selected Test";
@@ -69,9 +70,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 39);
+            this.label1.Location = new System.Drawing.Point(15, 51);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 13);
+            this.label1.Size = new System.Drawing.Size(100, 17);
             this.label1.TabIndex = 3;
             this.label1.Text = "Scripting Tests :";
             // 
@@ -79,9 +80,9 @@
             // 
             this.btnAddNewTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddNewTask.AutoSize = true;
-            this.btnAddNewTask.Location = new System.Drawing.Point(200, 39);
+            this.btnAddNewTask.Location = new System.Drawing.Point(233, 51);
             this.btnAddNewTask.Name = "btnAddNewTask";
-            this.btnAddNewTask.Size = new System.Drawing.Size(75, 13);
+            this.btnAddNewTask.Size = new System.Drawing.Size(90, 17);
             this.btnAddNewTask.TabIndex = 4;
             this.btnAddNewTask.TabStop = true;
             this.btnAddNewTask.Text = "Add New Test";
@@ -91,9 +92,9 @@
             // 
             this.btnDeleteSelectedTask.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDeleteSelectedTask.AutoSize = true;
-            this.btnDeleteSelectedTask.Location = new System.Drawing.Point(386, 39);
+            this.btnDeleteSelectedTask.Location = new System.Drawing.Point(450, 51);
             this.btnDeleteSelectedTask.Name = "btnDeleteSelectedTask";
-            this.btnDeleteSelectedTask.Size = new System.Drawing.Size(107, 13);
+            this.btnDeleteSelectedTask.Size = new System.Drawing.Size(126, 17);
             this.btnDeleteSelectedTask.TabIndex = 6;
             this.btnDeleteSelectedTask.TabStop = true;
             this.btnDeleteSelectedTask.Text = "Delete Selected Test";
@@ -103,18 +104,19 @@
             // 
             this.cbCategories.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCategories.FormattingEnabled = true;
-            this.cbCategories.Location = new System.Drawing.Point(100, 6);
+            this.cbCategories.Location = new System.Drawing.Point(117, 8);
+            this.cbCategories.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbCategories.Name = "cbCategories";
-            this.cbCategories.Size = new System.Drawing.Size(155, 21);
+            this.cbCategories.Size = new System.Drawing.Size(180, 25);
             this.cbCategories.TabIndex = 1;
             this.cbCategories.SelectedIndexChanged += new System.EventHandler(this.cbCategories_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 9);
+            this.label2.Location = new System.Drawing.Point(15, 12);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 13);
+            this.label2.Size = new System.Drawing.Size(95, 17);
             this.label2.TabIndex = 0;
             this.label2.Text = "Select Subject :";
             // 
@@ -123,7 +125,7 @@
             this.btnRunTests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRunTests.AutoSize = true;
             this.btnRunTests.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.btnRunTests.Location = new System.Drawing.Point(261, 9);
+            this.btnRunTests.Location = new System.Drawing.Point(304, 12);
             this.btnRunTests.Name = "btnRunTests";
             this.btnRunTests.Size = new System.Drawing.Size(65, 13);
             this.btnRunTests.TabIndex = 2;
@@ -139,9 +141,9 @@
             // 
             // FormScriptingTest
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 411);
+            this.ClientSize = new System.Drawing.Size(590, 537);
             this.Controls.Add(this.btnRunTests);
             this.Controls.Add(this.cbCategories);
             this.Controls.Add(this.label2);
@@ -150,6 +152,8 @@
             this.Controls.Add(this.btnAddNewTask);
             this.Controls.Add(this.btnDeleteSelectedTask);
             this.Controls.Add(this.grid);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormScriptingTest";
             this.Text = "Çınar Scripting Testing & Learning Center";
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();

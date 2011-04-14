@@ -37,18 +37,21 @@
             // lbTables
             // 
             this.lbTables.FormattingEnabled = true;
-            this.lbTables.Location = new System.Drawing.Point(13, 26);
+            this.lbTables.ItemHeight = 17;
+            this.lbTables.Location = new System.Drawing.Point(15, 34);
+            this.lbTables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbTables.Size = new System.Drawing.Size(267, 199);
+            this.lbTables.Size = new System.Drawing.Size(311, 259);
             this.lbTables.TabIndex = 1;
             // 
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(126, 231);
+            this.btnOK.Location = new System.Drawing.Point(147, 302);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(87, 30);
             this.btnOK.TabIndex = 2;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -56,9 +59,10 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(207, 231);
+            this.button1.Location = new System.Drawing.Point(241, 302);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(87, 30);
             this.button1.TabIndex = 3;
             this.button1.Text = "Cancel";
             this.button1.UseVisualStyleBackColor = true;
@@ -66,22 +70,24 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 7);
+            this.label1.Location = new System.Drawing.Point(15, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 13);
+            this.label1.Size = new System.Drawing.Size(162, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select one or more tables:";
             // 
             // ListBoxDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 263);
+            this.ClientSize = new System.Drawing.Size(341, 344);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.lbTables);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ListBoxDialog";
             this.Text = " Çınar DBTools";
             this.ResumeLayout(false);

@@ -422,6 +422,7 @@
     <None Include="Resources\Property.PNG" />
     <None Include="Resources\Struct.PNG" />
     <None Include="Resources\disk.png" />
+    <Content Include="ToDo.txt" />
     <Content Include="yaprak.ico" />
     <Content Include="_library\ICSharpCode.TextEditor.dll" />
     <Content Include="_library\Menees.dll" />
