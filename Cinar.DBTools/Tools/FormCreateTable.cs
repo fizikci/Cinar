@@ -53,6 +53,25 @@ namespace Cinar.DBTools.Tools
                 }
             return tbl;
         }
+
+        internal void SetTable(Table table)
+        {
+            txtTableName.Text = table.Name;
+            List<FieldDef> fields = new List<FieldDef>();
+            foreach (Field f in table.Fields)
+            {
+                fields.Add(new FieldDef { 
+                    DefaultValue = f.DefaultValue,
+                    FieldType = f.FieldType.ToString(),
+                    IsAutoIncrement = f.IsAutoIncrement,
+                    IsNullable = f.IsNullable,
+                    IsPrimaryKey = f.IsPrimaryKey,
+                    Length = (int)f.Length,
+                    Name = f.Name
+                });
+            }
+            fieldCollectionBindingSource.DataSource = fields;
+        }
     }
 
     public class FieldDef

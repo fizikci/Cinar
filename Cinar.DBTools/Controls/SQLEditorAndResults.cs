@@ -34,6 +34,8 @@ namespace Cinar.DBTools.Controls
             {
                 InitialText = txtSQL.Text = "";
             }
+
+            txtSQLLog.Document.ReadOnly = true;
         }
 
         public string InitialText;
@@ -44,7 +46,8 @@ namespace Cinar.DBTools.Controls
             }
         }
 
-        public TextBox SQLLog {
+        public CinarSQLEditor SQLLog
+        {
             get
             {
                 return txtSQLLog;

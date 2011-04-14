@@ -47,14 +47,15 @@
             // numInterval
             // 
             this.numInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numInterval.Location = new System.Drawing.Point(541, 42);
+            this.numInterval.Location = new System.Drawing.Point(631, 55);
+            this.numInterval.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.numInterval.Maximum = new decimal(new int[] {
             2000000,
             0,
             0,
             0});
             this.numInterval.Name = "numInterval";
-            this.numInterval.Size = new System.Drawing.Size(59, 20);
+            this.numInterval.Size = new System.Drawing.Size(69, 25);
             this.numInterval.TabIndex = 9;
             this.numInterval.ThousandsSeparator = true;
             // 
@@ -62,9 +63,9 @@
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(443, 45);
+            this.label7.Location = new System.Drawing.Point(517, 59);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(92, 13);
+            this.label7.Size = new System.Drawing.Size(108, 17);
             this.label7.TabIndex = 8;
             this.label7.Text = "Exec. Interval (s) :";
             // 
@@ -72,18 +73,19 @@
             // 
             this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtName.Location = new System.Drawing.Point(64, 13);
+            this.txtName.Location = new System.Drawing.Point(75, 17);
+            this.txtName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(313, 20);
+            this.txtName.Size = new System.Drawing.Size(364, 25);
             this.txtName.TabIndex = 1;
             this.txtName.Text = "Ajans insert";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 16);
+            this.label5.Location = new System.Drawing.Point(8, 21);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 13);
+            this.label5.Size = new System.Drawing.Size(50, 17);
             this.label5.TabIndex = 0;
             this.label5.Text = "Name :";
             // 
@@ -92,18 +94,19 @@
             this.cbDstDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbDstDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDstDb.FormattingEnabled = true;
-            this.cbDstDb.Location = new System.Drawing.Point(275, 41);
+            this.cbDstDb.Location = new System.Drawing.Point(321, 54);
+            this.cbDstDb.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbDstDb.Name = "cbDstDb";
-            this.cbDstDb.Size = new System.Drawing.Size(160, 21);
+            this.cbDstDb.Size = new System.Drawing.Size(186, 25);
             this.cbDstDb.TabIndex = 7;
             // 
             // label6
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(243, 44);
+            this.label6.Location = new System.Drawing.Point(283, 58);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(26, 13);
+            this.label6.Size = new System.Drawing.Size(30, 17);
             this.label6.TabIndex = 6;
             this.label6.Text = "To :";
             // 
@@ -113,17 +116,18 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSrcDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSrcDb.FormattingEnabled = true;
-            this.cbSrcDb.Location = new System.Drawing.Point(64, 41);
+            this.cbSrcDb.Location = new System.Drawing.Point(75, 54);
+            this.cbSrcDb.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbSrcDb.Name = "cbSrcDb";
-            this.cbSrcDb.Size = new System.Drawing.Size(173, 21);
+            this.cbSrcDb.Size = new System.Drawing.Size(201, 25);
             this.cbSrcDb.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 44);
+            this.label2.Location = new System.Drawing.Point(8, 58);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.Size = new System.Drawing.Size(45, 17);
             this.label2.TabIndex = 4;
             this.label2.Text = "From :";
             // 
@@ -131,17 +135,18 @@
             // 
             this.txtCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCategory.Location = new System.Drawing.Point(435, 13);
+            this.txtCategory.Location = new System.Drawing.Point(507, 17);
+            this.txtCategory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtCategory.Name = "txtCategory";
-            this.txtCategory.Size = new System.Drawing.Size(165, 20);
+            this.txtCategory.Size = new System.Drawing.Size(192, 25);
             this.txtCategory.TabIndex = 3;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(383, 16);
+            this.label1.Location = new System.Drawing.Point(447, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.Size = new System.Drawing.Size(55, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Project :";
             // 
@@ -149,9 +154,10 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(433, 441);
+            this.btnOK.Location = new System.Drawing.Point(505, 577);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(87, 30);
             this.btnOK.TabIndex = 11;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -160,9 +166,10 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(525, 441);
+            this.btnCancel.Location = new System.Drawing.Point(612, 577);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(87, 30);
             this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -173,16 +180,17 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCode.IsReadOnly = false;
-            this.txtCode.Location = new System.Drawing.Point(10, 73);
+            this.txtCode.Location = new System.Drawing.Point(12, 95);
+            this.txtCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtCode.Name = "txtCode";
-            this.txtCode.Size = new System.Drawing.Size(590, 362);
+            this.txtCode.Size = new System.Drawing.Size(688, 473);
             this.txtCode.TabIndex = 10;
             // 
             // FormDBIntegrationTask
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 474);
+            this.ClientSize = new System.Drawing.Size(714, 620);
             this.Controls.Add(this.txtCode);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -196,6 +204,8 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.cbSrcDb);
             this.Controls.Add(this.label2);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormDBIntegrationTask";
             this.Text = "Çınar Database Integration Task";
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).EndInit();

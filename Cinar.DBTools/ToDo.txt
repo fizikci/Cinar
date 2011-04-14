@@ -1,0 +1,85 @@
+﻿Database
+[test] - New Connection
+[ok] - Edit Connection
+[ok] - Delete Connection
+[ok] - Refresh Nodes
+[ok] - Refresh Metadata
+[ok] - Generate UI Metadata
+Create Database
+Drop database
+Truncate database
+Empty database
+Create => Table, View, Trigger, Procedure, Function
+Backup database
+Transfer Database...
+Execute SQL from file
+Show database ER Diagram
+
+Diagrams
+[ok] - New ER diagram
+
+Diagram
+[ok] - Open ER Diagram
+[ok] - Delete diagram
+[ok] - New ER Diagram
+
+Tables
+- Create table...
+1. Transfer Tables..
+2. Backup tables as SQL dump
+
+Table
+- Count
+- Top 1000
+- Drop
+- Analyze
+- Generate SQL => Select, INSER, UPDATE, CREATE, [Delete]
+- Generate UI Metadata
+2. Transfer table...
+3. Open table
+4. Create Table
+5. Alter table
+6. Manage Indexes...
+7. Relationships/Foreign Keys...
+8. Rename
+9. Truncate
+10. Drop
+11. Reorder columns
+12. Change table type
+13. Backup table => SQL Dump, Other format
+14. Import table from CSV
+
+Fields:
+1. Modify fields
+
+Field:
+1. Drop field
+2. Modify field
+- Distinct
+- Max
+- Min
+- Grouped Counts
+- Generate UI Metadata
+
+Indexes:
+1. Create index
+
+Views:
+1. Create view
+
+Triggers:
+1. Create trigger
+
+Stored procedures
+1. Create Procedure
+
+Functions:
+1. Create fumction
+
+Other:
+1. Make grid editable
+2. Put paging on top of grid
+3. [ok] Put time/exec time at the beginning of each history lines.
+4. [ok] convert history SQLs to one line
+5. Make "analyze table" better
+6. Put ER Diagram window into the main window tabs
