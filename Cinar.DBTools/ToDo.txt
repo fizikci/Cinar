@@ -9,7 +9,7 @@ Create Database
 Drop database
 Truncate database
 Empty database
-Create => Table, View, Trigger, Procedure, Function
+[ok] Create => Table, View, Trigger, Procedure, Function
 Backup database
 Transfer Database...
 Execute SQL from file
@@ -24,57 +24,57 @@ Diagram
 [ok] - New ER Diagram
 
 Tables
-- Create table...
-1. Transfer Tables..
-2. Backup tables as SQL dump
+[ok] - Create table...
+ - Transfer Tables..
+ - Backup tables as SQL dump
 
 Table
-- Count
-- Top 1000
-- Drop
-- Analyze
+[ok] - Count
+[ok] - Top 1000
+[ok] - Drop
+[ok] - Analyze
 - Generate SQL => Select, INSER, UPDATE, CREATE, [Delete]
-- Generate UI Metadata
-2. Transfer table...
-3. Open table
-4. Create Table
-5. Alter table
-6. Manage Indexes...
-7. Relationships/Foreign Keys...
-8. Rename
-9. Truncate
-10. Drop
-11. Reorder columns
-12. Change table type
-13. Backup table => SQL Dump, Other format
-14. Import table from CSV
+[ok] - Generate UI Metadata
+ - Transfer table...
+ - Open table
+ - Create Table
+[ok] - Alter table
+ - Manage Indexes...
+ - Relationships/Foreign Keys...
+ - Rename
+ - Truncate
+ - Drop
+ - Reorder columns
+ - Change table type
+ - Backup table => SQL Dump, Other format
+ - Import table from CSV
 
 Fields:
-1. Modify fields
+ - Modify fields
 
 Field:
-1. Drop field
-2. Modify field
-- Distinct
-- Max
-- Min
-- Grouped Counts
-- Generate UI Metadata
+ - Drop field
+ - Modify field
+ - Distinct
+ - Max
+ - Min
+ - Grouped Counts
+ - Generate UI Metadata
 
 Indexes:
-1. Create index
+ - Create index
 
 Views:
-1. Create view
+ - Create view
 
 Triggers:
-1. Create trigger
+ - Create trigger
 
 Stored procedures
-1. Create Procedure
+ - Create Procedure
 
 Functions:
-1. Create fumction
+ - Create fumction
 
 Other:
 1. Make grid editable

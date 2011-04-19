@@ -74,13 +74,14 @@ namespace Cinar.Database.Tools
             if (transferData)
             {
                 Table srcTable = dbSrc.Tables[tableName];
-                foreach (Field f in srcTable.Fields)
-                    if (f.IsDateType())
-                    {
-                        int res = dbSrc.ExecuteNonQuery("update " + srcTable.Name + " set " + f.Name + "='1980-01-01 00:00' where " + f.Name + "<'1980-01-01 00:00'");
-                        if (res > 0)
-                            logLine(res + " kayıt için " + srcTable.Name + "." + f.Name + " alanı düzeltildi");
-                    }
+                //TODO: aktarımda datetime hatasına bir çözüm bul, aşağıdaki çözüm çok kötü.
+                //foreach (Field f in srcTable.Fields)
+                //    if (f.IsDateType())
+                //    {
+                //        int res = dbSrc.ExecuteNonQuery("update " + srcTable.Name + " set " + f.Name + "='1980-01-01 00:00' where " + f.Name + "<'1980-01-01 00:00'");
+                //        if (res > 0)
+                //            logLine(res + " kayıt için " + srcTable.Name + "." + f.Name + " alanı düzeltildi");
+                //    }
 
                 for (; i < rowCount; i += pageSize)
                 {
@@ -100,8 +101,16 @@ namespace Cinar.Database.Tools
                     {
                         System.Collections.Hashtable drDest = new System.Collections.Hashtable();//newRow(dbDst, prefix + tableName);
                         foreach (DataColumn dc in dt.Columns)
-                            if (!dr.IsNull(dc) && dtDestSample.Columns[dc.ColumnName]!=null)
-                                drDest[dc.ColumnName] = Convert.ChangeType(dr[dc], dtDestSample.Columns[dc.ColumnName].DataType);
+                            if (!dr.IsNull(dc) && dtDestSample.Columns[dc.ColumnName] != null)
+                            {
+                                try
+                                {
+                                    drDest[dc.ColumnName] = Convert.ChangeType(dr[dc], dtDestSample.Columns[dc.ColumnName].DataType);
+                                }
+                                catch(Exception ex) {
+                                    log("Transfer error for " + tableName + "." + dc.ColumnName + ": " + ex.Message);
+                                }
+                            }
 
                         dbDst.Insert(prefix + tableName, drDest, false);
                         transferedRows++;

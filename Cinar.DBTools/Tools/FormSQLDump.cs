@@ -22,11 +22,11 @@ namespace Cinar.DBTools.Tools
 
             foreach (ConnectionSettings cs in Provider.Connections)
                 cbDbSrc.Items.Add(cs);
-            cbDbSrc.SelectedIndex = 0;
+            cbDbSrc.SelectedIndex = cbDbSrc.Items.IndexOf(Provider.ActiveConnection);
 
             foreach (object o in Enum.GetValues(typeof(DatabaseProvider)))
                 cbProvider.Items.Add(o);
-            cbProvider.SelectedIndex = 0;
+            cbProvider.SelectedIndex = cbProvider.Items.IndexOf(Provider.Database.Provider);
         }
 
         private void cbDbSrc_SelectedIndexChanged(object sender, EventArgs e)
@@ -55,6 +55,7 @@ namespace Cinar.DBTools.Tools
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             DBDump dbDump = (DBDump)e.Argument;
+            File.WriteAllText(dbDump.FilePath, "");
             foreach (var tableName in dbDump.TableList)
             {
                 Table t = dbDump.Database.Tables[tableName];

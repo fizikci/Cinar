@@ -274,7 +274,7 @@ namespace Cinar.DBTools.Tools
 
         private void btnScriptInclude_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            TextInputDialog tid = new TextInputDialog();
+            ScriptInputDialog tid = new ScriptInputDialog();
             tid.TextInput = integData.ScriptIncludeCode;
 
             if (tid.ShowDialog() == DialogResult.OK)

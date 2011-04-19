@@ -17,6 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
@@ -105,7 +106,8 @@ namespace Cinar.Database.Providers
                 {
                     Field f = new Field();
                     f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
-                    f.FieldType = StringToDbType(drColumn["DATA_TYPE"].ToString());
+                    f.FieldTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
+                    f.FieldType = StringToDbType(f.FieldTypeOriginal);
                     f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt32(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
                     f.IsNullable = drColumn["IS_NULLABLE"].ToString() != "NO";
                     f.Name = drColumn["COLUMN_NAME"].ToString();
@@ -148,14 +150,15 @@ namespace Cinar.Database.Providers
 
         }
 
+        #region string <=> dbType conversion
+
         /// <summary>
         /// Veritabanından string olarak gelen field tip bilgisini DbType enum'una dönüştürür.
         /// </summary>
         public DbType StringToDbType(string typeName)
         {
-            foreach (var elm in DEFStringToDbType)
-                if (elm.Key.ToLowerInvariant().Equals(typeName.ToLowerInvariant()))
-                    return elm.Value;
+            if (DEFStringToDbType.ContainsKey(typeName.ToUpperInvariant()))
+                return DEFStringToDbType[typeName];
             return DbType.Undefined;
         }
 
@@ -164,92 +167,98 @@ namespace Cinar.Database.Providers
         /// </summary>
         public string DbTypeToString(DbType dbType)
         {
-            foreach (var elm in DEFDbTypeToString)
-                if (elm.Key == dbType)
-                    return elm.Value;
+            if (DEFDbTypeToString.ContainsKey(dbType))
+                return DEFDbTypeToString[dbType];
             return "???";
         }
 
         public static Dictionary<DbType, string> DEFDbTypeToString = new Dictionary<DbType, string>() 
         { 
-            {DbType.Binary, "Binary"},
-            {DbType.Blob , "Blob"},
-            {DbType.BlobLong , "Image"},
-            {DbType.BlobMedium, "BlobMedium"},
-            {DbType.BlobTiny, "BlobTiny"},
-            {DbType.Boolean, "Bit"},
-            {DbType.Byte, "Tinyint"},
-            {DbType.Char, "Char"},
-            {DbType.Currency, "Money"},
-            {DbType.CurrencySmall, "SmallMoney"},
-            {DbType.Date, "Date"},
-            {DbType.DateTime, "DateTime"},
-            {DbType.DateTimeSmall, "SmallDateTime"},
-            {DbType.Decimal, "Decimal"},
-            {DbType.Double, "Decimal"},
-            {DbType.Enum, "Varchar"},
-            {DbType.Float, "Float"},
-            {DbType.Guid, "Uniqueidentifier"},
-            {DbType.Image, "Image"},
-            {DbType.Int16, "SmallInt"},
-            {DbType.Int32, "Int"},
-            {DbType.Int64, "Bigint"},
-            {DbType.NChar, "NChar"},
-            {DbType.NText, "NText"},
-            {DbType.Numeric, "Numeric"},
-            {DbType.NVarChar, "NVarChar"},
-            {DbType.Real, "Real"},
-            {DbType.Set, "Varchar"},
-            {DbType.Text, "Text"},
-            {DbType.TextLong, "Text"},
-            {DbType.TextMedium, "Text"},
-            {DbType.TextTiny, "Text"},
-            {DbType.Time, "Time"},
-            {DbType.Timestamp, "timestamp"},
-            {DbType.Timestamptz, "Timestamp"},
-            {DbType.Timetz, "Time"},
-            {DbType.Undefined, "???"},
-            {DbType.VarBinary, "Varbinary"},
-            {DbType.VarChar, "VarChar"},
-            {DbType.Variant, "Sql_variant"},
-            {DbType.Xml, "Xml"}
+            {DbType.Binary,         "BINARY"},
+            {DbType.Blob ,          "BLOB"},
+            {DbType.BlobLong ,      "IMAGE"},
+            {DbType.BlobMedium,     "BLOBMEDIUM"},
+            {DbType.BlobTiny,       "BLOBTINY"},
+            {DbType.Boolean,        "BIT"},
+            {DbType.Byte,           "TINYINT"},
+            {DbType.Char,           "CHAR"},
+            {DbType.Currency,       "MONEY"},
+            {DbType.CurrencySmall,  "SMALLMONEY"},
+            {DbType.Date,           "DATE"},
+            {DbType.DateTime,       "DATETIME"},
+            {DbType.DateTimeSmall,  "SMALLDATETIME"},
+            {DbType.Decimal,        "DECIMAL"},
+            {DbType.Double,         "DECIMAL"},
+            {DbType.Enum,           "VARCHAR"},
+            {DbType.Float,          "FLOAT"},
+            {DbType.Guid,           "UNIQUEIDENTIFIER"},
+            {DbType.Image,          "IMAGE"},
+            {DbType.Int16,          "SMALLINT"},
+            {DbType.Int32,          "INT"},
+            {DbType.Int64,          "BIGINT"},
+            {DbType.NChar,          "NCHAR"},
+            {DbType.NText,          "NTEXT"},
+            {DbType.Numeric,        "NUMERIC"},
+            {DbType.NVarChar,       "NVARCHAR"},
+            {DbType.Real,           "REAL"},
+            {DbType.Set,            "VARCHAR"},
+            {DbType.Text,           "TEXT"},
+            {DbType.TextLong,       "TEXT"},
+            {DbType.TextMedium,     "TEXT"},
+            {DbType.TextTiny,       "TEXT"},
+            {DbType.Time,           "TIME"},
+            {DbType.Timestamp,      "TIMESTAMP"},
+            {DbType.Timestamptz,    "TIMESTAMP"},
+            {DbType.Timetz,         "TIME"},
+            {DbType.Undefined,      "???"},
+            {DbType.VarBinary,      "VARBINARY"},
+            {DbType.VarChar,        "VARCHAR"},
+            {DbType.Variant,        "SQL_VARIANT"},
+            {DbType.Xml,            "XML"}
         };
 
         public static Dictionary<string, DbType> DEFStringToDbType = new Dictionary<string, DbType>()
         {
-            {"Binary", DbType.Binary},
-            {"Blob", DbType.Blob},
-            {"BlobLong", DbType.BlobLong},
-            {"BlobMedium", DbType.BlobMedium},
-            {"BlobTiny", DbType.BlobTiny},
-            {"Bit", DbType.Boolean},
-            {"Tinyint", DbType.Byte},
-            {"Char", DbType.Char},
-            {"Money", DbType.Currency},
-            {"SmallMoney", DbType.CurrencySmall},
-            {"Date", DbType.Date},
-            {"DateTime", DbType.DateTime},
-            {"SmallDateTime", DbType.DateTimeSmall},
-            {"Decimal", DbType.Decimal},
-            {"Float", DbType.Float},
-            {"Uniqueidentifier", DbType.Guid},
-            {"Image", DbType.Image},
-            {"SmallInt", DbType.Int16},
-            {"Int", DbType.Int32},
-            {"Bigint", DbType.Int64},
-            {"NChar", DbType.NChar},
-            {"NText", DbType.NText},
-            {"Numeric", DbType.Numeric},
-            {"NVarChar", DbType.NVarChar},
-            {"Real", DbType.Real},
-            {"Text", DbType.Text},
-            {"Time", DbType.Time},
-            {"Timestamp", DbType.Timestamp},
-            {"Varbinary", DbType.VarBinary},
-            {"VarChar", DbType.VarChar},
-            {"Sql_variant", DbType.Variant},
-            {"Xml", DbType.Xml}
+            {"BINARY",              DbType.Binary},
+            {"BLOB",                DbType.Blob},
+            {"BLOBLONG",            DbType.BlobLong},
+            {"BLOBMEDIUM",          DbType.BlobMedium},
+            {"BLOBTINY",            DbType.BlobTiny},
+            {"BIT",                 DbType.Boolean},
+            {"TINYINT",             DbType.Byte},
+            {"CHAR",                DbType.Char},
+            {"MONEY",               DbType.Currency},
+            {"SMALLMONEY",          DbType.CurrencySmall},
+            {"DATE",                DbType.Date},
+            {"DATETIME",            DbType.DateTime},
+            {"SMALLDATETIME",       DbType.DateTimeSmall},
+            {"DECIMAL",             DbType.Decimal},
+            {"FLOAT",               DbType.Float},
+            {"UNIQUEIDENTIFIER",    DbType.Guid},
+            {"IMAGE",               DbType.Image},
+            {"SMALLINT",            DbType.Int16},
+            {"INT",                 DbType.Int32},
+            {"BIGINT",              DbType.Int64},
+            {"NCHAR",               DbType.NChar},
+            {"NTEXT",               DbType.NText},
+            {"NUMERIC",             DbType.Numeric},
+            {"NVARCHAR",            DbType.NVarChar},
+            {"REAL",                DbType.Real},
+            {"TEXT",                DbType.Text},
+            {"TIME",                DbType.Time},
+            {"TIMESTAMP",           DbType.Timestamp},
+            {"VARBINARY",           DbType.VarBinary},
+            {"VARCHAR",             DbType.VarChar},
+            {"SQL_VARIANT",         DbType.Variant},
+            {"XML",                 DbType.Xml}
         };
+
+        public string[] GetFieldTypes()
+        {
+            return DEFStringToDbType.Keys.ToArray();
+        }
+
+        #endregion
 
         #region INFORMATION_SCHEMA SQL İFADELERİ
         // tablolar
@@ -300,7 +309,6 @@ namespace Cinar.Database.Providers
 												TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME AND
 												TBL3.CONSTRAINT_NAME = UNIQUE_CONSTRAINT_NAME";
         #endregion
-
 
         #region IDatabaseProvider Members
         public IDbConnection CreateConnection()
@@ -354,20 +362,29 @@ namespace Cinar.Database.Providers
             foreach (Field f in table.Fields)
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
+            foreach (Key k in table.Keys.OrderBy(k => k.Name))
+                if (k.IsPrimary || k.IsUnique)
+                    sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
+
             sbFields = sbFields.Remove(sbFields.Length - len, len);
 
-            StringBuilder sbKeys = new StringBuilder();
-            foreach (Key k in table.Keys)
-                sbKeys.Append(GetIndexKeyDDL(k) + ";" + Environment.NewLine);
-
-            return String.Format("CREATE {0} [{1}]({3}{2});{3}{4}",
+            return String.Format("CREATE {0} [{1}](\n{2});" + Environment.NewLine,
                 (table.IsView ? "VIEW" : "TABLE"),
                 table.Name,
-                sbFields.ToString(),
-                Environment.NewLine,
-                sbKeys.ToString());
+                sbFields);
         }
 
+        private string GetIndexKeyDDL(Key key)
+        {
+            if (key.IsPrimary)
+            {
+                if (string.IsNullOrEmpty(key.Name)) key.Name = "pk_" + key.parent.table.Name;
+                return "CONSTRAINT [" + key.Name + "] PRIMARY KEY ([" + String.Join("], [", key.Fields.ToStringArray()) + "])";
+            }
+
+            return "CONSTRAINT [" + key.Name + "] UNIQUE  ([" + String.Join("], [", key.Fields.ToStringArray()) + "])";
+        }
+        /*
         private string GetIndexKeyDDL(Key key)
         {
             if (key.IsPrimary)
@@ -386,7 +403,7 @@ namespace Cinar.Database.Providers
                     key.parent.table.Name,
                     String.Join("], [", key.Fields.ToStringArray()));
         }
-
+        */
         public string GetFieldDDL(Field f)
         {
             string fieldDDL = "[" + f.Name + "] " + f.Table.Database.dbProvider.DbTypeToString(f.FieldType);

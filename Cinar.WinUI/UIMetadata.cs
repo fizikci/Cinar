@@ -30,7 +30,7 @@ namespace Cinar.WinUI
                     Assembly plugInAssembly = Assembly.LoadFile(plugInPath);
                     foreach (Type type in plugInAssembly.GetTypes())
                     {
-                        if (type != typeof(ListEntity) && !type.IsInterface && type.GetInterface("IInterpressForm") != null)
+                        if (type != typeof(ListEntity) && !type.IsInterface && type.GetInterface("ICinarForm") != null)
                         {
                             EditFormAttribute editForm = (EditFormAttribute)type.GetAttribute(typeof(EditFormAttribute));
                             editForm.FormType = type;

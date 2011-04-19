@@ -39,6 +39,7 @@ namespace Cinar.Database
         /// <summary>
         /// Tablonun adı
         /// </summary>
+        [Description("Name of the table"), Category("DDL")]
         public string Name
         {
             get { return name; }
@@ -48,7 +49,7 @@ namespace Cinar.Database
         /// <summary>
         /// Hangi veritabanına ait?
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public Database Database
         {
             get { return this.parent.db; }
@@ -58,6 +59,7 @@ namespace Cinar.Database
         /// <summary>
         /// Tablonun fieldlarını listeler
         /// </summary>
+        [Browsable(false)]
         public FieldCollection Fields
         {
             get { return fields; }
@@ -67,19 +69,20 @@ namespace Cinar.Database
         /// <summary>
         /// Bu tablonun (varsa) tek alan üzerinde tanımlanmış Primary Key alanı.
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Description("Primary field if exists"), Category("Extra Info")]
         public Field PrimaryField
         {
             get
             {
-                foreach(Key key in this.Keys)
-                    if(key.IsPrimary && key.FieldNames.Count==1)
-                        return this.Fields[key.FieldNames[0]];
+                if(this.Keys!=null)
+                    foreach(Key key in this.Keys)
+                        if(key.IsPrimary && key.FieldNames.Count==1)
+                            return this.Fields[key.FieldNames[0]];
                 return null;
             }
         }
 
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public TableTypes DiscoveredTableType
         {
             get
@@ -89,6 +92,7 @@ namespace Cinar.Database
         }
 
         private string stringFieldName;
+        [Description("Name of the string representation field"), Category("Extra Info")]
         public string StringFieldName
         {
             get { return stringFieldName; }
@@ -99,7 +103,7 @@ namespace Cinar.Database
         /// Bu tablonun sahip olduğu string tipindeki ilk alan
         /// Human readable birşeyler lazım olduğunda kullanılabilir.
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public Field StringField
         {
             get
@@ -122,7 +126,7 @@ namespace Cinar.Database
         /// Bu tablonun fieldlarının bağımlı olduğu tabloların listesi.
         /// Dolayısıyla bu tabloya ait bir kayıt, bu özellik tarafından listelenen tablolardaki ilişkili kayıtların child'ı olmuş olur.
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public TableCollection ReferenceTables
         {
             get
@@ -142,7 +146,7 @@ namespace Cinar.Database
         /// <summary>
         /// Bu tabloya bağımlı başka tablolardaki fieldlar.
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public TableCollection ReferencedByTables
         {
             get
@@ -152,7 +156,7 @@ namespace Cinar.Database
                     referencedByTables = new TableCollection(this.Database);
                     foreach (Table tbl in this.Database.Tables)
                         foreach (Field f in tbl.Fields)
-                            if (f.ReferenceField == this.PrimaryField)
+                            if (f.ReferenceField!=null && f.ReferenceField == this.PrimaryField)
                                 referencedByTables.Add(f.Table);
                 }
                 return referencedByTables;
@@ -164,6 +168,7 @@ namespace Cinar.Database
         /// <summary>
         /// Tablonun keylerini listeler
         /// </summary>
+        [Browsable(false)]
         public KeyCollection Keys
         {
             get { return keys; }
@@ -177,6 +182,7 @@ namespace Cinar.Database
         /// Yoksa bu bir View mi? View'ler tablolara çok benzedikleri için ayrıca bir View sınıfı tanımlamadık.
         /// Bu alan size elinizdeki tablonun view mi, yoksa table mı olduğunu söyleyecektir.
         /// </summary>
+        [Description("Is just a view?"), Category("DDL")]
         public bool IsView
         {
             get { return isView; }

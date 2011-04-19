@@ -66,6 +66,10 @@ namespace Cinar.Database
             get { return isUnique; }
             set { isUnique = value; }
         }
+
+        public Key() {
+            this.fieldNames = new List<string>();
+        }
     }
 
     [Serializable]

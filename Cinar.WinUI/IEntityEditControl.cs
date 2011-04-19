@@ -10,7 +10,7 @@ using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {
-    public interface IInterpressForm
+    public interface ICinarForm
     {
         CommandCollection GetCommands();
         string GetTitle();
@@ -18,7 +18,7 @@ namespace Cinar.WinUI
         
     }
 
-    public interface IEntityEditControl : IInterpressForm
+    public interface IEntityEditControl : ICinarForm
     {
         Type GetEntityType();
         List<ColumnDefinition> GetVisibleColumns();

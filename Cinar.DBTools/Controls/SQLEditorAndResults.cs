@@ -136,6 +136,7 @@ namespace Cinar.DBTools.Controls
             if (string.IsNullOrEmpty(filePath))
                 return SaveAs();
 
+            InitialText = txtSQL.Text;
             txtSQL.SaveFile(filePath);
             return true;
         }
@@ -146,6 +147,7 @@ namespace Cinar.DBTools.Controls
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 filePath = sfd.FileName;
+                InitialText = txtSQL.Text;
                 txtSQL.SaveFile(filePath);
                 return true;
             }

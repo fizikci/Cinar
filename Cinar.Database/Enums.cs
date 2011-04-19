@@ -55,4 +55,21 @@ namespace Cinar.Database
 
         Undefined
     }
+
+    public enum SimpleDbType
+    {
+        Boolean,
+
+        Integer,
+        
+        Float,
+
+        DateTime,
+
+        String,
+        
+        Text,
+        
+        ByteArray
+    }
 }

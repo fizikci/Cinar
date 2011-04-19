@@ -40,5 +40,7 @@ namespace Cinar.Database
 
         string GetTableDDL(Table table);
         string GetFieldDDL(Field field);
+
+        string[] GetFieldTypes();
     }
 }
