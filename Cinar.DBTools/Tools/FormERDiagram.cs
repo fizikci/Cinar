@@ -379,7 +379,7 @@ namespace Cinar.DBTools.Tools
                                 IsNullable = false
                             }};
 
-            tbl.Keys = new KeyCollection(tbl) {new Key
+            tbl.Indices = new IndexCollection(tbl) {new Index
                           {
                               IsPrimary = true,
                               FieldNames = new List<string> {"Id"},
@@ -456,18 +456,18 @@ namespace Cinar.DBTools.Tools
             if (selectedTVs.Count != 1)
                 return;
 
-            Key key = conn.Database.Tables[selectedTVs[0].TableName].Keys.Find(k => k.IsPrimary);
-            if (key == null)
+            Index index = conn.Database.Tables[selectedTVs[0].TableName].Indices.Find(k => k.IsPrimary);
+            if (index == null)
             {
-                key = new Key();
-                key.IsPrimary = true;
-                key.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
-                key.IsUnique = true;
-                key.Name = "PK_" + selectedTVs[0].TableName;
+                index = new Index();
+                index.IsPrimary = true;
+                index.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
+                index.IsUnique = true;
+                index.Name = "PK_" + selectedTVs[0].TableName;
             }
             else
             {
-                key.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
+                index.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
             }
             panelPaint(false);
         }

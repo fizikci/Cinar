@@ -157,6 +157,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SQLResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormCreateIndex.resx">
+      <DependentUpon>FormCreateIndex.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormSQLDump.resx">
       <DependentUpon>FormSQLDump.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -242,6 +245,12 @@
       <DependentUpon>SQLResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\CodeGenerator.cs" />
+    <Compile Include="Tools\FormCreateIndex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormCreateIndex.Designer.cs">
+      <DependentUpon>FormCreateIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\FormSQLDump.cs">
       <SubType>Form</SubType>
     </Compile>

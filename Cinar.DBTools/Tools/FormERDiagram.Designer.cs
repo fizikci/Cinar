@@ -189,7 +189,7 @@
             // 
             this.menuSetAsPrimaryKey.Name = "menuSetAsPrimaryKey";
             this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(178, 22);
-            this.menuSetAsPrimaryKey.Text = "Set As Primary Key";
+            this.menuSetAsPrimaryKey.Text = "Set As Primary Index";
             // 
             // menuAddField
             // 

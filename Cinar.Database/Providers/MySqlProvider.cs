@@ -117,32 +117,32 @@ namespace Cinar.Database.Providers
                     tbl.Fields.Add(f);
                 }
 
-                // keys
-                tbl.Keys = new KeyCollection(tbl);
+                // indices
+                tbl.Indices = new IndexCollection(tbl);
                 DataTable dtKeys = db.GetDataTable("SHOW INDEXES FROM `" + tbl.Name + "`");
                 if (dtKeys != null)
                     for (int i = 0; i < dtKeys.Rows.Count; i++)
                     {
                         DataRow drKey = dtKeys.Rows[i];
-                        Key key = tbl.Keys[drKey["Key_name"].ToString()] ?? new Key();
-                        key.Name = drKey["Key_name"].ToString();
-                        if (key.FieldNames == null)
-                            key.FieldNames = new List<string>();
-                        key.FieldNames.Add(drKey["Column_name"].ToString());
-                        key.IsUnique = drKey["Non_unique"].ToString() == "0";
-                        key.IsPrimary = key.Name == "PRIMARY";
+                        Index index = tbl.Indices[drKey["Key_name"].ToString()] ?? new Index();
+                        index.Name = drKey["Key_name"].ToString();
+                        if (index.FieldNames == null)
+                            index.FieldNames = new List<string>();
+                        index.FieldNames.Add(drKey["Column_name"].ToString());
+                        index.IsUnique = drKey["Non_unique"].ToString() == "0";
+                        index.IsPrimary = index.Name == "PRIMARY";
 
-                        if (tbl.Keys[key.Name] == null)
-                            tbl.Keys.Add(key);
+                        if (tbl.Indices[index.Name] == null)
+                            tbl.Indices.Add(index);
                     }
             }
 
-            // keys
+            // indices
             //DataTable dtKeys = db.GetDataTable(String.Format(this.SQLPrimaryKeys, con.Database));
             //foreach (DataRow drKey in dtKeys.Rows)
             //    db.Tables[drKey["TABLE_NAME"].ToString()].Fields[drKey["COLUMN_NAME"].ToString()].IsPrimaryKey = true;
             
-            // foreign keys
+            // foreign indices
             DataTable dtForeigns = db.GetDataTable(String.Format(this.SQLForeignKeys, con.Database));
             foreach (DataRow drForeign in dtForeigns.Rows)
                 db.Tables[drForeign["TABLE_NAME_1"].ToString()]
@@ -281,17 +281,6 @@ namespace Cinar.Database.Providers
 												INFORMATION_SCHEMA.COLUMNS
 											WHERE
 												TABLE_NAME='{0}' and TABLE_SCHEMA='{1}'";
-        // Tablolara Primary Key Alanlarý
-//        private string SQLPrimaryKeys = @"
-//											SELECT
-//												TBL1.CONSTRAINT_NAME,
-//												TBL2.TABLE_NAME,
-//												TBL2.COLUMN_NAME
-//											FROM
-//												(select CONSTRAINT_NAME, TABLE_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND CONSTRAINT_SCHEMA='{0}') AS TBL1,
-//												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA='{0}') AS TBL2
-//											WHERE
-//												TBL2.TABLE_NAME = TBL1.TABLE_NAME;";
         // Foreyn kiyler
         private string SQLForeignKeys = @"
                                             SELECT
@@ -362,7 +351,7 @@ namespace Cinar.Database.Providers
             foreach (Field f in table.Fields.OrderBy(f=>f.Name))
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
-            foreach (Key k in table.Keys.OrderBy(k=>k.Name))
+            foreach (Index k in table.Indices.OrderBy(k=>k.Name))
                 sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
 
             sbFields = sbFields.Remove(sbFields.Length - len, len);
@@ -376,25 +365,25 @@ namespace Cinar.Database.Providers
         private void checkTable(Table table)
         {
             Field autoIncrementField = table.Fields.Find(f => f.IsAutoIncrement);
-            Key primaryKey = table.Keys == null ? null : table.Keys.Find(k => k.IsPrimary);
-            if (autoIncrementField != null && (primaryKey == null || !primaryKey.FieldNames.Contains(autoIncrementField.Name)))
+            Index primaryKeyIndex = table.Indices == null ? null : table.Indices.Find(k => k.IsPrimary);
+            if (autoIncrementField != null && (primaryKeyIndex == null || !primaryKeyIndex.FieldNames.Contains(autoIncrementField.Name)))
             {
-                if (table.Keys == null) table.Keys = new KeyCollection(table);
-                if (primaryKey == null)
-                    table.Keys.Add(new Key { FieldNames = new List<string> { autoIncrementField.Name }, IsPrimary = true, IsUnique = true, Name = "pk_" + table.Name });
+                if (table.Indices == null) table.Indices = new IndexCollection(table);
+                if (primaryKeyIndex == null)
+                    table.Indices.Add(new Index { FieldNames = new List<string> { autoIncrementField.Name }, IsPrimary = true, IsUnique = true, Name = "pk_" + table.Name });
                 else
-                    primaryKey.FieldNames.Add(autoIncrementField.Name);
+                    primaryKeyIndex.FieldNames.Add(autoIncrementField.Name);
             }
         }
 
-        public string GetIndexKeyDDL(Key key)
+        public string GetIndexKeyDDL(Index index)
         {
-            if (key.IsPrimary)
-                return "PRIMARY KEY (`" + String.Join("`, `", key.Fields.ToStringArray()) + "`)";
-            else if (key.IsUnique)
-                return "UNIQUE KEY `" + key.Name + "` (`" + String.Join("`, `", key.Fields.ToStringArray()) + "`)";
+            if (index.IsPrimary)
+                return "PRIMARY KEY (`" + String.Join("`, `", index.Fields.ToStringArray()) + "`)";
+            else if (index.IsUnique)
+                return "UNIQUE KEY `" + index.Name + "` (`" + String.Join("`, `", index.Fields.ToStringArray()) + "`)";
             else
-                return "KEY `" + key.Name + "` (`" + String.Join("`, `", key.Fields.ToStringArray()) + "`)";
+                return "KEY `" + index.Name + "` (`" + String.Join("`, `", index.Fields.ToStringArray()) + "`)";
         }
 
         public string GetFieldDDL(Field field)

@@ -116,32 +116,32 @@ namespace Cinar.Database.Providers
                     tbl.Fields.Add(f);
                 }
 
-                // keys
-                tbl.Keys = new KeyCollection(tbl);
+                // indices
+                tbl.Indices = new IndexCollection(tbl);
                 DataTable dtKeys = db.GetDataTable("EXEC sp_helpindex " + tbl.Name);
                 if(dtKeys!=null)
                     foreach (DataRow drKey in dtKeys.Rows)
                     {
-                        Key key = new Key();
-                        key.Name = drKey["index_name"].ToString();
-                        key.IsUnique = drKey["index_description"].ToString().Contains("unique");
-                        key.IsPrimary = drKey["index_description"].ToString().Contains("primary key");
+                        Index index = new Index();
+                        index.Name = drKey["index_name"].ToString();
+                        index.IsUnique = drKey["index_description"].ToString().Contains("unique");
+                        index.IsPrimary = drKey["index_description"].ToString().Contains("primary key");
 
-                        key.FieldNames = new List<string>();
+                        index.FieldNames = new List<string>();
                         foreach (string fieldName in drKey["index_keys"].ToString().Split(','))
-                            key.FieldNames.Add(fieldName.Trim().Replace("(-)", ""));
+                            index.FieldNames.Add(fieldName.Trim().Replace("(-)", ""));
 
-                        tbl.Keys.Add(key);
+                        tbl.Indices.Add(index);
                     }
 
             }
 
-            // primary keys
+            // primary indices
             //DataTable dtKeys = db.GetDataTable(this.SQLPrimaryKeys);
             //foreach (DataRow drKey in dtKeys.Rows)
             //    db.Tables[drKey["TABLE_NAME"].ToString()].Fields[drKey["COLUMN_NAME"].ToString()].IsPrimaryKey = true;
 
-            // foreign keys
+            // foreign indices
             DataTable dtForeigns = db.GetDataTable(this.SQLForeignKeys);
             foreach (DataRow drForeign in dtForeigns.Rows)
                 db.Tables[drForeign["TABLE_NAME_1"].ToString()]
@@ -280,17 +280,6 @@ namespace Cinar.Database.Providers
 												INFORMATION_SCHEMA.COLUMNS
 											WHERE
 												TABLE_NAME='{0}'";
-        // Tablolara Primary Key Alanları
-//        private string SQLPrimaryKeys = @"
-//											SELECT
-//												TBL1.CONSTRAINT_NAME,
-//												TBL2.TABLE_NAME,
-//												TBL2.COLUMN_NAME
-//											FROM
-//												(select CONSTRAINT_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE='PRIMARY KEY' AND TABLE_NAME<>'dtproperties') AS TBL1,
-//												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE) AS TBL2
-//											WHERE
-//												TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
         // Foreyn kiyler
         private string SQLForeignKeys = @"
 											SELECT
@@ -362,7 +351,7 @@ namespace Cinar.Database.Providers
             foreach (Field f in table.Fields)
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
-            foreach (Key k in table.Keys.OrderBy(k => k.Name))
+            foreach (Index k in table.Indices.OrderBy(k => k.Name))
                 if (k.IsPrimary || k.IsUnique)
                     sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
 
@@ -374,34 +363,34 @@ namespace Cinar.Database.Providers
                 sbFields);
         }
 
-        private string GetIndexKeyDDL(Key key)
+        private string GetIndexKeyDDL(Index index)
         {
-            if (key.IsPrimary)
+            if (index.IsPrimary)
             {
-                if (string.IsNullOrEmpty(key.Name)) key.Name = "pk_" + key.parent.table.Name;
-                return "CONSTRAINT [" + key.Name + "] PRIMARY KEY ([" + String.Join("], [", key.Fields.ToStringArray()) + "])";
+                if (string.IsNullOrEmpty(index.Name)) index.Name = "pk_" + index.parent.table.Name;
+                return "CONSTRAINT [" + index.Name + "] PRIMARY KEY ([" + String.Join("], [", index.Fields.ToStringArray()) + "])";
             }
 
-            return "CONSTRAINT [" + key.Name + "] UNIQUE  ([" + String.Join("], [", key.Fields.ToStringArray()) + "])";
+            return "CONSTRAINT [" + index.Name + "] UNIQUE  ([" + String.Join("], [", index.Fields.ToStringArray()) + "])";
         }
         /*
-        private string GetIndexKeyDDL(Key key)
+        private string GetIndexKeyDDL(Index Index)
         {
-            if (key.IsPrimary)
+            if (Index.IsPrimary)
                 return String.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] PRIMARY KEY CLUSTERED ([{2}])",
-                    key.parent.table.Name,
-                    key.Name,
-                    String.Join("], [", key.Fields.ToStringArray()));
-            else if (key.IsUnique)
+                    Index.parent.table.Name,
+                    Index.Name,
+                    String.Join("], [", Index.Fields.ToStringArray()));
+            else if (Index.IsUnique)
                 return String.Format("CREATE UNIQUE NONCLUSTERED INDEX [{0}] ON {1} ([{2}])",
-                    key.Name,
-                    key.parent.table.Name,
-                    String.Join("], [", key.Fields.ToStringArray()));
+                    Index.Name,
+                    Index.parent.table.Name,
+                    String.Join("], [", Index.Fields.ToStringArray()));
             else
                 return String.Format("CREATE NONCLUSTERED INDEX [{0}] ON {1} ([{2}])",
-                    key.Name,
-                    key.parent.table.Name,
-                    String.Join("], [", key.Fields.ToStringArray()));
+                    Index.Name,
+                    Index.parent.table.Name,
+                    String.Join("], [", Index.Fields.ToStringArray()));
         }
         */
         public string GetFieldDDL(Field f)

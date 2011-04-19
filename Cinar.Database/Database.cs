@@ -159,9 +159,9 @@ namespace Cinar.Database
                 foreach (Field field in table.Fields)
                     field.parent = table.Fields;
 
-                table.Keys.table = table;
-                foreach (Key key in table.Keys)
-                    key.parent = table.Keys;
+                table.Indices.table = table;
+                foreach (Index index in table.Indices)
+                    index.parent = table.Indices;
             }
         }
 
@@ -1372,13 +1372,13 @@ namespace Cinar.Database
             f.IsNullable = !fieldProps.IsNotNull;
             if (fieldProps.IsPrimaryKey)
             {
-                if (f.Table.Keys == null) f.Table.Keys = new KeyCollection(f.Table);
-                Key key = new Key();
-                key.FieldNames = new List<string> { f.Name };
-                key.IsPrimary = true;
-                key.IsUnique = true;
-                key.Name = "PK_" + f.Name;
-                f.Table.Keys.Add(key);
+                if (f.Table.Indices == null) f.Table.Indices = new IndexCollection(f.Table);
+                Index index = new Index();
+                index.FieldNames = new List<string> { f.Name };
+                index.IsPrimary = true;
+                index.IsUnique = true;
+                index.Name = "PK_" + f.Name;
+                f.Table.Indices.Add(index);
             }
             f.Length = fieldProps.Length;
 
@@ -1649,21 +1649,38 @@ namespace Cinar.Database
             }
         }
 
-        public string GetAlterTableAddKeyDDL(Key key)
+        public string GetAlterTableDropKeyDDL(Index index)
         {
-            if (Provider == DatabaseProvider.SQLServer)
-            {
-                if(key.IsPrimary)
-                    return "ALTER TABLE [" + key.parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT " + key.Name + " PRIMARY KEY CLUSTERED (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
-                else if(key.IsUnique)
-                    return "ALTER TABLE [" + key.parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT " + key.Name + " UNIQUE (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
-            }
-
-            return "CREATE " + (key.IsUnique ? "UNIQUE" : "") + " INDEX " + key.Name + " ON " + key.parent.table.Name + " (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
+            return "DROP INDEX " + index.Name;
         }
-        public string GetAlterTableDropKeyDDL(Key key)
+
+        // http://troels.arvin.dk/db/rdbms/
+        // http://en.wikibooks.org/wiki/SQL_dialects_reference
+        public List<string> GetDatabases()
         {
-            return "DROP INDEX " + key.Name;
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                    return this.GetList<string>("SELECT datname FROM pg_catalog.pg_database");
+                case DatabaseProvider.MySQL:
+                    return this.GetList<string>("SHOW DATABASES");
+                case DatabaseProvider.SQLServer:
+                    return this.GetList<string>("EXEC SP_HELPDB");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        public string GetVersion() {
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                case DatabaseProvider.MySQL:
+                    return this.GetString("SELECT version()");
+                case DatabaseProvider.SQLServer:
+                    return this.GetString("SELECT SERVERPROPERTY('ProductVersion') ");
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
         #endregion
     }
