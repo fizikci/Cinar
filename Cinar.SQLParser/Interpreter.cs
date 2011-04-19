@@ -81,7 +81,7 @@ namespace Cinar.SQLParser
                     }
                 }
             }
-            catch (ParserException ex)
+            catch
             {
                 //statements = new List<Statement>();
                 //statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message) })));

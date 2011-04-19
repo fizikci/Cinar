@@ -127,7 +127,7 @@ namespace Cinar.WinApp
                     BarButtonItem item = new BarButtonItem(barManager, editForm.DisplayName);
                     menuFormCat.LinksPersistInfo.Add(new LinkPersistInfo(item));
 					if(!string.IsNullOrEmpty(editForm.ImageKey))
-						item.Glyph = (Image)Cinar.WinUI.Properties.Resources.ResourceManager.GetObject(editForm.ImageKey);
+                        item.Glyph = (Image)FamFamFam.ResourceManager.GetObject(editForm.ImageKey);
                     item.Tag = editForm;
 
                     if (navBarCat == null)
@@ -140,7 +140,7 @@ namespace Cinar.WinApp
                     NavBarItem item2 = new NavBarItem(editForm.DisplayName);
                     navBarCat.ItemLinks.Add(new NavBarItemLink(item2));
 					if (!string.IsNullOrEmpty(editForm.ImageKey))
-                        item2.SmallImage = (Image)Cinar.WinUI.Properties.Resources.ResourceManager.GetObject(editForm.ImageKey);
+                        item2.SmallImage = (Image)FamFamFam.ResourceManager.GetObject(editForm.ImageKey);
                     item2.Tag = editForm;
 
                     cmdMan.Commands.Add(

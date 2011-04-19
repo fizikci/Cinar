@@ -106,7 +106,6 @@ namespace BoneSoft.CSS {
 
 		void CSS3() {
 			CSSDoc = new CSSDocument();
-			string cset = null;
 			RuleSet rset = null;
 			Directive dir = null;
 
@@ -308,10 +307,9 @@ namespace BoneSoft.CSS {
 		}
 
 		void QuotedString(out string qs) {
-			qs = ""; char quote = '\n';
+			qs = "";
 			if (la.kind == 7) {
 				Get();
-				quote = '\'';
 				while (StartOf(7)) {
 					Get();
 					qs += t.val;
@@ -320,7 +318,6 @@ namespace BoneSoft.CSS {
 				Expect(7);
 			} else if (la.kind == 8) {
 				Get();
-				quote = '"';
 				while (StartOf(8)) {
 					Get();
 					qs += t.val;

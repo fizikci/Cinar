@@ -503,22 +503,16 @@ namespace Cinar.SQLParser
                     break;
                 case ComparisonOperator.Equal:
                     return leftC.CompareTo(right) == 0;
-                    break;
                 case ComparisonOperator.NotEqual:
                     return leftC.CompareTo(right) != 0;
-                    break;
                 case ComparisonOperator.LessThan:
                     return leftC.CompareTo(right) < 0;
-                    break;
                 case ComparisonOperator.GreaterThan:
                     return leftC.CompareTo(right) > 0;
-                    break;
                 case ComparisonOperator.LessThanOrEqual:
                     return leftC.CompareTo(right) < 0 || leftC.CompareTo(right) == 0;
-                    break;
                 case ComparisonOperator.GreaterThanOrEqual:
                     return leftC.CompareTo(right) > 0 || leftC.CompareTo(right) == 0;
-                    break;
                 default:
                     break;
             }

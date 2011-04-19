@@ -28,12 +28,12 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.editCategory.EntityType = typeof(Category);
             this.editMedia.EntityType = typeof(Media);
             editContentType.BindTo(Enum.GetValues(typeof(ContentType)));
-            layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.feed;
-            btnAddContentDefinition.Image = Cinar.WinUI.Properties.Resources.add;
-            btnDeleteContentDefinition.Image = Cinar.WinUI.Properties.Resources.delete;
-            btnSaveContentDefinition.Image = Cinar.WinUI.Properties.Resources.disk;
-            btnTest.Image = Cinar.WinUI.Properties.Resources.television;
-            listEntityContent.ImageForEntity = Cinar.WinUI.Properties.Resources.newspaper;
+            layoutControlItemName.Image = FamFamFam.feed;
+            btnAddContentDefinition.Image = FamFamFam.add;
+            btnDeleteContentDefinition.Image = FamFamFam.delete;
+            btnSaveContentDefinition.Image = FamFamFam.disk;
+            btnTest.Image = FamFamFam.television;
+            listEntityContent.ImageForEntity = FamFamFam.newspaper;
         }
 
         public CommandCollection GetCommands()

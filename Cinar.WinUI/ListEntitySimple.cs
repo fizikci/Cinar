@@ -23,14 +23,14 @@ namespace Cinar.WinUI
         {
             InitializeComponent();
 
-            btnPrev.Image = Properties.Resources.go_prev;
-            btnNext.Image = Properties.Resources.go_next;
-            btnAddEntity.Image = menuAddEntity.Image = Properties.Resources.add;
-            btnDeleteEntity.Image = menuDeleteEntity.Image = Properties.Resources.delete;
-            btnEditEntity.Image = menuEditEntity.Image = Properties.Resources.application_form;
-            btnExcel.Image = menuExcel.Image = Properties.Resources.table;
-            menuHistory.Image = Properties.Resources.book_open;
-            menuCopy.Image = Properties.Resources.page_copy;
+            btnPrev.Image = FamFamFam.go_prev;
+            btnNext.Image = FamFamFam.go_next;
+            btnAddEntity.Image = menuAddEntity.Image = FamFamFam.add;
+            btnDeleteEntity.Image = menuDeleteEntity.Image = FamFamFam.delete;
+            btnEditEntity.Image = menuEditEntity.Image = FamFamFam.application_form;
+            btnExcel.Image = menuExcel.Image = FamFamFam.table;
+            menuHistory.Image = FamFamFam.book_open;
+            menuCopy.Image = FamFamFam.page_copy;
         }
 
         protected override void OnLoad(EventArgs e)

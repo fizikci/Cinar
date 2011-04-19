@@ -12,7 +12,6 @@ using System.Linq;
 using DevExpress.XtraLayout.Utils;
 using Cinar.WinUI;
 using Cinar.Entities.Standart;
-using Cinar.Entities.Standart;
 
 namespace Cinar.WinApp.DefaultPlugIn.Forms
 {

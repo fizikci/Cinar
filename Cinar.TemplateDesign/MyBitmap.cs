@@ -123,27 +123,26 @@ namespace Cinar.TemplateDesign
         [DllImport("gdi32")]
         static extern int Rectangle(IntPtr hDC, int X1, int Y1, int X2, int Y2);
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern bool DeleteObject(IntPtr hObject);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [DllImport("user32.dll")]
         static extern IntPtr GetDC(IntPtr hwnd);
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern IntPtr CreateCompatibleDC(IntPtr hdc);
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [DllImport("user32.dll")]
         static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern int DeleteDC(IntPtr hdc);
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern int BitBlt(IntPtr hdcDst, int xDst, int yDst, int w, int h, IntPtr hdcSrc, int xSrc, int ySrc, int rop);
-        static int SRCCOPY = 0x00CC0020;
 
         [DllImport("gdi32.dll", ExactSpelling = true, PreserveSig = true, SetLastError = true)]
         static extern bool Ellipse(IntPtr hdc, int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
@@ -159,11 +158,11 @@ namespace Cinar.TemplateDesign
             int nBottomRect);
 
 
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        [DllImport("gdi32.dll")]
         static extern IntPtr CreateDIBSection(IntPtr hdc, ref BITMAPINFO bmi, uint Usage, out IntPtr bits, IntPtr hSection, uint dwOffset);
         static uint BI_RGB = 0;
         static uint DIB_RGB_COLORS = 0;
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct BITMAPINFO
         {
             public uint biSize;
@@ -172,7 +171,7 @@ namespace Cinar.TemplateDesign
             public uint biCompression, biSizeImage;
             public int biXPelsPerMeter, biYPelsPerMeter;
             public uint biClrUsed, biClrImportant;
-            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 256)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
             public uint[] cols;
         }
 
