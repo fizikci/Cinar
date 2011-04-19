@@ -28,7 +28,7 @@ namespace Cinar.DBTools.Tools
         {
             Table tbl = new Table();
             tbl.Fields = new FieldCollection(tbl);
-            tbl.Keys = new KeyCollection(tbl);
+            tbl.Indices = new IndexCollection(tbl);
             tbl.Name = txtTableName.Text.MakeFileName();
             if (!(fieldCollectionBindingSource.DataSource is Type))
                 foreach (FieldDef fd in fieldCollectionBindingSource.DataSource as List<FieldDef>)
@@ -46,8 +46,8 @@ namespace Cinar.DBTools.Tools
                     tbl.Fields.Add(f);
                     if (fd.IsPrimaryKey)
                     {
-                        Key k = new Key();
-                        tbl.Keys.Add(k);
+                        Index k = new Index();
+                        tbl.Indices.Add(k);
                         k.FieldNames.Add(f.Name);
                         k.IsPrimary = true;
                         k.IsUnique = true;

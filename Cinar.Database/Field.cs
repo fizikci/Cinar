@@ -52,8 +52,8 @@ namespace Cinar.Database
                 string oldName = name;
                 name = value;
                 
-                if (oldName != name && this.parent != null && this.parent.table != null && this.parent.table.Keys != null && parent.table.Keys.Count > 0)
-                    this.parent.table.Keys.
+                if (oldName != name && this.parent != null && this.parent.table != null && this.parent.table.Indices != null && parent.table.Indices.Count > 0)
+                    this.parent.table.Indices.
                         FindAll(k => k.FieldNames.Contains(oldName)).
                         ForEach(k => { k.FieldNames.Remove(oldName); k.FieldNames.Add(name); });
             }
@@ -100,9 +100,9 @@ namespace Cinar.Database
         {
             get 
             {
-                if(this.Table.Keys!=null)
-                    foreach (Key key in this.Table.Keys)
-                        if (key.IsPrimary && key.FieldNames.Count == 1 && key.Fields[0].Name==this.Name)
+                if(this.Table.Indices!=null)
+                    foreach (Index index in this.Table.Indices)
+                        if (index.IsPrimary && index.FieldNames.Count == 1 && index.Fields[0].Name==this.Name)
                             return true;
                 return false;
             }

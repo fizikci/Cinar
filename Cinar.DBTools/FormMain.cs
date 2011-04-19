@@ -400,6 +400,21 @@ $"},
                                      Trigger = new CommandTrigger{ Control = menuShowUIMetadata},
                                      IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is ConnectionSettings || treeView.SelectedNode.Tag is Table || treeView.SelectedNode.Tag is Field)
                                  },
+                     new Command {
+                                     Execute = cmdCreateIndex,
+                                     Trigger = new CommandTrigger{ Control = menuIndexCreateIndex},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is IndexCollection || treeView.SelectedNode.Tag is Index)
+                                 },
+                     new Command {
+                                     Execute = cmdEditIndex,
+                                     Trigger = new CommandTrigger{ Control = menuIndexEditIndex},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Index
+                                 },
+                     new Command {
+                                     Execute = cmdDropIndex,
+                                     Trigger = new CommandTrigger{ Control = menuIndexDropIndex},
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Index
+                                 },
                     #endregion
              };
             cmdMan.SetCommandTriggers();
@@ -450,7 +465,7 @@ $"},
             foreach (ConnectionSettings cs in Provider.Connections)
             {
                 TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
-                node.NodeFont = new System.Drawing.Font(treeView.Font, FontStyle.Bold);
+                node.NodeFont = new System.Drawing.Font(treeView.Font, FontStyle.Underline);
                 node.Tag = cs;
 
                 cbActiveConnection.Items.Add(cs);
@@ -538,12 +553,12 @@ $"},
                     tnField.Tag = fld;
                 }
                 TreeNode keysNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
-                keysNode.Tag = tbl.Keys;
-                if(tbl.Keys!=null)
-                    foreach (var key in tbl.Keys)
+                keysNode.Tag = tbl.Indices;
+                if(tbl.Indices!=null)
+                    foreach (var index in tbl.Indices)
                     {
-                        TreeNode tnKey = keysNode.Nodes.Add(key.Name, key.Name + " (" + string.Join(", ",key.FieldNames.ToArray()) + ")", key.IsPrimary ? "Key" : "Field", key.IsPrimary ? "Key" : "Field");
-                        tnKey.Tag = key;
+                        TreeNode tnKey = keysNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ",index.FieldNames.ToArray()) + ")", index.IsPrimary ? "Key" : "Field", index.IsPrimary ? "Key" : "Field");
+                        tnKey.Tag = index;
                     }
             }
 
@@ -581,6 +596,17 @@ $"},
             while (treeNode != null)
             {
                 if (treeNode.Tag is ConnectionSettings)
+                    return treeNode;
+                treeNode = treeNode.Parent;
+            }
+            return null;
+        }
+        private TreeNode findSelectedTableNode()
+        {
+            TreeNode treeNode = treeView.SelectedNode;
+            while (treeNode != null)
+            {
+                if (treeNode.Tag is Table)
                     return treeNode;
                 treeNode = treeNode.Parent;
             }
@@ -780,7 +806,7 @@ $"},
                 SaveConnections();
                 TreeNode tn = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
                 tn.Tag = cs;
-                tn.NodeFont = new Font(this.Font, FontStyle.Bold);
+                tn.NodeFont = new Font(this.Font, FontStyle.Underline);
                 cbActiveConnection.Items.Add(cs);
                 treeView.SelectedNode = tn;
                 tn.Expand();
@@ -931,12 +957,9 @@ $"},
 
         private void cmdSetActiveConnection(string arg)
         {
-            TreeNode tnOld = findNode(treeView.Nodes, n => n.ForeColor == Color.White);
+            TreeNode tnOld = findNode(treeView.Nodes, n => n.BackColor == Color.LightBlue);
             if (tnOld != null)
-            { 
-                tnOld.ForeColor = Color.Black; 
                 tnOld.BackColor = Color.White; 
-            }
 
             if (treeView.SelectedNode.Tag is ConnectionSettings)
             {
@@ -952,10 +975,7 @@ $"},
 
             TreeNode tnNew = findSelectedDBNode();
             if (tnNew != null)
-            {
-                tnNew.ForeColor = Color.White;
-                tnNew.BackColor = Color.Green;
-            }
+                tnNew.BackColor = Color.LightBlue;
 
             cbActiveConnection.SelectedItem = Provider.ActiveConnection;
 
@@ -972,7 +992,7 @@ $"},
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            if (MessageBox.Show("Are you sure to drop table " + tableName + "? All data will be lost!", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(string.Format("Are you sure to drop table {0}? All data will be lost!", tableName), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
                 Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
@@ -1060,7 +1080,7 @@ $"},
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar DBTools");
+                        MessageBox.Show(ex.Message, "Çınar Database Tools");
                         Provider.Database.Tables.Remove(tbl);
                         fct.DialogResult = DialogResult.None;
                     }
@@ -1117,22 +1137,22 @@ $"},
 
                                 if (f.IsPrimaryKey)
                                 {
-                                    Key key = oldTable.Keys.Find(k => k.IsPrimary);
-                                    if (key == null)
+                                    Index index = oldTable.Indices.Find(k => k.IsPrimary);
+                                    if (index == null)
                                     {
-                                        key = new Key();
-                                        oldTable.Keys.Add(key);
-                                        key.FieldNames.Add(f.Name);
-                                        key.IsPrimary = true;
-                                        key.IsUnique = true;
-                                        key.Name = "PK_" + oldTable.Name;
-                                        sb.AppendLine(Provider.Database.GetAlterTableAddKeyDDL(key) + ";");
+                                        index = new Index();
+                                        oldTable.Indices.Add(index);
+                                        index.FieldNames.Add(f.Name);
+                                        index.IsPrimary = true;
+                                        index.IsUnique = true;
+                                        index.Name = "PK_" + oldTable.Name;
+                                        sb.AppendLine(index.ToDDL() + ";");
                                     }
                                     else
                                     {
-                                        sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(key) + ";");
-                                        key.FieldNames = new List<string> { f.Name };
-                                        sb.AppendLine(Provider.Database.GetAlterTableAddKeyDDL(key) + ";");
+                                        sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
+                                        index.FieldNames = new List<string> { f.Name };
+                                        sb.AppendLine(index.ToDDL() + ";");
                                     }
                                 }
                                 continue;
@@ -1142,28 +1162,28 @@ $"},
                             // primary key kaldırılmış mı?
                             if (orgField.IsPrimaryKey && !f.IsPrimaryKey)
                             {
-                                Key key = oldTable.Keys.Find(k => k.IsPrimary);
-                                sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(key) + ";");
+                                Index index = oldTable.Indices.Find(k => k.IsPrimary);
+                                sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
                             }
                             // primary key eklenmiş mi?
                             if (!orgField.IsPrimaryKey && f.IsPrimaryKey)
                             {
-                                Key key = oldTable.Keys.Find(k => k.IsPrimary);
-                                if (key == null)
+                                Index index = oldTable.Indices.Find(k => k.IsPrimary);
+                                if (index == null)
                                 {
-                                    key = new Key();
-                                    oldTable.Keys.Add(key);
-                                    key.FieldNames.Add(f.Name);
-                                    key.IsPrimary = true;
-                                    key.IsUnique = true;
-                                    key.Name = "PK_"+oldTable.Name;
-                                    sb.AppendLine(Provider.Database.GetAlterTableAddKeyDDL(key) + ";");
+                                    index = new Index();
+                                    oldTable.Indices.Add(index);
+                                    index.FieldNames.Add(f.Name);
+                                    index.IsPrimary = true;
+                                    index.IsUnique = true;
+                                    index.Name = "PK_"+oldTable.Name;
+                                    sb.AppendLine(index.ToDDL() + ";");
                                 }
                                 else
                                 {
-                                    sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(key) + ";");
-                                    key.FieldNames = new List<string> { f.Name };
-                                    sb.AppendLine(Provider.Database.GetAlterTableAddKeyDDL(key) + ";");
+                                    sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
+                                    index.FieldNames = new List<string> { f.Name };
+                                    sb.AppendLine(index.ToDDL() + ";");
                                 }
                             }
                             // field adı değişmiş mi?
@@ -1384,6 +1404,112 @@ $"},
             
         }
 
+        private void cmdCreateIndex(string arg)
+        {
+            TreeNode tn = findSelectedTableNode();
+            if (tn == null) return;
+            Table table = tn.Tag as Table;
+
+            FormCreateIndex fct = new FormCreateIndex(table);
+            while (true)
+            {
+                if (fct.ShowDialog() == DialogResult.OK)
+                {
+                    Index index = fct.GetCreatedKey();
+                    try
+                    {
+                        if(table.Indices==null) table.Indices = new IndexCollection(table);
+
+                        table.Indices.Add(index);
+
+                        if (string.IsNullOrEmpty(index.Name))
+                            throw new Exception("Enter a valid name for the index.");
+                        if (index.Fields == null || index.Fields.Count == 0)
+                            throw new Exception("Select minimum one field for the index.");
+
+                        string sql = index.ToDDL();
+                        SQLInputDialog sid = new SQLInputDialog(sql, false);
+                        if (sid.ShowDialog() == DialogResult.OK)
+                        {
+                            Provider.Database.ExecuteNonQuery(sid.SQL);
+                            cmdRefresh("");
+                        }
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Çınar Database Tools");
+                        table.Indices.Remove(index);
+                        fct.DialogResult = DialogResult.None;
+                    }
+                }
+                else
+                    break;
+            }
+        }
+        private void cmdEditIndex(string arg)
+        {
+            TreeNode tn = findSelectedTableNode();
+            if (tn == null) return;
+            Table table = tn.Tag as Table;
+
+            FormCreateIndex fct = new FormCreateIndex(table);
+            Index oldIndex = treeView.SelectedNode.Tag as Index;
+            fct.SetKey(oldIndex);
+
+            while (true)
+            {
+                if (fct.ShowDialog() == DialogResult.OK)
+                {
+                    Index index = fct.GetCreatedKey();
+                    try
+                    {
+                        if (table.Indices == null) table.Indices = new IndexCollection(table);
+
+                        table.Indices.Add(index);
+
+                        if (string.IsNullOrEmpty(index.Name))
+                            throw new Exception("Enter a valid name for the index.");
+                        if (index.FieldNames == null || index.FieldNames.Count == 0)
+                            throw new Exception("Select minimum one field for the index.");
+
+                        string sql = Provider.Database.GetAlterTableDropKeyDDL(index) + ";" + Environment.NewLine;
+                        sql += index.ToDDL();
+                        SQLInputDialog sid = new SQLInputDialog(sql, false);
+                        if (sid.ShowDialog() == DialogResult.OK)
+                        {
+                            Provider.Database.ExecuteNonQuery(sid.SQL);
+                            //table.indices.Remove(index);
+                            cmdRefresh("");
+                        }
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Çınar Database Tools");
+                        table.Indices.Remove(index);
+                        fct.DialogResult = DialogResult.None;
+                    }
+                }
+                else
+                    break;
+            }
+        }
+        private void cmdDropIndex(string arg)
+        {
+            if (!checkConnection()) return;
+            Table table = findSelectedTableNode().Tag as Table;
+            Index index = treeView.SelectedNode.Tag as Index;
+            if (MessageBox.Show(string.Format("Are you sure to drop index {0} on {1}?", index.Name, table.Name), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                int i = Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
+                table.Indices.Remove(index);
+                cmdRefresh(null);
+                CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
+            }
+        }
+
+
         private void cmdNewERDiagram(string arg)
         {
             FormERDiagram form = new FormERDiagram();
@@ -1484,7 +1610,7 @@ $"},
         }
         private void showSelectedObjectOnPropertyGrid()
         {
-            object o = treeView.SelectedNode.Tag;
+            object o = treeView.SelectedNode==null ? null : treeView.SelectedNode.Tag;
             if (o is IList)
                 o = null;
 

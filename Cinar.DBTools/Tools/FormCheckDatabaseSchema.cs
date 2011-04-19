@@ -112,7 +112,7 @@ namespace Cinar.DBTools.Tools
                 Field f = (Field)cb.SelectedItem;
                 if (f != null)
                 {
-                    Table.Keys.Add(new Key() { FieldNames = new List<string>() {f.Name}, IsPrimary=true, IsUnique=true, Name="PK"+Table.Name });
+                    Table.Indices.Add(new Index() { FieldNames = new List<string>() {f.Name}, IsPrimary=true, IsUnique=true, Name="PK"+Table.Name });
                 }
             }
         }

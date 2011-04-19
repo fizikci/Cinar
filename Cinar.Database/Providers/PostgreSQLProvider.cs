@@ -124,23 +124,23 @@ namespace Cinar.Database.Providers
                 }
             }
 
-            // primary keys
+            // primary indices
             //TODO: postgreSQL bulursak bu kodu MySQL ve SQLServer'da olduðu gibi düzeltelim
             DataTable dtKeys = db.GetDataTable(this.SQLPrimaryKeys);
             if (dtKeys != null)
                 foreach (DataRow drKey in dtKeys.Rows)
                 {
                     Table tbl = db.Tables[drKey["TABLE_NAME"].ToString()];
-                    Key key = new Key();
-                    key.FieldNames = new List<string>();
-                    key.FieldNames.Add(drKey["COLUMN_NAME"].ToString());
-                    key.IsPrimary = true;
-                    key.IsUnique = true;
-                    if (tbl.Keys == null) tbl.Keys = new KeyCollection(tbl);
-                    tbl.Keys.Add(key);
+                    Index index = new Index();
+                    index.FieldNames = new List<string>();
+                    index.FieldNames.Add(drKey["COLUMN_NAME"].ToString());
+                    index.IsPrimary = true;
+                    index.IsUnique = true;
+                    if (tbl.Indices == null) tbl.Indices = new IndexCollection(tbl);
+                    tbl.Indices.Add(index);
                 }
 
-            // foreign keys
+            // foreign indices
             DataTable dtForeigns = db.GetDataTable(this.SQLForeignKeys);
             foreach (DataRow drForeign in dtForeigns.Rows)
                 db.Tables[drForeign["TABLE_NAME_1"].ToString()]
@@ -288,7 +288,7 @@ namespace Cinar.Database.Providers
 												INFORMATION_SCHEMA.COLUMNS
 											WHERE
 												TABLE_NAME='{0}'";
-        // Tablolara Primary Key Alanlarý
+        // Tablolara Primary Index Alanlarý
         private string SQLPrimaryKeys = @"
 											SELECT
 												TBL1.CONSTRAINT_NAME,
@@ -370,7 +370,7 @@ namespace Cinar.Database.Providers
             foreach (Field f in table.Fields)
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
-            foreach (Key k in table.Keys.OrderBy(k => k.Name))
+            foreach (Index k in table.Indices.OrderBy(k => k.Name))
                 if(k.IsPrimary || k.IsUnique)
                     sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
 
@@ -382,15 +382,15 @@ namespace Cinar.Database.Providers
                 sbFields);
         }
 
-        public string GetIndexKeyDDL(Key key)
+        public string GetIndexKeyDDL(Index index)
         {
-            if (key.IsPrimary)
+            if (index.IsPrimary)
             {
-                if (string.IsNullOrEmpty(key.Name)) key.Name = "pk_" + key.parent.table.Name;
-                return "CONSTRAINT \"" + key.Name + "\" PRIMARY KEY (\"" + String.Join("\", \"", key.Fields.ToStringArray()) + "\")";
+                if (string.IsNullOrEmpty(index.Name)) index.Name = "pk_" + index.parent.table.Name;
+                return "CONSTRAINT \"" + index.Name + "\" PRIMARY KEY (\"" + String.Join("\", \"", index.Fields.ToStringArray()) + "\")";
             }
 
-            return "CONSTRAINT \"" + key.Name + "\" UNIQUE  (\"" + String.Join("\", \"", key.Fields.ToStringArray()) + "\")";
+            return "CONSTRAINT \"" + index.Name + "\" UNIQUE  (\"" + String.Join("\", \"", index.Fields.ToStringArray()) + "\")";
         }
 
         public string GetFieldDDL(Field f)

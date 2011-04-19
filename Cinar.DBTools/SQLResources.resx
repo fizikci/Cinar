@@ -231,11 +231,12 @@
 				&lt;Key word =  "database" /&gt;
 				&lt;Key word =  "trigger" /&gt;
 				&lt;Key word =  "function" /&gt;
-				&lt;Key word =  "INT"/&gt;
-				&lt;Key word =  "IDENTITY"/&gt;
-				&lt;Key word =  "NVARCHAR"/&gt;
-				&lt;Key word =  "CONSTRAINT"/&gt;
-				&lt;Key word =  "PRIMARY"/&gt;
+				&lt;Key word =  "int"/&gt;
+				&lt;Key word =  "identity"/&gt;
+				&lt;Key word =  "nvarchar"/&gt;
+				&lt;Key word =  "constraint"/&gt;
+				&lt;Key word =  "unique"/&gt;
+				&lt;Key word =  "index"/&gt;
 			&lt;/KeyWords&gt;
 		&lt;/RuleSet&gt;
 	&lt;/RuleSets&gt;
@@ -273,6 +274,18 @@ CREATE FUNCTION &lt;function_name&gt;()
 
 DELIMITER ;</value>
   </data>
+  <data name="SQLCreateFunctionPostgreSQL" xml:space="preserve">
+    <value>CREATE FUNCTION function_name
+  (input_parameter_name datatype, ...)
+RETURNS datatype
+AS $$
+DECLARE
+  variable_name datatype;
+BEGIN
+  /* SQL code */
+END;
+$$ LANGUAGE plpgsql;</value>
+  </data>
   <data name="SQLCreateSProcMySQL" xml:space="preserve">
     <value>DELIMITER $$
 
@@ -282,6 +295,25 @@ CREATE PROCEDURE &lt;procedure_name&gt;()
     END$$
 
 DELIMITER ;</value>
+  </data>
+  <data name="SQLCreateSProcPostgreSQL" xml:space="preserve">
+    <value>CREATE FUNCTION function_name
+  (input_parameter_name datatype, ...)
+RETURNS return_type
+AS $$
+DECLARE
+  variable_name datatype;
+BEGIN
+  /* SQL code */
+END;
+$$ LANGUAGE plpgsql;</value>
+  </data>
+  <data name="SQLCreateSProcSQLServer" xml:space="preserve">
+    <value>CREATE PROCEDURE nameprocedure
+  (input_parameter_name datatype, ... )
+AS
+  /* SQL code */
+GO</value>
   </data>
   <data name="SQLCreateTriggerMySQL" xml:space="preserve">
     <value>DELIMITER $$

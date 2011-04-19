@@ -67,17 +67,17 @@ namespace Cinar.Database
         }
 
         /// <summary>
-        /// Bu tablonun (varsa) tek alan üzerinde tanımlanmış Primary Key alanı.
+        /// Bu tablonun (varsa) tek alan üzerinde tanımlanmış Primary Index alanı.
         /// </summary>
         [XmlIgnore, Description("Primary field if exists"), Category("Extra Info")]
         public Field PrimaryField
         {
             get
             {
-                if(this.Keys!=null)
-                    foreach(Key key in this.Keys)
-                        if(key.IsPrimary && key.FieldNames.Count==1)
-                            return this.Fields[key.FieldNames[0]];
+                if(this.Indices!=null)
+                    foreach(Index index in this.Indices)
+                        if(index.IsPrimary && index.FieldNames.Count==1)
+                            return this.Fields[index.FieldNames[0]];
                 return null;
             }
         }
@@ -164,15 +164,15 @@ namespace Cinar.Database
         }
 
 
-        private KeyCollection keys;
+        private IndexCollection indices;
         /// <summary>
         /// Tablonun keylerini listeler
         /// </summary>
         [Browsable(false)]
-        public KeyCollection Keys
+        public IndexCollection Indices
         {
-            get { return keys; }
-            set { keys = value; }
+            get { return indices; }
+            set { indices = value; }
         }
 
 
@@ -262,19 +262,19 @@ namespace Cinar.Database
                 newField.parent = newTable.Fields;
                 newTable.Fields.Add(newField);
             }
-            newTable.Keys = new KeyCollection(newTable);
-            foreach (Key k in this.Keys)
+            newTable.Indices = new IndexCollection(newTable);
+            foreach (Index k in this.Indices)
             {
-                Key newKey = new Key();
-                newKey.Name = k.Name;
+                Index newIndex = new Index();
+                newIndex.Name = k.Name;
                 if (k.Name == "PRIMARY")
-                    newKey.Name = "PK_" + tableName;
-                newKey.IsUnique = k.IsUnique;
-                newKey.IsPrimary = k.IsPrimary;
-                newKey.FieldNames = new List<string>();
+                    newIndex.Name = "PK_" + tableName;
+                newIndex.IsUnique = k.IsUnique;
+                newIndex.IsPrimary = k.IsPrimary;
+                newIndex.FieldNames = new List<string>();
                 foreach (Field fk in k.Fields)
-                    newKey.FieldNames.Add(fk.Name);
-                newTable.Keys.Add(newKey);
+                    newIndex.FieldNames.Add(fk.Name);
+                newTable.Indices.Add(newIndex);
             }
             newTable.IsView = this.IsView;
             newTable.Name = tableName;
