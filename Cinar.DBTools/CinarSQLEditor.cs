@@ -39,12 +39,12 @@ namespace Cinar.DBTools
             imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             imageList.ImageSize = new System.Drawing.Size(16, 16);
             imageList.TransparentColor = System.Drawing.Color.Transparent;
-            imageList.Images.Add(Resources.Class);
-            imageList.Images.Add(Resources.LocalVariable);
-            imageList.Images.Add(Resources.Method);
-            imageList.Images.Add(Resources.Property);
-            imageList.Images.Add(Resources.Struct);
-            imageList.Images.Add(Resources.Interface);
+            imageList.Images.Add(SQLResources.Class);
+            imageList.Images.Add(SQLResources.LocalVariable);
+            imageList.Images.Add(SQLResources.Method);
+            imageList.Images.Add(SQLResources.Property);
+            imageList.Images.Add(SQLResources.Struct);
+            imageList.Images.Add(SQLResources.Interface);
         }
 
         //void TextArea_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -202,7 +202,7 @@ namespace Cinar.DBTools
 
         public XmlTextReader GetSyntaxModeFile(SyntaxMode syntaxMode)
         {
-            return new XmlTextReader(new StringReader(Resources.SQL));
+            return new XmlTextReader(new StringReader(SQLResources.SQL));
         }
 
         public void UpdateSyntaxModeList()

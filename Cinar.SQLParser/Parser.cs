@@ -73,7 +73,7 @@ namespace Cinar.SQLParser
             if (fCurrentToken.Value == "alter")
                 return ParseAlterStatement();
 
-            if (fCurrentToken.Value == "var")
+            if (fCurrentToken.Value == "drop")
                 return ParseVarStatement();
              * */
 

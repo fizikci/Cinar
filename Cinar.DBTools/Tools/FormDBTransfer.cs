@@ -19,13 +19,16 @@ namespace Cinar.DBTools.Tools
         {
             InitializeComponent();
 
+            if (Provider.Connections.Count < 2)
+                throw new Exception("Add one more connection for transfer target");
+
             foreach (ConnectionSettings cs in Provider.Connections)
             {
-                cbDbDest.Items.Add(cs);
                 cbDbSrc.Items.Add(cs);
+                cbDbDest.Items.Add(cs);
             }
-            cbDbDest.SelectedIndex = 0;
-            cbDbSrc.SelectedIndex = 0;
+            cbDbSrc.SelectedIndex = cbDbSrc.Items.IndexOf(Provider.ActiveConnection);
+            cbDbDest.SelectedIndex = cbDbSrc.SelectedIndex < cbDbSrc.Items.Count - 1 ? cbDbSrc.SelectedIndex + 1 : cbDbSrc.SelectedIndex - 1;
         }
 
         private void cbDbSrc_SelectedIndexChanged(object sender, EventArgs e)

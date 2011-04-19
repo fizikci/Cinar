@@ -17,6 +17,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
@@ -42,15 +43,18 @@ namespace Cinar.Database.Providers
         public PostgreSQLProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
-            if (createDatabaseIfNotExist)
+            try
             {
-                try
+                con = new NpgsqlConnection(db.ConnectionString);
+                if (createDatabaseIfNotExist)
                 {
-                    con = new NpgsqlConnection(db.ConnectionString);
                     con.Open();
                     con.Close();
                 }
-                catch
+            }
+            catch
+            {
+                if (createDatabaseIfNotExist)
                 {
                     // ihtimal, veritabaný create edilmemiþ. create edelim o zaman:
                     string newConnStr = "";
@@ -104,11 +108,12 @@ namespace Cinar.Database.Providers
                     {
                         Field f = new Field();
                         f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
-                        f.FieldType = StringToDbType(drColumn["DATA_TYPE"].ToString());
+                        f.FieldTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
+                        f.FieldType = StringToDbType(f.FieldTypeOriginal);
                         f.Length = drColumn.IsNull("CHARACTER_MAXiMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXiMUM_LENGTH"]);
                         f.IsNullable = drColumn["iS_NULLABLE"].ToString() != "NO";
                         f.Name = drColumn["COLUMN_NAME"].ToString();
-                        f.IsAutoIncrement = drColumn["IS_AUTO_INCREMENT"].ToString() == "1";
+                        f.IsAutoIncrement = !string.IsNullOrEmpty(drColumn["iS_AUTO_iNCREMENT"].ToString());
 
                         tbl.Fields.Add(f);
                     }
@@ -122,7 +127,7 @@ namespace Cinar.Database.Providers
             // primary keys
             //TODO: postgreSQL bulursak bu kodu MySQL ve SQLServer'da olduðu gibi düzeltelim
             DataTable dtKeys = db.GetDataTable(this.SQLPrimaryKeys);
-            if(dtKeys!=null)
+            if (dtKeys != null)
                 foreach (DataRow drKey in dtKeys.Rows)
                 {
                     Table tbl = db.Tables[drKey["TABLE_NAME"].ToString()];
@@ -134,7 +139,7 @@ namespace Cinar.Database.Providers
                     if (tbl.Keys == null) tbl.Keys = new KeyCollection(tbl);
                     tbl.Keys.Add(key);
                 }
-            
+
             // foreign keys
             DataTable dtForeigns = db.GetDataTable(this.SQLForeignKeys);
             foreach (DataRow drForeign in dtForeigns.Rows)
@@ -144,15 +149,16 @@ namespace Cinar.Database.Providers
 
         }
 
+        #region string <=> dbType conversion
+
         /// <summary>
         /// Veritabanýndan string olarak gelen field tip bilgisini DbType enum'una dönüþtürür.
         /// </summary>
         public DbType StringToDbType(string typeName)
         {
-            typeName = typeName[0].ToString().ToUpperInvariant() + typeName.Substring(1);
-            object ob = Enum.Parse(typeof(DbType4Postgres), typeName.Replace(" ", "_"));
-            object ob2 = Enum.ToObject(typeof(DbType), ob);
-            return (DbType)ob2;
+            if(DEFStringToDbType.ContainsKey(typeName.ToUpperInvariant()))
+                return DEFStringToDbType[typeName];
+            return DbType.Undefined;
         }
 
         /// <summary>
@@ -160,45 +166,103 @@ namespace Cinar.Database.Providers
         /// </summary>
         public string DbTypeToString(DbType dbType)
         {
-            DbType4Postgres dbType4Postgres = (DbType4Postgres)dbType;
-            switch (dbType4Postgres)
-            {
-                case DbType4Postgres.Boolean:
-                    return "boolean";
-                case DbType4Postgres.Bigint:
-                    return "int4";
-                case DbType4Postgres.Smallint:
-                    return "int2";
-                case DbType4Postgres.Integer:
-                    return "int4";
-                case DbType4Postgres.Text:
-                    return "text";
-                case DbType4Postgres.Real:
-                    return "float4";
-                case DbType4Postgres.Double_precision:
-                    return "float8";
-                case DbType4Postgres.Money:
-                    return "money";
-                case DbType4Postgres.Character:
-                    return "char";
-                case DbType4Postgres.Character_varying:
-                    return "varchar";
-                case DbType4Postgres.Date:
-                    return "date";
-                case DbType4Postgres.Time_without_time_zone:
-                    return "time";
-                case DbType4Postgres.Timestamp_without_time_zone:
-                    return "timestamp";
-                case DbType4Postgres.Timestamp_with_time_zone:
-                    return "timestamptz";
-                case DbType4Postgres.Time_with_time_zone:
-                    return "timetz";
-                case DbType4Postgres.Numeric:
-                    return "numeric";
-            }
+            if (DEFDbTypeToString.ContainsKey(dbType))
+                return DEFDbTypeToString[dbType];
             return "???";
         }
 
+        public static Dictionary<string, DbType> DEFStringToDbType = new Dictionary<string, DbType>() 
+        { 
+            {"BOOLEAN",                     DbType.Boolean},
+            {"BOOL",                        DbType.Boolean},
+            {"BIGINT",                      DbType.Int64},
+            {"INT8",                        DbType.Int64},
+            {"BIGSERIAL",                   DbType.Int64},
+            {"SERIAL8",                     DbType.Int64},
+            {"SERIAL",                      DbType.Int32},
+            {"SERIAL4",                     DbType.Int32},
+            {"BYTEA",                       DbType.Binary},
+            {"BIT",                         DbType.Binary},
+            {"BIT VARYING",                 DbType.VarBinary},
+            {"INT2",                        DbType.Int16},
+            {"SMALLINT",                    DbType.Int16},
+            {"INT",                         DbType.Int32},
+            {"INT4",                        DbType.Int32},
+            {"INTEGER",                     DbType.Int32},
+            {"TEXT",                        DbType.Text},
+            {"REAL",                        DbType.Real},
+            {"FLOAT4",                      DbType.Real},
+            {"FLOAT8",                      DbType.Float},
+            {"DOUBLE PRECISION",            DbType.Float},
+            {"MONEY",                       DbType.Currency},
+            {"CHAR",                        DbType.Char},
+            {"CHARACTER",                   DbType.Char},
+            {"VARCHAR",                     DbType.VarChar},
+            {"CHARACTER VARYING",           DbType.VarChar},
+            {"DATE",                        DbType.Date},
+            {"TIME",                        DbType.Time},
+            {"TIME WITHOUT TIME ZONE",      DbType.Time},
+            {"TIMESTAMP",                   DbType.Timestamp},
+            {"TIMESTAMP WITHOUT TIME ZONE", DbType.Timestamp},
+            {"TIMESTAMP WITH TIME ZONE",    DbType.Timestamptz},
+            {"TIMESTAMPZ",                  DbType.Timestamptz},
+            {"TIME WITH TIME ZONE",         DbType.Timetz},
+            {"TIMEZ",                       DbType.Timetz},
+            {"XML",                         DbType.Xml},
+            {"DECIMAL",                     DbType.Decimal},
+            {"NUMERIC",                     DbType.Numeric}
+        };
+        public static Dictionary<DbType, string> DEFDbTypeToString = new Dictionary<DbType, string>() 
+        { 
+            {DbType.Binary,         "BYTEA"},
+            {DbType.Blob ,          "BYTEA"},
+            {DbType.BlobLong ,      "BYTEA"},
+            {DbType.BlobMedium,     "BYTEA"},
+            {DbType.BlobTiny,       "BYTEA"},
+            {DbType.Boolean,        "BOOL"},
+            {DbType.Byte,           "INT2"},
+            {DbType.Char,           "CHAR"},
+            {DbType.Currency,       "MONEY"},
+            {DbType.CurrencySmall,  "MONEY"},
+            {DbType.Date,           "DATE"},
+            {DbType.DateTime,       "DATE"},
+            {DbType.DateTimeSmall,  "DATE"},
+            {DbType.Decimal,        "DECIMAL"},
+            {DbType.Double,         "DECIMAL"},
+            {DbType.Enum,           "VARCHAR"},
+            {DbType.Float,          "REAL"},
+            {DbType.Guid,           "UUID"},
+            {DbType.Image,          "BYTEA"},
+            {DbType.Int16,          "SMALLINT"},
+            {DbType.Int32,          "INT"},
+            {DbType.Int64,          "BIGINT"},
+            {DbType.NChar,          "CHAR"},
+            {DbType.NText,          "TEXT"},
+            {DbType.Numeric,        "NUMERIC"},
+            {DbType.NVarChar,       "VARCHAR"},
+            {DbType.Real,           "REAL"},
+            {DbType.Set,            "VARCHAR"},
+            {DbType.Text,           "TEXT"},
+            {DbType.TextLong,       "TEXT"},
+            {DbType.TextMedium,     "TEXT"},
+            {DbType.TextTiny,       "TEXT"},
+            {DbType.Time,           "TIME"},
+            {DbType.Timestamp,      "TIMESTAMP"},
+            {DbType.Timestamptz,    "TIMESTAMP"},
+            {DbType.Timetz,         "TIME"},
+            {DbType.Undefined,      "???"},
+            {DbType.VarBinary,      "BYTEA"},
+            {DbType.VarChar,        "VARCHAR"},
+            {DbType.Variant,        "BYTEA"},
+            {DbType.Xml,            "XML"}
+        };
+
+        public string[] GetFieldTypes()
+        {
+            return DEFStringToDbType.Keys.ToArray();
+        }
+
+        #endregion
 
         #region INFORMATION_SCHEMA SQL ÝFADELERÝ
         // tablolar
@@ -254,7 +318,6 @@ namespace Cinar.Database.Providers
 												TBL3.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
         #endregion
 
-
         #region IDatabaseProvider Members
         public IDbConnection CreateConnection()
         {
@@ -301,23 +364,39 @@ namespace Cinar.Database.Providers
 
         public string GetTableDDL(Table table)
         {
+            int len = ("," + Environment.NewLine).Length;
+
             StringBuilder sbFields = new StringBuilder();
             foreach (Field f in table.Fields)
-                sbFields.Append("\t" + GetFieldDDL(f) + ",\n");
+                sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
 
-            sbFields = sbFields.Remove(sbFields.Length - 2, 2);
+            foreach (Key k in table.Keys.OrderBy(k => k.Name))
+                if(k.IsPrimary || k.IsUnique)
+                    sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
 
+            sbFields = sbFields.Remove(sbFields.Length - len, len);
 
-            return String.Format("CREATE {0} \"{1}\"(\n{2});\n",
+            return String.Format("CREATE {0} \"{1}\"(\n{2});" + Environment.NewLine,
                 (table.IsView ? "VIEW" : "TABLE"),
                 table.Name,
-                sbFields.ToString());
+                sbFields);
+        }
+
+        public string GetIndexKeyDDL(Key key)
+        {
+            if (key.IsPrimary)
+            {
+                if (string.IsNullOrEmpty(key.Name)) key.Name = "pk_" + key.parent.table.Name;
+                return "CONSTRAINT \"" + key.Name + "\" PRIMARY KEY (\"" + String.Join("\", \"", key.Fields.ToStringArray()) + "\")";
+            }
+
+            return "CONSTRAINT \"" + key.Name + "\" UNIQUE  (\"" + String.Join("\", \"", key.Fields.ToStringArray()) + "\")";
         }
 
         public string GetFieldDDL(Field f)
         {
             string fieldDDL = "\"" + f.Name + "\" ";
-            if(!f.IsAutoIncrement)
+            if (!f.IsAutoIncrement)
                 fieldDDL += f.Table.Database.dbProvider.DbTypeToString(f.FieldType);
             if (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar)
                 fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
@@ -325,37 +404,15 @@ namespace Cinar.Database.Providers
                 fieldDDL += " SERIAL";
             if (!f.IsNullable)
                 fieldDDL += " NOT NULL";
-            if (f.IsPrimaryKey)
-                fieldDDL += " PRIMARY KEY";
-            if (!string.IsNullOrEmpty(f.DefaultValue))
+            //if (f.IsPrimaryKey)
+            //    fieldDDL += " PRIMARY KEY";
+            if (!string.IsNullOrEmpty(f.DefaultValue) && !f.DefaultValue.StartsWith("nextval("))
                 fieldDDL += " DEFAULT " + f.DefaultValue;
             if (f.ReferenceField != null)
-                fieldDDL += " REFERENCES [" + f.ReferenceField.Table.Name + "](" + f.ReferenceField.Name + ")";
+                fieldDDL += " REFERENCES \"" + f.ReferenceField.Table.Name + "\"(" + f.ReferenceField.Name + ")";
             return fieldDDL;
         }
 
         #endregion
     }
-
-    internal enum DbType4Postgres
-    {
-        Boolean = DbType.Boolean,
-        Bigint = DbType.Int64,
-        Smallint = DbType.Int16,
-        Integer = DbType.Int32,
-        Text = DbType.Text,
-        Real = DbType.Real,
-        Double_precision = DbType.Double,
-        Money = DbType.Currency,
-        Character = DbType.Char,
-        Character_varying = DbType.VarChar,
-        Date = DbType.Date,
-        Time_without_time_zone = DbType.Time,
-        Timestamp_without_time_zone = DbType.Timestamp,
-        Timestamp_with_time_zone = DbType.Timestamptz,
-        Time_with_time_zone = DbType.Timetz,
-        //Bit = DbType.Bit,
-        Numeric = DbType.Numeric
-    }
-
 }

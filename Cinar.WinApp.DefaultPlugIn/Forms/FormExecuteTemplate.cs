@@ -24,7 +24,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Forms
         CategoryName = "Raporlar",
         DisplayName = "Standart Raporlar",
         ImageKey = "cog")]
-    public partial class FormExecuteTemplate : XtraForm, IInterpressForm
+    public partial class FormExecuteTemplate : XtraForm, ICinarForm
     {
         public FormExecuteTemplate()
         {
@@ -124,7 +124,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Forms
         }
 
 
-        #region IInterpressForm Members
+        #region ICinarForm Members
 
         public Cinar.UICommands.CommandCollection GetCommands()
         {

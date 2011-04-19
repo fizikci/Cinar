@@ -821,24 +821,57 @@ namespace Cinar.Scripting
             //   {unary-expression} [* or /] {unary-expression}
             //   {unary-expression} [* or /] {unary-expression} [* or /] ...
 
-            Expression lNode = ParseIsExpression();
+            Expression lNode = ParseUnaryExpression();
 
             while (!AtEndOfSource)
             {
                 if (fCurrentToken.Equals(TokenType.Symbol, "*"))
                 {
                     ReadNextToken(); // skip '*'
-                    lNode = new Multiplication(lNode, ParseIsExpression());
+                    lNode = new Multiplication(lNode, ParseUnaryExpression());
                 }
                 else if (fCurrentToken.Equals(TokenType.Symbol, "/"))
                 {
                     ReadNextToken(); // skip '/'
-                    lNode = new Division(lNode, ParseIsExpression());
+                    lNode = new Division(lNode, ParseUnaryExpression());
                 }
                 else break;
             }
 
             return lNode;
+        }
+
+        Expression ParseUnaryExpression()
+        {
+            // unary expression:
+            //   {base-expression}
+            //   -{base-expression}
+            //   !{base-expression}
+
+            CheckForUnexpectedEndOfSource();
+            if (fCurrentToken.Equals(TokenType.Symbol, "-"))
+            {
+                ReadNextToken(); // skip '-'
+                return new Negation(ParseIsExpression());
+            }
+            else if (fCurrentToken.Equals(TokenType.Symbol, "!"))
+            {
+                ReadNextToken(); // skip '!'
+                return new NotExpression(ParseIsExpression());
+            }
+            else if (fCurrentToken.Equals(TokenType.Word, "new"))
+            {
+                ReadNextToken(); // skip 'new'
+                if (fCurrentToken.Type != TokenType.Word)
+                    throw new ParserException("Type name expected");
+                string constructorName = fCurrentToken.Value;
+                ReadNextToken(); // skip constructorName
+                return new NewExpression(ParseFunctionCall(constructorName));
+            }
+            else if (fCurrentToken.Equals(TokenType.Symbol, "+"))
+                ReadNextToken(); // skip '+'
+
+            return ParseIsExpression();
         }
 
         Expression ParseIsExpression()
@@ -865,7 +898,7 @@ namespace Cinar.Scripting
             // DOT-expression:
             //   {unary-expression} . {functionCallOrVariable}
 
-            Expression lNode = ParseUnaryExpression();
+            Expression lNode = ParseBaseExpression();
 
             while (!AtEndOfSource && (fCurrentToken.Value == "." || fCurrentToken.Value == "["))
             {
@@ -892,39 +925,6 @@ namespace Cinar.Scripting
             }
 
             return lNode;
-        }
-
-        Expression ParseUnaryExpression()
-        {
-            // unary expression:
-            //   {base-expression}
-            //   -{base-expression}
-            //   !{base-expression}
-
-            CheckForUnexpectedEndOfSource();
-            if (fCurrentToken.Equals(TokenType.Symbol, "-"))
-            {
-                ReadNextToken(); // skip '-'
-                return new Negation(ParseBaseExpression());
-            }
-            else if (fCurrentToken.Equals(TokenType.Symbol, "!"))
-            {
-                ReadNextToken(); // skip '!'
-                return new NotExpression(ParseBaseExpression());
-            }
-            else if (fCurrentToken.Equals(TokenType.Word, "new"))
-            {
-                ReadNextToken(); // skip 'new'
-                if (fCurrentToken.Type != TokenType.Word)
-                    throw new ParserException("Type name expected");
-                string constructorName = fCurrentToken.Value;
-                ReadNextToken(); // skip constructorName
-                return new NewExpression(ParseFunctionCall(constructorName));
-            }
-            else if (fCurrentToken.Equals(TokenType.Symbol, "+"))
-                ReadNextToken(); // skip '+'
-
-            return ParseBaseExpression();
         }
 
         Expression ParseBaseExpression()

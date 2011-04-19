@@ -30,7 +30,7 @@ namespace Cinar.Database.Providers
     /// <summary>
     /// MySQL'den metadata okuyan sýnýf
     /// </summary>
-    internal class MySqlProvider : IDatabaseProvider
+    public class MySqlProvider : IDatabaseProvider
     {
         private System.Data.IDbConnection con;
         public System.Data.IDbConnection Connection
@@ -107,7 +107,8 @@ namespace Cinar.Database.Providers
                 {
                     Field f = new Field();
                     f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
-                    f.FieldType = StringToDbType(drColumn["DATA_TYPE"].ToString());
+                    f.FieldTypeOriginal = drColumn["COLUMN_TYPE"].ToString()=="tinyint(1)" ? "BOOL" : drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
+                    f.FieldType = StringToDbType(f.FieldTypeOriginal);
                     f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
                     f.IsNullable = drColumn["IS_NULLABLE"].ToString() != "NO";
                     f.Name = drColumn["COLUMN_NAME"].ToString();
@@ -150,14 +151,15 @@ namespace Cinar.Database.Providers
 
         }
 
+        #region string <=> dbType conversion
+
         /// <summary>
         /// Veritabanýndan string olarak gelen field tip bilgisini DbType enum'una dönüþtürür.
         /// </summary>
         public DbType StringToDbType(string typeName)
         {
-            foreach (var elm in DEFStringToDbType)
-                if (elm.Key.ToLowerInvariant().Equals(typeName.ToLowerInvariant()))
-                    return elm.Value;
+            if (DEFStringToDbType.ContainsKey(typeName.ToUpperInvariant()))
+                return DEFStringToDbType[typeName];
             return DbType.Undefined;
         }
 
@@ -166,91 +168,95 @@ namespace Cinar.Database.Providers
         /// </summary>
         public string DbTypeToString(DbType dbType)
         {
-            if (dbType == DbType.Boolean) return "tinyint(1)";
-            foreach (var elm in DEFDbTypeToString)
-                if (elm.Key == dbType)
-                    return elm.Value;
+            if (DEFDbTypeToString.ContainsKey(dbType))
+                return DEFDbTypeToString[dbType];
             return "???";
         }
 
         public static Dictionary<DbType, string> DEFDbTypeToString = new Dictionary<DbType, string>() 
         { 
-            {DbType.Binary, "Binary"},
-            {DbType.Blob , "Blob"},
-            {DbType.BlobLong , "LongBlob"},
-            {DbType.BlobMedium, "MediumBlob"},
-            {DbType.BlobTiny, "TinyBlob"},
-            {DbType.Boolean, "Bit"},
-            {DbType.Byte, "Tinyint"},
-            {DbType.Char, "Char"},
-            {DbType.Currency, "Decimal"},
-            {DbType.CurrencySmall, "Decimal"},
-            {DbType.Date, "Date"},
-            {DbType.DateTime, "DateTime"},
-            {DbType.DateTimeSmall, "SmallDateTime"},
-            {DbType.Decimal, "Decimal"},
-            {DbType.Double, "Double"},
-            {DbType.Enum, "varchar"},
-            {DbType.Float, "Float"},
-            {DbType.Guid, "varchar"},
-            {DbType.Image, "Blob"},
-            {DbType.Int16, "SmallInt"},
-            {DbType.Int32, "Int"},
-            {DbType.Int64, "Bigint"},
-            {DbType.NChar, "Char"},
-            {DbType.NText, "Text"},
-            {DbType.Numeric, "Numeric"},
-            {DbType.NVarChar, "VarChar"},
-            {DbType.Real, "Real"},
-            {DbType.Set, "Set"},
-            {DbType.Text, "Text"},
-            {DbType.TextLong, "LongText"},
-            {DbType.TextMedium, "MediumText"},
-            {DbType.TextTiny, "TinyText"},
-            {DbType.Time, "Time"},
-            {DbType.Timestamp, "timestamp"},
-            {DbType.Timestamptz, "Timestamp"},
-            {DbType.Timetz, "Time"},
+            {DbType.Binary, "BINARY"},
+            {DbType.Blob , "BLOB"},
+            {DbType.BlobLong , "LONGBLOB"},
+            {DbType.BlobMedium, "MEDIUMBLOB"},
+            {DbType.BlobTiny, "TINYBLOB"},
+            {DbType.Boolean, "BOOL"},
+            {DbType.Byte, "TINYINT"},
+            {DbType.Char, "CHAR"},
+            {DbType.Currency, "DECIMAL"},
+            {DbType.CurrencySmall, "DECIMAL"},
+            {DbType.Date, "DATE"},
+            {DbType.DateTime, "DATETIME"},
+            {DbType.DateTimeSmall, "SMALLDATETIME"},
+            {DbType.Decimal, "DECIMAL"},
+            {DbType.Double, "DOUBLE"},
+            {DbType.Enum, "VARCHAR"},
+            {DbType.Float, "FLOAT"},
+            {DbType.Guid, "VARCHAR"},
+            {DbType.Image, "BLOB"},
+            {DbType.Int16, "SMALLINT"},
+            {DbType.Int32, "INT"},
+            {DbType.Int64, "BIGINT"},
+            {DbType.NChar, "CHAR"},
+            {DbType.NText, "TEXT"},
+            {DbType.Numeric, "NUMERIC"},
+            {DbType.NVarChar, "VARCHAR"},
+            {DbType.Real, "REAL"},
+            {DbType.Set, "SET"},
+            {DbType.Text, "TEXT"},
+            {DbType.TextLong, "LONGTEXT"},
+            {DbType.TextMedium, "MEDIUMTEXT"},
+            {DbType.TextTiny, "TINYTEXT"},
+            {DbType.Time, "TIME"},
+            {DbType.Timestamp, "TIMESTAMP"},
+            {DbType.Timestamptz, "TIMESTAMP"},
+            {DbType.Timetz, "TIME"},
             {DbType.Undefined, "???"},
-            {DbType.VarBinary, "Binary"},
-            {DbType.VarChar, "VarChar"},
-            {DbType.Variant, "Blob"},
-            {DbType.Xml, "text"}
+            {DbType.VarBinary, "BINARY"},
+            {DbType.VarChar, "VARCHAR"},
+            {DbType.Variant, "BLOB"},
+            {DbType.Xml, "TEXT"}
         };
 
         public static Dictionary<string, DbType> DEFStringToDbType = new Dictionary<string, DbType>() 
         { 
-            {"Binary", DbType.Binary},
-            {"Blob", DbType.Blob},
-            {"LongBlob", DbType.BlobLong},
-            {"MediumBlob", DbType.BlobMedium},
-            {"TinyBlob", DbType.BlobTiny},
-            {"Bit", DbType.Boolean},
-            {"Tinyint", DbType.Byte},
-            {"Char", DbType.Char},
-            {"Date", DbType.Date},
-            {"DateTime", DbType.DateTime},
-            {"SmallDateTime", DbType.DateTimeSmall},
-            {"Decimal", DbType.Decimal},
-            {"Enum", DbType.VarChar},
-            {"Float", DbType.Float},
-            {"Double", DbType.Double},
-            {"SmallInt", DbType.Int16},
-            {"MediumInt", DbType.Int32},
-            {"Int", DbType.Int32},
-            {"Bigint", DbType.Int64},
-            {"Numeric", DbType.Numeric},
-            {"Real", DbType.Real},
-            {"Set", DbType.Set},
-            {"Text", DbType.Text},
-            {"LongText", DbType.TextLong},
-            {"MediumText", DbType.TextMedium},
-            {"TinyText", DbType.TextTiny},
-            {"Time", DbType.Time},
-            {"Timestamp", DbType.Timestamp},
-            {"VarChar", DbType.VarChar}
+            {"BINARY", DbType.Binary},
+            {"BLOB", DbType.Blob},
+            {"LONGBLOB", DbType.BlobLong},
+            {"MEDIUMBLOB", DbType.BlobMedium},
+            {"TINYBLOB", DbType.BlobTiny},
+            {"BIT", DbType.Binary},
+            {"BOOL", DbType.Boolean},
+            {"TINYINT", DbType.Byte},
+            {"CHAR", DbType.Char},
+            {"DATE", DbType.Date},
+            {"DATETIME", DbType.DateTime},
+            {"SMALLDATETIME", DbType.DateTimeSmall},
+            {"DECIMAL", DbType.Decimal},
+            {"ENUM", DbType.VarChar},
+            {"FLOAT", DbType.Float},
+            {"DOUBLE", DbType.Double},
+            {"SMALLINT", DbType.Int16},
+            {"MEDIUMINT", DbType.Int32},
+            {"INT", DbType.Int32},
+            {"BIGINT", DbType.Int64},
+            {"NUMERIC", DbType.Numeric},
+            {"REAL", DbType.Real},
+            {"SET", DbType.Set},
+            {"TEXT", DbType.Text},
+            {"LONGTEXT", DbType.TextLong},
+            {"MEDIUMTEXT", DbType.TextMedium},
+            {"TINYTEXT", DbType.TextTiny},
+            {"TIME", DbType.Time},
+            {"TIMESTAMP", DbType.Timestamp},
+            {"VARCHAR", DbType.VarChar}
         };
 
+        public string[] GetFieldTypes() {
+            return DEFStringToDbType.Keys.ToArray();
+        }
+
+        #endregion
 
         #region INFORMATION_SCHEMA SQL ÝFADELERÝ
         // tablolar
@@ -265,6 +271,7 @@ namespace Cinar.Database.Providers
         private string SQLFields = @"
 											select
 												COLUMN_NAME,
+                                                COLUMN_TYPE,
 												DATA_TYPE,
 												CHARACTER_MAXIMUM_LENGTH,
 												IS_NULLABLE,
@@ -299,7 +306,6 @@ namespace Cinar.Database.Providers
                                             WHERE
 	                                            TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
         #endregion
-
 
         #region IDatabaseProvider Members
 
@@ -348,6 +354,8 @@ namespace Cinar.Database.Providers
 
         public string GetTableDDL(Table table)
         {
+            checkTable(table);
+
             int len = ("," + Environment.NewLine).Length;
 
             StringBuilder sbFields = new StringBuilder();
@@ -363,6 +371,20 @@ namespace Cinar.Database.Providers
                 (table.IsView ? "VIEW" : "TABLE"),
                 table.Name,
                 sbFields.ToString());
+        }
+
+        private void checkTable(Table table)
+        {
+            Field autoIncrementField = table.Fields.Find(f => f.IsAutoIncrement);
+            Key primaryKey = table.Keys == null ? null : table.Keys.Find(k => k.IsPrimary);
+            if (autoIncrementField != null && (primaryKey == null || !primaryKey.FieldNames.Contains(autoIncrementField.Name)))
+            {
+                if (table.Keys == null) table.Keys = new KeyCollection(table);
+                if (primaryKey == null)
+                    table.Keys.Add(new Key { FieldNames = new List<string> { autoIncrementField.Name }, IsPrimary = true, IsUnique = true, Name = "pk_" + table.Name });
+                else
+                    primaryKey.FieldNames.Add(autoIncrementField.Name);
+            }
         }
 
         public string GetIndexKeyDDL(Key key)
@@ -399,36 +421,6 @@ namespace Cinar.Database.Providers
         }
 
         #endregion
-    }
-
-    internal enum DbType4MySQL
-    {
-        Bigint = DbType.Int64,
-        Binary = DbType.Binary,
-        Bit = DbType.Boolean,
-        Blob = DbType.Blob,
-        Tinyint = DbType.Boolean,
-        Char = DbType.Char,
-        Date = DbType.Date,
-        Datetime = DbType.DateTime,
-        Decimal = DbType.Decimal,
-        Double = DbType.Double,
-        Float = DbType.Float,
-        Int = DbType.Int32,
-        Longblob = DbType.BlobLong,
-        Longtext = DbType.TextLong,
-        Mediumblob = DbType.BlobMedium,
-        Mediumint = DbType.Int32,
-        Mediumtext = DbType.TextMedium,
-        Smallint = DbType.Int16,
-        Text = DbType.Text,
-        Time = DbType.Time,
-        Timestamp = DbType.Timestamp,
-        Tinyblob = DbType.BlobTiny,
-        Tinytext = DbType.TextTiny,
-        Varchar = DbType.VarChar,
-        Set = DbType.Set,
-        Enum = DbType.Enum
     }
 
 }

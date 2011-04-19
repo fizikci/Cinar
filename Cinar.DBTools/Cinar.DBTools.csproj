@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cinar.DBTools</RootNamespace>
     <AssemblyName>Cinar.DBTools</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ApplicationIcon>yaprak.ico</ApplicationIcon>
@@ -37,6 +37,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -85,6 +86,12 @@
     <Compile Include="CinarSQLEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\SQLInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SQLInputDialog.Designer.cs">
+      <DependentUpon>SQLInputDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MyDataGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,11 +101,11 @@
     <Compile Include="Controls\SQLEditorAndResults.Designer.cs">
       <DependentUpon>SQLEditorAndResults.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TextInputDialog.cs">
+    <Compile Include="Controls\ScriptInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\TextInputDialog.Designer.cs">
-      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    <Compile Include="Controls\ScriptInputDialog.Designer.cs">
+      <DependentUpon>ScriptInputDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="FindDialog.cs">
       <SubType>Form</SubType>
@@ -124,32 +131,31 @@
       <DependentUpon>CinarSQLEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SQLInputDialog.resx">
+      <DependentUpon>SQLInputDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\SQLEditorAndResults.resx">
       <DependentUpon>SQLEditorAndResults.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TextInputDialog.resx">
-      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ScriptInputDialog.resx">
+      <DependentUpon>ScriptInputDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FindDialog.resx">
       <DependentUpon>FindDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMain.resx">
-      <DependentUpon>FormMain.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="FormConnect.resx">
       <DependentUpon>FormConnect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources.resx">
+    <EmbeddedResource Include="SQLResources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>SQLResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormSQLDump.resx">
       <DependentUpon>FormSQLDump.cs</DependentUpon>
@@ -220,24 +226,20 @@
       <DependentUpon>SelectTableDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Resources.Designer.cs">
+    <Compile Include="SQLResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>SQLResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\CodeGenerator.cs" />
     <Compile Include="Tools\FormSQLDump.cs">
@@ -361,6 +363,10 @@
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cinar.FamFamFam\Cinar.FamFamFam.csproj">
+      <Project>{73C0D1FF-4C20-4EA1-9224-A461AD0AF249}</Project>
+      <Name>Cinar.FamFamFam</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
       <Project>{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}</Project>
       <Name>Cinar.POP3</Name>
@@ -421,7 +427,6 @@
     <None Include="Resources\Method.PNG" />
     <None Include="Resources\Property.PNG" />
     <None Include="Resources\Struct.PNG" />
-    <None Include="Resources\disk.png" />
     <Content Include="ToDo.txt" />
     <Content Include="yaprak.ico" />
     <Content Include="_library\ICSharpCode.TextEditor.dll" />

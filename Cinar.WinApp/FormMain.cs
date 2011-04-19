@@ -184,17 +184,17 @@ namespace Cinar.WinApp
             ListEntity le = (ListEntity)ActiveMdiChild;
             le.ChangeView();
         }
-        Dictionary<IInterpressForm, CommandManager> childCommandMans = new Dictionary<IInterpressForm, CommandManager>();
+        Dictionary<ICinarForm, CommandManager> childCommandMans = new Dictionary<ICinarForm, CommandManager>();
         private void cmdOpenForm(string arg)
         {
             EditFormAttribute efa = DMT.Provider.UIMetaData.EditForms.Find(e => e.FormType != null && e.FormType.FullName == arg);
             if (efa != null)
             {
-                IInterpressForm form = null;
+                ICinarForm form = null;
                 if (efa.FormType.GetInterface("IEntityEditControl") != null)
                     form = new ListEntity((IEntityEditControl)Activator.CreateInstance(efa.FormType));
                 else
-                    form = (IInterpressForm)Activator.CreateInstance(efa.FormType);
+                    form = (ICinarForm)Activator.CreateInstance(efa.FormType);
                 (form as Form).Text = ((EditFormAttribute)cmdMan.LastSender.GetMemberValue("Tag")).DisplayName;
 
                 CommandManager cmdManChild = new CommandManager();
@@ -219,7 +219,7 @@ namespace Cinar.WinApp
         }
         void form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            childCommandMans.Remove((IInterpressForm)sender);
+            childCommandMans.Remove((ICinarForm)sender);
         }
         private void appIdleForChildCommandMans(object sender, EventArgs arg)
         {

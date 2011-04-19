@@ -1459,7 +1459,6 @@ namespace Cinar.Database
         #endregion
 
         #region mapping
-        //TODO: clear these dictionaries on refresh metadata
         private Dictionary<Type, Table> tableMappingInfo = new Dictionary<Type, Table>();
         private Dictionary<PropertyInfo, Field> fieldMappingInfo = new Dictionary<PropertyInfo, Field>();
         public Table GetTableForEntityType(Type entityType)
@@ -1533,6 +1532,13 @@ namespace Cinar.Database
         #endregion
 
         #region DDL
+        public string DbTypeToString(DbType dbType) { return dbProvider.DbTypeToString(dbType); }
+        public DbType StringToDbType(string dbType) { return dbProvider.StringToDbType(dbType); }
+        public string[] GetOriginalFieldTypes()
+        {
+            return dbProvider.GetFieldTypes();
+        }
+
         public string GetDatabaseDDL(bool addDropTable)
         {
             StringBuilder sb = new StringBuilder();
@@ -1592,65 +1598,74 @@ namespace Cinar.Database
             return dbProvider.GetFieldDDL(field);
         }
 
-        public void AlterTableRename(string oldName, string newName)
+        public string GetAlterTableRenameDDL(string oldName, string newName)
         {
             switch (Provider)
             {
                 case DatabaseProvider.PostgreSQL:
                 case DatabaseProvider.MySQL:
-                    this.ExecuteNonQuery("ALTER TABLE [" + oldName + "] RENAME TO [" + newName + "]");
-                    break;
+                    return "ALTER TABLE [" + oldName + "] RENAME TO [" + newName + "]";
                 case DatabaseProvider.SQLServer:
-                    this.ExecuteNonQuery("EXEC sp_rename {0}, {1}", oldName, newName);
-                    break;
+                    return "EXEC sp_rename " + oldName + ", " + newName;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        public void AlterTableRenameColumn(string tableName, string oldColumnName, string newColumnName)
+        public string GetAlterTableRenameColumnDDL(string tableName, string oldColumnName, string newColumnName)
         {
             switch (Provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    this.ExecuteNonQuery("ALTER TABLE [" + tableName + "] RENAME [" + oldColumnName + "] TO [" + newColumnName + "]");
-                    break;
+                    return "ALTER TABLE [" + tableName + "] RENAME [" + oldColumnName + "] TO [" + newColumnName + "]";
                 case DatabaseProvider.MySQL:
-                    this.ExecuteNonQuery("ALTER TABLE [" + tableName + "] CHANGE [" + oldColumnName + "] " + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName));
-                    break;
+                    return "ALTER TABLE [" + tableName + "] CHANGE [" + oldColumnName + "] " + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName);
                 case DatabaseProvider.SQLServer:
-                    this.ExecuteNonQuery(string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", tableName, oldColumnName, newColumnName));
-                    break;
+                    return string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", tableName, oldColumnName, newColumnName);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-        public void AlterTableAddColumn(Field field)
-        {
-            this.ExecuteNonQuery("alter table [" + field.Table.Name + "] add " + GetFieldDDL(field));
-        }
-        public void AlterTableDropColumn(Field field)
-        {
-            this.ExecuteNonQuery("alter table [" + field.Table.Name + "] drop [" + field.Name + "]");
         }
 
-        public void AlterTableChangeColumn(Field field)
+        public string GetAlterTableAddColumnDDL(Field field)
+        {
+            return "ALTER TABLE [" + field.Table.Name + "] ADD " + GetFieldDDL(field);
+        }
+        public string GetAlterTableDropColumnDDL(Field field)
+        {
+            return "ALTER TABLE [" + field.Table.Name + "] DROP COLUMN [" + field.Name + "]";
+        }
+        public string GetAlterTableChangeColumnDDL(Field field)
         {
             switch (Provider)
             {
                 case DatabaseProvider.PostgreSQL:
                     throw new Exception("Alter column is not implemented for Postgre SQL!");
                 case DatabaseProvider.MySQL:
-                    this.ExecuteNonQuery("alter table [" + field.Table.Name + "] modify column " + GetFieldDDL(field));
-                    break;
+                    return "ALTER TABLE [" + field.Table.Name + "] MODIFY COLUMN " + GetFieldDDL(field);
                 case DatabaseProvider.SQLServer:
-                    this.ExecuteNonQuery("alter table [" + field.Table.Name + "] alter column " + GetFieldDDL(field));
-                    break;
+                    return "ALTER TABLE [" + field.Table.Name + "] ALTER COLUMN " + GetFieldDDL(field);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        #endregion
 
+        public string GetAlterTableAddKeyDDL(Key key)
+        {
+            if (Provider == DatabaseProvider.SQLServer)
+            {
+                if(key.IsPrimary)
+                    return "ALTER TABLE [" + key.parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT " + key.Name + " PRIMARY KEY CLUSTERED (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
+                else if(key.IsUnique)
+                    return "ALTER TABLE [" + key.parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT " + key.Name + " UNIQUE (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
+            }
+
+            return "CREATE " + (key.IsUnique ? "UNIQUE" : "") + " INDEX " + key.Name + " ON " + key.parent.table.Name + " (" + string.Join(", ", key.FieldNames.ToArray()) + ")";
+        }
+        public string GetAlterTableDropKeyDDL(Key key)
+        {
+            return "DROP INDEX " + key.Name;
+        }
+        #endregion
     }
 
     public delegate void DbAction();

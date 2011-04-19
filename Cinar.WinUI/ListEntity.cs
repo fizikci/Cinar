@@ -21,7 +21,7 @@ using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {
-    public partial class ListEntity : XtraForm, IInterpressForm
+    public partial class ListEntity : XtraForm, ICinarForm
     {
         public ServiceProvider Provider
         {

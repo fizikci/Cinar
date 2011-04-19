@@ -37,16 +37,14 @@ namespace Cinar.Database
         /// <summary>
         /// Bu field'ın ait olduğu tablo
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public Table Table
         {
             get { return this.parent.table; }
         }
 	
         private string name;
-        /// <summary>
-        /// Field'ın adı.
-        /// </summary>
+        [Description("Name of the field"), Category("DDL")]
         public string Name
         {
             get { return name; }
@@ -62,19 +60,18 @@ namespace Cinar.Database
         }
 
         private DbType fieldType;
-        /// <summary>
-        /// Bu field'ın tipi
-        /// </summary>
+        [Description("Type of the field"), Category("DDL")]
         public Cinar.Database.DbType FieldType
         {
             get { return fieldType; }
             set { fieldType = value; }
         }
 
+        [Description("Field type name on the owner database"), Category("DDL")]
+        public string FieldTypeOriginal { get; set; }
+
         private bool isNullable;
-        /// <summary>
-        /// Insert ve updatelerde bu field'ın değeri boş (null) bırakılabilir mi?
-        /// </summary>
+        [Description("Can be nullable?"), Category("DDL")]
         public bool IsNullable
         {
             get { return isNullable; }
@@ -82,10 +79,7 @@ namespace Cinar.Database
         }
 
         private string defaultValue;
-        /// <summary>
-        /// Bir insert sorgusunda bu field belirtilmezse default olarak girilmesi gereken değer nedir?
-        /// Bu değer veritabanından "select " + field.DefaultValue + " from " + field.Table.Name şeklinde okunmalıdır.
-        /// </summary>
+        [Description("If not specified, what is the default value of this field? (Can be an SQL expression.)"), Category("DDL")]
         public string DefaultValue
         {
             get { return defaultValue; }
@@ -93,34 +87,29 @@ namespace Cinar.Database
         }
 
         private long length;
-        /// <summary>
-        /// Eğer bu bir varchar veya char türü bir alan ise maximum karekter boyu nedir?
-        /// </summary>
+        [Description("What is the maximum number of characters if this field is char or varchar?"), Category("DDL")]
         public long Length
         {
             get { return length; }
             set { length = value; }
         }
 
-        /// <summary>
-        /// Bu alan tek başına Primary Key olarak tanımlanmış mıdır?
-        /// </summary>
+        [Description("Is this this field a standalone primary key?"), Category("Extra Info")]
         [XmlIgnore]
         public bool IsPrimaryKey
         {
             get 
             {
-                foreach (Key key in this.Table.Keys)
-                    if (key.IsPrimary && key.FieldNames.Count == 1 && key.Fields[0].Name==this.Name)
-                        return true;
+                if(this.Table.Keys!=null)
+                    foreach (Key key in this.Table.Keys)
+                        if (key.IsPrimary && key.FieldNames.Count == 1 && key.Fields[0].Name==this.Name)
+                            return true;
                 return false;
             }
         }
 
         private bool isAutoIncrement;
-        /// <summary>
-        /// Bu alan auto_increment veya serial veya identity midir? Yani otomatik artar mı?
-        /// </summary>
+        [Description("Is this field auto_icrement or serial or identity? That is automatically increasing number.."), Category("Extra Info")]
         public bool IsAutoIncrement
         {
             get { return isAutoIncrement; }
@@ -128,20 +117,15 @@ namespace Cinar.Database
         }
 
         private string referenceFieldName;
-        /// <summary>
-        /// Bu alanın referans verdiği başka bir tablodaki alan.
-        /// </summary>
+        [Description("Another field on a different table which is referenced by this field as tableName.fieldName"), Category("Extra Info")]
         public string ReferenceFieldName
         {
             get { return referenceFieldName; }
             set { referenceFieldName = value; }
         }
-	
 
-        /// <summary>
-        /// Bu alanın referans verdiği başka bir tablodaki alan.
-        /// </summary>
-        [XmlIgnore]
+
+        [XmlIgnore, Browsable(false)]
         public Field ReferenceField
         {
             get {
@@ -211,46 +195,79 @@ namespace Cinar.Database
         public bool IsDateType()
         {
             return
-                fieldType == DbType.Date ||
-                fieldType == DbType.DateTime ||
-                fieldType == DbType.DateTimeSmall;
-                //fieldType == DbType.Time ||
-                //fieldType == DbType.Timestamp ||
-                //fieldType == DbType.Timestamptz ||
-                //fieldType == DbType.Timetz;
+                SimpleFieldType == SimpleDbType.DateTime;
         }
 
         public bool IsNumericType()
         {
             return
-                fieldType == DbType.Byte ||
-                fieldType == DbType.Currency ||
-                fieldType == DbType.CurrencySmall ||
-                fieldType == DbType.Decimal ||
-                fieldType == DbType.Double ||
-                fieldType == DbType.Float ||
-                fieldType == DbType.Int16 ||
-                fieldType == DbType.Int32 ||
-                fieldType == DbType.Int64 ||
-                fieldType == DbType.Numeric ||
-                fieldType == DbType.Real;
+                SimpleFieldType == SimpleDbType.Integer ||
+                SimpleFieldType == SimpleDbType.Float;
         }
 
         public bool IsStringType()
         {
             return
-                fieldType == DbType.Char ||
-                fieldType == DbType.Enum ||
-                fieldType == DbType.Guid ||
-                fieldType == DbType.NChar ||
-                fieldType == DbType.NText ||
-                fieldType == DbType.NVarChar ||
-                fieldType == DbType.Text ||
-                fieldType == DbType.TextLong ||
-                fieldType == DbType.TextMedium ||
-                fieldType == DbType.TextTiny ||
-                fieldType == DbType.VarChar ||
-                fieldType == DbType.Xml;
+                SimpleFieldType == SimpleDbType.String ||
+                SimpleFieldType == SimpleDbType.Text;
+        }
+
+        public SimpleDbType SimpleFieldType
+        {
+            get {
+                switch (FieldType)
+                {
+                    case DbType.Boolean:
+                        return SimpleDbType.Boolean;
+                    case DbType.Byte:
+                    case DbType.Int16:
+                    case DbType.Int32:
+                    case DbType.Int64:
+                        return SimpleDbType.Integer;
+                    case DbType.Real:
+                    case DbType.Float:
+                    case DbType.Decimal:
+                    case DbType.Double:
+                    case DbType.Numeric:
+                    case DbType.Currency:
+                    case DbType.CurrencySmall:
+                        return SimpleDbType.Float;
+                    case DbType.DateTimeSmall:
+                    case DbType.DateTime:
+                    case DbType.Date:
+                    case DbType.Time:
+                    case DbType.Timetz:
+                    case DbType.Timestamp:
+                    case DbType.Timestamptz:
+                        return SimpleDbType.DateTime;
+                    case DbType.Char:
+                    case DbType.VarChar:
+                    case DbType.NChar:
+                    case DbType.NVarChar:
+                    case DbType.Guid:
+                    case DbType.Enum:
+                    case DbType.Variant:
+                    case DbType.Set:
+                        return SimpleDbType.String;
+                    case DbType.Binary:
+                    case DbType.VarBinary:
+                    case DbType.Image:
+                    case DbType.Blob:
+                    case DbType.BlobTiny:
+                    case DbType.BlobMedium:
+                    case DbType.BlobLong:
+                        return SimpleDbType.ByteArray;
+                    case DbType.Text:
+                    case DbType.NText:
+                    case DbType.TextTiny:
+                    case DbType.TextMedium:
+                    case DbType.TextLong:
+                    case DbType.Xml:
+                        return SimpleDbType.Text;
+                    default:
+                        return SimpleDbType.String;
+                }
+            }
         }
 
         public void GenerateUIMetadata()
@@ -278,6 +295,7 @@ namespace Cinar.Database
             UIMetadata.SortableInGrid = true;
         }
 
+        [Description("The definitions for this field to be used generatin of UI code"), Category("Extra Info")]
         public FieldUIMetadata UIMetadata { get; set; }
     }
 

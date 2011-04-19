@@ -427,7 +427,7 @@ namespace Cinar.DBTools.Tools
 
             try
             {
-                conn.Database.AlterTableAddColumn(f);
+                conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableAddColumnDDL(f));
 
                 selectedTVs[0].Size += new Size(0, Schema.Def_FieldHeight);
                 selectedTVs[0].Modified = true;
@@ -463,7 +463,7 @@ namespace Cinar.DBTools.Tools
                 key.IsPrimary = true;
                 key.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
                 key.IsUnique = true;
-                key.Name = "PRIMARY";
+                key.Name = "PK_" + selectedTVs[0].TableName;
             }
             else
             {
@@ -480,7 +480,7 @@ namespace Cinar.DBTools.Tools
                 {
                     try
                     {
-                        conn.Database.AlterTableRename(e.OldValue.ToString(), e.ChangedItem.Value.ToString());
+                        conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableRenameDDL(e.OldValue.ToString(), e.ChangedItem.Value.ToString()));
                         CurrentSchema.GetTableView(e.OldValue.ToString()).TableName = e.ChangedItem.Value.ToString();
                     }
                     catch (Exception ex)
@@ -492,7 +492,7 @@ namespace Cinar.DBTools.Tools
                 {
                     try
                     {
-                        conn.Database.AlterTableRenameColumn(selectedTVs[0].TableName, e.OldValue.ToString(), e.ChangedItem.Value.ToString());
+                        conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableRenameColumnDDL(selectedTVs[0].TableName, e.OldValue.ToString(), e.ChangedItem.Value.ToString()));
                     }
                     catch (Exception ex)
                     {
@@ -504,7 +504,7 @@ namespace Cinar.DBTools.Tools
             {
                 try
                 {
-                    conn.Database.AlterTableChangeColumn(propertyGrid.SelectedObject as Field);
+                    conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableChangeColumnDDL(propertyGrid.SelectedObject as Field));
                 }
                 catch (Exception ex)
                 {
