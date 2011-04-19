@@ -31,9 +31,9 @@ namespace BoneSoft.CSS {
 		}
 		private void FromRGB(Color color) {
 			double min; double max; double delta;
-			double r = (double)color.R / 255D;
-			double g = (double)color.G / 255D;
-			double b = (double)color.B / 255D;
+			double r = color.R / 255D;
+			double g = color.G / 255D;
+			double b = color.B / 255D;
 			double h; double s; double v;
 
 			min = Math.Min(Math.Min(r, g), b);
@@ -112,5 +112,13 @@ namespace BoneSoft.CSS {
 		public static bool operator ==(HSV left, HSV right) {
 			return (left.Hue == right.Hue && left.Value == right.Value && left.Saturation == right.Saturation);
 		}
+        public override bool Equals(object obj)
+        {
+            return this == (HSV)obj;
+        }
+        public override int GetHashCode()
+        {
+            return Hue*1000000 + Value*1000 + Saturation;
+        }
 	}
 }

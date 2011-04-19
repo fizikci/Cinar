@@ -15,7 +15,6 @@ using System.Reflection;
 using Cinar.Entities.Standart;
 using Cinar.Database;
 using System.Configuration;
-using Cinar.Entities.Standart;
 
 namespace Cinar.WinUI
 {
@@ -54,7 +53,7 @@ namespace Cinar.WinUI
                 {
                     try
                     {
-                        Cinar.Entities.Context.Db = Db;
+                        Entities.Context.Db = Db;
 
                         clientUser = Db.Read<User>("[UserName]={0} AND [Password]={1}", giris.Username, giris.Password);
 
@@ -67,15 +66,13 @@ namespace Cinar.WinUI
                                     clientUser.AddRight(right.Name);
                                 }
 
-                            Cinar.Entities.Context.ClientUser = clientUser;
+                            Entities.Context.ClientUser = clientUser;
 
                             return true;
                         }
-                        else
-                        {
-                            Alert("Tanımsız kullanıcı!");
-                            return false;
-                        }
+
+                        Alert("Tanımsız kullanıcı!");
+                        return false;
                     }
                     catch (Exception ex)
                     {
@@ -83,15 +80,12 @@ namespace Cinar.WinUI
                         return false;
                     }
                 }
-                else
-                    throw new Exception("Cancel");
+ 
+                throw new Exception("Cancel");
             }
-            else
-            {
-                FeedBack("Zaten oturum açılmış durumda");
-                return true;
-            }
-            return false;
+
+            FeedBack("Zaten oturum açılmış durumda");
+            return true;
         }
         public void Logout()
         {

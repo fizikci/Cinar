@@ -33,7 +33,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Controls
 
             this.editName.EntityType = typeof(Report);
 
-            layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.cog;
+            layoutControlItemName.Image = FamFamFam.cog;
 		}
 
 		public CommandCollection GetCommands()

@@ -730,8 +730,6 @@ namespace Cinar.TemplateDesign
 
         public byte[] myMergeTiffStreams(MemoryStream[] sourceStream)
         {
-            bool response = false;
-
             MemoryStream targetStream = new MemoryStream();
             try
             {
@@ -761,12 +759,10 @@ namespace Cinar.TemplateDesign
                 // Last page
                 finalImage.SaveAdd(tifEncoderParametersPageLast);
                 finalImage.Dispose();
-                response = true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                response = false;
             }
 
             return targetStream.ToArray();

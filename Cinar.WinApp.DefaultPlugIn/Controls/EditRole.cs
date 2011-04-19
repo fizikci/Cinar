@@ -28,7 +28,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Controls
             this.editRight.EntityType = typeof(Right);
             this.editName.EntityType = typeof(Role);
 
-            layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.shield;
+            layoutControlItemName.Image = FamFamFam.shield;
         }
 
         public CommandCollection GetCommands()

@@ -27,8 +27,8 @@ namespace Cinar.LocalizationTool
             {
                 if (db == null)
                 {
-                    string sqlCon = ConfigurationSettings.AppSettings["sqlConnection"];
-                    DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationSettings.AppSettings["sqlProvider"]);
+                    string sqlCon = ConfigurationManager.AppSettings["sqlConnection"];
+                    DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]);
                     db = new Database.Database(sqlCon, sqlPro);
                 }
                 return db;

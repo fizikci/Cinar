@@ -15,10 +15,10 @@ namespace Cinar.WinUI
         {
             InitializeComponent();
 
-            if (ConfigurationSettings.AppSettings["defaultUserName"] != null)
-                editUserName.Text = ConfigurationSettings.AppSettings["defaultUserName"];
-            if (ConfigurationSettings.AppSettings["defaultPassword"] != null)
-                editPassword.Text = ConfigurationSettings.AppSettings["defaultPassword"];
+            if (ConfigurationManager.AppSettings["defaultUserName"] != null)
+                editUserName.Text = ConfigurationManager.AppSettings["defaultUserName"];
+            if (ConfigurationManager.AppSettings["defaultPassword"] != null)
+                editPassword.Text = ConfigurationManager.AppSettings["defaultPassword"];
 
             editUserName.Focus();
         }

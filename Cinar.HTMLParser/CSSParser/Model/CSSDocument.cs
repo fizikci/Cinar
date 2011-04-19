@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 namespace BoneSoft.CSS {
 	/// <summary></summary>
 	public class CSSDocument : IRuleSetContainer {
-		private string charset;
 		private List<Directive> dirs = new List<Directive>();
 		private List<RuleSet> rulesets = new List<RuleSet>();
 

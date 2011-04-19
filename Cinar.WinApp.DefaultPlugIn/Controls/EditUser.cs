@@ -26,7 +26,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Controls
             InitializeComponent();
 
             this.editName.EntityType = typeof(User);
-            layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.user;
+            layoutControlItemName.Image = FamFamFam.user;
         }
 
         public CommandCollection GetCommands()

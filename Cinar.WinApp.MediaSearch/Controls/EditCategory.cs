@@ -26,7 +26,7 @@ namespace Cinar.WinApp.MediaSearch.Controls
             InitializeComponent();
 
             this.editName.EntityType = typeof(Category);
-            layoutControlItemName.Image = Cinar.WinUI.Properties.Resources.folder;
+            layoutControlItemName.Image = FamFamFam.folder;
         }
 
         public CommandCollection GetCommands()
