@@ -341,7 +341,7 @@ namespace Cinar.Database
                     if (sf.GetFileName() != null && sf.GetFileName().Contains("Sitematik\\Library"))
                         sbSQL.AppendFormat("{0}({1}), ", sf.GetMethod().DeclaringType.Name + "." + sf.GetMethod().Name, sf.GetFileLineNumber());
                 }
-                SQLLog.Add(sbSQL.ToString() + "\n");
+                SQLLog.Add(sbSQL + "\n");
             }
 
             return sql;
@@ -1550,13 +1550,11 @@ namespace Cinar.Database
                     switch (Provider)
                     {
                         case DatabaseProvider.MySQL:
-                            sb.AppendLine("DROP TABLE IF EXISTS " + tbl.Name + ";");
+                        case DatabaseProvider.PostgreSQL:
+                            sb.AppendLine("DROP TABLE IF EXISTS [" + tbl.Name + "];");
                             break;
                         case DatabaseProvider.SQLServer:
                             sb.AppendLine("IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[" + tbl.Name + "]') AND type in (N'U')) DROP TABLE [" + tbl.Name + "];");
-                            break;
-                        case DatabaseProvider.PostgreSQL:
-                            //TODO: add drop table syntax for postgre...
                             break;
                     }
                 }
@@ -1606,7 +1604,7 @@ namespace Cinar.Database
                 case DatabaseProvider.MySQL:
                     return "ALTER TABLE [" + oldName + "] RENAME TO [" + newName + "]";
                 case DatabaseProvider.SQLServer:
-                    return "EXEC sp_rename " + oldName + ", " + newName;
+                    return "EXEC sp_rename [" + oldName + "], [" + newName + "]";
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -1616,9 +1614,9 @@ namespace Cinar.Database
             switch (Provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    return "ALTER TABLE [" + tableName + "] RENAME [" + oldColumnName + "] TO [" + newColumnName + "]";
+                    return "ALTER TABLE \"" + tableName + "\" RENAME \"" + oldColumnName + "\" TO \"" + newColumnName + "\"";
                 case DatabaseProvider.MySQL:
-                    return "ALTER TABLE [" + tableName + "] CHANGE [" + oldColumnName + "] " + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName);
+                    return "ALTER TABLE `" + tableName + "` CHANGE `" + oldColumnName + "` `" + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName) + "`";
                 case DatabaseProvider.SQLServer:
                     return string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", tableName, oldColumnName, newColumnName);
                 default:
@@ -1651,7 +1649,15 @@ namespace Cinar.Database
 
         public string GetAlterTableDropKeyDDL(Index index)
         {
-            return "DROP INDEX " + index.Name + " ON " + index.parent.table.Name;
+            switch (Provider)
+            {
+                case DatabaseProvider.MySQL:
+                case DatabaseProvider.SQLServer:
+                    return "DROP INDEX [" + index.Name + "] ON [" + index.parent.table.Name + "]";
+                case DatabaseProvider.PostgreSQL:
+                    return "DROP INDEX [" + index.Name + "]";
+            }
+            throw new Exception(Provider + " is not supported.");
         }
 
         // http://troels.arvin.dk/db/rdbms/

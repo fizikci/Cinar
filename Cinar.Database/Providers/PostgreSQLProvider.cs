@@ -409,7 +409,7 @@ namespace Cinar.Database.Providers
             if (!string.IsNullOrEmpty(f.DefaultValue) && !f.DefaultValue.StartsWith("nextval("))
                 fieldDDL += " DEFAULT " + f.DefaultValue;
             if (f.ReferenceField != null)
-                fieldDDL += " REFERENCES \"" + f.ReferenceField.Table.Name + "\"(" + f.ReferenceField.Name + ")";
+                fieldDDL += " REFERENCES \"" + f.ReferenceField.Table.Name + "\"(\"" + f.ReferenceField.Name + "\")";
             return fieldDDL;
         }
 
