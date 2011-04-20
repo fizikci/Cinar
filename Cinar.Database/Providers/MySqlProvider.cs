@@ -404,7 +404,7 @@ namespace Cinar.Database.Providers
             if (!string.IsNullOrEmpty(field.DefaultValue))
                 fieldDDL.Append(" DEFAULT '" + field.DefaultValue + "'");
             if (field.ReferenceField != null)
-                fieldDDL.Append(" REFERENCES `" + field.ReferenceField.Table.Name + "`(" + field.ReferenceField.Name + ")");
+                fieldDDL.Append(" REFERENCES `" + field.ReferenceField.Table.Name + "`(`" + field.ReferenceField.Name + "`)");
 
             return fieldDDL.ToString();
         }

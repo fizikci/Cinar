@@ -407,7 +407,7 @@ namespace Cinar.Database.Providers
             if (!string.IsNullOrEmpty(f.DefaultValue) && f.FieldType != DbType.Timestamp)
                 fieldDDL += " DEFAULT " + getDefaultValue(f);
             if (f.ReferenceField != null)
-                fieldDDL += " REFERENCES [" + f.ReferenceField.Table.Name + "](" + f.ReferenceField.Name + ")";
+                fieldDDL += " REFERENCES [" + f.ReferenceField.Table.Name + "]([" + f.ReferenceField.Name + "])";
             return fieldDDL;
         }
 
