@@ -1651,7 +1651,7 @@ namespace Cinar.Database
 
         public string GetAlterTableDropKeyDDL(Index index)
         {
-            return "DROP INDEX " + index.Name;
+            return "DROP INDEX " + index.Name + " ON " + index.parent.table.Name;
         }
 
         // http://troels.arvin.dk/db/rdbms/

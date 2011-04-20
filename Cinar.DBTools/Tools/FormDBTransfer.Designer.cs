@@ -58,11 +58,11 @@
             // 
             this.groupBox2.Controls.Add(this.btnCancel);
             this.groupBox2.Controls.Add(this.txtLog);
-            this.groupBox2.Location = new System.Drawing.Point(359, 16);
+            this.groupBox2.Location = new System.Drawing.Point(359, 14);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox2.Size = new System.Drawing.Size(617, 637);
+            this.groupBox2.Size = new System.Drawing.Size(617, 562);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Transfer Log";
@@ -70,10 +70,10 @@
             // btnCancel
             // 
             this.btnCancel.Enabled = false;
-            this.btnCancel.Location = new System.Drawing.Point(236, 597);
+            this.btnCancel.Location = new System.Drawing.Point(236, 527);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(147, 30);
+            this.btnCancel.Size = new System.Drawing.Size(147, 26);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel Transfer";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -82,13 +82,13 @@
             // txtLog
             // 
             this.txtLog.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtLog.Location = new System.Drawing.Point(16, 25);
+            this.txtLog.Location = new System.Drawing.Point(16, 22);
             this.txtLog.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(583, 559);
+            this.txtLog.Size = new System.Drawing.Size(583, 494);
             this.txtLog.TabIndex = 0;
             // 
             // backgroundWorker
@@ -108,11 +108,11 @@
             this.groupTransferData.Controls.Add(this.label4);
             this.groupTransferData.Controls.Add(this.editLimit);
             this.groupTransferData.Enabled = false;
-            this.groupTransferData.Location = new System.Drawing.Point(8, 102);
+            this.groupTransferData.Location = new System.Drawing.Point(8, 90);
             this.groupTransferData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupTransferData.Name = "groupTransferData";
             this.groupTransferData.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupTransferData.Size = new System.Drawing.Size(313, 90);
+            this.groupTransferData.Size = new System.Drawing.Size(313, 79);
             this.groupTransferData.TabIndex = 5;
             this.groupTransferData.TabStop = false;
             this.groupTransferData.Text = "     ";
@@ -120,24 +120,24 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 29);
+            this.label3.Location = new System.Drawing.Point(9, 26);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 17);
+            this.label3.Size = new System.Drawing.Size(56, 15);
             this.label3.TabIndex = 0;
             this.label3.Text = "Page Size";
             // 
             // txtPrefix
             // 
-            this.txtPrefix.Location = new System.Drawing.Point(233, 51);
+            this.txtPrefix.Location = new System.Drawing.Point(233, 45);
             this.txtPrefix.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtPrefix.Name = "txtPrefix";
-            this.txtPrefix.Size = new System.Drawing.Size(66, 25);
+            this.txtPrefix.Size = new System.Drawing.Size(66, 23);
             this.txtPrefix.TabIndex = 5;
             this.txtPrefix.Text = "new_";
             // 
             // editPageSize
             // 
-            this.editPageSize.Location = new System.Drawing.Point(13, 51);
+            this.editPageSize.Location = new System.Drawing.Point(13, 45);
             this.editPageSize.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.editPageSize.Maximum = new decimal(new int[] {
             2000000000,
@@ -150,7 +150,7 @@
             0,
             0});
             this.editPageSize.Name = "editPageSize";
-            this.editPageSize.Size = new System.Drawing.Size(87, 25);
+            this.editPageSize.Size = new System.Drawing.Size(87, 23);
             this.editPageSize.TabIndex = 1;
             this.editPageSize.Value = new decimal(new int[] {
             100,
@@ -161,24 +161,24 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(226, 29);
+            this.label6.Location = new System.Drawing.Point(226, 26);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(76, 17);
+            this.label6.Size = new System.Drawing.Size(68, 15);
             this.label6.TabIndex = 4;
             this.label6.Text = "Table Prefix";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(107, 29);
+            this.label4.Location = new System.Drawing.Point(107, 26);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(116, 17);
+            this.label4.Size = new System.Drawing.Size(106, 15);
             this.label4.TabIndex = 2;
             this.label4.Text = "Row Transfer Limit";
             // 
             // editLimit
             // 
-            this.editLimit.Location = new System.Drawing.Point(111, 51);
+            this.editLimit.Location = new System.Drawing.Point(111, 45);
             this.editLimit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.editLimit.Maximum = new decimal(new int[] {
             2000000000,
@@ -186,15 +186,15 @@
             0,
             0});
             this.editLimit.Name = "editLimit";
-            this.editLimit.Size = new System.Drawing.Size(107, 25);
+            this.editLimit.Size = new System.Drawing.Size(107, 23);
             this.editLimit.TabIndex = 3;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(90, 613);
+            this.btnStart.Location = new System.Drawing.Point(90, 541);
             this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(147, 30);
+            this.btnStart.Size = new System.Drawing.Size(147, 26);
             this.btnStart.TabIndex = 8;
             this.btnStart.Text = "Start Transfer";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -203,18 +203,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 18);
+            this.label1.Location = new System.Drawing.Point(5, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 17);
+            this.label1.Size = new System.Drawing.Size(61, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Source DB";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(5, 201);
+            this.label5.Location = new System.Drawing.Point(5, 177);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(146, 17);
+            this.label5.Size = new System.Drawing.Size(129, 15);
             this.label5.TabIndex = 6;
             this.label5.Text = "Select tables to transfer";
             // 
@@ -222,50 +222,50 @@
             // 
             this.cbDbSrc.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDbSrc.FormattingEnabled = true;
-            this.cbDbSrc.Location = new System.Drawing.Point(119, 14);
+            this.cbDbSrc.Location = new System.Drawing.Point(119, 12);
             this.cbDbSrc.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbDbSrc.Name = "cbDbSrc";
-            this.cbDbSrc.Size = new System.Drawing.Size(201, 25);
+            this.cbDbSrc.Size = new System.Drawing.Size(201, 23);
             this.cbDbSrc.TabIndex = 1;
             this.cbDbSrc.SelectedIndexChanged += new System.EventHandler(this.cbDbSrc_SelectedIndexChanged);
             // 
             // lbTables
             // 
             this.lbTables.FormattingEnabled = true;
-            this.lbTables.ItemHeight = 17;
-            this.lbTables.Location = new System.Drawing.Point(8, 222);
+            this.lbTables.ItemHeight = 15;
+            this.lbTables.Location = new System.Drawing.Point(8, 196);
             this.lbTables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbTables.Size = new System.Drawing.Size(312, 378);
+            this.lbTables.Size = new System.Drawing.Size(312, 334);
             this.lbTables.TabIndex = 7;
             // 
             // cbDbDest
             // 
             this.cbDbDest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDbDest.FormattingEnabled = true;
-            this.cbDbDest.Location = new System.Drawing.Point(119, 56);
+            this.cbDbDest.Location = new System.Drawing.Point(119, 49);
             this.cbDbDest.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbDbDest.Name = "cbDbDest";
-            this.cbDbDest.Size = new System.Drawing.Size(201, 25);
+            this.cbDbDest.Size = new System.Drawing.Size(201, 23);
             this.cbDbDest.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 60);
+            this.label2.Location = new System.Drawing.Point(5, 53);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(93, 17);
+            this.label2.Size = new System.Drawing.Size(85, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Destination DB";
             // 
             // cbTransferData
             // 
             this.cbTransferData.AutoSize = true;
-            this.cbTransferData.Location = new System.Drawing.Point(24, 99);
+            this.cbTransferData.Location = new System.Drawing.Point(24, 87);
             this.cbTransferData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbTransferData.Name = "cbTransferData";
-            this.cbTransferData.Size = new System.Drawing.Size(106, 21);
+            this.cbTransferData.Size = new System.Drawing.Size(96, 19);
             this.cbTransferData.TabIndex = 4;
             this.cbTransferData.Text = "Transfer Data";
             this.cbTransferData.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -274,9 +274,9 @@
             // 
             // FormDBTransfer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(990, 667);
+            this.ClientSize = new System.Drawing.Size(990, 589);
             this.Controls.Add(this.cbTransferData);
             this.Controls.Add(this.groupTransferData);
             this.Controls.Add(this.btnStart);
@@ -287,7 +287,7 @@
             this.Controls.Add(this.cbDbDest);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupBox2);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormDBTransfer";

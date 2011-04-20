@@ -38,29 +38,29 @@
             // lbProblems
             // 
             this.lbProblems.FormattingEnabled = true;
-            this.lbProblems.ItemHeight = 17;
-            this.lbProblems.Location = new System.Drawing.Point(17, 37);
+            this.lbProblems.ItemHeight = 15;
+            this.lbProblems.Location = new System.Drawing.Point(17, 33);
             this.lbProblems.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbProblems.Name = "lbProblems";
             this.lbProblems.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbProblems.Size = new System.Drawing.Size(622, 463);
+            this.lbProblems.Size = new System.Drawing.Size(622, 409);
             this.lbProblems.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 12);
+            this.label1.Location = new System.Drawing.Point(14, 11);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 17);
+            this.label1.Size = new System.Drawing.Size(118, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "Discovered Problems";
             // 
             // btnFix
             // 
-            this.btnFix.Location = new System.Drawing.Point(350, 509);
+            this.btnFix.Location = new System.Drawing.Point(350, 449);
             this.btnFix.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnFix.Name = "btnFix";
-            this.btnFix.Size = new System.Drawing.Size(192, 30);
+            this.btnFix.Size = new System.Drawing.Size(192, 26);
             this.btnFix.TabIndex = 2;
             this.btnFix.Text = "Fix Selected Problems";
             this.btnFix.UseVisualStyleBackColor = true;
@@ -68,10 +68,10 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(553, 509);
+            this.btnClose.Location = new System.Drawing.Point(553, 449);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(87, 30);
+            this.btnClose.Size = new System.Drawing.Size(87, 26);
             this.btnClose.TabIndex = 3;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -79,10 +79,10 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(17, 510);
+            this.btnRefresh.Location = new System.Drawing.Point(17, 450);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(87, 30);
+            this.btnRefresh.Size = new System.Drawing.Size(87, 26);
             this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -90,15 +90,15 @@
             // 
             // FormCheckDatabaseSchema
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 554);
+            this.ClientSize = new System.Drawing.Size(656, 489);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnFix);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbProblems);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCheckDatabaseSchema";
             this.Text = "Database Schema Notices";

@@ -26,5 +26,15 @@ namespace Cinar.DBTools.Tools
         {
             Process.Start("http://www.cinarteknoloji.com");
         }
+
+        private void linkLabel1_MouseEnter(object sender, EventArgs e)
+        {
+            (sender as LinkLabel).LinkColor = Color.Gold;
+        }
+
+        private void linkLabel1_MouseLeave(object sender, EventArgs e)
+        {
+            (sender as LinkLabel).LinkColor = Color.White;
+        }
     }
 }

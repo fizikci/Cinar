@@ -49,10 +49,10 @@
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(423, 305);
+            this.button2.Location = new System.Drawing.Point(423, 269);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(87, 30);
+            this.button2.Size = new System.Drawing.Size(87, 26);
             this.button2.TabIndex = 8;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
@@ -61,28 +61,28 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(518, 305);
+            this.button1.Location = new System.Drawing.Point(518, 269);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 30);
+            this.button1.Size = new System.Drawing.Size(87, 26);
             this.button1.TabIndex = 9;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // txtTableName
             // 
-            this.txtTableName.Location = new System.Drawing.Point(118, 16);
+            this.txtTableName.Location = new System.Drawing.Point(118, 14);
             this.txtTableName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTableName.Name = "txtTableName";
-            this.txtTableName.Size = new System.Drawing.Size(238, 25);
+            this.txtTableName.Size = new System.Drawing.Size(238, 23);
             this.txtTableName.TabIndex = 6;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 23);
+            this.label1.Location = new System.Drawing.Point(12, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 17);
+            this.label1.Size = new System.Drawing.Size(76, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Index Name :";
             // 
@@ -101,10 +101,10 @@
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3});
             this.dataGridView1.DataSource = this.keyFieldBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 60);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 53);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(593, 237);
+            this.dataGridView1.Size = new System.Drawing.Size(593, 209);
             this.dataGridView1.TabIndex = 7;
             // 
             // selectedDataGridViewCheckBoxColumn
@@ -144,9 +144,9 @@
             // cbPrimary
             // 
             this.cbPrimary.AutoSize = true;
-            this.cbPrimary.Location = new System.Drawing.Point(377, 18);
+            this.cbPrimary.Location = new System.Drawing.Point(377, 16);
             this.cbPrimary.Name = "cbPrimary";
-            this.cbPrimary.Size = new System.Drawing.Size(71, 21);
+            this.cbPrimary.Size = new System.Drawing.Size(67, 19);
             this.cbPrimary.TabIndex = 10;
             this.cbPrimary.Text = "Primary";
             this.cbPrimary.UseVisualStyleBackColor = true;
@@ -154,18 +154,18 @@
             // cbUnique
             // 
             this.cbUnique.AutoSize = true;
-            this.cbUnique.Location = new System.Drawing.Point(470, 18);
+            this.cbUnique.Location = new System.Drawing.Point(470, 16);
             this.cbUnique.Name = "cbUnique";
-            this.cbUnique.Size = new System.Drawing.Size(68, 21);
+            this.cbUnique.Size = new System.Drawing.Size(64, 19);
             this.cbUnique.TabIndex = 11;
             this.cbUnique.Text = "Unique";
             this.cbUnique.UseVisualStyleBackColor = true;
             // 
             // FormCreateIndex
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(617, 348);
+            this.ClientSize = new System.Drawing.Size(617, 307);
             this.Controls.Add(this.cbUnique);
             this.Controls.Add(this.cbPrimary);
             this.Controls.Add(this.button2);
@@ -173,7 +173,7 @@
             this.Controls.Add(this.txtTableName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCreateIndex";
             this.Text = "Create/Edit Index";
