@@ -62,10 +62,10 @@
             this.colIsPrimaryKey,
             this.colIsAutoIncrement});
             this.dataGridView1.DataSource = this.fieldCollectionBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(14, 54);
+            this.dataGridView1.Location = new System.Drawing.Point(14, 48);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(902, 390);
+            this.dataGridView1.Size = new System.Drawing.Size(902, 344);
             this.dataGridView1.TabIndex = 2;
             // 
             // colName
@@ -122,28 +122,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 17);
+            this.label1.Location = new System.Drawing.Point(14, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 17);
+            this.label1.Size = new System.Drawing.Size(77, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Table Name :";
             // 
             // txtTableName
             // 
-            this.txtTableName.Location = new System.Drawing.Point(120, 10);
+            this.txtTableName.Location = new System.Drawing.Point(120, 9);
             this.txtTableName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtTableName.Name = "txtTableName";
-            this.txtTableName.Size = new System.Drawing.Size(238, 25);
+            this.txtTableName.Size = new System.Drawing.Size(238, 23);
             this.txtTableName.TabIndex = 1;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(824, 454);
+            this.button1.Location = new System.Drawing.Point(824, 401);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 30);
+            this.button1.Size = new System.Drawing.Size(87, 26);
             this.button1.TabIndex = 4;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
@@ -152,25 +152,25 @@
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(729, 454);
+            this.button2.Location = new System.Drawing.Point(729, 401);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(87, 30);
+            this.button2.Size = new System.Drawing.Size(87, 26);
             this.button2.TabIndex = 3;
             this.button2.Text = "Cancel";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // FormCreateTable
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(930, 493);
+            this.ClientSize = new System.Drawing.Size(930, 435);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.txtTableName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCreateTable";
             this.Text = "Create / Alter Table";

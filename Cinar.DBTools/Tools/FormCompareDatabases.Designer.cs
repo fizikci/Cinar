@@ -43,18 +43,18 @@
             // 
             this.cbDstDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDstDb.FormattingEnabled = true;
-            this.cbDstDb.Location = new System.Drawing.Point(250, 16);
+            this.cbDstDb.Location = new System.Drawing.Point(250, 14);
             this.cbDstDb.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbDstDb.Name = "cbDstDb";
-            this.cbDstDb.Size = new System.Drawing.Size(186, 25);
+            this.cbDstDb.Size = new System.Drawing.Size(186, 23);
             this.cbDstDb.TabIndex = 1;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(219, 20);
+            this.label6.Location = new System.Drawing.Point(219, 18);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(22, 17);
+            this.label6.Size = new System.Drawing.Size(19, 15);
             this.label6.TabIndex = 44;
             this.label6.Text = "Vs";
             // 
@@ -62,18 +62,18 @@
             // 
             this.cbSrcDb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSrcDb.FormattingEnabled = true;
-            this.cbSrcDb.Location = new System.Drawing.Point(14, 16);
+            this.cbSrcDb.Location = new System.Drawing.Point(14, 14);
             this.cbSrcDb.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbSrcDb.Name = "cbSrcDb";
-            this.cbSrcDb.Size = new System.Drawing.Size(198, 25);
+            this.cbSrcDb.Size = new System.Drawing.Size(198, 23);
             this.cbSrcDb.TabIndex = 0;
             // 
             // btnCompare
             // 
-            this.btnCompare.Location = new System.Drawing.Point(770, 16);
+            this.btnCompare.Location = new System.Drawing.Point(770, 14);
             this.btnCompare.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCompare.Name = "btnCompare";
-            this.btnCompare.Size = new System.Drawing.Size(87, 30);
+            this.btnCompare.Size = new System.Drawing.Size(87, 26);
             this.btnCompare.TabIndex = 6;
             this.btnCompare.Text = "Compare";
             this.btnCompare.UseVisualStyleBackColor = true;
@@ -84,19 +84,19 @@
             this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel.Location = new System.Drawing.Point(14, 54);
+            this.panel.Location = new System.Drawing.Point(14, 48);
             this.panel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(950, 583);
+            this.panel.Size = new System.Drawing.Size(950, 514);
             this.panel.TabIndex = 7;
             // 
             // cbName
             // 
             this.cbName.AutoSize = true;
-            this.cbName.Location = new System.Drawing.Point(457, 20);
+            this.cbName.Location = new System.Drawing.Point(457, 18);
             this.cbName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbName.Name = "cbName";
-            this.cbName.Size = new System.Drawing.Size(62, 21);
+            this.cbName.Size = new System.Drawing.Size(58, 19);
             this.cbName.TabIndex = 2;
             this.cbName.Text = "Name";
             this.cbName.UseVisualStyleBackColor = true;
@@ -104,10 +104,10 @@
             // cbType
             // 
             this.cbType.AutoSize = true;
-            this.cbType.Location = new System.Drawing.Point(527, 20);
+            this.cbType.Location = new System.Drawing.Point(527, 18);
             this.cbType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(55, 21);
+            this.cbType.Size = new System.Drawing.Size(52, 19);
             this.cbType.TabIndex = 3;
             this.cbType.Text = "Type";
             this.cbType.UseVisualStyleBackColor = true;
@@ -115,10 +115,10 @@
             // cbLength
             // 
             this.cbLength.AutoSize = true;
-            this.cbLength.Location = new System.Drawing.Point(593, 20);
+            this.cbLength.Location = new System.Drawing.Point(593, 18);
             this.cbLength.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbLength.Name = "cbLength";
-            this.cbLength.Size = new System.Drawing.Size(66, 21);
+            this.cbLength.Size = new System.Drawing.Size(63, 19);
             this.cbLength.TabIndex = 4;
             this.cbLength.Text = "Length";
             this.cbLength.UseVisualStyleBackColor = true;
@@ -126,19 +126,19 @@
             // cbNullable
             // 
             this.cbNullable.AutoSize = true;
-            this.cbNullable.Location = new System.Drawing.Point(668, 20);
+            this.cbNullable.Location = new System.Drawing.Point(668, 18);
             this.cbNullable.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbNullable.Name = "cbNullable";
-            this.cbNullable.Size = new System.Drawing.Size(75, 21);
+            this.cbNullable.Size = new System.Drawing.Size(70, 19);
             this.cbNullable.TabIndex = 5;
             this.cbNullable.Text = "Nullable";
             this.cbNullable.UseVisualStyleBackColor = true;
             // 
             // FormCompareDatabases
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(978, 653);
+            this.ClientSize = new System.Drawing.Size(978, 576);
             this.Controls.Add(this.cbNullable);
             this.Controls.Add(this.cbLength);
             this.Controls.Add(this.cbType);
@@ -148,7 +148,7 @@
             this.Controls.Add(this.cbDstDb);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.cbSrcDb);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCompareDatabases";
             this.Text = "Compare Databases";

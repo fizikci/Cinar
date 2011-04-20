@@ -58,6 +58,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -106,7 +107,7 @@
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(255, 439);
+            this.propertyGrid.Size = new System.Drawing.Size(298, 510);
             this.propertyGrid.TabIndex = 0;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
             // 
@@ -125,16 +126,17 @@
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.propertyGrid);
-            this.splitContainer.Size = new System.Drawing.Size(870, 439);
-            this.splitContainer.SplitterDistance = 611;
+            this.splitContainer.Size = new System.Drawing.Size(1015, 510);
+            this.splitContainer.SplitterDistance = 712;
+            this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 1;
             // 
             // panel
             // 
             this.panel.ContextMenuStrip = this.contextMenu;
-            this.panel.Location = new System.Drawing.Point(4, 3);
+            this.panel.Location = new System.Drawing.Point(5, 3);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(604, 433);
+            this.panel.Size = new System.Drawing.Size(705, 500);
             this.panel.TabIndex = 0;
             this.panel.TabStop = true;
             this.panel.Paint += new System.Windows.Forms.PaintEventHandler(this.panelOnPaint);
@@ -203,7 +205,8 @@
             this.menuFile});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(870, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1015, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -282,12 +285,13 @@
             // 
             // FormERDiagram
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(870, 463);
+            this.ClientSize = new System.Drawing.Size(1015, 534);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormERDiagram";
@@ -295,6 +299,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             this.contextMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);

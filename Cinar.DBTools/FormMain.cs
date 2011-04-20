@@ -518,6 +518,9 @@ $"},
                 CurrSQLEditor.ShowInfoText(ex.Message);
             }
         }
+        private void executeSQLEditable(string sql, params object[] args)
+        {
+        }
         private bool checkConnection()
         {
             if (Provider.Database == null)
@@ -986,7 +989,7 @@ $"},
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            executeSQL("select top 1000 * from [" + tableName + "]");
+            executeSQLEditable("select top 1000 * from [" + tableName + "]");
         }
         private void cmdTableDrop(string arg)
         {

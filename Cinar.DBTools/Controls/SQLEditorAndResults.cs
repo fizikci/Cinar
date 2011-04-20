@@ -128,7 +128,7 @@ namespace Cinar.DBTools.Controls
         public void Navigate(string url)
         {
             webBrowser.Navigate(url);
-            tabControl.SelectedTab = tpTableAnalyze;
+            tabControl.SelectedTab = tpTableInfo;
         }
 
         public bool Save()
