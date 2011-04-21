@@ -118,7 +118,7 @@ namespace Cinar.Database.Providers
 
                 // indices
                 tbl.Indices = new IndexCollection(tbl);
-                DataTable dtKeys = db.GetDataTable("EXEC sp_helpindex " + tbl.Name);
+                DataTable dtKeys = db.GetDataTable("EXEC sp_helpindex [" + tbl.Name + "]");
                 if(dtKeys!=null)
                     foreach (DataRow drKey in dtKeys.Rows)
                     {

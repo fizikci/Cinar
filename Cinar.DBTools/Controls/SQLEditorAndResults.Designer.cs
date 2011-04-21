@@ -1,4 +1,5 @@
-﻿namespace Cinar.DBTools.Controls
+﻿using System;
+namespace Cinar.DBTools.Controls
 {
     partial class SQLEditorAndResults
     {
@@ -42,19 +43,29 @@
             this.tpTableData = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.myDataGrid1 = new Cinar.DBTools.Controls.MyDataGrid();
+            this.gridShowTable = new Cinar.DBTools.Controls.MyDataGrid();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnExportAs = new System.Windows.Forms.ToolStripButton();
             this.btnCopyData = new System.Windows.Forms.ToolStripSplitButton();
             this.menuCopySelectedCell = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopySelectedRows = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopyAllRows = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnResetFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDeleteSelectedRows = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnResetFilter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.txtLimit = new System.Windows.Forms.ToolStripTextBox();
+            this.txtPageSize = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.txtOffset = new System.Windows.Forms.ToolStripTextBox();
+            this.btnPrevPage = new System.Windows.Forms.ToolStripButton();
+            this.txtPageNo = new System.Windows.Forms.ToolStripTextBox();
+            this.btnNextPage = new System.Windows.Forms.ToolStripButton();
+            this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
+            this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
+            this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
+            this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
+            this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -68,7 +79,7 @@
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.myDataGrid1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridShowTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,6 +127,7 @@
             this.tabControl.Size = new System.Drawing.Size(638, 457);
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.TabIndex = 0;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // tpResults
             // 
@@ -214,14 +226,17 @@
             // 
             // toolStripContainer1
             // 
+            this.toolStripContainer1.BottomToolStripPanelVisible = false;
             // 
             // toolStripContainer1.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.myDataGrid1);
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.gridShowTable);
             this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(630, 400);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
+            this.toolStripContainer1.RightToolStripPanelVisible = false;
             this.toolStripContainer1.Size = new System.Drawing.Size(630, 425);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
@@ -230,14 +245,14 @@
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             // 
-            // myDataGrid1
+            // gridShowTable
             // 
-            this.myDataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.myDataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.myDataGrid1.Location = new System.Drawing.Point(0, 0);
-            this.myDataGrid1.Name = "myDataGrid1";
-            this.myDataGrid1.Size = new System.Drawing.Size(630, 400);
-            this.myDataGrid1.TabIndex = 1;
+            this.gridShowTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridShowTable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridShowTable.Location = new System.Drawing.Point(0, 0);
+            this.gridShowTable.Name = "gridShowTable";
+            this.gridShowTable.Size = new System.Drawing.Size(630, 400);
+            this.gridShowTable.TabIndex = 1;
             // 
             // toolStrip1
             // 
@@ -246,18 +261,22 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnExportAs,
             this.btnCopyData,
-            this.btnResetFilter,
+            this.toolStripSeparator2,
             this.btnDeleteSelectedRows,
+            this.toolStripSeparator1,
+            this.btnResetFilter,
+            this.toolStripLabel3,
             this.toolStripLabel1,
-            this.txtLimit,
+            this.txtPageSize,
             this.toolStripLabel2,
-            this.txtOffset});
-            this.toolStrip1.Location = new System.Drawing.Point(3, 0);
+            this.btnPrevPage,
+            this.txtPageNo,
+            this.btnNextPage});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(281, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(630, 25);
+            this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 2;
-            this.toolStrip1.Text = "toolStrip1";
-            this.toolStrip1.Visible = false;
             // 
             // btnExportAs
             // 
@@ -299,14 +318,10 @@
             this.menuCopyAllRows.Size = new System.Drawing.Size(180, 22);
             this.menuCopyAllRows.Text = "Copy All Rows";
             // 
-            // btnResetFilter
+            // toolStripSeparator2
             // 
-            this.btnResetFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnResetFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnResetFilter.Image")));
-            this.btnResetFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnResetFilter.Name = "btnResetFilter";
-            this.btnResetFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnResetFilter.Text = "Reset Filter";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // btnDeleteSelectedRows
             // 
@@ -317,37 +332,111 @@
             this.btnDeleteSelectedRows.Size = new System.Drawing.Size(23, 22);
             this.btnDeleteSelectedRows.Text = "Delete Selected Rows";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnResetFilter
+            // 
+            this.btnResetFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnResetFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnResetFilter.Image")));
+            this.btnResetFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnResetFilter.Name = "btnResetFilter";
+            this.btnResetFilter.Size = new System.Drawing.Size(23, 22);
+            this.btnResetFilter.Text = "Reset Filter";
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(47, 22);
+            this.toolStripLabel3.Text = "Paging:";
+            // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(40, 22);
-            this.toolStripLabel1.Text = "Limit :";
+            this.toolStripLabel1.Size = new System.Drawing.Size(33, 22);
+            this.toolStripLabel1.Text = "Size :";
             // 
-            // txtLimit
+            // txtPageSize
             // 
-            this.txtLimit.AutoSize = false;
-            this.txtLimit.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtLimit.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtLimit.Name = "txtLimit";
-            this.txtLimit.Size = new System.Drawing.Size(30, 15);
-            this.txtLimit.Text = "100";
-            this.txtLimit.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPageSize.AutoSize = false;
+            this.txtPageSize.BackColor = System.Drawing.SystemColors.Info;
+            this.txtPageSize.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPageSize.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtPageSize.Name = "txtPageSize";
+            this.txtPageSize.Size = new System.Drawing.Size(30, 15);
+            this.txtPageSize.Text = "100";
+            this.txtPageSize.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(42, 22);
-            this.toolStripLabel2.Text = "Offset:";
+            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel2.Text = "Page:";
             // 
-            // txtOffset
+            // btnPrevPage
             // 
-            this.txtOffset.AutoSize = false;
-            this.txtOffset.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtOffset.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtOffset.Name = "txtOffset";
-            this.txtOffset.Size = new System.Drawing.Size(30, 15);
-            this.txtOffset.Text = "0";
-            this.txtOffset.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.btnPrevPage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPrevPage.Image = ((System.Drawing.Image)(resources.GetObject("btnPrevPage.Image")));
+            this.btnPrevPage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPrevPage.Name = "btnPrevPage";
+            this.btnPrevPage.Size = new System.Drawing.Size(23, 22);
+            // 
+            // txtPageNo
+            // 
+            this.txtPageNo.AutoSize = false;
+            this.txtPageNo.BackColor = System.Drawing.SystemColors.Info;
+            this.txtPageNo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPageNo.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtPageNo.Name = "txtPageNo";
+            this.txtPageNo.Size = new System.Drawing.Size(15, 15);
+            this.txtPageNo.Text = "1";
+            this.txtPageNo.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // btnNextPage
+            // 
+            this.btnNextPage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNextPage.Image = ((System.Drawing.Image)(resources.GetObject("btnNextPage.Image")));
+            this.btnNextPage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNextPage.Name = "btnNextPage";
+            this.btnNextPage.Size = new System.Drawing.Size(23, 22);
+            // 
+            // BottomToolStripPanel
+            // 
+            this.BottomToolStripPanel.Location = new System.Drawing.Point(0, 0);
+            this.BottomToolStripPanel.Name = "BottomToolStripPanel";
+            this.BottomToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.BottomToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.BottomToolStripPanel.Size = new System.Drawing.Size(0, 0);
+            // 
+            // TopToolStripPanel
+            // 
+            this.TopToolStripPanel.Location = new System.Drawing.Point(0, 0);
+            this.TopToolStripPanel.Name = "TopToolStripPanel";
+            this.TopToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.TopToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.TopToolStripPanel.Size = new System.Drawing.Size(0, 0);
+            // 
+            // RightToolStripPanel
+            // 
+            this.RightToolStripPanel.Location = new System.Drawing.Point(0, 0);
+            this.RightToolStripPanel.Name = "RightToolStripPanel";
+            this.RightToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.RightToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.RightToolStripPanel.Size = new System.Drawing.Size(0, 0);
+            // 
+            // LeftToolStripPanel
+            // 
+            this.LeftToolStripPanel.Location = new System.Drawing.Point(0, 0);
+            this.LeftToolStripPanel.Name = "LeftToolStripPanel";
+            this.LeftToolStripPanel.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.LeftToolStripPanel.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            this.LeftToolStripPanel.Size = new System.Drawing.Size(0, 0);
+            // 
+            // ContentPanel
+            // 
+            this.ContentPanel.Size = new System.Drawing.Size(436, 163);
             // 
             // SQLEditorAndResults
             // 
@@ -372,7 +461,7 @@
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.myDataGrid1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridShowTable)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -392,7 +481,7 @@
         private System.Windows.Forms.WebBrowser webBrowser;
         private CinarSQLEditor txtSQLLog;
         private System.Windows.Forms.TabPage tpTableData;
-        private MyDataGrid myDataGrid1;
+        private MyDataGrid gridShowTable;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.ToolStrip toolStrip1;
@@ -404,8 +493,18 @@
         private System.Windows.Forms.ToolStripButton btnResetFilter;
         private System.Windows.Forms.ToolStripButton btnDeleteSelectedRows;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripTextBox txtLimit;
+        private System.Windows.Forms.ToolStripTextBox txtPageSize;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripTextBox txtOffset;
+        private System.Windows.Forms.ToolStripTextBox txtPageNo;
+        private System.Windows.Forms.ToolStripPanel BottomToolStripPanel;
+        private System.Windows.Forms.ToolStripPanel TopToolStripPanel;
+        private System.Windows.Forms.ToolStripPanel RightToolStripPanel;
+        private System.Windows.Forms.ToolStripPanel LeftToolStripPanel;
+        private System.Windows.Forms.ToolStripContentPanel ContentPanel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripButton btnPrevPage;
+        private System.Windows.Forms.ToolStripButton btnNextPage;
     }
 }

@@ -518,9 +518,6 @@ $"},
                 CurrSQLEditor.ShowInfoText(ex.Message);
             }
         }
-        private void executeSQLEditable(string sql, params object[] args)
-        {
-        }
         private bool checkConnection()
         {
             if (Provider.Database == null)
@@ -987,9 +984,7 @@ $"},
 
         private void cmdTableOpen(string arg)
         {
-            if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
-            executeSQLEditable("select top 1000 * from [" + tableName + "]");
+            throw new NotImplementedException();
         }
         private void cmdTableDrop(string arg)
         {
@@ -1610,6 +1605,14 @@ $"},
         {
             treeView.SelectedNode = e.Node;
             showSelectedObjectOnPropertyGrid();
+
+            if (CurrSQLEditor != null)
+            {
+                TreeNode tn = findSelectedTableNode();
+                if (tn != null)
+                    CurrSQLEditor.ShowTable = tn.Tag as Table;
+            }
+
         }
         private void showSelectedObjectOnPropertyGrid()
         {
@@ -1710,6 +1713,7 @@ $"},
         public string Host { get; set; }
         public string DbName { get; set; }
         public string UserName { get; set; }
+        [Browsable(false)]
         public string Password { get; set; }
         public Database.Database Database;
         public List<Schema> Schemas = new List<Schema>();
