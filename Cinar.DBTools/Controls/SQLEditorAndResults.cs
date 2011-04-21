@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Cinar.Database;
 
 namespace Cinar.DBTools.Controls
 {
@@ -36,6 +37,8 @@ namespace Cinar.DBTools.Controls
             }
 
             txtSQLLog.Document.ReadOnly = true;
+
+            gridShowTable.CellValueChanged += new DataGridViewCellEventHandler(gridShowTable_CellValueChanged);
         }
 
         public string InitialText;
@@ -105,7 +108,6 @@ namespace Cinar.DBTools.Controls
                 tpResults.Controls.Add(gridResults);
             }
         }
-
         private MyDataGrid createNewGrid()
         {
             MyDataGrid grid = new MyDataGrid();
@@ -117,7 +119,6 @@ namespace Cinar.DBTools.Controls
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             return grid;
         }
-
 
         public void ShowInfoText(string txt)
         {
@@ -153,5 +154,50 @@ namespace Cinar.DBTools.Controls
             }
             return false;
         }
+
+
+
+        Table showTable;
+        public Table ShowTable
+        {
+            get { return showTable; }
+            set {
+                if (tabControl.SelectedTab == tpTableData && value != showTable)
+                {
+                    showTable = value;
+                    bindTableData();
+                }
+                else
+                    showTable = value;
+            }
+        }
+        
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl.SelectedTab==tpTableData && ShowTable != null && ShowTable != gridShowTable.Tag)
+                bindTableData();
+        }
+
+        private void bindTableData()
+        {
+            int pageSize = int.Parse(txtPageSize.Text);
+            int pageNo = int.Parse(txtPageNo.Text) - 1;
+
+            FilterExpression fExp = new FilterExpression();
+            fExp.PageNo = pageNo;
+            fExp.PageSize = pageSize;
+
+            gridShowTable.DataSource = Provider.Database.GetDataTableFor(ShowTable.Name, fExp);
+            gridShowTable.Tag = ShowTable;
+        }
+
+        void gridShowTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            string columnName = gridShowTable.Columns[e.ColumnIndex].Name;
+            DataRow dr = gridShowTable.Rows[e.RowIndex].DataBoundItem as DataRow;
+            //update...
+        }
+
+
     }
 }

@@ -1027,6 +1027,42 @@ namespace Cinar.Database
         {
             return GetDataTable(sql, new object[0]);
         }
+        public DataTable GetDataTableFor(string tableName, FilterExpression fExp)
+        {
+            Table table = Tables[tableName];
+            if(table==null)
+                throw new Exception("No such table: " + tableName);
+
+            if (fExp == null) fExp = new FilterExpression();
+            string where = fExp.Criterias.ToParamString();
+            string orderBy = fExp.Orders.ToString();
+            if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryField != null ? table.PrimaryField.Name : table.Fields.First(f=>!(f.SimpleFieldType==SimpleDbType.Text || f.SimpleFieldType==SimpleDbType.ByteArray)).Name) + "]";
+            string sql = "";
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                    sql = "SELECT * FROM \"" + tableName + "\"" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
+                    break;
+                case DatabaseProvider.MySQL:
+                    sql = "SELECT * FROM `" + tableName + "`" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
+                    break;
+                case DatabaseProvider.SQLServer:
+                    sql = @"WITH _CinarResult AS
+                                (
+                                    SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @",
+                                    ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
+                                    FROM [" + tableName + @"] 
+                                ) 
+                                SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @" 
+                                FROM _CinarResult 
+                                WHERE _CinarRowNumber BETWEEN " + (fExp.PageSize * fExp.PageNo) + " AND " + (fExp.PageSize * fExp.PageNo + fExp.PageSize) + ";";
+                    break;
+                default:
+                    break;
+            }
+            
+            return this.GetDataTable(sql, fExp.GetParamValues());
+        }
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
             return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr=>(T)dr[0]).ToList();
@@ -1221,17 +1257,23 @@ namespace Cinar.Database
         }
         public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
-            string selectSQL = "select * from [" + typeof(T).Name + "] " + filterExpression.ToParamString(); // limit-offset ToParamString() tarafından ekleniyor
-            return ReadList<T>(selectSQL, filterExpression.GetParamValues());
+            DataTable dt = GetDataTableFor(typeof(T).Name, filterExpression);
+            List<T> list = new List<T>();
+            foreach (DataRow dr in dt.Rows)
+                list.Add(DataRowToEntity<T>(dr));
+            return list;
         }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
-            string selectSQL = "select * from [" + entityType.Name + "] " + filterExpression.ToParamString(); // limit-offset ToParamString() tarafından ekleniyor
-            return ReadList(entityType, selectSQL, filterExpression.GetParamValues());
+            DataTable dt = GetDataTableFor(entityType.Name, filterExpression);
+            List<IDatabaseEntity> list = new List<IDatabaseEntity>();
+            foreach (DataRow dr in dt.Rows)
+                list.Add(DataRowToEntity(entityType, dr));
+            return list.ToArray();
         }
         public int ReadCount(Type entityType, FilterExpression filterExpression)
         {
-            string selectSQL = "select count(*) from [" + entityType.Name + "] " + filterExpression.Criterias.ToParamString();
+            string selectSQL = "SELECT COUNT(*) FROM [" + entityType.Name + "] " + filterExpression.Criterias.ToParamString();
             return GetInt(selectSQL, filterExpression.GetParamValues());
         }
         public DataTable ReadTable(Type entityType, string selectSql, params object[] parameters)

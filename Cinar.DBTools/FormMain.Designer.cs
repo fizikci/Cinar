@@ -135,14 +135,17 @@ namespace Cinar.DBTools
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.btnNewConnection = new System.Windows.Forms.ToolStripButton();
             this.btnEditConnection = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteConnection = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cbActiveConnection = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.btnAddEditor = new System.Windows.Forms.ToolStripButton();
             this.btnExecuteSQL = new System.Windows.Forms.ToolStripButton();
             this.btnExecuteScript = new System.Windows.Forms.ToolStripButton();
@@ -155,9 +158,6 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -685,7 +685,7 @@ namespace Cinar.DBTools
             this.btnCloseSQLEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseSQLEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseSQLEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseSQLEditor.Image")));
-            this.btnCloseSQLEditor.Location = new System.Drawing.Point(700, 4);
+            this.btnCloseSQLEditor.Location = new System.Drawing.Point(698, 4);
             this.btnCloseSQLEditor.Name = "btnCloseSQLEditor";
             this.btnCloseSQLEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseSQLEditor.TabIndex = 1;
@@ -1093,6 +1093,12 @@ namespace Cinar.DBTools
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 1;
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(28, 22);
+            this.toolStripLabel2.Text = "File:";
+            // 
             // btnOpen
             // 
             this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1115,6 +1121,12 @@ namespace Cinar.DBTools
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(77, 22);
+            this.toolStripLabel3.Text = "Connections:";
             // 
             // btnNewConnection
             // 
@@ -1143,17 +1155,23 @@ namespace Cinar.DBTools
             this.btnDeleteConnection.Size = new System.Drawing.Size(23, 22);
             this.btnDeleteConnection.Text = "Delete Connection";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
             // cbActiveConnection
             // 
             this.cbActiveConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbActiveConnection.Name = "cbActiveConnection";
             this.cbActiveConnection.Size = new System.Drawing.Size(200, 25);
             this.cbActiveConnection.SelectedIndexChanged += new System.EventHandler(this.cbActiveConnection_SelectedIndexChanged);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel4
+            // 
+            this.toolStripLabel4.Name = "toolStripLabel4";
+            this.toolStripLabel4.Size = new System.Drawing.Size(42, 22);
+            this.toolStripLabel4.Text = "Query:";
             // 
             // btnAddEditor
             // 
@@ -1252,24 +1270,6 @@ namespace Cinar.DBTools
             // 
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(28, 22);
-            this.toolStripLabel2.Text = "File:";
-            // 
-            // toolStripLabel3
-            // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(77, 22);
-            this.toolStripLabel3.Text = "Connections:";
-            // 
-            // toolStripLabel4
-            // 
-            this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(42, 22);
-            this.toolStripLabel4.Text = "Query:";
             // 
             // FormMain
             // 

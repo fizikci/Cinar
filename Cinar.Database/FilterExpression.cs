@@ -70,8 +70,8 @@ namespace Cinar.Database
                 res += criterias.ToString();
             if (orders != null)
                 res += " " + orders;
-            if (PageSize > 0)
-                res += " limit " + PageSize + " offset " + (PageSize * PageNo);
+            //if (PageSize > 0)
+            //    res += " LIMIT " + PageSize + " OFFSET " + (PageSize * PageNo);
             return res;
         }
         public string ToParamString()
@@ -81,8 +81,8 @@ namespace Cinar.Database
                 res += criterias.ToParamString();
             if (orders != null)
                 res += orders;
-            if (PageSize > 0)
-                res += " limit " + PageSize + " offset " + (PageSize * PageNo);
+            //if (PageSize > 0)
+            //    res += " LIMIT " + PageSize + " OFFSET " + (PageSize * PageNo);
 
             return res;
         }
@@ -168,7 +168,7 @@ namespace Cinar.Database
 
         public string ToParamString(int index)
         {
-            string str = fieldName + " ";
+            string str = "[" + fieldName + "] ";
             switch (criteriaType)
             {
                 case CriteriaTypes.Eq:
@@ -190,22 +190,22 @@ namespace Cinar.Database
                     str += " <= {" + index + "}";
                     break;
                 case CriteriaTypes.IsNull:
-                    str += " is null ";
+                    str += " IS NULL ";
                     break;
                 case CriteriaTypes.IsNotNull:
-                    str += " is not null ";
+                    str += " IS NOT NULL ";
                     break;
                 case CriteriaTypes.Like:
-                    str += " like {" + index + "}";
+                    str += " LIKE {" + index + "}";
                     break;
                 case CriteriaTypes.NotLike:
-                    str += " not like {" + index + "}";
+                    str += " NOT LIKE {" + index + "}";
                     break;
                 case CriteriaTypes.In:
-                    str += " in {" + index + "}";
+                    str += " IN {" + index + "}";
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " not in {" + index + "}";
+                    str += " NOT IN {" + index + "}";
                     break;
             }
 
@@ -213,7 +213,7 @@ namespace Cinar.Database
         }
         public override string ToString()
         {
-            string str = fieldName + " ";
+            string str = "[" + fieldName + "] ";
             switch (criteriaType)
             {
                 case CriteriaTypes.Eq:
@@ -235,22 +235,22 @@ namespace Cinar.Database
                     str += " <= " + fieldValue;
                     break;
                 case CriteriaTypes.IsNull:
-                    str += " is null ";
+                    str += " IS NULL ";
                     break;
                 case CriteriaTypes.IsNotNull:
-                    str += " is not null ";
+                    str += " IS NOT NULL ";
                     break;
                 case CriteriaTypes.Like:
-                    str += " like " + fieldValue;
+                    str += " LIKE " + fieldValue;
                     break;
                 case CriteriaTypes.NotLike:
-                    str += " not like " + fieldValue;
+                    str += " NOT LIKE " + fieldValue;
                     break;
                 case CriteriaTypes.In:
-                    str += " in " + fieldValue;
+                    str += " IN " + fieldValue;
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " not in " + fieldValue;
+                    str += " NOT IN " + fieldValue;
                     break;
             }
 
@@ -297,7 +297,7 @@ namespace Cinar.Database
         public override string ToString()
         {
             if (this.Count > 0)
-                return " where " + String.Join(" AND ", this.ConvertAll(c => c.ToString()).ToArray());
+                return " WHERE " + String.Join(" AND ", this.Select(c => c.ToString()).ToArray());
             return "";
         }
         public string ToParamString()
@@ -308,7 +308,7 @@ namespace Cinar.Database
                 string[] sList = new string[this.Count];
                 for (int i = 0; i < sList.Length; i++)
                     sList[i] = this[i].ToParamString(i);
-                res += " where " + string.Join(" AND ", sList);
+                res += " WHERE " + string.Join(" AND ", sList);
             }
             return res;
         }
@@ -339,7 +339,7 @@ namespace Cinar.Database
 
         public override string ToString()
         {
-            string str = fieldName + (ascending ? "" : " desc");
+            string str = "[" + fieldName + "]" + (ascending ? "" : " DESC");
             return str;
         }
     }
@@ -349,7 +349,7 @@ namespace Cinar.Database
         public override string ToString()
         {
             if (this.Count > 0)
-                return " order by " + string.Join(", ", this.Select(o => o.ToString()).ToArray());
+                return " ORDER BY " + string.Join(", ", this.Select(o => o.ToString()).ToArray());
             return "";
         }
     }
