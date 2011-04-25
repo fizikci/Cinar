@@ -120,17 +120,18 @@
             this.dockPanel1.Controls.Add(this.dockPanel1_Container);
             this.dockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
             this.dockPanel1.ID = new System.Guid("05b3b684-88ba-41ec-97ed-527cda9a9c70");
-            this.dockPanel1.Location = new System.Drawing.Point(470, 26);
+            this.dockPanel1.Location = new System.Drawing.Point(470, 31);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.Size = new System.Drawing.Size(200, 520);
+            this.dockPanel1.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dockPanel1.Size = new System.Drawing.Size(200, 515);
             this.dockPanel1.Text = "Özellikler";
             // 
             // dockPanel1_Container
             // 
             this.dockPanel1_Container.Controls.Add(this.propertyGrid);
-            this.dockPanel1_Container.Location = new System.Drawing.Point(3, 25);
+            this.dockPanel1_Container.Location = new System.Drawing.Point(4, 23);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(194, 492);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(192, 488);
             this.dockPanel1_Container.TabIndex = 0;
             // 
             // propertyGrid
@@ -139,7 +140,7 @@
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(194, 492);
+            this.propertyGrid.Size = new System.Drawing.Size(192, 488);
             this.propertyGrid.TabIndex = 1;
             // 
             // barManager1
@@ -437,6 +438,34 @@
             this.menuParams.Id = 46;
             this.menuParams.Name = "menuParams";
             // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(670, 31);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 546);
+            this.barDockControlBottom.Size = new System.Drawing.Size(670, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 515);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(670, 31);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 515);
+            // 
             // barButtonItem1
             // 
             this.barButtonItem1.Caption = "File";
@@ -496,10 +525,10 @@
             // 
             this.templateDesigner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.templateDesigner.FileName = null;
-            this.templateDesigner.Location = new System.Drawing.Point(0, 26);
+            this.templateDesigner.Location = new System.Drawing.Point(0, 31);
             this.templateDesigner.Modified = true;
             this.templateDesigner.Name = "templateDesigner";
-            this.templateDesigner.Size = new System.Drawing.Size(470, 520);
+            this.templateDesigner.Size = new System.Drawing.Size(470, 515);
             this.templateDesigner.TabIndex = 6;
             this.templateDesigner.Resize += new System.EventHandler(this.templateDesigner_Resize);
             // 

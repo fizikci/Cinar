@@ -660,13 +660,18 @@ namespace Cinar.Database
             Hashtable ht = new Hashtable();
             foreach (DataColumn dc in dataRow.Table.Columns)
                 ht[dc.ColumnName] = dataRow[dc];
-            return this.Insert(tableName, ht, bypassAutoIncrementField);
+
+            int res = this.Insert(tableName, ht, bypassAutoIncrementField);
+            dataRow.AcceptChanges();
+            
+            return res;
         }
         public int Insert(string tableName, DataRow dataRow)
         {
             return this.Insert(tableName, dataRow, true);
         }
-        public int Update(string tableName, Hashtable data)
+
+        public int Update(string tableName, Hashtable data, Hashtable originalData = null)
         {
             // validate parameters
             if (data.Count == 0) return -1;
@@ -680,7 +685,7 @@ namespace Cinar.Database
             if (validFieldNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("update [" + tableName + "] set ");
+            sb.Append("UPDATE [" + tableName + "] SET ");
             for (int i = 0; i < fields.Count; i++)
             {
                 Field fld = fields[i];
@@ -698,7 +703,27 @@ namespace Cinar.Database
                 }
             }
             sb.Remove(sb.Length-2,2);
-            sb.AppendFormat(" where [{0}]=@_{0}", tbl.PrimaryField.Name);
+
+            Field[] whereFields = null;
+
+            if(tbl.PrimaryField!=null)
+                sb.AppendFormat(" WHERE [{0}]=@_{0}", tbl.PrimaryField.Name);
+            else if(originalData==null)
+                throw new Exception("Update failed because there is no primary field OR original data.");
+            else
+            {
+                whereFields = tbl.Fields.Where(f => !(f.SimpleFieldType == SimpleDbType.ByteArray || f.SimpleFieldType == SimpleDbType.Text)).ToArray();
+                string where = " WHERE " + string.Join(" AND ", whereFields.Select((f, i) => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
+                object[] values = new object[whereFields.Length];
+                for (int i = 0; i < values.Length; i++) values[i] = originalData[whereFields[i].Name];
+
+                int count = GetInt("SELECT COUNT(*) FROM [" + tableName + "]" + where, values);
+                if (count > 1)
+                    throw new Exception("There are more than one row to be updated!");
+                if (count < 1)
+                    throw new Exception("There is no row to be updated!");
+                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereFields.Select(f => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_org_{0}", f.Name)).ToArray()));
+            }
 
             IDbCommand cmd = this.CreateCommand(sb.ToString());
             for (int i = 0; i < fields.Count; i++)
@@ -716,6 +741,14 @@ namespace Cinar.Database
                     cmd.Parameters.Add(param);
                 }
             }
+            if (whereFields != null && whereFields.Length > 0)
+                foreach (Field f in whereFields)
+                {
+                    if (originalData[f.Name] == null) continue;
+                    IDbDataParameter param = this.CreateParameter("@_org_" + f.Name, originalData[f.Name]);
+                    cmd.Parameters.Add(param);
+                }
+
             int res = this.ExecuteNonQuery(cmd);
 
             return res;
@@ -723,10 +756,78 @@ namespace Cinar.Database
         public int Update(string tableName, DataRow dataRow)
         {
             Hashtable ht = new Hashtable();
+            Hashtable originalHt = new Hashtable();
+
             foreach (DataColumn dc in dataRow.Table.Columns)
-                if(!dataRow.IsNull(dc))
+                if (!dataRow.IsNull(dc))
+                {
                     ht[dc.ColumnName] = dataRow[dc];
-            return this.Update(tableName, ht);
+                    originalHt[dc.ColumnName] = dataRow[dc, DataRowVersion.Original];
+                }
+
+            int res = this.Update(tableName, ht, originalHt);
+            dataRow.AcceptChanges();
+            
+            return res;
+        }
+
+        public int Delete(string tableName, Hashtable data)
+        {
+            // validate parameters
+            if (data.Count == 0) return -1;
+            Table tbl = this.Tables[tableName];
+            if (tbl == null) throw new ApplicationException("There is no such table : " + tableName);
+
+            FieldCollection fields = tbl.Fields;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE FROM [" + tableName + "]");
+
+            Field[] whereFields = null;
+
+            if (tbl.PrimaryField != null)
+                sb.AppendFormat(" WHERE [{0}] = @_{0}", tbl.PrimaryField.Name);
+            else
+            {
+                whereFields = tbl.Fields.Where(f => !(f.SimpleFieldType == SimpleDbType.ByteArray || f.SimpleFieldType == SimpleDbType.Text)).ToArray();
+                string where = " WHERE " + string.Join(" AND ", whereFields.Select((f, i) => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
+                object[] values = new object[whereFields.Length];
+                for (int i = 0; i < values.Length; i++) values[i] = data[whereFields[i].Name];
+
+                int count = GetInt("SELECT COUNT(*) FROM [" + tableName + "]" + where, values);
+                if (count > 1)
+                    throw new Exception("There are more than one row to be deleted!");
+                if (count < 1)
+                    throw new Exception("There is no row to be deleted!");
+                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereFields.Select(f => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_{0}", f.Name)).ToArray()));
+            }
+
+            IDbCommand cmd = this.CreateCommand(sb.ToString());
+            if (whereFields != null && whereFields.Length > 0)
+                foreach (Field f in whereFields)
+                {
+                    if (data[f.Name] == null) continue;
+                    IDbDataParameter param = this.CreateParameter("@_" + f.Name, data[f.Name]);
+                    cmd.Parameters.Add(param);
+                }
+
+            int res = this.ExecuteNonQuery(cmd);
+
+            return res;
+        }
+        public int Delete(string tableName, DataRow dataRow)
+        {
+            Hashtable ht = new Hashtable();
+            Hashtable originalHt = new Hashtable();
+
+            foreach (DataColumn dc in dataRow.Table.Columns)
+                if (!dataRow.IsNull(dc))
+                    ht[dc.ColumnName] = dataRow[dc, DataRowVersion.Original];
+
+            int res = this.Delete(tableName, ht);
+            //dataRow.AcceptChanges();
+
+            return res;
         }
 
         public string GetIdFieldName(IDatabaseEntity entity)
@@ -1678,10 +1779,9 @@ namespace Cinar.Database
         {
             switch (Provider)
             {
-                case DatabaseProvider.PostgreSQL:
-                    throw new Exception("Alter column is not implemented for Postgre SQL!");
                 case DatabaseProvider.MySQL:
                     return "ALTER TABLE [" + field.Table.Name + "] MODIFY COLUMN " + GetFieldDDL(field);
+                case DatabaseProvider.PostgreSQL:
                 case DatabaseProvider.SQLServer:
                     return "ALTER TABLE [" + field.Table.Name + "] ALTER COLUMN " + GetFieldDDL(field);
                 default:
@@ -1691,6 +1791,14 @@ namespace Cinar.Database
 
         public string GetAlterTableDropKeyDDL(Index index)
         {
+            if (index.IsPrimary)
+            {
+                if (Provider == DatabaseProvider.MySQL)
+                    return "ALTER TABLE [" + index.parent.table.Name + "] DROP PRIMARY KEY";
+                else
+                    return "ALTER TABLE [" + index.parent.table.Name + "] DROP CONSTRAINT [" + index.Name + "]";
+            }
+
             switch (Provider)
             {
                 case DatabaseProvider.MySQL:

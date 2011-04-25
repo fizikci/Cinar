@@ -29,6 +29,7 @@ namespace Cinar.DBTools.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQLEditorAndResults));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new Cinar.DBTools.CinarSQLEditor();
@@ -51,16 +52,17 @@ namespace Cinar.DBTools.Controls
             this.menuCopySelectedRows = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopyAllRows = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteSelectedRows = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnResetFilter = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.txtPageSize = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.btnPrevPage = new System.Windows.Forms.ToolStripButton();
             this.txtPageNo = new System.Windows.Forms.ToolStripTextBox();
             this.btnNextPage = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.txtPageSize = new System.Windows.Forms.ToolStripTextBox();
+            this.btnRefresh = new System.Windows.Forms.ToolStripButton();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -247,10 +249,21 @@ namespace Cinar.DBTools.Controls
             // 
             // gridShowTable
             // 
+            this.gridShowTable.AllowUserToDeleteRows = false;
+            this.gridShowTable.AllowUserToOrderColumns = true;
             this.gridShowTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridShowTable.DefaultCellStyle = dataGridViewCellStyle1;
             this.gridShowTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridShowTable.Location = new System.Drawing.Point(0, 0);
             this.gridShowTable.Name = "gridShowTable";
+            this.gridShowTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridShowTable.Size = new System.Drawing.Size(630, 400);
             this.gridShowTable.TabIndex = 1;
             // 
@@ -262,16 +275,17 @@ namespace Cinar.DBTools.Controls
             this.btnExportAs,
             this.btnCopyData,
             this.toolStripSeparator2,
+            this.btnSave,
             this.btnDeleteSelectedRows,
             this.toolStripSeparator1,
             this.btnResetFilter,
             this.toolStripLabel3,
-            this.toolStripLabel1,
-            this.txtPageSize,
-            this.toolStripLabel2,
             this.btnPrevPage,
             this.txtPageNo,
-            this.btnNextPage});
+            this.btnNextPage,
+            this.toolStripLabel1,
+            this.txtPageSize,
+            this.btnRefresh});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(630, 25);
@@ -323,6 +337,15 @@ namespace Cinar.DBTools.Controls
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnSave
+            // 
+            this.btnSave.ForeColor = System.Drawing.Color.Red;
+            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
+            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(96, 22);
+            this.btnSave.Text = "Click to save!";
+            // 
             // btnDeleteSelectedRows
             // 
             this.btnDeleteSelectedRows.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -352,29 +375,6 @@ namespace Cinar.DBTools.Controls
             this.toolStripLabel3.Size = new System.Drawing.Size(47, 22);
             this.toolStripLabel3.Text = "Paging:";
             // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(33, 22);
-            this.toolStripLabel1.Text = "Size :";
-            // 
-            // txtPageSize
-            // 
-            this.txtPageSize.AutoSize = false;
-            this.txtPageSize.BackColor = System.Drawing.SystemColors.Info;
-            this.txtPageSize.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPageSize.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txtPageSize.Name = "txtPageSize";
-            this.txtPageSize.Size = new System.Drawing.Size(30, 15);
-            this.txtPageSize.Text = "100";
-            this.txtPageSize.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
-            this.toolStripLabel2.Text = "Page:";
-            // 
             // btnPrevPage
             // 
             this.btnPrevPage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -401,6 +401,32 @@ namespace Cinar.DBTools.Controls
             this.btnNextPage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnNextPage.Name = "btnNextPage";
             this.btnNextPage.Size = new System.Drawing.Size(23, 22);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(33, 22);
+            this.toolStripLabel1.Text = "Size :";
+            // 
+            // txtPageSize
+            // 
+            this.txtPageSize.AutoSize = false;
+            this.txtPageSize.BackColor = System.Drawing.SystemColors.Info;
+            this.txtPageSize.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPageSize.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtPageSize.Name = "txtPageSize";
+            this.txtPageSize.Size = new System.Drawing.Size(30, 15);
+            this.txtPageSize.Text = "100";
+            this.txtPageSize.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
+            this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
+            this.btnRefresh.Text = "Refresh";
             // 
             // BottomToolStripPanel
             // 
@@ -494,7 +520,6 @@ namespace Cinar.DBTools.Controls
         private System.Windows.Forms.ToolStripButton btnDeleteSelectedRows;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox txtPageSize;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripTextBox txtPageNo;
         private System.Windows.Forms.ToolStripPanel BottomToolStripPanel;
         private System.Windows.Forms.ToolStripPanel TopToolStripPanel;
@@ -506,5 +531,7 @@ namespace Cinar.DBTools.Controls
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripButton btnPrevPage;
         private System.Windows.Forms.ToolStripButton btnNextPage;
+        private System.Windows.Forms.ToolStripButton btnRefresh;
+        private System.Windows.Forms.ToolStripButton btnSave;
     }
 }

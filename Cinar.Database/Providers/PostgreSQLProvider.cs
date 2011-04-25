@@ -125,13 +125,13 @@ namespace Cinar.Database.Providers
             }
 
             // primary indices
-            //TODO: postgreSQL bulursak bu kodu MySQL ve SQLServer'da olduðu gibi düzeltelim
             DataTable dtKeys = db.GetDataTable(this.SQLPrimaryKeys);
             if (dtKeys != null)
                 foreach (DataRow drKey in dtKeys.Rows)
                 {
                     Table tbl = db.Tables[drKey["TABLE_NAME"].ToString()];
                     Index index = new Index();
+                    index.Name = drKey["CONSTRAiNT_NAME"].ToString();
                     index.FieldNames = new List<string>();
                     index.FieldNames.Add(drKey["COLUMN_NAME"].ToString());
                     index.IsPrimary = true;
@@ -396,17 +396,17 @@ namespace Cinar.Database.Providers
         public string GetFieldDDL(Field f)
         {
             string fieldDDL = "\"" + f.Name + "\" ";
-            if (!f.IsAutoIncrement)
+            //if (!f.IsAutoIncrement)
                 fieldDDL += f.Table.Database.dbProvider.DbTypeToString(f.FieldType);
             if (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar)
                 fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
-            if (f.IsAutoIncrement)
-                fieldDDL += " SERIAL";
+            //if (f.IsAutoIncrement)
+            //    fieldDDL += " SERIAL";
             if (!f.IsNullable)
                 fieldDDL += " NOT NULL";
             //if (f.IsPrimaryKey)
             //    fieldDDL += " PRIMARY KEY";
-            if (!string.IsNullOrEmpty(f.DefaultValue) && !f.DefaultValue.StartsWith("nextval("))
+            if (!string.IsNullOrEmpty(f.DefaultValue) /*&& !f.DefaultValue.StartsWith("nextval(")*/)
                 fieldDDL += " DEFAULT " + f.DefaultValue;
             if (f.ReferenceField != null)
                 fieldDDL += " REFERENCES \"" + f.ReferenceField.Table.Name + "\"(\"" + f.ReferenceField.Name + "\")";

@@ -117,4 +117,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btnEmailNotificationResource1.AlternateText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="btnEmailNotificationResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblAdministratePageResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblAdminToolsLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblAttachmentsLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblAuthorResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblBackLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblBreadcrumbsTrailResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblByResource1.Text" xml:space="preserve">
+    <value> by </value>
+  </data>
+  <data name="lblCategorizedAsResource1.Text" xml:space="preserve">
+    <value>Categorized as </value>
+  </data>
+  <data name="lblDiscussedPageResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDiscussLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDoubleClickHandlerResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblEditLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblHistoryLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblModifiedDateTimeResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblModifiedResource1.Text" xml:space="preserve">
+    <value>Modified on </value>
+  </data>
+  <data name="lblNavigationPathsResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblNextPageResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPageCategoriesResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPageDiscussionForResource1.Text" xml:space="preserve">
+    <value>Page discussion for </value>
+  </data>
+  <data name="lblPageTitleResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPostMessageLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPreviousPageResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblPrintLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRedirectionSourceResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRollbackPageResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRssLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblSetPagePermissionsResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblViewCodeLinkResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PageResource2.Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="pnlPageInfoResource1.GroupingText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pnlPageInfoResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
 </root>

@@ -76,15 +76,21 @@ namespace Cinar.Database
             switch (parent.table.Database.Provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    return "CREATE " + (IsPrimary ? "PRIMARY KEY" : (IsUnique ? "UNIQUE" : "")) + " INDEX \"" + Name + "\" ON \"" + parent.table.Name + "\" (\"" + string.Join("\", \"", FieldNames.ToArray()) + "\")";
+                    if (IsPrimary)
+                        return "ALTER TABLE \"" + parent.table.Name + "\" ADD PRIMARY KEY (\"" + string.Join("\", \"", FieldNames.ToArray()) + "\")";
+                    else
+                        return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX \"" + Name + "\" ON \"" + parent.table.Name + "\" (\"" + string.Join("\", \"", FieldNames.ToArray()) + "\")";
                 case DatabaseProvider.MySQL:
-                    return "CREATE " + (IsPrimary ? "PRIMARY KEY" : (IsUnique ? "UNIQUE" : "")) + " INDEX `" + Name + "` ON `" + parent.table.Name + "` (`" + string.Join("`, `", FieldNames.ToArray()) + "`)";
+                    if(IsPrimary)
+                        return "ALTER TABLE `" + parent.table.Name + "` ADD PRIMARY KEY (`" + string.Join("`, `", FieldNames.ToArray()) + "`)";
+                    else
+                        return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX `" + Name + "` ON `" + parent.table.Name + "` (`" + string.Join("`, `", FieldNames.ToArray()) + "`)";
                 case DatabaseProvider.SQLServer:
                     if (IsPrimary)
                         return "ALTER TABLE [" + parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT [" + Name + "] PRIMARY KEY CLUSTERED ([" + string.Join("], [", FieldNames.ToArray()) + "])";
                     if (IsUnique)
                         return "ALTER TABLE [" + parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT [" + Name + "] UNIQUE ([" + string.Join("], [", FieldNames.ToArray()) + "])";
-                    return "CREATE " + (IsPrimary ? "PRIMARY KEY" : (IsUnique ? "UNIQUE" : "")) + " INDEX [" + Name + "] ON [" + parent.table.Name + "] ([" + string.Join("], [", FieldNames.ToArray()) + "])";
+                    return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX [" + Name + "] ON [" + parent.table.Name + "] ([" + string.Join("], [", FieldNames.ToArray()) + "])";
                 default:
                     throw new ArgumentOutOfRangeException();
             }

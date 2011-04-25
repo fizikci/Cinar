@@ -433,6 +433,34 @@ namespace Cinar.TemplateDesign
             this.menuParams.Id = 46;
             this.menuParams.Name = "menuParams";
             // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(837, 53);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 498);
+            this.barDockControlBottom.Size = new System.Drawing.Size(837, 23);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 53);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 445);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(837, 53);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 445);
+            // 
             // dockManager1
             // 
             this.dockManager1.Controller = this.barAndDockingController1;
@@ -450,17 +478,18 @@ namespace Cinar.TemplateDesign
             this.dockPanel1.Controls.Add(this.dockPanel1_Container);
             this.dockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
             this.dockPanel1.ID = new System.Guid("e2bae78c-b4ae-4a3f-8a13-4bec47201107");
-            this.dockPanel1.Location = new System.Drawing.Point(583, 51);
+            this.dockPanel1.Location = new System.Drawing.Point(637, 53);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.Size = new System.Drawing.Size(254, 448);
+            this.dockPanel1.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dockPanel1.Size = new System.Drawing.Size(200, 445);
             this.dockPanel1.Text = "Özellikler";
             // 
             // dockPanel1_Container
             // 
             this.dockPanel1_Container.Controls.Add(this.propertyGrid);
-            this.dockPanel1_Container.Location = new System.Drawing.Point(3, 25);
+            this.dockPanel1_Container.Location = new System.Drawing.Point(4, 23);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(248, 420);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(192, 418);
             this.dockPanel1_Container.TabIndex = 0;
             // 
             // propertyGrid
@@ -469,7 +498,7 @@ namespace Cinar.TemplateDesign
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(248, 420);
+            this.propertyGrid.Size = new System.Drawing.Size(192, 418);
             this.propertyGrid.TabIndex = 0;
             // 
             // barButtonItem1
@@ -505,13 +534,12 @@ namespace Cinar.TemplateDesign
             // 
             // templateDesigner
             // 
-            this.templateDesigner.BackColor = System.Drawing.Color.Gray;
             this.templateDesigner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.templateDesigner.FileName = null;
-            this.templateDesigner.Location = new System.Drawing.Point(0, 51);
+            this.templateDesigner.Location = new System.Drawing.Point(0, 53);
             this.templateDesigner.Modified = true;
             this.templateDesigner.Name = "templateDesigner";
-            this.templateDesigner.Size = new System.Drawing.Size(583, 448);
+            this.templateDesigner.Size = new System.Drawing.Size(637, 445);
             this.templateDesigner.TabIndex = 5;
             // 
             // FormTemplateDesigner
@@ -526,7 +554,7 @@ namespace Cinar.TemplateDesign
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
             this.Name = "FormTemplateDesigner";
-            this.Text = "FinsFAX Template Designer";
+            this.Text = "Çýnar Template Designer";
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
