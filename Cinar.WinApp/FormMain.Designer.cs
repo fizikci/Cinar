@@ -28,13 +28,13 @@ namespace Cinar.WinApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
+            this.barManager = new DevExpress.XtraBars.BarManager();
             this.MainMenu = new DevExpress.XtraBars.Bar();
             this.menuFile = new DevExpress.XtraBars.BarSubItem();
             this.menuExit = new DevExpress.XtraBars.BarButtonItem();
             this.menuCommands = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
             this.menuView = new DevExpress.XtraBars.BarSubItem();
             this.menuSkins = new DevExpress.XtraBars.BarSubItem();
             this.menuChangeView = new DevExpress.XtraBars.BarButtonItem();
@@ -60,8 +60,7 @@ namespace Cinar.WinApp
             this.navBar = new DevExpress.XtraNavBar.NavBarControl();
             this.navBarGroup1 = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem1 = new DevExpress.XtraNavBar.NavBarItem();
-            this.xtraTabbedMdiManager1 = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(this.components);
-            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
+            this.xtraTabbedMdiManager1 = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager();
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtBul)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.navBar)).BeginInit();
@@ -100,7 +99,7 @@ namespace Cinar.WinApp
             this.txtBarItemBul,
             this.barButtonItem4});
             this.barManager.MainMenu = this.MainMenu;
-            this.barManager.MaxItemId = 25;
+            this.barManager.MaxItemId = 26;
             this.barManager.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.txtBul});
             this.barManager.StatusBar = this.StatusBar;
@@ -143,6 +142,11 @@ namespace Cinar.WinApp
             this.menuCommands.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem4)});
             this.menuCommands.Name = "menuCommands";
+            // 
+            // barButtonItem4
+            // 
+            this.barButtonItem4.Id = 25;
+            this.barButtonItem4.Name = "barButtonItem4";
             // 
             // menuView
             // 
@@ -198,6 +202,34 @@ namespace Cinar.WinApp
             this.statusBarStaticItem.Id = 0;
             this.statusBarStaticItem.Name = "statusBarStaticItem";
             this.statusBarStaticItem.TextAlignment = System.Drawing.StringAlignment.Near;
+            // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(1016, 22);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 714);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1016, 26);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 22);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 692);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(1016, 22);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 692);
             // 
             // btnNewCommands
             // 
@@ -291,14 +323,14 @@ namespace Cinar.WinApp
             this.navBarGroup1});
             this.navBar.Items.AddRange(new DevExpress.XtraNavBar.NavBarItem[] {
             this.navBarItem1});
-            this.navBar.Location = new System.Drawing.Point(0, 25);
+            this.navBar.Location = new System.Drawing.Point(0, 22);
             this.navBar.MinimumSize = new System.Drawing.Size(30, 0);
             this.navBar.Name = "navBar";
             this.navBar.OptionsNavPane.ExpandedWidth = 269;
             this.navBar.OptionsNavPane.ShowOverflowPanel = false;
             this.navBar.OptionsNavPane.ShowSplitter = false;
             this.navBar.PaintStyleKind = DevExpress.XtraNavBar.NavBarViewKind.NavigationPane;
-            this.navBar.Size = new System.Drawing.Size(194, 691);
+            this.navBar.Size = new System.Drawing.Size(194, 692);
             this.navBar.TabIndex = 0;
             this.navBar.Text = "navBarControl1";
             this.navBar.View = new DevExpress.XtraNavBar.ViewInfo.SkinNavigationPaneViewInfoRegistrator();
@@ -324,7 +356,7 @@ namespace Cinar.WinApp
             this.xtraTabbedMdiManager1.HeaderButtonsShowMode = DevExpress.XtraTab.TabButtonShowMode.Always;
             this.xtraTabbedMdiManager1.MdiParent = this;
             // 
-            // FormDMT
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

@@ -5,15 +5,15 @@
 [ok] - Refresh Nodes
 [ok] - Refresh Metadata
 [ok] - Generate UI Metadata
-Create Database
-Drop database
-Truncate database
-Empty database
+[ok] - Create Database
+[ok] - Drop database
+[ok] - Truncate database
+[ok] - Empty database
 [ok] Create => Table, View, Trigger, Procedure, Function
-Backup database
-Transfer Database...
+[ok] - Backup database
+[ok] - Transfer Database...
 Execute SQL from file
-Show database ER Diagram
+[ok] - Show database ER Diagram
 
 Diagrams
 [ok] - New ER diagram
@@ -55,31 +55,32 @@ Fields:
 Field:
  - Drop field
  - Modify field
- - Distinct
- - Max
- - Min
- - Grouped Counts
- - Generate UI Metadata
+[ok] - Distinct
+[ok] - Max
+[ok] - Min
+[ok] - Grouped Counts
+[ok] - Generate UI Metadata
 
 Indexes:
- - Create index
+[ok] - Create index
 
 Views:
- - Create view
+[ok] - Create view
 
 Triggers:
- - Create trigger
+[ok] - Create trigger
 
 Stored procedures
- - Create Procedure
+[ok] - Create Procedure
 
 Functions:
- - Create fumction
+[ok] - Create fumction
 
 Other:
-1. Make grid editable
-2. Put paging on top of grid
+1. [ok] Make grid editable
+2. [ok] Put paging on top of grid
 3. [ok] Put time/exec time at the beginning of each history lines.
 4. [ok] convert history SQLs to one line
 5. Make "analyze table" better
 6. Put ER Diagram window into the main window tabs
+7. editSQLAsForProvider saçmalığına bi son ver

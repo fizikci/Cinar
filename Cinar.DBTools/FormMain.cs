@@ -173,13 +173,13 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuToolsQScriptDeleteFromTables, Argument=@"$
 foreach(table in db.Tables)
-    echo('truncate table ' + table.Name + ';\r\n');
+    echo('truncate table [' + table.Name + '];\r\n');
 $"},
                                          new CommandTrigger{ Control = menuToolsQScriptSelectCountsFromTables, Argument=@"$
 for(int i=0; i<db.Tables.Count; i++)
 {
 	var table = db.Tables[i];
-    echo(""select '"" + table.Name + ""', count(*) from "" + table.Name);
+    echo(""select '"" + table.Name + ""', count(*) from ["" + table.Name + ""]"");
     if(i<db.Tables.Count-1) echo("" UNION \r\n"");
 }
 $"},
@@ -984,7 +984,9 @@ $"},
 
         private void cmdTableOpen(string arg)
         {
-            throw new NotImplementedException();
+            TreeNode tn = findSelectedTableNode();
+            if (tn != null && tn.Tag is Table && CurrSQLEditor != null)
+                CurrSQLEditor.ShowTableData(tn.Tag as Table);
         }
         private void cmdTableDrop(string arg)
         {
@@ -992,7 +994,7 @@ $"},
             string tableName = treeView.SelectedNode.Name;
             if (MessageBox.Show(string.Format("Are you sure to drop table {0}? All data will be lost!", tableName), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                int i = Provider.Database.ExecuteNonQuery("drop table " + tableName);
+                int i = Provider.Database.ExecuteNonQuery("drop table [" + tableName + "]");
                 Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
                 cmdRefresh(null);
                 CurrSQLEditor.ShowInfoText("Table " + tableName + " dropped succesfully.");
@@ -1009,14 +1011,14 @@ $"},
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
             
-            int count = Provider.Database.GetInt("select count(*) from " + tableName);
+            int count = Provider.Database.GetInt("select count(*) from [" + tableName + "]");
 
             DataTable dtMaxMin = null;
             if (count > 0)
             {
                 List<string> list = new List<string>();
                 foreach (Field f in Provider.Database.Tables[tableName].Fields)
-                    list.Add("select '" + f.Name + "' as [Field Name], min(" + f.Name + ") as [Min. Value], max(" + f.Name + ") as [Max. Value] from " + tableName);
+                    list.Add("select '" + f.Name + "' as [Field Name], min([" + f.Name + "]) as [Min. Value], max([" + f.Name + "]) as [Max. Value] from [" + tableName + "]");
                 string sql = string.Join("\nUNION\n", list.ToArray());
                 dtMaxMin = Provider.Database.GetDataTable(sql);
             }
@@ -1157,6 +1159,9 @@ $"},
                             }
 
                             // field zaten varsa
+
+                            if (oldTable.Indices == null) oldTable.Indices = new IndexCollection(oldTable);
+
                             // primary key kaldırılmış mı?
                             if (orgField.IsPrimaryKey && !f.IsPrimaryKey)
                             {
@@ -1189,6 +1194,15 @@ $"},
                             {
                                 sb.AppendLine(Provider.Database.GetAlterTableRenameColumnDDL(oldTable.Name, f.OriginalName, f.Name) + ";");
                                 orgField.Name = f.Name;
+                            }
+                            // postgre'ye özel olarak is_autoincrement true yapılmışsa sequence ekle
+                            if (Provider.Database.Provider == DatabaseProvider.PostgreSQL && !orgField.IsAutoIncrement && f.IsAutoIncrement)
+                            {
+                                // add sequence
+                                string seqName = "seq_" + oldTable.Name + "_" + orgField.Name;
+                                int maxId = Provider.Database.GetInt("select max(\"" + orgField.Name + "\")+1 from \"" + oldTable.Name + "\"");
+                                Provider.Database.ExecuteNonQuery("CREATE SEQUENCE \"" + seqName + "\" INCREMENT 1 START " + maxId + ";");
+                                f.DefaultValue = "nextval('\"" + seqName + "\"')";
                             }
                             // tipi vs. değişmiş mi?
                             string orgFieldDDL = Provider.Database.GetFieldDDL(orgField);
@@ -1315,7 +1329,7 @@ $"},
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL(@"
                 select distinct top 1000 
-                    {0} 
+                    [{0}] 
                 from 
                     [{1}]", 
                           field.Name, 
@@ -1327,7 +1341,7 @@ $"},
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL(@"
                 select 
-                    max({0}) AS {0}_MAX_value 
+                    max([{0}]) AS {0}_MAX_value 
                 from 
                     [{1}]",
                           field.Name,
@@ -1339,7 +1353,7 @@ $"},
             Field field = (Field)treeView.SelectedNode.Tag;
             executeSQL(@"
                 select 
-                    min({0}) AS {0}_MIN_value 
+                    min([{0}]) AS {0}_MIN_value 
                 from 
                     [{1}]", 
                           field.Name, 
@@ -1354,11 +1368,11 @@ $"},
             {
                 executeSQL(@"
                     select top 1000 
-                        {0}, 
+                        [{0}], 
                         count(*) as RecordCount 
                     from 
                         [{1}] 
-                    group by {0} 
+                    group by [{0}] 
                     order by RecordCount desc",
                                               field.Name,
                                               field.Table.Name);
@@ -1367,13 +1381,13 @@ $"},
             {
                 executeSQL(@"
                     select top 1000 
-                        t.{0}, 
-                        tRef.{4},
+                        t.[{0}], 
+                        tRef.[{4}],
                         count(*) as RecordCount 
                     from 
-                        {1} t
-                        left join {3} tRef on t.{0} = tRef.{2}
-                    group by t.{0}, tRef.{4}
+                        [{1}] t
+                        left join [{3}] tRef on t.[{0}] = tRef.[{2}]
+                    group by t.[{0}], tRef.[{4}]
                     order by RecordCount desc",
                                               field.Name,
                                               field.Table.Name,
@@ -1392,7 +1406,7 @@ $"},
                 executeSQL(@"
                     select top 1000 
                         * 
-                    from {1} 
+                    from [{1}] 
                     where [{3}].[{0}] = '{2}'",
                                               field.Name,
                                               from,
