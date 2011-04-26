@@ -1,9 +1,0 @@
-G|*|G.Administrators|1
-N.|Crt_Pg|G.Users|1
-N.|Pst_Disc|G.Users|1
-N.|Down_Attn|G.Users|1
-D.(ScrewTurn.Wiki.FilesStorageProvider)/|Down_Files|G.Users|1
-N.|Rd_Pg|G.Anonymous|1
-N.|Rd_Disc|G.Anonymous|1
-N.|Down_Attn|G.Anonymous|1
-D.(ScrewTurn.Wiki.FilesStorageProvider)/|Down_Files|G.Anonymous|1
