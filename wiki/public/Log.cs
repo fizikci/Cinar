@@ -24,3 +24,7 @@ G|2011/04/26 11:25:25|Provider Local Users Provider loaded (Enabled)|SYSTEM
 G|2011/04/26 11:25:25|Provider Local Pages Provider loaded (Enabled)|SYSTEM
 G|2011/04/26 11:25:25|Provider Local Cache Provider loaded (Enabled)|SYSTEM
 G|2011/04/26 11:25:25|ScrewTurn Wiki is ready|SYSTEM
+G|2011/04/26 11:34:08|User admin logged in|SYSTEM
+G|2011/04/26 11:34:21|Page update requested for MainPage|admin
+G|2011/04/26 11:34:21|Page Content updated for MainPage|SYSTEM
+G|2011/04/26 11:34:22|Page MainPage rebound|SYSTEM
