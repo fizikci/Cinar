@@ -252,6 +252,12 @@ namespace Cinar.DBTools.Controls
             {
                 MessageBox.Show("Error: " + ex.Message + Environment.NewLine + "Try refreshing metadata.", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            if(fExp.Orders.Count>0)
+                gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].FieldName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+
+            btnPrevPage.Enabled = pageNo > 1;
+            btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
         }
 
         void btnPrevPage_Click(object sender, EventArgs e)
