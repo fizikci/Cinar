@@ -117,9 +117,9 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
-                                     Execute = cmdCloseSQLEditor,
+                                     Execute = cmdCloseEditor,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = btnCloseSQLEditor},
+                                         new CommandTrigger{ Control = btnCloseEditor},
                                      },
                                      IsEnabled = () => tabControlEditors.TabCount > 1
                                 },
@@ -310,21 +310,21 @@ $"},
                                          new CommandTrigger{ Control = menuDiagramNew},
                                          new CommandTrigger{ Control = menuConShowDatabaseERDiagram},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is List<Schema> || treeView.SelectedNode.Tag is Schema)
+                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is List<Diagram> || treeView.SelectedNode.Tag is Diagram)
                                  },
                      new Command {
                                      Execute = cmdOpenERDiagram,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDiagramOpen},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Schema,
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Diagram,
                                  },
                      new Command {
                                      Execute = cmdDeleteERDiagram,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDiagramDelete},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Schema,
+                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Diagram,
                                  },
                      new Command {
                                      Execute = cmdShowTableCounts,
@@ -446,6 +446,16 @@ $"},
             }
         }
 
+        private IEditor CurrEditor
+        {
+            get
+            {
+                if (tabControlEditors.TabCount > 0)
+                    return (tabControlEditors.SelectedTab.Controls[0] as IEditor);
+                return null;
+            }
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             addSQLEditor("", "");
@@ -562,7 +572,7 @@ $"},
                     }
             }
 
-            foreach (Schema schema in cs.Schemas)
+            foreach (Diagram schema in cs.Schemas)
             {
                 TreeNode tnSchema = schemasNode.Nodes.Add(schema.Name, schema.Name, "Diagram", "Diagram");
                 tnSchema.Tag = schema;
@@ -613,14 +623,33 @@ $"},
             return null;
         }
 
-        private void addSQLEditor(string filePath, string sql) {
+        private void addSQLEditor(string filePath, string sql)
+        {
             TabPage tp = new TabPage();
             tp.ImageKey = "Script";
-            
+
             SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
             sqlEd.Dock = DockStyle.Fill;
             tp.Controls.Add(sqlEd);
             tp.Text = string.IsNullOrEmpty(filePath) ? "Query" : Path.GetFileName(filePath);
+            tabControlEditors.Controls.Add(tp);
+            tabControlEditors.SelectTab(tp);
+
+            SetFont(tp, Font);
+        }
+
+        private void addDiagram(Diagram schema)
+        {
+            TabPage tp = new TabPage();
+            tp.ImageKey = "Diagram";
+            tp.BackColor = Color.FromKnownColor(KnownColor.Window);
+            tp.AutoScroll = true;
+
+            DiagramEditor d = new DiagramEditor();
+            d.CurrentSchema = schema;
+            d.propertyGrid = this.propertyGrid;
+            tp.Controls.Add(d);
+            tp.Text = schema == null ? "New Diagram" : schema.Name;
             tabControlEditors.Controls.Add(tp);
             tabControlEditors.SelectTab(tp);
 
@@ -645,15 +674,17 @@ $"},
             if (ofd.ShowDialog() == DialogResult.OK)
                 addSQLEditor(ofd.FileName, "");
         }
-        private void cmdCloseSQLEditor(string arg)
+        private void cmdCloseEditor(string arg)
         {
-            if (CurrSQLEditor.Modified)
+            if (CurrEditor.Modified)
             {
-                DialogResult dr = MessageBox.Show("Would you like to save?", "Çınar DB Tools", MessageBoxButtons.YesNoCancel);
+                DialogResult dr = MessageBox.Show("Would you like to save?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel);
                 if (dr == DialogResult.Yes)
                 {
-                    cmdSave("");
-                    tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
+                    if (CurrEditor.Save())
+                        tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
+                    else
+                        cancel = true;
                 }
                 else if (dr == DialogResult.No)
                     tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
@@ -1524,22 +1555,17 @@ $"},
 
         private void cmdNewERDiagram(string arg)
         {
-            FormERDiagram form = new FormERDiagram();
-            form.MainForm = this;
-            form.Show();
+            addDiagram(null);
         }
         private void cmdOpenERDiagram(string arg)
         {
-            Schema schema = treeView.SelectedNode.Tag as Schema;
+            Diagram schema = treeView.SelectedNode.Tag as Diagram;
             schema.conn = Provider.ActiveConnection;
-            FormERDiagram form = new FormERDiagram();
-            form.MainForm = this;
-            form.CurrentSchema = schema;
-            form.Show();
+            addDiagram(schema);
         }
         private void cmdDeleteERDiagram(string arg)
         {
-            Schema schema = treeView.SelectedNode.Tag as Schema;
+            Diagram schema = treeView.SelectedNode.Tag as Diagram;
             Provider.ActiveConnection.Schemas.Remove(schema);
             SaveConnections();
             cmdRefresh(null);
@@ -1585,7 +1611,7 @@ $"},
         {
             cancel = false;
             while (CurrSQLEditor != null && !cancel)
-                cmdCloseSQLEditor("");
+                cmdCloseEditor("");
 
             e.Cancel = cancel;
         }
@@ -1600,13 +1626,13 @@ $"},
                     (e.Node.Tag as Field).Name = e.Label;
                 else if (e.Node.Tag is ConnectionSettings)
                     (e.Node.Tag as ConnectionSettings).Database.Name = e.Label;
-                else if (e.Node.Tag is Schema)
-                    (e.Node.Tag as Schema).Name = e.Label;
+                else if (e.Node.Tag is Diagram)
+                    (e.Node.Tag as Diagram).Name = e.Label;
             }
         }
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Tag is Schema)
+            if (e.Node.Tag is Diagram)
                 cmdOpenERDiagram(null);
             else if (e.Node.Tag is ConnectionSettings)
                 cmdEditConnection(null);
@@ -1649,6 +1675,14 @@ $"},
         {
             //cmdMan.SetCommandControlsVisibility();
             cmdMan.SetCommandControlsEnable();
+        }
+
+        private void propertyGrid_SelectedObjectsChanged(object sender, EventArgs e)
+        {
+            if (propertyGrid.SelectedObject != null)
+                labelProperties.Text = "      " + propertyGrid.SelectedObject.GetType().Name + " Properties";
+            else
+                labelProperties.Text = "      Properties";
         }
     }
 
@@ -1730,7 +1764,7 @@ $"},
         [Browsable(false)]
         public string Password { get; set; }
         public Database.Database Database;
-        public List<Schema> Schemas = new List<Schema>();
+        public List<Diagram> Schemas = new List<Diagram>();
 
         public void RefreshDatabaseSchema()
         {

@@ -10,7 +10,7 @@ using Cinar.Database;
 
 namespace Cinar.DBTools.Tools
 {
-    public class Schema
+    public class Diagram
     {
         public static int Def_TableWidth = 150;
         public static int Def_TitleHeight = 20;
@@ -20,7 +20,7 @@ namespace Cinar.DBTools.Tools
         public ConnectionSettings conn;
 
         public string Name { get; set; }
-        public List<TableView> Tables { get; set; }
+        public ListTableView Tables { get; set; }
         public List<ConnectionLine> ConnectionLines { get; set; }
 
         public TableView GetTableView(string tableName)
@@ -31,14 +31,17 @@ namespace Cinar.DBTools.Tools
             return null;
         }
 
-        public Schema()
+        public Diagram()
         {
-            Tables = new List<TableView>();
+            Tables = new ListTableView(this);
             ConnectionLines = new List<ConnectionLine>();
         }
 
         public Size CalculateTotalSize()
         {
+            if (Tables.Count == 0)
+                return new Size(20, 20);
+
             int maxX1 = Tables.Max(tv => tv.Position.X + tv.RealSize.Width);
             int maxY1 = Tables.Max(tv => tv.Position.Y + tv.RealSize.Height);
 
@@ -48,16 +51,15 @@ namespace Cinar.DBTools.Tools
             return new Size(maxX1 > maxX2 ? maxX1 : maxX2, maxY1 > maxY2 ? maxY1 : maxY2) + new Size(20, 20);
         }
 
-        internal void Draw(Graphics graphics, int width, int height)
+        internal void Draw(Graphics graphics, Font font, int width, int height)
         {
-
             Bitmap offScreenBmp = new Bitmap(width, height);
             Graphics offScreenDC = Graphics.FromImage(offScreenBmp);
 
             foreach (ConnectionLine cl in this.ConnectionLines)
                 cl.Draw(offScreenDC);
             foreach (TableView tv in this.Tables)
-                tv.Draw(offScreenDC, conn);
+                tv.Draw(offScreenDC, font, conn);
 
             graphics.DrawImage(offScreenBmp, new Point(0, 0));
         }
@@ -75,14 +77,42 @@ namespace Cinar.DBTools.Tools
                 if (tv.Rectangle.Contains(point))
                 {
                     Table table = conn.Database.Tables[tv.TableName];
-                    if (point.Y - tv.Position.Y > Schema.Def_TitleHeight)
+                    if (point.Y - tv.Position.Y > Diagram.Def_TitleHeight)
                     {
-                        int i = (point.Y - tv.Position.Y - Schema.Def_TitleHeight) / Schema.Def_FieldHeight;
+                        int i = (point.Y - tv.Position.Y - Diagram.Def_TitleHeight) / Diagram.Def_FieldHeight;
                         if (i < table.Fields.Count)
                             return table.Fields[i];
                     }
                 }
             return null;
+        }
+        public ConnectionLine HitTestConnectionLine(Point point)
+        {
+            foreach (ConnectionLine cl in this.ConnectionLines)
+            {
+                int d = cl.FindDistanceTo(point);
+                if (d < 16 && d > -1)
+                    return cl;
+            }
+            return null;
+        }
+    }
+
+    public class ListTableView : List<TableView>
+    {
+        [XmlIgnore]
+        internal Diagram Diagram;
+
+        public ListTableView(Diagram schema)
+        {
+            this.Diagram = schema;
+        }
+
+        public new int Add(TableView tv)
+        {
+            tv.Diagram = Diagram;
+            base.Add(tv);
+            return base.Count;
         }
     }
 
@@ -90,17 +120,21 @@ namespace Cinar.DBTools.Tools
     {
         public string TableName { get; set; }
         public Point Position { get; set; }
-        public Size Size { get; set; }
+        [XmlIgnore]
+        public Size Size { get { return new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + Diagram.conn.Database.Tables[TableName].Fields.Count * Diagram.Def_FieldHeight); } }
         internal bool Selected;
         public bool ShowFull;
         public string SelectedField;
         public bool Modified = false;
 
+        [XmlIgnore]
+        internal Diagram Diagram { get; set; }
+
         public Size RealSize
         {
             get
             {
-                return ShowFull ? Size : new Size(Size.Width, Schema.Def_TitleHeight + 1);
+                return ShowFull ? Size : new Size(Size.Width, Diagram.Def_TitleHeight + 1);
             }
         }
 
@@ -114,7 +148,7 @@ namespace Cinar.DBTools.Tools
 
         private Rectangle lastDrawRect;
 
-        internal void Draw(Graphics graphics, ConnectionSettings conn)
+        internal void Draw(Graphics graphics, Font font, ConnectionSettings conn)
         {
             Size size = RealSize;
             // bir önceki çizim alanını temizle (flicker engellemek için)
@@ -125,9 +159,9 @@ namespace Cinar.DBTools.Tools
             // çerçeve içinde beyaz zemin
             graphics.FillRectangle(Brushes.White, new Rectangle(Position + new Size(1, 1), size - new Size(2, 2)));
 
-            Rectangle rectTitle = new Rectangle(Position + new Size(1, 1), new Size(size.Width - 1, Schema.Def_TitleHeight));
+            Rectangle rectTitle = new Rectangle(Position + new Size(1, 1), new Size(size.Width - 1, Diagram.Def_TitleHeight));
             graphics.FillRectangle(Selected ? SystemBrushes.ActiveCaption : SystemBrushes.InactiveCaption, rectTitle);
-            graphics.DrawString(this.TableName, Control.DefaultFont, Selected ? SystemBrushes.ActiveCaptionText : SystemBrushes.InactiveCaptionText, rectTitle.ToRectangleF(), GetTitleStringFormat());
+            graphics.DrawString(this.TableName, font, Selected ? SystemBrushes.ActiveCaptionText : SystemBrushes.InactiveCaptionText, rectTitle.ToRectangleF(), GetTitleStringFormat());
 
             if (ShowFull)
             {
@@ -136,13 +170,13 @@ namespace Cinar.DBTools.Tools
                 for (int i = 0; i < table.Fields.Count; i++)
                 {
                     Field field = table.Fields[i];
-                    Rectangle rectField = new Rectangle(Position + new Size(1, 1 + Schema.Def_TitleHeight + Schema.Def_FieldHeight * i), new Size(Size.Width - 2, Schema.Def_FieldHeight));
+                    Rectangle rectField = new Rectangle(Position + new Size(1, 1 + Diagram.Def_TitleHeight + Diagram.Def_FieldHeight * i), new Size(Size.Width - 2, Diagram.Def_FieldHeight));
                     if (field.Name == SelectedField)
                         graphics.FillRectangle(SystemBrushes.Highlight, rectField);
                     rectField.Size -= new Size(20, 0);
                     rectField.Location += new Size(20, 0);
-                    graphics.DrawImageUnscaled(Schema.ImageList.Images[field.IsPrimaryKey ? "key" : "field"], rectField.Location + new Size(-18, 2));
-                    graphics.DrawString(field.Name, Control.DefaultFont, field.Name == SelectedField ? SystemBrushes.HighlightText : SystemBrushes.ControlText, rectField.ToRectangleF(), sf);
+                    graphics.DrawImageUnscaled(Diagram.ImageList.Images[field.IsPrimaryKey ? "key" : "field"], rectField.Location + new Size(-18, 2));
+                    graphics.DrawString(field.Name, font, field.Name == SelectedField ? SystemBrushes.HighlightText : SystemBrushes.ControlText, rectField.ToRectangleF(), sf);
                 }
             }
 
@@ -203,7 +237,7 @@ namespace Cinar.DBTools.Tools
             Pen p = new Pen(Color.White, 12f);
             graphics.DrawLine(p, lastStartPoint, lastEndPoint);
 
-            p = new Pen(Color.Gray, 4f);
+            p = new Pen(Selected ? Color.Blue : Color.Gray, 4f);
             graphics.DrawLine(p, startPoint, endPoint);
 
             Pair<Point> centerLine = startPoint.GetLinePart(endPoint, 20, LinePart.Center);
@@ -213,5 +247,22 @@ namespace Cinar.DBTools.Tools
             graphics.DrawLine(p, centerLine.First, centerLine.Second);
 
         }
+
+        public int FindDistanceTo(Point point)
+        {
+            bool isOutX = (point.X < StartPoint.X && point.X < EndPoint.X) || (point.X > StartPoint.X && point.X > EndPoint.X);
+            bool isOutY = (point.Y < StartPoint.Y && point.Y < EndPoint.Y) || (point.Y > StartPoint.Y && point.Y > EndPoint.Y);
+            if (isOutX || isOutY)
+                return -1;
+
+            int A = StartPoint.Y - EndPoint.Y;
+            int B = EndPoint.X - StartPoint.X;
+            int C = StartPoint.Y * (StartPoint.X - EndPoint.X) + StartPoint.X * (EndPoint.Y - StartPoint.Y);
+
+            return Convert.ToInt32(Math.Abs(A * point.X + B * point.Y + C) / Math.Sqrt(A * A + B * B));
+        }
+
+        [XmlIgnore]
+        internal bool Selected { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using Cinar.Database;
 
 namespace Cinar.DBTools.Controls
 {
-    public partial class SQLEditorAndResults : UserControl
+    public partial class SQLEditorAndResults : UserControl, IEditor
     {
         public string filePath;
         public string FilePath { get { return filePath; } }
@@ -232,18 +232,26 @@ namespace Cinar.DBTools.Controls
             fExp.PageNo = pageNo;
             fExp.PageSize = pageSize;
 
-            gridShowTable.DataSource = Provider.Database.GetDataTableFor(ShowTable.Name, fExp);
+            try
+            {
+                gridShowTable.RowNumberOffset = pageNo * pageSize;
+                gridShowTable.DataSource = Provider.Database.GetDataTableFor(ShowTable.Name, fExp);
 
-            for(int i=0; i<gridShowTable.Columns.Count; i++)
-                gridShowTable.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;
+                for (int i = 0; i < gridShowTable.Columns.Count; i++)
+                    gridShowTable.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;
 
-            gridShowTable.Tag = ShowTable;
+                gridShowTable.Tag = ShowTable;
 
-            if(fExp.Orders.Count>0)
-                gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].FieldName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+                if (fExp.Orders.Count > 0)
+                    gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].FieldName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
 
-            btnPrevPage.Enabled = pageNo > 1;
-            btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
+                btnPrevPage.Enabled = pageNo > 0;
+                btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message + Environment.NewLine + "Try refreshing metadata.", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         void btnPrevPage_Click(object sender, EventArgs e)

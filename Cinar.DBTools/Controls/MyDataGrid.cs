@@ -12,9 +12,11 @@ namespace Cinar.DBTools.Controls
         {
         }
 
+        public int RowNumberOffset { get; set; }
+
         protected override void OnRowPostPaint(DataGridViewRowPostPaintEventArgs e)
         {
-            string strRowNumber = (e.RowIndex + 1).ToString();
+            string strRowNumber = (e.RowIndex + RowNumberOffset + 1).ToString();
 
             while (strRowNumber.Length < this.RowCount.ToString().Length) strRowNumber = "0" + strRowNumber;
 
