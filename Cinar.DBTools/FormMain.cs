@@ -29,6 +29,7 @@ namespace Cinar.DBTools
         {
             InitializeComponent();
             SetFont(this, Font);
+
             imageListTree.Images.Add("Folder", FamFamFam.folder);
             imageListTree.Images.Add("Table", FamFamFam.table);
             imageListTree.Images.Add("Field", FamFamFam.table_row_insert);
@@ -40,6 +41,9 @@ namespace Cinar.DBTools
             imageListTree.Images.Add("PostgreSQL", FamFamFam.postgresql);
             imageListTree.Images.Add("SQLServer", FamFamFam.sqlserver);
             imageListTree.Images.Add("Script", FamFamFam.script);
+
+            imageListTabs.Images.Add("Diagram", FamFamFam.chart_organisation);
+            imageListTabs.Images.Add("Query", FamFamFam.script);
 
 
             #region commands
@@ -626,7 +630,8 @@ $"},
         private void addSQLEditor(string filePath, string sql)
         {
             TabPage tp = new TabPage();
-            tp.ImageKey = "Script";
+            tp.ImageKey = "Query";
+            tp.ImageIndex = 1;
 
             SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
             sqlEd.Dock = DockStyle.Fill;
@@ -642,14 +647,17 @@ $"},
         {
             TabPage tp = new TabPage();
             tp.ImageKey = "Diagram";
+            tp.ImageIndex = 0;
+
+            tp.Text = schema == null ? "New Diagram" : schema.Name;
             tp.BackColor = Color.FromKnownColor(KnownColor.Window);
             tp.AutoScroll = true;
 
             DiagramEditor d = new DiagramEditor();
+            d.MainForm = this;
             d.CurrentSchema = schema;
             d.propertyGrid = this.propertyGrid;
             tp.Controls.Add(d);
-            tp.Text = schema == null ? "New Diagram" : schema.Name;
             tabControlEditors.Controls.Add(tp);
             tabControlEditors.SelectTab(tp);
 

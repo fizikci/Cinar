@@ -1,42 +1,42 @@
 Çınar Teknoloji
-admin|2011/04/26 18:15:36
+admin|2011/04/26 16:33:54
 ##PAGE##
 Çınar Teknoloji, yaşları 40'a dayanmış birkaç yazılımcının tecrübeleriyle zaman içinde geliştirdiği açık kaynaklı bir yazılım kütüphanesidir.
 
 Bu kütüphane aşağıdaki teknolojileri sağlar:
 
-* '''[Cinar Database]'''
+* '''[Cinar.Database]'''
 Database abstraction, ORM
 
-* '''[Cinar DBTools]'''
+* '''[Cinar.DBTools]'''
 SQL client, Code Generation, Diagraming, Database Transfer/Dump/Backup
 
-* '''[Cinar UICommands]'''
+* '''[Cinar.UICommands]'''
 UI Command Pattern kütüphanesi
 
-* '''[Cinar Scripting]'''
+* '''[Cinar.Scripting]'''
 C# ve Javascript benzeri bir script dili
 
-* '''[Cinar Extensions]'''
+* '''[Cinar.Extensions]'''
 JSON, XML, Reflection, Drawing vb konularda yazılmış C# extensionları
 
-* '''[Cinar FamFamFam]'''
+* '''[Cinar.FamFamFam]'''
 Meşhur FamFamFam ikonlarını resource olaran barındıran assembly
 
-* '''[Cinar POP3]'''
+* '''[Cinar.POP]'''
 POP3 maillerini serverdan indirmeye yarayan kütüphane
 
-* '''[Cinar Scheduler]'''
+* '''[Cinar.Scheduler]'''
 Zamanlanmış kodlar çalıştırmaya yarar
 
-* '''[Cinar RSSReader]'''
+* '''[Cinar.RSSReader]'''
 RSS okuyucu
 
-* '''[Cinar TemplateDesign]'''
+* '''[Cinar.TemplateDesign]'''
 Template hazırlamaya ve çalıştırmaya yarar
 
-* '''[Cinar WebServer]'''
+* '''[Cinar.WebServer]'''
 Çok basit bir web sunucusu
 
-* '''[Cinar WinApp]'''
+* '''[Cinar.WinApp]'''
 Windows desktop tabanlı data-centric uygulamalar geliştirmeye yarar
