@@ -90,6 +90,7 @@ namespace Cinar.DBTools
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.btnCloseEditor = new System.Windows.Forms.PictureBox();
             this.tabControlEditors = new System.Windows.Forms.TabControl();
+            this.imageListTabs = new System.Windows.Forms.ImageList(this.components);
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.labelProperties = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -685,7 +686,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(699, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(697, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -695,7 +696,7 @@ namespace Cinar.DBTools
             // 
             this.tabControlEditors.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlEditors.HotTrack = true;
-            this.tabControlEditors.ImageList = this.imageListTree;
+            this.tabControlEditors.ImageList = this.imageListTabs;
             this.tabControlEditors.ItemSize = new System.Drawing.Size(100, 24);
             this.tabControlEditors.Location = new System.Drawing.Point(0, 0);
             this.tabControlEditors.Name = "tabControlEditors";
@@ -704,6 +705,12 @@ namespace Cinar.DBTools
             this.tabControlEditors.Size = new System.Drawing.Size(723, 623);
             this.tabControlEditors.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControlEditors.TabIndex = 1;
+            // 
+            // imageListTabs
+            // 
+            this.imageListTabs.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
+            this.imageListTabs.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageListTabs.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // propertyGrid
             // 
@@ -1439,6 +1446,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripLabel toolStripLabel4;
+        private System.Windows.Forms.ImageList imageListTabs;
 
     }
 }
