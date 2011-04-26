@@ -88,7 +88,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.menuIndexDropIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
-            this.btnCloseSQLEditor = new System.Windows.Forms.PictureBox();
+            this.btnCloseEditor = new System.Windows.Forms.PictureBox();
             this.tabControlEditors = new System.Windows.Forms.TabControl();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.labelProperties = new System.Windows.Forms.Label();
@@ -172,7 +172,7 @@ namespace Cinar.DBTools
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
             this.menuStripTree.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCloseSQLEditor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCloseEditor)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -295,7 +295,7 @@ namespace Cinar.DBTools
             // 
             // splitContainerMain.Panel2
             // 
-            this.splitContainerMain.Panel2.Controls.Add(this.btnCloseSQLEditor);
+            this.splitContainerMain.Panel2.Controls.Add(this.btnCloseEditor);
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
             this.splitContainerMain.Size = new System.Drawing.Size(893, 623);
             this.splitContainerMain.SplitterDistance = 165;
@@ -680,16 +680,16 @@ namespace Cinar.DBTools
             this.imageListTree.ImageSize = new System.Drawing.Size(16, 16);
             this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // btnCloseSQLEditor
+            // btnCloseEditor
             // 
-            this.btnCloseSQLEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCloseSQLEditor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCloseSQLEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseSQLEditor.Image")));
-            this.btnCloseSQLEditor.Location = new System.Drawing.Point(698, 4);
-            this.btnCloseSQLEditor.Name = "btnCloseSQLEditor";
-            this.btnCloseSQLEditor.Size = new System.Drawing.Size(19, 18);
-            this.btnCloseSQLEditor.TabIndex = 1;
-            this.btnCloseSQLEditor.TabStop = false;
+            this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
+            this.btnCloseEditor.Location = new System.Drawing.Point(699, 4);
+            this.btnCloseEditor.Name = "btnCloseEditor";
+            this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
+            this.btnCloseEditor.TabIndex = 1;
+            this.btnCloseEditor.TabStop = false;
             // 
             // tabControlEditors
             // 
@@ -714,6 +714,8 @@ namespace Cinar.DBTools
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.Size = new System.Drawing.Size(206, 595);
             this.propertyGrid.TabIndex = 3;
+            this.propertyGrid.ToolbarVisible = false;
+            this.propertyGrid.SelectedObjectsChanged += new System.EventHandler(this.propertyGrid_SelectedObjectsChanged);
             // 
             // labelProperties
             // 
@@ -1299,7 +1301,7 @@ namespace Cinar.DBTools
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
             this.menuStripTree.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.btnCloseSQLEditor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCloseEditor)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -1402,7 +1404,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripButton btnSimpleIntegrationService;
         private System.Windows.Forms.ToolStripMenuItem menuToolsSQLDump;
         private System.Windows.Forms.ToolStripButton btnSQLDump;
-        private System.Windows.Forms.PictureBox btnCloseSQLEditor;
+        private System.Windows.Forms.PictureBox btnCloseEditor;
         private System.Windows.Forms.TabControl tabControlEditors;
         private System.Windows.Forms.ToolStripButton btnAddEditor;
         private System.Windows.Forms.ToolStripMenuItem menuConCreateDatabase;

@@ -86,6 +86,13 @@
     <Compile Include="CinarSQLEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\DiagramEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\DiagramEditor.Designer.cs">
+      <DependentUpon>DiagramEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IEditor.cs" />
     <Compile Include="Controls\SQLInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,6 +137,9 @@
     <EmbeddedResource Include="CinarSQLEditor.resx">
       <DependentUpon>CinarSQLEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\DiagramEditor.resx">
+      <DependentUpon>DiagramEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\SQLInputDialog.resx">
       <DependentUpon>SQLInputDialog.cs</DependentUpon>
@@ -211,10 +221,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormGeneratedCode.resx">
       <DependentUpon>FormGeneratedCode.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\FormERDiagram.resx">
-      <DependentUpon>FormERDiagram.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormScriptingTest.resx">
@@ -335,12 +341,6 @@
     </Compile>
     <Compile Include="Tools\FormGeneratedCode.Designer.cs">
       <DependentUpon>FormGeneratedCode.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tools\FormERDiagram.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\FormERDiagram.Designer.cs">
-      <DependentUpon>FormERDiagram.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FormScriptingTest.cs">
       <SubType>Form</SubType>
