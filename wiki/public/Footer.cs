@@ -1,0 +1,1 @@
+<p class="small">[http://www.screwturn.eu|ScrewTurn Wiki] version {WIKIVERSION}. Some of the icons created by [http://www.famfamfam.com|FamFamFam].</p>
