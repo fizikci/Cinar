@@ -160,7 +160,7 @@
             this.ClientSize = new System.Drawing.Size(915, 483);
             this.Controls.Add(this.splitContainer2);
             this.Name = "FormHTMLDeneme";
-            this.Text = "Çınar HTML Parser Test";
+            this.Text = "Cinar HTML Parser Test";
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);

@@ -302,7 +302,7 @@ namespace Cinar.DBTools.Tools
             if (File.Exists(logPath))
                 Process.Start(logPath);
             else
-                MessageBox.Show("There is no log file", "Çınar");
+                MessageBox.Show("There is no log file", "Cinar");
         }
 
         private bool autoStart = false;

@@ -100,7 +100,7 @@ namespace Cinar.DBTools.Controls
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControl);
             this.splitContainer2.Size = new System.Drawing.Size(638, 665);
-            this.splitContainer2.SplitterDistance = 204;
+            this.splitContainer2.SplitterDistance = 408;
             this.splitContainer2.TabIndex = 1;
             // 
             // txtSQL
@@ -110,7 +110,7 @@ namespace Cinar.DBTools.Controls
             this.txtSQL.IsReadOnly = false;
             this.txtSQL.Location = new System.Drawing.Point(0, 0);
             this.txtSQL.Name = "txtSQL";
-            this.txtSQL.Size = new System.Drawing.Size(638, 204);
+            this.txtSQL.Size = new System.Drawing.Size(638, 408);
             this.txtSQL.TabIndex = 0;
             // 
             // tabControl
@@ -126,7 +126,7 @@ namespace Cinar.DBTools.Controls
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(638, 457);
+            this.tabControl.Size = new System.Drawing.Size(638, 253);
             this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
@@ -137,7 +137,7 @@ namespace Cinar.DBTools.Controls
             this.tpResults.Location = new System.Drawing.Point(4, 28);
             this.tpResults.Name = "tpResults";
             this.tpResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tpResults.Size = new System.Drawing.Size(630, 425);
+            this.tpResults.Size = new System.Drawing.Size(630, 221);
             this.tpResults.TabIndex = 0;
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
@@ -263,6 +263,7 @@ namespace Cinar.DBTools.Controls
             this.gridShowTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridShowTable.Location = new System.Drawing.Point(0, 0);
             this.gridShowTable.Name = "gridShowTable";
+            this.gridShowTable.RowNumberOffset = 0;
             this.gridShowTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridShowTable.Size = new System.Drawing.Size(630, 400);
             this.gridShowTable.TabIndex = 1;

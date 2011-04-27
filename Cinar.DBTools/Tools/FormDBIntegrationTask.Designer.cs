@@ -207,7 +207,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormDBIntegrationTask";
-            this.Text = "Çınar Database Integration Task";
+            this.Text = "Cinar Database Integration Task";
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -81,7 +81,7 @@ namespace Cinar.WinUI
             this.Controls.Add(this.simpleButton1);
             this.Controls.Add(this.lblQuestion);
             this.Name = "PromptDialog";
-            this.Text = "Çýnar";
+            this.Text = "Cinar";
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
