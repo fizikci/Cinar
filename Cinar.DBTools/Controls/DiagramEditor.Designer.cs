@@ -37,7 +37,7 @@
             this.menuRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetAsDisplayField = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetAsPrimaryKey = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuAddField = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAlterTable = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -48,54 +48,54 @@
             this.menuArrangeTables,
             this.menuAddTables,
             this.menuCreateTable,
+            this.menuAlterTable,
             this.menuRemove,
             this.menuSetAsDisplayField,
-            this.menuSetAsPrimaryKey,
-            this.menuAddField});
+            this.menuSetAsPrimaryKey});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(182, 158);
+            this.contextMenu.Size = new System.Drawing.Size(205, 180);
             // 
             // menuArrangeTables
             // 
             this.menuArrangeTables.Name = "menuArrangeTables";
-            this.menuArrangeTables.Size = new System.Drawing.Size(181, 22);
+            this.menuArrangeTables.Size = new System.Drawing.Size(204, 22);
             this.menuArrangeTables.Text = "Arrange Tables";
             // 
             // menuAddTables
             // 
             this.menuAddTables.Name = "menuAddTables";
-            this.menuAddTables.Size = new System.Drawing.Size(181, 22);
-            this.menuAddTables.Text = "Add Tables...";
+            this.menuAddTables.Size = new System.Drawing.Size(204, 22);
+            this.menuAddTables.Text = "Add Tables to Diagram...";
             // 
             // menuCreateTable
             // 
             this.menuCreateTable.Name = "menuCreateTable";
-            this.menuCreateTable.Size = new System.Drawing.Size(181, 22);
+            this.menuCreateTable.Size = new System.Drawing.Size(204, 22);
             this.menuCreateTable.Text = "Create Table...";
             // 
             // menuRemove
             // 
             this.menuRemove.Name = "menuRemove";
-            this.menuRemove.Size = new System.Drawing.Size(181, 22);
-            this.menuRemove.Text = "Remove";
+            this.menuRemove.Size = new System.Drawing.Size(204, 22);
+            this.menuRemove.Text = "Remove from Diagram";
             // 
             // menuSetAsDisplayField
             // 
             this.menuSetAsDisplayField.Name = "menuSetAsDisplayField";
-            this.menuSetAsDisplayField.Size = new System.Drawing.Size(181, 22);
+            this.menuSetAsDisplayField.Size = new System.Drawing.Size(204, 22);
             this.menuSetAsDisplayField.Text = "Set As Display Field";
             // 
             // menuSetAsPrimaryKey
             // 
             this.menuSetAsPrimaryKey.Name = "menuSetAsPrimaryKey";
-            this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(181, 22);
+            this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(204, 22);
             this.menuSetAsPrimaryKey.Text = "Set As Primary Index";
             // 
-            // menuAddField
+            // menuAlterTable
             // 
-            this.menuAddField.Name = "menuAddField";
-            this.menuAddField.Size = new System.Drawing.Size(181, 22);
-            this.menuAddField.Text = "Add Field...";
+            this.menuAlterTable.Name = "menuAlterTable";
+            this.menuAlterTable.Size = new System.Drawing.Size(204, 22);
+            this.menuAlterTable.Text = "Alter Table...";
             // 
             // imageListTree
             // 
@@ -129,7 +129,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuRemove;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayField;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsPrimaryKey;
-        private System.Windows.Forms.ToolStripMenuItem menuAddField;
+        private System.Windows.Forms.ToolStripMenuItem menuAlterTable;
         private System.Windows.Forms.ImageList imageListTree;
     }
 }

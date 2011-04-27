@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
+using System.IO;
 
 namespace Cinar.DBTools.Controls
 {
@@ -337,5 +338,9 @@ namespace Cinar.DBTools.Controls
         }
 
 
+        public string GetName()
+        {
+            return Path.GetFileName(this.FilePath);
+        }
     }
 }

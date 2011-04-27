@@ -302,6 +302,8 @@ namespace Cinar.Database
     public class FieldCollection : List<Field>
     {
         internal Table table;
+        public Table Table { get { return table; } }
+
         public FieldCollection()
         {
         }

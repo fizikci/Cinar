@@ -8,7 +8,7 @@ namespace Cinar.DBTools.Controls
     public interface IEditor
     {
         bool Modified { get; }
-
+        string GetName();
         bool Save();
     }
 }
