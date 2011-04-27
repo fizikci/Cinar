@@ -11,6 +11,8 @@ namespace Cinar.Database
     {
         internal IndexCollection parent;
 
+        public Table Table { get { return parent.Table; } }
+
         private string name;
         /// <summary>
         /// Index adı.
@@ -101,6 +103,8 @@ namespace Cinar.Database
     public class IndexCollection : List<Index>
     {
         internal Table table;
+        public Table Table { get { return table; } }
+
         public IndexCollection()
         {
         }

@@ -21,7 +21,7 @@ namespace Cinar.DBTools
 {
     public partial class FormMain : Form
     {
-        CommandManager cmdMan = new CommandManager();
+        public CommandManager cmdMan = new CommandManager();
         TreeNode rootNode;
         int splitterMainLast = 0, splitterPropLast = 0;
 
@@ -61,7 +61,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = btnNewConnection},
                                          new CommandTrigger{ Control = menuNewConnection},
                                      },
-                                     IsVisible = () => treeView.SelectedNode!=null && (treeView.SelectedNode==treeView.Nodes[0] || treeView.SelectedNode.Tag is ConnectionSettings)
+                                     IsVisible = () => treeView.SelectedNode!=null && (treeView.SelectedNode==treeView.Nodes[0] || SelectedObject is ConnectionSettings)
                                  },
                      new Command {
                                      Execute = cmdOpenConnectionsFile,
@@ -81,7 +81,8 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuSave},
                                          new CommandTrigger{ Control = btnSave},
-                                     }
+                                     },
+                                     IsEnabled = () => CurrEditor != null && CurrEditor.Modified
                                  },
                      new Command {
                                      Execute = cmdSaveAs,
@@ -241,7 +242,7 @@ $"},
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuConNewConnection},
                                      },
-                                     IsVisible = () => treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is ConnectionSettings || treeView.SelectedNode.Tag is List<ConnectionSettings>)
+                                     IsVisible = () => SelectedObject is ConnectionSettings || SelectedObject is List<ConnectionSettings>
                                  },
                      new Command {
                                      Execute = cmdEditConnection,
@@ -249,8 +250,8 @@ $"},
                                          new CommandTrigger{ Control = menuConEditConnection},
                                          new CommandTrigger{ Control = btnEditConnection},
                                      },
-                                     IsEnabled = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings,
-                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsEnabled = () => SelectedObject is ConnectionSettings,
+                                     IsVisible = () => SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdDeleteConnection,
@@ -258,18 +259,18 @@ $"},
                                          new CommandTrigger{ Control = menuConDeleteConnection},
                                          new CommandTrigger{ Control = btnDeleteConnection},
                                      },
-                                     IsEnabled = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings,
-                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsEnabled = () => SelectedObject is ConnectionSettings,
+                                     IsVisible = () => SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdRefresh,
                                      Trigger = new CommandTrigger{ Control = menuConRefresh},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdRefreshMetadata,
                                      Trigger = new CommandTrigger{ Control = menuConRefreshMetadata},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdDoDatabaseOperation,
@@ -281,7 +282,7 @@ $"},
                                          new CommandTrigger{ Control = menuConTransferDatabase, Argument="Transfer"},
                                          new CommandTrigger{ Control = menuConBackupDatabase, Argument="Backup"},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdCreateDBObject,
@@ -293,12 +294,12 @@ $"},
                                          new CommandTrigger{ Control = menuDBCreateSProc, Argument="SProc"},
                                          new CommandTrigger{ Control = menuDBCreateFunction, Argument="Function"},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdExecuteSQLFromFile,
                                      Trigger = new CommandTrigger{ Control = menuConExecuteSQLFromFile},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is ConnectionSettings
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdNewERDiagram,
@@ -314,58 +315,58 @@ $"},
                                          new CommandTrigger{ Control = menuDiagramNew},
                                          new CommandTrigger{ Control = menuConShowDatabaseERDiagram},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is List<Diagram> || treeView.SelectedNode.Tag is Diagram)
+                                     IsVisible = ()=> SelectedObject is List<Diagram> || SelectedObject is Diagram
                                  },
                      new Command {
                                      Execute = cmdOpenERDiagram,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDiagramOpen},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Diagram,
+                                     IsVisible = ()=> SelectedObject is Diagram,
                                  },
                      new Command {
                                      Execute = cmdDeleteERDiagram,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuDiagramDelete},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Diagram,
+                                     IsVisible = ()=> SelectedObject is Diagram,
                                  },
                      new Command {
                                      Execute = cmdShowTableCounts,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuTablesShowTableCounts},
                                      },
-                                     IsVisible = () => treeView.SelectedNode!=null && treeView.SelectedNode.Tag is TableCollection
+                                     IsVisible = () => SelectedObject is TableCollection
                                  },
                      new Command {
                                      Execute = cmdCreateTable,
                                      Trigger = new CommandTrigger{ Control = menuTableCreate},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is TableCollection || treeView.SelectedNode.Tag is Table)
+                                     IsVisible = ()=> SelectedObject is TableCollection || SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdAlterTable,
                                      Trigger = new CommandTrigger{ Control = menuTableAlter},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdTableDrop,
                                      Trigger = new CommandTrigger{ Control = menuTableDrop},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdTableOpen,
                                      Trigger = new CommandTrigger{ Control = menuTableOpen},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdTableCount,
                                      Trigger = new CommandTrigger{ Control = menuTableCount},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdAnalyzeTable,
                                      Trigger = new CommandTrigger{ Control = menuTableAnalyze},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdGenerateSQL,
@@ -377,47 +378,47 @@ $"},
                                          new CommandTrigger{ Control = menuTableGenSQLUpdate, Argument="Update"},
                                          new CommandTrigger{ Control = menuTableGenSQLDump, Argument="Dump"},
                                      },
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Table
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdFieldDistinct,
                                      Trigger = new CommandTrigger{ Control = menuFieldDistinct},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Field
+                                     IsVisible = ()=> SelectedObject is Field
                                  },
                      new Command {
                                      Execute = cmdFieldMax,
                                      Trigger = new CommandTrigger{ Control = menuFieldMax},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Field
+                                     IsVisible = ()=> SelectedObject is Field
                                  },
                      new Command {
                                      Execute = cmdFieldMin,
                                      Trigger = new CommandTrigger{ Control = menuFieldMin},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Field
+                                     IsVisible = ()=> SelectedObject is Field
                                  },
                      new Command {
                                      Execute = cmdGroupedCounts,
                                      Trigger = new CommandTrigger{ Control = menuFieldGroupedCounts},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Field
+                                     IsVisible = ()=> SelectedObject is Field
                                  },
                      new Command {
                                      Execute = cmdGenerateUIMetadata,
                                      Trigger = new CommandTrigger{ Control = menuShowUIMetadata},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is ConnectionSettings || treeView.SelectedNode.Tag is Table || treeView.SelectedNode.Tag is Field)
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings || SelectedObject is Table || SelectedObject is Field
                                  },
                      new Command {
                                      Execute = cmdCreateIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexCreateIndex},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && (treeView.SelectedNode.Tag is IndexCollection || treeView.SelectedNode.Tag is Index)
+                                     IsVisible = ()=> SelectedObject is IndexCollection || SelectedObject is Index
                                  },
                      new Command {
                                      Execute = cmdEditIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexEditIndex},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Index
+                                     IsVisible = ()=> SelectedObject is Index
                                  },
                      new Command {
                                      Execute = cmdDropIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexDropIndex},
-                                     IsVisible = ()=> treeView.SelectedNode!=null && treeView.SelectedNode.Tag is Index
+                                     IsVisible = ()=> SelectedObject is Index
                                  },
                     #endregion
              };
@@ -518,6 +519,9 @@ $"},
                 sql = sql.Replace("\n", " ").Replace("\r", "").Replace("\t", " ") + (sql.EndsWith(";") ? "" : ";");
                 while (sql.Contains("  ")) sql = sql.Replace("  ", " ");
                 if (sql.Length > 1000) sql = sql.Substring(0, 1000) + "...";
+
+                if (CurrSQLEditor == null) findOrCreateNewSQLEditor();
+
                 CurrSQLEditor.SQLLog.Text += string.Format(Environment.NewLine + "/*[{0} - {1,5} ms]*/ {2}", DateTime.Now.ToString("hh:mm:ss"), watch.ElapsedMilliseconds, sql);
 
                 if (ds.Tables.Count > 1)
@@ -615,15 +619,23 @@ $"},
             }
             return null;
         }
-        private TreeNode findSelectedTableNode()
+        private Table findSelectedTable()
         {
-            TreeNode treeNode = treeView.SelectedNode;
-            while (treeNode != null)
-            {
-                if (treeNode.Tag is Table)
-                    return treeNode;
-                treeNode = treeNode.Parent;
-            }
+            if (SelectedObject is Table)
+                return SelectedObject as Table;
+
+            if (SelectedObject is FieldCollection)
+                return (SelectedObject as FieldCollection).Table;
+
+            if (SelectedObject is Field)
+                return (SelectedObject as Field).Table;
+
+            if (SelectedObject is IndexCollection)
+                return (SelectedObject as IndexCollection).Table;
+
+            if (SelectedObject is Index)
+                return (SelectedObject as Index).Table;
+
             return null;
         }
 
@@ -657,6 +669,7 @@ $"},
             d.MainForm = this;
             d.CurrentSchema = schema;
             d.propertyGrid = this.propertyGrid;
+            d.ContextMenuStrip = menuStripTree;
             tp.Controls.Add(d);
             tabControlEditors.Controls.Add(tp);
             tabControlEditors.SelectTab(tp);
@@ -668,8 +681,8 @@ $"},
         #region Commands
         private void cmdSave(string arg)
         {
-            if (CurrSQLEditor.Save())
-                tabControlEditors.SelectedTab.Text = Path.GetFileName(CurrSQLEditor.FilePath);
+            if (CurrEditor.Save())
+                tabControlEditors.SelectedTab.Text = CurrEditor.GetName();
         }
         private void cmdSaveAs(string arg)
         {
@@ -822,9 +835,9 @@ $"},
             FormConnect f = new FormConnect();
             if (arg == "create")
                 f.Text = "Create Database";
-            if (treeView.SelectedNode != null && treeView.SelectedNode.Tag is ConnectionSettings)
+            if (SelectedObject is ConnectionSettings)
             {
-                ConnectionSettings curr = treeView.SelectedNode.Tag as ConnectionSettings;
+                ConnectionSettings curr = SelectedObject as ConnectionSettings;
                 f.txtDBName.Text = "";
                 f.txtHost.Text = curr.Host;
                 f.txtPassword.Text = curr.Password;
@@ -853,7 +866,7 @@ $"},
         }
         private void cmdEditConnection(string arg)
         {
-            ConnectionSettings cs = (ConnectionSettings)treeView.SelectedNode.Tag;
+            ConnectionSettings cs = (ConnectionSettings)SelectedObject;
             FormConnect f = new FormConnect();
             f.txtDBName.Text = cs.DbName;
             f.txtHost.Text = cs.Host;
@@ -874,7 +887,7 @@ $"},
         }
         private void cmdDeleteConnection(string arg)
         {
-            ConnectionSettings cs = (ConnectionSettings)treeView.SelectedNode.Tag;
+            ConnectionSettings cs = (ConnectionSettings)SelectedObject;
             if (MessageBox.Show("Are you sure to delete connection \""+cs+"\"?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 TreeNode currNode = treeView.SelectedNode;
@@ -1000,9 +1013,9 @@ $"},
             if (tnOld != null)
                 tnOld.BackColor = Color.White; 
 
-            if (treeView.SelectedNode.Tag is ConnectionSettings)
+            if (SelectedObject is ConnectionSettings)
             {
-                Provider.ActiveConnection = (ConnectionSettings)treeView.SelectedNode.Tag;
+                Provider.ActiveConnection = (ConnectionSettings)SelectedObject;
 
                 if (treeView.SelectedNode.Nodes.Count == 0)
                     populateTreeNodesForDatabase(treeView.SelectedNode);
@@ -1023,9 +1036,26 @@ $"},
 
         private void cmdTableOpen(string arg)
         {
-            TreeNode tn = findSelectedTableNode();
-            if (tn != null && tn.Tag is Table && CurrSQLEditor != null)
-                CurrSQLEditor.ShowTableData(tn.Tag as Table);
+            Table tbl = findSelectedTable();
+            if (tbl == null)
+                return;
+
+            if (CurrSQLEditor != null)
+                CurrSQLEditor.ShowTableData(tbl);
+            else
+            {
+                findOrCreateNewSQLEditor();
+                CurrSQLEditor.ShowTableData(tbl);
+            }
+        }
+
+        private void findOrCreateNewSQLEditor()
+        {
+            TabPage tabPage = tabControlEditors.TabPages.OfType<TabPage>().FirstOrDefault(tp => tp.Controls[0] is SQLEditorAndResults);
+            if (tabPage != null)
+                tabControlEditors.SelectedTab = tabPage;
+            else
+                addSQLEditor("", "");
         }
         private void cmdTableDrop(string arg)
         {
@@ -1093,12 +1123,17 @@ $"},
         }
         private void cmdCreateTable(string arg)
         {
+            CreateTable();
+        }
+        public Table CreateTable()
+        {
             FormCreateTable fct = new FormCreateTable();
+            Table tbl = null;
             while (true)
             {
                 if (fct.ShowDialog() == DialogResult.OK)
                 {
-                    Table tbl = fct.GetCreatedTable();
+                    tbl = fct.GetCreatedTable();
                     try
                     {
                         Provider.Database.Tables.Add(tbl);
@@ -1127,11 +1162,16 @@ $"},
                 else
                     break;
             }
+            return tbl;
         }
         private void cmdAlterTable(string arg)
         {
+            Table oldTable = SelectedObject as Table;
+            AlterTable(oldTable);
+        }
+        public void AlterTable(Table oldTable)
+        {
             FormCreateTable fct = new FormCreateTable();
-            Table oldTable = treeView.SelectedNode.Tag as Table;
             fct.SetTable(oldTable);
 
             while (true)
@@ -1218,7 +1258,7 @@ $"},
                                     index.FieldNames.Add(f.Name);
                                     index.IsPrimary = true;
                                     index.IsUnique = true;
-                                    index.Name = "PK_"+oldTable.Name;
+                                    index.Name = "PK_" + oldTable.Name;
                                     sb.AppendLine(index.ToDDL() + ";");
                                 }
                                 else
@@ -1260,7 +1300,7 @@ $"},
                             sb.AppendLine(Provider.Database.GetAlterTableRenameDDL(oldTable.Name, newTable.Name));
 
                         SQLInputDialog sid = new SQLInputDialog(sb.ToString(), false);
-                        if(sid.ShowDialog()==DialogResult.OK)
+                        if (sid.ShowDialog() == DialogResult.OK)
                             Provider.Database.ExecuteNonQuery(sid.SQL);
 
                         cmdRefreshMetadata("nowarn");
@@ -1279,7 +1319,7 @@ $"},
 
         private void cmdGenerateSQL(string arg)
         {
-            Table table = (Table)treeView.SelectedNode.Tag;
+            Table table = (Table)SelectedObject;
             StringBuilder sb = new StringBuilder();
             switch (arg)
             {
@@ -1339,23 +1379,23 @@ $"},
 
         private void cmdGenerateUIMetadata(string arg)
         {
-            if (treeView.SelectedNode.Tag is ConnectionSettings)
+            if (SelectedObject is ConnectionSettings)
             {
-                ConnectionSettings cs = (ConnectionSettings)treeView.SelectedNode.Tag;
+                ConnectionSettings cs = (ConnectionSettings)SelectedObject;
                 if (MessageBox.Show("UI metadata will be generated for database " + cs.DbName + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 cs.Database.GenerateUIMetadata();
             }
-            else if (treeView.SelectedNode.Tag is Table)
+            else if (SelectedObject is Table)
             {
-                Table tbl = (Table)treeView.SelectedNode.Tag;
+                Table tbl = (Table)SelectedObject;
                 if (MessageBox.Show("UI metadata will be generated for table " + tbl.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 tbl.GenerateUIMetadata();
             }
-            else if (treeView.SelectedNode.Tag is Field)
+            else if (SelectedObject is Field)
             {
-                Field fld = (Field)treeView.SelectedNode.Tag;
+                Field fld = (Field)SelectedObject;
                 if (MessageBox.Show("UI metadata will be generated for field " + fld.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 fld.GenerateUIMetadata();
@@ -1364,8 +1404,8 @@ $"},
 
         private void cmdFieldDistinct(string arg)
         {
-            if (!checkConnection() || !(treeView.SelectedNode.Tag is Field)) return;
-            Field field = (Field)treeView.SelectedNode.Tag;
+            if (!checkConnection() || !(SelectedObject is Field)) return;
+            Field field = (Field)SelectedObject;
             executeSQL(@"
                 select distinct top 1000 
                     [{0}] 
@@ -1377,7 +1417,7 @@ $"},
         private void cmdFieldMax(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)treeView.SelectedNode.Tag;
+            Field field = (Field)SelectedObject;
             executeSQL(@"
                 select 
                     max([{0}]) AS {0}_MAX_value 
@@ -1389,7 +1429,7 @@ $"},
         private void cmdFieldMin(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)treeView.SelectedNode.Tag;
+            Field field = (Field)SelectedObject;
             executeSQL(@"
                 select 
                     min([{0}]) AS {0}_MIN_value 
@@ -1402,7 +1442,7 @@ $"},
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)treeView.SelectedNode.Tag;
+            Field field = (Field)SelectedObject;
             if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
             {
                 executeSQL(@"
@@ -1457,9 +1497,9 @@ $"},
 
         private void cmdCreateIndex(string arg)
         {
-            TreeNode tn = findSelectedTableNode();
-            if (tn == null) return;
-            Table table = tn.Tag as Table;
+            //TreeNode tn = findSelectedTableNode();
+            Table table = findSelectedTable();
+            if (table == null) return;
 
             FormCreateIndex fct = new FormCreateIndex(table);
             while (true)
@@ -1500,12 +1540,11 @@ $"},
         }
         private void cmdEditIndex(string arg)
         {
-            TreeNode tn = findSelectedTableNode();
-            if (tn == null) return;
-            Table table = tn.Tag as Table;
+            Table table = findSelectedTable();
+            if (table == null) return;
 
             FormCreateIndex fct = new FormCreateIndex(table);
-            Index oldIndex = treeView.SelectedNode.Tag as Index;
+            Index oldIndex = SelectedObject as Index;
             fct.SetKey(oldIndex);
 
             while (true)
@@ -1549,8 +1588,8 @@ $"},
         private void cmdDropIndex(string arg)
         {
             if (!checkConnection()) return;
-            Table table = findSelectedTableNode().Tag as Table;
-            Index index = treeView.SelectedNode.Tag as Index;
+            Table table = findSelectedTable();
+            Index index = SelectedObject as Index;
             if (MessageBox.Show(string.Format("Are you sure to drop index {0} on {1}?", index.Name, table.Name), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
@@ -1567,13 +1606,13 @@ $"},
         }
         private void cmdOpenERDiagram(string arg)
         {
-            Diagram schema = treeView.SelectedNode.Tag as Diagram;
+            Diagram schema = SelectedObject as Diagram;
             schema.conn = Provider.ActiveConnection;
             addDiagram(schema);
         }
         private void cmdDeleteERDiagram(string arg)
         {
-            Diagram schema = treeView.SelectedNode.Tag as Diagram;
+            Diagram schema = SelectedObject as Diagram;
             Provider.ActiveConnection.Schemas.Remove(schema);
             SaveConnections();
             cmdRefresh(null);
@@ -1656,15 +1695,15 @@ $"},
 
             if (CurrSQLEditor != null)
             {
-                TreeNode tn = findSelectedTableNode();
+                Table tn = findSelectedTable();
                 if (tn != null)
-                    CurrSQLEditor.ShowTable = tn.Tag as Table;
+                    CurrSQLEditor.ShowTable = tn;
             }
 
         }
         private void showSelectedObjectOnPropertyGrid()
         {
-            object o = treeView.SelectedNode==null ? null : treeView.SelectedNode.Tag;
+            object o = SelectedObject;
             if (o is IList)
                 o = null;
 
@@ -1691,6 +1730,18 @@ $"},
                 labelProperties.Text = "      " + propertyGrid.SelectedObject.GetType().Name + " Properties";
             else
                 labelProperties.Text = "      Properties";
+        }
+
+
+        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
+        }
+
+        public object SelectedObject;
+        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
         }
     }
 
@@ -1765,12 +1816,17 @@ $"},
     }
     public class ConnectionSettings
     {
+        [ReadOnly(true), Description("Database vendor of the current connection")]
         public DatabaseProvider Provider { get; set; }
+        [ReadOnly(true), Description("Host of the current connection")]
         public string Host { get; set; }
+        [ReadOnly(true), Description("Database name of the current connection")]
         public string DbName { get; set; }
+        [ReadOnly(true), Description("Username of the current connection")]
         public string UserName { get; set; }
-        [Browsable(false)]
+        [PasswordPropertyText(true), ReadOnly(true), Description("User password of the current connection")]
         public string Password { get; set; }
+
         public Database.Database Database;
         public List<Diagram> Schemas = new List<Diagram>();
 
