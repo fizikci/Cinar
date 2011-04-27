@@ -89,7 +89,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ListBoxDialog";
-            this.Text = " Çınar DBTools";
+            this.Text = " Cinar DBTools";
             this.ResumeLayout(false);
             this.PerformLayout();
 

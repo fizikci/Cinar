@@ -187,7 +187,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Controls
             this.layoutControlGroup3.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup3.Name = "layoutControlGroup3";
             this.layoutControlGroup3.Size = new System.Drawing.Size(710, 361);
-            this.layoutControlGroup3.Text = "HTML + Çýnar Script";
+            this.layoutControlGroup3.Text = "HTML + Cinar Script";
             // 
             // layoutControlItem2
             // 

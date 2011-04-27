@@ -100,7 +100,7 @@ namespace Cinar.DBTools.Tools
                     string.Format("\"{0}\" düğümünün altındaki tüm kayıtlar \"{1}\" düğümünün altına kopyalanacak. Devam etmek istiyor musunuz?", 
                         tvSource.SelectedNode.Text, 
                         tvDest.SelectedNode.Text), 
-                    "Çınar Database Tools", 
+                    "Cinar Database Tools", 
                     MessageBoxButtons.YesNo, 
                     MessageBoxIcon.Information) 
                         == DialogResult.No)
@@ -195,7 +195,7 @@ namespace Cinar.DBTools.Tools
             btnStart.Enabled = true;
 
             if (e.Error != null)
-                MessageBox.Show(e.Error.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Error.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {

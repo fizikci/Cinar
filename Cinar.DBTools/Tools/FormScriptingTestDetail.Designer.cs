@@ -127,7 +127,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormScriptingTestDetail";
-            this.Text = "Çınar Scripting Test";
+            this.Text = "Cinar Scripting Test";
             this.ResumeLayout(false);
             this.PerformLayout();
 

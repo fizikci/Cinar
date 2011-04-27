@@ -554,7 +554,7 @@ namespace Cinar.TemplateDesign
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
             this.Name = "FormTemplateDesigner";
-            this.Text = "Çýnar Template Designer";
+            this.Text = "Cinar Template Designer";
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();

@@ -46,7 +46,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(336, 45);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Çınar Database Tools";
+            this.label1.Text = "Cinar Database Tools";
             // 
             // label2
             // 
@@ -104,7 +104,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(160, 17);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Contact Çınar Technology:";
+            this.label3.Text = "Contact Cinar Technology:";
             // 
             // FormAbout
             // 

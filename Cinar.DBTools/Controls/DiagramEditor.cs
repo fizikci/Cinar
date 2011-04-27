@@ -388,7 +388,7 @@ namespace Cinar.DBTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -407,7 +407,7 @@ namespace Cinar.DBTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -447,7 +447,7 @@ namespace Cinar.DBTools.Controls
         {
             if (e.ChangedItem.Label == "Name")
             {
-                if (propertyGrid.SelectedObject is Table && MessageBox.Show("The table name will be changed on database! Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                if (propertyGrid.SelectedObject is Table && MessageBox.Show("The table name will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     try
                     {
@@ -456,10 +456,10 @@ namespace Cinar.DBTools.Controls
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field name will be changed on database! Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field name will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     try
                     {
@@ -467,11 +467,11 @@ namespace Cinar.DBTools.Controls
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
-            else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field definition will be changed on database! Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field definition will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 try
                 {
@@ -479,7 +479,7 @@ namespace Cinar.DBTools.Controls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

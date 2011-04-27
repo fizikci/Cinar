@@ -15,6 +15,7 @@ using System.Collections;
 using Cinar.Scripting;
 using System.Diagnostics;
 using Cinar.DBTools.Controls;
+using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace Cinar.DBTools
@@ -119,6 +120,7 @@ namespace Cinar.DBTools
                                      Execute = (s)=>{addSQLEditor("", "");},
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnAddEditor},
+                                         new CommandTrigger{ Control = menuAddEditor}
                                      }
                                  },
                      new Command {
@@ -132,7 +134,7 @@ namespace Cinar.DBTools
                                      Execute = cmdExecuteSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnExecuteSQL},
-                                         //new CommandTrigger{ Control = CurrSQLEditor.SQLEditor, Event = "KeyUp", Predicate = (e)=>{KeyEventArgs k = (KeyEventArgs)e; return k.KeyCode==Keys.F5 || k.KeyCode==Keys.F9;}}
+                                         new CommandTrigger{ Control = menuExecuteSQL}
                                      },
                                      IsEnabled = () => CurrSQLEditor!=null && !string.IsNullOrEmpty(CurrSQLEditor.SQLEditor.Text)
                                  },
@@ -140,6 +142,7 @@ namespace Cinar.DBTools
                                      Execute = cmdExecuteScript,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnExecuteScript},
+                                         new CommandTrigger{ Control = menuExecuteScript}
                                      },
                                      IsEnabled = () => CurrSQLEditor!=null && !string.IsNullOrEmpty(CurrSQLEditor.SQLEditor.Text)
                                  },
@@ -465,6 +468,15 @@ $"},
         {
             addSQLEditor("", "");
             timer.Enabled = true;
+
+            if (File.Exists(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt"))
+            {
+                string[] files = File.ReadAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt").Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var file in files)
+                {
+                    addSQLEditor(file, "");
+                }
+            }
         }
 
 
@@ -540,7 +552,7 @@ $"},
         {
             if (Provider.Database == null)
             {
-                MessageBox.Show("Please select a database first", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Please select a database first", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
             return true;
@@ -699,7 +711,7 @@ $"},
         {
             if (CurrEditor.Modified)
             {
-                DialogResult dr = MessageBox.Show("Would you like to save?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel);
+                DialogResult dr = MessageBox.Show("Would you like to save?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel);
                 if (dr == DialogResult.Yes)
                 {
                     if (CurrEditor.Save())
@@ -718,53 +730,55 @@ $"},
 
         private void cmdEditorCommand(string arg)
         {
+            Control c = ActiveControl;
+            while (c is ContainerControl) c = (c as ContainerControl).ActiveControl;
+            if (c == null) return;
+
             switch (arg)
             {
                 case "Undo":
-                    CurrSQLEditor.SQLEditor.Undo();
+                    if (c is TextBoxBase) 
+                        (c as TextBoxBase).Undo();
+                    else if (c is TextArea)
+                        new ICSharpCode.TextEditor.Actions.Undo().Execute(c as TextArea);
                     break;
                 case "Redo":
-                    CurrSQLEditor.SQLEditor.Redo();
+                    if (c is TextBoxBase)
+                        (c as TextBoxBase).Undo();
+                    else if (CurrSQLEditor != null)
+                        new ICSharpCode.TextEditor.Actions.Redo().Execute(c as TextArea);
                     break;
                 case "Cut":
-                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
-                    {
-                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        Clipboard.SetData(DataFormats.Text, sel.SelectedText);
-                        CurrSQLEditor.SQLEditor.Document.Remove(sel.Offset, sel.Length);
-                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = sel.StartPosition;
-                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.ClearSelection();
-                    }
+                    if (c is TextBoxBase)
+                        (c as TextBoxBase).Cut();
+                    else if (c is TextArea)
+                        new ICSharpCode.TextEditor.Actions.Cut().Execute(c as TextArea);
                     break;
                 case "Copy":
-                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
-                    {
-                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        Clipboard.SetData(DataFormats.Text, sel.SelectedText);
-                    }
+                    if (c is TextBoxBase)
+                        (c as TextBoxBase).Copy();
+                    else if (c is TextArea)
+                        new ICSharpCode.TextEditor.Actions.Copy().Execute(c as TextArea);
                     break;
                 case "Paste":
-                    string copiedText = Clipboard.GetText();
-                    if (CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
-                    {
-                        ISelection sel = CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
-                        CurrSQLEditor.SQLEditor.Document.Replace(sel.Offset, sel.Length, copiedText);
-                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.ClearSelection();
-                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = CurrSQLEditor.SQLEditor.Document.OffsetToPosition(sel.Offset + copiedText.Length);
-                    }
-                    else
-                    {
-                        CurrSQLEditor.SQLEditor.Document.Insert(CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Offset, copiedText);
-                        CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Position = CurrSQLEditor.SQLEditor.Document.OffsetToPosition(CurrSQLEditor.SQLEditor.ActiveTextAreaControl.Caret.Offset + copiedText.Length);
-                    }
+                    if (c is TextBoxBase)
+                        (c as TextBoxBase).Paste();
+                    else if (c is TextArea)
+                        new ICSharpCode.TextEditor.Actions.Paste().Execute(c as TextArea);
                     break;
                 case "SelectAll":
-                    CurrSQLEditor.SQLEditor.ActiveTextAreaControl.SelectionManager.SetSelection(new ICSharpCode.TextEditor.TextLocation(0, 0), CurrSQLEditor.SQLEditor.Document.OffsetToPosition(CurrSQLEditor.SQLEditor.Text.Length));
+                    if (c is TextBoxBase)
+                        (c as TextBoxBase).SelectAll();
+                    else if (c is TextArea)
+                        new ICSharpCode.TextEditor.Actions.SelectWholeDocument().Execute(c as TextArea);
                     break;
                 case "Find":
                 case "Replace":
-                    FindDialog fd = new FindDialog(CurrSQLEditor.SQLEditor);
-                    fd.Show();
+                    if (c is TextArea && CurrSQLEditor != null)
+                    {
+                        FindDialog fd = new FindDialog(CurrSQLEditor.SQLEditor);
+                        fd.Show();
+                    }
                     break;
             }
         }
@@ -778,7 +792,7 @@ $"},
         }
         private void cmdRefreshMetadata(string arg)
         {
-            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\n This may result in loss of some of your later added metadata.\n (such as UI metadata, and foreign relationships)\n\n Continue?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\n This may result in loss of some of your later added metadata.\n (such as UI metadata, and foreign relationships)\n\n Continue?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Database.Database oldDb = Provider.Database;
                 Provider.ActiveConnection.RefreshDatabaseSchema();
@@ -888,7 +902,7 @@ $"},
         private void cmdDeleteConnection(string arg)
         {
             ConnectionSettings cs = (ConnectionSettings)SelectedObject;
-            if (MessageBox.Show("Are you sure to delete connection \""+cs+"\"?", "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure to delete connection \""+cs+"\"?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 TreeNode currNode = treeView.SelectedNode;
                 if (currNode.PrevNode != null)
@@ -920,7 +934,7 @@ $"},
             switch (arg)
             {
                 case "Drop":
-                    if (MessageBox.Show("Database will be dropped and all data lost. Continue?", "Çınar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Database will be dropped and all data lost. Continue?", "Cinar", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         Provider.Database.ExecuteNonQuery("drop database " + Provider.Database.Name);
                         TreeNode tn = findSelectedDBNode();
@@ -1061,7 +1075,7 @@ $"},
         {
             if (!checkConnection()) return;
             string tableName = treeView.SelectedNode.Name;
-            if (MessageBox.Show(string.Format("Are you sure to drop table {0}? All data will be lost!", tableName), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(string.Format("Are you sure to drop table {0}? All data will be lost!", tableName), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery("drop table [" + tableName + "]");
                 Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
@@ -1154,7 +1168,7 @@ $"},
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar Database Tools");
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
                         Provider.Database.Tables.Remove(tbl);
                         fct.DialogResult = DialogResult.None;
                     }
@@ -1308,7 +1322,7 @@ $"},
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar DBTools");
+                        MessageBox.Show(ex.Message, "Cinar DBTools");
                         fct.DialogResult = DialogResult.None;
                     }
                 }
@@ -1382,21 +1396,21 @@ $"},
             if (SelectedObject is ConnectionSettings)
             {
                 ConnectionSettings cs = (ConnectionSettings)SelectedObject;
-                if (MessageBox.Show("UI metadata will be generated for database " + cs.DbName + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (MessageBox.Show("UI metadata will be generated for database " + cs.DbName + ". Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 cs.Database.GenerateUIMetadata();
             }
             else if (SelectedObject is Table)
             {
                 Table tbl = (Table)SelectedObject;
-                if (MessageBox.Show("UI metadata will be generated for table " + tbl.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (MessageBox.Show("UI metadata will be generated for table " + tbl.Name + ". Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 tbl.GenerateUIMetadata();
             }
             else if (SelectedObject is Field)
             {
                 Field fld = (Field)SelectedObject;
-                if (MessageBox.Show("UI metadata will be generated for field " + fld.Name + ". Continue?", "Çınar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (MessageBox.Show("UI metadata will be generated for field " + fld.Name + ". Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
                 fld.GenerateUIMetadata();
             }
@@ -1529,7 +1543,7 @@ $"},
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar Database Tools");
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
                         table.Indices.Remove(index);
                         fct.DialogResult = DialogResult.None;
                     }
@@ -1576,7 +1590,7 @@ $"},
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Çınar Database Tools");
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
                         table.Indices.Remove(index);
                         fct.DialogResult = DialogResult.None;
                     }
@@ -1590,7 +1604,7 @@ $"},
             if (!checkConnection()) return;
             Table table = findSelectedTable();
             Index index = SelectedObject as Index;
-            if (MessageBox.Show(string.Format("Are you sure to drop index {0} on {1}?", index.Name, table.Name), "Çınar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(string.Format("Are you sure to drop index {0} on {1}?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
                 table.Indices.Remove(index);
@@ -1628,7 +1642,7 @@ $"},
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Çınar");
+                MessageBox.Show(ex.Message, "Cinar");
             }
         }
 
@@ -1657,8 +1671,16 @@ $"},
         protected override void OnClosing(CancelEventArgs e)
         {
             cancel = false;
-            while (CurrSQLEditor != null && !cancel)
+            string openedFiles = "";
+            while (CurrEditor != null && !cancel)
+            {
+                if (CurrEditor is SQLEditorAndResults && !string.IsNullOrEmpty((CurrEditor as SQLEditorAndResults).FilePath))
+                    openedFiles += (CurrEditor as SQLEditorAndResults).FilePath + Environment.NewLine;
                 cmdCloseEditor("");
+            }
+
+            if (!cancel && openedFiles.Length > 0)
+                File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
 
             e.Cancel = cancel;
         }
@@ -1789,7 +1811,7 @@ $"},
                         Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
                     }
                     catch {
-                        MessageBox.Show("This is not a valid connection file", "Çınar");
+                        MessageBox.Show("This is not a valid connection file", "Cinar");
                     }
                     foreach (ConnectionSettings cs in Connections)
                     {

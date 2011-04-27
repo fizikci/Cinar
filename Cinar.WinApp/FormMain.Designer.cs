@@ -368,7 +368,7 @@ namespace Cinar.WinApp
             this.Controls.Add(this.barDockControlTop);
             this.IsMdiContainer = true;
             this.Name = "FormMain";
-            this.Text = "Çýnar WinApp";
+            this.Text = "Cinar WinApp";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtBul)).EndInit();

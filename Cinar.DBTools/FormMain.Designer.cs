@@ -114,6 +114,10 @@ namespace Cinar.DBTools
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuFind = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAddEditor = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuExecuteSQL = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuExecuteScript = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCodeGenerator = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCheckDatabaseSchema = new System.Windows.Forms.ToolStripMenuItem();
@@ -377,7 +381,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 730);
             // 
             // menuConNewConnection
             // 
@@ -687,7 +691,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(690, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(698, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -749,6 +753,7 @@ namespace Cinar.DBTools
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
+            this.queryToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -915,6 +920,40 @@ namespace Cinar.DBTools
             this.menuReplace.Size = new System.Drawing.Size(184, 24);
             this.menuReplace.Text = "Replace...";
             // 
+            // queryToolStripMenuItem
+            // 
+            this.queryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuAddEditor,
+            this.menuExecuteSQL,
+            this.menuExecuteScript});
+            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
+            this.queryToolStripMenuItem.Size = new System.Drawing.Size(59, 23);
+            this.queryToolStripMenuItem.Text = "Query";
+            // 
+            // menuAddEditor
+            // 
+            this.menuAddEditor.Image = ((System.Drawing.Image)(resources.GetObject("menuAddEditor.Image")));
+            this.menuAddEditor.Name = "menuAddEditor";
+            this.menuAddEditor.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.menuAddEditor.Size = new System.Drawing.Size(247, 24);
+            this.menuAddEditor.Text = "New Query Editor";
+            // 
+            // menuExecuteSQL
+            // 
+            this.menuExecuteSQL.Image = ((System.Drawing.Image)(resources.GetObject("menuExecuteSQL.Image")));
+            this.menuExecuteSQL.Name = "menuExecuteSQL";
+            this.menuExecuteSQL.ShortcutKeys = System.Windows.Forms.Keys.F9;
+            this.menuExecuteSQL.Size = new System.Drawing.Size(247, 24);
+            this.menuExecuteSQL.Text = "Execute as SQL Query";
+            // 
+            // menuExecuteScript
+            // 
+            this.menuExecuteScript.Image = ((System.Drawing.Image)(resources.GetObject("menuExecuteScript.Image")));
+            this.menuExecuteScript.Name = "menuExecuteScript";
+            this.menuExecuteScript.ShortcutKeys = System.Windows.Forms.Keys.F10;
+            this.menuExecuteScript.Size = new System.Drawing.Size(247, 24);
+            this.menuExecuteScript.Text = "Execute as Cinar Script";
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1056,7 +1095,7 @@ namespace Cinar.DBTools
             this.menuHelpScriptingTest.Image = ((System.Drawing.Image)(resources.GetObject("menuHelpScriptingTest.Image")));
             this.menuHelpScriptingTest.Name = "menuHelpScriptingTest";
             this.menuHelpScriptingTest.Size = new System.Drawing.Size(322, 24);
-            this.menuHelpScriptingTest.Text = "Çınar Scripting Test && Learning Center...";
+            this.menuHelpScriptingTest.Text = "Cinar Scripting Test && Learning Center...";
             // 
             // toolStripMenuItem1
             // 
@@ -1190,7 +1229,7 @@ namespace Cinar.DBTools
             this.btnAddEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddEditor.Name = "btnAddEditor";
             this.btnAddEditor.Size = new System.Drawing.Size(23, 22);
-            this.btnAddEditor.Text = "Add New SQL Editor";
+            this.btnAddEditor.Text = "New Query Editor (Ctrl+N)";
             // 
             // btnExecuteSQL
             // 
@@ -1199,7 +1238,7 @@ namespace Cinar.DBTools
             this.btnExecuteSQL.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExecuteSQL.Name = "btnExecuteSQL";
             this.btnExecuteSQL.Size = new System.Drawing.Size(23, 22);
-            this.btnExecuteSQL.Text = "Execute SQL";
+            this.btnExecuteSQL.Text = "Execute as SQL Query (F9)";
             // 
             // btnExecuteScript
             // 
@@ -1208,7 +1247,7 @@ namespace Cinar.DBTools
             this.btnExecuteScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExecuteScript.Name = "btnExecuteScript";
             this.btnExecuteScript.Size = new System.Drawing.Size(23, 22);
-            this.btnExecuteScript.Text = "Execute Script";
+            this.btnExecuteScript.Text = "Execute as Cinar Script (F10)";
             // 
             // toolStripSeparator2
             // 
@@ -1288,8 +1327,9 @@ namespace Cinar.DBTools
             this.ClientSize = new System.Drawing.Size(1109, 699);
             this.Controls.Add(this.toolStripContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.KeyPreview = true;
             this.Name = "FormMain";
-            this.Text = "Çınar Database Tools";
+            this.Text = "Cinar Database Tools";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
@@ -1448,6 +1488,10 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripLabel toolStripLabel4;
         private System.Windows.Forms.ImageList imageListTabs;
+        private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuAddEditor;
+        private System.Windows.Forms.ToolStripMenuItem menuExecuteSQL;
+        private System.Windows.Forms.ToolStripMenuItem menuExecuteScript;
 
     }
 }

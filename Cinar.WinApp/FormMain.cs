@@ -30,7 +30,7 @@ namespace Cinar.WinApp
         public FormMain()
         {
             InitializeComponent();
-            this.Text = "Çýnar WinApp";
+            this.Text = "Cinar WinApp";
             initializeForm();
         }
         private void initializeForm()

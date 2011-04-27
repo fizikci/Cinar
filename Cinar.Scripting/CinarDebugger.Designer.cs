@@ -94,7 +94,7 @@
             // 
             this.statusBarLabel.Name = "statusBarLabel";
             this.statusBarLabel.Size = new System.Drawing.Size(82, 17);
-            this.statusBarLabel.Text = "Çınar Debugger";
+            this.statusBarLabel.Text = "Cinar Debugger";
             // 
             // splitContainer1
             // 
@@ -235,7 +235,7 @@
             this.ClientSize = new System.Drawing.Size(788, 515);
             this.Controls.Add(this.toolStripContainer1);
             this.Name = "CinarDebugger";
-            this.Text = "Çınar Debugger";
+            this.Text = "Cinar Debugger";
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);

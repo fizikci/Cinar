@@ -82,5 +82,10 @@ Other:
 3. [ok] Put time/exec time at the beginning of each history lines.
 4. [ok] convert history SQLs to one line
 5. Make "analyze table" better
-6. Put ER Diagram window into the main window tabs
+5. Rename "analyze table".. yanlış anlaşılıyor.
+6. [ok] Put ER Diagram window into the main window tabs
 7. editSQLAsForProvider saçmalığına bi son ver
+8. Diagram penceresinde açılan context menünün ve komutların düzgün çalışması
+9. Herşey index değil. Index ve constraintleri birbirinden ayır.
+	Constraints: Primary Key, Unique, Foreign Key
+	Indexes: 

@@ -124,7 +124,7 @@ namespace Cinar.Scripting
                     {
                         if (Context.debugging)
                         {
-                            MessageBox.Show((ex.InnerException != null ? ex.InnerException.Message : ex.Message), "Çınar Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show((ex.InnerException != null ? ex.InnerException.Message : ex.Message), "Cinar Script", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Context.debugging = false;
                         }
                         throw ex;
@@ -694,7 +694,7 @@ namespace Cinar.Scripting
 
         public override void Execute(Context context, ParserNode parentNode)
         {
-            if (HttpContext.Current==null && MessageBox.Show("Would you like to debug current execution?", "Çınar Script", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (HttpContext.Current==null && MessageBox.Show("Would you like to debug current execution?", "Cinar Script", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Context.debugging = true;
                 CinarDebugger cd = new CinarDebugger(context);

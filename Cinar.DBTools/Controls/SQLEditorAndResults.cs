@@ -251,7 +251,7 @@ namespace Cinar.DBTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message + Environment.NewLine + "Try refreshing metadata.", "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message + Environment.NewLine + "Try refreshing metadata.", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if(fExp.Orders.Count>0)
@@ -312,14 +312,14 @@ namespace Cinar.DBTools.Controls
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         void deleteSelectedRows()
         {
-            if (gridShowTable.SelectedRows.Count > 0 && MessageBox.Show("Are you sure to delete " + gridShowTable.SelectedRows.Count + " rows?", "Çınar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (gridShowTable.SelectedRows.Count > 0 && MessageBox.Show("Are you sure to delete " + gridShowTable.SelectedRows.Count + " rows?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
             try
@@ -333,7 +333,7 @@ namespace Cinar.DBTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -94,7 +94,7 @@ namespace Cinar.WinUI
 
         public DialogResult ShowMessage(string message, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            return XtraMessageBox.Show(message, "Çınar WinApp", buttons, icon);
+            return XtraMessageBox.Show(message, "Cinar WinApp", buttons, icon);
         }
 
         public void Alert(string message)

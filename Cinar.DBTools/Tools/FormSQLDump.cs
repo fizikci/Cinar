@@ -72,7 +72,7 @@ namespace Cinar.DBTools.Tools
             btnCancel.Enabled = false;
 
             if (e.Error != null)
-                MessageBox.Show(e.Error.Message, "Çınar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Error.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
