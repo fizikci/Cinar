@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DatabaseAnalyzer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Cinar Database Tools")]
+[assembly: AssemblyDescription("http://www.cinarteknoloji.com")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DatabaseAnalyzer")]
+[assembly: AssemblyCompany("Cinar Technology")]
+[assembly: AssemblyProduct("Cinar Database Tools")]
 [assembly: AssemblyCopyright("Copyright ©  2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
