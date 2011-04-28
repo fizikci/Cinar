@@ -244,12 +244,7 @@ namespace Cinar.Database
             }
         }
 
-        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
-            : this(provider, host, dbName, userName, password, defaultCommandTimeout, null)
-        {
-        }
-
-        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath)
+        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null)
         {
             SetConnectionString(provider, host, dbName, userName, password, defaultCommandTimeout);
             createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath);
@@ -322,6 +317,19 @@ namespace Cinar.Database
             StringComparison ic = StringComparison.InvariantCultureIgnoreCase;
 
             sql = sql.Trim();
+
+            //Cinar.SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
+            //SQLParser.Token token = tokenizer.ReadNextToken();
+            //StringBuilder sb = new StringBuilder();
+            //while (token != null) {
+            //    if (token.Type == SQLParser.TokenType.Symbol && (token.Value == "[" || token.Value == "]"))
+            //        sb.Append(token.Value == "[" ? " " + getReservedWordToken(true) : getReservedWordToken(false));
+            //    else
+            //        sb.Append(" " + token.Value);
+            //    token = tokenizer.ReadNextToken();
+            //}
+            //sql = sb.ToString();
+
             if (provider != DatabaseProvider.SQLServer && (sql.StartsWith("select top ", ic) || sql.StartsWith("select distinct top ", ic)))
             {
                 string[] parts = sql.Split(' ');

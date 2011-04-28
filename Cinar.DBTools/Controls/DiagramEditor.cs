@@ -292,7 +292,7 @@ namespace Cinar.DBTools.Controls
                     panelPaint(false);
                 }
 
-                cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
+                MainForm.cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
             }
         }
 

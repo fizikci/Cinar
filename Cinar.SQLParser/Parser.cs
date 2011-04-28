@@ -619,7 +619,7 @@ namespace Cinar.SQLParser
                 return ReadIntegerOrDecimalConstant();
 
             // if the first character is a quote, the token is a string constant
-            if (fCurrentChar == '"' || fCurrentChar == '\'')
+            if (fCurrentChar == '\'')
                 return ReadStringConstant();
 
             // in all other cases, the token should be a symbol
@@ -660,7 +660,7 @@ namespace Cinar.SQLParser
         Token ReadStringConstant()
         {
             char quoteChar = fCurrentChar;
-            ReadNextChar();
+            StoreCurrentCharAndReadNext();
             while (!AtEndOfSource && fCurrentChar != quoteChar)
             {
                 if (fCurrentChar == '\\')
@@ -690,6 +690,7 @@ namespace Cinar.SQLParser
                 else
                     StoreCurrentCharAndReadNext();
             }
+            StoreCurrentCharAndReadNext();
 
             CheckForUnexpectedEndOfSource();
             ReadNextChar();
@@ -735,12 +736,16 @@ namespace Cinar.SQLParser
                     return new Token(TokenType.Symbol, ExtractStoredChars());
                 case '(':
                 case ')':
+                case '[':
+                case ']':
                 case ',':
                 case '.':
                 case '}':
                 case '{':
                 case ';':
                 case ':':
+                case '`':
+                case '"':
                     StoreCurrentCharAndReadNext();
                     return new Token(TokenType.Symbol, ExtractStoredChars());
                 // the symbols = ==

@@ -435,7 +435,7 @@ $"},
         {
             foreach (Control ctl in parent.Controls)
             {
-                if (ctl is CinarSQLEditor) continue;
+                if (ctl is CinarSQLEditor || ctl is MenuStrip || ctl is ContextMenuStrip) continue;
 
                 ctl.Font = font;
                 if (ctl is DataGridView)
@@ -1818,7 +1818,7 @@ $"},
                         if (cs.Database == null)
                             cs.RefreshDatabaseSchema();
                         cs.Database.SetCollectionParents();
-                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 1000);
+                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 30);
                         cs.Database.CreateDbProvider(false);
                     }
                 }

@@ -157,17 +157,23 @@
 				&lt;End&gt;*/&lt;/End&gt;
 			&lt;/Span&gt;
 			
-			&lt;Span name ="String" bold ="false" italic ="false" color ="Red" stopateol ="false" escapecharacter="\"&gt;
+			&lt;Span name ="String" bold ="false" italic ="false" color ="Sienna" stopateol ="false" escapecharacter="\"&gt;
 				&lt;Begin&gt;&amp;quot;&lt;/Begin&gt;
 				&lt;End&gt;&amp;quot;&lt;/End&gt;
 			&lt;/Span&gt;
 	
-			&lt;Span name = "Character" bold = "false" italic = "false" color = "Red" stopateol = "true" escapecharacter="\"&gt;
+			&lt;Span name = "Character" bold = "false" italic = "false" color = "Sienna" stopateol = "true" escapecharacter="\"&gt;
 				&lt;Begin&gt;&amp;apos;&lt;/Begin&gt;
 				&lt;End&gt;&amp;apos;&lt;/End&gt;
 			&lt;/Span&gt;
+			
+			&lt;Span name="ScriptTag" rule="CinarSet" bold="false" italic="false" color="Black" stopateol="false"&gt;
+				&lt;Begin bgcolor="LightBlue"&gt;$&lt;/Begin&gt;
+				&lt;End bgcolor="LightBlue"&gt;$&lt;/End&gt;
+			&lt;/Span&gt;
+
 	
-			&lt;KeyWords name ="SQLKeyWords" bold="false" italic = "false" color = "Blue"&gt;
+			&lt;KeyWords name ="SQLKeyWords" bold="false" italic = "false" color = "Teal"&gt;
 				&lt;Key word =  "select" /&gt;
 				&lt;Key word =  "from" /&gt;
 				&lt;Key word =  "where" /&gt;
@@ -239,6 +245,126 @@
 				&lt;Key word =  "index"/&gt;
 			&lt;/KeyWords&gt;
 		&lt;/RuleSet&gt;
+	
+		&lt;RuleSet name="CinarSet" ignorecase = "false"&gt;
+			&lt;Delimiters&gt;=!&amp;gt;&amp;lt;+-/*%&amp;amp;|^~.}{,;][?:()&lt;/Delimiters&gt;
+			
+			&lt;Span name ="LineComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="true"&gt;
+				&lt;Begin&gt;//&lt;/Begin&gt;
+			&lt;/Span&gt;
+					
+			&lt;Span name ="BlockComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="false"&gt;
+				&lt;Begin&gt;/*&lt;/Begin&gt;
+				&lt;End&gt;*/&lt;/End&gt;
+			&lt;/Span&gt;
+			
+			&lt;Span name ="String" bold ="false" italic ="false" color ="Sienna" stopateol ="false" escapecharacter="\"&gt;
+				&lt;Begin&gt;&amp;quot;&lt;/Begin&gt;
+				&lt;End&gt;&amp;quot;&lt;/End&gt;
+			&lt;/Span&gt;
+	
+			&lt;Span name = "Character" bold = "false" italic = "false" color = "Sienna" stopateol = "true" escapecharacter="\"&gt;
+				&lt;Begin&gt;&amp;apos;&lt;/Begin&gt;
+				&lt;End&gt;&amp;apos;&lt;/End&gt;
+			&lt;/Span&gt;
+	
+			&lt;KeyWords name ="JavaScriptKeyWords" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "break" /&gt;
+				&lt;Key word =  "continue" /&gt;
+				&lt;Key word =  "delete" /&gt;
+				&lt;Key word =  "else" /&gt;
+				&lt;Key word =  "for" /&gt;
+				&lt;Key word =  "function" /&gt;
+				&lt;Key word =  "if" /&gt;
+				&lt;Key word =  "in" /&gt;
+				&lt;Key word =  "new" /&gt;
+				&lt;Key word =  "return" /&gt;
+				&lt;Key word =  "this" /&gt;
+				&lt;Key word =  "typeof" /&gt;
+				&lt;Key word =  "var" /&gt;
+				&lt;Key word =  "void" /&gt;
+				&lt;Key word =  "while" /&gt;
+				&lt;Key word =  "with" /&gt;
+				&lt;Key word =  "using" /&gt;
+				&lt;Key word =  "foreach" /&gt;
+				&lt;!--ECMAScript keywords--&gt;
+				&lt;!-- Reserved for future use 
+					(some are already used in some Javascript Engines) 
+				--&gt;
+				&lt;Key word =  "abstract" /&gt;
+				&lt;Key word =  "boolean" /&gt;
+				&lt;Key word =  "byte" /&gt;
+				&lt;Key word =  "case" /&gt;
+				&lt;Key word =  "catch" /&gt;
+				&lt;Key word =  "char" /&gt;
+				&lt;Key word =  "class" /&gt;
+				&lt;Key word =  "const" /&gt;
+				&lt;Key word =  "debugger" /&gt;
+				&lt;Key word =  "default" /&gt;
+				&lt;Key word =  "do" /&gt;
+				&lt;Key word =  "double" /&gt;
+				&lt;Key word =  "enum" /&gt;
+				&lt;Key word =  "export" /&gt;
+				&lt;Key word =  "extends" /&gt;
+				&lt;Key word =  "final" /&gt;
+				&lt;Key word =  "finally" /&gt;
+				&lt;Key word =  "float" /&gt;
+				&lt;Key word =  "goto" /&gt;
+				&lt;Key word =  "implements" /&gt;
+				&lt;Key word =  "import" /&gt;
+				&lt;Key word =  "instanceof" /&gt;
+				&lt;Key word =  "int" /&gt;
+				&lt;Key word =  "interface" /&gt;
+				&lt;Key word =  "long" /&gt;
+				&lt;Key word =  "native" /&gt;
+				&lt;Key word =  "package" /&gt;
+				&lt;Key word =  "private" /&gt;
+				&lt;Key word =  "protected" /&gt;
+				&lt;Key word =  "public" /&gt;
+				&lt;Key word =  "short" /&gt;
+				&lt;Key word =  "static" /&gt;
+				&lt;Key word =  "super" /&gt;
+				&lt;Key word =  "switch" /&gt;
+				&lt;Key word =  "synchronized" /&gt;
+				&lt;Key word =  "throw" /&gt;
+				&lt;Key word =  "throws" /&gt;
+				&lt;Key word =  "transient" /&gt;
+				&lt;Key word =  "try" /&gt;
+				&lt;Key word =  "volatile" /&gt;
+			&lt;/KeyWords&gt;
+	
+			&lt;KeyWords name ="JavaScriptIntrinsics" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "Array" /&gt;
+				&lt;Key word =  "Boolean" /&gt;
+				&lt;Key word =  "Date" /&gt;
+				&lt;Key word =  "Function" /&gt;
+				&lt;Key word =  "Global" /&gt;
+				&lt;Key word =  "Math" /&gt;
+				&lt;Key word =  "Number" /&gt;
+				&lt;Key word =  "Object" /&gt;
+				&lt;Key word =  "RegExp" /&gt;
+				&lt;Key word =  "String" /&gt;
+			&lt;/KeyWords&gt;
+			
+			&lt;KeyWords name ="JavaScriptLiterals" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "false" /&gt;
+				&lt;Key word =  "null" /&gt;
+				&lt;Key word =  "true" /&gt;
+				&lt;Key word =  "NaN" /&gt;
+				&lt;Key word =  "Infinity" /&gt;
+			&lt;/KeyWords&gt;
+	
+			&lt;KeyWords name ="JavaScriptGlobalFunctions" bold="false" italic = "false" color = "Blue"&gt;
+				&lt;Key word =  "eval" /&gt;
+				&lt;Key word =  "parseInt" /&gt;
+				&lt;Key word =  "parseFloat" /&gt;
+				&lt;Key word =  "escape" /&gt;
+				&lt;Key word =  "unescape" /&gt;
+				&lt;Key word =  "isNaN" /&gt;
+				&lt;Key word =  "isFinite" /&gt;
+			&lt;/KeyWords&gt;		
+		&lt;/RuleSet&gt;
+
 	&lt;/RuleSets&gt;
 	
 &lt;/SyntaxDefinition&gt;</value>
