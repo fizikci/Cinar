@@ -691,7 +691,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(696, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(695, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -1327,6 +1327,7 @@ namespace Cinar.DBTools
             this.ClientSize = new System.Drawing.Size(1109, 699);
             this.Controls.Add(this.toolStripContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "FormMain";
             this.Text = "Cinar Database Tools";
