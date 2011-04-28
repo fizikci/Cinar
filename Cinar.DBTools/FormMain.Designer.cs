@@ -192,7 +192,7 @@ namespace Cinar.DBTools
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainerProperties);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1109, 623);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1109, 625);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -282,7 +282,7 @@ namespace Cinar.DBTools
             this.splitContainerProperties.Panel2.Controls.Add(this.propertyGrid);
             this.splitContainerProperties.Panel2.Controls.Add(this.labelProperties);
             this.splitContainerProperties.Panel2MinSize = 22;
-            this.splitContainerProperties.Size = new System.Drawing.Size(1109, 623);
+            this.splitContainerProperties.Size = new System.Drawing.Size(1109, 625);
             this.splitContainerProperties.SplitterDistance = 893;
             this.splitContainerProperties.TabIndex = 1;
             // 
@@ -302,7 +302,7 @@ namespace Cinar.DBTools
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.btnCloseEditor);
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
-            this.splitContainerMain.Size = new System.Drawing.Size(893, 623);
+            this.splitContainerMain.Size = new System.Drawing.Size(893, 625);
             this.splitContainerMain.SplitterDistance = 165;
             this.splitContainerMain.SplitterWidth = 5;
             this.splitContainerMain.TabIndex = 0;
@@ -336,7 +336,7 @@ namespace Cinar.DBTools
             this.treeView.Location = new System.Drawing.Point(0, 19);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(165, 602);
+            this.treeView.Size = new System.Drawing.Size(165, 604);
             this.treeView.TabIndex = 0;
             this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
@@ -345,7 +345,7 @@ namespace Cinar.DBTools
             // 
             // menuStripTree
             // 
-            this.menuStripTree.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.menuStripTree.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.menuStripTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuConNewConnection,
             this.menuConEditConnection,
@@ -381,7 +381,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 730);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
             // 
             // menuConNewConnection
             // 
@@ -691,7 +691,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(698, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(696, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -707,7 +707,7 @@ namespace Cinar.DBTools
             this.tabControlEditors.Name = "tabControlEditors";
             this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
             this.tabControlEditors.SelectedIndex = 0;
-            this.tabControlEditors.Size = new System.Drawing.Size(723, 623);
+            this.tabControlEditors.Size = new System.Drawing.Size(723, 625);
             this.tabControlEditors.TabIndex = 1;
             // 
             // imageListTabs
@@ -723,7 +723,7 @@ namespace Cinar.DBTools
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid.Location = new System.Drawing.Point(3, 25);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(206, 595);
+            this.propertyGrid.Size = new System.Drawing.Size(206, 597);
             this.propertyGrid.TabIndex = 3;
             this.propertyGrid.ToolbarVisible = false;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
@@ -749,7 +749,7 @@ namespace Cinar.DBTools
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -758,7 +758,7 @@ namespace Cinar.DBTools
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1109, 27);
+            this.menuStrip1.Size = new System.Drawing.Size(1109, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -774,33 +774,33 @@ namespace Cinar.DBTools
             this.toolStripMenuItem3,
             this.menuExit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // menuNewConnection
             // 
             this.menuNewConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuNewConnection.Image")));
             this.menuNewConnection.Name = "menuNewConnection";
-            this.menuNewConnection.Size = new System.Drawing.Size(225, 24);
+            this.menuNewConnection.Size = new System.Drawing.Size(215, 22);
             this.menuNewConnection.Text = "New Connection...";
             // 
             // menuOpenConnectionsFile
             // 
             this.menuOpenConnectionsFile.Name = "menuOpenConnectionsFile";
-            this.menuOpenConnectionsFile.Size = new System.Drawing.Size(225, 24);
+            this.menuOpenConnectionsFile.Size = new System.Drawing.Size(215, 22);
             this.menuOpenConnectionsFile.Text = "Open Connections File...";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(212, 6);
             // 
             // menuOpen
             // 
             this.menuOpen.Image = ((System.Drawing.Image)(resources.GetObject("menuOpen.Image")));
             this.menuOpen.Name = "menuOpen";
             this.menuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpen.Size = new System.Drawing.Size(225, 24);
+            this.menuOpen.Size = new System.Drawing.Size(215, 22);
             this.menuOpen.Text = "Open...";
             // 
             // menuSave
@@ -808,26 +808,26 @@ namespace Cinar.DBTools
             this.menuSave.Image = ((System.Drawing.Image)(resources.GetObject("menuSave.Image")));
             this.menuSave.Name = "menuSave";
             this.menuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuSave.Size = new System.Drawing.Size(225, 24);
+            this.menuSave.Size = new System.Drawing.Size(215, 22);
             this.menuSave.Text = "Save";
             // 
             // menuSaveAs
             // 
             this.menuSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("menuSaveAs.Image")));
             this.menuSaveAs.Name = "menuSaveAs";
-            this.menuSaveAs.Size = new System.Drawing.Size(225, 24);
+            this.menuSaveAs.Size = new System.Drawing.Size(215, 22);
             this.menuSaveAs.Text = "Save As...";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(222, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(212, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
             this.menuExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.menuExit.Size = new System.Drawing.Size(225, 24);
+            this.menuExit.Size = new System.Drawing.Size(215, 22);
             this.menuExit.Text = "Exit";
             // 
             // editToolStripMenuItem
@@ -844,7 +844,7 @@ namespace Cinar.DBTools
             this.menuFind,
             this.menuReplace});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(44, 23);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // menuUndo
@@ -852,7 +852,7 @@ namespace Cinar.DBTools
             this.menuUndo.Image = ((System.Drawing.Image)(resources.GetObject("menuUndo.Image")));
             this.menuUndo.Name = "menuUndo";
             this.menuUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.menuUndo.Size = new System.Drawing.Size(184, 24);
+            this.menuUndo.Size = new System.Drawing.Size(177, 22);
             this.menuUndo.Text = "Undo";
             // 
             // menuRedo
@@ -860,20 +860,20 @@ namespace Cinar.DBTools
             this.menuRedo.Image = ((System.Drawing.Image)(resources.GetObject("menuRedo.Image")));
             this.menuRedo.Name = "menuRedo";
             this.menuRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.menuRedo.Size = new System.Drawing.Size(184, 24);
+            this.menuRedo.Size = new System.Drawing.Size(177, 22);
             this.menuRedo.Text = "Redo";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(181, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(174, 6);
             // 
             // menuCut
             // 
             this.menuCut.Image = ((System.Drawing.Image)(resources.GetObject("menuCut.Image")));
             this.menuCut.Name = "menuCut";
             this.menuCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.menuCut.Size = new System.Drawing.Size(184, 24);
+            this.menuCut.Size = new System.Drawing.Size(177, 22);
             this.menuCut.Text = "Cut";
             // 
             // menuCopy
@@ -881,7 +881,7 @@ namespace Cinar.DBTools
             this.menuCopy.Image = ((System.Drawing.Image)(resources.GetObject("menuCopy.Image")));
             this.menuCopy.Name = "menuCopy";
             this.menuCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.menuCopy.Size = new System.Drawing.Size(184, 24);
+            this.menuCopy.Size = new System.Drawing.Size(177, 22);
             this.menuCopy.Text = "Copy";
             // 
             // menuPaste
@@ -889,27 +889,27 @@ namespace Cinar.DBTools
             this.menuPaste.Image = ((System.Drawing.Image)(resources.GetObject("menuPaste.Image")));
             this.menuPaste.Name = "menuPaste";
             this.menuPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.menuPaste.Size = new System.Drawing.Size(184, 24);
+            this.menuPaste.Size = new System.Drawing.Size(177, 22);
             this.menuPaste.Text = "Paste";
             // 
             // menuSelectAll
             // 
             this.menuSelectAll.Name = "menuSelectAll";
             this.menuSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.menuSelectAll.Size = new System.Drawing.Size(184, 24);
+            this.menuSelectAll.Size = new System.Drawing.Size(177, 22);
             this.menuSelectAll.Text = "Select All";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(181, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(174, 6);
             // 
             // menuFind
             // 
             this.menuFind.Image = ((System.Drawing.Image)(resources.GetObject("menuFind.Image")));
             this.menuFind.Name = "menuFind";
             this.menuFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.menuFind.Size = new System.Drawing.Size(184, 24);
+            this.menuFind.Size = new System.Drawing.Size(177, 22);
             this.menuFind.Text = "Find...";
             // 
             // menuReplace
@@ -917,7 +917,7 @@ namespace Cinar.DBTools
             this.menuReplace.Image = ((System.Drawing.Image)(resources.GetObject("menuReplace.Image")));
             this.menuReplace.Name = "menuReplace";
             this.menuReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.menuReplace.Size = new System.Drawing.Size(184, 24);
+            this.menuReplace.Size = new System.Drawing.Size(177, 22);
             this.menuReplace.Text = "Replace...";
             // 
             // queryToolStripMenuItem
@@ -927,7 +927,7 @@ namespace Cinar.DBTools
             this.menuExecuteSQL,
             this.menuExecuteScript});
             this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
-            this.queryToolStripMenuItem.Size = new System.Drawing.Size(59, 23);
+            this.queryToolStripMenuItem.Size = new System.Drawing.Size(55, 21);
             this.queryToolStripMenuItem.Text = "Query";
             // 
             // menuAddEditor
@@ -935,7 +935,7 @@ namespace Cinar.DBTools
             this.menuAddEditor.Image = ((System.Drawing.Image)(resources.GetObject("menuAddEditor.Image")));
             this.menuAddEditor.Name = "menuAddEditor";
             this.menuAddEditor.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.menuAddEditor.Size = new System.Drawing.Size(247, 24);
+            this.menuAddEditor.Size = new System.Drawing.Size(236, 22);
             this.menuAddEditor.Text = "New Query Editor";
             // 
             // menuExecuteSQL
@@ -943,7 +943,7 @@ namespace Cinar.DBTools
             this.menuExecuteSQL.Image = ((System.Drawing.Image)(resources.GetObject("menuExecuteSQL.Image")));
             this.menuExecuteSQL.Name = "menuExecuteSQL";
             this.menuExecuteSQL.ShortcutKeys = System.Windows.Forms.Keys.F9;
-            this.menuExecuteSQL.Size = new System.Drawing.Size(247, 24);
+            this.menuExecuteSQL.Size = new System.Drawing.Size(236, 22);
             this.menuExecuteSQL.Text = "Execute as SQL Query";
             // 
             // menuExecuteScript
@@ -951,7 +951,7 @@ namespace Cinar.DBTools
             this.menuExecuteScript.Image = ((System.Drawing.Image)(resources.GetObject("menuExecuteScript.Image")));
             this.menuExecuteScript.Name = "menuExecuteScript";
             this.menuExecuteScript.ShortcutKeys = System.Windows.Forms.Keys.F10;
-            this.menuExecuteScript.Size = new System.Drawing.Size(247, 24);
+            this.menuExecuteScript.Size = new System.Drawing.Size(236, 22);
             this.menuExecuteScript.Text = "Execute as Cinar Script";
             // 
             // toolsToolStripMenuItem
@@ -969,73 +969,73 @@ namespace Cinar.DBTools
             this.toolStripMenuItem2,
             this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(53, 23);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(52, 21);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // menuToolsCodeGenerator
             // 
             this.menuToolsCodeGenerator.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsCodeGenerator.Image")));
             this.menuToolsCodeGenerator.Name = "menuToolsCodeGenerator";
-            this.menuToolsCodeGenerator.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsCodeGenerator.Size = new System.Drawing.Size(236, 22);
             this.menuToolsCodeGenerator.Text = "Code Generator...";
             // 
             // menuToolsCheckDatabaseSchema
             // 
             this.menuToolsCheckDatabaseSchema.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsCheckDatabaseSchema.Image")));
             this.menuToolsCheckDatabaseSchema.Name = "menuToolsCheckDatabaseSchema";
-            this.menuToolsCheckDatabaseSchema.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsCheckDatabaseSchema.Size = new System.Drawing.Size(236, 22);
             this.menuToolsCheckDatabaseSchema.Text = "Check Database Schema...";
             // 
             // menuToolsDBTransfer
             // 
             this.menuToolsDBTransfer.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsDBTransfer.Image")));
             this.menuToolsDBTransfer.Name = "menuToolsDBTransfer";
-            this.menuToolsDBTransfer.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsDBTransfer.Size = new System.Drawing.Size(236, 22);
             this.menuToolsDBTransfer.Text = "Database Transfer...";
             // 
             // menuToolsViewERDiagram
             // 
             this.menuToolsViewERDiagram.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsViewERDiagram.Image")));
             this.menuToolsViewERDiagram.Name = "menuToolsViewERDiagram";
-            this.menuToolsViewERDiagram.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsViewERDiagram.Size = new System.Drawing.Size(236, 22);
             this.menuToolsViewERDiagram.Text = "View ER Diagram...";
             // 
             // menuToolsSQLDump
             // 
             this.menuToolsSQLDump.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsSQLDump.Image")));
             this.menuToolsSQLDump.Name = "menuToolsSQLDump";
-            this.menuToolsSQLDump.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsSQLDump.Size = new System.Drawing.Size(236, 22);
             this.menuToolsSQLDump.Text = "SQL Dump...";
             // 
             // menuToolsSimpleIntegrationService
             // 
             this.menuToolsSimpleIntegrationService.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsSimpleIntegrationService.Image")));
             this.menuToolsSimpleIntegrationService.Name = "menuToolsSimpleIntegrationService";
-            this.menuToolsSimpleIntegrationService.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsSimpleIntegrationService.Size = new System.Drawing.Size(236, 22);
             this.menuToolsSimpleIntegrationService.Text = "Simple Integration Service...";
             // 
             // menuToolsCopyTreeData
             // 
             this.menuToolsCopyTreeData.Name = "menuToolsCopyTreeData";
-            this.menuToolsCopyTreeData.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsCopyTreeData.Size = new System.Drawing.Size(236, 22);
             this.menuToolsCopyTreeData.Text = "Copy Tree Data...";
             // 
             // menuToolsCompareDatabases
             // 
             this.menuToolsCompareDatabases.Name = "menuToolsCompareDatabases";
-            this.menuToolsCompareDatabases.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsCompareDatabases.Size = new System.Drawing.Size(236, 22);
             this.menuToolsCompareDatabases.Text = "Compare Databases...";
             // 
             // menuToolsCompareDirectories
             // 
             this.menuToolsCompareDirectories.Name = "menuToolsCompareDirectories";
-            this.menuToolsCompareDirectories.Size = new System.Drawing.Size(245, 24);
+            this.menuToolsCompareDirectories.Size = new System.Drawing.Size(236, 22);
             this.menuToolsCompareDirectories.Text = "Compare Directories...";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(242, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(233, 6);
             // 
             // quickScriptToolStripMenuItem
             // 
@@ -1047,37 +1047,37 @@ namespace Cinar.DBTools
             this.menuToolsQScriptCalculateOptDataLen});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
-            this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(245, 24);
+            this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.quickScriptToolStripMenuItem.Text = "Quick Script";
             // 
             // menuToolsQScriptDeleteFromTables
             // 
             this.menuToolsQScriptDeleteFromTables.Name = "menuToolsQScriptDeleteFromTables";
-            this.menuToolsQScriptDeleteFromTables.Size = new System.Drawing.Size(272, 24);
+            this.menuToolsQScriptDeleteFromTables.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptDeleteFromTables.Text = "Delete From Tables";
             // 
             // menuToolsQScriptSelectCountsFromTables
             // 
             this.menuToolsQScriptSelectCountsFromTables.Name = "menuToolsQScriptSelectCountsFromTables";
-            this.menuToolsQScriptSelectCountsFromTables.Size = new System.Drawing.Size(272, 24);
+            this.menuToolsQScriptSelectCountsFromTables.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptSelectCountsFromTables.Text = "Select Count(*) From Tables";
             // 
             // menuToolsQScriptForEachTable
             // 
             this.menuToolsQScriptForEachTable.Name = "menuToolsQScriptForEachTable";
-            this.menuToolsQScriptForEachTable.Size = new System.Drawing.Size(272, 24);
+            this.menuToolsQScriptForEachTable.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptForEachTable.Text = "For Each Table";
             // 
             // menuToolsQScriptForEachField
             // 
             this.menuToolsQScriptForEachField.Name = "menuToolsQScriptForEachField";
-            this.menuToolsQScriptForEachField.Size = new System.Drawing.Size(272, 24);
+            this.menuToolsQScriptForEachField.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptForEachField.Text = "For Each Field";
             // 
             // menuToolsQScriptCalculateOptDataLen
             // 
             this.menuToolsQScriptCalculateOptDataLen.Name = "menuToolsQScriptCalculateOptDataLen";
-            this.menuToolsQScriptCalculateOptDataLen.Size = new System.Drawing.Size(272, 24);
+            this.menuToolsQScriptCalculateOptDataLen.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptCalculateOptDataLen.Text = "Calculate Optimal Data Lengths";
             // 
             // helpToolStripMenuItem
@@ -1087,25 +1087,25 @@ namespace Cinar.DBTools
             this.toolStripMenuItem1,
             this.menuHelpAbout});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(47, 21);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // menuHelpScriptingTest
             // 
             this.menuHelpScriptingTest.Image = ((System.Drawing.Image)(resources.GetObject("menuHelpScriptingTest.Image")));
             this.menuHelpScriptingTest.Name = "menuHelpScriptingTest";
-            this.menuHelpScriptingTest.Size = new System.Drawing.Size(322, 24);
+            this.menuHelpScriptingTest.Size = new System.Drawing.Size(308, 22);
             this.menuHelpScriptingTest.Text = "Cinar Scripting Test && Learning Center...";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(319, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(305, 6);
             // 
             // menuHelpAbout
             // 
             this.menuHelpAbout.Name = "menuHelpAbout";
-            this.menuHelpAbout.Size = new System.Drawing.Size(322, 24);
+            this.menuHelpAbout.Size = new System.Drawing.Size(308, 22);
             this.menuHelpAbout.Text = "About...";
             // 
             // toolStrip1
@@ -1136,7 +1136,7 @@ namespace Cinar.DBTools
             this.btnSQLDump,
             this.btnSimpleIntegrationService});
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolStrip1.Location = new System.Drawing.Point(0, 27);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1109, 25);
             this.toolStrip1.Stretch = true;

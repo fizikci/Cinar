@@ -111,6 +111,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
+      <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
+      <Name>Cinar.SQLParser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

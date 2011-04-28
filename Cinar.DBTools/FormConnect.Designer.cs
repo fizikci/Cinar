@@ -38,14 +38,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtHost = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.cbCreateDatabase = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(52, 21);
+            this.label1.Location = new System.Drawing.Point(27, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(51, 15);
             this.label1.TabIndex = 7;
@@ -59,41 +60,41 @@
             "MySQL",
             "PostgreSQL",
             "SQLServer"});
-            this.cbProvider.Location = new System.Drawing.Point(113, 16);
+            this.cbProvider.Location = new System.Drawing.Point(88, 16);
             this.cbProvider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbProvider.Name = "cbProvider";
-            this.cbProvider.Size = new System.Drawing.Size(132, 23);
+            this.cbProvider.Size = new System.Drawing.Size(162, 23);
             this.cbProvider.TabIndex = 0;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 99);
+            this.label2.Location = new System.Drawing.Point(24, 160);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 15);
+            this.label2.Size = new System.Drawing.Size(55, 15);
             this.label2.TabIndex = 9;
-            this.label2.Text = "Database Name";
+            this.label2.Text = "Database";
             // 
             // txtDBName
             // 
-            this.txtDBName.Location = new System.Drawing.Point(113, 94);
+            this.txtDBName.Location = new System.Drawing.Point(89, 157);
             this.txtDBName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Size = new System.Drawing.Size(132, 23);
+            this.txtDBName.Size = new System.Drawing.Size(162, 23);
             this.txtDBName.TabIndex = 2;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(113, 133);
+            this.txtUserName.Location = new System.Drawing.Point(89, 86);
             this.txtUserName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(132, 23);
+            this.txtUserName.Size = new System.Drawing.Size(162, 23);
             this.txtUserName.TabIndex = 3;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(38, 139);
+            this.label3.Location = new System.Drawing.Point(14, 92);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 15);
             this.label3.TabIndex = 10;
@@ -101,17 +102,17 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(113, 172);
+            this.txtPassword.Location = new System.Drawing.Point(89, 121);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(132, 23);
+            this.txtPassword.Size = new System.Drawing.Size(162, 23);
             this.txtPassword.TabIndex = 4;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(46, 177);
+            this.label4.Location = new System.Drawing.Point(22, 126);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 15);
             this.label4.TabIndex = 11;
@@ -119,50 +120,62 @@
             // 
             // txtHost
             // 
-            this.txtHost.Location = new System.Drawing.Point(113, 55);
+            this.txtHost.Location = new System.Drawing.Point(88, 51);
             this.txtHost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtHost.Name = "txtHost";
-            this.txtHost.Size = new System.Drawing.Size(132, 23);
+            this.txtHost.Size = new System.Drawing.Size(162, 23);
             this.txtHost.TabIndex = 1;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(71, 59);
+            this.label5.Location = new System.Drawing.Point(46, 55);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(32, 15);
             this.label5.TabIndex = 8;
             this.label5.Text = "Host";
             // 
-            // button1
+            // btnCancel
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(159, 217);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(87, 26);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Cancel";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(141, 220);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(87, 26);
+            this.btnCancel.TabIndex = 6;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnOK
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button2.Location = new System.Drawing.Point(59, 217);
-            this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(87, 26);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "OK";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Location = new System.Drawing.Point(41, 220);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(87, 26);
+            this.btnOK.TabIndex = 5;
+            this.btnOK.Text = "OK";
+            this.btnOK.UseVisualStyleBackColor = true;
+            // 
+            // cbCreateDatabase
+            // 
+            this.cbCreateDatabase.AutoSize = true;
+            this.cbCreateDatabase.Location = new System.Drawing.Point(89, 184);
+            this.cbCreateDatabase.Name = "cbCreateDatabase";
+            this.cbCreateDatabase.Size = new System.Drawing.Size(172, 19);
+            this.cbCreateDatabase.TabIndex = 12;
+            this.cbCreateDatabase.Text = "Create database if not exists";
+            this.cbCreateDatabase.UseVisualStyleBackColor = true;
             // 
             // FormConnect
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(264, 261);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.CancelButton = this.btnCancel;
+            this.ClientSize = new System.Drawing.Size(268, 261);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.txtHost);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtPassword);
@@ -173,6 +186,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cbProvider);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbCreateDatabase);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -190,12 +204,13 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnOK;
         internal System.Windows.Forms.ComboBox cbProvider;
         internal System.Windows.Forms.TextBox txtDBName;
         internal System.Windows.Forms.TextBox txtUserName;
         internal System.Windows.Forms.TextBox txtPassword;
         internal System.Windows.Forms.TextBox txtHost;
+        private System.Windows.Forms.CheckBox cbCreateDatabase;
     }
 }
