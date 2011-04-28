@@ -1,5 +1,5 @@
 Cinar Database
-admin|2011/04/28 18:04:18
+admin|2011/04/28 17:59:54
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
@@ -43,8 +43,8 @@ foreach( Table tbl in db.Tables )
 	Console.WriteLine("Tablo adı                         : " + tbl.Name);
 	Console.WriteLine("Alan sayısı                       : " + tbl.Fields.Count);
 	Console.WriteLine("Primary key                       : " + tbl.PrimaryField);
-	Console.WriteLine("String tipindeki ilk alan (varsa) : " + tbl.StringField);
-	Console.WriteLine("Int tipindeki ilk alan (varsa)    : " + tbl.Fields.Find(DbType.Int32));
+	Console.WrileLine("String tipindeki ilk alan (varsa) : " + tbl.StringField);
+	Console.WrileLine("Int tipindeki ilk alan (varsa)    : " + tbl.Fields.Find(DbType.Int32));
 }
 
 // Şimdi de, Musteri isimli tablonun alanlarını listelemek istediğimizi farzedelim:
@@ -62,19 +62,11 @@ else
 		Console.WriteLine("Field adı                   : " + fld.Name);
 		Console.WriteLine("Tipi                        : " + fld.FieldType);
 		Console.WriteLine("Null olabilir mi?           : " + fld.IsNullable);
-		Console.WriteLine("Default değeri              : " + fld.DefaultValue);
-		Console.WriteLine("Primary key mi?             : " + fld.IsPrimaryKey);
-		Console.WriteLine("Başka bir tabloya referans? : " + fld.ReferenceField);
+		Console.WrileLine("Default değeri              : " + fld.DefaultValue);
+		Console.WrileLine("Primary key mi?             : " + fld.IsPrimaryKey);
+		Console.WrileLine("Başka bir tabloya referans? : " + fld.ReferenceField);
 	} 
 }@@
-
-'''Insert / Update sorguları'''
-
-@@
-DataRow dr = db.GetDataRow("select * from Musteri");
-dr["Ad"] = "Adı değiştirdik";
-db.Update("Musteri", dr); // Musteri tablosunda update Musteri set Ad = 'Adı değiştirdik' where Id = xx; sorgusunu çalıştırır.
-@@
 
 <nowiki>
 <!--iframe title="YouTube video player" width="480" height="390" src="http://www.youtube.com/embed/fFzswnSpB64" frameborder="0" allowfullscreen></iframe-->

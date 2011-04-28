@@ -1682,6 +1682,8 @@ $"},
             if (!cancel && openedFiles.Length > 0)
                 File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
 
+            Provider.SaveConnections();
+
             e.Cancel = cancel;
         }
 

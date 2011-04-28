@@ -22,6 +22,17 @@ namespace Cinar.DBTools
             this.target = target;
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (target.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+            {
+                ISelection sel = target.ActiveTextAreaControl.SelectionManager.SelectionCollection[0];
+                if(sel.SelectedText.Length<50)
+                    txtFind.Text = target.ActiveTextAreaControl.SelectionManager.SelectionCollection[0].SelectedText;
+            }
+        }
+
         int startIndex = 0;
         bool replaceAll = false;
 
