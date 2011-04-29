@@ -1,5 +1,5 @@
 Cinar Database
-admin|2011/04/29 12:48:24
+admin|2011/04/28 18:04:18
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
@@ -27,7 +27,6 @@ Execute metoduna parametre olarak geçilen bir "lambda ifadesini" bir transactio
 @@Database db = new Database(Provider.MySQL, host, dbName, userName, password, 30);@@
 
 @@Database db = new Database(Provider.PostgreSQL, host, dbName, userName, password, 30);@@
-Bu sayede MySQL, Postgre veya MS SQL'de "connection string nasıl yazılıyordu" diye düşünmenize gerek kalmıyor.
 
 '''Basit sorgular'''
 
@@ -35,24 +34,6 @@ Bu sayede MySQL, Postgre veya MS SQL'de "connection string nasıl yazılıyordu"
 string version = db.GetString("select version()");
 DataTable dt = db.GetDataTable("select Id, Ad from Kisi");
 @@
-
-'''Insert'''
-
-@@
-Hashtable record = new Hashtable();
-record["Ad"] = "Microsoft";
-db.Insert("Kisi", record);
-@@
-Insert sql yazmak için uğraşmaya gerek yok, Insert metodu INSERT sorgusunu nasıl oluşturacağını biliyor.
-
-'''Update'''
-
-@@
-DataRow dr = db.GetDataRow("select * from Kisi where Id=1");
-dr["Ad"] = "Microsoft Coorporation";
-db.Update("Kisi", dr);
-@@
-Update sorgusu da yazmaya gerek yok. Eğer ORM yöntemini kullanırsanız, DataRow veya Hashtable'lar ile de uğraşmanıza gerek yok.
 
 '''Metadataya erişim'''
 
@@ -86,6 +67,14 @@ else
 		Console.WriteLine("Başka bir tabloya referans? : " + fld.ReferenceField);
 	} 
 }@@
+
+'''Insert / Update sorguları'''
+
+@@
+DataRow dr = db.GetDataRow("select * from Musteri");
+dr["Ad"] = "Adı değiştirdik";
+db.Update("Musteri", dr); // Musteri tablosunda update Musteri set Ad = 'Adı değiştirdik' where Id = xx; sorgusunu çalıştırır.
+@@
 
 <nowiki>
 <!--iframe title="YouTube video player" width="480" height="390" src="http://www.youtube.com/embed/fFzswnSpB64" frameborder="0" allowfullscreen></iframe-->

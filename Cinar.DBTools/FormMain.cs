@@ -71,6 +71,12 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdSaveConnectionsAs,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuSaveConnectionsAs},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdOpen,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuOpen},
@@ -235,6 +241,20 @@ $"},
                                          }
                                      },
                                      Trigger = new CommandTrigger{ Control = labelProperties}
+                                 },
+                     new Command {
+                                     Execute = (arg)=>{
+                                         if(SelectedObject is ConnectionSettings)
+                                             cmdDeleteConnection("");
+                                         else if(SelectedObject is Table)
+                                             cmdTableDrop("");
+                                         //else if(SelectedObject is Field)
+                                         //    cmdFieldDrop("");
+                                         else if(SelectedObject is Index)
+                                             cmdDropIndex("");
+                                         
+                                     },
+                                     Trigger = new CommandTrigger{ Control = treeView, Event = "KeyUp", Predicate = (e)=>{return (e as KeyEventArgs).KeyCode == Keys.Delete;}}
                                  },
                      new Command {
                                      Execute = cmdSetActiveConnection,
@@ -526,11 +546,6 @@ $"},
             return node;
         }
 
-        public void SaveConnections()
-        {
-            Provider.SaveConnections();
-            statusText.Text = "Connections saved.";
-        }
         private void executeSQL(string sql, params object[] args)
         {
             sql = String.Format(sql, args);
@@ -724,6 +739,7 @@ $"},
         private void cmdOpen(string arg)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Query Files|*.sql";
             if (ofd.ShowDialog() == DialogResult.OK)
                 addSQLEditor(ofd.FileName, "");
         }
@@ -736,13 +752,9 @@ $"},
                 {
                     if (CurrEditor.Save())
                         tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
-                    else
-                        cancel = true;
                 }
                 else if (dr == DialogResult.No)
                     tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
-                else
-                    cancel = true;
             }
             else
                 tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
@@ -845,7 +857,6 @@ $"},
                 TreeNode dbNode = findSelectedDBNode();
                 dbNode.Nodes.Clear();
                 populateTreeNodesForDatabase(dbNode);
-                SaveConnections();
                 treeView.Sort();
             }
         }
@@ -859,9 +870,22 @@ $"},
         private void cmdOpenConnectionsFile(string arg)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = Path.GetDirectoryName(Provider.ConnectionsPath);
             ofd.Filter = "Connection Files|*.xml";
             if (ofd.ShowDialog() == DialogResult.OK)
                 showConnections(ofd.FileName);
+        }
+        private void cmdSaveConnectionsAs(string arg)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = Path.GetDirectoryName(Provider.ConnectionsPath);
+            sfd.FileName = Provider.ConnectionsPath;
+            sfd.Filter = "Connection Files|*.xml";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                Provider.ConnectionsPath = sfd.FileName;
+                Provider.SaveConnections();
+            }
         }
 
         private void cmdShowHiddenConnections(string arg)
@@ -876,7 +900,6 @@ $"},
                 }
             }
         }
-
         private void cmdHideConnection(string arg)
         {
             ConnectionSettings cs = SelectedObject as ConnectionSettings;
@@ -911,7 +934,6 @@ $"},
                 cs.UserName = f.txtUserName.Text;
                 cs.RefreshDatabaseSchema();
                 Provider.Connections.Add(cs);
-                SaveConnections();
                 TreeNode tn = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
                 tn.Tag = cs;
                 tn.NodeFont = new Font(this.Font, FontStyle.Underline);
@@ -936,7 +958,6 @@ $"},
                 cs.Password = f.txtPassword.Text;
                 cs.Provider = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), f.cbProvider.SelectedItem.ToString());
                 cs.UserName = f.txtUserName.Text;
-                SaveConnections();
                 treeView.SelectedNode.Name = treeView.SelectedNode.Text = cs.ToString();
                 cs.RefreshDatabaseSchema();
             }
@@ -944,7 +965,7 @@ $"},
         private void cmdDeleteConnection(string arg)
         {
             ConnectionSettings cs = (ConnectionSettings)SelectedObject;
-            if (MessageBox.Show("Are you sure to delete connection \""+cs+"\"?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("The connection \"" + cs + "\" will be deleted. It doesn't harm your data.\n\nContinue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
                 TreeNode currNode = treeView.SelectedNode;
                 if (currNode.PrevNode != null)
@@ -952,7 +973,6 @@ $"},
                 else if (currNode.NextNode != null)
                     treeView.SelectedNode = currNode.NextNode;
                 Provider.Connections.Remove(cs);
-                SaveConnections();
                 currNode.Remove();
 
                 statusText.Text = "Connection deleted.";
@@ -976,13 +996,13 @@ $"},
             switch (arg)
             {
                 case "Drop":
-                    if (MessageBox.Show("Database will be dropped and all data lost. Continue?", "Cinar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Database will be dropped and ALL DATA LOST.\n\nContinue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                     {
                         Provider.Database.ExecuteNonQuery("drop database " + Provider.Database.Name);
                         TreeNode tn = findSelectedDBNode();
                         Provider.Connections.Remove(Provider.ActiveConnection);
                         tn.Remove();
-                        SaveConnections();
+                        CurrSQLEditor.ShowInfoText(string.Format("Database {0} dropped successfully.", tn.Text));
                     }
                     break;
                 case "Create":
@@ -1116,13 +1136,13 @@ $"},
         private void cmdTableDrop(string arg)
         {
             if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
-            if (MessageBox.Show(string.Format("Are you sure to drop table {0}? All data will be lost!", tableName), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            Table table = SelectedObject as Table;
+            if (MessageBox.Show(string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                int i = Provider.Database.ExecuteNonQuery("drop table [" + tableName + "]");
-                Provider.Database.Tables.Remove(Provider.Database.Tables[tableName]);
+                int i = Provider.Database.ExecuteNonQuery("drop " + (table.IsView ? "view" : "table") + " [" + table.Name + "]");
+                Provider.Database.Tables.Remove(Provider.Database.Tables[table.Name]);
                 cmdRefresh(null);
-                CurrSQLEditor.ShowInfoText("Table " + tableName + " dropped succesfully.");
+                CurrSQLEditor.ShowInfoText("Table " + table.Name + " dropped succesfully.");
             }
         }
         private void cmdTableCount(string arg)
@@ -1646,7 +1666,7 @@ $"},
             if (!checkConnection()) return;
             Table table = findSelectedTable();
             Index index = SelectedObject as Index;
-            if (MessageBox.Show(string.Format("Are you sure to drop index {0} on {1}?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show(string.Format("Index \"{0}\" on \"{1}\" will be dropped.\n\nContinue?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 int i = Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
                 table.Indices.Remove(index);
@@ -1669,9 +1689,11 @@ $"},
         private void cmdDeleteERDiagram(string arg)
         {
             Diagram schema = SelectedObject as Diagram;
-            Provider.ActiveConnection.Schemas.Remove(schema);
-            SaveConnections();
-            cmdRefresh(null);
+            if (MessageBox.Show(string.Format("Diagram \"{0}\" will be deleted.\n\nContinue?", schema.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                Provider.ActiveConnection.Schemas.Remove(schema);
+                cmdRefresh(null);
+            }
         }
 
         private void cmdShowForm(string arg)
@@ -1709,40 +1731,44 @@ $"},
         }
         #endregion
 
-        bool cancel;
         protected override void OnClosing(CancelEventArgs e)
         {
-            cancel = false;
+            bool cancel = false;
+
+            // save modified query editors and add them to "lastopened" log.
             string openedFiles = "";
-            while (CurrEditor != null && !cancel)
+            for (int i = 0; i < tabControlEditors.TabPages.Count && !cancel; i++)
             {
+                tabControlEditors.SelectedIndex = i;
+
+                if (CurrEditor.Modified)
+                {
+                    DialogResult dr = MessageBox.Show("Would you like to save " + CurrEditor.GetName() + "?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    if (dr == DialogResult.Yes)
+                    {
+                        if (!CurrEditor.Save())
+                            cancel = true;
+                    }
+                    else if (dr == DialogResult.Cancel)
+                        cancel = true;
+                }
+
                 if (CurrEditor is SQLEditorAndResults && !string.IsNullOrEmpty((CurrEditor as SQLEditorAndResults).FilePath))
                     openedFiles += (CurrEditor as SQLEditorAndResults).FilePath + Environment.NewLine;
-                cmdCloseEditor("");
             }
-
             if (!cancel && openedFiles.Length > 0)
                 File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
 
-            Provider.SaveConnections();
+            // save connections
+            DialogResult dr2 = MessageBox.Show("Would you like to save current connections & metadata to the file: \n\n" + Provider.ConnectionsPath, "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (dr2 == DialogResult.Yes)
+                Provider.SaveConnections();
+            else if (dr2 == DialogResult.Cancel)
+                cancel = true;
 
             e.Cancel = cancel;
         }
 
-        private void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(e.Label))
-            {
-                if (e.Node.Tag is Table)
-                    (e.Node.Tag as Table).Name = e.Label;
-                else if (e.Node.Tag is Field)
-                    (e.Node.Tag as Field).Name = e.Label;
-                else if (e.Node.Tag is ConnectionSettings)
-                    (e.Node.Tag as ConnectionSettings).Database.Name = e.Label;
-                else if (e.Node.Tag is Diagram)
-                    (e.Node.Tag as Diagram).Name = e.Label;
-            }
-        }
         private void treeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Tag is Diagram)
@@ -1842,11 +1868,13 @@ $"},
         public static string ConnectionsPath;
         public static void LoadConnectionsFromXML(string path)
         {
-            if (path==ConnectionsPath && connectionsLooaded)
+            if (path == Provider.ConnectionsPath && connectionsLooaded)
                 return;
 
             if(string.IsNullOrEmpty(path))
-                ConnectionsPath = path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+                path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
+
+            Provider.ConnectionsPath = path;
 
             if (File.Exists(path))
             {
@@ -1855,10 +1883,10 @@ $"},
                 {
                     try
                     {
-                        Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
+                        Provider.Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
                     }
                     catch {
-                        MessageBox.Show("This is not a valid connection file", "Cinar");
+                        MessageBox.Show("This is not a valid connection file", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     foreach (ConnectionSettings cs in Connections)
                     {
@@ -1869,6 +1897,10 @@ $"},
                         cs.Database.CreateDbProvider(false);
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("File not found:\n" + path, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             connectionsLooaded = true;
         }

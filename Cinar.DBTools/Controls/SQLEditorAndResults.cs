@@ -155,6 +155,7 @@ namespace Cinar.DBTools.Controls
         public bool SaveAs()
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Query Files|*.sql";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 filePath = sfd.FileName;

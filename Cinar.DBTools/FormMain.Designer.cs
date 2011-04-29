@@ -100,6 +100,7 @@ namespace Cinar.DBTools
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNewConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenConnectionsFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveConnectionsAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
@@ -195,11 +196,11 @@ namespace Cinar.DBTools
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainerProperties);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(931, 808);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(979, 622);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(931, 882);
+            this.toolStripContainer1.Size = new System.Drawing.Size(979, 696);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -219,7 +220,7 @@ namespace Cinar.DBTools
             this.statusNumberOfRows});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(931, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(979, 24);
             this.statusStrip1.TabIndex = 0;
             // 
             // statusText
@@ -229,7 +230,7 @@ namespace Cinar.DBTools
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusText.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(699, 19);
+            this.statusText.Size = new System.Drawing.Size(747, 19);
             this.statusText.Spring = true;
             this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -285,8 +286,8 @@ namespace Cinar.DBTools
             this.splitContainerProperties.Panel2.Controls.Add(this.propertyGrid);
             this.splitContainerProperties.Panel2.Controls.Add(this.labelProperties);
             this.splitContainerProperties.Panel2MinSize = 22;
-            this.splitContainerProperties.Size = new System.Drawing.Size(931, 808);
-            this.splitContainerProperties.SplitterDistance = 749;
+            this.splitContainerProperties.Size = new System.Drawing.Size(979, 622);
+            this.splitContainerProperties.SplitterDistance = 786;
             this.splitContainerProperties.TabIndex = 1;
             // 
             // splitContainerMain
@@ -305,8 +306,8 @@ namespace Cinar.DBTools
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.btnCloseEditor);
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
-            this.splitContainerMain.Size = new System.Drawing.Size(749, 808);
-            this.splitContainerMain.SplitterDistance = 138;
+            this.splitContainerMain.Size = new System.Drawing.Size(786, 622);
+            this.splitContainerMain.SplitterDistance = 142;
             this.splitContainerMain.SplitterWidth = 5;
             this.splitContainerMain.TabIndex = 0;
             // 
@@ -322,7 +323,7 @@ namespace Cinar.DBTools
             this.labelConnections.Location = new System.Drawing.Point(0, 0);
             this.labelConnections.Name = "labelConnections";
             this.labelConnections.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.labelConnections.Size = new System.Drawing.Size(138, 20);
+            this.labelConnections.Size = new System.Drawing.Size(142, 20);
             this.labelConnections.TabIndex = 1;
             this.labelConnections.Text = "      Connections";
             // 
@@ -335,13 +336,11 @@ namespace Cinar.DBTools
             this.treeView.ContextMenuStrip = this.menuStripTree;
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.imageListTree;
-            this.treeView.LabelEdit = true;
             this.treeView.Location = new System.Drawing.Point(0, 19);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(138, 787);
+            this.treeView.Size = new System.Drawing.Size(142, 601);
             this.treeView.TabIndex = 0;
-            this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
             this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
@@ -380,7 +379,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 664);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 568);
             // 
             // menuConShowHiddenConnections
             // 
@@ -716,7 +715,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(570, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(599, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -732,7 +731,7 @@ namespace Cinar.DBTools
             this.tabControlEditors.Name = "tabControlEditors";
             this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
             this.tabControlEditors.SelectedIndex = 0;
-            this.tabControlEditors.Size = new System.Drawing.Size(606, 808);
+            this.tabControlEditors.Size = new System.Drawing.Size(639, 622);
             this.tabControlEditors.TabIndex = 1;
             // 
             // imageListTabs
@@ -748,7 +747,7 @@ namespace Cinar.DBTools
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid.Location = new System.Drawing.Point(3, 25);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(172, 780);
+            this.propertyGrid.Size = new System.Drawing.Size(183, 594);
             this.propertyGrid.TabIndex = 3;
             this.propertyGrid.ToolbarVisible = false;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
@@ -767,7 +766,7 @@ namespace Cinar.DBTools
             this.labelProperties.Location = new System.Drawing.Point(2, 3);
             this.labelProperties.Name = "labelProperties";
             this.labelProperties.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.labelProperties.Size = new System.Drawing.Size(173, 20);
+            this.labelProperties.Size = new System.Drawing.Size(184, 20);
             this.labelProperties.TabIndex = 2;
             this.labelProperties.Text = "      Properties";
             // 
@@ -783,7 +782,7 @@ namespace Cinar.DBTools
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(931, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(979, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -792,6 +791,7 @@ namespace Cinar.DBTools
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNewConnection,
             this.menuOpenConnectionsFile,
+            this.menuSaveConnectionsAs,
             this.toolStripSeparator3,
             this.menuOpen,
             this.menuSave,
@@ -814,6 +814,12 @@ namespace Cinar.DBTools
             this.menuOpenConnectionsFile.Name = "menuOpenConnectionsFile";
             this.menuOpenConnectionsFile.Size = new System.Drawing.Size(215, 22);
             this.menuOpenConnectionsFile.Text = "Open Connections File...";
+            // 
+            // menuSaveConnectionsAs
+            // 
+            this.menuSaveConnectionsAs.Name = "menuSaveConnectionsAs";
+            this.menuSaveConnectionsAs.Size = new System.Drawing.Size(215, 22);
+            this.menuSaveConnectionsAs.Text = "Save Connections as...";
             // 
             // toolStripSeparator3
             // 
@@ -1163,7 +1169,7 @@ namespace Cinar.DBTools
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(931, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(979, 25);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 1;
             // 
@@ -1349,7 +1355,7 @@ namespace Cinar.DBTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(931, 882);
+            this.ClientSize = new System.Drawing.Size(979, 696);
             this.Controls.Add(this.toolStripContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1521,6 +1527,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem moreDatabaseOperationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuConShowHiddenConnections;
         private System.Windows.Forms.ToolStripMenuItem menuConHideConnection;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveConnectionsAs;
 
     }
 }

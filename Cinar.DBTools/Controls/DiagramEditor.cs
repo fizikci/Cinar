@@ -107,7 +107,6 @@ namespace Cinar.DBTools.Controls
 
             if (conn.Schemas.IndexOf(CurrentSchema) == -1)
                 conn.Schemas.Add(CurrentSchema);
-            MainForm.SaveConnections();
             modified = false;
             return true;
         }

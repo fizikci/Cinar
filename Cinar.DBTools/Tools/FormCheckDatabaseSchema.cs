@@ -52,7 +52,6 @@ namespace Cinar.DBTools.Tools
         {
             foreach (Problem problem in lbProblems.SelectedItems)
                 problem.Fix();
-            MainForm.SaveConnections();
             checkDatabaseSchema();
         }
 
