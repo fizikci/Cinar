@@ -96,10 +96,10 @@ namespace Cinar.Database.Tools
                     else
                         dt = dbSrc.GetDataTable("select top " + pageSize + " * from " + tableName);
 
-                    DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + tableName);
+                    DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + prefix + tableName);
                     foreach (DataRow dr in dt.Rows)
                     {
-                        System.Collections.Hashtable drDest = new System.Collections.Hashtable();//newRow(dbDst, prefix + tableName);
+                        System.Collections.Hashtable drDest = new System.Collections.Hashtable();
                         foreach (DataColumn dc in dt.Columns)
                             if (!dr.IsNull(dc) && dtDestSample.Columns[dc.ColumnName] != null)
                             {
@@ -125,12 +125,6 @@ namespace Cinar.Database.Tools
                 }
                 logLine("");
             }
-        }
-
-        private DataRow newRow(Database db, string tableName) 
-        {
-            DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + tableName);
-            return dtDestSample.NewRow();
         }
 
         private void log(string str, params object[] values)

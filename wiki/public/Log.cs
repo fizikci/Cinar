@@ -117,3 +117,8 @@ G|2011/04/28 17:59:54|Page Cinar Database rebound|SYSTEM
 G|2011/04/28 18:04:18|Page update requested for Cinar Database|admin
 G|2011/04/28 18:04:18|Page Content updated for Cinar Database|SYSTEM
 G|2011/04/28 18:04:18|Page Cinar Database rebound|SYSTEM
+G|2011/04/29 01:23:11|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/04/29 01:23:11|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/04/29 01:23:11|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/04/29 01:23:11|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/04/29 01:23:11|ScrewTurn Wiki is ready|SYSTEM

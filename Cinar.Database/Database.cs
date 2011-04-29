@@ -670,13 +670,21 @@ namespace Cinar.Database
                 ht[dc.ColumnName] = dataRow[dc];
 
             int res = this.Insert(tableName, ht, bypassAutoIncrementField);
-            dataRow.AcceptChanges();
+            if (dataRow.RowState != DataRowState.Detached)
+                dataRow.AcceptChanges();
             
             return res;
         }
         public int Insert(string tableName, DataRow dataRow)
         {
             return this.Insert(tableName, dataRow, true);
+        }
+        public int Insert(string tableName, object record)
+        {
+            Hashtable ht = new Hashtable();
+            foreach (PropertyInfo pi in record.GetType().GetProperties())
+                ht[pi.Name] = pi.GetValue(record, null);
+            return Insert(tableName, ht);
         }
 
         public int Update(string tableName, Hashtable data, Hashtable originalData = null)

@@ -241,6 +241,13 @@ $"},
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "AfterSelect"}
                                  },
                      new Command {
+                                     Execute = cmdShowHiddenConnections,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuConShowHiddenConnections},
+                                     },
+                                     IsVisible = () => SelectedObject is List<ConnectionSettings>
+                                 },
+                     new Command {
                                      Execute = cmdNewConnection,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuConNewConnection},
@@ -263,6 +270,13 @@ $"},
                                          new CommandTrigger{ Control = btnDeleteConnection},
                                      },
                                      IsEnabled = () => SelectedObject is ConnectionSettings,
+                                     IsVisible = () => SelectedObject is ConnectionSettings
+                                 },
+                     new Command {
+                                     Execute = cmdHideConnection,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuConHideConnection},
+                                     },
                                      IsVisible = () => SelectedObject is ConnectionSettings
                                  },
                      new Command {
@@ -491,11 +505,7 @@ $"},
             Provider.LoadConnectionsFromXML(path);
             foreach (ConnectionSettings cs in Provider.Connections)
             {
-                TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
-                node.NodeFont = new System.Drawing.Font(treeView.Font, FontStyle.Underline);
-                node.Tag = cs;
-
-                cbActiveConnection.Items.Add(cs);
+                TreeNode node = createConnectionNode(cs);
                 populateTreeNodesForDatabase(node);
             }
             treeView.Sort();
@@ -504,6 +514,16 @@ $"},
                 rootNode.Nodes[0].Expand();
                 treeView.SelectedNode = rootNode.Nodes[0];
             }
+        }
+
+        private TreeNode createConnectionNode(ConnectionSettings cs)
+        {
+            TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
+            node.NodeFont = new System.Drawing.Font(treeView.Font, FontStyle.Underline);
+            node.Tag = cs;
+
+            cbActiveConnection.Items.Add(cs);
+            return node;
         }
 
         public void SaveConnections()
@@ -842,6 +862,28 @@ $"},
             ofd.Filter = "Connection Files|*.xml";
             if (ofd.ShowDialog() == DialogResult.OK)
                 showConnections(ofd.FileName);
+        }
+
+        private void cmdShowHiddenConnections(string arg)
+        {
+            foreach (ConnectionSettings cs in Provider.Connections)
+            {
+                TreeNode tn = findNode(treeView.Nodes, t => t.Tag == cs);
+                if (tn == null)
+                {
+                    tn = createConnectionNode(cs);
+                    populateTreeNodesForDatabase(tn);
+                }
+            }
+        }
+
+        private void cmdHideConnection(string arg)
+        {
+            ConnectionSettings cs = SelectedObject as ConnectionSettings;
+            if (cs == null) return;
+
+            treeView.SelectedNode.Remove();
+            cbActiveConnection.Items.Remove(cs);
         }
 
         private void cmdNewConnection(string arg)
@@ -1759,7 +1801,10 @@ $"},
 
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
+            if (propertyGrid.SelectedObject is Field && e.ChangedItem.Label == "ReferenceFieldName")
+                ;
+            else
+                e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
         }
 
         public object SelectedObject;

@@ -43,24 +43,27 @@ namespace Cinar.DBTools
             this.labelConnections = new System.Windows.Forms.Label();
             this.treeView = new System.Windows.Forms.TreeView();
             this.menuStripTree = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuConShowHiddenConnections = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConNewConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConEditConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConDeleteConnection = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConHideConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConRefreshMetadata = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConCreateDatabase = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConDropDatabase = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConTruncateDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.moreDatabaseOperationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConEmptyDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConTruncateDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConDropDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConCreateDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConBackupDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConTransferDatabase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuConExecuteSQLFromFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConCreate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBCreateTable = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBCreateView = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBCreateTrigger = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBCreateSProc = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDBCreateFunction = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConBackupDatabase = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConTransferDatabase = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuConExecuteSQLFromFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConShowDatabaseERDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDiagramNew = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDiagramOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -192,11 +195,11 @@ namespace Cinar.DBTools
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainerProperties);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1109, 625);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(931, 808);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1109, 699);
+            this.toolStripContainer1.Size = new System.Drawing.Size(931, 882);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -216,7 +219,7 @@ namespace Cinar.DBTools
             this.statusNumberOfRows});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1109, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(931, 24);
             this.statusStrip1.TabIndex = 0;
             // 
             // statusText
@@ -226,7 +229,7 @@ namespace Cinar.DBTools
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusText.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(877, 19);
+            this.statusText.Size = new System.Drawing.Size(699, 19);
             this.statusText.Spring = true;
             this.statusText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -282,8 +285,8 @@ namespace Cinar.DBTools
             this.splitContainerProperties.Panel2.Controls.Add(this.propertyGrid);
             this.splitContainerProperties.Panel2.Controls.Add(this.labelProperties);
             this.splitContainerProperties.Panel2MinSize = 22;
-            this.splitContainerProperties.Size = new System.Drawing.Size(1109, 625);
-            this.splitContainerProperties.SplitterDistance = 893;
+            this.splitContainerProperties.Size = new System.Drawing.Size(931, 808);
+            this.splitContainerProperties.SplitterDistance = 749;
             this.splitContainerProperties.TabIndex = 1;
             // 
             // splitContainerMain
@@ -302,8 +305,8 @@ namespace Cinar.DBTools
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.btnCloseEditor);
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
-            this.splitContainerMain.Size = new System.Drawing.Size(893, 625);
-            this.splitContainerMain.SplitterDistance = 165;
+            this.splitContainerMain.Size = new System.Drawing.Size(749, 808);
+            this.splitContainerMain.SplitterDistance = 138;
             this.splitContainerMain.SplitterWidth = 5;
             this.splitContainerMain.TabIndex = 0;
             // 
@@ -319,7 +322,7 @@ namespace Cinar.DBTools
             this.labelConnections.Location = new System.Drawing.Point(0, 0);
             this.labelConnections.Name = "labelConnections";
             this.labelConnections.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.labelConnections.Size = new System.Drawing.Size(165, 20);
+            this.labelConnections.Size = new System.Drawing.Size(138, 20);
             this.labelConnections.TabIndex = 1;
             this.labelConnections.Text = "      Connections";
             // 
@@ -336,7 +339,7 @@ namespace Cinar.DBTools
             this.treeView.Location = new System.Drawing.Point(0, 19);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(165, 604);
+            this.treeView.Size = new System.Drawing.Size(138, 787);
             this.treeView.TabIndex = 0;
             this.treeView.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_AfterLabelEdit);
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
@@ -347,19 +350,15 @@ namespace Cinar.DBTools
             // 
             this.menuStripTree.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.menuStripTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuConShowHiddenConnections,
             this.menuConNewConnection,
             this.menuConEditConnection,
             this.menuConDeleteConnection,
+            this.menuConHideConnection,
             this.menuConRefresh,
             this.menuConRefreshMetadata,
-            this.menuConCreateDatabase,
-            this.menuConDropDatabase,
-            this.menuConTruncateDatabase,
-            this.menuConEmptyDatabase,
+            this.moreDatabaseOperationsToolStripMenuItem,
             this.menuConCreate,
-            this.menuConBackupDatabase,
-            this.menuConTransferDatabase,
-            this.menuConExecuteSQLFromFile,
             this.menuConShowDatabaseERDiagram,
             this.menuDiagramNew,
             this.menuDiagramOpen,
@@ -381,7 +380,13 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 664);
+            // 
+            // menuConShowHiddenConnections
+            // 
+            this.menuConShowHiddenConnections.Name = "menuConShowHiddenConnections";
+            this.menuConShowHiddenConnections.Size = new System.Drawing.Size(265, 22);
+            this.menuConShowHiddenConnections.Text = "Show Hidden Connections";
             // 
             // menuConNewConnection
             // 
@@ -404,6 +409,12 @@ namespace Cinar.DBTools
             this.menuConDeleteConnection.Size = new System.Drawing.Size(265, 22);
             this.menuConDeleteConnection.Text = "Delete Connection";
             // 
+            // menuConHideConnection
+            // 
+            this.menuConHideConnection.Name = "menuConHideConnection";
+            this.menuConHideConnection.Size = new System.Drawing.Size(265, 22);
+            this.menuConHideConnection.Text = "Hide Connection";
+            // 
             // menuConRefresh
             // 
             this.menuConRefresh.Image = ((System.Drawing.Image)(resources.GetObject("menuConRefresh.Image")));
@@ -418,29 +429,61 @@ namespace Cinar.DBTools
             this.menuConRefreshMetadata.Size = new System.Drawing.Size(265, 22);
             this.menuConRefreshMetadata.Text = "Refresh Metadata";
             // 
-            // menuConCreateDatabase
+            // moreDatabaseOperationsToolStripMenuItem
             // 
-            this.menuConCreateDatabase.Name = "menuConCreateDatabase";
-            this.menuConCreateDatabase.Size = new System.Drawing.Size(265, 22);
-            this.menuConCreateDatabase.Text = "Create Database...";
-            // 
-            // menuConDropDatabase
-            // 
-            this.menuConDropDatabase.Name = "menuConDropDatabase";
-            this.menuConDropDatabase.Size = new System.Drawing.Size(265, 22);
-            this.menuConDropDatabase.Text = "Drop Database";
-            // 
-            // menuConTruncateDatabase
-            // 
-            this.menuConTruncateDatabase.Name = "menuConTruncateDatabase";
-            this.menuConTruncateDatabase.Size = new System.Drawing.Size(265, 22);
-            this.menuConTruncateDatabase.Text = "Truncate Database";
+            this.moreDatabaseOperationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuConEmptyDatabase,
+            this.menuConTruncateDatabase,
+            this.menuConDropDatabase,
+            this.menuConCreateDatabase,
+            this.menuConBackupDatabase,
+            this.menuConTransferDatabase,
+            this.menuConExecuteSQLFromFile});
+            this.moreDatabaseOperationsToolStripMenuItem.Name = "moreDatabaseOperationsToolStripMenuItem";
+            this.moreDatabaseOperationsToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
+            this.moreDatabaseOperationsToolStripMenuItem.Text = "More Database Operations";
             // 
             // menuConEmptyDatabase
             // 
             this.menuConEmptyDatabase.Name = "menuConEmptyDatabase";
-            this.menuConEmptyDatabase.Size = new System.Drawing.Size(265, 22);
+            this.menuConEmptyDatabase.Size = new System.Drawing.Size(213, 22);
             this.menuConEmptyDatabase.Text = "Empty Database";
+            // 
+            // menuConTruncateDatabase
+            // 
+            this.menuConTruncateDatabase.Name = "menuConTruncateDatabase";
+            this.menuConTruncateDatabase.Size = new System.Drawing.Size(213, 22);
+            this.menuConTruncateDatabase.Text = "Truncate Database";
+            // 
+            // menuConDropDatabase
+            // 
+            this.menuConDropDatabase.Name = "menuConDropDatabase";
+            this.menuConDropDatabase.Size = new System.Drawing.Size(213, 22);
+            this.menuConDropDatabase.Text = "Drop Database";
+            // 
+            // menuConCreateDatabase
+            // 
+            this.menuConCreateDatabase.Name = "menuConCreateDatabase";
+            this.menuConCreateDatabase.Size = new System.Drawing.Size(213, 22);
+            this.menuConCreateDatabase.Text = "Create Database...";
+            // 
+            // menuConBackupDatabase
+            // 
+            this.menuConBackupDatabase.Name = "menuConBackupDatabase";
+            this.menuConBackupDatabase.Size = new System.Drawing.Size(213, 22);
+            this.menuConBackupDatabase.Text = "Backup Database...";
+            // 
+            // menuConTransferDatabase
+            // 
+            this.menuConTransferDatabase.Name = "menuConTransferDatabase";
+            this.menuConTransferDatabase.Size = new System.Drawing.Size(213, 22);
+            this.menuConTransferDatabase.Text = "Transfer Database...";
+            // 
+            // menuConExecuteSQLFromFile
+            // 
+            this.menuConExecuteSQLFromFile.Name = "menuConExecuteSQLFromFile";
+            this.menuConExecuteSQLFromFile.Size = new System.Drawing.Size(213, 22);
+            this.menuConExecuteSQLFromFile.Text = "Execute SQL From File...";
             // 
             // menuConCreate
             // 
@@ -483,24 +526,6 @@ namespace Cinar.DBTools
             this.menuDBCreateFunction.Name = "menuDBCreateFunction";
             this.menuDBCreateFunction.Size = new System.Drawing.Size(188, 22);
             this.menuDBCreateFunction.Text = "Function...";
-            // 
-            // menuConBackupDatabase
-            // 
-            this.menuConBackupDatabase.Name = "menuConBackupDatabase";
-            this.menuConBackupDatabase.Size = new System.Drawing.Size(265, 22);
-            this.menuConBackupDatabase.Text = "Backup Database...";
-            // 
-            // menuConTransferDatabase
-            // 
-            this.menuConTransferDatabase.Name = "menuConTransferDatabase";
-            this.menuConTransferDatabase.Size = new System.Drawing.Size(265, 22);
-            this.menuConTransferDatabase.Text = "Transfer Database...";
-            // 
-            // menuConExecuteSQLFromFile
-            // 
-            this.menuConExecuteSQLFromFile.Name = "menuConExecuteSQLFromFile";
-            this.menuConExecuteSQLFromFile.Size = new System.Drawing.Size(265, 22);
-            this.menuConExecuteSQLFromFile.Text = "Execute SQL From File...";
             // 
             // menuConShowDatabaseERDiagram
             // 
@@ -691,7 +716,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(694, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(570, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
@@ -707,7 +732,7 @@ namespace Cinar.DBTools
             this.tabControlEditors.Name = "tabControlEditors";
             this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
             this.tabControlEditors.SelectedIndex = 0;
-            this.tabControlEditors.Size = new System.Drawing.Size(723, 625);
+            this.tabControlEditors.Size = new System.Drawing.Size(606, 808);
             this.tabControlEditors.TabIndex = 1;
             // 
             // imageListTabs
@@ -723,7 +748,7 @@ namespace Cinar.DBTools
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid.Location = new System.Drawing.Point(3, 25);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(206, 597);
+            this.propertyGrid.Size = new System.Drawing.Size(172, 780);
             this.propertyGrid.TabIndex = 3;
             this.propertyGrid.ToolbarVisible = false;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
@@ -742,7 +767,7 @@ namespace Cinar.DBTools
             this.labelProperties.Location = new System.Drawing.Point(2, 3);
             this.labelProperties.Name = "labelProperties";
             this.labelProperties.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.labelProperties.Size = new System.Drawing.Size(207, 20);
+            this.labelProperties.Size = new System.Drawing.Size(173, 20);
             this.labelProperties.TabIndex = 2;
             this.labelProperties.Text = "      Properties";
             // 
@@ -758,7 +783,7 @@ namespace Cinar.DBTools
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1109, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(931, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1138,7 +1163,7 @@ namespace Cinar.DBTools
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1109, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(931, 25);
             this.toolStrip1.Stretch = true;
             this.toolStrip1.TabIndex = 1;
             // 
@@ -1324,7 +1349,7 @@ namespace Cinar.DBTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1109, 699);
+            this.ClientSize = new System.Drawing.Size(931, 882);
             this.Controls.Add(this.toolStripContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1493,6 +1518,9 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuAddEditor;
         private System.Windows.Forms.ToolStripMenuItem menuExecuteSQL;
         private System.Windows.Forms.ToolStripMenuItem menuExecuteScript;
+        private System.Windows.Forms.ToolStripMenuItem moreDatabaseOperationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuConShowHiddenConnections;
+        private System.Windows.Forms.ToolStripMenuItem menuConHideConnection;
 
     }
 }
