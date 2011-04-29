@@ -708,12 +708,6 @@ namespace Cinar.Database
                 if (fld.IsAutoIncrement) continue;
                 if (data.ContainsKey(fld.Name) && data[fld.Name]!=null)
                 {
-                    // if field is reference and the value equals 0, continue
-                    //if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
-                    //{
-                    //    int refId = (int)data[fld.Name];
-                    //    if (refId == 0) continue; //***
-                    //}
                     sb.AppendFormat("[{0}] = @_{0}", fld.Name);
                     sb.Append(", ");
                 }
@@ -722,9 +716,9 @@ namespace Cinar.Database
 
             Field[] whereFields = null;
 
-            if(tbl.PrimaryField!=null)
+            if (tbl.PrimaryField != null && data.ContainsKey(tbl.PrimaryField.Name) && data[tbl.PrimaryField.Name]!=null)
                 sb.AppendFormat(" WHERE [{0}]=@_{0}", tbl.PrimaryField.Name);
-            else if(originalData==null)
+            else if (originalData == null)
                 throw new Exception("Update failed because there is no primary field OR original data.");
             else
             {

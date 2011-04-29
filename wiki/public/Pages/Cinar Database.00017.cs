@@ -1,5 +1,5 @@
 Cinar Database
-admin|2011/04/29 12:48:24
+admin|2011/04/29 12:46:05
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
@@ -86,6 +86,14 @@ else
 		Console.WriteLine("Başka bir tabloya referans? : " + fld.ReferenceField);
 	} 
 }@@
+
+'''Insert / Update sorguları'''
+
+@@
+DataRow dr = db.GetDataRow("select * from Musteri");
+dr["Ad"] = "Adı değiştirdik";
+db.Update("Musteri", dr); // Musteri tablosunda update Musteri set Ad = 'Adı değiştirdik' where Id = xx; sorgusunu çalıştırır.
+@@
 
 <nowiki>
 <!--iframe title="YouTube video player" width="480" height="390" src="http://www.youtube.com/embed/fFzswnSpB64" frameborder="0" allowfullscreen></iframe-->
