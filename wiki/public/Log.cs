@@ -175,3 +175,12 @@ G|2011/04/30 02:54:25|User admin logged in through cookie|SYSTEM
 G|2011/04/30 03:24:07|Page update requested for Cinar Database|admin
 G|2011/04/30 03:24:07|Page Content updated for Cinar Database|SYSTEM
 G|2011/04/30 03:24:07|Page Cinar Database rebound|SYSTEM
+G|2011/04/30 11:01:57|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/04/30 11:01:57|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/04/30 11:01:57|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/04/30 11:01:57|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/04/30 11:01:57|ScrewTurn Wiki is ready|SYSTEM
+G|2011/04/30 11:05:01|User admin logged in|SYSTEM
+G|2011/04/30 11:05:29|Page update requested for Cinar Database|admin
+G|2011/04/30 11:05:30|Page Content updated for Cinar Database|SYSTEM
+G|2011/04/30 11:05:30|Page Cinar Database rebound|SYSTEM
