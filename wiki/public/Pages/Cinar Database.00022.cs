@@ -1,11 +1,11 @@
 Cinar Database
-admin|2011/04/30 03:24:07
+admin|2011/04/30 02:07:25
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
 
 ==Özellikler==
-* '''Database abstraction''': MySQL, MS SQL Server ve PostgreSQL ile çalışabilir. <nowiki>(<a href="javascript:showScreenCast('Database Abstraction', 'http://www.youtube.com/embed/fFzswnSpB64')">İzle</a>)</nowiki>
+* '''Database abstraction''': MySQL, MS SQL Server ve PostgreSQL ile çalışabilir. <nowiki>(<a href="javascript:showScreenCast('Cinar_Database_Introduction')">İzle</a>)</nowiki>
 * '''Veritabanı metedatasına erişim''': Veritabanında tanımlı olan tablo, field, index gibi nesnelere ait detaylı bilgi sağlıyor.
 * '''SQL Generation''': Metadatadan "create table", "insert", "update" gibi SQL scriptlerini üretebiliyor
 * '''Transaction'''lı veya transactionsız çalışabilir. (Özellikle web uygulamalarında performansı arttırmak için transaction'ı kapatmak gerekli olabilir)
@@ -22,7 +22,7 @@ Execute metoduna parametre olarak geçilen bir "lambda ifadesini" bir transactio
 
 ==Kod Örnekleri==
 
-====Veritabanına bağlanma====
+===Veritabanına bağlanma===
 
 @@Database db = new Database(Provider.MySQL, host, dbName, userName, password, 30);@@
 
@@ -30,7 +30,7 @@ Execute metoduna parametre olarak geçilen bir "lambda ifadesini" bir transactio
 
 Bu sayede "MySQL, Postgre veya MS SQL'de connection string nasıl yazılıyordu" diye düşünmemize gerek kalmıyor.
 
-====Basit sorgular====
+'''Basit sorgular'''
 
 @@
 string version = db.GetString("select version()");
@@ -39,7 +39,7 @@ DataTable dt = db.GetDataTable("select Id, Ad from Kisi");
 
 Veritabanından bir DataTable okumak için SQLConnection ve SQLDataAdapter kullanarak DataTable'i Fill() etmekle kim uğraşır?
 
-====Insert====
+'''Insert'''
 
 @@
 Hashtable record = new Hashtable();
@@ -49,7 +49,7 @@ db.Insert("Kisi", record);
 
 Insert sql yazmak için uğraşmaya gerek yok, Insert metodu INSERT sorgusunu nasıl oluşturacağını biliyor.
 
-====Update====
+'''Update'''
 
 @@
 DataRow dr = db.GetDataRow("select * from Kisi where Id=1");
@@ -59,7 +59,7 @@ db.Update("Kisi", dr);
 
 Update sorgusu da yazmaya gerek yok. (Eğer ORM yöntemini kullanırsak, DataRow veya Hashtable'lar ile de uğraşmaya gerek yok.)
 
-====Metadataya erişim====
+'''Metadataya erişim'''
 
 @@// tabloları listeleyelim:
 foreach( Table tbl in db.Tables )
@@ -91,3 +91,7 @@ else
 		Console.WriteLine("Başka bir tabloya referans? : " + fld.ReferenceField);
 	} 
 }@@
+
+<nowiki>
+<!--iframe title="YouTube video player" width="480" height="390" src="http://www.youtube.com/embed/fFzswnSpB64" frameborder="0" allowfullscreen></iframe-->
+</nowiki>

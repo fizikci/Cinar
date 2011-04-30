@@ -88,4 +88,19 @@ Other:
 8. Diagram penceresinde açılan context menünün ve komutların düzgün çalışması
 9. Herşey index değil. Index ve constraintleri birbirinden ayır.
 	Constraints: Primary Key, Unique, Foreign Key
-	Indexes: 
+	Indexes: (yukardakiler constraint ise index ne o zaman?)
+
+
+PARLAK FİKİR:
+
+- Bir SQL Server yazalım.
+- Herhangi bir data kaynağı tablo olarak tanımlanabilsin.
+- Mesela bir POP3 hesabındaki emailler ya da bir dizindeki dosyalar ya da bir veritabanındaki tablo.
+- Bunlar SQL ile sorgulanabilsin join edilebilsin.
+- Tüm veri kaynaklarını SQL ile sorgulayabilen bir "Çınar SQL Data Server".
+- Bence süper!
+
+SELECT: POP3 hesabındaki emailleri okur veya bir dizindeki dosyaların listesini alır
+INSERT: mail gönderir veya dosya oluşturur
+DELETE: mail veya dosya siler
+UPDATE: maili okundu olarak işaretleyebilir, dosyaya data ekleyebilir
