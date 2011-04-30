@@ -500,17 +500,23 @@ $"},
 
         protected override void OnLoad(EventArgs e)
         {
-            addSQLEditor("", "");
-            timer.Enabled = true;
-
-            if (File.Exists(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt"))
+            bool isAnyEditorOpened = false;
+            string lastOpenedFilePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt";
+            if (File.Exists(lastOpenedFilePath))
             {
-                string[] files = File.ReadAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt").Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+                string[] files = File.ReadAllText(lastOpenedFilePath).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var file in files)
-                {
-                    addSQLEditor(file, "");
-                }
+                    if (File.Exists(file))
+                    {
+                        addSQLEditor(file, "");
+                        isAnyEditorOpened = true;
+                    }
             }
+
+            if(!isAnyEditorOpened)
+                addSQLEditor("", "");
+
+            timer.Enabled = true;
         }
 
 
@@ -824,7 +830,7 @@ $"},
         }
         private void cmdRefreshMetadata(string arg)
         {
-            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\n This may result in loss of some of your later added metadata.\n (such as UI metadata, and foreign relationships)\n\n Continue?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\nThis may result in loss of unsaved metadata changes.\n\nContinue?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Database.Database oldDb = Provider.Database;
                 Provider.ActiveConnection.RefreshDatabaseSchema();

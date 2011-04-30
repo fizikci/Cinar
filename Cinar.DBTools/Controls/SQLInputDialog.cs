@@ -17,6 +17,7 @@ namespace Cinar.DBTools.Controls
 
             txtCode.Text = sql;
             txtCode.Document.ReadOnly = readOnly;
+            label1.Text = string.Format(label1.Text, Provider.ActiveConnection);
         }
 
         public string SQL

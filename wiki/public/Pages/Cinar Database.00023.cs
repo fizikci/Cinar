@@ -1,11 +1,11 @@
 Cinar Database
-admin|2011/04/30 03:24:07
+admin|2011/04/30 02:09:13
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
 
 ==Özellikler==
-* '''Database abstraction''': MySQL, MS SQL Server ve PostgreSQL ile çalışabilir. <nowiki>(<a href="javascript:showScreenCast('Database Abstraction', 'http://www.youtube.com/embed/fFzswnSpB64')">İzle</a>)</nowiki>
+* '''Database abstraction''': MySQL, MS SQL Server ve PostgreSQL ile çalışabilir. <nowiki>(<a href="javascript:showScreenCast('Cinar_Database_Introduction')">İzle</a>)</nowiki>
 * '''Veritabanı metedatasına erişim''': Veritabanında tanımlı olan tablo, field, index gibi nesnelere ait detaylı bilgi sağlıyor.
 * '''SQL Generation''': Metadatadan "create table", "insert", "update" gibi SQL scriptlerini üretebiliyor
 * '''Transaction'''lı veya transactionsız çalışabilir. (Özellikle web uygulamalarında performansı arttırmak için transaction'ı kapatmak gerekli olabilir)
@@ -91,3 +91,7 @@ else
 		Console.WriteLine("Başka bir tabloya referans? : " + fld.ReferenceField);
 	} 
 }@@
+
+<nowiki>
+<!--iframe title="YouTube video player" width="480" height="390" src="http://www.youtube.com/embed/fFzswnSpB64" frameborder="0" allowfullscreen></iframe-->
+</nowiki>
