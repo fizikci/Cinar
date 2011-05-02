@@ -146,23 +146,6 @@ namespace Cinar.Database
         {
             return this.Name;// this.Table.Name + "." + this.Name + " : " + this.FieldType;
         }
-        //public string ToDDL()
-        //{
-        //    string str = this.Name + " " + this.Table.Database.dbProvider.DbTypeToString(this.FieldType);
-        //    if (this.Length > 0 && (FieldType == DbType.Char || FieldType == DbType.VarChar || FieldType == DbType.NChar || FieldType == DbType.NVarChar))
-        //        str += "(" + this.Length + ")";
-        //    if (this.IsAutoIncrement)
-        //        str += " IDENTITY";
-        //    if (!this.IsNullable)
-        //        str += " NOT NULL";
-        //    if (this.IsPrimaryKey)
-        //        str += " PRIMARY KEY";
-        //    if (!string.IsNullOrEmpty(this.DefaultValue))
-        //        str += " DEFAULT " + this.DefaultValue;
-        //    if (this.ReferenceField != null)
-        //        str += " REFERENCES [" + this.ReferenceField.Table.Name + "](" + this.ReferenceField.Name + ")";
-        //    return str;
-        //}
 
         internal string GetDefaultValueQuoted()
         {

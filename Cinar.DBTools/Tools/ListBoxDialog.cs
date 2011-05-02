@@ -19,6 +19,8 @@ namespace Cinar.DBTools.Tools
 
         public ListBox ListBox { get{ return lbTables;} }
 
+        public string Message { get { return label1.Text; } set { label1.Text = value; } }
+
         public List<T> GetSelectedItems<T>() 
         {
             return lbTables.SelectedItems.Cast<T>().ToList();

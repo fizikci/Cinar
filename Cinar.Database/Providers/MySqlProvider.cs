@@ -389,7 +389,7 @@ namespace Cinar.Database.Providers
         public string GetFieldDDL(Field field)
         {
             StringBuilder fieldDDL = new StringBuilder();
-            string fieldTypeName = field.Table.Database.dbProvider.DbTypeToString(field.FieldType).ToLowerInvariant();
+            string fieldTypeName = DbTypeToString(field.FieldType).ToLowerInvariant();
             fieldDDL.Append("`" + field.Name + "` " + fieldTypeName);
             if (fieldTypeName == "char" || fieldTypeName == "varchar" || fieldTypeName == "nchar" || fieldTypeName == "nvarchar")
                 fieldDDL.Append("(" + (field.Length == 0 ? 50 : field.Length) + ")");

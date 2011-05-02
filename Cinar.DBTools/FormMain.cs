@@ -930,7 +930,7 @@ $"},
                 f.txtUserName.Text = curr.UserName;
             }
 
-            if (f.ShowDialog() == DialogResult.OK)
+            while (f.ShowDialog() == DialogResult.OK)
             {
                 ConnectionSettings cs = new ConnectionSettings();
                 cs.DbName = f.txtDBName.Text;
@@ -938,14 +938,24 @@ $"},
                 cs.Password = f.txtPassword.Text;
                 cs.Provider = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), f.cbProvider.SelectedItem.ToString());
                 cs.UserName = f.txtUserName.Text;
-                cs.RefreshDatabaseSchema();
-                Provider.Connections.Add(cs);
-                TreeNode tn = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
-                tn.Tag = cs;
-                tn.NodeFont = new Font(this.Font, FontStyle.Underline);
-                cbActiveConnection.Items.Add(cs);
-                treeView.SelectedNode = tn;
-                tn.Expand();
+                cs.CreateDatabaseIfNotExist = f.cbCreateDatabase.Checked;
+                try
+                {
+                    cs.RefreshDatabaseSchema();
+                    Provider.Connections.Add(cs);
+                    TreeNode tn = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
+                    tn.Tag = cs;
+                    tn.NodeFont = new Font(this.Font, FontStyle.Underline);
+                    cbActiveConnection.Items.Add(cs);
+                    treeView.SelectedNode = tn;
+                    tn.Expand();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    f.DialogResult = DialogResult.None;
+                }
             }
         }
         private void cmdEditConnection(string arg)
@@ -957,15 +967,24 @@ $"},
             f.txtPassword.Text = cs.Password;
             f.cbProvider.SelectedItem = cs.Provider.ToString();
             f.txtUserName.Text = cs.UserName;
-            if (f.ShowDialog() == DialogResult.OK)
+            while (f.ShowDialog() == DialogResult.OK)
             {
                 cs.DbName = f.txtDBName.Text;
                 cs.Host = f.txtHost.Text;
                 cs.Password = f.txtPassword.Text;
                 cs.Provider = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), f.cbProvider.SelectedItem.ToString());
                 cs.UserName = f.txtUserName.Text;
-                treeView.SelectedNode.Name = treeView.SelectedNode.Text = cs.ToString();
-                cs.RefreshDatabaseSchema();
+                try
+                {
+                    cs.RefreshDatabaseSchema();
+                    treeView.SelectedNode.Name = treeView.SelectedNode.Text = cs.ToString();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    f.DialogResult = DialogResult.None;
+                }
             }
         }
         private void cmdDeleteConnection(string arg)
@@ -1674,10 +1693,17 @@ $"},
             Index index = SelectedObject as Index;
             if (MessageBox.Show(string.Format("Index \"{0}\" on \"{1}\" will be dropped.\n\nContinue?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                int i = Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
-                table.Indices.Remove(index);
-                cmdRefresh(null);
-                CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
+                try
+                {
+                    Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
+                    table.Indices.Remove(index);
+                    cmdRefresh(null);
+                    CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
+                }
+                catch (Exception ex)
+                {
+                    CurrSQLEditor.ShowInfoText(ex.Message);
+                }
             }
         }
 
@@ -1894,13 +1920,10 @@ $"},
                     catch {
                         MessageBox.Show("This is not a valid connection file", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+
                     foreach (ConnectionSettings cs in Connections)
                     {
-                        if (cs.Database == null)
-                            cs.RefreshDatabaseSchema();
-                        cs.Database.SetCollectionParents();
-                        cs.Database.SetConnectionString(cs.Provider, cs.Host, cs.DbName, cs.UserName, cs.Password, 30);
-                        cs.Database.CreateDbProvider(false);
+                        cs.InitializeDatabase();
                     }
                 }
             }
@@ -1933,16 +1956,24 @@ $"},
         public string UserName { get; set; }
         [PasswordPropertyText(true), ReadOnly(true), Description("User password of the current connection")]
         public string Password { get; set; }
+        [XmlIgnore, Browsable(false)]
+        public bool CreateDatabaseIfNotExist { get; set; }
 
         public Database.Database Database;
         public List<Diagram> Schemas = new List<Diagram>();
 
-        public void RefreshDatabaseSchema()
+        public void InitializeDatabase()
         {
-            //if (Database == null)
-                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30);
-            //else
-            //    Database.Refresh();
+            if (Database == null)
+            {
+                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
+            }
+            else
+            {
+                Database.SetConnectionString(Provider, Host, DbName, UserName, Password, 30);
+                Database.SetCollectionParents();
+                Database.CreateDbProvider(false);
+            }
         }
 
         public override string ToString()
@@ -1955,9 +1986,14 @@ $"},
             }
             else
                 toStr += Host;
-            //toStr += " (" + Provider + ")";
+            toStr += " (" + Provider + ")";
 
             return toStr;
+        }
+
+        public void RefreshDatabaseSchema()
+        {
+            Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
         }
     }
 }

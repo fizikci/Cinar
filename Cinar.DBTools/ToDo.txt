@@ -90,6 +90,9 @@ Other:
 	Constraints: Primary Key, Unique, Foreign Key
 	Indexes: (yukardakiler constraint ise index ne o zaman?)
 
+Testler:
+1. Her provider üzerine (create, alter, drop) x (database, table, view, field, index
+
 
 PARLAK FİKİR:
 

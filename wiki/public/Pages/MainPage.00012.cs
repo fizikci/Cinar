@@ -1,5 +1,5 @@
 Çınar Teknoloji
-admin|2011/05/01 20:16:54
+admin|2011/05/01 12:54:07
 ##PAGE##
 Çınar Teknoloji, yaşları 40'a dayanmış birkaç yazılımcının tecrübeleriyle zaman içinde geliştirdiği açık kaynaklı bir yazılım kütüphanesidir.
 
@@ -7,7 +7,7 @@ Bu kütüphane aşağıdaki teknolojileri sağlar:
 
 <div class="cbox">
 <div class="icon"><img alt="" src="/Images/cinar/cinar.database.png"></div>
-<h3>[Cinar Database|Çınar Database]</h3>
+<h3>[Cinar Database]</h3>
 <h4>Table veya object oriented!</h4>
 <p>MySQL, PostgreSQL, MS SQL farketmez. Hepsine aynı arabirimden erişin, metadata ile generic kodlar yazmanın tadını çıkarın.</p></div>
 <div class="cbox">
@@ -53,5 +53,3 @@ Template hazırlamaya ve çalıştırmaya yarar
 
 * '''[Cinar WinApp]'''
 Windows desktop tabanlı data-centric uygulamalar geliştirmeye yarar
-
-[Database Comparison]

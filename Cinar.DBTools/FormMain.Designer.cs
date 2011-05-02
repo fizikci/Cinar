@@ -715,7 +715,7 @@ namespace Cinar.DBTools
             this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(599, 4);
+            this.btnCloseEditor.Location = new System.Drawing.Point(598, 4);
             this.btnCloseEditor.Name = "btnCloseEditor";
             this.btnCloseEditor.Size = new System.Drawing.Size(19, 18);
             this.btnCloseEditor.TabIndex = 1;
