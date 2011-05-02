@@ -8,8 +8,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=8" />
     <title runat="server">Title</title>
     <link href="/JS/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" />
+    <link href="/Themes/cinar.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+	<div id="topbar"></div>
     <form runat="server" id="FrmMaster">
 		<asp:Literal ID="lblStrings" runat="server" EnableViewState="false" />
 		<script type="text/javascript">
@@ -25,24 +27,14 @@
     
         <div id="HeaderDiv">
             <asp:Literal ID="lblHeaderDiv" runat="server" EnableViewState="false" />
+			<a title="Çınar Teknoloji" href="http://www.cinarteknoloji.com/" id="logo"><span>Çınar Teknoloji</span></a>
+			<div id="mainMenu"><asp:Literal ID="lblSidebarDiv" runat="server" EnableViewState="false" /></div>
         </div>
                    
         <div id="ContainerDiv">
-                 
-            <div id="SidebarDiv">
-                <div id="SidebarHeaderDiv">
-                    <!-- Used for layout purposes only -->
-                </div>
-                <div id="SidebarContentDiv">
-                    <asp:Literal ID="lblSidebarDiv" runat="server" EnableViewState="false" />
-                </div>
-                <div id="SidebarFooterDiv">
-                    <!-- Used for layout purposes only -->
-                </div>
-            </div>
+			<%= (Request.RawUrl.Contains("MainPage.ashx") || Request.RawUrl.Contains("Default.aspx")) ? "<img id=\"splash\" height=\"399\" width=\"910\" src=\"/Images/cinar/design/splash.jpg\"/>" : "" %>
             <div id="MainDiv">
                 <div id="MainHeaderDiv">
-                    <!-- Used for layout purposes only -->
                 </div>
                 <asp:Literal ID="lblPageHeaderDiv" runat="server" EnableViewState="false" />
                 <asp:contentplaceholder id="CphMaster" runat="server" />

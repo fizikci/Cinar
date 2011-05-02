@@ -386,7 +386,8 @@ namespace Cinar.Database.Providers
         {
             if (index.IsPrimary)
             {
-                if (string.IsNullOrEmpty(index.Name)) index.Name = "pk_" + index.parent.table.Name;
+                if (string.IsNullOrEmpty(index.Name) || index.Name.ToUpperInvariant() == "PRIMARY") 
+                    index.Name = "pk_" + index.parent.table.Name;
                 return "CONSTRAINT \"" + index.Name + "\" PRIMARY KEY (\"" + String.Join("\", \"", index.Fields.ToStringArray()) + "\")";
             }
 
@@ -397,7 +398,7 @@ namespace Cinar.Database.Providers
         {
             string fieldDDL = "\"" + f.Name + "\" ";
             //if (!f.IsAutoIncrement)
-                fieldDDL += f.Table.Database.dbProvider.DbTypeToString(f.FieldType);
+                fieldDDL += DbTypeToString(f.FieldType);
             if (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar)
                 fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
             //if (f.IsAutoIncrement)

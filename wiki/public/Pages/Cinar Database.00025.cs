@@ -1,5 +1,5 @@
-Çınar Database
-admin|2011/05/01 12:46:27
+Cinar Database
+admin|2011/04/30 11:05:29
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
@@ -42,19 +42,8 @@ Veritabanından bir DataTable okumak için SQLConnection ve SQLDataAdapter kulla
 ====Insert====
 
 @@
-Hashtable record = new Hashtable(); // Hashtable
-record["Ad"] = "Ahmet";
-db.Insert("Kisi", record);
-@@
-veya
-@@
-var record = new { Ad = "Ahmet" }; // Anonymous object
-db.Insert("Kisi", record);
-@@
-veya
-@@
-DataRow record = dataTable.NewRow(); // DataRow
-record["Ad"] = "Ahmet";
+Hashtable record = new Hashtable();
+record["Ad"] = "Microsoft";
 db.Insert("Kisi", record);
 @@
 

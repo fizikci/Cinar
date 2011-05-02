@@ -72,9 +72,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(15, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(143, 15);
+            this.label1.Size = new System.Drawing.Size(141, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Select one or more tables:";
+            this.label1.Text = "Select one or more items:";
             // 
             // ListBoxDialog
             // 

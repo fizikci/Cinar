@@ -448,6 +448,11 @@ namespace System
             return Color.Red;
         }
 
+        public static T ToEnum<T>(this string s)
+        {
+            return (T)Enum.Parse(typeof(T), s);
+        }
+
         public static bool ContainedBy(this string str, List<string> list)
         {
             return list.Any(s => s == str);

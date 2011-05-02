@@ -1,5 +1,5 @@
 Çınar Teknoloji
-admin|2011/05/01 20:16:54
+admin|2011/05/01 12:54:53
 ##PAGE##
 Çınar Teknoloji, yaşları 40'a dayanmış birkaç yazılımcının tecrübeleriyle zaman içinde geliştirdiği açık kaynaklı bir yazılım kütüphanesidir.
 
@@ -53,5 +53,3 @@ Template hazırlamaya ve çalıştırmaya yarar
 
 * '''[Cinar WinApp]'''
 Windows desktop tabanlı data-centric uygulamalar geliştirmeye yarar
-
-[Database Comparison]

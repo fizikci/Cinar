@@ -1,16 +1,15 @@
-
+/*
 body {
 	background-color: #FFFFFF;
 	background-repeat: repeat-x;
 	padding: 0px;
 	margin: 0px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #555555;
 }
-
+*/
 p {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 	color: #555555;
 	padding: 0px;
@@ -26,7 +25,7 @@ p {
 }
 
 input, label {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 	color: #000000;
 	padding: 2px;
@@ -34,7 +33,7 @@ input, label {
 }
 
 select, option {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 	color: #000000;
 	margin: 0px;
@@ -129,36 +128,36 @@ a.emaillink {
 }
 
 h1 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 18px;
-	color: #000000;
+	color: #FF8500;
 	padding: 0px;
 	margin: 0px;
 	font-weight: normal;
 }
 
 h2 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 16px;
-	color: #000000;
+	color: #FF8500;
 	padding: 0px;
 	margin: 0px;
 	font-weight: normal;
 }
 
 h3 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 14px;
-	color: #000000;
+	color: #FF8500;
 	padding: 0px;
 	margin: 0px;
-	font-weight: normal;
+	font-weight: bold;
 }
 
 h4 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 13px;
-	color: #000000;
+	color: white;
 	padding: 0px;
 	margin: 0px;
 	font-weight: normal;
@@ -167,15 +166,17 @@ h4 {
 
 h1.pagetitle, h1.pagetitlesystem {
 	font-size: 22px;
-	border-bottom: dashed 1px #DDDDDD;
+	font-weight:bold;
+	/*border-bottom: solid 1px #DDDDDD;*/
 	padding-bottom: 6px;
 	margin-bottom: 2px;
 	padding-left: 8px;
 	padding-right: 8px;
 	margin-left: -8px;
-	margin-top: -8px;
+	margin-top: 8px;
 	padding-top: 5px;
-	background-color: #F4FFD6;
+	/*background-color: #F4FFD6;*/
+	display:inline-block;
 }
 
 h1.pagetitlesystem {
@@ -184,7 +185,7 @@ h1.pagetitlesystem {
 
 /* Class for applying a separator under H elements (useful to avoid usage of HR) */
 h1.separator, h2.separator, h3.separator {
-	border-bottom: dashed 1px #DDDDDD;
+	border-bottom: dashed 1px #888;
 	padding-bottom: 2px;
 	margin-bottom: 8px;
 }
@@ -204,7 +205,7 @@ a.headeranchor:hover {
 	background-color: #F4FFD6;
 }
 
-#SidebarDiv a.headeranchor, #HeaderDiv a.headeranchor, #FooterDiv a.headeranchor {
+#SidebarDiv a.headeranchor, /*#HeaderDiv a.headeranchor,*/ #FooterDiv a.headeranchor {
 	display: none;
 }
 
@@ -220,7 +221,7 @@ ul, ol {
 	padding-bottom: 0px;
 	padding-left: 28px;
 	padding-right: 8px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 	color: #555555;
 }
@@ -356,6 +357,7 @@ div.box {
 }
 
 /* Contains the Header */
+/*
 #HeaderDiv {
 	margin: 0px;
 	padding: 8px 12px 8px 12px;
@@ -363,20 +365,21 @@ div.box {
 	background-color: #3E2E2E;
 	color: #F5F5F5;
 }
+*/
 #HeaderDiv a, #HeaderDiv h1, #HeaderDiv h2, #HeaderDiv h3, #HeaderDiv h4,
 #HeaderDiv input, #HeaderDiv ul li, #HeaderDiv ol li {
-	color: #F5F5F5;
+	/*color: #F5F5F5;*/
 }
 #HeaderDiv input {
-	background-color: #000000;
+	background-color: white;
 }
 #HeaderDiv a {
 	color: #F5F5F5;
-	border-bottom: dashed 1px #999999;
+	/*border-bottom: dashed 1px #999999;*/
 }
 #HeaderDiv a:hover {
 	text-decoration: none;
-	border-bottom: solid 1px #999999;
+	/*border-bottom: solid 1px #999999;*/
 }
 
 select.namespacedropdown {
@@ -398,11 +401,14 @@ select.namespacedropdown {
 
 /* Contains the contents of a Page */
 #MainDiv {
-	background-color: #FFFFFF;
-	padding: 8px 0px 12px 196px;
+	padding: 8px 0px 12px 8px;
+	border-top: 3px solid #FF8500;
+    background: url("/Images/cinar/design/bg_about.png") no-repeat scroll left bottom #000000;
+	/*
 	background-image: url(Images/MainBackground.gif);
 	background-position: top left;
 	background-repeat: repeat-y;
+	*/
 }
 
 /* Contains the Page Header (title, last modify, etc.) */
@@ -554,16 +560,20 @@ div.pageoutgoinglinksmenu a:hover {
 	display: block;
 	height: 17px;
 	width: 24px;
+	display:none;
 }
 #RssLink.discuss {
 	background-image: url(Images/RSS-Discussion.png);
 }
 
 #PrintLinkDiv {
+/*
 	float: right;
 	position: relative;
 	margin-top: 8px;
 	margin-right: 8px;
+	*/
+	display:inline-block;
 }
 #PrintLink {
 	background-image: url(Images/Print.png);
@@ -1192,7 +1202,7 @@ p.excerpt b.searchkeyword, b.searchkeyword {
 	margin-top: 6px;
 	width: 98%;
 	height: 200px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 }
 

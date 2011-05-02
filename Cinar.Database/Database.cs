@@ -129,19 +129,9 @@ namespace Cinar.Database
                 Cache["sqlLog"] = null;
         }
 
-        public Database(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath)
+        public Database(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = true)
         {
-            createProviderAndReadMetadata(connectionString, provider, serializedMetadataFilePath);
-        }
-
-        /// <summary>
-        /// Database constructor
-        /// </summary>
-        /// <param name="connectionString">Bağlantı bilgisi</param>
-        /// <param name="provider">Hangi veritabanı bu?</param>
-        public Database(string connectionString, DatabaseProvider provider)
-            : this(connectionString, provider, null)
-        {
+            createProviderAndReadMetadata(connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist);
         }
 
         public Database() 
@@ -150,6 +140,9 @@ namespace Cinar.Database
 
         public void SetCollectionParents()
         {
+            if (this.Tables == null)
+                return;
+
             this.Tables.db = this;
             foreach (Table table in this.Tables)
             {
@@ -165,12 +158,12 @@ namespace Cinar.Database
             }
         }
 
-        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath)
+        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath, bool createDatabaseIfNotExist)
         {
             this.connectionString = connectionString;
             this.provider = provider;
 
-            CreateDbProvider(true);
+            CreateDbProvider(createDatabaseIfNotExist);
 
             if (HttpContext.Current != null)
             {
@@ -244,10 +237,10 @@ namespace Cinar.Database
             }
         }
 
-        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null)
+        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = false)
         {
             SetConnectionString(provider, host, dbName, userName, password, defaultCommandTimeout);
-            createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath);
+            createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist);
         }
 
         public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
@@ -258,16 +251,16 @@ namespace Cinar.Database
             {
                 case DatabaseProvider.PostgreSQL:
                     this.connectionString = String.Format("Server={0};Database={1};User Id={2};Password={3};",
-                                                          host, dbName, userName, password);
+                                                          host, dbName, userName, password).Replace("Database=;", "");
                     break;
                 case DatabaseProvider.MySQL:
                     if (defaultCommandTimeout == 0) defaultCommandTimeout = 20;
                     this.connectionString = String.Format("Server={0};Database={1};Uid={2};Pwd={3};old syntax=yes;charset=utf8;default command timeout={4};",
-                                                          host, dbName, userName, password, defaultCommandTimeout);
+                                                          host, dbName, userName, password, defaultCommandTimeout).Replace("Database=;", "");
                     break;
                 case DatabaseProvider.SQLServer:
                     this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",
-                                                          host, dbName, userName, password);
+                                                          host, dbName, userName, password).Replace("Initial Catalog=;", "");
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");

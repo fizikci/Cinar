@@ -1,1 +1,1 @@
-<div style="float: right;">Hoşgeldiniz {USERNAME} &bull; {LOGINLOGOUT}</div><h1>{WIKITITLE}</h1>
+<div style="float: right;">{USERNAME} &bull; {LOGINLOGOUT}</div><h1>{WIKITITLE}</h1>
