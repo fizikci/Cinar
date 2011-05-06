@@ -405,6 +405,15 @@ namespace Cinar.Database
             set { tables = value; }
         }
 
+        public Constraint GetConstraint(string constraintName)
+        {
+            foreach (Table tbl in Tables)
+                foreach (Constraint c in tbl.Constraints)
+                    if (c.Name == constraintName)
+                        return c;
+            return null;
+        }
+
         public override string ToString()
         {
             return this.ConnectionString;
@@ -1491,7 +1500,6 @@ namespace Cinar.Database
             Table tbl = new Table();
             tbl.IsView = false;
             tbl.Name = string.IsNullOrEmpty(tableProps.Name) ? type.Name : tableProps.Name;
-            tbl.Fields = new FieldCollection(tbl);
             foreach (PropertyInfo pi in type.GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
@@ -1521,8 +1529,6 @@ namespace Cinar.Database
                 if (f.Table.Indices == null) f.Table.Indices = new IndexCollection(f.Table);
                 Index index = new Index();
                 index.FieldNames = new List<string> { f.Name };
-                index.IsPrimary = true;
-                index.IsUnique = true;
                 index.Name = "PK_" + f.Name;
                 f.Table.Indices.Add(index);
             }
@@ -1741,76 +1747,135 @@ namespace Cinar.Database
         {
             return dbProvider.GetFieldDDL(field);
         }
+        #endregion
 
-        public string GetAlterTableRenameDDL(string oldName, string newName)
+
+        #region vendor spesific SQL syntax
+
+        public string GetSQLTableList()
         {
-            switch (Provider)
-            {
-                case DatabaseProvider.PostgreSQL:
-                case DatabaseProvider.MySQL:
-                    return "ALTER TABLE [" + oldName + "] RENAME TO [" + newName + "]";
-                case DatabaseProvider.SQLServer:
-                    return "EXEC sp_rename [" + oldName + "], [" + newName + "]";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        public string GetAlterTableRenameColumnDDL(string tableName, string oldColumnName, string newColumnName)
-        {
-            switch (Provider)
-            {
-                case DatabaseProvider.PostgreSQL:
-                    return "ALTER TABLE \"" + tableName + "\" RENAME \"" + oldColumnName + "\" TO \"" + newColumnName + "\"";
-                case DatabaseProvider.MySQL:
-                    return "ALTER TABLE `" + tableName + "` CHANGE `" + oldColumnName + "` `" + GetFieldDDL(Tables[tableName].Fields[oldColumnName]).Replace(oldColumnName, newColumnName) + "`";
-                case DatabaseProvider.SQLServer:
-                    return string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", tableName, oldColumnName, newColumnName);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return dbProvider.GetSQLTableList();
         }
 
-        public string GetAlterTableAddColumnDDL(Field field)
+        public string GetSQLTableRename(string oldName, string newName)
         {
-            return "ALTER TABLE [" + field.Table.Name + "] ADD " + GetFieldDDL(field);
-        }
-        public string GetAlterTableDropColumnDDL(Field field)
-        {
-            return "ALTER TABLE [" + field.Table.Name + "] DROP COLUMN [" + field.Name + "]";
-        }
-        public string GetAlterTableChangeColumnDDL(Field field)
-        {
-            switch (Provider)
-            {
-                case DatabaseProvider.MySQL:
-                    return "ALTER TABLE [" + field.Table.Name + "] MODIFY COLUMN " + GetFieldDDL(field);
-                case DatabaseProvider.PostgreSQL:
-                case DatabaseProvider.SQLServer:
-                    return "ALTER TABLE [" + field.Table.Name + "] ALTER COLUMN " + GetFieldDDL(field);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return dbProvider.GetSQLTableRename(oldName, newName);
         }
 
-        public string GetAlterTableDropKeyDDL(Index index)
+        public string GetSQLColumnList(string tableName)
         {
-            if (index.IsPrimary)
-            {
-                if (Provider == DatabaseProvider.MySQL)
-                    return "ALTER TABLE [" + index.parent.table.Name + "] DROP PRIMARY KEY";
-                else
-                    return "ALTER TABLE [" + index.parent.table.Name + "] DROP CONSTRAINT [" + index.Name + "]";
-            }
+            return dbProvider.GetSQLColumnList(tableName);
+        }
 
-            switch (Provider)
-            {
-                case DatabaseProvider.MySQL:
-                case DatabaseProvider.SQLServer:
-                    return "DROP INDEX [" + index.Name + "] ON [" + index.parent.table.Name + "]";
-                case DatabaseProvider.PostgreSQL:
-                    return "DROP INDEX [" + index.Name + "]";
-            }
-            throw new Exception(Provider + " is not supported.");
+        public string GetSQLColumnAdd(string toTable, Field column)
+        {
+            return dbProvider.GetSQLColumnAdd(toTable, column);
+        }
+
+        public string GetSQLColumnRemove(Field column)
+        {
+            return dbProvider.GetSQLColumnRemove(column);
+        }
+
+        public string GetSQLColumnRename(string oldColumnName, Field column)
+        {
+            return dbProvider.GetSQLColumnRename(oldColumnName, column);
+        }
+
+        public string GetSQLColumnChangeDataType(Field column)
+        {
+            return dbProvider.GetSQLColumnChangeDataType(column);
+        }
+
+        public string GetSQLColumnChangeDefault(Field column)
+        {
+            return dbProvider.GetSQLColumnChangeDefault(column);
+        }
+
+        public string GetSQLConstraintList()
+        {
+            return dbProvider.GetSQLConstraintList();
+        }
+
+        public string GetSQLConstraintRemove(Constraint constraint)
+        {
+            return dbProvider.GetSQLConstraintRemove(constraint);
+        }
+
+        public string GetSQLConstraintAdd(Constraint constraint)
+        {
+            return dbProvider.GetSQLConstraintAdd(constraint);
+        }
+
+        public string GetSQLConstraintAdd(CheckConstraint constraint)
+        {
+            return dbProvider.GetSQLConstraintAdd(constraint);
+        }
+
+        public string GetSQLConstraintAdd(UniqueConstraint constraint)
+        {
+            return dbProvider.GetSQLConstraintAdd(constraint);
+        }
+
+        public string GetSQLConstraintAdd(ForeignKeyConstraint constraint)
+        {
+            return dbProvider.GetSQLConstraintAdd(constraint);
+        }
+
+        public string GetSQLConstraintAdd(PrimaryKeyConstraint constraint)
+        {
+            return dbProvider.GetSQLConstraintAdd(constraint);
+        }
+
+        public string GetSQLConstraintRemove(PrimaryKeyConstraint constraint)
+        {
+            return dbProvider.GetSQLConstraintRemove(constraint);
+        }
+
+        public string GetSQLColumnAddNotNull(Field column)
+        {
+            return dbProvider.GetSQLColumnAddNotNull(column);
+        }
+
+        public string GetSQLColumnRemoveNotNull(Field column)
+        {
+            return dbProvider.GetSQLColumnRemoveNotNull(column);
+        }
+
+        public string GetSQLColumnSetAutoIncrement(Field column)
+        {
+            return dbProvider.GetSQLColumnSetAutoIncrement(column);
+        }
+
+        public string GetSQLColumnRemoveAutoIncrement(Field column)
+        {
+            return dbProvider.GetSQLColumnRemoveAutoIncrement(column);
+        }
+
+        public string GetSQLIndexAdd(Index index)
+        {
+            return dbProvider.GetSQLIndexAdd(index);
+        }
+
+        public string GetSQLIndexRemove(Index index)
+        {
+            return dbProvider.GetSQLIndexRemove(index);
+        }
+
+        public string GetSQLBaseIndexConstraintAdd(BaseIndexConstraint obj)
+        {
+            if(obj is Index)
+                return GetSQLIndexAdd((Index)obj);
+            else
+                return GetSQLConstraintAdd((Constraint)obj);
+        }
+
+        public string GetSQLBaseIndexConstraintRemove(BaseIndexConstraint obj)
+        {
+            if(obj is Index)
+                return GetSQLIndexRemove((Index)obj);
+            else
+                return GetSQLConstraintRemove((Constraint)obj);
         }
 
         // http://troels.arvin.dk/db/rdbms/
@@ -1842,6 +1907,7 @@ namespace Cinar.Database
             }
         }
         #endregion
+
     }
 
     public delegate void DbAction();

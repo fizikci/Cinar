@@ -33,13 +33,20 @@ namespace Cinar.Database
     [Serializable]
     public class Table
     {
+        public Table()
+        {
+            this.Fields = new FieldCollection(this);
+            this.Indices = new IndexCollection(this);
+            this.Constraints = new ConstraintCollection(this);
+        }
+
         internal TableCollection parent;
 
         private string name;
         /// <summary>
         /// Tablonun adı
         /// </summary>
-        [Description("Name of the table"), Category("DDL")]
+        [Description("Name of the table"), Category("Definition")]
         public string Name
         {
             get { return name; }
@@ -74,10 +81,10 @@ namespace Cinar.Database
         {
             get
             {
-                if(this.Indices!=null)
-                    foreach(Index index in this.Indices)
-                        if(index.IsPrimary && index.FieldNames.Count==1)
-                            return this.Fields[index.FieldNames[0]];
+                if(this.Constraints!=null)
+                    foreach(Constraint con in this.Constraints)
+                        if(con is PrimaryKeyConstraint && con.FieldNames.Count==1)
+                            return this.Fields[con.FieldNames[0]];
                 return null;
             }
         }
@@ -87,7 +94,7 @@ namespace Cinar.Database
         {
             get
             {
-                return this.ReferencedByTables.Count > 0 ? TableTypes.Account : TableTypes.Transaction;
+                return this.ReferencedByTables.Count > ReferenceTables.Count ? TableTypes.Account : TableTypes.Transaction;
             }
         }
 
@@ -134,9 +141,8 @@ namespace Cinar.Database
                 if (referenceTables == null)
                 {
                     referenceTables = new TableCollection(this.parent.db);
-                    foreach (Field f in this.Fields)
-                        if (f.ReferenceField != null)
-                            referenceTables.Add(f.ReferenceField.Table);
+                    foreach (ForeignKeyConstraint fk in this.Constraints.Where(c=>c is ForeignKeyConstraint))
+                        referenceTables.Add(fk.Table);
                 }
                 return referenceTables;
             }
@@ -155,9 +161,9 @@ namespace Cinar.Database
                 {
                     referencedByTables = new TableCollection(this.Database);
                     foreach (Table tbl in this.Database.Tables)
-                        foreach (Field f in tbl.Fields)
-                            if (f.ReferenceField!=null && f.ReferenceField == this.PrimaryField)
-                                referencedByTables.Add(f.Table);
+                        foreach (ForeignKeyConstraint fk in tbl.Constraints.Where(c => c is ForeignKeyConstraint))
+                            if (fk.RefTableName == this.Name)
+                                referencedByTables.Add(fk.Table);
                 }
                 return referencedByTables;
             }
@@ -166,13 +172,24 @@ namespace Cinar.Database
 
         private IndexCollection indices;
         /// <summary>
-        /// Tablonun keylerini listeler
+        /// Tablonun indexlerini listeler
         /// </summary>
         [Browsable(false)]
         public IndexCollection Indices
         {
             get { return indices; }
             set { indices = value; }
+        }
+
+        private ConstraintCollection constraints;
+        /// <summary>
+        /// Tablonun constraintlerini listeler
+        /// </summary>
+        [Browsable(false)]
+        public ConstraintCollection Constraints
+        {
+            get { return constraints; }
+            set { constraints = value; }
         }
 
 
@@ -182,7 +199,7 @@ namespace Cinar.Database
         /// Yoksa bu bir View mi? View'ler tablolara çok benzedikleri için ayrıca bir View sınıfı tanımlamadık.
         /// Bu alan size elinizdeki tablonun view mi, yoksa table mı olduğunu söyleyecektir.
         /// </summary>
-        [Description("Is just a view?"), Category("DDL")]
+        [Description("Is just a view?"), Category("Definition"), ReadOnly(true)]
         public bool IsView
         {
             get { return isView; }
@@ -247,7 +264,6 @@ namespace Cinar.Database
         {
             Table newTable = new Table();
             newTable.parent = dbDst.Tables;
-            newTable.Fields = new FieldCollection(newTable);
             foreach (Field f in this.Fields)
             {
                 Field newField = new Field();
@@ -262,15 +278,12 @@ namespace Cinar.Database
                 newField.parent = newTable.Fields;
                 newTable.Fields.Add(newField);
             }
-            newTable.Indices = new IndexCollection(newTable);
             foreach (Index k in this.Indices)
             {
                 Index newIndex = new Index();
                 newIndex.Name = k.Name;
                 if (k.Name == "PRIMARY")
                     newIndex.Name = "PK_" + tableName;
-                newIndex.IsUnique = k.IsUnique;
-                newIndex.IsPrimary = k.IsPrimary;
                 newIndex.FieldNames = new List<string>();
                 foreach (Field fk in k.Fields)
                     newIndex.FieldNames.Add(fk.Name);
@@ -318,6 +331,7 @@ namespace Cinar.Database
                 f.GenerateUIMetadata();
         }
 
+        [Description("The definitions for this table to be used generating of UI code"), Category("Extra Info")]
         public TableUIMetadata UIMetadata { get; set; }
     }
 
@@ -350,20 +364,6 @@ namespace Cinar.Database
                 return null;
             }
         }
-
-        //public override string ToString()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    foreach (Table table in this) sb.Append(table.Name + " ");
-        //    return sb.ToString();
-        //}
-        //public string ToDDL()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    foreach (Table tbl in this)
-        //        sb.Append(tbl.ToDDL() + Environment.NewLine);
-        //    return sb.ToString();
-        //}
     }
 
     [Serializable, TypeConverter(typeof(ExpandableObjectConverter))]

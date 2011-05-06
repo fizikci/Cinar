@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
+using ForeignKeyConstraint = Cinar.Database.ForeignKeyConstraint;
 
 namespace Cinar.DBTools.Tools
 {
@@ -27,8 +28,6 @@ namespace Cinar.DBTools.Tools
         public Table GetCreatedTable()
         {
             Table tbl = new Table();
-            tbl.Fields = new FieldCollection(tbl);
-            tbl.Indices = new IndexCollection(tbl);
             tbl.Name = txtTableName.Text.MakeFileName();
             if (!(fieldCollectionBindingSource.DataSource is Type))
                 foreach (FieldDef fd in fieldCollectionBindingSource.DataSource as List<FieldDef>)
@@ -46,11 +45,9 @@ namespace Cinar.DBTools.Tools
                     tbl.Fields.Add(f);
                     if (fd.IsPrimaryKey)
                     {
-                        Index k = new Index();
-                        tbl.Indices.Add(k);
+                        PrimaryKeyConstraint k = new PrimaryKeyConstraint();
+                        tbl.Constraints.Add(k);
                         k.FieldNames.Add(f.Name);
-                        k.IsPrimary = true;
-                        k.IsUnique = true;
                         k.Name = "PK_" + tbl.Name;
                     }
                 }

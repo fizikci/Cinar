@@ -91,7 +91,32 @@ Other:
 	Indexes: (yukardakiler constraint ise index ne o zaman?)
 
 Testler:
-1. Her provider üzerine (create, alter, drop) x (database, table, view, field, index
+1. Her provider üzerine (read, create, alter, drop) x (database, table, field, constraint, index, view, function, trigger, sproc) metodu yazalım
+										4												9											36 adet
+
+
+Desteklenecek RDBMSler
+-----------------------
+http://en.wikipedia.org/wiki/Comparison_of_relational_database_management_systems
+
+Meşhur RDBMSler:
+----------------
+Ingres Database
+NonStop SQL
+Sybase SQL Server
+Microsoft SQL Server
+PostgreSQL
+Netezza
+Greenplum
+Vertica Analytic Database
+IBM DB2
+Empress Embedded Database
+MariaDB
+MySQL
+Drizzle
+Oracle Database
+InterBase
+Firebird
 
 
 PARLAK FİKİR:

@@ -42,5 +42,28 @@ namespace Cinar.Database
         string GetFieldDDL(Field field);
 
         string[] GetFieldTypes();
+
+        string GetSQLTableList();
+        string GetSQLTableRename(string oldName, string newName);
+        string GetSQLColumnList(string tableName);
+        string GetSQLColumnAdd(string toTable, Field column);
+        string GetSQLColumnRemove(Field column);
+        string GetSQLColumnRename(string oldColumnName, Field column);
+        string GetSQLColumnChangeDataType(Field column);
+        string GetSQLColumnChangeDefault(Field column);
+        string GetSQLConstraintList();
+        string GetSQLConstraintRemove(Constraint constraint);
+        string GetSQLConstraintAdd(Constraint constraint);
+        string GetSQLConstraintAdd(CheckConstraint constraint);
+        string GetSQLConstraintAdd(UniqueConstraint constraint);
+        string GetSQLConstraintAdd(ForeignKeyConstraint constraint);
+        string GetSQLConstraintAdd(PrimaryKeyConstraint constraint);
+        string GetSQLConstraintRemove(PrimaryKeyConstraint constraint);
+        string GetSQLColumnAddNotNull(Field column);
+        string GetSQLColumnRemoveNotNull(Field column);
+        string GetSQLColumnSetAutoIncrement(Field column);
+        string GetSQLColumnRemoveAutoIncrement(Field column);
+        string GetSQLIndexAdd(Index index);
+        string GetSQLIndexRemove(Index index);
     }
 }

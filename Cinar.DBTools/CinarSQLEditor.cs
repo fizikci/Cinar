@@ -221,6 +221,22 @@ namespace Cinar.DBTools
         }
 
         #endregion
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // textAreaPanel
+            // 
+            this.textAreaPanel.Size = new System.Drawing.Size(893, 507);
+            // 
+            // CinarSQLEditor
+            // 
+            this.Name = "CinarSQLEditor";
+            this.Size = new System.Drawing.Size(893, 507);
+            this.ResumeLayout(false);
+
+        }
     }
 
     public class CinarCompletionData : ICompletionData

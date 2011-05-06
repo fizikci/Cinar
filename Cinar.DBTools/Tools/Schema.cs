@@ -56,10 +56,17 @@ namespace Cinar.DBTools.Tools
             Bitmap offScreenBmp = new Bitmap(width, height);
             Graphics offScreenDC = Graphics.FromImage(offScreenBmp);
 
-            foreach (ConnectionLine cl in this.ConnectionLines)
-                cl.Draw(offScreenDC);
-            foreach (TableView tv in this.Tables)
-                tv.Draw(offScreenDC, font, conn);
+            if (this.Tables.Count == 0)
+            { 
+                offScreenDC.DrawString("double click (or drag and drop tables)", font, Brushes.Gray, 50, 50);
+            }
+            else
+            {
+                foreach (ConnectionLine cl in this.ConnectionLines)
+                    cl.Draw(offScreenDC);
+                foreach (TableView tv in this.Tables)
+                    tv.Draw(offScreenDC, font, conn);
+            }
 
             graphics.DrawImage(offScreenBmp, new Point(0, 0));
         }
@@ -77,6 +84,8 @@ namespace Cinar.DBTools.Tools
                 if (tv.Rectangle.Contains(point))
                 {
                     Table table = conn.Database.Tables[tv.TableName];
+                    if (table == null) return null;//***
+
                     if (point.Y - tv.Position.Y > Diagram.Def_TitleHeight)
                     {
                         int i = (point.Y - tv.Position.Y - Diagram.Def_TitleHeight) / Diagram.Def_FieldHeight;
@@ -121,7 +130,15 @@ namespace Cinar.DBTools.Tools
         public string TableName { get; set; }
         public Point Position { get; set; }
         [XmlIgnore]
-        public Size Size { get { return new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + Diagram.conn.Database.Tables[TableName].Fields.Count * Diagram.Def_FieldHeight); } }
+        public Size Size { 
+            get 
+            {
+                int fieldCount = 0;
+                if (Diagram.conn.Database.Tables[TableName] != null)
+                    fieldCount = Diagram.conn.Database.Tables[TableName].Fields.Count;
+                return new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + fieldCount * Diagram.Def_FieldHeight); 
+            } 
+        }
         internal bool Selected;
         public bool ShowFull;
         public string SelectedField;
@@ -150,6 +167,10 @@ namespace Cinar.DBTools.Tools
 
         internal void Draw(Graphics graphics, Font font, ConnectionSettings conn)
         {
+            Table table = conn.Database.Tables[this.TableName];
+            if (table == null)
+                return; //***
+
             Size size = RealSize;
             // bir önceki çizim alanını temizle (flicker engellemek için)
             graphics.FillRectangle(Brushes.White, new Rectangle(lastDrawRect.Location, lastDrawRect.Size + new Size(1, 1)));
@@ -166,7 +187,6 @@ namespace Cinar.DBTools.Tools
             if (ShowFull)
             {
                 StringFormat sf = GetFieldStringFormat();
-                Table table = conn.Database.Tables[this.TableName];
                 for (int i = 0; i < table.Fields.Count; i++)
                 {
                     Field field = table.Fields[i];
@@ -207,7 +227,6 @@ namespace Cinar.DBTools.Tools
     public class ConnectionLine
     {
         public string FromTable { get; set; }
-        public string FromField { get; set; }
         public string ToTable { get; set; }
         private Point startPoint, lastStartPoint;
         public Point StartPoint

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
+using UniqueConstraint = Cinar.Database.UniqueConstraint;
 
 namespace Cinar.DBTools.Tools
 {
@@ -32,24 +33,30 @@ namespace Cinar.DBTools.Tools
             }
             keyFieldBindingSource.DataSource = list;
         }
-        public Index GetCreatedKey()
+        public BaseIndexConstraint GetCreatedKey()
         {
-            Index index = new Index();
+            BaseIndexConstraint index = null;
+
+            if (rbPrimaryKey.Checked)
+                index = new PrimaryKeyConstraint();
+            else if (rbUnique.Checked)
+                index = new UniqueConstraint();
+            else
+                index = new Index();
+
             index.FieldNames = new List<string>();
-            index.Name = txtTableName.Text.MakeFileName();
-            index.IsPrimary = cbPrimary.Checked;
-            index.IsUnique = cbUnique.Checked;
+            index.Name = txtKeyName.Text.MakeFileName();
             foreach (KeyField fd in keyFieldBindingSource.DataSource as List<KeyField>)
                 if(fd.Selected)
                     index.FieldNames.Add(fd.Name);
             return index;
         }
 
-        public void SetKey(Index index)
+        public void SetKey(BaseIndexConstraint index)
         {
-            txtTableName.Text = index.Name;
-            cbPrimary.Checked = index.IsPrimary;
-            cbUnique.Checked = index.IsUnique;
+            txtKeyName.Text = index.Name;
+            rbPrimaryKey.Checked = index is PrimaryKeyConstraint;
+            rbUnique.Checked = index is PrimaryKeyConstraint || index is UniqueConstraint;
             List<KeyField> fields = new List<KeyField>();
             foreach (Field f in table.Fields)
             {

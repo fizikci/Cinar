@@ -59,17 +59,12 @@ namespace Cinar.Database
     public enum SimpleDbType
     {
         Boolean,
-
         Integer,
-        
         Float,
-
         DateTime,
-
         String,
-        
         Text,
-        
-        ByteArray
+        ByteArray,
+        Other
     }
 }

@@ -29,26 +29,18 @@ namespace Cinar.Database.Providers
     /// <summary>
     /// Microsoft SQL Server'dan metadata okuyan sınıf
     /// </summary>
-    internal class SQLServerProvider : IDatabaseProvider
+    internal class SQLServerProvider : BaseProvider, IDatabaseProvider
     {
-        private System.Data.IDbConnection con;
-        public System.Data.IDbConnection Connection
-        {
-            get { return con; }
-        }
-
-        private Database db = null;
-
         public SQLServerProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
             try
             {
-                con = new SqlConnection(db.ConnectionString);
+                connection = new SqlConnection(db.ConnectionString);
                 if (createDatabaseIfNotExist)
                 {
-                    con.Open();
-                    con.Close();
+                    connection.Open();
+                    connection.Close();
                 }
             }
             catch
@@ -65,15 +57,15 @@ namespace Cinar.Database.Providers
                         else
                             newConnStr += param + ";";
                     }
-                    con = new SqlConnection(newConnStr);
+                    connection = new SqlConnection(newConnStr);
                     try
                     {
-                        con.Open();
-                        IDbCommand cmd = con.CreateCommand();
+                        connection.Open();
+                        IDbCommand cmd = connection.CreateCommand();
                         cmd.CommandText = "create database " + dbName + ";";
                         cmd.ExecuteNonQuery();
-                        con.ChangeDatabase(dbName);
-                        con.Close();
+                        connection.ChangeDatabase(dbName);
+                        connection.Close();
                     }
                     catch { }
                 }
@@ -81,7 +73,7 @@ namespace Cinar.Database.Providers
         }
 
         /// <summary>
-        /// Metada okuma işini yapan asıl metod. Sırayla bütün veritabanı nesnelerini okur.
+        /// Metadata okuma işini yapan asıl metod. Sırayla bütün veritabanı nesnelerini okur.
         /// </summary>
         /// <param name="db"></param>
         public void ReadDatabaseMetadata()
@@ -90,7 +82,7 @@ namespace Cinar.Database.Providers
             db.Tables = new TableCollection((Database)db);
 
             // columns
-            DataTable dtTables = db.GetDataTable(this.SQLTables);
+            DataTable dtTables = db.GetDataTable(GetSQLTableList());
             foreach (DataRow drTable in dtTables.Rows)
             {
                 Table tbl = new Table();
@@ -98,10 +90,7 @@ namespace Cinar.Database.Providers
                 tbl.IsView = drTable["TABLE_TYPE"].ToString() == "VIEW";
                 db.Tables.Add(tbl);
 
-
-                tbl.Fields = new FieldCollection(tbl);
-
-                DataTable dtColumns = db.GetDataTable(String.Format(this.SQLFields, tbl.Name));
+                DataTable dtColumns = db.GetDataTable(GetSQLColumnList(tbl.Name));
                 foreach (DataRow drColumn in dtColumns.Rows)
                 {
                     Field f = new Field();
@@ -115,17 +104,58 @@ namespace Cinar.Database.Providers
 
                     tbl.Fields.Add(f);
                 }
+            }
 
-                // indices
-                tbl.Indices = new IndexCollection(tbl);
+            // constraints
+            // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
+            DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
+            ConstraintCollection conCol = new ConstraintCollection();
+            foreach (DataRow drCon in dtCons.Rows)
+            {
+                Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
+                if (con != null)
+                {
+                    con.FieldNames.Add(drCon["ColumnName"].ToString());
+                    continue;
+                }
+
+                switch (drCon["Type"].ToString())
+                {
+                    case "FOREIGN KEY":
+                        con = new ForeignKeyConstraint();
+                        (con as ForeignKeyConstraint).RefConstraintName = drCon["RefConstraintName"].ToString();
+                        //(con as ForeignKeyConstraint).RefTableName = drCon["RefConstraintName"].ToString();
+                        (con as ForeignKeyConstraint).DeleteRule = drCon["DeleteRule"].ToString();
+                        (con as ForeignKeyConstraint).UpdateRule = drCon["UpdateRule"].ToString();
+                        break;
+                    case "PRIMARY KEY":
+                        con = new PrimaryKeyConstraint();
+                        break;
+                    case "UNIQUE":
+                        con = new UniqueConstraint();
+                        break;
+                }
+                con.Name = drCon["Name"].ToString();
+                con.FieldNames.Add(drCon["ColumnName"].ToString());
+
+                db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
+            }
+            foreach (Table tbl in db.Tables)
+                foreach (ForeignKeyConstraint fk in tbl.Constraints.Where(c => c is ForeignKeyConstraint))
+                    fk.RefTableName = db.GetConstraint(fk.RefConstraintName).Table.Name;
+
+            // indices
+            foreach (Table tbl in db.Tables)
+            {
                 DataTable dtKeys = db.GetDataTable("EXEC sp_helpindex [" + tbl.Name + "]");
-                if(dtKeys!=null)
+                if (dtKeys != null)
                     foreach (DataRow drKey in dtKeys.Rows)
                     {
+                        if (db.GetConstraint(drKey["index_name"].ToString()) != null)
+                            continue;
+
                         Index index = new Index();
                         index.Name = drKey["index_name"].ToString();
-                        index.IsUnique = drKey["index_description"].ToString().Contains("unique");
-                        index.IsPrimary = drKey["index_description"].ToString().Contains("primary key");
 
                         index.FieldNames = new List<string>();
                         foreach (string fieldName in drKey["index_keys"].ToString().Split(','))
@@ -133,46 +163,13 @@ namespace Cinar.Database.Providers
 
                         tbl.Indices.Add(index);
                     }
-
             }
-
-            // primary indices
-            //DataTable dtKeys = db.GetDataTable(this.SQLPrimaryKeys);
-            //foreach (DataRow drKey in dtKeys.Rows)
-            //    db.Tables[drKey["TABLE_NAME"].ToString()].Fields[drKey["COLUMN_NAME"].ToString()].IsPrimaryKey = true;
-
-            // foreign indices
-            DataTable dtForeigns = db.GetDataTable(this.SQLForeignKeys);
-            foreach (DataRow drForeign in dtForeigns.Rows)
-                db.Tables[drForeign["TABLE_NAME_1"].ToString()]
-                    .Fields[drForeign["COLUMN_NAME_1"].ToString()].ReferenceFieldName =
-                        drForeign["TABLE_NAME_2"] + "." + drForeign["COLUMN_NAME_2"];
-
         }
 
         #region string <=> dbType conversion
 
-        /// <summary>
-        /// Veritabanından string olarak gelen field tip bilgisini DbType enum'una dönüştürür.
-        /// </summary>
-        public DbType StringToDbType(string typeName)
-        {
-            if (DEFStringToDbType.ContainsKey(typeName.ToUpperInvariant()))
-                return DEFStringToDbType[typeName];
-            return DbType.Undefined;
-        }
-
-        /// <summary>
-        /// DbType olarak elimizde bulunan field tip bilgisini veritabanın anlayacağı stringe dönüştürür. 
-        /// </summary>
-        public string DbTypeToString(DbType dbType)
-        {
-            if (DEFDbTypeToString.ContainsKey(dbType))
-                return DEFDbTypeToString[dbType];
-            return "???";
-        }
-
-        public static Dictionary<DbType, string> DEFDbTypeToString = new Dictionary<DbType, string>() 
+        public override Dictionary<DbType, string> DEFDbTypeToString { get { return _DEFDbTypeToString; } }
+        private Dictionary<DbType, string> _DEFDbTypeToString = new Dictionary<DbType, string>() 
         { 
             {DbType.Binary,         "BINARY"},
             {DbType.Blob ,          "BLOB"},
@@ -217,7 +214,8 @@ namespace Cinar.Database.Providers
             {DbType.Xml,            "XML"}
         };
 
-        public static Dictionary<string, DbType> DEFStringToDbType = new Dictionary<string, DbType>()
+        public override Dictionary<string, DbType> DEFStringToDbType { get { return _DEFStringToDbType; } }
+        private Dictionary<string, DbType> _DEFStringToDbType = new Dictionary<string, DbType>()
         {
             {"BINARY",              DbType.Binary},
             {"BLOB",                DbType.Blob},
@@ -260,45 +258,6 @@ namespace Cinar.Database.Providers
 
         #endregion
 
-        #region INFORMATION_SCHEMA SQL İFADELERİ
-        // tablolar
-        private string SQLTables = @"
-											select
-												TABLE_NAME, TABLE_TYPE
-											from
-												INFORMATION_SCHEMA.TABLES";
-        // bir tablonun fieldları
-        private string SQLFields = @"
-											select
-												COLUMN_NAME,
-												DATA_TYPE,
-												CHARACTER_MAXIMUM_LENGTH,
-												IS_NULLABLE,
-												COLUMN_DEFAULT,
-                                                columnproperty(OBJECT_ID('{0}'), COLUMN_NAME,'IsIdentity') as IS_AUTO_INCREMENT
-											from
-												INFORMATION_SCHEMA.COLUMNS
-											WHERE
-												TABLE_NAME='{0}'";
-        // Foreyn kiyler
-        private string SQLForeignKeys = @"
-											SELECT
-												TBL1.CONSTRAINT_NAME,
-												TBL2.TABLE_NAME as TABLE_NAME_1,
-												TBL2.COLUMN_NAME as COLUMN_NAME_1,
-												TBL3.TABLE_NAME as TABLE_NAME_2,
-												TBL3.COLUMN_NAME as COLUMN_NAME_2,
-												TBL1.UPDATE_RULE,
-												TBL1.DELETE_RULE
-											FROM
-												(select CONSTRAINT_NAME, UNIQUE_CONSTRAINT_NAME, UPDATE_RULE, DELETE_RULE  from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS) AS TBL1,
-												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE) AS TBL2,
-												(select TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE) AS TBL3
-											WHERE
-												TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME AND
-												TBL3.CONSTRAINT_NAME = UNIQUE_CONSTRAINT_NAME";
-        #endregion
-
         #region IDatabaseProvider Members
         public IDbConnection CreateConnection()
         {
@@ -309,18 +268,18 @@ namespace Cinar.Database.Providers
         {
             return new SqlDataAdapter((SqlCommand)selectCommand);
         }
-        
+
         public DbDataAdapter CreateDataAdapter(string selectCommandText, params object[] parameters)
         {
             SqlCommand selectCommand = (SqlCommand)this.CreateCommand(selectCommandText, parameters);
             return this.CreateDataAdapter(selectCommand);
         }
-        
+
         public IDbCommand CreateCommand(string cmdText, params object[] parameters)
         {
             return this.CreateCommand(cmdText, (IDbTransaction)null, parameters);
         }
-        
+
         public IDbCommand CreateCommand(string cmdText, IDbTransaction transaction, params object[] parameters)
         {
             for (int i = 0; i < parameters.Length; i++)
@@ -337,12 +296,29 @@ namespace Cinar.Database.Providers
 
             return cmd;
         }
-        
+
         public IDbDataParameter CreateParameter(string parameterName, object value)
         {
             return new SqlParameter(parameterName, value);
         }
 
+        public string GetFieldDDL(Field f)
+        {
+            string fieldDDL = "[" + f.Name + "] " + (string.IsNullOrEmpty(f.FieldTypeOriginal) ? DbTypeToString(f.FieldType) : f.FieldTypeOriginal);
+            if (f.Length > 0 && (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar))
+                fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
+            if (!f.IsNullable)
+                fieldDDL += " NOT NULL";
+            if (f.IsAutoIncrement)
+                fieldDDL += " IDENTITY";
+            //if (f.IsPrimaryKey && f == f.Table.PrimaryField)
+            //    fieldDDL += " PRIMARY KEY";
+            if (!string.IsNullOrEmpty(f.DefaultValue) && f.FieldType != DbType.Timestamp)
+                fieldDDL += " DEFAULT " + getDefaultValue(f);
+            //if (f.ReferenceField != null)
+            //    fieldDDL += " REFERENCES [" + f.ReferenceField.Table.Name + "]([" + f.ReferenceField.Name + "])";
+            return fieldDDL;
+        }
         public string GetTableDDL(Table table)
         {
             int len = ("," + Environment.NewLine).Length;
@@ -350,66 +326,20 @@ namespace Cinar.Database.Providers
             StringBuilder sbFields = new StringBuilder();
             foreach (Field f in table.Fields)
                 sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
-
-            foreach (Index k in table.Indices.OrderBy(k => k.Name))
-                if (k.IsPrimary || k.IsUnique)
-                    sbFields.Append("\t" + GetIndexKeyDDL(k) + "," + Environment.NewLine);
-
             sbFields = sbFields.Remove(sbFields.Length - len, len);
 
-            return String.Format("CREATE {0} [{1}](\n{2});" + Environment.NewLine,
+            StringBuilder sbCons = new StringBuilder();
+            foreach (Constraint c in table.Constraints)
+                sbCons.Append(GetSQLConstraintAdd(c) + ";" + Environment.NewLine);
+            foreach (Index i in table.Indices)
+                sbCons.Append(GetSQLIndexAdd(i) + ";" + Environment.NewLine);
+
+
+            return String.Format("CREATE {0} [{1}](\r\n{2});\r\n{3}" + Environment.NewLine,
                 (table.IsView ? "VIEW" : "TABLE"),
                 table.Name,
-                sbFields);
-        }
-
-        private string GetIndexKeyDDL(Index index)
-        {
-            if (index.IsPrimary)
-            {
-                if (string.IsNullOrEmpty(index.Name) || index.Name.ToUpperInvariant()=="PRIMARY")
-                    index.Name = "pk_" + index.parent.table.Name;
-                return "CONSTRAINT [" + index.Name + "] PRIMARY KEY ([" + String.Join("], [", index.Fields.ToStringArray()) + "])";
-            }
-
-            return "CONSTRAINT [" + index.Name + "] UNIQUE  ([" + String.Join("], [", index.Fields.ToStringArray()) + "])";
-        }
-        /*
-        private string GetIndexKeyDDL(Index Index)
-        {
-            if (Index.IsPrimary)
-                return String.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] PRIMARY KEY CLUSTERED ([{2}])",
-                    Index.parent.table.Name,
-                    Index.Name,
-                    String.Join("], [", Index.Fields.ToStringArray()));
-            else if (Index.IsUnique)
-                return String.Format("CREATE UNIQUE NONCLUSTERED INDEX [{0}] ON {1} ([{2}])",
-                    Index.Name,
-                    Index.parent.table.Name,
-                    String.Join("], [", Index.Fields.ToStringArray()));
-            else
-                return String.Format("CREATE NONCLUSTERED INDEX [{0}] ON {1} ([{2}])",
-                    Index.Name,
-                    Index.parent.table.Name,
-                    String.Join("], [", Index.Fields.ToStringArray()));
-        }
-        */
-        public string GetFieldDDL(Field f)
-        {
-            string fieldDDL = "[" + f.Name + "] " + DbTypeToString(f.FieldType);
-            if (f.Length>0 && (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar))
-                fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
-            if (f.IsAutoIncrement)
-                fieldDDL += " IDENTITY";
-            if (!f.IsNullable)
-                fieldDDL += " NOT NULL";
-            //if (f.IsPrimaryKey && f == f.Table.PrimaryField)
-            //    fieldDDL += " PRIMARY KEY";
-            if (!string.IsNullOrEmpty(f.DefaultValue) && f.FieldType != DbType.Timestamp)
-                fieldDDL += " DEFAULT " + getDefaultValue(f);
-            if (f.ReferenceField != null)
-                fieldDDL += " REFERENCES [" + f.ReferenceField.Table.Name + "]([" + f.ReferenceField.Name + "])";
-            return fieldDDL;
+                sbFields,
+                sbCons);
         }
 
         private string getDefaultValue(Field field)
@@ -431,6 +361,155 @@ namespace Cinar.Database.Providers
         {
             return "(" + str.Trim().Trim('(', ')') + ")";
         }
+        #endregion
+
+        #region GetSQL
+
+        public string GetSQLTableList()
+        {
+            return string.Format(@"
+					    select
+							TABLE_NAME, TABLE_TYPE
+						from
+							INFORMATION_SCHEMA.TABLES", db.Name);
+        }
+
+        public string GetSQLTableRename(string oldName, string newName)
+        {
+            return string.Format("EXEC sp_rename [{0}], [{1}]", oldName, newName);
+        }
+
+        public string GetSQLColumnList(string tableName)
+        {
+            return string.Format(@"
+					    select
+							COLUMN_NAME,
+							DATA_TYPE,
+							CHARACTER_MAXIMUM_LENGTH,
+							IS_NULLABLE,
+							COLUMN_DEFAULT,
+                            columnproperty(OBJECT_ID('{0}'), COLUMN_NAME,'IsIdentity') as IS_AUTO_INCREMENT
+						from
+							INFORMATION_SCHEMA.COLUMNS
+						WHERE
+							TABLE_NAME='{0}'
+                        ORDER BY ORDINAL_POSITION", tableName);
+        }
+
+        public string GetSQLColumnAdd(string toTable, Field column)
+        {
+            return string.Format("ALTER TABLE [{0}] ADD {1}", toTable, GetFieldDDL(column));
+        }
+
+        public string GetSQLColumnRemove(Field column)
+        {
+            return string.Format("ALTER TABLE [{0}] DROP COLUMN [{1}]", column.Table.Name, column.Name);
+        }
+
+        public string GetSQLColumnRename(string oldColumnName, Field column)
+        {
+            return string.Format("EXEC sp_rename @objname = '{0}.{1}', @newname = '{2}', @objtype = 'COLUMN'", column.Table.Name, oldColumnName, column.Name);
+        }
+
+        public string GetSQLColumnChangeDataType(Field column)
+        {
+            return string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}{3}", column.Table.Name, column.Name, column.FieldTypeOriginal, column.SimpleFieldType == SimpleDbType.String ? "(" + column.Length + ")" : "");
+        }
+
+        public string GetSQLColumnChangeDefault(Field column)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSQLConstraintList()
+        {
+            return string.Format(@"select distinct
+	Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
+from
+	(select c.CONSTRAINT_NAME as Name, c.TABLE_NAME as TableName, c.CONSTRAINT_TYPE as Type, r.UNIQUE_CONSTRAINT_NAME as RefConstraintName, r.UPDATE_RULE AS UpdateRule, R.DELETE_RULE as DeleteRule from INFORMATION_SCHEMA.TABLE_CONSTRAINTS c left join INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS r ON r.CONSTRAINT_NAME=c.CONSTRAINT_NAME where c.table_catalog='{0}') as Con,
+	(select CONSTRAINT_NAME as ConstraintName, TABLE_NAME as TableName, COLUMN_NAME as ColumnName, ORDINAL_POSITION as Position from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where table_catalog='{0}') as Col
+where
+	Con.Name = Col.ConstraintName
+order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Name);
+        }
+
+        public string GetSQLConstraintRemove(Constraint constraint)
+        {
+            return string.Format("ALTER TABLE [{0}] DROP CONSTRAINT [{1}]", constraint.Table.Name, constraint.Name);
+        }
+
+        public string GetSQLConstraintAdd(Constraint constraint)
+        {
+            if (constraint == null)
+                return "";
+
+            if (constraint is PrimaryKeyConstraint)
+                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+            if (constraint is UniqueConstraint)
+                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+            if (constraint is CheckConstraint)
+                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+            if (constraint is ForeignKeyConstraint)
+                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+
+            throw new Exception("Unknown constraint type: " + constraint.GetType().Name);
+        }
+
+        public string GetSQLConstraintAdd(CheckConstraint constraint)
+        {
+            return string.Format("ALTER TABLE [{0}] WITH NOCHECK ADD CONSTRAINT [{1}] CHECK ({2})", constraint.Table.Name, constraint.Name, constraint.Expression);
+        }
+
+        public string GetSQLConstraintAdd(UniqueConstraint constraint)
+        {
+            return string.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] UNIQUE ([{2}])", constraint.Table.Name, constraint.Name, string.Join("],[", constraint.FieldNames.ToArray()));
+        }
+
+        public string GetSQLConstraintAdd(ForeignKeyConstraint constraint)
+        {
+            return string.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] FOREIGN KEY ([{2}]) REFERENCES [{3}]([{4}])", constraint.Table.Name, constraint.Name, string.Join("],[", constraint.FieldNames.ToArray()), constraint.RefTableName, string.Join("],[", db.Tables[constraint.RefTableName].Constraints[constraint.RefConstraintName].FieldNames.ToArray()));
+        }
+
+        public string GetSQLConstraintAdd(PrimaryKeyConstraint constraint)
+        {
+            return string.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] PRIMARY KEY ([{2}])", constraint.Table.Name, constraint.Name, string.Join("],[", constraint.FieldNames.ToArray()));
+        }
+
+        public string GetSQLConstraintRemove(PrimaryKeyConstraint constraint)
+        {
+            return GetSQLConstraintRemove(constraint);
+        }
+
+        public string GetSQLColumnAddNotNull(Field column)
+        {
+            return string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}{3} NOT NULL", column.Table.Name, column.Name, column.FieldTypeOriginal, column.SimpleFieldType == SimpleDbType.String ? "(" + column.Length + ")" : "");
+        }
+
+        public string GetSQLColumnRemoveNotNull(Field column)
+        {
+            return string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}{3} NULL", column.Table.Name, column.Name, column.FieldTypeOriginal, column.SimpleFieldType == SimpleDbType.String ? "(" + column.Length + ")" : "");
+        }
+
+        public string GetSQLColumnSetAutoIncrement(Field column)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSQLColumnRemoveAutoIncrement(Field column)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSQLIndexAdd(Index index)
+        {
+            return string.Format("CREATE INDEX [{0}] ON [{1}] ([{2}])", index.Name, index.Table.Name, string.Join("],[", index.FieldNames.ToArray()));
+        }
+
+        public string GetSQLIndexRemove(Index index)
+        {
+            return string.Format("DROP INDEX [{0}] ON [{1}]", index.Name, index.Table.Name);
+        }
+
         #endregion
     }
 }

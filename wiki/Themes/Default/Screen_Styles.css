@@ -239,11 +239,11 @@ code, pre {
 }
 
 pre {
-	background-color: #FFFFF0;
+	background-color: #282828;
 	margin: 0px 10px 0px 10px;
 	padding: 8px;
-	border: solid 1px #DDDDDD;
 	overflow: auto;
+	color:#AAAAAA;
 }
 html>body pre {
 	/* Fix for IE7 - unwanted horizontal scrollbar */

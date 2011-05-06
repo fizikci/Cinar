@@ -17,6 +17,7 @@ using System.Diagnostics;
 using Cinar.DBTools.Controls;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using Constraint = Cinar.Database.Constraint;
 
 namespace Cinar.DBTools
 {
@@ -25,16 +26,22 @@ namespace Cinar.DBTools
         public CommandManager cmdMan = new CommandManager();
         TreeNode rootNode;
         int splitterMainLast = 0, splitterPropLast = 0;
+        Image imgYellowBg = null;
 
         public FormMain()
         {
             InitializeComponent();
             SetFont(this, Font);
 
+            toolStrip.BackColor = Color.FromArgb(188, 199, 216);
+            imgYellowBg = splitContainerMain.Panel1.BackgroundImage;
+
             imageListTree.Images.Add("Folder", FamFamFam.folder);
             imageListTree.Images.Add("Table", FamFamFam.table);
             imageListTree.Images.Add("Field", FamFamFam.table_row_insert);
             imageListTree.Images.Add("Key", FamFamFam.key);
+            imageListTree.Images.Add("Constraint", FamFamFam.database_link);
+            imageListTree.Images.Add("Index", FamFamFam.database_key);
             imageListTree.Images.Add("View", FamFamFam.eye);
             imageListTree.Images.Add("Diagram", FamFamFam.chart_organisation);
             imageListTree.Images.Add("Database", FamFamFam.database);
@@ -212,33 +219,41 @@ $"},
                     #region tree menus
                      new Command {
                                      Execute = (arg)=>{
+                                         this.SuspendLayout();
                                          if(treeView.Visible)
                                          {
                                              splitterMainLast = splitContainerMain.SplitterDistance;
                                              splitContainerMain.SplitterDistance = 22;
+                                             splitContainerMain.Panel1.BackgroundImage = null;
                                              treeView.Visible = false;
                                          }
                                          else
                                          {
+                                             splitContainerMain.Panel1.BackgroundImage = imgYellowBg;
                                              splitContainerMain.SplitterDistance = splitterMainLast;
                                              treeView.Visible = true;
                                          }
+                                         this.PerformLayout();
                                      },
                                      Trigger = new CommandTrigger{ Control = labelConnections}
                                  },
                      new Command {
                                      Execute = (arg)=>{
+                                         this.SuspendLayout();
                                          if(propertyGrid.Visible)
                                          {
                                              splitterPropLast = splitContainerProperties.SplitterDistance;
                                              splitContainerProperties.SplitterDistance = splitContainerProperties.Width - 30;
+                                             splitContainerProperties.Panel2.BackgroundImage = null;
                                              propertyGrid.Visible = false;
                                          }
                                          else
                                          {
                                              splitContainerProperties.SplitterDistance = splitterPropLast;
+                                             splitContainerProperties.Panel2.BackgroundImage = imgYellowBg;
                                              propertyGrid.Visible = true;
                                          }
+                                         this.PerformLayout();
                                      },
                                      Trigger = new CommandTrigger{ Control = labelProperties}
                                  },
@@ -250,7 +265,7 @@ $"},
                                              cmdTableDrop("");
                                          //else if(SelectedObject is Field)
                                          //    cmdFieldDrop("");
-                                         else if(SelectedObject is Index)
+                                         else if(SelectedObject is BaseIndexConstraint)
                                              cmdDropIndex("");
                                          
                                      },
@@ -381,11 +396,6 @@ $"},
                                      IsVisible = ()=> SelectedObject is TableCollection || SelectedObject is Table
                                  },
                      new Command {
-                                     Execute = cmdAlterTable,
-                                     Trigger = new CommandTrigger{ Control = menuTableAlter},
-                                     IsVisible = ()=> SelectedObject is Table
-                                 },
-                     new Command {
                                      Execute = cmdTableDrop,
                                      Trigger = new CommandTrigger{ Control = menuTableDrop},
                                      IsVisible = ()=> SelectedObject is Table
@@ -445,17 +455,17 @@ $"},
                      new Command {
                                      Execute = cmdCreateIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexCreateIndex},
-                                     IsVisible = ()=> SelectedObject is IndexCollection || SelectedObject is Index
+                                     IsVisible = ()=> SelectedObject is IndexCollection || SelectedObject is BaseIndexConstraint
                                  },
                      new Command {
                                      Execute = cmdEditIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexEditIndex},
-                                     IsVisible = ()=> SelectedObject is Index
+                                     IsVisible = ()=> SelectedObject is BaseIndexConstraint
                                  },
                      new Command {
                                      Execute = cmdDropIndex,
                                      Trigger = new CommandTrigger{ Control = menuIndexDropIndex},
-                                     IsVisible = ()=> SelectedObject is Index
+                                     IsVisible = ()=> SelectedObject is BaseIndexConstraint
                                  },
                     #endregion
              };
@@ -534,7 +544,7 @@ $"},
                 TreeNode node = createConnectionNode(cs);
                 populateTreeNodesForDatabase(node);
             }
-            treeView.Sort();
+            //treeView.Sort();
             if (rootNode.Nodes.Count > 0 && rootNode.Nodes[0].Nodes.Count > 0)
             {
                 rootNode.Nodes[0].Expand();
@@ -623,12 +633,20 @@ $"},
                     TreeNode tnField = fieldsNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
                     tnField.Tag = fld;
                 }
-                TreeNode keysNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
+                TreeNode keysNode = tnTable.Nodes.Add("Constraints", "Constraints", "Folder", "Folder");
+                keysNode.Tag = tbl.Constraints;
+                if (tbl.Constraints != null)
+                    foreach (var index in tbl.Constraints)
+                    {
+                        TreeNode tnKey = keysNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", index is PrimaryKeyConstraint ? "Key" : "Constraint", index is PrimaryKeyConstraint ? "Key" : "Constraint");
+                        tnKey.Tag = index;
+                    }
+                TreeNode indexesNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
                 keysNode.Tag = tbl.Indices;
-                if(tbl.Indices!=null)
+                if (tbl.Indices != null)
                     foreach (var index in tbl.Indices)
                     {
-                        TreeNode tnKey = keysNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ",index.FieldNames.ToArray()) + ")", index.IsPrimary ? "Key" : "Field", index.IsPrimary ? "Key" : "Field");
+                        TreeNode tnKey = indexesNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", "Index", "Index");
                         tnKey.Tag = index;
                     }
             }
@@ -661,6 +679,10 @@ $"},
             }
             return null;
         }
+        private TreeNode findNode(object tag) 
+        {
+            return findNode(treeView.Nodes, tn => tn.Tag == tag);
+        }
         private TreeNode findSelectedDBNode()
         {
             TreeNode treeNode = treeView.SelectedNode;
@@ -686,8 +708,8 @@ $"},
             if (SelectedObject is IndexCollection)
                 return (SelectedObject as IndexCollection).Table;
 
-            if (SelectedObject is Index)
-                return (SelectedObject as Index).Table;
+            if (SelectedObject is BaseIndexConstraint)
+                return (SelectedObject as BaseIndexConstraint).Table;
 
             return null;
         }
@@ -826,7 +848,7 @@ $"},
             TreeNode dbNode = findSelectedDBNode();
             dbNode.Nodes.Clear();
             populateTreeNodesForDatabase(dbNode);
-            treeView.Sort();
+            //treeView.Sort();
         }
         private void cmdRefreshMetadata(string arg)
         {
@@ -845,14 +867,14 @@ $"},
                         Field newField = newTable.Fields[oldField.Name];
                         if (newField == null) continue;
 
-                        if (oldField.ReferenceField != null)
-                        {
-                            var isOk = newField.ReferenceField != null && oldField.ReferenceField.Table.Name == newField.ReferenceField.Table.Name && oldField.ReferenceField.Name == newField.ReferenceField.Name;
-                            if (!isOk)
-                            {
-                                newField.ReferenceField = getField(oldField.ReferenceField.Table.Name, oldField.ReferenceField.Name);
-                            }
-                        }
+                        //if (oldField.ReferenceField != null)
+                        //{
+                        //    var isOk = newField.ReferenceField != null && oldField.ReferenceField.Table.Name == newField.ReferenceField.Table.Name && oldField.ReferenceField.Name == newField.ReferenceField.Name;
+                        //    if (!isOk)
+                        //    {
+                        //        newField.ReferenceField = getField(oldField.ReferenceField.Table.Name, oldField.ReferenceField.Name);
+                        //    }
+                        //}
 
                         newField.UIMetadata = oldField.UIMetadata;
                     }
@@ -863,7 +885,7 @@ $"},
                 TreeNode dbNode = findSelectedDBNode();
                 dbNode.Nodes.Clear();
                 populateTreeNodesForDatabase(dbNode);
-                treeView.Sort();
+                //treeView.Sort();
             }
         }
         private Field getField(string tableName, string fieldName)
@@ -1265,158 +1287,6 @@ $"},
             }
             return tbl;
         }
-        private void cmdAlterTable(string arg)
-        {
-            Table oldTable = SelectedObject as Table;
-            AlterTable(oldTable);
-        }
-        public void AlterTable(Table oldTable)
-        {
-            FormCreateTable fct = new FormCreateTable();
-            fct.SetTable(oldTable);
-
-            while (true)
-            {
-                if (fct.ShowDialog() == DialogResult.OK)
-                {
-                    TableDef newTable = fct.GetAlteredTable();
-                    try
-                    {
-                        if (string.IsNullOrEmpty(newTable.Name))
-                            throw new Exception("Enter a valid name for the table.");
-                        if (newTable.Fields == null || newTable.Fields.Count == 0)
-                            throw new Exception("Add minimum one field to the table.");
-
-                        StringBuilder sb = new StringBuilder();
-
-                        // silinmiş field var mı?
-                        foreach (Field field in oldTable.Fields)
-                        {
-                            FieldDef f = newTable.Fields.Find(nf => nf.OriginalName == field.Name);
-                            if (f != null) continue;
-
-                            sb.AppendLine(Provider.Database.GetAlterTableDropColumnDDL(field) + ";");
-                        }
-                        foreach (FieldDef f in newTable.Fields)
-                        {
-                            Field orgField = oldTable.Fields[f.OriginalName];
-                            // field yeni tanımlanmışsa
-                            if (orgField == null)
-                            {
-                                orgField = new Field();
-                                orgField.Name = f.Name;
-                                orgField.FieldTypeOriginal = f.FieldType;
-                                orgField.FieldType = Provider.Database.StringToDbType(f.FieldType);
-                                orgField.Length = f.Length;
-                                orgField.DefaultValue = f.DefaultValue;
-                                orgField.IsNullable = f.IsNullable;
-                                orgField.IsAutoIncrement = f.IsAutoIncrement;
-
-                                oldTable.Fields.Add(orgField);
-                                sb.AppendLine(Provider.Database.GetAlterTableAddColumnDDL(orgField) + ";");
-
-                                if (f.IsPrimaryKey)
-                                {
-                                    Index index = oldTable.Indices.Find(k => k.IsPrimary);
-                                    if (index == null)
-                                    {
-                                        index = new Index();
-                                        oldTable.Indices.Add(index);
-                                        index.FieldNames.Add(f.Name);
-                                        index.IsPrimary = true;
-                                        index.IsUnique = true;
-                                        index.Name = "PK_" + oldTable.Name;
-                                        sb.AppendLine(index.ToDDL() + ";");
-                                    }
-                                    else
-                                    {
-                                        sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
-                                        index.FieldNames = new List<string> { f.Name };
-                                        sb.AppendLine(index.ToDDL() + ";");
-                                    }
-                                }
-                                continue;
-                            }
-
-                            // field zaten varsa
-
-                            if (oldTable.Indices == null) oldTable.Indices = new IndexCollection(oldTable);
-
-                            // primary key kaldırılmış mı?
-                            if (orgField.IsPrimaryKey && !f.IsPrimaryKey)
-                            {
-                                Index index = oldTable.Indices.Find(k => k.IsPrimary);
-                                sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
-                            }
-                            // primary key eklenmiş mi?
-                            if (!orgField.IsPrimaryKey && f.IsPrimaryKey)
-                            {
-                                Index index = oldTable.Indices.Find(k => k.IsPrimary);
-                                if (index == null)
-                                {
-                                    index = new Index();
-                                    oldTable.Indices.Add(index);
-                                    index.FieldNames.Add(f.Name);
-                                    index.IsPrimary = true;
-                                    index.IsUnique = true;
-                                    index.Name = "PK_" + oldTable.Name;
-                                    sb.AppendLine(index.ToDDL() + ";");
-                                }
-                                else
-                                {
-                                    sb.AppendLine(Provider.Database.GetAlterTableDropKeyDDL(index) + ";");
-                                    index.FieldNames = new List<string> { f.Name };
-                                    sb.AppendLine(index.ToDDL() + ";");
-                                }
-                            }
-                            // field adı değişmiş mi?
-                            if (f.OriginalName != f.Name)
-                            {
-                                sb.AppendLine(Provider.Database.GetAlterTableRenameColumnDDL(oldTable.Name, f.OriginalName, f.Name) + ";");
-                                orgField.Name = f.Name;
-                            }
-                            // postgre'ye özel olarak is_autoincrement true yapılmışsa sequence ekle
-                            if (Provider.Database.Provider == DatabaseProvider.PostgreSQL && !orgField.IsAutoIncrement && f.IsAutoIncrement)
-                            {
-                                // add sequence
-                                string seqName = "seq_" + oldTable.Name + "_" + orgField.Name;
-                                int maxId = Provider.Database.GetInt("select max(\"" + orgField.Name + "\")+1 from \"" + oldTable.Name + "\"");
-                                Provider.Database.ExecuteNonQuery("CREATE SEQUENCE \"" + seqName + "\" INCREMENT 1 START " + maxId + ";");
-                                f.DefaultValue = "nextval('\"" + seqName + "\"')";
-                            }
-                            // tipi vs. değişmiş mi?
-                            string orgFieldDDL = Provider.Database.GetFieldDDL(orgField);
-                            orgField.Name = f.Name;
-                            orgField.FieldType = Provider.Database.StringToDbType(f.FieldType);
-                            orgField.Length = f.Length;
-                            orgField.DefaultValue = f.DefaultValue;
-                            orgField.IsNullable = f.IsNullable;
-                            orgField.IsAutoIncrement = f.IsAutoIncrement;
-                            string newFieldDDL = Provider.Database.GetFieldDDL(orgField);
-                            if (orgFieldDDL != newFieldDDL)
-                                sb.AppendLine(Provider.Database.GetAlterTableChangeColumnDDL(orgField) + ";");
-                        }
-
-                        if (oldTable.Name != newTable.Name)
-                            sb.AppendLine(Provider.Database.GetAlterTableRenameDDL(oldTable.Name, newTable.Name));
-
-                        SQLInputDialog sid = new SQLInputDialog(sb.ToString(), false);
-                        if (sid.ShowDialog() == DialogResult.OK)
-                            Provider.Database.ExecuteNonQuery(sid.SQL);
-
-                        cmdRefreshMetadata("nowarn");
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Cinar DBTools");
-                        fct.DialogResult = DialogResult.None;
-                    }
-                }
-                else
-                    break;
-            }
-        }
 
         private void cmdGenerateSQL(string arg)
         {
@@ -1607,19 +1477,20 @@ $"},
             {
                 if (fct.ShowDialog() == DialogResult.OK)
                 {
-                    Index index = fct.GetCreatedKey();
+                    BaseIndexConstraint index = fct.GetCreatedKey();
                     try
                     {
-                        if(table.Indices==null) table.Indices = new IndexCollection(table);
-
-                        table.Indices.Add(index);
+                        if(index is Index)
+                            table.Indices.Add((Index)index);
+                        else
+                            table.Constraints.Add((Constraint)index);
 
                         if (string.IsNullOrEmpty(index.Name))
-                            throw new Exception("Enter a valid name for the index.");
+                            throw new Exception("Enter a valid name.");
                         if (index.Fields == null || index.Fields.Count == 0)
-                            throw new Exception("Select minimum one field for the index.");
+                            throw new Exception("Select minimum one field.");
 
-                        string sql = index.ToDDL();
+                        string sql = Provider.Database.GetSQLBaseIndexConstraintAdd(index);
                         SQLInputDialog sid = new SQLInputDialog(sql, false);
                         if (sid.ShowDialog() == DialogResult.OK)
                         {
@@ -1631,7 +1502,10 @@ $"},
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Cinar Database Tools");
-                        table.Indices.Remove(index);
+                        if (index is Index)
+                            table.Indices.Remove((Index)index);
+                        else
+                            table.Constraints.Remove((Constraint)index);
                         fct.DialogResult = DialogResult.None;
                     }
                 }
@@ -1645,32 +1519,36 @@ $"},
             if (table == null) return;
 
             FormCreateIndex fct = new FormCreateIndex(table);
-            Index oldIndex = SelectedObject as Index;
+            BaseIndexConstraint oldIndex = SelectedObject as BaseIndexConstraint;
             fct.SetKey(oldIndex);
 
             while (true)
             {
                 if (fct.ShowDialog() == DialogResult.OK)
                 {
-                    Index index = fct.GetCreatedKey();
+                    BaseIndexConstraint index = fct.GetCreatedKey();
                     try
                     {
-                        if (table.Indices == null) table.Indices = new IndexCollection(table);
-
-                        table.Indices.Add(index);
+                        if (index is Index)
+                            table.Indices.Add((Index)index);
+                        else
+                            table.Constraints.Add((Constraint)index);
 
                         if (string.IsNullOrEmpty(index.Name))
-                            throw new Exception("Enter a valid name for the index.");
+                            throw new Exception("Enter a valid name.");
                         if (index.FieldNames == null || index.FieldNames.Count == 0)
-                            throw new Exception("Select minimum one field for the index.");
+                            throw new Exception("Select minimum one field.");
 
-                        string sql = Provider.Database.GetAlterTableDropKeyDDL(index) + ";" + Environment.NewLine;
-                        sql += index.ToDDL();
+                        string sql = Provider.Database.GetSQLBaseIndexConstraintRemove(oldIndex) + ";" + Environment.NewLine;
+                        sql += Provider.Database.GetSQLBaseIndexConstraintAdd(index);
                         SQLInputDialog sid = new SQLInputDialog(sql, false);
                         if (sid.ShowDialog() == DialogResult.OK)
                         {
                             Provider.Database.ExecuteNonQuery(sid.SQL);
-                            //table.indices.Remove(index);
+                            if (oldIndex is Index)
+                                table.Indices.Remove((Index)oldIndex);
+                            else
+                                table.Constraints.Remove((Constraint)oldIndex);
                             cmdRefresh("");
                         }
                         break;
@@ -1678,7 +1556,10 @@ $"},
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Cinar Database Tools");
-                        table.Indices.Remove(index);
+                        if (index is Index)
+                            table.Indices.Remove((Index)index);
+                        else
+                            table.Constraints.Remove((Constraint)index);
                         fct.DialogResult = DialogResult.None;
                     }
                 }
@@ -1690,19 +1571,31 @@ $"},
         {
             if (!checkConnection()) return;
             Table table = findSelectedTable();
-            Index index = SelectedObject as Index;
+            BaseIndexConstraint index = SelectedObject as BaseIndexConstraint;
             if (MessageBox.Show(string.Format("Index \"{0}\" on \"{1}\" will be dropped.\n\nContinue?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 try
                 {
-                    Provider.Database.ExecuteNonQuery(Provider.Database.GetAlterTableDropKeyDDL(index));
-                    table.Indices.Remove(index);
-                    cmdRefresh(null);
-                    CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
+                    string sql = Provider.Database.GetSQLBaseIndexConstraintRemove(index);
+                    SQLInputDialog sid = new SQLInputDialog(sql, false);
+                    if (sid.ShowDialog() == DialogResult.OK)
+                    {
+                        Provider.Database.ExecuteNonQuery(sid.SQL);
+                        if(index is Index)
+                            table.Indices.Remove((Index)index);
+                        else
+                            table.Constraints.Remove((Constraint)index);
+                        cmdRefresh(null);
+                        CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
+                    }
                 }
                 catch (Exception ex)
                 {
-                    CurrSQLEditor.ShowInfoText(ex.Message);
+                    MessageBox.Show(ex.Message, "Cinar Database Tools");
+                    if (index is Index)
+                        table.Indices.Add((Index)index);
+                    else
+                        table.Constraints.Add((Constraint)index);
                 }
             }
         }
@@ -1769,6 +1662,8 @@ $"},
 
             // save modified query editors and add them to "lastopened" log.
             string openedFiles = "";
+            File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
+
             for (int i = 0; i < tabControlEditors.TabPages.Count && !cancel; i++)
             {
                 tabControlEditors.SelectedIndex = i;
@@ -1857,11 +1752,83 @@ $"},
         }
 
 
+        public event EventHandler<DbObjectChangedArgs> ObjectChanged;
+
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            if (propertyGrid.SelectedObject is Field && e.ChangedItem.Label == "ReferenceFieldName")
-                ;
-            else
+            bool cancel = true;
+            string sql = null, message = "";
+            Action afterExecute = null, afterError = null;
+
+            try
+            {
+                if (propertyGrid.SelectedObject is Field)
+                {
+                    Field field = propertyGrid.SelectedObject as Field;
+                    switch (e.ChangedItem.Label)
+                    {
+                        case "Name":
+                            sql = Provider.Database.GetSQLColumnRename((string)e.OldValue, field);
+                            message = "Do you really want to rename this field?";
+                            afterExecute = () => { findNode(field).Text = field.Name + " (" + field.FieldType + ")"; };
+                            break;
+                        case "FieldType":
+                        case "Length":
+                            string oldOriginalfieldType = field.FieldTypeOriginal;
+                            field.FieldTypeOriginal = Provider.Database.DbTypeToString(field.FieldType);
+                            sql = Provider.Database.GetSQLColumnChangeDataType(field);
+                            message = "Do you really want to change the type of this field?";
+                            afterError = () => { field.FieldTypeOriginal = oldOriginalfieldType; };
+                            break;
+                        case "IsNullable":
+                            sql = field.IsNullable ?
+                                Provider.Database.GetSQLColumnRemoveNotNull(field) : Provider.Database.GetSQLColumnAddNotNull(field);
+                            message = "Do you really want to change nullability?";
+                            break;
+                        case "DefaultValue":
+                            sql = Provider.Database.GetSQLColumnChangeDefault(field);
+                            message = "Do you really want to change default value of this field?";
+                            break;
+                        case "IsAutoIncrement":
+                            sql = field.IsAutoIncrement ?
+                                Provider.Database.GetSQLColumnSetAutoIncrement(field) : Provider.Database.GetSQLColumnRemoveAutoIncrement(field);
+                            message = "Do you really want to change auto incrementing of this field?";
+                            break;
+                    }
+                }
+                if (propertyGrid.SelectedObject is Table)
+                {
+                    Table table = propertyGrid.SelectedObject as Table;
+                    switch (e.ChangedItem.Label)
+                    {
+                        case "Name":
+                            sql = Provider.Database.GetSQLTableRename((string)e.OldValue, table.Name);
+                            message = "Do you really want to rename this table?";
+                            afterExecute = () => { findNode(table).Text = table.Name; };
+                            break;
+                    }
+                }
+
+                if (sql != null)
+                {
+                    SQLInputDialog sid = new SQLInputDialog(sql, true, message);
+                    if (sid.ShowDialog() == DialogResult.OK)
+                    {
+                        Provider.Database.ExecuteNonQuery(sid.SQL);
+                        if (afterExecute != null) afterExecute();
+                        ObjectChanged(this, new DbObjectChangedArgs() { Object = propertyGrid.SelectedObject, NewValue = e.ChangedItem.Value, OldValue = e.OldValue, PropertyName = e.ChangedItem.Label });
+                        cancel = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (afterError != null) afterError();
+                cancel = true;
+            }
+
+            if(cancel)
                 e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
         }
 
@@ -1869,6 +1836,13 @@ $"},
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
+        }
+
+        private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            TreeNode tn = e.Item as TreeNode;
+            if (tn.Tag is Table)
+                DoDragDrop(tn.Tag, DragDropEffects.Move);
         }
     }
 
@@ -1996,4 +1970,13 @@ $"},
             Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
         }
     }
+
+    public class DbObjectChangedArgs : EventArgs
+    {
+        public object Object { get; set; }
+        public string PropertyName { get; set; }
+        public object OldValue { get; set; }
+        public object NewValue { get; set; }
+    }
+
 }
