@@ -56,16 +56,6 @@ namespace Cinar.DBTools.Controls
                     Trigger = new CommandTrigger{Control=menuSetAsDisplayField},
                     IsVisible = () => selectedTVs.Count > 0 && !string.IsNullOrEmpty(selectedTVs[0].SelectedField)
                 },
-                new Command {
-                    Execute = cmdSetAsPrimaryKey,
-                    Trigger = new CommandTrigger{Control=menuSetAsPrimaryKey},
-                    IsVisible = () => selectedTVs.Count > 0 && !string.IsNullOrEmpty(selectedTVs[0].SelectedField)
-                },
-                new Command {
-                    Execute = cmdAlterTable,
-                    Trigger = new CommandTrigger{Control=menuAlterTable},
-                    IsVisible = () => selectedTVs.Count > 0
-                },
             };
             cmdMan.SetCommandTriggers();
             //cmdMan.SetCommandControlsVisibility();
@@ -76,12 +66,48 @@ namespace Cinar.DBTools.Controls
 
         protected override void OnLoad(EventArgs e)
         {
-            if (this.CurrentSchema == null)
-                cmdNewSchema(null);
-
             base.OnLoad(e);
             correctPanelSize();
+            MainForm.ObjectChanged += new EventHandler<DbObjectChangedArgs>(MainForm_ObjectChanged);
 
+            if (CurrentSchema == null)
+            {
+                CurrentSchema = new Diagram();
+                CurrentSchema.conn = conn;
+                CurrentSchema.Name = "";
+                panelPaint(true);
+            }
+        }
+
+        protected override void OnDoubleClick(EventArgs e)
+        {
+            cmdAddTables(null);
+        }
+
+        void MainForm_ObjectChanged(object sender, DbObjectChangedArgs e)
+        {
+            if (e.Object is Table && e.PropertyName == "Name")
+            {
+                TableView tv = CurrentSchema.Tables.Find(t => t.TableName == e.OldValue.ToString());
+                if (tv != null)
+                    tv.TableName = e.NewValue.ToString();
+                foreach (ConnectionLine cl in CurrentSchema.ConnectionLines)
+                {
+                    if (cl.FromTable == e.OldValue.ToString()) cl.FromTable = e.NewValue.ToString();
+                    if (cl.ToTable == e.OldValue.ToString()) cl.ToTable = e.NewValue.ToString();
+                }
+            }
+            if (e.Object is Field && e.PropertyName == "Name")
+            {
+                Field f = e.Object as Field;
+                TableView tv = CurrentSchema.Tables.Find(t => t.TableName == f.Table.Name);
+                if (tv != null)
+                {
+                    tv.SelectedField = e.NewValue.ToString();
+                }
+            }
+
+            panelPaint(true);
         }
 
         public Diagram CurrentSchema;
@@ -89,6 +115,7 @@ namespace Cinar.DBTools.Controls
         private void cmdNewSchema(string arg)
         {
             ListBoxDialog std = new ListBoxDialog();
+            std.StartPosition = FormStartPosition.CenterScreen;
             foreach (var item in conn.Database.Tables.OrderBy(t=>t.Name))
                 std.ListBox.Items.Add(item);
             if (std.ShowDialog() == DialogResult.OK)
@@ -113,21 +140,20 @@ namespace Cinar.DBTools.Controls
 
         private void createNewSchema(List<Table> tables)
         {
-            CurrentSchema = new Diagram();
-            CurrentSchema.conn = conn;
-            CurrentSchema.Name = "";
             addTablesToSchema(tables, true);
             arrangeTables(true);
             correctConnectionLinesPositions(CurrentSchema.Tables);
         }
-        private void addTablesToSchema(List<Table> tables, bool circularLayout)
+        private void addTablesToSchema(List<Table> tables, bool circularLayout, int left = 10, int top = 10)
         {
             for (int i = 0; i < tables.Count; i++)
             {
                 Table tbl = tables[i];
                 TableView tv = new TableView();
                 //tv.Size = new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + tbl.Fields.Count * Diagram.Def_FieldHeight);
+                tv.Position = new Point(left, top);
                 tv.TableName = tbl.Name;
+                tv.ShowFull = !circularLayout;
 
                 CurrentSchema.Tables.Add(tv);
             }
@@ -148,7 +174,7 @@ namespace Cinar.DBTools.Controls
                             continue;
 
                         ConnectionLine cl = new ConnectionLine();
-                        cl.FromField = fld.Name;
+                        //cl.FromField = fld.Name;
                         cl.FromTable = tbl.Name;
                         cl.ToTable = tv.TableName;
                         CurrentSchema.ConnectionLines.Add(cl);
@@ -202,6 +228,9 @@ namespace Cinar.DBTools.Controls
         {
             TableView tv1 = CurrentSchema.GetTableView(cl.FromTable);
             TableView tv2 = CurrentSchema.GetTableView(cl.ToTable);
+            if (tv1 == null || tv2 == null)
+                return;
+
             Pair<Point> pair = tv1.Rectangle.FindClosestSideCenters(tv2.Rectangle);
             cl.StartPoint = pair.First;
             cl.EndPoint = pair.Second;
@@ -391,25 +420,6 @@ namespace Cinar.DBTools.Controls
             }
         }
 
-        private void cmdAlterTable(string arg)
-        {
-            if (selectedTVs.Count != 1)
-                return;
-
-            try
-            {
-                MainForm.AlterTable(conn.Database.Tables[selectedTVs[0].TableName]);
-                selectedTVs[0].Modified = true;
-                correctPanelSize();
-                panelPaint(true);
-                modified = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void cmdSetAsDisplayField(string arg)
         {
             if (selectedTVs.Count != 1)
@@ -419,72 +429,6 @@ namespace Cinar.DBTools.Controls
             panelPaint(false);
             modified = true;
         }
-
-        private void cmdSetAsPrimaryKey(string arg)
-        {
-            if (selectedTVs.Count != 1)
-                return;
-
-            Index index = conn.Database.Tables[selectedTVs[0].TableName].Indices.Find(k => k.IsPrimary);
-            if (index == null)
-            {
-                index = new Index();
-                index.IsPrimary = true;
-                index.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
-                index.IsUnique = true;
-                index.Name = "PK_" + selectedTVs[0].TableName;
-            }
-            else
-            {
-                index.FieldNames = new List<string>() { selectedTVs[0].SelectedField };
-            }
-            panelPaint(false);
-            modified = true;
-        }
-
-        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            if (e.ChangedItem.Label == "Name")
-            {
-                if (propertyGrid.SelectedObject is Table && MessageBox.Show("The table name will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableRenameDDL(e.OldValue.ToString(), e.ChangedItem.Value.ToString()));
-                        CurrentSchema.GetTableView(e.OldValue.ToString()).TableName = e.ChangedItem.Value.ToString();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field name will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableRenameColumnDDL(selectedTVs[0].TableName, e.OldValue.ToString(), e.ChangedItem.Value.ToString()));
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            else if (propertyGrid.SelectedObject is Field && MessageBox.Show("The field definition will be changed on database! Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-            {
-                try
-                {
-                    conn.Database.ExecuteNonQuery(conn.Database.GetAlterTableChangeColumnDDL(propertyGrid.SelectedObject as Field));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            panelPaint(false);
-        }
-
         private bool modified;
         public bool Modified
         {
@@ -500,6 +444,33 @@ namespace Cinar.DBTools.Controls
         public string GetName()
         {
             return CurrentSchema.Name;
+        }
+
+        public override bool AllowDrop
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+            }
+        }
+        protected override void OnDragEnter(DragEventArgs e)
+        {
+            Table tbl = e.Data.GetData(typeof(Table)) as Table;
+            TableView tv = CurrentSchema.GetTableView(tbl.Name);
+            if (tbl != null && tv==null && tbl.Database == conn.Database)
+                e.Effect = DragDropEffects.Move;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+        protected override void OnDragDrop(DragEventArgs e)
+        {
+            Table tbl = e.Data.GetData(typeof(Table)) as Table;
+            Point pos = this.PointToClient(new Point(e.X, e.Y));
+            addTablesToSchema(new List<Table>() { tbl}, false, pos.X, pos.Y);
+            panelPaint(false);
         }
     }
 }

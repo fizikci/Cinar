@@ -36,7 +36,7 @@ div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, pre, a, abbr, acronym, add
     position: relative;
 }
 
-#aspnetForm { 
+#aspnetForm, #FrmMaster { 
     background: url("/Images/cinar/design/bg_highlight.png") no-repeat scroll center top transparent;
 	width:910px; 
 	margin:0 auto;
@@ -117,3 +117,7 @@ li {
     text-shadow: 1px 1px 0 #000000;
 }
 #DiscussLink, #HistoryLink {display:none}
+
+.ui-dialog-title {
+    color: white;
+}

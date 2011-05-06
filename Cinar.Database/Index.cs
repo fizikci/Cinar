@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
@@ -7,96 +8,49 @@ using System.Xml.Serialization;
 namespace Cinar.Database
 {
     [Serializable]
-    public class Index
+    public class Index : BaseIndexConstraint
     {
         internal IndexCollection parent;
 
-        public Table Table { get { return parent.Table; } }
+        [Browsable(false)]
+        public override Table Table { get { return parent.Table; } }
 
-        private string name;
+        public Index() {
+            this.FieldNames = new List<string>();
+        }
+    }
+
+    public abstract class BaseIndexConstraint
+    {
+        public abstract Table Table { get; }
+
         /// <summary>
         /// Index adı.
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        [Category("Base"), ReadOnly(true)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Index ile ilgili fieldlar
         /// </summary>
-        [XmlIgnore]
+        [XmlIgnore, Browsable(false)]
         public FieldCollection Fields
         {
             get
             {
-                FieldCollection fields = new FieldCollection(parent.table);
-                foreach (string strField in fieldNames)
-                    fields.Add(parent.table.Fields[strField]);
+                FieldCollection fields = new FieldCollection(Table);
+                foreach (string strField in FieldNames)
+                    fields.Add(Table.Fields[strField]);
                 return fields;
             }
             //set { fields = value; }
         }
 
-        private List<string> fieldNames;
         /// <summary>
         /// Index ile ilgili fieldlar
         /// </summary>
-        public List<string> FieldNames
-        {
-            get { return fieldNames; }
-            set { fieldNames = value; }
-        }
-
-        private bool isPrimary;
-        /// <summary>
-        /// Primary Index midir?
-        /// </summary>
-        public bool IsPrimary
-        {
-            get { return isPrimary; }
-            set { isPrimary = value; }
-        }
-
-        private bool isUnique;
-        /// <summary>
-        /// Unique Index midir? (Primary Index ise unique olmak zorundadır zaten)
-        /// </summary>
-        public bool IsUnique
-        {
-            get { return isUnique; }
-            set { isUnique = value; }
-        }
-
-        public Index() {
-            this.fieldNames = new List<string>();
-        }
-
-        public string ToDDL()
-        {
-            switch (parent.table.Database.Provider)
-            {
-                case DatabaseProvider.PostgreSQL:
-                    if (IsPrimary)
-                        return "ALTER TABLE \"" + parent.table.Name + "\" ADD PRIMARY KEY (\"" + string.Join("\", \"", FieldNames.ToArray()) + "\")";
-                    else
-                        return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX \"" + Name + "\" ON \"" + parent.table.Name + "\" (\"" + string.Join("\", \"", FieldNames.ToArray()) + "\")";
-                case DatabaseProvider.MySQL:
-                    if(IsPrimary)
-                        return "ALTER TABLE `" + parent.table.Name + "` ADD PRIMARY KEY (`" + string.Join("`, `", FieldNames.ToArray()) + "`)";
-                    else
-                        return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX `" + Name + "` ON `" + parent.table.Name + "` (`" + string.Join("`, `", FieldNames.ToArray()) + "`)";
-                case DatabaseProvider.SQLServer:
-                    if (IsPrimary)
-                        return "ALTER TABLE [" + parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT [" + Name + "] PRIMARY KEY CLUSTERED ([" + string.Join("], [", FieldNames.ToArray()) + "])";
-                    if (IsUnique)
-                        return "ALTER TABLE [" + parent.table.Name + "] WITH NOCHECK ADD CONSTRAINT [" + Name + "] UNIQUE ([" + string.Join("], [", FieldNames.ToArray()) + "])";
-                    return "CREATE " + (IsUnique ? "UNIQUE" : "") + " INDEX [" + Name + "] ON [" + parent.table.Name + "] ([" + string.Join("], [", FieldNames.ToArray()) + "])";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        [Category("Base"), ReadOnly(true)]
+        public List<string> FieldNames { get; set; }
     }
 
     [Serializable]
@@ -128,13 +82,6 @@ namespace Cinar.Database
                 return null;
             }
         }
-        //public Field Find(DbType fieldType)
-        //{
-        //    foreach (Field fld in this)
-        //        if (fld.FieldType == fieldType)
-        //            return fld;
-        //    return null;
-        //}
 
         public string[] ToStringArray()
         {

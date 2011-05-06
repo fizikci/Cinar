@@ -11,13 +11,13 @@ namespace Cinar.DBTools.Controls
 {
     public partial class SQLInputDialog : Form
     {
-        public SQLInputDialog(string sql, bool readOnly)
+        public SQLInputDialog(string sql, bool readOnly, string message = "To complete your process, the following query is going to be executed on database {0}. Please be sure that it doesn\'t harm your data.")
         {
             InitializeComponent();
 
             txtCode.Text = sql;
             txtCode.Document.ReadOnly = readOnly;
-            label1.Text = string.Format(label1.Text, Provider.ActiveConnection);
+            label1.Text = string.Format(message, Provider.ActiveConnection);
         }
 
         public string SQL

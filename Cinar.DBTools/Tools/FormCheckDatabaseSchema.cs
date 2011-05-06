@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
+using Cinar.DBTools.Controls;
+using ForeignKeyConstraint = Cinar.Database.ForeignKeyConstraint;
 
 namespace Cinar.DBTools.Tools
 {
@@ -111,7 +113,7 @@ namespace Cinar.DBTools.Tools
                 Field f = (Field)cb.SelectedItem;
                 if (f != null)
                 {
-                    Table.Indices.Add(new Index() { FieldNames = new List<string>() {f.Name}, IsPrimary=true, IsUnique=true, Name="PK"+Table.Name });
+                    Table.Constraints.Add(new PrimaryKeyConstraint() { FieldNames = new List<string>() { f.Name }, Name = "PK" + Table.Name});
                 }
             }
         }
@@ -126,6 +128,18 @@ namespace Cinar.DBTools.Tools
         public override void Fix()
         {
             Field.IsAutoIncrement = true;
+            try
+            {
+                string sql = Provider.Database.GetSQLColumnSetAutoIncrement(Field);
+                SQLInputDialog sid = new SQLInputDialog(sql, true);
+                if(sid.ShowDialog()==DialogResult.OK)
+                    Provider.Database.ExecuteNonQuery(sql);
+            }
+            catch (Exception ex)
+            {
+                Field.IsAutoIncrement = false;
+                MessageBox.Show("Field cannot be set as auto increment.\n\n"+ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 
@@ -138,7 +152,9 @@ namespace Cinar.DBTools.Tools
         public override void Fix()
         {
             if (Table != null)
-                Field.ReferenceField = Table.PrimaryField;
+            {
+                createForeignKey();
+            }
             else
             {
                 Form form = new Form();
@@ -170,9 +186,36 @@ namespace Cinar.DBTools.Tools
                     Table t = (Table)cb.SelectedItem;
                     if (t != null)
                     {
-                        Field.ReferenceField = t.PrimaryField;
+                        createForeignKey(t);
                     }
                 }
+            }
+        }
+
+        private void createForeignKey(Table foreignTable = null)
+        {
+            if (foreignTable != null)
+                Table = foreignTable;
+
+            ForeignKeyConstraint fk = new ForeignKeyConstraint()
+                                          {
+                                              FieldNames = new List<string>() {Field.Name },
+                                              Name = string.Format("FK_{0}_{1}_{2}", Field.Table.Name, Field.Name, Table.Name ),
+                                              RefConstraintName = Table.Constraints.Find(c=>c is PrimaryKeyConstraint).Name,
+                                              RefTableName = Table.Name
+                                          };
+            Field.Table.Constraints.Add(fk);
+            try
+            {
+                string sql = Provider.Database.GetSQLConstraintAdd(fk);
+                SQLInputDialog sid = new SQLInputDialog(sql, true);
+                if (sid.ShowDialog() == DialogResult.OK)
+                    Provider.Database.ExecuteNonQuery(sql);
+            }
+            catch (Exception ex)
+            {
+                Field.Table.Constraints.Remove(fk);
+                MessageBox.Show("Foreign key cannot be created.\n\n" + ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

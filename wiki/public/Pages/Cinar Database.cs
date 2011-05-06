@@ -1,5 +1,5 @@
 Çınar Database
-admin|2011/05/01 12:46:27
+admin|2011/05/02 15:57:27
 ##PAGE##
 ==Tanım==
 Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
@@ -64,7 +64,7 @@ Insert sql yazmak için uğraşmaya gerek yok, Insert metodu INSERT sorgusunu na
 
 @@
 DataRow dr = db.GetDataRow("select * from Kisi where Id=1");
-dr["Ad"] = "Microsoft Coorporation";
+dr["Ad"] = "Zeynep";
 db.Update("Kisi", dr);
 @@
 

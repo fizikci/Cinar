@@ -44,34 +44,38 @@ namespace Cinar.Database
         }
 	
         private string name;
-        [Description("Name of the field"), Category("DDL")]
+        [Description("Name of the field"), Category("Definition")]
         public string Name
         {
             get { return name; }
             set {
                 string oldName = name;
                 name = value;
-                
+
                 if (oldName != name && this.parent != null && this.parent.table != null && this.parent.table.Indices != null && parent.table.Indices.Count > 0)
                     this.parent.table.Indices.
+                        FindAll(k => k.FieldNames.Contains(oldName)).
+                        ForEach(k => { k.FieldNames.Remove(oldName); k.FieldNames.Add(name); });
+                if (oldName != name && this.parent != null && this.parent.table != null && this.parent.table.Constraints != null && parent.table.Constraints.Count > 0)
+                    this.parent.table.Constraints.
                         FindAll(k => k.FieldNames.Contains(oldName)).
                         ForEach(k => { k.FieldNames.Remove(oldName); k.FieldNames.Add(name); });
             }
         }
 
         private DbType fieldType;
-        [Description("Type of the field"), Category("DDL")]
+        [Description("Type of the field"), Category("Definition")]
         public Cinar.Database.DbType FieldType
         {
             get { return fieldType; }
             set { fieldType = value; }
         }
 
-        [Description("Field type name on the owner database"), Category("DDL")]
+        [Description("Field type name on the owner database"), Category("Definition"), ReadOnly(true)]
         public string FieldTypeOriginal { get; set; }
 
         private bool isNullable;
-        [Description("Can be nullable?"), Category("DDL")]
+        [Description("Can be nullable?"), Category("Definition")]
         public bool IsNullable
         {
             get { return isNullable; }
@@ -79,7 +83,7 @@ namespace Cinar.Database
         }
 
         private string defaultValue;
-        [Description("If not specified, what is the default value of this field? (Can be an SQL expression.)"), Category("DDL")]
+        [Description("If not specified, what is the default value of this field? (Can be an SQL expression.)"), Category("Definition")]
         public string DefaultValue
         {
             get { return defaultValue; }
@@ -87,22 +91,22 @@ namespace Cinar.Database
         }
 
         private long length;
-        [Description("What is the maximum number of characters if this field is char or varchar?"), Category("DDL")]
+        [Description("What is the maximum number of characters if this field is char or varchar?"), Category("Definition")]
         public long Length
         {
             get { return length; }
             set { length = value; }
         }
 
-        [Description("Is this this field a standalone primary key?"), Category("Extra Info")]
+        [Description("Is this field a standalone primary key?"), Category("Extra Info"), ReadOnly(true)]
         [XmlIgnore]
         public bool IsPrimaryKey
         {
             get 
             {
-                if(this.Table.Indices!=null)
-                    foreach (Index index in this.Table.Indices)
-                        if (index.IsPrimary && index.FieldNames.Count == 1 && index.Fields[0].Name==this.Name)
+                if(this.Table.Constraints!=null)
+                    foreach (Constraint con in this.Table.Constraints)
+                        if (con is PrimaryKeyConstraint && con.FieldNames.Contains(this.Name))
                             return true;
                 return false;
             }
@@ -116,12 +120,13 @@ namespace Cinar.Database
             set { isAutoIncrement = value; }
         }
 
-        private string referenceFieldName;
         [Description("Another field on a different table which is referenced by this field as tableName.fieldName"), Category("Extra Info")]
         public string ReferenceFieldName
         {
-            get { return referenceFieldName; }
-            set { referenceFieldName = value; }
+            get { 
+                Field refField = ReferenceField;
+                return refField != null ? refField.Table.Name + "." + refField.Name : ""; 
+            }
         }
 
 
@@ -129,17 +134,12 @@ namespace Cinar.Database
         public Field ReferenceField
         {
             get {
-                if (String.IsNullOrEmpty(referenceFieldName))
+                ForeignKeyConstraint fkc = (ForeignKeyConstraint)this.Table.Constraints.Find(c => c is ForeignKeyConstraint && c.FieldNames.Count == 1 && c.FieldNames[0] == this.Name);
+                if (fkc == null)
                     return null;
 
-                string[] parts = referenceFieldName.Split('.');
-                return this.Table.Database.Tables[parts[0]].Fields[parts[1]]; 
-            }
-            set {
-                if (value != null)
-                {
-                    this.referenceFieldName = value.Table.Name + "." + value.Name;
-                }
+                string foreignFieldName = this.Table.Database.Tables[fkc.RefTableName].Constraints[fkc.RefConstraintName].FieldNames[0];
+                return this.Table.Database.Tables[fkc.RefTableName].Fields[foreignFieldName];
             }
         }
         public override string ToString()
@@ -195,6 +195,7 @@ namespace Cinar.Database
                 SimpleFieldType == SimpleDbType.Text;
         }
 
+        [Description("Simple type of this field"), Category("Extra Info")]
         public SimpleDbType SimpleFieldType
         {
             get {
@@ -227,10 +228,6 @@ namespace Cinar.Database
                     case DbType.VarChar:
                     case DbType.NChar:
                     case DbType.NVarChar:
-                    case DbType.Guid:
-                    case DbType.Enum:
-                    case DbType.Variant:
-                    case DbType.Set:
                         return SimpleDbType.String;
                     case DbType.Binary:
                     case DbType.VarBinary:
@@ -247,8 +244,12 @@ namespace Cinar.Database
                     case DbType.TextLong:
                     case DbType.Xml:
                         return SimpleDbType.Text;
+                    case DbType.Guid:
+                    case DbType.Enum:
+                    case DbType.Variant:
+                    case DbType.Set:
                     default:
-                        return SimpleDbType.String;
+                        return SimpleDbType.Other;
                 }
             }
         }
@@ -278,7 +279,7 @@ namespace Cinar.Database
             UIMetadata.SortableInGrid = true;
         }
 
-        [Description("The definitions for this field to be used generatin of UI code"), Category("Extra Info")]
+        [Description("The definitions for this field to be used generating of UI code"), Category("Extra Info")]
         public FieldUIMetadata UIMetadata { get; set; }
     }
 

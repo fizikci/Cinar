@@ -37,7 +37,6 @@
             this.menuRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetAsDisplayField = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetAsPrimaryKey = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuAlterTable = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -48,12 +47,11 @@
             this.menuArrangeTables,
             this.menuAddTables,
             this.menuCreateTable,
-            this.menuAlterTable,
             this.menuRemove,
             this.menuSetAsDisplayField,
             this.menuSetAsPrimaryKey});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(205, 180);
+            this.contextMenu.Size = new System.Drawing.Size(205, 158);
             // 
             // menuArrangeTables
             // 
@@ -91,12 +89,6 @@
             this.menuSetAsPrimaryKey.Size = new System.Drawing.Size(204, 22);
             this.menuSetAsPrimaryKey.Text = "Set As Primary Index";
             // 
-            // menuAlterTable
-            // 
-            this.menuAlterTable.Name = "menuAlterTable";
-            this.menuAlterTable.Size = new System.Drawing.Size(204, 22);
-            this.menuAlterTable.Text = "Alter Table...";
-            // 
             // imageListTree
             // 
             this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
@@ -129,7 +121,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuRemove;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayField;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsPrimaryKey;
-        private System.Windows.Forms.ToolStripMenuItem menuAlterTable;
         private System.Windows.Forms.ImageList imageListTree;
     }
 }

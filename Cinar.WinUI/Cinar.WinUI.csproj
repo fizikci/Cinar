@@ -65,52 +65,76 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cookie.cs" />
-    <Compile Include="CustomDesignForm.cs" />
+    <Compile Include="CustomDesignForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DevExpressLocalizers.cs" />
     <Compile Include="DMT.cs" />
     <Compile Include="EditFormAttribute.cs" />
-    <Compile Include="FilterPanel.cs" />
+    <Compile Include="FilterPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FilterPanel.Designer.cs">
       <DependentUpon>FilterPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEntity.cs" />
+    <Compile Include="FormEntity.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormEntity.Designer.cs">
       <DependentUpon>FormEntity.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEntityHistory.cs" />
+    <Compile Include="FormEntityHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormEntityHistory.Designer.cs">
       <DependentUpon>FormEntityHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormTemplatePreview.cs" />
+    <Compile Include="FormTemplatePreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormTemplatePreview.Designer.cs">
       <DependentUpon>FormTemplatePreview.cs</DependentUpon>
     </Compile>
     <Compile Include="IEntityEditControl.cs" />
     <Compile Include="IFormEntity.cs" />
-    <Compile Include="ListEntity.cs" />
+    <Compile Include="ListEntity.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ListEntity.Designer.cs">
       <DependentUpon>ListEntity.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListEntitySimple.cs" />
+    <Compile Include="ListEntitySimple.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ListEntitySimple.Designer.cs">
       <DependentUpon>ListEntitySimple.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoginDialog.cs" />
+    <Compile Include="LoginDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LoginDialog.Designer.cs">
       <DependentUpon>LoginDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="LookUp.cs" />
-    <Compile Include="PromptDialog.cs" />
+    <Compile Include="LookUp.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PromptDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="PromptDialog.Designer.cs">
       <DependentUpon>PromptDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider.cs" />
-    <Compile Include="ReportPreview.cs" />
+    <Compile Include="ReportPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ReportPreview.Designer.cs">
       <DependentUpon>ReportPreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectEntityDialog.cs" />
+    <Compile Include="SelectEntityDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SelectEntityDialog.Designer.cs">
       <DependentUpon>SelectEntityDialog.cs</DependentUpon>
     </Compile>
