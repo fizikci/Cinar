@@ -378,11 +378,17 @@ namespace System
             {
                 string exp = m.Groups["exp"].Value;
                 if (!expressions.ContainsKey(exp))
-                    expressions.Add(exp, obj.GetMemberValue(exp));
+                    try
+                    {
+                        expressions.Add(exp, obj.GetMemberValue(exp));
+                    }catch
+                    {
+                        expressions.Add(exp, "");
+                    }
             }
 
             foreach (var item in expressions)
-                template = template.Replace("#{" + item.Key + "}", item.Value.ToString());
+                template = template.Replace("#{" + item.Key + "}", item.Value == null ? "" : item.Value.ToString());
 
             return template;
         }
