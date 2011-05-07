@@ -1140,11 +1140,11 @@ namespace Cinar.Database
         {
             return GetDataTable(sql, new object[0]);
         }
-        public DataTable GetDataTableFor(string tableName, FilterExpression fExp)
+        public DataTable GetDataTableFor(Type entityType, FilterExpression fExp)
         {
-            Table table = Tables[tableName];
-            if(table==null)
-                throw new Exception("No such table: " + tableName);
+            Table table = GetTableForEntityType(entityType);
+            if (table == null)
+                table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
             if (fExp == null) fExp = new FilterExpression();
             string where = fExp.Criterias.ToParamString();
@@ -1154,17 +1154,17 @@ namespace Cinar.Database
             switch (Provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    sql = "SELECT * FROM \"" + tableName + "\"" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
+                    sql = "SELECT * FROM \"" + table.Name + "\"" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
                     break;
                 case DatabaseProvider.MySQL:
-                    sql = "SELECT * FROM `" + tableName + "`" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
+                    sql = "SELECT * FROM `" + table.Name + "`" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
                     break;
                 case DatabaseProvider.SQLServer:
                     sql = @"WITH _CinarResult AS
                                 (
                                     SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @",
                                     ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
-                                    FROM [" + tableName + @"] 
+                                    FROM [" + table.Name + @"] 
                                 ) 
                                 SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @" 
                                 FROM _CinarResult 
@@ -1370,7 +1370,7 @@ namespace Cinar.Database
         }
         public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
         {
-            DataTable dt = GetDataTableFor(typeof(T).Name, filterExpression);
+            DataTable dt = GetDataTableFor(typeof(T), filterExpression);
             List<T> list = new List<T>();
             foreach (DataRow dr in dt.Rows)
                 list.Add(DataRowToEntity<T>(dr));
@@ -1378,7 +1378,7 @@ namespace Cinar.Database
         }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
-            DataTable dt = GetDataTableFor(entityType.Name, filterExpression);
+            DataTable dt = GetDataTableFor(entityType, filterExpression);
             List<IDatabaseEntity> list = new List<IDatabaseEntity>();
             foreach (DataRow dr in dt.Rows)
                 list.Add(DataRowToEntity(entityType, dr));
