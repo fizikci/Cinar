@@ -33,7 +33,7 @@ Table
 [ok] - Top 1000
 [ok] - Drop
 [ok] - Analyze
-- Generate SQL => Select, INSER, UPDATE, CREATE, [Delete]
+- Generate SQL => Select, INSERT, UPDATE, CREATE, [Delete]
 [ok] - Generate UI Metadata
  - Transfer table...
  - Open table
@@ -74,7 +74,7 @@ Stored procedures
 [ok] - Create Procedure
 
 Functions:
-[ok] - Create fumction
+[ok] - Create function
 
 Other:
 1. [ok] Make grid editable
@@ -86,13 +86,26 @@ Other:
 6. [ok] Put ER Diagram window into the main window tabs
 7. editSQLAsForProvider saçmalığına bi son ver
 8. Diagram penceresinde açılan context menünün ve komutların düzgün çalışması
-9. Herşey index değil. Index ve constraintleri birbirinden ayır.
+9. [ok] Herşey index değil. Index ve constraintleri birbirinden ayır.
 	Constraints: Primary Key, Unique, Foreign Key
-	Indexes: (yukardakiler constraint ise index ne o zaman?)
-
-Testler:
-1. Her provider üzerine (read, create, alter, drop) x (database, table, field, constraint, index, view, function, trigger, sproc) metodu yazalım
+	Indexes: normal index
+10. [ok] Her provider üzerine (read, create, alter, drop) x (database, table, field, constraint, index, view, function, trigger, sproc) metodu yazalım
 										4												9											36 adet
+11. [ok] Tree'de yapılan her işlem (create index dahil) diagram'a event tetiklesin
+12. Code Generator'ı baştan ele alalım
+	a) Solution kavramı olsun. Aynı Visual Studio'daki gibi.
+	b) Bazı dosyalar template olarak eklenebilsin (tablo kadar generate edilecek anlamında)
+	c) Proje tipi olsun (windows/web)
+	d) Çalıştır deyince, bir dizine generate edip, derleyip çalıştırabilsin.
+13. [ok] Diagram'da connection line'a tıklanınca foreign key gösterilsin
+14. Diagram'da sürükle bırak ile foreign key tanımlanabilsin
+15. [ok] Diagram'dan veya tree'den sürüklenen fieldlar tablo üzerine bırakılınca tabloya eklensin! (vaaay)
+16. [ok] Bir tablo başka bir veritabanının üzerine sürüklenirse orada create edilsin (oleeey)
+17. Bir field tablodan boşluğa sürüklenirse drop edilsin.
+18. Bir field veya FK seçiliyken del tuşuna basılırsa drop edilsin, tablo seçiliyken del tuşuna basılırsa drop veya "remove from diagram" edilsin.
+19. [ok] Tabları tab üzerinden close edelim.
+
+
 
 
 Desteklenecek RDBMSler

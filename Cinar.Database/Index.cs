@@ -51,6 +51,11 @@ namespace Cinar.Database
         /// </summary>
         [Category("Base"), ReadOnly(true)]
         public List<string> FieldNames { get; set; }
+
+        public override string ToString()
+        {
+            return Table.Name + "." + this.Name + " (" + string.Join(", ", this.FieldNames.ToArray()) + ")";
+        }
     }
 
     [Serializable]

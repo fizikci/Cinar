@@ -343,5 +343,10 @@ namespace Cinar.DBTools.Controls
         {
             return Path.GetFileName(this.FilePath);
         }
+
+
+        public void OnClose()
+        {
+        }
     }
 }

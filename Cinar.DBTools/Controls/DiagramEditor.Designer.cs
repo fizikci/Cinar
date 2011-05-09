@@ -104,9 +104,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ContextMenuStrip = this.contextMenu;
             this.Name = "DiagramEditor";
-            this.Size = new System.Drawing.Size(595, 549);
+            this.Size = new System.Drawing.Size(1168, 731);
             this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 

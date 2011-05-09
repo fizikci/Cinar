@@ -1046,18 +1046,31 @@ namespace System
 
         public static object Clone(this object obj)
         {
-            return Clone(obj, null);
+            return Clone(obj, pi => pi.GetIndexParameters().Length == 0);
         }
         public static object Clone(this object obj, Func<PropertyInfo, bool> predicate)
         {
-            if (obj == null)
-                return null;
+            if (obj == null) return null;
+            if (obj.GetType().IsValueType || obj.GetType() == typeof(string))
+                return obj;
 
-            object res = Activator.CreateInstance(obj.GetType());
+            object res = null;
+            try
+            {
+                res = Activator.CreateInstance(obj.GetType());
+            }
+            catch { return null; }
+
+            if (obj is IEnumerable)
+                foreach (var elm in obj as IEnumerable)
+                    (res as IList).Add(elm.Clone());
 
             foreach (PropertyInfo pi in obj.GetType().GetProperties())
             {
                 if (predicate != null && !predicate(pi))
+                    continue;
+
+                if (pi.GetSetMethod() == null)
                     continue;
 
                 if (pi.PropertyType.IsValueType || pi.PropertyType == typeof(string))
