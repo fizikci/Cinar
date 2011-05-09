@@ -18,6 +18,24 @@ namespace Cinar.DBTools.Tools
         public static ImageList ImageList;
         [XmlIgnore]
         public ConnectionSettings conn;
+        [XmlIgnore]
+        public object SelectedObject
+        {
+            get { return selectedObject; }
+            set {
+                selectedObject = value;
+                Tables.ForEach(tv => { tv.Selected = tv == selectedObject; });
+                ConnectionLines.ForEach(cl => { cl.Selected = cl == selectedObject; });
+                if (selectedObject is Field)
+                {
+                    Field f = selectedObject as Field;
+                    Tables.ForEach(tv => { if (tv.TableName == f.Table.Name) tv.SelectedField = f.Name; else tv.SelectedField = ""; });
+                }
+                else
+                    Tables.ForEach(tv => { tv.SelectedField = ""; });
+            }
+        }
+        private object selectedObject;
 
         public string Name { get; set; }
         public ListTableView Tables { get; set; }
@@ -283,5 +301,7 @@ namespace Cinar.DBTools.Tools
 
         [XmlIgnore]
         internal bool Selected { get; set; }
+
+        public string ForeignKeyName { get; set; }
     }
 }

@@ -139,9 +139,9 @@ namespace Cinar.DBTools
                      new Command {
                                      Execute = cmdCloseEditor,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = btnCloseEditor},
+                                         new CommandTrigger{ Control = tabControlEditors, Event="CloseTab"},
                                      },
-                                     IsEnabled = () => tabControlEditors.TabCount > 1
+                                     //IsEnabled = () => tabControlEditors.TabCount > 1
                                 },
                      new Command {
                                      Execute = cmdExecuteSQL,
@@ -608,7 +608,8 @@ $"},
             }
             return true;
         }
-        private void populateTreeNodesForDatabase(TreeNode parentNode)
+
+        internal void populateTreeNodesForDatabase(TreeNode parentNode)
         {
             ConnectionSettings cs = parentNode.Tag as ConnectionSettings;
             if (cs == null)
@@ -623,40 +624,73 @@ $"},
             viewsNode.Tag = cs.Database.Tables;
 
             foreach (Table tbl in cs.Database.Tables)
-            {
-                TreeNode tnTable = (tbl.IsView ? viewsNode : tablesNode).Nodes.Add(tbl.Name, tbl.Name, tbl.IsView ? "View" : "Table", tbl.IsView ? "View" : "Table");
-                tnTable.Tag = tbl;
-                TreeNode fieldsNode = tnTable.Nodes.Add("Fields", "Fields", "Folder", "Folder");
-                fieldsNode.Tag = tbl.Fields;
-                foreach (Field fld in tbl.Fields)
-                {
-                    TreeNode tnField = fieldsNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
-                    tnField.Tag = fld;
-                }
-                TreeNode keysNode = tnTable.Nodes.Add("Constraints", "Constraints", "Folder", "Folder");
-                keysNode.Tag = tbl.Constraints;
-                if (tbl.Constraints != null)
-                    foreach (var index in tbl.Constraints)
-                    {
-                        TreeNode tnKey = keysNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", index is PrimaryKeyConstraint ? "Key" : "Constraint", index is PrimaryKeyConstraint ? "Key" : "Constraint");
-                        tnKey.Tag = index;
-                    }
-                TreeNode indexesNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
-                keysNode.Tag = tbl.Indices;
-                if (tbl.Indices != null)
-                    foreach (var index in tbl.Indices)
-                    {
-                        TreeNode tnKey = indexesNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", "Index", "Index");
-                        tnKey.Tag = index;
-                    }
-            }
+                populateTreeNodesFor(tbl.IsView ? viewsNode : tablesNode, tbl);
 
             foreach (Diagram schema in cs.Schemas)
-            {
-                TreeNode tnSchema = schemasNode.Nodes.Add(schema.Name, schema.Name, "Diagram", "Diagram");
-                tnSchema.Tag = schema;
-            }
+                populateTreeNodesFor(schemasNode, schema);
         }
+        internal void populateTreeNodesFor(TreeNode parentNode, Diagram schema)
+        {
+            TreeNode tnSchema = parentNode.Nodes.Add(schema.Name, schema.Name, "Diagram", "Diagram");
+            tnSchema.Tag = schema;
+        }
+        internal void populateTreeNodesFor(TreeNode parentNode, Table tbl)
+        {
+            if (parentNode == null)
+                parentNode = findNode(tbl.Database.Tables);
+
+            TreeNode tnTable = parentNode.Nodes.Add(tbl.Name, tbl.Name, tbl.IsView ? "View" : "Table", tbl.IsView ? "View" : "Table");
+            tnTable.Tag = tbl;
+            
+            TreeNode fieldsNode = tnTable.Nodes.Add("Fields", "Fields", "Folder", "Folder");
+            fieldsNode.Tag = tbl.Fields;
+            foreach (Field fld in tbl.Fields)
+                populateTreeNodesFor(fieldsNode, fld);
+
+            TreeNode keysNode = tnTable.Nodes.Add("Constraints", "Constraints", "Folder", "Folder");
+            keysNode.Tag = tbl.Constraints;
+            if (tbl.Constraints != null)
+                foreach (Constraint index in tbl.Constraints)
+                    populateTreeNodesFor(keysNode, index);
+
+            TreeNode indexesNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
+            keysNode.Tag = tbl.Indices;
+            if (tbl.Indices != null)
+                foreach (Index index in tbl.Indices)
+                    populateTreeNodesFor(indexesNode, index);
+        }
+        internal void populateTreeNodesFor(TreeNode parentNode, BaseIndexConstraint index)
+        {
+            if(index is Index)
+                populateTreeNodesFor(parentNode, index as Index);
+            else
+                populateTreeNodesFor(parentNode, index as Constraint);
+        }
+        internal void populateTreeNodesFor(TreeNode parentNode, Index index)
+        {
+            if (parentNode == null)
+                parentNode = findNode(index.Table.Indices);
+
+            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", "Index", "Index");
+            tnKey.Tag = index;
+        }
+        internal void populateTreeNodesFor(TreeNode parentNode, Constraint index)
+        {
+            if (parentNode == null)
+                parentNode = findNode(index.Table.Constraints);
+
+            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", index is PrimaryKeyConstraint ? "Key" : "Constraint", index is PrimaryKeyConstraint ? "Key" : "Constraint");
+            tnKey.Tag = index;
+        }
+        internal void populateTreeNodesFor(TreeNode parentNode, Field fld)
+        {
+            if (parentNode == null)
+                parentNode = findNode(fld.Table.Fields);
+
+            TreeNode tnField = parentNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
+            tnField.Tag = fld;
+        }
+
         private ConnectionSettings findConnection(TreeNode treeNode)
         {
             while (treeNode.Parent != null)
@@ -679,7 +713,7 @@ $"},
             }
             return null;
         }
-        private TreeNode findNode(object tag) 
+        internal TreeNode findNode(object tag) 
         {
             return findNode(treeView.Nodes, tn => tn.Tag == tag);
         }
@@ -716,15 +750,16 @@ $"},
 
         private void addSQLEditor(string filePath, string sql)
         {
-            TabPage tp = new TabPage();
+            MyTabPage tp = new MyTabPage();
             tp.ImageKey = "Query";
             tp.ImageIndex = 1;
 
             SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
             sqlEd.Dock = DockStyle.Fill;
             tp.Controls.Add(sqlEd);
+            tp.ToolTipText = filePath;
             tp.Text = string.IsNullOrEmpty(filePath) ? "Query" : Path.GetFileName(filePath);
-            tabControlEditors.Controls.Add(tp);
+            tabControlEditors.TabPages.Add(tp);
             tabControlEditors.SelectTab(tp);
 
             SetFont(tp, Font);
@@ -732,7 +767,7 @@ $"},
 
         private void addDiagram(Diagram schema)
         {
-            TabPage tp = new TabPage();
+            MyTabPage tp = new MyTabPage();
             tp.ImageKey = "Diagram";
             tp.ImageIndex = 0;
 
@@ -742,13 +777,15 @@ $"},
 
             DiagramEditor d = new DiagramEditor();
             d.MainForm = this;
-            d.CurrentSchema = schema;
+            if(schema!=null)
+                d.CurrentSchema = schema;
             d.propertyGrid = this.propertyGrid;
             d.ContextMenuStrip = menuStripTree;
             tp.Controls.Add(d);
-            tabControlEditors.Controls.Add(tp);
+            tabControlEditors.TabPages.Add(tp);
             tabControlEditors.SelectTab(tp);
 
+            d.Size = d.MinimumSize = tp.Size - new Size(tp.Padding.Left + tp.Padding.Right, tp.Padding.Top + tp.Padding.Bottom);
             SetFont(tp, Font);
         }
         #endregion
@@ -773,19 +810,18 @@ $"},
         }
         private void cmdCloseEditor(string arg)
         {
+            CancelEventArgs e = (CancelEventArgs) cmdMan.LastEventArgs;
             if (CurrEditor.Modified)
             {
                 DialogResult dr = MessageBox.Show("Would you like to save?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel);
                 if (dr == DialogResult.Yes)
-                {
-                    if (CurrEditor.Save())
-                        tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
-                }
-                else if (dr == DialogResult.No)
-                    tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
+                    CurrEditor.Save();
+                
+                if (dr == DialogResult.Cancel)
+                    e.Cancel = true;
             }
-            else
-                tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
+            if (!e.Cancel)
+                CurrEditor.OnClose();
         }
 
         private void cmdEditorCommand(string arg)
@@ -887,12 +923,6 @@ $"},
                 populateTreeNodesForDatabase(dbNode);
                 //treeView.Sort();
             }
-        }
-        private Field getField(string tableName, string fieldName)
-        {
-            if (Provider.Database.Tables[tableName] != null)
-                return Provider.Database.Tables[tableName].Fields[fieldName];
-            return null;
         }
 
         private void cmdOpenConnectionsFile(string arg)
@@ -1049,6 +1079,8 @@ $"},
                         TreeNode tn = findSelectedDBNode();
                         Provider.Connections.Remove(Provider.ActiveConnection);
                         tn.Remove();
+                        if (ObjectRemoved != null)
+                            ObjectRemoved(this, new DbObjectRemovedArgs { Object = tn.Tag });
                         CurrSQLEditor.ShowInfoText(string.Format("Database {0} dropped successfully.", tn.Text));
                     }
                     break;
@@ -1069,7 +1101,7 @@ $"},
                     {
                         StringBuilder sb = new StringBuilder();
                         foreach (Table t in Provider.Database.Tables)
-                            sb.AppendLine("drop table [" + t.Name + "];");
+                            sb.AppendLine(Provider.Database.GetSQLTableDrop(t) + ";");
                         SQLInputDialog sid = new SQLInputDialog(sb.ToString(), false);
                         if (sid.ShowDialog() == DialogResult.OK)
                             Provider.Database.ExecuteNonQuery(sid.SQL);
@@ -1184,12 +1216,16 @@ $"},
         {
             if (!checkConnection()) return;
             Table table = SelectedObject as Table;
-            if (MessageBox.Show(string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLTableDrop(table), true, string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name));
+            if(sid.ShowDialog()==DialogResult.OK)
             {
-                int i = Provider.Database.ExecuteNonQuery("drop " + (table.IsView ? "view" : "table") + " [" + table.Name + "]");
-                Provider.Database.Tables.Remove(Provider.Database.Tables[table.Name]);
-                cmdRefresh(null);
-                CurrSQLEditor.ShowInfoText("Table " + table.Name + " dropped succesfully.");
+                int i = Provider.Database.ExecuteNonQuery(sid.SQL);
+                Provider.Database.Tables.Remove(table);
+                findNode(table).Remove();
+                if(ObjectRemoved!=null)
+                    ObjectRemoved(this, new DbObjectRemovedArgs { Object = table });
+                if(CurrSQLEditor!=null)
+                    CurrSQLEditor.ShowInfoText("Table " + table.Name + " dropped succesfully.");
             }
         }
         private void cmdTableCount(string arg)
@@ -1266,13 +1302,8 @@ $"},
                         if (tbl.Fields == null || tbl.Fields.Count == 0)
                             throw new Exception("Add minimum one field to the table.");
 
-                        string sql = tbl.ToDDL();
-                        SQLInputDialog sid = new SQLInputDialog(sql, false);
-                        if (sid.ShowDialog() == DialogResult.OK)
-                        {
-                            Provider.Database.ExecuteNonQuery(sid.SQL);
-                            cmdRefresh("");
-                        }
+                        if(!CreateTable(Provider.Database, tbl))
+                            Provider.Database.Tables.Remove(tbl);
                         break;
                     }
                     catch (Exception ex)
@@ -1286,6 +1317,24 @@ $"},
                     break;
             }
             return tbl;
+        }
+        public bool CreateTable(Database.Database db, Table tbl)
+        {
+            string sql = tbl.ToDDL();
+            SQLInputDialog sid = new SQLInputDialog(sql, false);
+            if (sid.ShowDialog() == DialogResult.OK)
+            {
+                db.ExecuteNonQuery(sid.SQL);
+                try
+                {
+                    populateTreeNodesFor(null, tbl);
+                    if (ObjectAdded != null)
+                        ObjectAdded(this, new DbObjectAddedArgs { Object = tbl });
+                }
+                catch { }
+                return true;
+            }
+            return false;
         }
 
         private void cmdGenerateSQL(string arg)
@@ -1495,7 +1544,9 @@ $"},
                         if (sid.ShowDialog() == DialogResult.OK)
                         {
                             Provider.Database.ExecuteNonQuery(sid.SQL);
-                            cmdRefresh("");
+                            populateTreeNodesFor(null, index);
+                            if (ObjectAdded != null) 
+                                ObjectAdded(this, new DbObjectAddedArgs { Object = index });
                         }
                         break;
                     }
@@ -1513,6 +1564,7 @@ $"},
                     break;
             }
         }
+
         private void cmdEditIndex(string arg)
         {
             Table table = findSelectedTable();
@@ -1549,7 +1601,12 @@ $"},
                                 table.Indices.Remove((Index)oldIndex);
                             else
                                 table.Constraints.Remove((Constraint)oldIndex);
-                            cmdRefresh("");
+                            findNode(oldIndex).Remove();
+                            if (ObjectRemoved != null)
+                                ObjectRemoved(this, new DbObjectRemovedArgs { Object = oldIndex });
+                            populateTreeNodesFor(null, index);
+                            if (ObjectAdded != null)
+                                ObjectAdded(this, new DbObjectAddedArgs { Object = index });
                         }
                         break;
                     }
@@ -1572,31 +1629,31 @@ $"},
             if (!checkConnection()) return;
             Table table = findSelectedTable();
             BaseIndexConstraint index = SelectedObject as BaseIndexConstraint;
-            if (MessageBox.Show(string.Format("Index \"{0}\" on \"{1}\" will be dropped.\n\nContinue?", index.Name, table.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+
+            try
             {
-                try
+                string sql = Provider.Database.GetSQLBaseIndexConstraintRemove(index);
+                SQLInputDialog sid = new SQLInputDialog(sql, false, string.Format("Index \"{0}\" on \"{1}\" will be dropped.\n\nContinue?", index.Name, table.Name));
+                if (sid.ShowDialog() == DialogResult.OK)
                 {
-                    string sql = Provider.Database.GetSQLBaseIndexConstraintRemove(index);
-                    SQLInputDialog sid = new SQLInputDialog(sql, false);
-                    if (sid.ShowDialog() == DialogResult.OK)
-                    {
-                        Provider.Database.ExecuteNonQuery(sid.SQL);
-                        if(index is Index)
-                            table.Indices.Remove((Index)index);
-                        else
-                            table.Constraints.Remove((Constraint)index);
-                        cmdRefresh(null);
-                        CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Cinar Database Tools");
+                    Provider.Database.ExecuteNonQuery(sid.SQL);
                     if (index is Index)
-                        table.Indices.Add((Index)index);
+                        table.Indices.Remove((Index)index);
                     else
-                        table.Constraints.Add((Constraint)index);
+                        table.Constraints.Remove((Constraint)index);
+                    findNode(index).Remove();
+                    if (ObjectRemoved != null)
+                        ObjectRemoved(this, new DbObjectRemovedArgs { Object = index });
+                    CurrSQLEditor.ShowInfoText(string.Format("Index {0} on {1} dropped successfully.", index.Name, table.Name));
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cinar Database Tools");
+                if (index is Index)
+                    table.Indices.Add((Index)index);
+                else
+                    table.Constraints.Add((Constraint)index);
             }
         }
 
@@ -1608,6 +1665,7 @@ $"},
         private void cmdOpenERDiagram(string arg)
         {
             Diagram schema = SelectedObject as Diagram;
+            if (schema == null) return;
             schema.conn = Provider.ActiveConnection;
             addDiagram(schema);
         }
@@ -1617,7 +1675,7 @@ $"},
             if (MessageBox.Show(string.Format("Diagram \"{0}\" will be deleted.\n\nContinue?", schema.Name), "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Provider.ActiveConnection.Schemas.Remove(schema);
-                cmdRefresh(null);
+                findNode(schema).Remove();
             }
         }
 
@@ -1710,6 +1768,7 @@ $"},
         private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             treeView.SelectedNode = e.Node;
+            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
             showSelectedObjectOnPropertyGrid();
 
             if (CurrSQLEditor != null)
@@ -1753,6 +1812,8 @@ $"},
 
 
         public event EventHandler<DbObjectChangedArgs> ObjectChanged;
+        public event EventHandler<DbObjectRemovedArgs> ObjectRemoved;
+        public event EventHandler<DbObjectAddedArgs> ObjectAdded;
 
         private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
@@ -1816,7 +1877,8 @@ $"},
                     {
                         Provider.Database.ExecuteNonQuery(sid.SQL);
                         if (afterExecute != null) afterExecute();
-                        ObjectChanged(this, new DbObjectChangedArgs() { Object = propertyGrid.SelectedObject, NewValue = e.ChangedItem.Value, OldValue = e.OldValue, PropertyName = e.ChangedItem.Label });
+                        if (ObjectChanged != null)
+                            ObjectChanged(this, new DbObjectChangedArgs() { Object = propertyGrid.SelectedObject, NewValue = e.ChangedItem.Value, OldValue = e.OldValue, PropertyName = e.ChangedItem.Label });
                         cancel = false;
                     }
                 }
@@ -1841,7 +1903,7 @@ $"},
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             TreeNode tn = e.Item as TreeNode;
-            if (tn.Tag is Table)
+            if (tn.Tag is Table || tn.Tag is Field)
                 DoDragDrop(tn.Tag, DragDropEffects.Move);
         }
     }
@@ -1952,15 +2014,15 @@ $"},
 
         public override string ToString()
         {
-            string toStr = DbName + " @ ";
+            string toStr = DbName + " (";
             if (Host.Contains('.'))
             {
                 string[] parts = Host.Split('.');
-                toStr += parts[parts.Length - 2]  + "." + parts[parts.Length - 1];
+                toStr += parts[parts.Length - 2] + "." + parts[parts.Length - 1];
             }
             else
-                toStr += Host;
-            toStr += " (" + Provider + ")";
+                toStr += (Host == "localhost" ? "local" : Host);
+            toStr += " " + Provider + ")";
 
             return toStr;
         }
@@ -1977,6 +2039,16 @@ $"},
         public string PropertyName { get; set; }
         public object OldValue { get; set; }
         public object NewValue { get; set; }
+    }
+
+    public class DbObjectRemovedArgs : EventArgs
+    {
+        public object Object { get; set; }
+    }
+
+    public class DbObjectAddedArgs : EventArgs
+    {
+        public object Object { get; set; }
     }
 
 }

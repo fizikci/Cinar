@@ -342,25 +342,6 @@ namespace Cinar.Database.Providers
                 sbCons);
         }
 
-        private string getDefaultValue(Field field)
-        {
-            if (field.IsStringType())
-                return encloseWithQuote(field.DefaultValue.Trim());
-            else if (field.IsNumericType())
-                return field.DefaultValue.Trim().Trim('\'');
-            else
-                return encloseWithQuote(field.DefaultValue.Trim());
-        }
-
-        private string encloseWithQuote(string str)
-        {
-            return "'" + str.Trim().Trim('(', ')', '\'') + "'";
-        }
-
-        private string encloseWithParanthesis(string str)
-        {
-            return "(" + str.Trim().Trim('(', ')') + ")";
-        }
         #endregion
 
         #region GetSQL
@@ -377,6 +358,11 @@ namespace Cinar.Database.Providers
         public string GetSQLTableRename(string oldName, string newName)
         {
             return string.Format("EXEC sp_rename [{0}], [{1}]", oldName, newName);
+        }
+
+        public string GetSQLTableDrop(Table table)
+        {
+            return string.Format("DROP {0} [{1}]", table.IsView ? "VIEW" : "TABLE", table.Name);
         }
 
         public string GetSQLColumnList(string tableName)
@@ -446,11 +432,11 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
             if (constraint is PrimaryKeyConstraint)
                 return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
             if (constraint is UniqueConstraint)
-                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+                return GetSQLConstraintAdd(constraint as UniqueConstraint);
             if (constraint is CheckConstraint)
-                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+                return GetSQLConstraintAdd(constraint as CheckConstraint);
             if (constraint is ForeignKeyConstraint)
-                return GetSQLConstraintAdd(constraint as PrimaryKeyConstraint);
+                return GetSQLConstraintAdd(constraint as ForeignKeyConstraint);
 
             throw new Exception("Unknown constraint type: " + constraint.GetType().Name);
         }

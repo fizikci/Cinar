@@ -40,6 +40,7 @@ namespace Cinar.DBTools
             this.statusNumberOfRows = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerProperties = new System.Windows.Forms.SplitContainer();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.panelConnections = new System.Windows.Forms.Panel();
             this.labelConnections = new System.Windows.Forms.Label();
             this.treeView = new System.Windows.Forms.TreeView();
             this.menuStripTree = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -90,9 +91,9 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.menuIndexDropIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
-            this.btnCloseEditor = new System.Windows.Forms.PictureBox();
             this.tabControlEditors = new Cinar.DBTools.Controls.MyTabControl();
             this.imageListTabs = new System.Windows.Forms.ImageList(this.components);
+            this.panelProperties = new System.Windows.Forms.Panel();
             this.labelProperties = new System.Windows.Forms.Label();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -179,8 +180,9 @@ namespace Cinar.DBTools
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
+            this.panelConnections.SuspendLayout();
             this.menuStripTree.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCloseEditor)).BeginInit();
+            this.panelProperties.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -280,8 +282,7 @@ namespace Cinar.DBTools
             // splitContainerProperties.Panel2
             // 
             this.splitContainerProperties.Panel2.BackColor = System.Drawing.Color.Transparent;
-            this.splitContainerProperties.Panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("splitContainerProperties.Panel2.BackgroundImage")));
-            this.splitContainerProperties.Panel2.Controls.Add(this.labelProperties);
+            this.splitContainerProperties.Panel2.Controls.Add(this.panelProperties);
             this.splitContainerProperties.Panel2.Controls.Add(this.propertyGrid);
             this.splitContainerProperties.Panel2MinSize = 22;
             this.splitContainerProperties.Size = new System.Drawing.Size(971, 616);
@@ -298,20 +299,29 @@ namespace Cinar.DBTools
             // splitContainerMain.Panel1
             // 
             this.splitContainerMain.Panel1.BackColor = System.Drawing.Color.Transparent;
-            this.splitContainerMain.Panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("splitContainerMain.Panel1.BackgroundImage")));
-            this.splitContainerMain.Panel1.Controls.Add(this.labelConnections);
+            this.splitContainerMain.Panel1.Controls.Add(this.panelConnections);
             this.splitContainerMain.Panel1.Controls.Add(this.treeView);
             this.splitContainerMain.Panel1MinSize = 22;
             // 
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("splitContainerMain.Panel2.BackgroundImage")));
-            this.splitContainerMain.Panel2.Controls.Add(this.btnCloseEditor);
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
             this.splitContainerMain.Size = new System.Drawing.Size(779, 616);
             this.splitContainerMain.SplitterDistance = 191;
             this.splitContainerMain.SplitterWidth = 5;
             this.splitContainerMain.TabIndex = 0;
+            // 
+            // panelConnections
+            // 
+            this.panelConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelConnections.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelConnections.BackgroundImage")));
+            this.panelConnections.Controls.Add(this.labelConnections);
+            this.panelConnections.Location = new System.Drawing.Point(0, 0);
+            this.panelConnections.Name = "panelConnections";
+            this.panelConnections.Size = new System.Drawing.Size(191, 20);
+            this.panelConnections.TabIndex = 2;
             // 
             // labelConnections
             // 
@@ -705,28 +715,16 @@ namespace Cinar.DBTools
             this.imageListTree.ImageSize = new System.Drawing.Size(16, 16);
             this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // btnCloseEditor
-            // 
-            this.btnCloseEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCloseEditor.BackColor = System.Drawing.Color.Transparent;
-            this.btnCloseEditor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnCloseEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseEditor.Image")));
-            this.btnCloseEditor.Location = new System.Drawing.Point(557, 4);
-            this.btnCloseEditor.Name = "btnCloseEditor";
-            this.btnCloseEditor.Size = new System.Drawing.Size(16, 16);
-            this.btnCloseEditor.TabIndex = 1;
-            this.btnCloseEditor.TabStop = false;
-            // 
             // tabControlEditors
             // 
             this.tabControlEditors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlEditors.HotTrack = true;
             this.tabControlEditors.ImageList = this.imageListTabs;
             this.tabControlEditors.ItemSize = new System.Drawing.Size(100, 22);
             this.tabControlEditors.Location = new System.Drawing.Point(0, 0);
             this.tabControlEditors.Name = "tabControlEditors";
             this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
             this.tabControlEditors.SelectedIndex = 0;
+            this.tabControlEditors.ShowToolTips = true;
             this.tabControlEditors.Size = new System.Drawing.Size(583, 616);
             this.tabControlEditors.TabIndex = 1;
             // 
@@ -735,6 +733,17 @@ namespace Cinar.DBTools
             this.imageListTabs.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
             this.imageListTabs.ImageSize = new System.Drawing.Size(16, 16);
             this.imageListTabs.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // panelProperties
+            // 
+            this.panelProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelProperties.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelProperties.BackgroundImage")));
+            this.panelProperties.Controls.Add(this.labelProperties);
+            this.panelProperties.Location = new System.Drawing.Point(0, 0);
+            this.panelProperties.Name = "panelProperties";
+            this.panelProperties.Size = new System.Drawing.Size(192, 20);
+            this.panelProperties.TabIndex = 4;
             // 
             // labelProperties
             // 
@@ -746,7 +755,7 @@ namespace Cinar.DBTools
             this.labelProperties.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelProperties.Image = ((System.Drawing.Image)(resources.GetObject("labelProperties.Image")));
             this.labelProperties.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelProperties.Location = new System.Drawing.Point(-1, 0);
+            this.labelProperties.Location = new System.Drawing.Point(0, 0);
             this.labelProperties.Name = "labelProperties";
             this.labelProperties.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
             this.labelProperties.Size = new System.Drawing.Size(189, 20);
@@ -1379,8 +1388,9 @@ namespace Cinar.DBTools
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
+            this.panelConnections.ResumeLayout(false);
             this.menuStripTree.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.btnCloseEditor)).EndInit();
+            this.panelProperties.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip.ResumeLayout(false);
@@ -1483,7 +1493,6 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripButton btnSimpleIntegrationService;
         private System.Windows.Forms.ToolStripMenuItem menuToolsSQLDump;
         private System.Windows.Forms.ToolStripButton btnSQLDump;
-        private System.Windows.Forms.PictureBox btnCloseEditor;
         private Cinar.DBTools.Controls.MyTabControl tabControlEditors;
         private System.Windows.Forms.ToolStripButton btnAddEditor;
         private System.Windows.Forms.ToolStripMenuItem menuConCreateDatabase;
@@ -1526,6 +1535,8 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuConShowHiddenConnections;
         private System.Windows.Forms.ToolStripMenuItem menuConHideConnection;
         private System.Windows.Forms.ToolStripMenuItem menuSaveConnectionsAs;
+        private System.Windows.Forms.Panel panelConnections;
+        private System.Windows.Forms.Panel panelProperties;
 
     }
 }

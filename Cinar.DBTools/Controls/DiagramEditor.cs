@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -26,6 +25,13 @@ namespace Cinar.DBTools.Controls
 
             conn = Provider.ActiveConnection;
 
+            if (CurrentSchema == null)
+            {
+                CurrentSchema = new Diagram();
+                CurrentSchema.conn = conn;
+                CurrentSchema.Name = "";
+            }
+
             cmdMan.Commands = new CommandCollection(){
                 new Command {
                     Execute = cmdToggleTableView,
@@ -40,21 +46,16 @@ namespace Cinar.DBTools.Controls
                     Trigger = new CommandTrigger{Control=menuArrangeTables}
                 },
                 new Command {
-                    Execute = cmdRemoveTable,
+                    Execute = cmdRemoveObject,
                     Triggers = new List<CommandTrigger>{ 
                         new CommandTrigger{Control=menuRemove},
                         new CommandTrigger{Control=this, Event="PreviewKeyDown", Predicate=(e)=>(e as PreviewKeyDownEventArgs).KeyValue == 46} //Keys.Delete
                     },
-                    IsVisible = () => selectedTVs.Count > 0
+                    IsVisible = () => CurrentSchema.SelectedObject is TableView
                 },
                 new Command {
                     Execute = cmdCreateTable,
                     Trigger = new CommandTrigger{Control=menuCreateTable}
-                },
-                new Command {
-                    Execute = cmdSetAsDisplayField,
-                    Trigger = new CommandTrigger{Control=menuSetAsDisplayField},
-                    IsVisible = () => selectedTVs.Count > 0 && !string.IsNullOrEmpty(selectedTVs[0].SelectedField)
                 },
             };
             cmdMan.SetCommandTriggers();
@@ -68,15 +69,30 @@ namespace Cinar.DBTools.Controls
         {
             base.OnLoad(e);
             correctPanelSize();
+            panelPaint(true);
             MainForm.ObjectChanged += new EventHandler<DbObjectChangedArgs>(MainForm_ObjectChanged);
+            MainForm.ObjectAdded += new EventHandler<DbObjectAddedArgs>(MainForm_ObjectAdded);
+            MainForm.ObjectRemoved += new EventHandler<DbObjectRemovedArgs>(MainForm_ObjectRemoved);
+        }
 
-            if (CurrentSchema == null)
+        void MainForm_ObjectRemoved(object sender, DbObjectRemovedArgs e)
+        {
+            if (e.Object is Table && (e.Object as Table).Database == conn.Database)
             {
-                CurrentSchema = new Diagram();
-                CurrentSchema.conn = conn;
-                CurrentSchema.Name = "";
-                panelPaint(true);
+                TableView tv = CurrentSchema.GetTableView((e.Object as Table).Name);
+                CurrentSchema.Tables.Remove(tv);
+                CurrentSchema.ConnectionLines.RemoveAll(cl => cl.ToTable == tv.TableName || cl.FromTable == tv.TableName);
             }
+            if (e.Object is ForeignKeyConstraint && (e.Object as ForeignKeyConstraint).Table.Database == conn.Database)
+            {
+                CurrentSchema.ConnectionLines.RemoveAll(cl => cl.ForeignKeyName == (e.Object as ForeignKeyConstraint).RefConstraintName);
+            }
+            panelPaint(true);
+        }
+
+        void MainForm_ObjectAdded(object sender, DbObjectAddedArgs e)
+        {
+            
         }
 
         protected override void OnDoubleClick(EventArgs e)
@@ -166,19 +182,17 @@ namespace Cinar.DBTools.Controls
                 if (CurrentSchema.GetTableView(tbl.Name) == null)
                     continue;
 
-                foreach (Field fld in tbl.Fields)
-                    if (fld.ReferenceField != null)
-                    {
-                        TableView tv = CurrentSchema.GetTableView(fld.ReferenceField.Table.Name);
-                        if(tv==null)
-                            continue;
-
-                        ConnectionLine cl = new ConnectionLine();
-                        //cl.FromField = fld.Name;
-                        cl.FromTable = tbl.Name;
-                        cl.ToTable = tv.TableName;
-                        CurrentSchema.ConnectionLines.Add(cl);
-                    }
+                foreach (ForeignKeyConstraint fk in tbl.Constraints.Where(c => c is ForeignKeyConstraint))
+                {
+                    TableView tv = CurrentSchema.GetTableView(fk.RefTableName);
+                    if (tv == null)
+                        continue;
+                    ConnectionLine cl = new ConnectionLine();
+                    cl.FromTable = tbl.Name;
+                    cl.ToTable = tv.TableName;
+                    cl.ForeignKeyName = fk.Name;
+                    CurrentSchema.ConnectionLines.Add(cl);
+                }
             }
         }
         private void arrangeTables(bool circularLayout)
@@ -199,7 +213,7 @@ namespace Cinar.DBTools.Controls
                 for (int i = 0; i < CurrentSchema.Tables.Count; i++)
                 {
                     TableView tv = CurrentSchema.Tables[i];
-                    tv.Position = new Point(20, 20 + i * (Diagram.Def_TitleHeight + 20));
+                    tv.Position = new Point(20 + i * (Diagram.Def_TitleHeight + 20), 20 + i * (Diagram.Def_TitleHeight + 20));
                 }
             }
         }
@@ -209,10 +223,10 @@ namespace Cinar.DBTools.Controls
             {
                 Size size = CurrentSchema.CalculateTotalSize();
                 
-                if (size.Width > this.Parent.Size.Width)
+                if (size.Width > this.MinimumSize.Width)
                     this.Size = new Size(size.Width, this.Size.Height);
 
-                if (size.Height > this.Parent.Size.Height)
+                if (size.Height > this.MinimumSize.Height)
                     this.Size = new Size(this.Size.Width, size.Height);
             }
         }
@@ -249,37 +263,6 @@ namespace Cinar.DBTools.Controls
             }
         }
 
-        List<TableView> _selectedTvs = new List<TableView>();
-        List<TableView> selectedTVs 
-        {
-            get {
-                return _selectedTvs;
-            }
-            set 
-            {
-                _selectedTvs.ForEach(tv => { tv.Selected = false; if (value != null && !value.Contains(tv)) tv.SelectedField = null; });
-                _selectedTvs = value;
-                if (_selectedTvs != null)
-                    _selectedTvs.ForEach(tv => tv.Selected = true);
-                else
-                    _selectedTvs = new List<TableView>();
-
-                if (selectedTVs.Count == 1)
-                {
-                    if (!string.IsNullOrEmpty(selectedTVs[0].SelectedField))
-                        propertyGrid.SelectedObject = conn.Database.Tables[selectedTVs[0].TableName].Fields[selectedTVs[0].SelectedField];
-                    else
-                        propertyGrid.SelectedObject = conn.Database.Tables[selectedTVs[0].TableName];
-                }
-                else if (selectedTVs.Count == 0)
-                    propertyGrid.SelectedObject = CurrentSchema;
-                else
-                    propertyGrid.SelectedObject = null;
-
-                if (propertyGrid.SelectedObject != null)
-                    MainForm.SelectedObject = propertyGrid.SelectedObject;
-            }
-        }
         bool dragging = false;
         Size dragDelta;
 
@@ -301,24 +284,27 @@ namespace Cinar.DBTools.Controls
                     dragging = true;
                     CurrentSchema.Tables.Remove(tv);
                     CurrentSchema.Tables.Add(tv);
+                    CurrentSchema.SelectedObject = tv;
+                    propertyGrid.SelectedObject = conn.Database.Tables[tv.TableName];
 
                     Field selectedField = CurrentSchema.HitTestField(e.Location);
-                    tv.SelectedField = selectedField == null ? null : selectedField.Name;
-                    selectedTVs = new List<TableView> { tv };
+                    if (selectedField != null)
+                    {
+                        CurrentSchema.SelectedObject = selectedField;
+                        propertyGrid.SelectedObject = selectedField;
+                    }
                 }
                 else
                 {
-                    selectedTVs = null;
-
                     ConnectionLine cl = CurrentSchema.HitTestConnectionLine(e.Location);
                     if (cl != null) {
-                        ConnectionLine lastSelectedCL = CurrentSchema.ConnectionLines.Find(c => c.Selected);
-                        if (lastSelectedCL != null) lastSelectedCL.Selected = false;
                         cl.Selected = true;
+                        CurrentSchema.SelectedObject = cl;
+                        propertyGrid.SelectedObject = conn.Database.GetConstraint(cl.ForeignKeyName);
                     }
-
-                    panelPaint(false);
                 }
+
+                panelPaint(false);
 
                 MainForm.cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
             }
@@ -328,11 +314,15 @@ namespace Cinar.DBTools.Controls
         {
             if (dragging)
             {
-                selectedTVs.ForEach(tv => tv.Position = e.Location - dragDelta);
-                correctConnectionLinesPositions(selectedTVs);
-                correctPanelSize();
-                panelPaint(false);
-                modified = true;
+                if (CurrentSchema.SelectedObject is TableView)
+                {
+                    TableView tv = CurrentSchema.SelectedObject as TableView;
+                    tv.Position = e.Location - dragDelta;
+                    correctConnectionLinesPositions(new List<TableView> { tv });
+                    correctPanelSize();
+                    panelPaint(false);
+                    modified = true;
+                }
             }
         }
 
@@ -345,11 +335,15 @@ namespace Cinar.DBTools.Controls
 
         private void cmdToggleTableView(string arg)
         {
-            selectedTVs.ForEach(tv=>tv.ShowFull = !tv.ShowFull);
-            correctConnectionLinesPositions(selectedTVs);
-            correctPanelSize();
-            panelPaint(false);
-            modified = true;
+            if (CurrentSchema.SelectedObject is TableView)
+            {
+                TableView tv = CurrentSchema.SelectedObject as TableView;
+                tv.ShowFull = !tv.ShowFull;
+                correctConnectionLinesPositions(new List<TableView> { tv });
+                correctPanelSize();
+                panelPaint(false);
+                modified = true;
+            }
         }
 
         private void cmdAddTables(string arg)
@@ -375,19 +369,43 @@ namespace Cinar.DBTools.Controls
             modified = true;
         }
 
-        private void cmdRemoveTable(string arg)
+        private void cmdRemoveObject(string arg)
         {
-            selectedTVs.ForEach(tv =>
+            if (CurrentSchema.SelectedObject is TableView)
             {
+                TableView tv = CurrentSchema.SelectedObject as TableView;
                 CurrentSchema.Tables.Remove(tv);
-                CurrentSchema.ConnectionLines
-                    .RemoveAll(cl => cl.FromTable == tv.TableName || cl.ToTable == tv.TableName);
-            });
+                CurrentSchema.ConnectionLines.RemoveAll(cl => cl.FromTable == tv.TableName || cl.ToTable == tv.TableName);
 
-            if (CurrentSchema.Tables.Count > 0)
-                selectedTVs = new List<TableView> { CurrentSchema.Tables[0] };
+                CurrentSchema.SelectedObject = null;
+                correctConnectionLinesPositions(new List<TableView> { tv });
+            }
+            if (CurrentSchema.SelectedObject is Field)
+            {
+                Field f = CurrentSchema.SelectedObject as Field;
+                SQLInputDialog sid = new SQLInputDialog(conn.Database.GetSQLColumnRemove(f), true, "Do you really want to drop this column?");
+                if (sid.ShowDialog() == DialogResult.OK)
+                {
+                    conn.Database.ExecuteNonQuery(sid.SQL);
+                    TreeNode tn = MainForm.findNode(f);
+                    if(tn!=null) tn.Remove();
+                    CurrentSchema.SelectedObject = null;
+                }
+            }
+            if (CurrentSchema.SelectedObject is ConnectionLine)
+            {
+                Constraint c = conn.Database.GetConstraint((CurrentSchema.SelectedObject as ConnectionLine).ForeignKeyName);
+                SQLInputDialog sid = new SQLInputDialog(conn.Database.GetSQLConstraintRemove(c), true, "Do you really want to drop this constraint?");
+                if (sid.ShowDialog() == DialogResult.OK)
+                {
+                    conn.Database.ExecuteNonQuery(sid.SQL);
+                    CurrentSchema.ConnectionLines.Remove(CurrentSchema.SelectedObject as ConnectionLine);
+                    TreeNode tn = MainForm.findNode(c);
+                    if (tn != null) tn.Remove();
+                    CurrentSchema.SelectedObject = null;
+                }
+            }
 
-            correctConnectionLinesPositions(selectedTVs);
             correctPanelSize();
             panelPaint(true);
             modified = true;
@@ -405,10 +423,9 @@ namespace Cinar.DBTools.Controls
                 tv.ShowFull = true;
                 tv.TableName = tbl.Name;
                 tv.Position = lastMousePos;
-                //tv.Size = new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + tbl.Fields.Count * Diagram.Def_FieldHeight);
                 CurrentSchema.Tables.Add(tv);
 
-                selectedTVs = new List<TableView> { tv };
+                CurrentSchema.SelectedObject = tv;
 
                 modified = true;
                 correctPanelSize();
@@ -420,15 +437,6 @@ namespace Cinar.DBTools.Controls
             }
         }
 
-        private void cmdSetAsDisplayField(string arg)
-        {
-            if (selectedTVs.Count != 1)
-                return;
-
-            conn.Database.Tables[selectedTVs[0].TableName].StringFieldName = selectedTVs[0].SelectedField;
-            panelPaint(false);
-            modified = true;
-        }
         private bool modified;
         public bool Modified
         {
@@ -459,18 +467,87 @@ namespace Cinar.DBTools.Controls
         protected override void OnDragEnter(DragEventArgs e)
         {
             Table tbl = e.Data.GetData(typeof(Table)) as Table;
-            TableView tv = CurrentSchema.GetTableView(tbl.Name);
-            if (tbl != null && tv==null && tbl.Database == conn.Database)
-                e.Effect = DragDropEffects.Move;
-            else
-                e.Effect = DragDropEffects.None;
+            Field fld = e.Data.GetData(typeof(Field)) as Field;
+
+            if (tbl != null)
+            {
+                TableView tv = CurrentSchema.GetTableView(tbl.Name);
+                if (tbl != null && tv == null)
+                    e.Effect = DragDropEffects.Move;
+                else
+                    e.Effect = DragDropEffects.None;
+            }
+
+            if (fld != null)
+            {
+                    e.Effect = DragDropEffects.Move;
+            }
         }
         protected override void OnDragDrop(DragEventArgs e)
         {
             Table tbl = e.Data.GetData(typeof(Table)) as Table;
-            Point pos = this.PointToClient(new Point(e.X, e.Y));
-            addTablesToSchema(new List<Table>() { tbl}, false, pos.X, pos.Y);
-            panelPaint(false);
+            Field fld = e.Data.GetData(typeof(Field)) as Field;
+
+            if (tbl != null)
+            {
+                Point pos = this.PointToClient(new Point(e.X, e.Y));
+                if (tbl.Database == conn.Database)
+                    addTablesToSchema(new List<Table>() { tbl }, false, pos.X, pos.Y);
+                else
+                {
+                    Table newTable = null;
+                    try
+                    {
+                        newTable = (Table)tbl.Clone();
+                        conn.Database.Tables.Add(newTable);
+                        conn.Database.SetCollectionParents();
+                        if(MainForm.CreateTable(conn.Database, newTable))
+                            addTablesToSchema(new List<Table>() { newTable }, false, pos.X, pos.Y);
+                        else
+                            conn.Database.Tables.Remove(newTable);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
+                        conn.Database.Tables.Remove(newTable);
+                    }
+                }
+            }
+
+            if (fld != null)
+            {
+                TableView tv = CurrentSchema.HitTestTable(this.PointToClient(new Point(e.X, e.Y)));
+                if (tv != null)
+                {
+                    fld = (Field)fld.Clone();
+                    conn.Database.Tables[tv.TableName].Fields.Add(fld);
+
+                    try
+                    {
+                        string sql = conn.Database.GetSQLColumnAdd(tv.TableName, fld);
+                        SQLInputDialog sid = new SQLInputDialog(sql, false);
+                        if (sid.ShowDialog() == DialogResult.OK)
+                        {
+                            conn.Database.ExecuteNonQuery(sid.SQL);
+                            MainForm.populateTreeNodesFor(null, fld);
+                        }
+                        else
+                            conn.Database.Tables[tv.TableName].Fields.Remove(fld);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
+                        conn.Database.Tables[tv.TableName].Fields.Remove(fld);
+                    }
+                }
+            }
+
+            panelPaint(true);
+        }
+
+        public void OnClose()
+        {
+            
         }
     }
 }

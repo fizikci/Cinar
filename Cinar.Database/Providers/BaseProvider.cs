@@ -38,5 +38,25 @@ namespace Cinar.Database.Providers
         public abstract Dictionary<DbType, string> DEFDbTypeToString { get; }
         public abstract Dictionary<string, DbType> DEFStringToDbType { get; }
 
+        protected string getDefaultValue(Field field)
+        {
+            if (field.IsStringType())
+                return encloseWithQuote(field.DefaultValue.Trim());
+            else if (field.IsNumericType())
+                return field.DefaultValue.Trim().Trim('\'');
+            else
+                return encloseWithQuote(field.DefaultValue.Trim());
+        }
+
+        protected string encloseWithQuote(string str)
+        {
+            return "'" + str.Trim().Trim('(', ')', '\'') + "'";
+        }
+
+        protected string encloseWithParanthesis(string str)
+        {
+            return "(" + str.Trim().Trim('(', ')') + ")";
+        }
+
     }
 }

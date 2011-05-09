@@ -155,6 +155,10 @@ namespace Cinar.Database
                 table.Indices.table = table;
                 foreach (Index index in table.Indices)
                     index.parent = table.Indices;
+
+                table.Constraints.table = table;
+                foreach (Constraint con in table.Constraints)
+                    con.parent = table.Constraints;
             }
         }
 
@@ -1760,6 +1764,11 @@ namespace Cinar.Database
         public string GetSQLTableRename(string oldName, string newName)
         {
             return dbProvider.GetSQLTableRename(oldName, newName);
+        }
+
+        public string GetSQLTableDrop(Table table)
+        {
+            return dbProvider.GetSQLTableDrop(table);
         }
 
         public string GetSQLColumnList(string tableName)

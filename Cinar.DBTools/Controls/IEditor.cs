@@ -10,5 +10,6 @@ namespace Cinar.DBTools.Controls
         bool Modified { get; }
         string GetName();
         bool Save();
+        void OnClose();
     }
 }

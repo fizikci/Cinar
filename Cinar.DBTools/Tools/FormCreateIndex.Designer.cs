@@ -45,7 +45,7 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageFK = new System.Windows.Forms.TabPage();
             this.pnlForeignTableFields = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.comboForeignTableKeys = new System.Windows.Forms.ComboBox();
@@ -53,7 +53,7 @@
             this.tabControl.SuspendLayout();
             this.tabPageLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.tabPageFK.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -109,7 +109,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPageLocal);
-            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.tabPageFK);
             this.tabControl.Location = new System.Drawing.Point(15, 48);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -223,18 +223,18 @@
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
-            // tabPage2
+            // tabPageFK
             // 
-            this.tabPage2.Controls.Add(this.pnlForeignTableFields);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.comboForeignTableKeys);
-            this.tabPage2.Location = new System.Drawing.Point(4, 24);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(583, 311);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Foreign Key";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageFK.Controls.Add(this.pnlForeignTableFields);
+            this.tabPageFK.Controls.Add(this.label3);
+            this.tabPageFK.Controls.Add(this.comboForeignTableKeys);
+            this.tabPageFK.Location = new System.Drawing.Point(4, 24);
+            this.tabPageFK.Name = "tabPageFK";
+            this.tabPageFK.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageFK.Size = new System.Drawing.Size(583, 311);
+            this.tabPageFK.TabIndex = 1;
+            this.tabPageFK.Text = "Foreign Key";
+            this.tabPageFK.UseVisualStyleBackColor = true;
             // 
             // pnlForeignTableFields
             // 
@@ -258,10 +258,11 @@
             // 
             // comboForeignTableKeys
             // 
+            this.comboForeignTableKeys.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboForeignTableKeys.FormattingEnabled = true;
             this.comboForeignTableKeys.Location = new System.Drawing.Point(133, 19);
             this.comboForeignTableKeys.Name = "comboForeignTableKeys";
-            this.comboForeignTableKeys.Size = new System.Drawing.Size(288, 23);
+            this.comboForeignTableKeys.Size = new System.Drawing.Size(425, 23);
             this.comboForeignTableKeys.TabIndex = 25;
             // 
             // FormCreateIndex
@@ -283,8 +284,8 @@
             this.tabPageLocal.ResumeLayout(false);
             this.tabPageLocal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabPageFK.ResumeLayout(false);
+            this.tabPageFK.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -311,7 +312,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageFK;
         private System.Windows.Forms.FlowLayoutPanel pnlForeignTableFields;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboForeignTableKeys;
