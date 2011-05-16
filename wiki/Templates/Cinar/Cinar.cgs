@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>Cinar</Name>
+  <RepeatGeneration>NoRepeat</RepeatGeneration>
+  <Items>
+    <Item xsi:type="FolderItem">
+      <Name>Library</Name>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FileItem">
+          <Name>ObjectWithTags.cs</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Provider.cs</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Entities</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>BaseEntity.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>Entity.cs</Name>
+              <FileNameTemplate>$=table.Name$.cs</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+            </Item>
+          </Items>
+        </Item>
+      </Items>
+    </Item>
+  </Items>
+  <Modified>true</Modified>
+</Solution>
