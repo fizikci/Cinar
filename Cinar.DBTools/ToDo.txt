@@ -102,12 +102,12 @@ Other:
 15. [ok] Diagram'dan veya tree'den sürüklenen columnlar tablo üzerine bırakılınca tabloya eklensin! (vaaay)
 16. [ok] Bir tablo başka bir veritabanının üzerine sürüklenirse orada create edilsin (oleeey)
 17. [ok] Bir column tablodan boşluğa sürüklenirse drop edilsin.
-18. [ok] Bir column veya FK veya tablo Shift-Del ile drop edilsin, tablo seçiliyken del tuşuna "remove from diagram" edilsin.
+18. [ok] Bir column veya FK veya tablo Shift-Del ile drop edilsin, tablo seçiliyken del tuşuyla "remove from diagram" edilsin.
 19. [ok] Tabları tab üzerinden close edelim.
 20. Solution tree'sinde drag/drop, copy/paste çalışsın.
 21. Eski code generator uçurulsun.
 22. SQL result üzerinden tablo seçerek row update yapılabilmeli
-23. Schema problems ekranı daha user-friendly olsun
+23. [OK] Schema problems ekranı daha user-friendly olsun
 
 
 
