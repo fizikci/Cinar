@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>NHibernate</Name>
+  <RepeatGeneration>NoRepeat</RepeatGeneration>
+  <Items>
+    <Item xsi:type="FolderItem">
+      <Name>Entities</Name>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FolderItem">
+          <Name>ModuleName</Name>
+          <FileNameTemplate>$=table.UIMetadata.ModuleName$</FileNameTemplate>
+          <RepeatGeneration>ForEachCategory</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>Entity.cs</Name>
+              <FileNameTemplate>$=table.Name$.cs</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+            </Item>
+          </Items>
+        </Item>
+      </Items>
+    </Item>
+    <Item xsi:type="FolderItem">
+      <Name>Hbm</Name>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FolderItem">
+          <Name>ModuleName</Name>
+          <FileNameTemplate>$=table.UIMetadata.ModuleName$</FileNameTemplate>
+          <RepeatGeneration>ForEachCategory</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>EntityName.hbm.xml</Name>
+              <FileNameTemplate>$=table.Name$.hbm.xml</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+            </Item>
+          </Items>
+        </Item>
+      </Items>
+    </Item>
+  </Items>
+  <Modified>true</Modified>
+</Solution>
