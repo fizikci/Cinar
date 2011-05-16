@@ -17,37 +17,37 @@ namespace Cinar.DBTools.Tools
         {
             InitializeComponent();
 
-            string[] fieldTypes = Provider.Database.GetOriginalFieldTypes().OrderBy(s => s).ToArray();
+            string[] columnTypes = Provider.Database.GetOriginalColumnTypes().OrderBy(s => s).ToArray();
 
-            foreach (object o in fieldTypes)
-                colFieldType.Items.Add(o);
+            foreach (object o in columnTypes)
+                colColumnType.Items.Add(o);
 
-            fieldCollectionBindingSource.DataSource = new List<FieldDef>();
+            columnCollectionBindingSource.DataSource = new List<ColumnDef>();
         }
 
         public Table GetCreatedTable()
         {
             Table tbl = new Table();
             tbl.Name = txtTableName.Text.MakeFileName();
-            if (!(fieldCollectionBindingSource.DataSource is Type))
-                foreach (FieldDef fd in fieldCollectionBindingSource.DataSource as List<FieldDef>)
+            if (!(columnCollectionBindingSource.DataSource is Type))
+                foreach (ColumnDef fd in columnCollectionBindingSource.DataSource as List<ColumnDef>)
                 {
-                    Field f = new Field()
+                    Column f = new Column()
                     {
                         Name = fd.Name,
-                        FieldTypeOriginal = fd.FieldType,
-                        FieldType = Provider.Database.StringToDbType(fd.FieldType),
+                        ColumnTypeOriginal = fd.ColumnType,
+                        ColumnType = Provider.Database.StringToDbType(fd.ColumnType),
                         Length = fd.Length,
                         DefaultValue = fd.DefaultValue,
                         IsNullable = fd.IsNullable,
                         IsAutoIncrement = fd.IsAutoIncrement
                     };
-                    tbl.Fields.Add(f);
+                    tbl.Columns.Add(f);
                     if (fd.IsPrimaryKey)
                     {
                         PrimaryKeyConstraint k = new PrimaryKeyConstraint();
                         tbl.Constraints.Add(k);
-                        k.FieldNames.Add(f.Name);
+                        k.ColumnNames.Add(f.Name);
                         k.Name = "PK_" + tbl.Name;
                     }
                 }
@@ -57,12 +57,12 @@ namespace Cinar.DBTools.Tools
         public void SetTable(Table table)
         {
             txtTableName.Text = table.Name;
-            List<FieldDef> fields = new List<FieldDef>();
-            foreach (Field f in table.Fields)
+            List<ColumnDef> columns = new List<ColumnDef>();
+            foreach (Column f in table.Columns)
             {
-                fields.Add(new FieldDef { 
+                columns.Add(new ColumnDef { 
                     DefaultValue = f.DefaultValue,
-                    FieldType = string.IsNullOrEmpty(f.FieldTypeOriginal) ? Provider.Database.DbTypeToString(f.FieldType) : f.FieldTypeOriginal,
+                    ColumnType = string.IsNullOrEmpty(f.ColumnTypeOriginal) ? Provider.Database.DbTypeToString(f.ColumnType) : f.ColumnTypeOriginal,
                     IsAutoIncrement = f.IsAutoIncrement,
                     IsNullable = f.IsNullable,
                     IsPrimaryKey = f.IsPrimaryKey,
@@ -71,23 +71,23 @@ namespace Cinar.DBTools.Tools
                     OriginalName = f.Name
                 });
             }
-            fieldCollectionBindingSource.DataSource = fields;
+            columnCollectionBindingSource.DataSource = columns;
         }
 
         public TableDef GetAlteredTable()
         {
             TableDef t = new TableDef();
-            t.Fields = fieldCollectionBindingSource.DataSource as List<FieldDef>;
+            t.Columns = columnCollectionBindingSource.DataSource as List<ColumnDef>;
             t.Name = txtTableName.Text;
             return t;
         }
     }
 
-    public class FieldDef
+    public class ColumnDef
     {
         public string OriginalName { get; set; }
         public string Name { get; set; }
-        public string FieldType { get; set; }
+        public string ColumnType { get; set; }
         public int Length { get; set; }
         public string DefaultValue { get; set; }
         public bool IsNullable { get; set; }
@@ -96,11 +96,11 @@ namespace Cinar.DBTools.Tools
     }
     public class TableDef
     {
-        public List<FieldDef> Fields { get; set; }
+        public List<ColumnDef> Columns { get; set; }
         public string Name { get; set; }
 
         public TableDef() {
-            Fields = new List<FieldDef>();
+            Columns = new List<ColumnDef>();
         }
     }
 }

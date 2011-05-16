@@ -57,8 +57,15 @@ namespace Cinar.DBTools.Tools
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            DBTransfer dbTranfer = (DBTransfer)e.Argument;
-            dbTranfer.Transfer(cbTransferData.Checked);
+            try
+            {
+                DBTransfer dbTranfer = (DBTransfer)e.Argument;
+                dbTranfer.Transfer(cbTransferData.Checked);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void log(string msg)

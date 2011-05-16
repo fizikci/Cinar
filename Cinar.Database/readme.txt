@@ -2,15 +2,15 @@ Cinar.Database kütüphanesi veritabaný ile çalýþmayý daha fonksiyonel ve daha eðl
 
 Özellikler:
 - Database abstraction (MySQL, MS SQL Server ve PostgreSQL ile çalýþabilir)
-- Veritabaný metedatasýna eriþim saðlýyor (Tables, Fields, PrimaryKey, vs..)
+- Veritabaný metedatasýna eriþim saðlýyor (Tables, Columns, PrimaryKey, vs..)
 - Metadatadan "create table", "insert", "update" gibi SQL scriptlerini üretebiliyor
 - Transactionlý veya transactionsýz çalýþabilir (özellikle web uygulamalarýnda performansý arttýrmak için transaction'ý kapatmak gerekli olabilir)
 - Çalýþtýrýlan SQL'lerin detaylý loglarýný tutuyor. (hangi kod satýrýndan hangi SQL çalýþtý?)
 - Web uygulamalarýnda bir request için çalýþan Cache (önbellek) mekanizmasýna sahip
 - Object Releational mapping yaklaþýmý
-	- Nesnelerin sýnýf isimlerini tablo adý ve public {get; set;} imzasýna sahip propertilerini tablo fieldý olarak kabul edip database ile map ediyor
-	- Nesneler üzerinde FieldDetail attribute'u ile field metadatasý belirtilebiliyor
-		(FieldType, IsNotNull, DefaultValue, Length, IsPrimaryKey, IsAutoIncrement, References, ReferenceType)
+	- Nesnelerin sýnýf isimlerini tablo adý ve public {get; set;} imzasýna sahip propertilerini tablo sütunu olarak kabul edip database ile map ediyor
+	- Nesneler üzerinde ColumnDetail attribute'u ile column metadatasý belirtilebiliyor
+		(ColumnType, IsNotNull, DefaultValue, Length, IsPrimaryKey, IsAutoIncrement, References, ReferenceType)
 	- Nesnesi olup kendisi olmayan tablolarýn runtime'da otomatik "create" edilmesi
 	- Otomatik create edilen tablolara eklenmesi gereken default kayýtlar DefaultData attribute'u ile belirtilebiliyor
 	- Yazýlýmdaki mevcut sýnýflarla çalýþabilmesi için yapýlmasý gereken tek þey bu nesnelere IDatabaseEntity interface'ini implement ettirmek
@@ -46,7 +46,7 @@ Cinar.Database kütüphanesi veritabaný ile çalýþmayý daha fonksiyonel ve daha eðl
 		DbType GetDbType(Type type)
 		string GetTableDDL(Table table)
 		string GetTableDDL(Table table, DatabaseProvider provider)
-		string GetFieldDDL(Field field)
+		string GetColumnDDL(Column column)
 	Veri tiplerini dönüþtürme metodlarý:
 		Hashtable EntityToHashtable(IDatabaseEntity entity)
 		DataRow EntityToDataRow(IDatabaseEntity entity)
@@ -77,10 +77,10 @@ içine doldurur. Bu bilgiye aþaðýdaki gibi eriþilebilir:
 foreach( Table tbl in db.Tables )
 {
 	Console.WriteLine("Tablo adý                         : " + tbl.Name);
-	Console.WriteLine("Alan sayýsý                       : " + tbl.Fields.Count);
-	Console.WriteLine("Primary key                       : " + tbl.PrimaryField);
-	Console.WrileLine("String tipindeki ilk alan (varsa) : " + tbl.StringField);
-	Console.WrileLine("Int tipindeki ilk alan (varsa)    : " + tbl.Fields.Find(DbType.Int32));
+	Console.WriteLine("Alan sayýsý                       : " + tbl.Columns.Count);
+	Console.WriteLine("Primary key                       : " + tbl.PrimaryColumn);
+	Console.WrileLine("String tipindeki ilk alan (varsa) : " + tbl.StringColumn);
+	Console.WrileLine("Int tipindeki ilk alan (varsa)    : " + tbl.Columns.Find(DbType.Int32));
 	Console.WriteLine("---------------------------------------------");
 } 
 Koddan da görüldüðü gibi db.Tables kolleksiyonu tablolar hakkýnda bilgi toplamak için kullanýlabilir.
@@ -94,14 +94,14 @@ if(musteriTable==null)
 }
 else
 {
-	foreach( Field fld in musteriTable.Fields )
+	foreach( Column fld in musteriTable.Columns )
 	{
-		Console.WriteLine("Field adý                   : " + fld.Name);
-		Console.WriteLine("Tipi                        : " + fld.FieldType);
+		Console.WriteLine("Column adý                   : " + fld.Name);
+		Console.WriteLine("Tipi                        : " + fld.ColumnType);
 		Console.WriteLine("Null olabilir mi?           : " + fld.IsNullable);
 		Console.WrileLine("Default deðeri              : " + fld.DefaultValue);
 		Console.WrileLine("Primary key mi?             : " + fld.IsPrimaryKey);
-		Console.WrileLine("Baþka bir tabloya referans? : " + fld.ReferenceField);
+		Console.WrileLine("Baþka bir tabloya referans? : " + fld.ReferenceColumn);
 		Console.WriteLine("---------------------------------------------");
 	} 
 }

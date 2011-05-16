@@ -9,7 +9,7 @@ namespace Cinar.Entities.MediaSearch
 {
     public class Author : NamedEntity
     {
-        [FieldDetail(References=typeof(Media))]
+        [ColumnDetail(References=typeof(Media))]
         public int MediaId { get; set; }
 
         private Media media;

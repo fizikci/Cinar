@@ -11,5 +11,8 @@ namespace Cinar.DBTools.Controls
         string GetName();
         bool Save();
         void OnClose();
+
+        string Content { get; set; }
+        string FilePath { get; }
     }
 }

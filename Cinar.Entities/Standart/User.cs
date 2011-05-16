@@ -3,7 +3,7 @@ using Cinar.Database;
 
 namespace Cinar.Entities.Standart
 {
-    [DefaultData(FieldList="Username,Password", ValueList="'bulent','offoff'")]
+    [DefaultData(ColumnList="Username,Password", ValueList="'bulent','offoff'")]
     public class User : NamedEntity
     {
         string username;

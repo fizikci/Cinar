@@ -4,14 +4,14 @@ namespace Cinar.Entities.Standart
 {
     public class RoleUser : BaseEntity
     {
-        [FieldDetail(References = typeof(User))]
+        [ColumnDetail(References = typeof(User))]
         public int UserId
         {
             get;
             set;
         }
 
-        [FieldDetail(References = typeof(Role))]
+        [ColumnDetail(References = typeof(Role))]
         public int RoleId
         {
             get;

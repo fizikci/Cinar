@@ -1199,7 +1199,7 @@ namespace Cinar.Scripting
                     token = ReadNextToken();
                 }
 
-                if (token.Value == "$")
+                if (token != null && token.Value == "$")
                 {
                     if (readingShortCutEcho)
                     {

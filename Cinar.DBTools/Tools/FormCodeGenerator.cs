@@ -289,9 +289,9 @@ namespace Cinar.DBTools.Tools
             return res.Substring(0, 1).ToLowerInvariant() + res.Substring(1);
         }
 
-        public string CSType(string fieldType)
+        public string CSType(string columnType)
         {
-            Cinar.Database.DbType dbType = (Cinar.Database.DbType)Enum.Parse(typeof(Cinar.Database.DbType), fieldType);
+            Cinar.Database.DbType dbType = (Cinar.Database.DbType)Enum.Parse(typeof(Cinar.Database.DbType), columnType);
             switch (dbType)
             {
                 case Cinar.Database.DbType.Binary:
@@ -358,9 +358,9 @@ namespace Cinar.DBTools.Tools
             }
         }
 
-        public string CSTypeConstant(string fieldType)
+        public string CSTypeConstant(string columnType)
         {
-            Cinar.Database.DbType dbType = (Cinar.Database.DbType)Enum.Parse(typeof(Cinar.Database.DbType), fieldType);
+            Cinar.Database.DbType dbType = (Cinar.Database.DbType)Enum.Parse(typeof(Cinar.Database.DbType), columnType);
             switch (dbType)
             {
                 case Cinar.Database.DbType.Binary:

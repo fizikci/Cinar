@@ -17,7 +17,7 @@ namespace Cinar.Database
             set;
         }
 
-        string GetNameField();
+        string GetNameColumn();
         string GetNameValue();
 
         object this[string key]
@@ -35,10 +35,10 @@ namespace Cinar.Database
     /// </summary>
     public interface ISerializeSubclassFields
     {
-        [FieldDetail(IsNotNull = true, Length = 100)]
+        [ColumnDetail(IsNotNull = true, Length = 100)]
         string TypeName { get; set; }
 
-        [FieldDetail(FieldType = Cinar.Database.DbType.Text)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
         string Details { get; set; }
     }
 }

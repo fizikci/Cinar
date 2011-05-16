@@ -19,7 +19,7 @@ namespace Cinar.Database
         public override Table Table { get { return parent.Table; } }
 
         public Constraint() {
-            this.FieldNames = new List<string>();
+            this.ColumnNames = new List<string>();
         }
     }
 

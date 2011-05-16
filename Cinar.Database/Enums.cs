@@ -23,7 +23,7 @@ using System.Text;
 namespace Cinar.Database
 {
     /// <summary>
-    /// Desteklenen (veya desteklenecek olan) veritabaný türleri
+    /// Desteklenen veritabaný türleri
     /// </summary>
     public enum DatabaseProvider
     {

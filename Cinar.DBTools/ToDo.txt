@@ -49,12 +49,12 @@ Table
  - Backup table => SQL Dump, Other format
  - Import table from CSV
 
-Fields:
- - Modify fields
+Columns:
+ - Modify columns
 
-Field:
- - Drop field
- - Modify field
+Column:
+ - Drop column
+ - Modify column
 [ok] - Distinct
 [ok] - Max
 [ok] - Min
@@ -77,33 +77,39 @@ Functions:
 [ok] - Create function
 
 Other:
-1. [ok] Make grid editable
-2. [ok] Put paging on top of grid
-3. [ok] Put time/exec time at the beginning of each history lines.
-4. [ok] convert history SQLs to one line
-5. Make "analyze table" better
-5. Rename "analyze table".. yanlış anlaşılıyor.
-6. [ok] Put ER Diagram window into the main window tabs
-7. editSQLAsForProvider saçmalığına bi son ver
-8. Diagram penceresinde açılan context menünün ve komutların düzgün çalışması
-9. [ok] Herşey index değil. Index ve constraintleri birbirinden ayır.
+ 1. [ok] Make grid editable
+ 2. [ok] Put paging on top of grid
+ 3. [ok] Put time/exec time at the beginning of each history lines.
+ 4. [ok] convert history SQLs to one line
+ 5. Make "analyze table" better
+ 5. Rename "analyze table".. yanlış anlaşılıyor.
+ 6. [ok] Put ER Diagram window into the main window tabs
+ 7. editSQLAsForProvider saçmalığına bi son ver
+ 8. Diagram penceresinde açılan context menünün ve komutların düzgün çalışması
+ 9. [ok] Herşey index değil. Index ve constraintleri birbirinden ayır.
 	Constraints: Primary Key, Unique, Foreign Key
 	Indexes: normal index
-10. [ok] Her provider üzerine (read, create, alter, drop) x (database, table, field, constraint, index, view, function, trigger, sproc) metodu yazalım
+10. [ok] Her provider üzerine (read, create, alter, drop) x (database, table, column, constraint, index, view, function, trigger, sproc) metodu yazalım
 										4												9											36 adet
 11. [ok] Tree'de yapılan her işlem (create index dahil) diagram'a event tetiklesin
-12. Code Generator'ı baştan ele alalım
-	a) Solution kavramı olsun. Aynı Visual Studio'daki gibi.
-	b) Bazı dosyalar template olarak eklenebilsin (tablo kadar generate edilecek anlamında)
+12. [ok] Code Generator'ı baştan ele alalım
+	a) [ok] Solution kavramı olsun. Aynı Visual Studio'daki gibi.
+	b) [ok] Bazı dosyalar template olarak eklenebilsin (tablo kadar generate edilecek anlamında)
 	c) Proje tipi olsun (windows/web)
 	d) Çalıştır deyince, bir dizine generate edip, derleyip çalıştırabilsin.
 13. [ok] Diagram'da connection line'a tıklanınca foreign key gösterilsin
-14. Diagram'da sürükle bırak ile foreign key tanımlanabilsin
-15. [ok] Diagram'dan veya tree'den sürüklenen fieldlar tablo üzerine bırakılınca tabloya eklensin! (vaaay)
+14. Diagram'da shift sürükle bırak ile foreign key tanımlanabilsin
+15. [ok] Diagram'dan veya tree'den sürüklenen columnlar tablo üzerine bırakılınca tabloya eklensin! (vaaay)
 16. [ok] Bir tablo başka bir veritabanının üzerine sürüklenirse orada create edilsin (oleeey)
-17. Bir field tablodan boşluğa sürüklenirse drop edilsin.
-18. Bir field veya FK seçiliyken del tuşuna basılırsa drop edilsin, tablo seçiliyken del tuşuna basılırsa drop veya "remove from diagram" edilsin.
+17. [ok] Bir column tablodan boşluğa sürüklenirse drop edilsin.
+18. [ok] Bir column veya FK veya tablo Shift-Del ile drop edilsin, tablo seçiliyken del tuşuna "remove from diagram" edilsin.
 19. [ok] Tabları tab üzerinden close edelim.
+20. Solution tree'sinde drag/drop, copy/paste çalışsın.
+21. Eski code generator uçurulsun.
+22. SQL result üzerinden tablo seçerek row update yapılabilmeli
+23. Schema problems ekranı daha user-friendly olsun
+
+
 
 
 

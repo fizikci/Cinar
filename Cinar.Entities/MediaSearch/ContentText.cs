@@ -9,10 +9,10 @@ namespace Cinar.Entities.MediaSearch
 {
     public class ContentText : BaseEntity
     {
-        [FieldDetail(References=typeof(Content))]
+        [ColumnDetail(References=typeof(Content))]
         public int ContentId { get; set; }
 
-        [FieldDetail(FieldType=DbType.Text)]
+        [ColumnDetail(ColumnType=DbType.Text)]
         public string Content { get; set; }
     }
 }

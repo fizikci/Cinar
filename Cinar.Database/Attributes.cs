@@ -23,27 +23,27 @@ using System.Text;
 namespace Cinar.Database
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public sealed class FieldDetailAttribute : Attribute
+    public sealed class ColumnDetailAttribute : Attribute
     {
-        public FieldDetailAttribute()
+        public ColumnDetailAttribute()
         {
         }
 
         public string Name { get; set; }
 
-        private DbType fieldType = DbType.Undefined;
+        private DbType columnType = DbType.Undefined;
         /// <summary>
-        /// Bu field'ın tipi
+        /// Bu alanın tipi
         /// </summary>
-        public Cinar.Database.DbType FieldType
+        public Cinar.Database.DbType ColumnType
         {
-            get { return fieldType; }
-            set { fieldType = value; }
+            get { return columnType; }
+            set { columnType = value; }
         }
 
         private bool isNotNull = false;
         /// <summary>
-        /// Insert ve updatelerde bu field'ın değeri boş (null) bırakılabilir mi?
+        /// Insert ve updatelerde bu alanın değeri boş (null) bırakılabilir mi?
         /// </summary>
         public bool IsNotNull
         {
@@ -53,8 +53,8 @@ namespace Cinar.Database
 
         private string defaultValue;
         /// <summary>
-        /// Bir insert sorgusunda bu field belirtilmezse default olarak girilmesi gereken değer nedir?
-        /// Bu değer veritabanından "select " + field.DefaultValue şeklinde okunmalıdır.
+        /// Bir insert sorgusunda bu alan belirtilmezse default olarak girilmesi gereken değer nedir?
+        /// Bu değer veritabanından "select " + column.DefaultValue şeklinde okunmalıdır.
         /// </summary>
         public string DefaultValue
         {
@@ -137,14 +137,14 @@ namespace Cinar.Database
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class DefaultDataAttribute : Attribute
     {
-        private string fieldList;
+        private string columnList;
         /// <summary>
         /// Örn: Yas, Ad, Soyad
         /// </summary>
-        public string FieldList
+        public string ColumnList
         {
-            get { return fieldList; }
-            set { fieldList = value; }
+            get { return columnList; }
+            set { columnList = value; }
         }
         private string valueList;
         /// <summary>

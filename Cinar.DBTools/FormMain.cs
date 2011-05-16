@@ -18,6 +18,10 @@ using Cinar.DBTools.Controls;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Constraint = Cinar.Database.Constraint;
+using Cinar.DBTools.CodeGen;
+using Menees.DiffUtils.Controls;
+using Menees.DiffUtils;
+using System.Xml;
 
 namespace Cinar.DBTools
 {
@@ -27,6 +31,7 @@ namespace Cinar.DBTools
         TreeNode rootNode;
         int splitterMainLast = 0, splitterPropLast = 0;
         Image imgYellowBg = null;
+        Controller codeGenController;
 
         public FormMain()
         {
@@ -37,8 +42,9 @@ namespace Cinar.DBTools
             imgYellowBg = splitContainerMain.Panel1.BackgroundImage;
 
             imageListTree.Images.Add("Folder", FamFamFam.folder);
+            imageListTree.Images.Add("File", FamFamFam.page);
             imageListTree.Images.Add("Table", FamFamFam.table);
-            imageListTree.Images.Add("Field", FamFamFam.table_row_insert);
+            imageListTree.Images.Add("Column", FamFamFam.table_row_insert);
             imageListTree.Images.Add("Key", FamFamFam.key);
             imageListTree.Images.Add("Constraint", FamFamFam.database_link);
             imageListTree.Images.Add("Index", FamFamFam.database_key);
@@ -52,12 +58,11 @@ namespace Cinar.DBTools
 
             imageListTabs.Images.Add("Diagram", FamFamFam.chart_organisation);
             imageListTabs.Images.Add("Query", FamFamFam.script);
-
+            imageListTabs.Images.Add("File", FamFamFam.page);
 
             #region commands
             cmdMan.AfterCommandExecute = () =>
             {
-                cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
                 showSelectedObjectOnPropertyGrid();
             };
 
@@ -95,6 +100,7 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuSave},
                                          new CommandTrigger{ Control = btnSave},
+                                         new CommandTrigger{ Control = menuTabSave},
                                      },
                                      IsEnabled = () => CurrEditor != null && CurrEditor.Modified
                                  },
@@ -130,18 +136,76 @@ namespace Cinar.DBTools
                 #endregion
                     #region toolBar & tools menu
                      new Command {
-                                     Execute = (s)=>{addSQLEditor("", "");},
+                                     Execute = (arg)=>{addSQLEditor("", "");},
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = btnAddEditor},
                                          new CommandTrigger{ Control = menuAddEditor}
                                      }
                                  },
                      new Command {
-                                     Execute = cmdCloseEditor,
+                                     Execute = (arg)=>{
+                                        CancelEventArgs e = (CancelEventArgs) cmdMan.LastEventArgs;
+                                        if (CurrEditor.Modified)
+                                        {
+                                            DialogResult dr = MessageBox.Show("Would you like to save?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel);
+                                            if (dr == DialogResult.Yes)
+                                                CurrEditor.Save();
+                
+                                            if (dr == DialogResult.Cancel)
+                                                e.Cancel = true;
+                                        }
+                                        if (!e.Cancel)
+                                            CurrEditor.OnClose();
+                                     },
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = tabControlEditors, Event="CloseTab"},
                                      },
-                                     //IsEnabled = () => tabControlEditors.TabCount > 1
+                                },
+                     new Command {
+                                     Execute = cmdCloseEditor,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabClose},
+                                     },
+                                },
+                     new Command {
+                                     Execute = cmdCloseAll,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabCloseAll},
+                                     },
+                                },
+                     new Command {
+                                     Execute = cmdCloseAllButThis,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabCloseAllButThis},
+                                     },
+                                     IsEnabled = () => tabControlEditors.TabPages.Count > 1
+                                },
+                     new Command {
+                                     Execute = (arg)=>{
+                                         Provider.CompareCode(CurrEditor.FilePath, CurrEditor.Content);
+                                     },
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabCompareWithOriginal},
+                                     },
+                                     IsEnabled = () => CurrEditor!=null && !String.IsNullOrEmpty(CurrEditor.FilePath)
+                                },
+                     new Command {
+                                     Execute = (arg)=>{
+                                         Clipboard.SetText(CurrEditor.FilePath);
+                                     },
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabCopyFullPath},
+                                     },
+                                     IsEnabled = () => CurrEditor!=null && !String.IsNullOrEmpty(CurrEditor.FilePath)
+                                },
+                     new Command {
+                                     Execute = (arg)=>{
+                                         Process.Start(Path.GetDirectoryName(CurrEditor.FilePath));
+                                     },
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTabOpenContainingFolder},
+                                     },
+                                     IsEnabled = () => CurrEditor!=null && !String.IsNullOrEmpty(CurrEditor.FilePath)
                                 },
                      new Command {
                                      Execute = cmdExecuteSQL,
@@ -164,6 +228,8 @@ namespace Cinar.DBTools
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuToolsCodeGenerator, Argument=typeof(FormCodeGenerator).FullName}, 
                                          new CommandTrigger{ Control = btnCodeGenerator, Argument=typeof(FormCodeGenerator).FullName}, 
+
+                                         new CommandTrigger{ Control = menuToolsGenerateTablesFromReflectedMetadata, Argument=typeof(FormGenerateTablesFromClasses).FullName}, 
 
                                          new CommandTrigger{ Control = menuToolsCheckDatabaseSchema, Argument=typeof(FormCheckDatabaseSchema).FullName},
                                          new CommandTrigger{ Control = btnCheckDatabaseSchema, Argument=typeof(FormCheckDatabaseSchema).FullName},
@@ -208,9 +274,9 @@ $"},
 foreach(table in db.Tables)
     echo(table.Name + ""\r\n"");
 $"},
-                                         new CommandTrigger{ Control = menuToolsQScriptForEachField, Argument=@"$
-foreach(field in db.Tables[""TABLE_NAME""].Fields)
-    echo(field.Name + ""\r\n"");
+                                         new CommandTrigger{ Control = menuToolsQScriptForEachColumn, Argument=@"$
+foreach(column in db.Tables[""TABLE_NAME""].Columns)
+    echo(column.Name + ""\r\n"");
 $"},
                                          new CommandTrigger{ Control = menuToolsQScriptCalculateOptDataLen, Argument=SQLResources.SQLCalculateOptimalDataLength},
                                      }
@@ -263,17 +329,13 @@ $"},
                                              cmdDeleteConnection("");
                                          else if(SelectedObject is Table)
                                              cmdTableDrop("");
-                                         //else if(SelectedObject is Field)
-                                         //    cmdFieldDrop("");
+                                         else if(SelectedObject is Column)
+                                             cmdColumnDrop("");
                                          else if(SelectedObject is BaseIndexConstraint)
                                              cmdDropIndex("");
                                          
                                      },
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "KeyUp", Predicate = (e)=>{return (e as KeyEventArgs).KeyCode == Keys.Delete;}}
-                                 },
-                     new Command {
-                                     Execute = cmdSetActiveConnection,
-                                     Trigger = new CommandTrigger{ Control = treeView, Event = "AfterSelect"}
                                  },
                      new Command {
                                      Execute = cmdShowHiddenConnections,
@@ -327,6 +389,7 @@ $"},
                      new Command {
                                      Execute = cmdDoDatabaseOperation,
                                      Triggers = new List<CommandTrigger>{
+                                         new CommandTrigger{ Control = menuMoreDatabaseOperations, Argument="-"},
                                          new CommandTrigger{ Control = menuConCreateDatabase, Argument="Create"},
                                          new CommandTrigger{ Control = menuConDropDatabase, Argument="Drop"},
                                          new CommandTrigger{ Control = menuConTruncateDatabase, Argument="Truncate"},
@@ -428,29 +491,34 @@ $"},
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
-                                     Execute = cmdFieldDistinct,
-                                     Trigger = new CommandTrigger{ Control = menuFieldDistinct},
-                                     IsVisible = ()=> SelectedObject is Field
+                                     Execute = cmdColumnDistinct,
+                                     Trigger = new CommandTrigger{ Control = menuColumnDistinct},
+                                     IsVisible = ()=> SelectedObject is Column
                                  },
                      new Command {
-                                     Execute = cmdFieldMax,
-                                     Trigger = new CommandTrigger{ Control = menuFieldMax},
-                                     IsVisible = ()=> SelectedObject is Field
+                                     Execute = cmdColumnMax,
+                                     Trigger = new CommandTrigger{ Control = menuColumnMax},
+                                     IsVisible = ()=> SelectedObject is Column
                                  },
                      new Command {
-                                     Execute = cmdFieldMin,
-                                     Trigger = new CommandTrigger{ Control = menuFieldMin},
-                                     IsVisible = ()=> SelectedObject is Field
+                                     Execute = cmdColumnMin,
+                                     Trigger = new CommandTrigger{ Control = menuColumnMin},
+                                     IsVisible = ()=> SelectedObject is Column
                                  },
                      new Command {
                                      Execute = cmdGroupedCounts,
-                                     Trigger = new CommandTrigger{ Control = menuFieldGroupedCounts},
-                                     IsVisible = ()=> SelectedObject is Field
+                                     Trigger = new CommandTrigger{ Control = menuColumnGroupedCounts},
+                                     IsVisible = ()=> SelectedObject is Column
+                                 },
+                     new Command {
+                                     Execute = cmdColumnDrop,
+                                     Trigger = new CommandTrigger{ Control = menuColumnDrop},
+                                     IsVisible = ()=> SelectedObject is Column
                                  },
                      new Command {
                                      Execute = cmdGenerateUIMetadata,
                                      Trigger = new CommandTrigger{ Control = menuShowUIMetadata},
-                                     IsVisible = ()=> SelectedObject is ConnectionSettings || SelectedObject is Table || SelectedObject is Field
+                                     IsVisible = ()=> SelectedObject is ConnectionSettings || SelectedObject is Table || SelectedObject is Column
                                  },
                      new Command {
                                      Execute = cmdCreateIndex,
@@ -469,6 +537,9 @@ $"},
                                  },
                     #endregion
              };
+            
+            codeGenController = new Controller(this);
+
             cmdMan.SetCommandTriggers();
             #endregion
 
@@ -479,7 +550,7 @@ $"},
         {
             foreach (Control ctl in parent.Controls)
             {
-                if (ctl is CinarSQLEditor || ctl is MenuStrip || ctl is ContextMenuStrip) continue;
+                if (ctl is TextEditorControl || ctl is MenuStrip || ctl is ContextMenuStrip) continue;
 
                 ctl.Font = font;
                 if (ctl is DataGridView)
@@ -498,7 +569,7 @@ $"},
             }
         }
 
-        private IEditor CurrEditor
+        internal IEditor CurrEditor
         {
             get
             {
@@ -641,17 +712,17 @@ $"},
 
             TreeNode tnTable = parentNode.Nodes.Add(tbl.Name, tbl.Name, tbl.IsView ? "View" : "Table", tbl.IsView ? "View" : "Table");
             tnTable.Tag = tbl;
-            
-            TreeNode fieldsNode = tnTable.Nodes.Add("Fields", "Fields", "Folder", "Folder");
-            fieldsNode.Tag = tbl.Fields;
-            foreach (Field fld in tbl.Fields)
-                populateTreeNodesFor(fieldsNode, fld);
+
+            TreeNode columnsNode = tnTable.Nodes.Add("Columns", "Columns", "Folder", "Folder");
+            columnsNode.Tag = tbl.Columns;
+            foreach (Column column in tbl.Columns)
+                populateTreeNodesFor(columnsNode, column);
 
             TreeNode keysNode = tnTable.Nodes.Add("Constraints", "Constraints", "Folder", "Folder");
             keysNode.Tag = tbl.Constraints;
             if (tbl.Constraints != null)
-                foreach (Constraint index in tbl.Constraints)
-                    populateTreeNodesFor(keysNode, index);
+                foreach (Constraint constraint in tbl.Constraints)
+                    populateTreeNodesFor(keysNode, constraint);
 
             TreeNode indexesNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
             keysNode.Tag = tbl.Indices;
@@ -671,7 +742,7 @@ $"},
             if (parentNode == null)
                 parentNode = findNode(index.Table.Indices);
 
-            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", "Index", "Index");
+            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.ColumnNames.ToArray()) + ")", "Index", "Index");
             tnKey.Tag = index;
         }
         internal void populateTreeNodesFor(TreeNode parentNode, Constraint index)
@@ -679,20 +750,23 @@ $"},
             if (parentNode == null)
                 parentNode = findNode(index.Table.Constraints);
 
-            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.FieldNames.ToArray()) + ")", index is PrimaryKeyConstraint ? "Key" : "Constraint", index is PrimaryKeyConstraint ? "Key" : "Constraint");
+            TreeNode tnKey = parentNode.Nodes.Add(index.Name, index.Name + " (" + string.Join(", ", index.ColumnNames.ToArray()) + ")", index is PrimaryKeyConstraint ? "Key" : "Constraint", index is PrimaryKeyConstraint ? "Key" : "Constraint");
             tnKey.Tag = index;
         }
-        internal void populateTreeNodesFor(TreeNode parentNode, Field fld)
+        internal void populateTreeNodesFor(TreeNode parentNode, Column fld)
         {
             if (parentNode == null)
-                parentNode = findNode(fld.Table.Fields);
+                parentNode = findNode(fld.Table.Columns);
 
-            TreeNode tnField = parentNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.FieldType + ")", fld.IsPrimaryKey ? "Key" : "Field", fld.IsPrimaryKey ? "Key" : "Field");
-            tnField.Tag = fld;
+            TreeNode tnColumn = parentNode.Nodes.Add(fld.Name, fld.Name + " (" + fld.ColumnType + ")", fld.IsPrimaryKey ? "Key" : "Column", fld.IsPrimaryKey ? "Key" : "Column");
+            tnColumn.Tag = fld;
         }
 
         private ConnectionSettings findConnection(TreeNode treeNode)
         {
+            if (treeNode == null)
+                return null;
+
             while (treeNode.Parent != null)
             {
                 if (treeNode.Tag is ConnectionSettings)
@@ -715,7 +789,10 @@ $"},
         }
         internal TreeNode findNode(object tag) 
         {
-            return findNode(treeView.Nodes, tn => tn.Tag == tag);
+            TreeNode node = findNode(treeView.Nodes, tn => tn.Tag == tag);
+            if (node == null)
+                node = findNode(treeCodeGen.Nodes, tn => tn.Tag == tag);
+            return node;
         }
         private TreeNode findSelectedDBNode()
         {
@@ -733,11 +810,11 @@ $"},
             if (SelectedObject is Table)
                 return SelectedObject as Table;
 
-            if (SelectedObject is FieldCollection)
-                return (SelectedObject as FieldCollection).Table;
+            if (SelectedObject is ColumnCollection)
+                return (SelectedObject as ColumnCollection).Table;
 
-            if (SelectedObject is Field)
-                return (SelectedObject as Field).Table;
+            if (SelectedObject is Column)
+                return (SelectedObject as Column).Table;
 
             if (SelectedObject is IndexCollection)
                 return (SelectedObject as IndexCollection).Table;
@@ -748,10 +825,17 @@ $"},
             return null;
         }
 
-        private void addSQLEditor(string filePath, string sql)
+        internal void addSQLEditor(string filePath, string sql)
         {
+            foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
+                if (!string.IsNullOrEmpty(filePath) && myTabPage.ToolTipText == filePath)
+                {
+                    tabControlEditors.SelectedTab = myTabPage;
+                    return;
+                }
+
             MyTabPage tp = new MyTabPage();
-            tp.ImageKey = "Query";
+            //tp.ImageKey = "Query";
             tp.ImageIndex = 1;
 
             SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
@@ -764,11 +848,42 @@ $"},
 
             SetFont(tp, Font);
         }
+        internal void addFileEditor(string filePath)
+        {
+            foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
+                if (!string.IsNullOrEmpty(filePath) && myTabPage.ToolTipText == filePath)
+                {
+                    tabControlEditors.SelectedTab = myTabPage;
+                    return;
+                }
+            if (!File.Exists(filePath)) 
+                throw new Exception("File not found");
 
+            MyTabPage tp = new MyTabPage();
+            //tp.ImageKey = "File";
+            tp.ImageIndex = 2;
+
+            TemplateEditor ed = new TemplateEditor(filePath);
+            ed.Dock = DockStyle.Fill;
+            tp.Controls.Add(ed);
+            tp.ToolTipText = filePath;
+            tp.Text = Path.GetFileName(filePath);
+            tabControlEditors.TabPages.Add(tp);
+            tabControlEditors.SelectTab(tp);
+
+            SetFont(tp, Font);
+        }
         private void addDiagram(Diagram schema)
         {
+            foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
+                if (myTabPage.Controls[0] is DiagramEditor && (myTabPage.Controls[0] as DiagramEditor).CurrentSchema==schema)
+                {
+                    tabControlEditors.SelectedTab = myTabPage;
+                    return;
+                }
+
             MyTabPage tp = new MyTabPage();
-            tp.ImageKey = "Diagram";
+            //tp.ImageKey = "Diagram";
             tp.ImageIndex = 0;
 
             tp.Text = schema == null ? "New Diagram" : schema.Name;
@@ -808,9 +923,12 @@ $"},
             if (ofd.ShowDialog() == DialogResult.OK)
                 addSQLEditor(ofd.FileName, "");
         }
+
+        bool cancel = false;
         private void cmdCloseEditor(string arg)
         {
-            CancelEventArgs e = (CancelEventArgs) cmdMan.LastEventArgs;
+            cancel = false;
+
             if (CurrEditor.Modified)
             {
                 DialogResult dr = MessageBox.Show("Would you like to save?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel);
@@ -818,10 +936,34 @@ $"},
                     CurrEditor.Save();
                 
                 if (dr == DialogResult.Cancel)
-                    e.Cancel = true;
+                    cancel = true;
             }
-            if (!e.Cancel)
+            if (!cancel)
+            {
                 CurrEditor.OnClose();
+                tabControlEditors.TabPages.Remove(tabControlEditors.SelectedTab);
+            }
+        }
+
+        private void cmdCloseAllButThis(string arg)
+        {
+            TabPage page = tabControlEditors.SelectedTab;
+            while (tabControlEditors.TabPages.Count>1 && cancel==false)
+            {
+                if (page == tabControlEditors.SelectedTab) {
+                    int i = tabControlEditors.TabPages.IndexOf(page);
+                    tabControlEditors.SelectedIndex = (i == 0) ? tabControlEditors.TabPages.Count - 1 : 0;
+                }
+                cmdCloseEditor("");
+            }
+        }
+
+        private void cmdCloseAll(string arg)
+        {
+            while (tabControlEditors.TabPages.Count > 0 && cancel == false)
+            {
+                cmdCloseEditor("");
+            }
         }
 
         private void cmdEditorCommand(string arg)
@@ -888,7 +1030,7 @@ $"},
         }
         private void cmdRefreshMetadata(string arg)
         {
-            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\nThis may result in loss of unsaved metadata changes.\n\nContinue?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (arg=="nowarn" || MessageBox.Show("Metada will be reread from database.\nThis may take a long time according to the number of tables.\n\nContinue?", "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 Database.Database oldDb = Provider.Database;
                 Provider.ActiveConnection.RefreshDatabaseSchema();
@@ -898,21 +1040,12 @@ $"},
                     Table newTable = Provider.Database.Tables[oldTable.Name];
                     if (newTable == null) continue;
 
-                    foreach (Field oldField in oldTable.Fields)
+                    foreach (Column oldColumn in oldTable.Columns)
                     {
-                        Field newField = newTable.Fields[oldField.Name];
-                        if (newField == null) continue;
+                        Column newColumn = newTable.Columns[oldColumn.Name];
+                        if (newColumn == null) continue;
 
-                        //if (oldField.ReferenceField != null)
-                        //{
-                        //    var isOk = newField.ReferenceField != null && oldField.ReferenceField.Table.Name == newField.ReferenceField.Table.Name && oldField.ReferenceField.Name == newField.ReferenceField.Name;
-                        //    if (!isOk)
-                        //    {
-                        //        newField.ReferenceField = getField(oldField.ReferenceField.Table.Name, oldField.ReferenceField.Name);
-                        //    }
-                        //}
-
-                        newField.UIMetadata = oldField.UIMetadata;
+                        newColumn.UIMetadata = oldColumn.UIMetadata;
                     }
 
                     newTable.UIMetadata = oldTable.UIMetadata;
@@ -1101,10 +1234,17 @@ $"},
                     {
                         StringBuilder sb = new StringBuilder();
                         foreach (Table t in Provider.Database.Tables)
+                            foreach (Constraint c in t.Constraints)
+                                if (c is Cinar.Database.ForeignKeyConstraint)
+                                    sb.AppendLine(Provider.Database.GetSQLConstraintRemove(c) + ";");
+                        foreach (Table t in Provider.Database.Tables)
                             sb.AppendLine(Provider.Database.GetSQLTableDrop(t) + ";");
                         SQLInputDialog sid = new SQLInputDialog(sb.ToString(), false);
                         if (sid.ShowDialog() == DialogResult.OK)
+                        {
                             Provider.Database.ExecuteNonQuery(sid.SQL);
+                            cmdRefreshMetadata("nowarn");
+                        }
                         break;
                     }
                 case "Transfer":
@@ -1117,11 +1257,15 @@ $"},
         }
         private void cmdCreateDBObject(string arg)
         {
+            if (arg == "-")
+                return;
+
             if (arg == "Table")
             {
                 cmdCreateTable("");
                 return;
             }
+
             string key = "SQLCreate"+arg+Provider.Database.Provider;
             string sql = SQLResources.ResourceManager.GetString(key);
             addSQLEditor("", sql);
@@ -1143,6 +1287,8 @@ $"},
             Interpreter engine = new Interpreter(sel, null);
             engine.SetAttribute("db", Provider.Database);
             engine.SetAttribute("util", new Util());
+            engine.SetAttribute("table", findSelectedTable());
+            engine.SetAttribute("tree", treeView);
             engine.Parse();
             engine.Execute();
             string sql = engine.Output;
@@ -1154,6 +1300,8 @@ $"},
             Interpreter engine = new Interpreter(CurrSQLEditor.SQLEditor.Text, null);
             engine.SetAttribute("db", Provider.Database);
             engine.SetAttribute("util", new Util());
+            engine.SetAttribute("table", findSelectedTable());
+            engine.SetAttribute("tree", treeView);
             engine.Parse();
             engine.Execute();
 
@@ -1162,7 +1310,7 @@ $"},
             statusText.Text = "Script executed succesfully.";
         }
 
-        private void cmdSetActiveConnection(string arg)
+        internal void cmdSetActiveConnection(string arg)
         {
             TreeNode tnOld = findNode(treeView.Nodes, n => n.BackColor == Color.LightBlue);
             if (tnOld != null)
@@ -1186,7 +1334,7 @@ $"},
 
             cbActiveConnection.SelectedItem = Provider.ActiveConnection;
 
-            statusText.Text = "Active connection: " + Provider.ActiveConnection;
+            statusText.Text = "Active connection: " + Provider.ActiveConnection ?? "None";
         }
 
         private void cmdTableOpen(string arg)
@@ -1212,20 +1360,27 @@ $"},
             else
                 addSQLEditor("", "");
         }
-        private void cmdTableDrop(string arg)
+        internal void cmdTableDrop(string arg)
         {
             if (!checkConnection()) return;
             Table table = SelectedObject as Table;
             SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLTableDrop(table), true, string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name));
             if(sid.ShowDialog()==DialogResult.OK)
             {
-                int i = Provider.Database.ExecuteNonQuery(sid.SQL);
-                Provider.Database.Tables.Remove(table);
-                findNode(table).Remove();
-                if(ObjectRemoved!=null)
-                    ObjectRemoved(this, new DbObjectRemovedArgs { Object = table });
-                if(CurrSQLEditor!=null)
-                    CurrSQLEditor.ShowInfoText("Table " + table.Name + " dropped succesfully.");
+                try
+                {
+                    int i = Provider.Database.ExecuteNonQuery(sid.SQL);
+                    Provider.Database.Tables.Remove(table);
+                    findNode(table).Remove();
+                    if (ObjectRemoved != null)
+                        ObjectRemoved(this, new DbObjectRemovedArgs { Object = table });
+                    if (CurrSQLEditor != null)
+                        CurrSQLEditor.ShowInfoText("Table " + table.Name + " dropped succesfully.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
         private void cmdTableCount(string arg)
@@ -1245,8 +1400,8 @@ $"},
             if (count > 0)
             {
                 List<string> list = new List<string>();
-                foreach (Field f in Provider.Database.Tables[tableName].Fields)
-                    list.Add("select '" + f.Name + "' as [Field Name], min([" + f.Name + "]) as [Min. Value], max([" + f.Name + "]) as [Max. Value] from [" + tableName + "]");
+                foreach (Column f in Provider.Database.Tables[tableName].Columns)
+                    list.Add("select '" + f.Name + "' as [Column Name], min([" + f.Name + "]) as [Min. Value], max([" + f.Name + "]) as [Max. Value] from [" + tableName + "]");
                 string sql = string.Join("\nUNION\n", list.ToArray());
                 dtMaxMin = Provider.Database.GetDataTable(sql);
             }
@@ -1299,8 +1454,8 @@ $"},
 
                         if (string.IsNullOrEmpty(tbl.Name))
                             throw new Exception("Enter a valid name for the table.");
-                        if (tbl.Fields == null || tbl.Fields.Count == 0)
-                            throw new Exception("Add minimum one field to the table.");
+                        if (tbl.Columns == null || tbl.Columns.Count == 0)
+                            throw new Exception("Add minimum one column to the table.");
 
                         if(!CreateTable(Provider.Database, tbl))
                             Provider.Database.Tables.Remove(tbl);
@@ -1348,36 +1503,36 @@ $"},
                     break;
                 case "Insert":
                     sb.AppendLine("insert into " + table.Name + "(");
-                    foreach (Field field in table.Fields)
-                        if (!field.IsPrimaryKey)
-                            sb.AppendLine("\t" + field.Name + ",");
+                    foreach (Column column in table.Columns)
+                        if (!column.IsPrimaryKey)
+                            sb.AppendLine("\t" + column.Name + ",");
                     sb = sb.Remove(sb.Length - 3, 3);
                     sb.AppendLine();
                     sb.AppendLine(") values (");
-                    foreach (Field field in table.Fields)
-                        if (!field.IsPrimaryKey)
-                            sb.AppendLine("\t@" + field.Name + ",");
+                    foreach (Column column in table.Columns)
+                        if (!column.IsPrimaryKey)
+                            sb.AppendLine("\t@" + column.Name + ",");
                     sb = sb.Remove(sb.Length - 3, 3);
                     sb.AppendLine();
                     sb.AppendLine(")");
                     break;
                 case "Update":
                     sb.AppendLine("update " + table.Name + " set");
-                    foreach (Field field in table.Fields)
-                        if (!field.IsPrimaryKey)
-                            sb.AppendLine("\t" + field.Name + " = @" + field.Name + ",");
+                    foreach (Column column in table.Columns)
+                        if (!column.IsPrimaryKey)
+                            sb.AppendLine("\t" + column.Name + " = @" + column.Name + ",");
                     sb = sb.Remove(sb.Length - 3, 3);
                     sb.AppendLine();
                     sb.AppendLine("where");
-                    if (table.PrimaryField != null)
-                        sb.AppendLine("\t@" + table.PrimaryField.Name + " = @" + table.PrimaryField.Name);
+                    if (table.PrimaryColumn != null)
+                        sb.AppendLine("\t@" + table.PrimaryColumn.Name + " = @" + table.PrimaryColumn.Name);
                     else
                         sb.AppendLine("\t1 = 2");
                     break;
                 case "Select":
                     sb.AppendLine("select ");
-                    foreach (Field field in table.Fields)
-                        sb.AppendLine("\t" + field.Name + ",");
+                    foreach (Column column in table.Columns)
+                        sb.AppendLine("\t" + column.Name + ",");
                     sb = sb.Remove(sb.Length - 3, 3);
                     sb.AppendLine();
                     sb.AppendLine("from");
@@ -1413,57 +1568,77 @@ $"},
                     return;
                 tbl.GenerateUIMetadata();
             }
-            else if (SelectedObject is Field)
+            else if (SelectedObject is Column)
             {
-                Field fld = (Field)SelectedObject;
-                if (MessageBox.Show("UI metadata will be generated for field " + fld.Name + ". Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                Column column = (Column)SelectedObject;
+                if (MessageBox.Show("UI metadata will be generated for column " + column.Name + ". Continue?", "Cinar Database Tools", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
-                fld.GenerateUIMetadata();
+                column.GenerateUIMetadata();
             }
         }
 
-        private void cmdFieldDistinct(string arg)
+        private void cmdColumnDistinct(string arg)
         {
-            if (!checkConnection() || !(SelectedObject is Field)) return;
-            Field field = (Field)SelectedObject;
+            if (!checkConnection() || !(SelectedObject is Column)) return;
+            Column column = (Column)SelectedObject;
             executeSQL(@"
                 select distinct top 1000 
                     [{0}] 
                 from 
                     [{1}]", 
-                          field.Name, 
-                          field.Table.Name);
+                          column.Name, 
+                          column.Table.Name);
         }
-        private void cmdFieldMax(string arg)
+        private void cmdColumnMax(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)SelectedObject;
+            Column column = (Column)SelectedObject;
             executeSQL(@"
                 select 
                     max([{0}]) AS {0}_MAX_value 
                 from 
                     [{1}]",
-                          field.Name,
-                          field.Table.Name);
+                          column.Name,
+                          column.Table.Name);
         }
-        private void cmdFieldMin(string arg)
+        private void cmdColumnMin(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)SelectedObject;
+            Column column = (Column)SelectedObject;
             executeSQL(@"
                 select 
                     min([{0}]) AS {0}_MIN_value 
                 from 
                     [{1}]", 
-                          field.Name, 
-                          field.Table.Name);
+                          column.Name, 
+                          column.Table.Name);
+        }
+        private void cmdColumnDrop(string arg)
+        {
+            Column column = SelectedObject as Column;
+            SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLColumnRemove(column), true, string.Format("Column \"{0}.{1}\" will be dropped and ALL DATA LOST.\n\nContinue?", column.Table.Name, column.Name));
+            if (sid.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    int i = Provider.Database.ExecuteNonQuery(sid.SQL);
+                    column.Table.Columns.Remove(column);
+                    findNode(column).Remove();
+                    if (ObjectRemoved != null)
+                        ObjectRemoved(this, new DbObjectRemovedArgs { Object = column });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         private void cmdGroupedCounts(string arg)
         {
             if (!checkConnection()) return;
-            Field field = (Field)SelectedObject;
-            if (field.ReferenceField == null || field.ReferenceField.Table.StringField == null)
+            Column column = (Column)SelectedObject;
+            if (column.ReferenceColumn == null || column.ReferenceColumn.Table.StringColumn == null)
             {
                 executeSQL(@"
                     select top 1000 
@@ -1473,8 +1648,8 @@ $"},
                         [{1}] 
                     group by [{0}] 
                     order by RecordCount desc",
-                                              field.Name,
-                                              field.Table.Name);
+                                              column.Name,
+                                              column.Table.Name);
             }
             else
             {
@@ -1488,11 +1663,11 @@ $"},
                         left join [{3}] tRef on t.[{0}] = tRef.[{2}]
                     group by t.[{0}], tRef.[{4}]
                     order by RecordCount desc",
-                                              field.Name,
-                                              field.Table.Name,
-                                              field.ReferenceField.Name,
-                                              field.ReferenceField.Table.Name,
-                                              field.ReferenceField.Table.StringField.Name);
+                                              column.Name,
+                                              column.Table.Name,
+                                              column.ReferenceColumn.Name,
+                                              column.ReferenceColumn.Table.Name,
+                                              column.ReferenceColumn.Table.StringColumn.Name);
             }
 
             MyDataGrid grid = CurrSQLEditor.Grid;
@@ -1500,17 +1675,17 @@ $"},
                 if (grid.SelectedRows.Count <= 0)
                     return;
                 DataRow dr = (grid.SelectedRows[0].DataBoundItem as DataRowView).Row;
-                object keyVal = dr[field.Name];
-                string from = Provider.Database.GetFromWithJoin(field.Table);
+                object keyVal = dr[column.Name];
+                string from = Provider.Database.GetFromWithJoin(column.Table);
                 executeSQL(@"
                     select top 1000 
                         * 
                     from [{1}] 
                     where [{3}].[{0}] = '{2}'",
-                                              field.Name,
+                                              column.Name,
                                               from,
                                               keyVal,
-                                              field.Table.Name);
+                                              column.Table.Name);
             };
             
         }
@@ -1536,8 +1711,8 @@ $"},
 
                         if (string.IsNullOrEmpty(index.Name))
                             throw new Exception("Enter a valid name.");
-                        if (index.Fields == null || index.Fields.Count == 0)
-                            throw new Exception("Select minimum one field.");
+                        if (index.Columns == null || index.Columns.Count == 0)
+                            throw new Exception("Select minimum one column.");
 
                         string sql = Provider.Database.GetSQLBaseIndexConstraintAdd(index);
                         SQLInputDialog sid = new SQLInputDialog(sql, false);
@@ -1588,8 +1763,8 @@ $"},
 
                         if (string.IsNullOrEmpty(index.Name))
                             throw new Exception("Enter a valid name.");
-                        if (index.FieldNames == null || index.FieldNames.Count == 0)
-                            throw new Exception("Select minimum one field.");
+                        if (index.ColumnNames == null || index.ColumnNames.Count == 0)
+                            throw new Exception("Select minimum one column.");
 
                         string sql = Provider.Database.GetSQLBaseIndexConstraintRemove(oldIndex) + ";" + Environment.NewLine;
                         sql += Provider.Database.GetSQLBaseIndexConstraintAdd(index);
@@ -1657,7 +1832,6 @@ $"},
             }
         }
 
-
         private void cmdNewERDiagram(string arg)
         {
             addDiagram(null);
@@ -1720,7 +1894,7 @@ $"},
 
             // save modified query editors and add them to "lastopened" log.
             string openedFiles = "";
-            File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
+            File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles, Encoding.UTF8);
 
             for (int i = 0; i < tabControlEditors.TabPages.Count && !cancel; i++)
             {
@@ -1742,14 +1916,27 @@ $"},
                     openedFiles += (CurrEditor as SQLEditorAndResults).FilePath + Environment.NewLine;
             }
             if (!cancel && openedFiles.Length > 0)
-                File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles);
+                File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles, Encoding.UTF8);
 
             // save connections
-            DialogResult dr2 = MessageBox.Show("Would you like to save current connections & metadata to the file: \n\n" + Provider.ConnectionsPath, "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (dr2 == DialogResult.Yes)
-                Provider.SaveConnections();
-            else if (dr2 == DialogResult.Cancel)
-                cancel = true;
+            if (Provider.ConnectionsModified)
+            {
+                DialogResult dr2 = MessageBox.Show("Would you like to save current connections & metadata to the file: \n\n" + Provider.ConnectionsPath, "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (dr2 == DialogResult.Yes)
+                    Provider.SaveConnections();
+                else if (dr2 == DialogResult.Cancel)
+                    cancel = true;
+            }
+
+            // save codeGen project
+            if (codeGenController.Solution!=null && codeGenController.Solution.Modified)
+            {
+                DialogResult dr2 = MessageBox.Show("Would you like to save code generation project: \n\n" + codeGenController.Solution.FullPath, "Cinar Database Tools", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (dr2 == DialogResult.Yes)
+                    codeGenController.Solution.Save();
+                else if (dr2 == DialogResult.Cancel)
+                    cancel = true;
+            }
 
             e.Cancel = cancel;
         }
@@ -1762,22 +1949,8 @@ $"},
                 cmdEditConnection(null);
             else if (e.Node.Tag is Table)
                 cmdTableOpen(null);
-            else if (e.Node.Tag is Field)
-                cmdFieldDistinct(null);
-        }
-        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            treeView.SelectedNode = e.Node;
-            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
-            showSelectedObjectOnPropertyGrid();
-
-            if (CurrSQLEditor != null)
-            {
-                Table tn = findSelectedTable();
-                if (tn != null)
-                    CurrSQLEditor.ShowTable = tn;
-            }
-
+            else if (e.Node.Tag is Column)
+                cmdColumnDistinct(null);
         }
         private void showSelectedObjectOnPropertyGrid()
         {
@@ -1823,63 +1996,77 @@ $"},
 
             try
             {
-                if (propertyGrid.SelectedObject is Field)
+                if (propertyGrid.SelectedObject is IMetadata)
                 {
-                    Field field = propertyGrid.SelectedObject as Field;
-                    switch (e.ChangedItem.Label)
+                    if (propertyGrid.SelectedObject is Column)
                     {
-                        case "Name":
-                            sql = Provider.Database.GetSQLColumnRename((string)e.OldValue, field);
-                            message = "Do you really want to rename this field?";
-                            afterExecute = () => { findNode(field).Text = field.Name + " (" + field.FieldType + ")"; };
-                            break;
-                        case "FieldType":
-                        case "Length":
-                            string oldOriginalfieldType = field.FieldTypeOriginal;
-                            field.FieldTypeOriginal = Provider.Database.DbTypeToString(field.FieldType);
-                            sql = Provider.Database.GetSQLColumnChangeDataType(field);
-                            message = "Do you really want to change the type of this field?";
-                            afterError = () => { field.FieldTypeOriginal = oldOriginalfieldType; };
-                            break;
-                        case "IsNullable":
-                            sql = field.IsNullable ?
-                                Provider.Database.GetSQLColumnRemoveNotNull(field) : Provider.Database.GetSQLColumnAddNotNull(field);
-                            message = "Do you really want to change nullability?";
-                            break;
-                        case "DefaultValue":
-                            sql = Provider.Database.GetSQLColumnChangeDefault(field);
-                            message = "Do you really want to change default value of this field?";
-                            break;
-                        case "IsAutoIncrement":
-                            sql = field.IsAutoIncrement ?
-                                Provider.Database.GetSQLColumnSetAutoIncrement(field) : Provider.Database.GetSQLColumnRemoveAutoIncrement(field);
-                            message = "Do you really want to change auto incrementing of this field?";
-                            break;
+                        Column column = propertyGrid.SelectedObject as Column;
+                        switch (e.ChangedItem.Label)
+                        {
+                            case "Name":
+                                sql = Provider.Database.GetSQLColumnRename((string)e.OldValue, column);
+                                message = "Do you really want to rename this column?";
+                                afterExecute = () => { findNode(column).Text = column.Name + " (" + column.ColumnType + ")"; };
+                                break;
+                            case "ColumnType":
+                            case "Length":
+                                string oldOriginalColumnType = column.ColumnTypeOriginal;
+                                column.ColumnTypeOriginal = Provider.Database.DbTypeToString(column.ColumnType);
+                                sql = Provider.Database.GetSQLColumnChangeDataType(column);
+                                message = "Do you really want to change the type of this column?";
+                                afterError = () => { column.ColumnTypeOriginal = oldOriginalColumnType; };
+                                break;
+                            case "IsNullable":
+                                sql = column.IsNullable ?
+                                    Provider.Database.GetSQLColumnRemoveNotNull(column) : Provider.Database.GetSQLColumnAddNotNull(column);
+                                message = "Do you really want to change nullability of this column?";
+                                break;
+                            case "DefaultValue":
+                                sql = Provider.Database.GetSQLColumnChangeDefault(column);
+                                message = "Do you really want to change default value of this column?";
+                                break;
+                            case "IsAutoIncrement":
+                                sql = column.IsAutoIncrement ?
+                                    Provider.Database.GetSQLColumnSetAutoIncrement(column) : Provider.Database.GetSQLColumnRemoveAutoIncrement(column);
+                                message = "Do you really want to change auto incrementing of this column?";
+                                break;
+                        }
                     }
-                }
-                if (propertyGrid.SelectedObject is Table)
-                {
-                    Table table = propertyGrid.SelectedObject as Table;
-                    switch (e.ChangedItem.Label)
+                    if (propertyGrid.SelectedObject is Table)
                     {
-                        case "Name":
-                            sql = Provider.Database.GetSQLTableRename((string)e.OldValue, table.Name);
-                            message = "Do you really want to rename this table?";
-                            afterExecute = () => { findNode(table).Text = table.Name; };
-                            break;
+                        Table table = propertyGrid.SelectedObject as Table;
+                        switch (e.ChangedItem.Label)
+                        {
+                            case "Name":
+                                sql = Provider.Database.GetSQLTableRename((string)e.OldValue, table.Name);
+                                message = "Do you really want to rename this table?";
+                                afterExecute = () => { findNode(table).Text = table.Name; };
+                                break;
+                        }
+                    }
+
+                    if (sql != null)
+                    {
+                        SQLInputDialog sid = new SQLInputDialog(sql, true, message);
+                        if (sid.ShowDialog() == DialogResult.OK)
+                        {
+                            Provider.Database.ExecuteNonQuery(sid.SQL);
+                            if (afterExecute != null) afterExecute();
+                            if (ObjectChanged != null)
+                                ObjectChanged(this, new DbObjectChangedArgs() { Object = propertyGrid.SelectedObject, NewValue = e.ChangedItem.Value, OldValue = e.OldValue, PropertyName = e.ChangedItem.Label });
+                            cancel = false;
+                        }
                     }
                 }
 
-                if (sql != null)
+                if (propertyGrid.SelectedObject is Item)
                 {
-                    SQLInputDialog sid = new SQLInputDialog(sql, true, message);
-                    if (sid.ShowDialog() == DialogResult.OK)
+                    cancel = false;
+                    switch (e.ChangedItem.Label)
                     {
-                        Provider.Database.ExecuteNonQuery(sid.SQL);
-                        if (afterExecute != null) afterExecute();
-                        if (ObjectChanged != null)
-                            ObjectChanged(this, new DbObjectChangedArgs() { Object = propertyGrid.SelectedObject, NewValue = e.ChangedItem.Value, OldValue = e.OldValue, PropertyName = e.ChangedItem.Label });
-                        cancel = false;
+                        case "Name":
+                            findNode(propertyGrid.SelectedObject).Text = e.ChangedItem.Value.ToString();
+                            break;
                     }
                 }
             }
@@ -1895,16 +2082,36 @@ $"},
         }
 
         public object SelectedObject;
-        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
-        }
 
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             TreeNode tn = e.Item as TreeNode;
-            if (tn.Tag is Table || tn.Tag is Field)
+            if (tn.Tag is Table || tn.Tag is Column)
                 DoDragDrop(tn.Tag, DragDropEffects.Move);
+        }
+
+        private void treeCodeGen_MouseDown(object sender, MouseEventArgs e)
+        {
+            treeCodeGen.SelectedNode = treeCodeGen.GetNodeAt(e.X, e.Y);
+            SelectedObject = treeCodeGen.SelectedNode == null ? null : treeCodeGen.SelectedNode.Tag;
+            cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
+            showSelectedObjectOnPropertyGrid();
+        }
+
+        private void treeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            treeView.SelectedNode = treeView.GetNodeAt(e.X, e.Y);
+            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
+            cmdSetActiveConnection("");
+            cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
+            showSelectedObjectOnPropertyGrid();
+
+            if (CurrSQLEditor != null)
+            {
+                Table tn = findSelectedTable();
+                if (tn != null)
+                    CurrSQLEditor.ShowTable = tn;
+            }
         }
     }
 
@@ -1923,6 +2130,8 @@ $"},
             }
         }
 
+        public static bool ConnectionsModified { get; set; }
+
         public static ConnectionSettings GetConnection(string connectionName)
         {
             foreach (ConnectionSettings cs in Connections)
@@ -1931,12 +2140,12 @@ $"},
             return null;
         }
 
-        private static bool connectionsLooaded = false;
+        private static bool connectionsLoaded = false;
 
         public static string ConnectionsPath;
         public static void LoadConnectionsFromXML(string path)
         {
-            if (path == Provider.ConnectionsPath && connectionsLooaded)
+            if (path == Provider.ConnectionsPath && connectionsLoaded)
                 return;
 
             if(string.IsNullOrEmpty(path))
@@ -1967,7 +2176,7 @@ $"},
             {
                 MessageBox.Show("File not found:\n" + path, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            connectionsLooaded = true;
+            connectionsLoaded = true;
         }
         public static void SaveConnections()
         {
@@ -1979,6 +2188,54 @@ $"},
                 ser.Serialize(sr, Provider.Connections);
             }
         }
+
+        public static void CompareCode(string filePath, string modifiedContent)
+        {
+            Form f = new Form();
+            f.WindowState = FormWindowState.Maximized;
+            f.Text = "[Original] vs. [Modified]";
+            //ComponentResourceManager resources = new ComponentResourceManager(this.GetType());
+            //f.Icon = (Icon)(resources.GetObject("$this.Icon"));
+
+            DiffControl diffControl = new DiffControl();
+            diffControl.Dock = DockStyle.Fill;
+            f.Controls.Add(diffControl);
+
+            bool chkIgnoreCase = false;
+            bool chkIgnoreWhitespace = true;
+            bool chkSupportChangeEditType = false;
+            bool chkXML = false;
+
+            string strA = filePath;
+
+            try
+            {
+                TextDiff diff = new TextDiff(HashType.CRC32, chkIgnoreCase, chkIgnoreWhitespace, 0, chkSupportChangeEditType);
+
+                IList<string> code1, code2;
+                if (chkXML)
+                {
+                    code1 = Functions.GetXMLTextLines(strA, WhitespaceHandling.All);
+                    code2 = modifiedContent.Replace("\r", "").Split('\n');
+                }
+                else
+                {
+                    code1 = Functions.GetFileTextLines(strA);
+                    code2 = modifiedContent.Replace("\r", "").Split('\n');
+                }
+
+                EditScript script = diff.Execute(code1, code2);
+
+                diffControl.SetData(code1, code2, script);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            f.Show();
+        }
+
     }
     public class ConnectionSettings
     {
@@ -2030,6 +2287,7 @@ $"},
         public void RefreshDatabaseSchema()
         {
             Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
+            Cinar.DBTools.Provider.ConnectionsModified = true;
         }
     }
 
@@ -2040,12 +2298,10 @@ $"},
         public object OldValue { get; set; }
         public object NewValue { get; set; }
     }
-
     public class DbObjectRemovedArgs : EventArgs
     {
         public object Object { get; set; }
     }
-
     public class DbObjectAddedArgs : EventArgs
     {
         public object Object { get; set; }

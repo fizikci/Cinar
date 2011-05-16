@@ -75,7 +75,7 @@ namespace Cinar.Database.Tools
             {
                 Table srcTable = dbSrc.Tables[tableName];
                 //TODO: aktarımda datetime hatasına bir çözüm bul, aşağıdaki çözüm çok kötü.
-                //foreach (Field f in srcTable.Fields)
+                //foreach (Column f in srcTable.Columns)
                 //    if (f.IsDateType())
                 //    {
                 //        int res = dbSrc.ExecuteNonQuery("update " + srcTable.Name + " set " + f.Name + "='1980-01-01 00:00' where " + f.Name + "<'1980-01-01 00:00'");

@@ -8,21 +8,21 @@ namespace Cinar.Entities.Standart
     	private string sqlQuery = "";
         private string html = "";
 
-        [FieldDetail(FieldType=DbType.Text)]
+        [ColumnDetail(ColumnType=DbType.Text)]
         public string ReportLayout
         {
             get { return reportLayout; }
             set { reportLayout = value; }
         }
 
-        [FieldDetail(FieldType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text)]
         public string SQLQuery
 		{
 			get { return sqlQuery; }
 			set { sqlQuery = value; }
 		}
 
-        [FieldDetail(FieldType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text)]
         public string Html 
         {
             get { return html; }

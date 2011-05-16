@@ -148,9 +148,9 @@ namespace Cinar.Database
             {
                 table.parent = this.Tables;
 
-                table.Fields.table = table;
-                foreach (Field field in table.Fields)
-                    field.parent = table.Fields;
+                table.Columns.table = table;
+                foreach (Column column in table.Columns)
+                    column.parent = table.Columns;
 
                 table.Indices.table = table;
                 foreach (Index index in table.Indices)
@@ -375,7 +375,7 @@ namespace Cinar.Database
         {
             dbProvider.ReadDatabaseMetadata();
             tableMappingInfo = new Dictionary<Type, Table>();
-            fieldMappingInfo = new Dictionary<PropertyInfo, Field>();
+            columnMappingInfo = new Dictionary<PropertyInfo, Column>();
 
             if (HttpContext.Current != null)
             {
@@ -565,7 +565,7 @@ namespace Cinar.Database
         {
             return Insert(tableName, data, true);
         }
-        public int Insert(string tableName, Hashtable data, bool bypassAutoIncrementField)
+        public int Insert(string tableName, Hashtable data, bool bypassAutoIncrementColumn)
         {
             // validate parameters
             if (data.Count == 0) return -1;
@@ -574,26 +574,26 @@ namespace Cinar.Database
             if (tbl == null) //throw new ApplicationException("There is no such table : " + tableName);
                 this.CreateTable(tbl, null, true);
 
-            FieldCollection fields = tbl.Fields;
-            int validFieldNumber = 0;
-            foreach (Field fld in tbl.Fields)
-                if (data.ContainsKey(fld.Name) && !(fld.IsAutoIncrement && bypassAutoIncrementField))
-                    validFieldNumber++;
-            if (validFieldNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
+            ColumnCollection columns = tbl.Columns;
+            int validColumnNumber = 0;
+            foreach (Column fld in tbl.Columns)
+                if (data.ContainsKey(fld.Name) && !(fld.IsAutoIncrement && bypassAutoIncrementColumn))
+                    validColumnNumber++;
+            if (validColumnNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
 
             // ok valid, prepare SQL
             List<string> tmpList = new List<string>();
 
             StringBuilder sb = new StringBuilder();
             sb.Append("insert into [" + tableName + "] (");
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                Field fld = fields[i];
-                if (fld.IsAutoIncrement && bypassAutoIncrementField) continue;
+                Column fld = columns[i];
+                if (fld.IsAutoIncrement && bypassAutoIncrementColumn) continue;
                 if (data.ContainsKey(fld.Name))
                 {
-                    // if field is reference and the value equals 0, continue
-                    if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType==DbType.Int32) {
+                    // if column is reference and the value equals 0, continue
+                    if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType==DbType.Int32) {
                         if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
                         int refId = (int) data[fld.Name];
                         if (refId == 0) continue; //***
@@ -609,14 +609,14 @@ namespace Cinar.Database
             sb.Append(String.Join(",", tmpList.ToArray()));
             tmpList.Clear();
             sb.Append(") values (");
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                Field fld = fields[i];
-                if (fld.IsAutoIncrement && bypassAutoIncrementField) continue;
+                Column fld = columns[i];
+                if (fld.IsAutoIncrement && bypassAutoIncrementColumn) continue;
                 if (data.ContainsKey(fld.Name))
                 {
-                    // if field is reference and the value equals 0, continue
-                    if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
+                    // if column is reference and the value equals 0, continue
+                    if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType == DbType.Int32)
                     {
                         if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
                         int refId = (int)data[fld.Name];
@@ -633,33 +633,33 @@ namespace Cinar.Database
             sb.Append(String.Join(",", tmpList.ToArray()));
             sb.Append(");");
 
-            if (!bypassAutoIncrementField && provider == DatabaseProvider.SQLServer && tbl.HasAutoIncrementField())
+            if (!bypassAutoIncrementColumn && provider == DatabaseProvider.SQLServer && tbl.HasAutoIncrementColumn())
             {
                 sb.Insert(0, "SET IDENTITY_INSERT [" + tbl.Name + "] ON;" + Environment.NewLine);
                 sb.Append(Environment.NewLine + "SET IDENTITY_INSERT [" + tbl.Name + "] OFF;");
             }
 
             IDbCommand cmd = this.CreateCommand(sb.ToString());
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                Field fld = fields[i];
-                if (fld.IsAutoIncrement && bypassAutoIncrementField) continue;
-                if (data.ContainsKey(fld.Name))
+                Column column = columns[i];
+                if (column.IsAutoIncrement && bypassAutoIncrementColumn) continue;
+                if (data.ContainsKey(column.Name))
                 {
-                    // if field is reference and the value equals 0, continue
-                    if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
+                    // if column is reference and the value equals 0, continue
+                    if (column.ReferenceColumn != null && column.IsNullable && column.ColumnType == DbType.Int32)
                     {
-                        if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
-                        int refId = (int)data[fld.Name];
+                        if (data[column.Name] == null || data[column.Name] == DBNull.Value) data[column.Name] = 0;
+                        int refId = (int)data[column.Name];
                         if (refId == 0) continue; //***
                     }
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
-                    if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
-                        if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                    if (provider == DatabaseProvider.SQLServer && column.IsDateType())
+                        if (DBNull.Value.Equals(data[column.Name]) || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                             continue; //***
 
-                    IDbDataParameter param = this.CreateParameter("@_" + fld.Name, data[fld.Name]);
-                    if (fld.FieldType == DbType.Image)
+                    IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name]);
+                    if (column.ColumnType == DbType.Image)
                         param.DbType = System.Data.DbType.Binary;
                     cmd.Parameters.Add(param);
                 }
@@ -669,13 +669,13 @@ namespace Cinar.Database
 
             return res;
         }
-        public int Insert(string tableName, DataRow dataRow, bool bypassAutoIncrementField)
+        public int Insert(string tableName, DataRow dataRow, bool bypassAutoIncrementColumn)
         {
             Hashtable ht = new Hashtable();
             foreach (DataColumn dc in dataRow.Table.Columns)
                 ht[dc.ColumnName] = dataRow[dc];
 
-            int res = this.Insert(tableName, ht, bypassAutoIncrementField);
+            int res = this.Insert(tableName, ht, bypassAutoIncrementColumn);
             if (dataRow.RowState != DataRowState.Detached)
                 dataRow.AcceptChanges();
             
@@ -699,18 +699,18 @@ namespace Cinar.Database
             if (data.Count == 0) return -1;
             Table tbl = this.Tables[tableName];
             if (tbl == null) throw new ApplicationException("There is no such table : " + tableName);
-            FieldCollection fields = tbl.Fields;
-            int validFieldNumber = 0;
-            foreach (Field fld in tbl.Fields)
+            ColumnCollection columns = tbl.Columns;
+            int validColumnNumber = 0;
+            foreach (Column fld in tbl.Columns)
                 if (data.ContainsKey(fld.Name) && data[fld.Name] != null && !fld.IsAutoIncrement)
-                    validFieldNumber++;
-            if (validFieldNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
+                    validColumnNumber++;
+            if (validColumnNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
 
             StringBuilder sb = new StringBuilder();
             sb.Append("UPDATE [" + tableName + "] SET ");
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                Field fld = fields[i];
+                Column fld = columns[i];
                 if (fld.IsAutoIncrement) continue;
                 if (data.ContainsKey(fld.Name) && data[fld.Name]!=null)
                 {
@@ -720,35 +720,35 @@ namespace Cinar.Database
             }
             sb.Remove(sb.Length-2,2);
 
-            Field[] whereFields = null;
+            Column[] whereColumns = null;
 
-            if (tbl.PrimaryField != null && data.ContainsKey(tbl.PrimaryField.Name) && data[tbl.PrimaryField.Name]!=null)
-                sb.AppendFormat(" WHERE [{0}]=@_{0}", tbl.PrimaryField.Name);
+            if (tbl.PrimaryColumn != null && data.ContainsKey(tbl.PrimaryColumn.Name) && data[tbl.PrimaryColumn.Name]!=null)
+                sb.AppendFormat(" WHERE [{0}]=@_{0}", tbl.PrimaryColumn.Name);
             else if (originalData == null)
-                throw new Exception("Update failed because there is no primary field OR original data.");
+                throw new Exception("Update failed because there is no primary column OR original data.");
             else
             {
-                whereFields = tbl.Fields.Where(f => !(f.SimpleFieldType == SimpleDbType.ByteArray || f.SimpleFieldType == SimpleDbType.Text)).ToArray();
-                string where = " WHERE " + string.Join(" AND ", whereFields.Select((f, i) => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
-                object[] values = new object[whereFields.Length];
-                for (int i = 0; i < values.Length; i++) values[i] = originalData[whereFields[i].Name];
+                whereColumns = tbl.Columns.Where(f => !(f.SimpleColumnType == SimpleDbType.ByteArray || f.SimpleColumnType == SimpleDbType.Text)).ToArray();
+                string where = " WHERE " + string.Join(" AND ", whereColumns.Select((f, i) => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
+                object[] values = new object[whereColumns.Length];
+                for (int i = 0; i < values.Length; i++) values[i] = originalData[whereColumns[i].Name];
 
                 int count = GetInt("SELECT COUNT(*) FROM [" + tableName + "]" + where, values);
                 if (count > 1)
                     throw new Exception("There are more than one row to be updated!");
                 if (count < 1)
                     throw new Exception("There is no row to be updated!");
-                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereFields.Select(f => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_org_{0}", f.Name)).ToArray()));
+                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereColumns.Select(f => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_org_{0}", f.Name)).ToArray()));
             }
 
             IDbCommand cmd = this.CreateCommand(sb.ToString());
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < columns.Count; i++)
             {
-                Field fld = fields[i];
+                Column fld = columns[i];
                 if (data.ContainsKey(fld.Name) && data[fld.Name] != null)
                 {
-                    // if field is reference and the value equals 0, continue
-                    if (fld.ReferenceField != null && fld.IsNullable && fld.FieldType == DbType.Int32)
+                    // if column is reference and the value equals 0, continue
+                    if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType == DbType.Int32)
                     {
                         int refId = (int)data[fld.Name];
                         if (refId == 0) data[fld.Name]=DBNull.Value; //***
@@ -757,8 +757,8 @@ namespace Cinar.Database
                     cmd.Parameters.Add(param);
                 }
             }
-            if (whereFields != null && whereFields.Length > 0)
-                foreach (Field f in whereFields)
+            if (whereColumns != null && whereColumns.Length > 0)
+                foreach (Column f in whereColumns)
                 {
                     if (originalData[f.Name] == null) continue;
                     IDbDataParameter param = this.CreateParameter("@_org_" + f.Name, originalData[f.Name]);
@@ -794,33 +794,33 @@ namespace Cinar.Database
             Table tbl = this.Tables[tableName];
             if (tbl == null) throw new ApplicationException("There is no such table : " + tableName);
 
-            FieldCollection fields = tbl.Fields;
+            ColumnCollection columns = tbl.Columns;
 
             StringBuilder sb = new StringBuilder();
             sb.Append("DELETE FROM [" + tableName + "]");
 
-            Field[] whereFields = null;
+            Column[] whereColumns = null;
 
-            if (tbl.PrimaryField != null)
-                sb.AppendFormat(" WHERE [{0}] = @_{0}", tbl.PrimaryField.Name);
+            if (tbl.PrimaryColumn != null)
+                sb.AppendFormat(" WHERE [{0}] = @_{0}", tbl.PrimaryColumn.Name);
             else
             {
-                whereFields = tbl.Fields.Where(f => !(f.SimpleFieldType == SimpleDbType.ByteArray || f.SimpleFieldType == SimpleDbType.Text)).ToArray();
-                string where = " WHERE " + string.Join(" AND ", whereFields.Select((f, i) => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
-                object[] values = new object[whereFields.Length];
-                for (int i = 0; i < values.Length; i++) values[i] = data[whereFields[i].Name];
+                whereColumns = tbl.Columns.Where(f => !(f.SimpleColumnType == SimpleDbType.ByteArray || f.SimpleColumnType == SimpleDbType.Text)).ToArray();
+                string where = " WHERE " + string.Join(" AND ", whereColumns.Select((f, i) => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
+                object[] values = new object[whereColumns.Length];
+                for (int i = 0; i < values.Length; i++) values[i] = data[whereColumns[i].Name];
 
                 int count = GetInt("SELECT COUNT(*) FROM [" + tableName + "]" + where, values);
                 if (count > 1)
                     throw new Exception("There are more than one row to be deleted!");
                 if (count < 1)
                     throw new Exception("There is no row to be deleted!");
-                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereFields.Select(f => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_{0}", f.Name)).ToArray()));
+                sb.AppendFormat(" WHERE " + string.Join(" AND ", whereColumns.Select(f => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_{0}", f.Name)).ToArray()));
             }
 
             IDbCommand cmd = this.CreateCommand(sb.ToString());
-            if (whereFields != null && whereFields.Length > 0)
-                foreach (Field f in whereFields)
+            if (whereColumns != null && whereColumns.Length > 0)
+                foreach (Column f in whereColumns)
                 {
                     if (data[f.Name] == null) continue;
                     IDbDataParameter param = this.CreateParameter("@_" + f.Name, data[f.Name]);
@@ -846,15 +846,15 @@ namespace Cinar.Database
             return res;
         }
 
-        public string GetIdFieldName(IDatabaseEntity entity)
+        public string GetIdColumnName(IDatabaseEntity entity)
         {
-            return GetIdFieldName(entity.GetType());
+            return GetIdColumnName(entity.GetType());
         }
-        public string GetIdFieldName(Type entityType)
+        public string GetIdColumnName(Type entityType)
         {
             PropertyInfo pi = entityType.GetProperty("Id");
-            if (fieldMappingInfo.ContainsKey(pi))
-                return fieldMappingInfo[pi].Name;
+            if (columnMappingInfo.ContainsKey(pi))
+                return columnMappingInfo[pi].Name;
             else
                 return "Id";
         }
@@ -881,7 +881,7 @@ namespace Cinar.Database
                 if (entity.Id == 0)
                 {
                     this.Insert(tbl.Name, ht);
-                    object id = this.GetValue("select max(" + GetIdFieldName(entity) + ") from [" + tbl.Name + "]");
+                    object id = this.GetValue("select max(" + GetIdColumnName(entity) + ") from [" + tbl.Name + "]");
                     if (id == null) id = 0;
                     entity.Id = Convert.ToInt32(id);
                 }
@@ -959,7 +959,7 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
-                    Field f = GetFieldForProperty(pi);
+                    Column f = GetColumnForProperty(pi);
                     if (f != null)
                         ht[f.Name] = pi.GetValue(entity, null);
                 }
@@ -987,7 +987,7 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
-                    Field f = GetFieldForProperty(pi);
+                    Column f = GetColumnForProperty(pi);
                     if (f != null)
                         dt.Columns.Add(f.Name, pi.PropertyType);
                 }
@@ -996,7 +996,7 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
-                    Field f = GetFieldForProperty(pi);
+                    Column f = GetColumnForProperty(pi);
                     if (f != null)
                         dr[f.Name] = pi.GetValue(entity, null);
                 }
@@ -1035,7 +1035,7 @@ namespace Cinar.Database
             Table table = GetTableForEntityType(entityType);
             foreach (PropertyInfo pi in entityType.GetProperties())
                 if (canBeMappedToDBTable(pi))
-                    GetFieldForProperty(pi);
+                    GetColumnForProperty(pi);
 
             DataRowVersion rowVersion = DataRowVersion.Default;
             if (dr.RowState == DataRowState.Deleted)
@@ -1047,13 +1047,13 @@ namespace Cinar.Database
                 entity.GetOriginalValues()[colName] = dr.IsNull(dc, rowVersion) ? null : dr[colName, rowVersion];
                 if (dr.IsNull(dc, rowVersion)) continue;
 
-                if (table.Fields[colName] == null)
+                if (table.Columns[colName] == null)
                 {
                     entity[colName] = dr[colName, rowVersion];
                     continue;
                 }
 
-                PropertyInfo pi = GetPropertyInfoForField(table.Fields[colName]);
+                PropertyInfo pi = GetPropertyInfoForColumn(table.Columns[colName]);
                 if (pi == null) continue;
 
                 object val = dr[colName, rowVersion];
@@ -1086,7 +1086,7 @@ namespace Cinar.Database
         public void FillEntity(IDatabaseEntity entity)
         {
             string tableName = GetTableForEntityType(entity.GetType()).Name;
-            this.FillEntity(entity, GetDataRow("select * from " + tableName + " where " + GetIdFieldName(entity) + "={0}", entity.Id));
+            this.FillEntity(entity, GetDataRow("select * from " + tableName + " where " + GetIdColumnName(entity) + "={0}", entity.Id));
         }
         public void FillDataRow(IDatabaseEntity entity, DataRow dr)
         {
@@ -1095,7 +1095,7 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in entityType.GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
-                    Field f = GetFieldForProperty(pi);
+                    Column f = GetColumnForProperty(pi);
                     if (f != null)
                         dr[f.Name] = pi.GetValue(entity, null);
                 }
@@ -1144,16 +1144,27 @@ namespace Cinar.Database
         {
             return GetDataTable(sql, new object[0]);
         }
+        public DataTable GetDataTableFor(string tableName, FilterExpression fExp)
+        {
+            return getDataTableFor(tableName, fExp);
+        }
         public DataTable GetDataTableFor(Type entityType, FilterExpression fExp)
         {
             Table table = GetTableForEntityType(entityType);
             if (table == null)
                 table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
+            return getDataTableFor(table.Name, fExp);
+        }
+
+        private DataTable getDataTableFor(string tableName, FilterExpression fExp)
+        {
+            Table table = Tables[tableName];
+
             if (fExp == null) fExp = new FilterExpression();
             string where = fExp.Criterias.ToParamString();
             string orderBy = fExp.Orders.ToString();
-            if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryField != null ? table.PrimaryField.Name : table.Fields.First(f=>!(f.SimpleFieldType==SimpleDbType.Text || f.SimpleFieldType==SimpleDbType.ByteArray)).Name) + "]";
+            if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns.First(f=>!(f.SimpleColumnType==SimpleDbType.Text || f.SimpleColumnType==SimpleDbType.ByteArray)).Name) + "]";
             string sql = "";
             switch (Provider)
             {
@@ -1166,11 +1177,11 @@ namespace Cinar.Database
                 case DatabaseProvider.SQLServer:
                     sql = @"WITH _CinarResult AS
                                 (
-                                    SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @",
+                                    SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @",
                                     ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
                                     FROM [" + table.Name + @"] 
                                 ) 
-                                SELECT " + string.Join(", ", table.Fields.Select(f => "[" + f.Name + "]").ToArray()) + @" 
+                                SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @" 
                                 FROM _CinarResult 
                                 WHERE _CinarRowNumber BETWEEN " + (fExp.PageSize * fExp.PageNo) + " AND " + (fExp.PageSize * fExp.PageNo + fExp.PageSize) + ";";
                     break;
@@ -1180,6 +1191,7 @@ namespace Cinar.Database
             
             return this.GetDataTable(sql, fExp.GetParamValues());
         }
+
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
             return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr=>(T)dr[0]).ToList();
@@ -1292,13 +1304,13 @@ namespace Cinar.Database
                     return (IDatabaseEntity)HttpContext.Current.Items[entityType.Name + "_" + id];
                 else
                 {
-                    HttpContext.Current.Items[entityType.Name + "_" + id] = Read(entityType, GetIdFieldName(entityType) + "=" + id);
+                    HttpContext.Current.Items[entityType.Name + "_" + id] = Read(entityType, GetIdColumnName(entityType) + "=" + id);
                     return (IDatabaseEntity)HttpContext.Current.Items[entityType.Name + "_" + id];
                 }
             }
             else
             {
-                return Read(entityType, "" + GetIdFieldName(entityType) + "=" + id);
+                return Read(entityType, "" + GetIdColumnName(entityType) + "=" + id);
             }
         }
         public T Read<T>(int id)
@@ -1432,9 +1444,9 @@ namespace Cinar.Database
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("[{0}]\n", tbl.Name);
-            foreach (Field field in tbl.Fields)
-                if (field.ReferenceField != null)
-                    sb.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", field.ReferenceField.Table.Name, "T" + field.Name, field.ReferenceField.Name, tbl.Name, field.Name);
+            foreach (Column column in tbl.Columns)
+                if (column.ReferenceColumn != null)
+                    sb.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", column.ReferenceColumn.Table.Name, "T" + column.Name, column.ReferenceColumn.Name, tbl.Name, column.Name);
 
             return sb.ToString();
         }
@@ -1479,13 +1491,13 @@ namespace Cinar.Database
 
             if (defaultDataArr != null)
             {
-                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryField != null && tbl.PrimaryField.IsAutoIncrement)
+                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryColumn != null && tbl.PrimaryColumn.IsAutoIncrement)
                     this.ExecuteNonQuery("SET IDENTITY_INSERT [" + tbl.Name + "] ON");
 
                 foreach (DefaultDataAttribute defaultData in defaultDataArr)
-                    this.ExecuteNonQuery("insert into [" + tbl.Name + "](" + defaultData.FieldList + ") values(" + defaultData.ValueList + ")");
+                    this.ExecuteNonQuery("insert into [" + tbl.Name + "](" + defaultData.ColumnList + ") values(" + defaultData.ValueList + ")");
 
-                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryField != null && tbl.PrimaryField.IsAutoIncrement)
+                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryColumn != null && tbl.PrimaryColumn.IsAutoIncrement)
                     this.ExecuteNonQuery("SET IDENTITY_INSERT [" + tbl.Name + "] OFF");
             }
 
@@ -1507,49 +1519,48 @@ namespace Cinar.Database
             foreach (PropertyInfo pi in type.GetProperties())
                 if (canBeMappedToDBTable(pi))
                 {
-                    Field f = new Field();
-                    tbl.Fields.Add(f);
-                    setFieldPropsFromPropertyInfo(f, pi, tbl);
+                    Column f = new Column();
+                    tbl.Columns.Add(f);
+                    setColumnPropsFromPropertyInfo(f, pi, tbl);
                 }
             this.Tables.Add(tbl);
             return tbl;
         }
-        private void setFieldPropsFromPropertyInfo(Field f, PropertyInfo pi, Table forTable)
+        private void setColumnPropsFromPropertyInfo(Column f, PropertyInfo pi, Table forTable)
         {
-            object[] attribs = pi.GetCustomAttributes(typeof(FieldDetailAttribute), true);
-            FieldDetailAttribute fieldProps = new FieldDetailAttribute();
-            if (attribs.Length > 0) fieldProps = (FieldDetailAttribute)attribs[0];
+            object[] attribs = pi.GetCustomAttributes(typeof(ColumnDetailAttribute), true);
+            ColumnDetailAttribute columnProps = new ColumnDetailAttribute();
+            if (attribs.Length > 0) columnProps = (ColumnDetailAttribute)attribs[0];
 
-            f.Name = string.IsNullOrEmpty(fieldProps.Name) ? pi.Name : fieldProps.Name;
-            f.DefaultValue = fieldProps.DefaultValue;
-            if (fieldProps.FieldType == DbType.Undefined)
-                f.FieldType = GetDbType(pi.PropertyType);
+            f.Name = string.IsNullOrEmpty(columnProps.Name) ? pi.Name : columnProps.Name;
+            f.DefaultValue = columnProps.DefaultValue;
+            if (columnProps.ColumnType == DbType.Undefined)
+                f.ColumnType = GetDbType(pi.PropertyType);
             else
-                f.FieldType = fieldProps.FieldType;
-            f.IsAutoIncrement = fieldProps.IsAutoIncrement;
-            f.IsNullable = !fieldProps.IsNotNull;
-            if (fieldProps.IsPrimaryKey)
+                f.ColumnType = columnProps.ColumnType;
+            f.IsAutoIncrement = columnProps.IsAutoIncrement;
+            f.IsNullable = !columnProps.IsNotNull;
+            if (columnProps.IsPrimaryKey)
             {
-                if (f.Table.Indices == null) f.Table.Indices = new IndexCollection(f.Table);
-                Index index = new Index();
-                index.FieldNames = new List<string> { f.Name };
-                index.Name = "PK_" + f.Name;
-                f.Table.Indices.Add(index);
+                PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
+                pk.ColumnNames = new List<string> { f.Name };
+                pk.Name = string.Format("PK_{0}_{1}", f.Table.Name, f.Name);
+                f.Table.Constraints.Add(pk);
             }
-            f.Length = fieldProps.Length;
+            f.Length = columnProps.Length;
 
-            //TODO: burada field'ın refer ettiği tablo create ediliyordu ama stack overflow'a neden olduğu için kaldırıldı.
+            //TODO: burada column'ın refer ettiği tablo create ediliyordu ama stack overflow'a neden olduğu için kaldırıldı.
 
-            //if (fieldProps.References != null) { 
-            //    Table referencedTable = this.Tables[fieldProps.References.Name];
+            //if (columnProps.References != null) { 
+            //    Table referencedTable = this.Tables[columnProps.References.Name];
             //    if (referencedTable == null){
-            //        if (fieldProps.References.Name != forTable.Name)
+            //        if (columnProps.References.Name != forTable.Name)
             //        {
-            //            Table newTable = CreateTableForType(fieldProps.References);
-            //            f.ReferenceField = newTable.PrimaryField;
+            //            Table newTable = CreateTableForType(columnProps.References);
+            //            f.ReferenceColumn = newTable.PrimaryColumn;
             //        }else
             //        {
-            //            f.ReferenceField = forTable.PrimaryField;
+            //            f.ReferenceColumn = forTable.PrimaryColumn;
             //        }
             //    }
             //}
@@ -1616,7 +1627,7 @@ namespace Cinar.Database
 
         #region mapping
         private Dictionary<Type, Table> tableMappingInfo = new Dictionary<Type, Table>();
-        private Dictionary<PropertyInfo, Field> fieldMappingInfo = new Dictionary<PropertyInfo, Field>();
+        private Dictionary<PropertyInfo, Column> columnMappingInfo = new Dictionary<PropertyInfo, Column>();
         public Table GetTableForEntityType(Type entityType)
         {
             if (tableMappingInfo.ContainsKey(entityType))
@@ -1652,31 +1663,31 @@ namespace Cinar.Database
 
             return tableMappingInfo[entityType];
         }
-        public Field GetFieldForProperty(PropertyInfo propertyInfo)
+        public Column GetColumnForProperty(PropertyInfo propertyInfo)
         {
-            if (fieldMappingInfo.ContainsKey(propertyInfo))
-                return fieldMappingInfo[propertyInfo];
+            if (columnMappingInfo.ContainsKey(propertyInfo))
+                return columnMappingInfo[propertyInfo];
 
             Table table = GetTableForEntityType(propertyInfo.ReflectedType);
             if (table == null)
                 return null;
 
-            object[] attribs = propertyInfo.GetCustomAttributes(typeof(FieldDetailAttribute), false);
-            if (attribs != null && attribs.Length >= 1 && !string.IsNullOrEmpty((attribs[0] as FieldDetailAttribute).Name))
-                fieldMappingInfo[propertyInfo] = table.Fields[(attribs[0] as FieldDetailAttribute).Name];
-            if (!fieldMappingInfo.ContainsKey(propertyInfo))
-                fieldMappingInfo[propertyInfo] = table.Fields[propertyInfo.Name];
-            if (fieldMappingInfo[propertyInfo] == null)
+            object[] attribs = propertyInfo.GetCustomAttributes(typeof(ColumnDetailAttribute), false);
+            if (attribs != null && attribs.Length >= 1 && !string.IsNullOrEmpty((attribs[0] as ColumnDetailAttribute).Name))
+                columnMappingInfo[propertyInfo] = table.Columns[(attribs[0] as ColumnDetailAttribute).Name];
+            if (!columnMappingInfo.ContainsKey(propertyInfo))
+                columnMappingInfo[propertyInfo] = table.Columns[propertyInfo.Name];
+            if (columnMappingInfo[propertyInfo] == null)
             {
                 //throw new Exception(propertyInfo.ReflectedType.Name + " veya " + propertyInfo.DeclaringType.Name + " isimli tabloya ait " + propertyInfo.Name + " isimli alan bulunamadı!");
             }
-            return fieldMappingInfo[propertyInfo];
-            //return fieldMappingInfo.ContainsKey(propertyInfo) ? fieldMappingInfo[propertyInfo] : null;
+            return columnMappingInfo[propertyInfo];
+            //return columnMappingInfo.ContainsKey(propertyInfo) ? columnMappingInfo[propertyInfo] : null;
         }
-        public PropertyInfo GetPropertyInfoForField(Field field)
+        public PropertyInfo GetPropertyInfoForColumn(Column column)
         {
-            if(fieldMappingInfo.ContainsValue(field))
-                return fieldMappingInfo.First(p => p.Value == field).Key;
+            if(columnMappingInfo.ContainsValue(column))
+                return columnMappingInfo.First(p => p.Value == column).Key;
             return null;
         }
         public Type GetEntityTypeForTable(Table table)
@@ -1690,9 +1701,9 @@ namespace Cinar.Database
         #region DDL
         public string DbTypeToString(DbType dbType) { return dbProvider.DbTypeToString(dbType); }
         public DbType StringToDbType(string dbType) { return dbProvider.StringToDbType(dbType); }
-        public string[] GetOriginalFieldTypes()
+        public string[] GetOriginalColumnTypes()
         {
-            return dbProvider.GetFieldTypes();
+            return dbProvider.GetColumnTypes();
         }
 
         public string GetDatabaseDDL(bool addDropTable)
@@ -1747,9 +1758,9 @@ namespace Cinar.Database
 
             return dbPrvdr.GetTableDDL(table);
         }
-        public string GetFieldDDL(Field field)
+        public string GetColumnDDL(Column column)
         {
-            return dbProvider.GetFieldDDL(field);
+            return dbProvider.GetColumnDDL(column);
         }
         #endregion
 
@@ -1776,27 +1787,27 @@ namespace Cinar.Database
             return dbProvider.GetSQLColumnList(tableName);
         }
 
-        public string GetSQLColumnAdd(string toTable, Field column)
+        public string GetSQLColumnAdd(string toTable, Column column)
         {
             return dbProvider.GetSQLColumnAdd(toTable, column);
         }
 
-        public string GetSQLColumnRemove(Field column)
+        public string GetSQLColumnRemove(Column column)
         {
             return dbProvider.GetSQLColumnRemove(column);
         }
 
-        public string GetSQLColumnRename(string oldColumnName, Field column)
+        public string GetSQLColumnRename(string oldColumnName, Column column)
         {
             return dbProvider.GetSQLColumnRename(oldColumnName, column);
         }
 
-        public string GetSQLColumnChangeDataType(Field column)
+        public string GetSQLColumnChangeDataType(Column column)
         {
             return dbProvider.GetSQLColumnChangeDataType(column);
         }
 
-        public string GetSQLColumnChangeDefault(Field column)
+        public string GetSQLColumnChangeDefault(Column column)
         {
             return dbProvider.GetSQLColumnChangeDefault(column);
         }
@@ -1841,22 +1852,22 @@ namespace Cinar.Database
             return dbProvider.GetSQLConstraintRemove(constraint);
         }
 
-        public string GetSQLColumnAddNotNull(Field column)
+        public string GetSQLColumnAddNotNull(Column column)
         {
             return dbProvider.GetSQLColumnAddNotNull(column);
         }
 
-        public string GetSQLColumnRemoveNotNull(Field column)
+        public string GetSQLColumnRemoveNotNull(Column column)
         {
             return dbProvider.GetSQLColumnRemoveNotNull(column);
         }
 
-        public string GetSQLColumnSetAutoIncrement(Field column)
+        public string GetSQLColumnSetAutoIncrement(Column column)
         {
             return dbProvider.GetSQLColumnSetAutoIncrement(column);
         }
 
-        public string GetSQLColumnRemoveAutoIncrement(Field column)
+        public string GetSQLColumnRemoveAutoIncrement(Column column)
         {
             return dbProvider.GetSQLColumnRemoveAutoIncrement(column);
         }

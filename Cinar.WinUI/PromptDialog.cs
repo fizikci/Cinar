@@ -36,7 +36,7 @@ namespace Cinar.WinUI
                     {
                         LookUp lookUp = new LookUp();
                         lookUp.EntityType = typeof(T);
-                        lookUp.DisplayFieldName = ((BaseEntity)Activator.CreateInstance(typeof(T))).GetNameField();
+                        lookUp.DisplayFieldName = ((BaseEntity)Activator.CreateInstance(typeof(T))).GetNameColumn();
                         edit = lookUp;
                     }
                     else

@@ -39,19 +39,19 @@ namespace Cinar.Database
         IDbDataParameter CreateParameter(string parameterName, object value);
 
         string GetTableDDL(Table table);
-        string GetFieldDDL(Field field);
+        string GetColumnDDL(Column column);
 
-        string[] GetFieldTypes();
+        string[] GetColumnTypes();
 
         string GetSQLTableList();
         string GetSQLTableRename(string oldName, string newName);
         string GetSQLTableDrop(Table table);
         string GetSQLColumnList(string tableName);
-        string GetSQLColumnAdd(string toTable, Field column);
-        string GetSQLColumnRemove(Field column);
-        string GetSQLColumnRename(string oldColumnName, Field column);
-        string GetSQLColumnChangeDataType(Field column);
-        string GetSQLColumnChangeDefault(Field column);
+        string GetSQLColumnAdd(string toTable, Column column);
+        string GetSQLColumnRemove(Column column);
+        string GetSQLColumnRename(string oldColumnName, Column column);
+        string GetSQLColumnChangeDataType(Column column);
+        string GetSQLColumnChangeDefault(Column column);
         string GetSQLConstraintList();
         string GetSQLConstraintRemove(Constraint constraint);
         string GetSQLConstraintAdd(Constraint constraint);
@@ -60,11 +60,14 @@ namespace Cinar.Database
         string GetSQLConstraintAdd(ForeignKeyConstraint constraint);
         string GetSQLConstraintAdd(PrimaryKeyConstraint constraint);
         string GetSQLConstraintRemove(PrimaryKeyConstraint constraint);
-        string GetSQLColumnAddNotNull(Field column);
-        string GetSQLColumnRemoveNotNull(Field column);
-        string GetSQLColumnSetAutoIncrement(Field column);
-        string GetSQLColumnRemoveAutoIncrement(Field column);
+        string GetSQLColumnAddNotNull(Column column);
+        string GetSQLColumnRemoveNotNull(Column column);
+        string GetSQLColumnSetAutoIncrement(Column column);
+        string GetSQLColumnRemoveAutoIncrement(Column column);
         string GetSQLIndexAdd(Index index);
         string GetSQLIndexRemove(Index index);
+    }
+    public interface IMetadata
+    { 
     }
 }

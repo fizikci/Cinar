@@ -33,7 +33,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.txtKeyName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.keyFieldBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.keyColumnBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageLocal = new System.Windows.Forms.TabPage();
             this.rbIndex = new System.Windows.Forms.RadioButton();
@@ -46,10 +46,10 @@
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPageFK = new System.Windows.Forms.TabPage();
-            this.pnlForeignTableFields = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlForeignTableColumns = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.comboForeignTableKeys = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.keyFieldBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.keyColumnBindingSource)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabPageLocal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
@@ -99,9 +99,9 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "Name :";
             // 
-            // keyFieldBindingSource
+            // keyColumnBindingSource
             // 
-            this.keyFieldBindingSource.DataSource = typeof(Cinar.DBTools.Tools.KeyField);
+            this.keyColumnBindingSource.DataSource = typeof(Cinar.DBTools.Tools.KeyColumn);
             // 
             // tabControl
             // 
@@ -186,7 +186,7 @@
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3});
-            this.grid.DataSource = this.keyFieldBindingSource;
+            this.grid.DataSource = this.keyColumnBindingSource;
             this.grid.Location = new System.Drawing.Point(10, 62);
             this.grid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.grid.Name = "grid";
@@ -210,8 +210,8 @@
             // 
             // dataGridViewTextBoxColumn2
             // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "FieldType";
-            this.dataGridViewTextBoxColumn2.HeaderText = "FieldType";
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "ColumnType";
+            this.dataGridViewTextBoxColumn2.HeaderText = "ColumnType";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             this.dataGridViewTextBoxColumn2.Width = 150;
@@ -225,7 +225,7 @@
             // 
             // tabPageFK
             // 
-            this.tabPageFK.Controls.Add(this.pnlForeignTableFields);
+            this.tabPageFK.Controls.Add(this.pnlForeignTableColumns);
             this.tabPageFK.Controls.Add(this.label3);
             this.tabPageFK.Controls.Add(this.comboForeignTableKeys);
             this.tabPageFK.Location = new System.Drawing.Point(4, 24);
@@ -236,16 +236,16 @@
             this.tabPageFK.Text = "Foreign Key";
             this.tabPageFK.UseVisualStyleBackColor = true;
             // 
-            // pnlForeignTableFields
+            // pnlForeignTableColumns
             // 
-            this.pnlForeignTableFields.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.pnlForeignTableColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlForeignTableFields.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.pnlForeignTableFields.Location = new System.Drawing.Point(23, 61);
-            this.pnlForeignTableFields.Name = "pnlForeignTableFields";
-            this.pnlForeignTableFields.Size = new System.Drawing.Size(535, 226);
-            this.pnlForeignTableFields.TabIndex = 27;
+            this.pnlForeignTableColumns.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.pnlForeignTableColumns.Location = new System.Drawing.Point(23, 61);
+            this.pnlForeignTableColumns.Name = "pnlForeignTableColumns";
+            this.pnlForeignTableColumns.Size = new System.Drawing.Size(535, 226);
+            this.pnlForeignTableColumns.TabIndex = 27;
             // 
             // label3
             // 
@@ -279,7 +279,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCreateIndex";
             this.Text = "Create Index / Constraint";
-            ((System.ComponentModel.ISupportInitialize)(this.keyFieldBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.keyColumnBindingSource)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabPageLocal.ResumeLayout(false);
             this.tabPageLocal.PerformLayout();
@@ -297,10 +297,7 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TextBox txtKeyName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn fieldTypeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn;
-        private System.Windows.Forms.BindingSource keyFieldBindingSource;
+        private System.Windows.Forms.BindingSource keyColumnBindingSource;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageLocal;
         private System.Windows.Forms.RadioButton rbIndex;
@@ -313,7 +310,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.TabPage tabPageFK;
-        private System.Windows.Forms.FlowLayoutPanel pnlForeignTableFields;
+        private System.Windows.Forms.FlowLayoutPanel pnlForeignTableColumns;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboForeignTableKeys;
 

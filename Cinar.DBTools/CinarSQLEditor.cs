@@ -134,9 +134,9 @@ namespace Cinar.DBTools
             if (tbl == null)
                 return list.ToArray();
 
-            foreach (Field f in tbl.Fields)
+            foreach (Column f in tbl.Columns)
             {
-                string desc = f.FieldType + " " + f.Table.Name + "." + f.Name;
+                string desc = f.ColumnType + " " + f.Table.Name + "." + f.Name;
                 list.Add(new CinarCompletionData(f.Name, desc, (int)Images.Property));
             }
             return list.ToArray();
@@ -241,7 +241,7 @@ namespace Cinar.DBTools
 
     public class CinarCompletionData : ICompletionData
     {
-        // Fields
+        // columns
         private string description;
         private int imageIndex;
         private double priority;

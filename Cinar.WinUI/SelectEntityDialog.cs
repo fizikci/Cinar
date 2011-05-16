@@ -84,7 +84,7 @@ namespace Cinar.WinUI
                 if (Filter[SearchFieldName] == null)
                     Filter = Filter.And(SearchFieldName, CriteriaTypes.Like, search);
                 else
-                    Filter[SearchFieldName].FieldValue = search;
+                    Filter[SearchFieldName].ColumnValue = search;
             }
             Filter.PageNo = pageNo;
             Filter.PageSize = PageSize;
