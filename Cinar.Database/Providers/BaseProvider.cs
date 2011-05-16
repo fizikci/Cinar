@@ -16,7 +16,7 @@ namespace Cinar.Database.Providers
         protected Database db = null;
 
         /// <summary>
-        /// Veritabanından string olarak gelen field tip bilgisini DbType enum'una dönüştürür.
+        /// Veritabanından string olarak gelen column tip bilgisini DbType enum'una dönüştürür.
         /// </summary>
         public DbType StringToDbType(string typeName)
         {
@@ -26,7 +26,7 @@ namespace Cinar.Database.Providers
         }
 
         /// <summary>
-        /// DbType olarak elimizde bulunan field tip bilgisini veritabanın anlayacağı stringe dönüştürür. 
+        /// DbType olarak elimizde bulunan column tip bilgisini veritabanın anlayacağı stringe dönüştürür. 
         /// </summary>
         public string DbTypeToString(DbType dbType)
         {
@@ -38,14 +38,14 @@ namespace Cinar.Database.Providers
         public abstract Dictionary<DbType, string> DEFDbTypeToString { get; }
         public abstract Dictionary<string, DbType> DEFStringToDbType { get; }
 
-        protected string getDefaultValue(Field field)
+        protected string getDefaultValue(Column column)
         {
-            if (field.IsStringType())
-                return encloseWithQuote(field.DefaultValue.Trim());
-            else if (field.IsNumericType())
-                return field.DefaultValue.Trim().Trim('\'');
+            if (column.IsStringType())
+                return encloseWithQuote(column.DefaultValue.Trim());
+            else if (column.IsNumericType())
+                return column.DefaultValue.Trim().Trim('\'');
             else
-                return encloseWithQuote(field.DefaultValue.Trim());
+                return encloseWithQuote(column.DefaultValue.Trim());
         }
 
         protected string encloseWithQuote(string str)

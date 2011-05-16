@@ -292,14 +292,14 @@ namespace Cinar.WinUI
                     Filter.Criterias.Add(new Criteria(dependentFieldName, CriteriaTypes.Eq, ((BaseEntity)DependsOn.EditValue).Id));
                 }
                 else
-                    Filter[dependentFieldName].FieldValue = ((BaseEntity)DependsOn.EditValue).Id.ToString();
+                    Filter[dependentFieldName].ColumnValue = ((BaseEntity)DependsOn.EditValue).Id.ToString();
             }
 
             if (!showAll)
             {
                 if (Filter[DisplayFieldName] == null)
                     Filter.Criterias.Add(new Criteria(DisplayFieldName, CriteriaTypes.Like, searchStr));
-                Filter[DisplayFieldName].FieldValue = searchStr;
+                Filter[DisplayFieldName].ColumnValue = searchStr;
                 Filter[DisplayFieldName].CriteriaType = CriteriaTypes.Like;
             }
             Filter.Orders = new OrderList
@@ -366,7 +366,7 @@ namespace Cinar.WinUI
                         Filter.Criterias.Add(new Criteria(dependentFieldName, CriteriaTypes.Eq, ((BaseEntity)DependsOn.EditValue).Id));
                     }
                     else
-                        Filter[dependentFieldName].FieldValue = ((BaseEntity)DependsOn.EditValue).Id.ToString();
+                        Filter[dependentFieldName].ColumnValue = ((BaseEntity)DependsOn.EditValue).Id.ToString();
                 }
             }
         }

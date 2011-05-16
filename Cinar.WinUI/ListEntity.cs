@@ -67,7 +67,7 @@ namespace Cinar.WinUI
             List<CommandTrigger> triggers = new List<CommandTrigger>();
             foreach (Criteria criteria in fExp.Criterias)
             {
-                BaseEdit c = (BaseEdit)EntityEditControl.GetControl(criteria.FieldName);
+                BaseEdit c = (BaseEdit)EntityEditControl.GetControl(criteria.ColumnName);
                 if (c == null)
                     continue;
 
@@ -76,35 +76,35 @@ namespace Cinar.WinUI
                     if ((pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)) && pi.GetSetMethod()!=null)
                         pi.SetValue(control, pi.GetValue(c, null), null);
 
-                PropertyInfo piControl = EntityEditControl.GetEntityType().GetProperty(criteria.FieldName);
+                PropertyInfo piControl = EntityEditControl.GetEntityType().GetProperty(criteria.ColumnName);
                 switch (control.GetType().Name)
                 {
                     case "CheckEdit":
-                        DMT.Provider.SetValueOfEditControl(piControl, control, criteria.FieldValue);
+                        DMT.Provider.SetValueOfEditControl(piControl, control, criteria.ColumnValue);
                         (control as CheckEdit).Properties.AllowGrayed = true;
                         break;
                     case "TextEdit":
-                        control.EditValue = criteria.FieldValue;
+                        control.EditValue = criteria.ColumnValue;
                         break;
                     case "SpinEdit":
-                        control.EditValue = criteria.FieldValue;
+                        control.EditValue = criteria.ColumnValue;
                         break;
                     case "DateEdit":
-                        control.EditValue = criteria.FieldValue;
+                        control.EditValue = criteria.ColumnValue;
                         break;
                     case "ComboBoxEdit":
                         (control as ComboBoxEdit).Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
                         (control as ComboBoxEdit).Properties.Items.Clear();
                         (control as ComboBoxEdit).Properties.Items.Add("TÜMÜ");
                         (control as ComboBoxEdit).Properties.Items.AddRange((c as ComboBoxEdit).Properties.Items);
-                        control.EditValue = criteria.FieldValue;
+                        control.EditValue = criteria.ColumnValue;
                         break;
                     case "LookUp":
                         if (piControl.PropertyType == typeof(string))
                         {
                             control = new TextEdit();
                             control.Name = "edit" + piControl.Name;
-                            control.Text = criteria.FieldValue.ToString();
+                            control.Text = criteria.ColumnValue.ToString();
                         }
                         break;
                 }
@@ -116,7 +116,7 @@ namespace Cinar.WinUI
                     Label lbl = new Label();
                     lbl.Size = new Size(labelWidth, panelHeight);
                     lbl.Location = new Point(0, 0);
-                    lbl.Text = EntityEditControl.GetControlLabel(criteria.FieldName);
+                    lbl.Text = EntityEditControl.GetControlLabel(criteria.ColumnName);
                     lbl.TextAlign = ContentAlignment.MiddleLeft;
                     p.Controls.Add(lbl);
 
@@ -221,12 +221,12 @@ namespace Cinar.WinUI
                 fExp2.Orders = fExp.Orders;
                 foreach (Criteria cr in fExp.Criterias)
                 {
-                    Control[] controls = panelHeader.Controls.Find("edit" + cr.FieldName, true);
+                    Control[] controls = panelHeader.Controls.Find("edit" + cr.ColumnName, true);
                     if (controls.Length == 0)
                         continue;
 
                     BaseEdit control = (BaseEdit)controls.First();
-                    PropertyInfo piControl = EntityEditControl.GetEntityType().GetProperty(cr.FieldName);
+                    PropertyInfo piControl = EntityEditControl.GetEntityType().GetProperty(cr.ColumnName);
                     object val = DMT.Provider.GetValueOfEditControl(piControl, control);
 
                     if (control is ComboBoxEdit && val.Equals("TÜMÜ"))
@@ -241,8 +241,8 @@ namespace Cinar.WinUI
                             val = ((search.Length > 3 || likeMeansContaining) ? "%" : "") + search + "%";
                     }
 
-                    //cr.FieldValue = val.ToString();
-                    fExp2.Criterias.Add(new Criteria(cr.FieldName, cr.CriteriaType, val.ToString()));
+                    //cr.ColumnValue = val.ToString();
+                    fExp2.Criterias.Add(new Criteria(cr.ColumnName, cr.CriteriaType, val.ToString()));
                 }
             }
             return fExp2;
@@ -371,21 +371,21 @@ namespace Cinar.WinUI
             else if (
                         gridView.SortInfo.Count > 0 && 
                         fExp.Orders.Count >0 &&
-                        gridView.SortInfo[0].Column.FieldName == fExp.Orders[0].FieldName && 
+                        gridView.SortInfo[0].Column.FieldName == fExp.Orders[0].ColumnName && 
                         fExp.Orders[0].Ascending == (gridView.SortInfo[0].SortOrder == ColumnSortOrder.Ascending)
                     )
                         return; //***
             fExp.Orders = new OrderList();
             foreach (GridColumnSortInfo item in gridView.SortInfo)
             {
-                Order o = fExp.Orders.Count>0 ? fExp.Orders.FirstOrDefault(ord => ord.FieldName == item.Column.FieldName) : null;
+                Order o = fExp.Orders.Count>0 ? fExp.Orders.FirstOrDefault(ord => ord.ColumnName == item.Column.FieldName) : null;
                 if (o == null) { o = new Order(); fExp.Orders.Add(o); }
-                o.FieldName = item.Column.FieldName;
+                o.ColumnName = item.Column.FieldName;
                 o.Ascending = item.SortOrder == ColumnSortOrder.Ascending;
             }
             BindGrid();
             showEntity();
-            gridView.Columns[fExp.Orders[0].FieldName].SortOrder = fExp.Orders[0].Ascending ? ColumnSortOrder.Ascending : ColumnSortOrder.Descending;
+            gridView.Columns[fExp.Orders[0].ColumnName].SortOrder = fExp.Orders[0].Ascending ? ColumnSortOrder.Ascending : ColumnSortOrder.Descending;
         }
 
         private void gridView_RowStyle(object sender, RowStyleEventArgs e)

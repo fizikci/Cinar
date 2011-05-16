@@ -23,17 +23,17 @@ namespace Cinar.DBTools.Tools
 
             InitializeComponent();
 
-            List<KeyField> list = new List<KeyField>();
-            foreach (Field f in table.Fields)
+            List<KeyColumn> list = new List<KeyColumn>();
+            foreach (Column f in table.Columns)
             {
-                list.Add(new KeyField()
+                list.Add(new KeyColumn()
                 {
-                    FieldType = string.IsNullOrEmpty(f.FieldTypeOriginal) ? Provider.Database.DbTypeToString(f.FieldType) : f.FieldTypeOriginal,
+                    ColumnType = string.IsNullOrEmpty(f.ColumnTypeOriginal) ? Provider.Database.DbTypeToString(f.ColumnType) : f.ColumnTypeOriginal,
                     Length = (int)f.Length,
                     Name = f.Name
                 });
             }
-            keyFieldBindingSource.DataSource = list;
+            keyColumnBindingSource.DataSource = list;
 
             foreach (Table fkTable in Provider.Database.Tables)
             {
@@ -50,22 +50,22 @@ namespace Cinar.DBTools.Tools
             if (cs == null)
                 return;
 
-            pnlForeignTableFields.SuspendLayout();
-            pnlForeignTableFields.Controls.Clear();
+            pnlForeignTableColumns.SuspendLayout();
+            pnlForeignTableColumns.Controls.Clear();
 
-            foreach (string foreignFieldName in cs.FieldNames)
+            foreach (string foreignColumnName in cs.ColumnNames)
             {
-                Label lbl = new Label(){Text = "Map " + cs.Table.Name + "." + foreignFieldName + " column to:", Width = 200};
+                Label lbl = new Label(){Text = "Map " + cs.Table.Name + "." + foreignColumnName + " column to:", Width = 200};
                 ComboBox cb = new ComboBox {Width = 200, DropDownStyle = ComboBoxStyle.DropDownList, Left = 205};
-                foreach (Field field in table.Fields)
-                    cb.Items.Add(field);
+                foreach (Column column in table.Columns)
+                    cb.Items.Add(column);
                 Panel p = new Panel() {Height = 25, Width = 405};
                 p.Controls.Add(lbl);
                 p.Controls.Add(cb);
-                p.Tag = foreignFieldName;
-                pnlForeignTableFields.Controls.Add(p);
+                p.Tag = foreignColumnName;
+                pnlForeignTableColumns.Controls.Add(p);
             }
-            pnlForeignTableFields.PerformLayout();
+            pnlForeignTableColumns.PerformLayout();
         }
 
         public BaseIndexConstraint GetCreatedKey()
@@ -83,21 +83,21 @@ namespace Cinar.DBTools.Tools
             else
                 throw new Exception("Please select an index/constraint type");
 
-            index.FieldNames = new List<string>();
+            index.ColumnNames = new List<string>();
             index.Name = txtKeyName.Text.MakeFileName();
             if (index is ForeignKeyConstraint)
             {
                 ForeignKeyConstraint fk = index as ForeignKeyConstraint;
-                foreach (Panel panel in pnlForeignTableFields.Controls)
-                    fk.FieldNames.Add(((panel.Controls[1] as ComboBox).SelectedItem as Field).Name);
+                foreach (Panel panel in pnlForeignTableColumns.Controls)
+                    fk.ColumnNames.Add(((panel.Controls[1] as ComboBox).SelectedItem as Column).Name);
                 fk.RefConstraintName = (comboForeignTableKeys.SelectedItem as BaseIndexConstraint).Name;
                 fk.RefTableName = (comboForeignTableKeys.SelectedItem as BaseIndexConstraint).Table.Name;
             }
             else
             {
-                foreach (KeyField fd in keyFieldBindingSource.DataSource as List<KeyField>)
+                foreach (KeyColumn fd in keyColumnBindingSource.DataSource as List<KeyColumn>)
                     if (fd.Selected)
-                        index.FieldNames.Add(fd.Name);
+                        index.ColumnNames.Add(fd.Name);
             }
             return index;
         }
@@ -108,18 +108,18 @@ namespace Cinar.DBTools.Tools
             rbUnique.Checked = index is UniqueConstraint;
             rbPrimaryKey.Checked = index is PrimaryKeyConstraint;
             rbIndex.Checked = index is Index;
-            List<KeyField> fields = new List<KeyField>();
-            foreach (Field f in table.Fields)
+            List<KeyColumn> columns = new List<KeyColumn>();
+            foreach (Column f in table.Columns)
             {
-                fields.Add(new KeyField()
+                columns.Add(new KeyColumn()
                 {
-                    Selected = index.FieldNames.Contains(f.Name),
-                    FieldType = string.IsNullOrEmpty(f.FieldTypeOriginal) ? Provider.Database.DbTypeToString(f.FieldType) : f.FieldTypeOriginal,
+                    Selected = index.ColumnNames.Contains(f.Name),
+                    ColumnType = string.IsNullOrEmpty(f.ColumnTypeOriginal) ? Provider.Database.DbTypeToString(f.ColumnType) : f.ColumnTypeOriginal,
                     Length = (int)f.Length,
                     Name = f.Name
                 });
             }
-            keyFieldBindingSource.DataSource = fields;
+            keyColumnBindingSource.DataSource = columns;
 
             if (index is ForeignKeyConstraint)
             {
@@ -130,23 +130,23 @@ namespace Cinar.DBTools.Tools
                 tabControl.SelectedTab = tabPageLocal;
         }
     }
-    public class KeyField
+    public class KeyColumn
     {
         public bool Selected { get; set; }
         public string Name { get; set; }
-        public string FieldType { get; set; }
+        public string ColumnType { get; set; }
         public int Length { get; set; }
     }
     public class KeyDef
     {
-        public List<KeyField> Fields { get; set; }
+        public List<KeyColumn> Columns { get; set; }
         public string Name { get; set; }
         public bool IsPrimary { get; set; }
         public bool IsUnique { get; set; }
 
         public KeyDef()
         {
-            Fields = new List<KeyField>();
+            Columns = new List<KeyColumn>();
         }
     }
 

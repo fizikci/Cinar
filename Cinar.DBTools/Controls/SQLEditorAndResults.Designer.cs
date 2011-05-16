@@ -29,17 +29,18 @@ namespace Cinar.DBTools.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQLEditorAndResults));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtSQL = new Cinar.DBTools.CinarSQLEditor();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tpResults = new System.Windows.Forms.TabPage();
-            this.tpInfo = new System.Windows.Forms.TabPage();
+            this.tpOutput = new System.Windows.Forms.TabPage();
             this.txtInfo = new System.Windows.Forms.TextBox();
             this.tpSQLLog = new System.Windows.Forms.TabPage();
             this.txtSQLLog = new Cinar.DBTools.CinarSQLEditor();
-            this.tpTableInfo = new System.Windows.Forms.TabPage();
+            this.tpInfo = new System.Windows.Forms.TabPage();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.tpTableData = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -68,14 +69,15 @@ namespace Cinar.DBTools.Controls
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
+            this.imageListTabs = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.tabControl.SuspendLayout();
-            this.tpInfo.SuspendLayout();
+            this.tpOutput.SuspendLayout();
             this.tpSQLLog.SuspendLayout();
-            this.tpTableInfo.SuspendLayout();
+            this.tpInfo.SuspendLayout();
             this.tpTableData.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -116,18 +118,18 @@ namespace Cinar.DBTools.Controls
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tpResults);
-            this.tabControl.Controls.Add(this.tpInfo);
+            this.tabControl.Controls.Add(this.tpOutput);
             this.tabControl.Controls.Add(this.tpSQLLog);
-            this.tabControl.Controls.Add(this.tpTableInfo);
+            this.tabControl.Controls.Add(this.tpInfo);
             this.tabControl.Controls.Add(this.tpTableData);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.tabControl.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.tabControl.ImageList = this.imageListTabs;
             this.tabControl.ItemSize = new System.Drawing.Size(100, 24);
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(638, 253);
-            this.tabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -142,16 +144,16 @@ namespace Cinar.DBTools.Controls
             this.tpResults.Text = "Results";
             this.tpResults.UseVisualStyleBackColor = true;
             // 
-            // tpInfo
+            // tpOutput
             // 
-            this.tpInfo.Controls.Add(this.txtInfo);
-            this.tpInfo.Location = new System.Drawing.Point(4, 28);
-            this.tpInfo.Name = "tpInfo";
-            this.tpInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.tpInfo.Size = new System.Drawing.Size(630, 425);
-            this.tpInfo.TabIndex = 1;
-            this.tpInfo.Text = "Output";
-            this.tpInfo.UseVisualStyleBackColor = true;
+            this.tpOutput.Controls.Add(this.txtInfo);
+            this.tpOutput.Location = new System.Drawing.Point(4, 28);
+            this.tpOutput.Name = "tpOutput";
+            this.tpOutput.Padding = new System.Windows.Forms.Padding(3);
+            this.tpOutput.Size = new System.Drawing.Size(630, 221);
+            this.tpOutput.TabIndex = 1;
+            this.tpOutput.Text = "Output";
+            this.tpOutput.UseVisualStyleBackColor = true;
             // 
             // txtInfo
             // 
@@ -164,7 +166,7 @@ namespace Cinar.DBTools.Controls
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
             this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInfo.Size = new System.Drawing.Size(624, 419);
+            this.txtInfo.Size = new System.Drawing.Size(624, 215);
             this.txtInfo.TabIndex = 0;
             this.txtInfo.WordWrap = false;
             // 
@@ -173,7 +175,7 @@ namespace Cinar.DBTools.Controls
             this.tpSQLLog.Controls.Add(this.txtSQLLog);
             this.tpSQLLog.Location = new System.Drawing.Point(4, 28);
             this.tpSQLLog.Name = "tpSQLLog";
-            this.tpSQLLog.Size = new System.Drawing.Size(630, 425);
+            this.tpSQLLog.Size = new System.Drawing.Size(630, 221);
             this.tpSQLLog.TabIndex = 2;
             this.tpSQLLog.Text = "SQL Log";
             this.tpSQLLog.UseVisualStyleBackColor = true;
@@ -185,18 +187,18 @@ namespace Cinar.DBTools.Controls
             this.txtSQLLog.IsReadOnly = false;
             this.txtSQLLog.Location = new System.Drawing.Point(0, 0);
             this.txtSQLLog.Name = "txtSQLLog";
-            this.txtSQLLog.Size = new System.Drawing.Size(630, 425);
+            this.txtSQLLog.Size = new System.Drawing.Size(630, 221);
             this.txtSQLLog.TabIndex = 1;
             // 
-            // tpTableInfo
+            // tpInfo
             // 
-            this.tpTableInfo.Controls.Add(this.webBrowser);
-            this.tpTableInfo.Location = new System.Drawing.Point(4, 28);
-            this.tpTableInfo.Name = "tpTableInfo";
-            this.tpTableInfo.Size = new System.Drawing.Size(630, 425);
-            this.tpTableInfo.TabIndex = 3;
-            this.tpTableInfo.Text = "Info";
-            this.tpTableInfo.UseVisualStyleBackColor = true;
+            this.tpInfo.Controls.Add(this.webBrowser);
+            this.tpInfo.Location = new System.Drawing.Point(4, 28);
+            this.tpInfo.Name = "tpInfo";
+            this.tpInfo.Size = new System.Drawing.Size(630, 221);
+            this.tpInfo.TabIndex = 3;
+            this.tpInfo.Text = "Info";
+            this.tpInfo.UseVisualStyleBackColor = true;
             // 
             // webBrowser
             // 
@@ -204,7 +206,7 @@ namespace Cinar.DBTools.Controls
             this.webBrowser.Location = new System.Drawing.Point(0, 0);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(630, 425);
+            this.webBrowser.Size = new System.Drawing.Size(630, 221);
             this.webBrowser.TabIndex = 0;
             // 
             // tpTableData
@@ -212,7 +214,7 @@ namespace Cinar.DBTools.Controls
             this.tpTableData.Controls.Add(this.panel1);
             this.tpTableData.Location = new System.Drawing.Point(4, 28);
             this.tpTableData.Name = "tpTableData";
-            this.tpTableData.Size = new System.Drawing.Size(630, 425);
+            this.tpTableData.Size = new System.Drawing.Size(630, 221);
             this.tpTableData.TabIndex = 4;
             this.tpTableData.Text = "Table Data";
             this.tpTableData.UseVisualStyleBackColor = true;
@@ -223,7 +225,7 @@ namespace Cinar.DBTools.Controls
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(630, 425);
+            this.panel1.Size = new System.Drawing.Size(630, 221);
             this.panel1.TabIndex = 2;
             // 
             // toolStripContainer1
@@ -233,13 +235,13 @@ namespace Cinar.DBTools.Controls
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.gridShowTable);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(630, 400);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(630, 196);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(630, 425);
+            this.toolStripContainer1.Size = new System.Drawing.Size(630, 221);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -252,20 +254,20 @@ namespace Cinar.DBTools.Controls
             this.gridShowTable.AllowUserToDeleteRows = false;
             this.gridShowTable.AllowUserToOrderColumns = true;
             this.gridShowTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridShowTable.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridShowTable.DefaultCellStyle = dataGridViewCellStyle2;
             this.gridShowTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridShowTable.Location = new System.Drawing.Point(0, 0);
             this.gridShowTable.Name = "gridShowTable";
             this.gridShowTable.RowNumberOffset = 0;
             this.gridShowTable.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridShowTable.Size = new System.Drawing.Size(630, 400);
+            this.gridShowTable.Size = new System.Drawing.Size(630, 196);
             this.gridShowTable.TabIndex = 1;
             // 
             // toolStrip1
@@ -465,6 +467,12 @@ namespace Cinar.DBTools.Controls
             // 
             this.ContentPanel.Size = new System.Drawing.Size(436, 163);
             // 
+            // imageListTabs
+            // 
+            this.imageListTabs.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit;
+            this.imageListTabs.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageListTabs.TransparentColor = System.Drawing.Color.Transparent;
+            // 
             // SQLEditorAndResults
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -477,10 +485,10 @@ namespace Cinar.DBTools.Controls
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
-            this.tpInfo.ResumeLayout(false);
-            this.tpInfo.PerformLayout();
+            this.tpOutput.ResumeLayout(false);
+            this.tpOutput.PerformLayout();
             this.tpSQLLog.ResumeLayout(false);
-            this.tpTableInfo.ResumeLayout(false);
+            this.tpInfo.ResumeLayout(false);
             this.tpTableData.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
@@ -501,10 +509,10 @@ namespace Cinar.DBTools.Controls
         private CinarSQLEditor txtSQL;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tpResults;
-        private System.Windows.Forms.TabPage tpInfo;
+        private System.Windows.Forms.TabPage tpOutput;
         private System.Windows.Forms.TextBox txtInfo;
         private System.Windows.Forms.TabPage tpSQLLog;
-        private System.Windows.Forms.TabPage tpTableInfo;
+        private System.Windows.Forms.TabPage tpInfo;
         private System.Windows.Forms.WebBrowser webBrowser;
         private CinarSQLEditor txtSQLLog;
         private System.Windows.Forms.TabPage tpTableData;
@@ -534,5 +542,6 @@ namespace Cinar.DBTools.Controls
         private System.Windows.Forms.ToolStripButton btnNextPage;
         private System.Windows.Forms.ToolStripButton btnRefresh;
         private System.Windows.Forms.ToolStripButton btnSave;
+        private System.Windows.Forms.ImageList imageListTabs;
     }
 }

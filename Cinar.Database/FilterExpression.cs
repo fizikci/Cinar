@@ -37,12 +37,12 @@ namespace Cinar.Database
             set { orders = value; }
         }
 
-		public static FilterExpression Create(string fieldName, CriteriaTypes criteriaType, object fieldValue)
+		public static FilterExpression Create(string columnName, CriteriaTypes criteriaType, object fieldValue)
 		{
 			return new FilterExpression
 			{
 				Criterias = new CriteriaList { 
-                    new Criteria(fieldName, criteriaType, fieldValue)
+                    new Criteria(columnName, criteriaType, fieldValue)
                 }
 			};
 		}
@@ -88,60 +88,60 @@ namespace Cinar.Database
         }
         public object[] GetParamValues()
         {
-            return this.Criterias.Select(c => c.FieldValue).ToArray();
+            return this.Criterias.Select(c => c.ColumnValue).ToArray();
         }
 
-        public Criteria this[string fieldName]
+        public Criteria this[string columnName]
         {
             get
             {
                 foreach (var criteria in Criterias)
-                    if (criteria.FieldName == fieldName)
+                    if (criteria.ColumnName == columnName)
                         return criteria;
                 return null;
             }
         }
 
-        public static FilterExpression Where(string fieldName, CriteriaTypes criteriaType, object fieldValue)
+        public static FilterExpression Where(string columnName, CriteriaTypes criteriaType, object fieldValue)
         {
             return new FilterExpression
             {
                 Criterias = new CriteriaList { 
-                    new Criteria(fieldName, criteriaType, fieldValue)
+                    new Criteria(columnName, criteriaType, fieldValue)
                 }
             };
         }
-        public FilterExpression And(string fieldName, CriteriaTypes criteriaType, object fieldValue)
+        public FilterExpression And(string columnName, CriteriaTypes criteriaType, object columnValue)
         {
             this.Criterias.Add(new Criteria { 
-                FieldName = fieldName,
+                ColumnName = columnName,
                 CriteriaType = criteriaType,
-                FieldValue = fieldValue.ToString()
+                ColumnValue = columnValue.ToString()
             });
             return this;
         }
-        public FilterExpression OrderBy(string fieldName, bool ascending)
+        public FilterExpression OrderBy(string columnName, bool ascending)
         {
             this.Orders.Add(new Order
             {
-                FieldName = fieldName,
+                ColumnName = columnName,
                 Ascending = ascending
             });
             return this;
         }
-        public FilterExpression OrderBy(string fieldName)
+        public FilterExpression OrderBy(string columnName)
         {
-            return OrderBy(fieldName, true);
+            return OrderBy(columnName, true);
         }
     }
 
     public class Criteria
     {
-        string fieldName = "Id";
-        public string FieldName
+        string columnName = "Id";
+        public string ColumnName
         {
-            get { return fieldName; }
-            set { fieldName = value; }
+            get { return columnName; }
+            set { columnName = value; }
         }
 
         CriteriaTypes criteriaType = CriteriaTypes.Eq;
@@ -151,24 +151,24 @@ namespace Cinar.Database
             set { criteriaType = value; }
         }
 
-        object fieldValue = "-1";
-        public object FieldValue
+        object columnValue = "-1";
+        public object ColumnValue
         {
-            get { return fieldValue; }
-            set { fieldValue = value; }
+            get { return columnValue; }
+            set { columnValue = value; }
         }
 
         public Criteria() { }
-        public Criteria(string fieldName, CriteriaTypes criteriaType, object fieldValue)
+        public Criteria(string columnName, CriteriaTypes criteriaType, object columnValue)
         {
-            this.fieldName = fieldName;
+            this.columnName = columnName;
             this.criteriaType = criteriaType;
-            this.fieldValue = fieldValue;
+            this.columnValue = columnValue;
         }
 
         public string ToParamString(int index)
         {
-            string str = "[" + fieldName + "] ";
+            string str = "[" + columnName + "] ";
             switch (criteriaType)
             {
                 case CriteriaTypes.Eq:
@@ -213,26 +213,26 @@ namespace Cinar.Database
         }
         public override string ToString()
         {
-            string str = "[" + fieldName + "] ";
+            string str = "[" + columnName + "] ";
             switch (criteriaType)
             {
                 case CriteriaTypes.Eq:
-                    str += " = " + fieldValue;
+                    str += " = " + columnValue;
                     break;
                 case CriteriaTypes.NotEq:
-                    str += " <> " + fieldValue;
+                    str += " <> " + columnValue;
                     break;
                 case CriteriaTypes.Gt:
-                    str += " > " + fieldValue;
+                    str += " > " + columnValue;
                     break;
                 case CriteriaTypes.Ge:
-                    str += " >= " + fieldValue;
+                    str += " >= " + columnValue;
                     break;
                 case CriteriaTypes.Lt:
-                    str += " < " + fieldValue;
+                    str += " < " + columnValue;
                     break;
                 case CriteriaTypes.Le:
-                    str += " <= " + fieldValue;
+                    str += " <= " + columnValue;
                     break;
                 case CriteriaTypes.IsNull:
                     str += " IS NULL ";
@@ -241,16 +241,16 @@ namespace Cinar.Database
                     str += " IS NOT NULL ";
                     break;
                 case CriteriaTypes.Like:
-                    str += " LIKE " + fieldValue;
+                    str += " LIKE " + columnValue;
                     break;
                 case CriteriaTypes.NotLike:
-                    str += " NOT LIKE " + fieldValue;
+                    str += " NOT LIKE " + columnValue;
                     break;
                 case CriteriaTypes.In:
-                    str += " IN " + fieldValue;
+                    str += " IN " + columnValue;
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " NOT IN " + fieldValue;
+                    str += " NOT IN " + columnValue;
                     break;
             }
 
@@ -316,11 +316,11 @@ namespace Cinar.Database
 
     public class Order
     {
-        string fieldName = "Id";
-        public string FieldName
+        string columnName = "Id";
+        public string ColumnName
         {
-            get { return fieldName; }
-            set { fieldName = value; }
+            get { return columnName; }
+            set { columnName = value; }
         }
 
         bool ascending = true;
@@ -331,15 +331,15 @@ namespace Cinar.Database
         }
 
         public Order() { }
-        public Order(string fieldName, bool ascending)
+        public Order(string columnName, bool ascending)
         {
-            this.fieldName = fieldName;
+            this.columnName = columnName;
             this.ascending = ascending;
         }
 
         public override string ToString()
         {
-            string str = "[" + fieldName + "]" + (ascending ? "" : " DESC");
+            string str = "[" + columnName + "]" + (ascending ? "" : " DESC");
             return str;
         }
     }

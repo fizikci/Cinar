@@ -9,19 +9,19 @@ namespace Cinar.Entities.MediaSearch
 {
     public class Content : BaseEntity
     {
-        [FieldDetail(Length=500)]
+        [ColumnDetail(Length=500)]
         public string SourceUrl { get; set; }
 
-        [FieldDetail(References=typeof(ContentDefinition))]
+        [ColumnDetail(References=typeof(ContentDefinition))]
         public int ContentDefinitionId { get; set; }
 
-        [FieldDetail(Length=500)]
+        [ColumnDetail(Length=500)]
         public string Title { get; set; }
         
-        [FieldDetail(References=typeof(Author))]
+        [ColumnDetail(References=typeof(Author))]
         public int AuthorId { get; set; }
 
-        [FieldDetail(Length=500)]
+        [ColumnDetail(Length=500)]
         public string ImageUrl { get; set; }
 
         public DateTime PublishDate { get; set; }

@@ -31,19 +31,19 @@
             this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFieldType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colColumnType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.colLength = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDefaultValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colIsNullable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colIsPrimaryKey = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colIsAutoIncrement = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.fieldCollectionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.columnCollectionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.txtTableName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fieldCollectionBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.columnCollectionBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -55,13 +55,13 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
-            this.colFieldType,
+            this.colColumnType,
             this.colLength,
             this.colDefaultValue,
             this.colIsNullable,
             this.colIsPrimaryKey,
             this.colIsAutoIncrement});
-            this.dataGridView1.DataSource = this.fieldCollectionBindingSource;
+            this.dataGridView1.DataSource = this.columnCollectionBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(14, 48);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridView1.Name = "dataGridView1";
@@ -75,14 +75,14 @@
             this.colName.Name = "colName";
             this.colName.Width = 150;
             // 
-            // colFieldType
+            // colColumnType
             // 
-            this.colFieldType.DataPropertyName = "FieldType";
-            this.colFieldType.HeaderText = "FieldType";
-            this.colFieldType.Name = "colFieldType";
-            this.colFieldType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.colFieldType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.colFieldType.Width = 120;
+            this.colColumnType.DataPropertyName = "ColumnType";
+            this.colColumnType.HeaderText = "ColumnType";
+            this.colColumnType.Name = "colColumnType";
+            this.colColumnType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colColumnType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colColumnType.Width = 120;
             // 
             // colLength
             // 
@@ -115,9 +115,9 @@
             this.colIsAutoIncrement.HeaderText = "IsAutoIncrement";
             this.colIsAutoIncrement.Name = "colIsAutoIncrement";
             // 
-            // fieldCollectionBindingSource
+            // columnCollectionBindingSource
             // 
-            this.fieldCollectionBindingSource.DataSource = typeof(System.Collections.Generic.List<Cinar.DBTools.Tools.FieldDef>);
+            this.columnCollectionBindingSource.DataSource = typeof(System.Collections.Generic.List<Cinar.DBTools.Tools.ColumnDef>);
             // 
             // label1
             // 
@@ -175,7 +175,7 @@
             this.Name = "FormCreateTable";
             this.Text = "Create / Alter Table";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fieldCollectionBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.columnCollectionBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,13 +184,13 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.BindingSource fieldCollectionBindingSource;
+        private System.Windows.Forms.BindingSource columnCollectionBindingSource;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtTableName;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewComboBoxColumn colFieldType;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colColumnType;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLength;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDefaultValue;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colIsNullable;

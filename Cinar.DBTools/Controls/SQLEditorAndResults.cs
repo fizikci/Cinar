@@ -23,6 +23,18 @@ namespace Cinar.DBTools.Controls
 
             btnSave.Text = "";
 
+            imageListTabs.Images.Add("Results", FamFamFam.application_split);
+            imageListTabs.Images.Add("Output", FamFamFam.application_xp_terminal);
+            imageListTabs.Images.Add("SQLLog", FamFamFam.clock);
+            imageListTabs.Images.Add("Info", FamFamFam.information);
+            imageListTabs.Images.Add("TableData", FamFamFam.table);
+
+            tpResults.ImageKey = "Results";
+            tpOutput.ImageKey = "Output";
+            tpSQLLog.ImageKey = "SQLLog";
+            tpInfo.ImageKey = "Info";
+            tpTableData.ImageKey = "TableData";
+
             this.filePath = filePath;
             if (!string.IsNullOrEmpty(filePath))
             {
@@ -132,14 +144,14 @@ namespace Cinar.DBTools.Controls
 
         public void ShowInfoText(string txt)
         {
-            tabControl.SelectedTab = tpInfo;
+            tabControl.SelectedTab = tpOutput;
             txtInfo.Text = txt;
         }
 
         public void Navigate(string url)
         {
             webBrowser.Navigate(url);
-            tabControl.SelectedTab = tpTableInfo;
+            tabControl.SelectedTab = tpInfo;
         }
 
         public bool Save()
@@ -207,21 +219,21 @@ namespace Cinar.DBTools.Controls
 
         void gridShowTable_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            string sortField = fExp.Orders.Count == 1 ? fExp.Orders[0].FieldName : "";
+            string sortColumn = fExp.Orders.Count == 1 ? fExp.Orders[0].ColumnName : "";
             bool sortAsc = fExp.Orders.Count == 1 ? fExp.Orders[0].Ascending : true;
             fExp.Orders = new OrderList();
-            string newSortField = gridShowTable.Columns[e.ColumnIndex].Name;
+            string newSortColumn = gridShowTable.Columns[e.ColumnIndex].Name;
 
-            if (newSortField == sortField)
+            if (newSortColumn == sortColumn)
                 sortAsc = !sortAsc;
             else
             {
-                sortField = newSortField;
+                sortColumn = newSortColumn;
                 sortAsc = true;
             }
 
             fExp.Orders = new OrderList();
-            fExp.Orders.Add(new Order() { Ascending = sortAsc, FieldName = sortField });
+            fExp.Orders.Add(new Order() { Ascending = sortAsc, ColumnName = sortColumn });
 
             bindTableData();
         }
@@ -245,7 +257,7 @@ namespace Cinar.DBTools.Controls
                 gridShowTable.Tag = ShowTable;
 
                 if (fExp.Orders.Count > 0)
-                    gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].FieldName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+                    gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].ColumnName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
 
                 btnPrevPage.Enabled = pageNo > 0;
                 btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
@@ -256,7 +268,7 @@ namespace Cinar.DBTools.Controls
             }
 
             if(fExp.Orders.Count>0)
-                gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].FieldName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+                gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].ColumnName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
 
             btnPrevPage.Enabled = pageNo > 1;
             btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
@@ -347,6 +359,13 @@ namespace Cinar.DBTools.Controls
 
         public void OnClose()
         {
+        }
+
+
+        public string Content
+        {
+            get { return SQLEditor.Text; }
+            set { SQLEditor.Text = value; }
         }
     }
 }

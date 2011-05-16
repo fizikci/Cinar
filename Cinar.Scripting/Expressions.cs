@@ -46,8 +46,17 @@ namespace Cinar.Scripting
         {
             if (Name == "write" || Name == "print" || Name == "echo")
             {
-                foreach (Expression expression in fArguments)
-                    context.Output.Write(expression.Calculate(context, this));
+                if (fArguments.Length > 1 && fArguments[0] is StringConstant)
+                {
+                    string s = fArguments[0].Calculate(context, this).ToString();
+                    object[] objParams = new object[fArguments.Length-1];
+                    for(int i=1; i<fArguments.Length; i++)
+                        objParams[i - 1] = fArguments[i].Calculate(context, this).ToString();
+                    context.Output.Write(String.Format(s, objParams));
+                }
+                else
+                    foreach (Expression expression in fArguments)
+                        context.Output.Write(expression.Calculate(context, this));
             }
             else if (Name == "eval" && fArguments.Length>0)
             {

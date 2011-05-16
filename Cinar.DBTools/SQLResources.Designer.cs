@@ -131,12 +131,12 @@ namespace Cinar.DBTools {
         ///$
         ///bool firstUnionSkipped = false;
         ///foreach(var t in db.Tables)
-        ///	foreach(var f in t.Fields){
+        ///	foreach(var f in t.Columns){
         ///		if(f.IsStringType()==false) continue;
         ///		if(firstUnionSkipped) echo(&quot;UNION&quot;);
         ///		firstUnionSkipped = true;
         ///		$
-        ///		select &apos;$=t.Name$&apos; as table_name, &apos;$=f.Name$&apos; as field_nam [rest of string was truncated]&quot;;.
+        ///		select &apos;$=t.Name$&apos; as table_name, &apos;$=f.Name$&apos; as column_n [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SQLCalculateOptimalDataLength {
             get {

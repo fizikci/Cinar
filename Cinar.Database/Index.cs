@@ -16,11 +16,11 @@ namespace Cinar.Database
         public override Table Table { get { return parent.Table; } }
 
         public Index() {
-            this.FieldNames = new List<string>();
+            this.ColumnNames = new List<string>();
         }
     }
 
-    public abstract class BaseIndexConstraint
+    public abstract class BaseIndexConstraint : IMetadata
     {
         public abstract Table Table { get; }
 
@@ -31,30 +31,30 @@ namespace Cinar.Database
         public string Name { get; set; }
 
         /// <summary>
-        /// Index ile ilgili fieldlar
+        /// Index ile ilgili columnlar
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public FieldCollection Fields
+        public ColumnCollection Columns
         {
             get
             {
-                FieldCollection fields = new FieldCollection(Table);
-                foreach (string strField in FieldNames)
-                    fields.Add(Table.Fields[strField]);
-                return fields;
+                ColumnCollection columns = new ColumnCollection(Table);
+                foreach (string strColumn in ColumnNames)
+                    columns.Add(Table.Columns[strColumn]);
+                return columns;
             }
-            //set { fields = value; }
+            //set { columns = value; }
         }
 
         /// <summary>
-        /// Index ile ilgili fieldlar
+        /// Index ile ilgili columnlar
         /// </summary>
         [Category("Base"), ReadOnly(true)]
-        public List<string> FieldNames { get; set; }
+        public List<string> ColumnNames { get; set; }
 
         public override string ToString()
         {
-            return Table.Name + "." + this.Name + " (" + string.Join(", ", this.FieldNames.ToArray()) + ")";
+            return Table.Name + "." + this.Name + " (" + string.Join(", ", this.ColumnNames.ToArray()) + ")";
         }
     }
 

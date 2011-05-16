@@ -73,13 +73,13 @@ namespace Cinar.DBTools.Tools
             foreach (Table tbl in db1.Tables.OrderBy(t => t.Name))
             {
                 sb1.AppendLine(tbl.Name);
-                foreach (Field f in tbl.Fields.OrderBy(f => f.Name))
+                foreach (Column f in tbl.Columns.OrderBy(f => f.Name))
                 {
                     string fStr = "";
                     if (cbName.Checked)
                         fStr += f.Name + " ";
                     if (cbType.Checked)
-                        fStr += f.FieldType + " ";
+                        fStr += f.ColumnType + " ";
                     if (cbLength.Checked && f.IsStringType())
                         fStr += f.Length + " ";
                     if (cbNullable.Checked)

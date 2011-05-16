@@ -86,6 +86,17 @@
     <Compile Include="CinarSQLEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="CodeGen\Controller.cs" />
+    <Compile Include="CodeGen\FileItem.cs" />
+    <Compile Include="CodeGen\FolderItem.cs" />
+    <Compile Include="CodeGen\Item.cs" />
+    <Compile Include="CodeGen\Solution.cs" />
+    <Compile Include="Controls\TemplateEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TemplateEditor.Designer.cs">
+      <DependentUpon>TemplateEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DiagramEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -141,6 +152,9 @@
       <DependentUpon>CinarSQLEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TemplateEditor.resx">
+      <DependentUpon>TemplateEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\DiagramEditor.resx">
       <DependentUpon>DiagramEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -164,6 +178,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SQLResources.resx">
       <SubType>Designer</SubType>
@@ -172,6 +187,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCreateIndex.resx">
       <DependentUpon>FormCreateIndex.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormGenerateTablesFromClasses.resx">
+      <DependentUpon>FormGenerateTablesFromClasses.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormSQLDump.resx">
       <DependentUpon>FormSQLDump.cs</DependentUpon>
@@ -193,6 +212,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCreateTable.resx">
       <DependentUpon>FormCreateTable.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormScriptingTestDetail.resx">
       <DependentUpon>FormScriptingTestDetail.cs</DependentUpon>
@@ -259,6 +279,12 @@
     </Compile>
     <Compile Include="Tools\FormCreateIndex.Designer.cs">
       <DependentUpon>FormCreateIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormGenerateTablesFromClasses.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormGenerateTablesFromClasses.Designer.cs">
+      <DependentUpon>FormGenerateTablesFromClasses.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FormSQLDump.cs">
       <SubType>Form</SubType>

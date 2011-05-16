@@ -42,7 +42,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Forms
             base.OnLoad(e);
             FilterExpression fExp = new FilterExpression()
             {
-                Orders = new OrderList { new Order { FieldName = "Name", Ascending = true } }
+                Orders = new OrderList { new Order { ColumnName = "Name", Ascending = true } }
             };
             grid.DataSource = DMT.Provider.Db.ReadList<Report>(fExp);
             var columns = new List<ColumnDefinition>

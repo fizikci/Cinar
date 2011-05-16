@@ -412,7 +412,7 @@ namespace Cinar.WinUI
             else if (
                 gridView.SortInfo.Count > 0 &&
                 fExp.Orders.Count > 0 &&
-                gridView.SortInfo[0].Column.FieldName == fExp.Orders[0].FieldName &&
+                gridView.SortInfo[0].Column.FieldName == fExp.Orders[0].ColumnName &&
                 fExp.Orders[0].Ascending == (gridView.SortInfo[0].SortOrder == ColumnSortOrder.Ascending)
             )
                 return; //***
@@ -420,13 +420,13 @@ namespace Cinar.WinUI
             fExp.Orders = new OrderList();
             foreach (GridColumnSortInfo item in gridView.SortInfo)
             {
-                Order o = fExp.Orders.Count > 0 ? fExp.Orders.FirstOrDefault(ord => ord.FieldName == item.Column.FieldName) : null;
+                Order o = fExp.Orders.Count > 0 ? fExp.Orders.FirstOrDefault(ord => ord.ColumnName == item.Column.FieldName) : null;
                 if (o == null) { o = new Order(); fExp.Orders.Add(o); }
-                o.FieldName = item.Column.FieldName;
+                o.ColumnName = item.Column.FieldName;
                 o.Ascending = item.SortOrder == ColumnSortOrder.Ascending;
             }
             BindData();
-            gridView.Columns[fExp.Orders[0].FieldName].SortOrder = fExp.Orders[0].Ascending ? ColumnSortOrder.Ascending : ColumnSortOrder.Descending;
+            gridView.Columns[fExp.Orders[0].ColumnName].SortOrder = fExp.Orders[0].Ascending ? ColumnSortOrder.Ascending : ColumnSortOrder.Descending;
 
         }
 

@@ -8,12 +8,15 @@ using System.ComponentModel;
 
 namespace Cinar.DBTools.Controls
 {
-    class MyTabControl : System.Windows.Forms.TabControl
+    class MyTabControl : TabControl
     {
         public MyTabControl()
         {
             this.SetStyle(ControlStyles.UserPaint | ControlStyles.DoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
         }
+
+        Pen penPassive = new Pen(Brushes.Gray, 2);
+        Pen penActive = new Pen(Brushes.Crimson, 2);
 
         protected override void OnPaint(PaintEventArgs pevent)
         {
@@ -26,15 +29,20 @@ namespace Cinar.DBTools.Controls
             pevent.Graphics.DrawImageUnscaled(buffer, 0, 0);
             for (int i = 0; i < this.TabPages.Count; i++)
             {
-                pevent.Graphics.DrawImageUnscaled(FamFamFam.cross, getCloseButtonRect(i).Location);
+                //pevent.Graphics.DrawImageUnscaled(FamFamFam.cross, getCloseButtonRect(i).Location);
+                Rectangle rect = getCloseButtonRect(i);
+                Pen p = this.SelectedIndex == i ? penActive : penPassive;
+                pevent.Graphics.DrawLine(p, rect.Location, rect.Location + rect.Size);
+                pevent.Graphics.DrawLine(p, rect.Location + new Size(rect.Size.Width, 0), rect.Location + new Size(0, rect.Size.Height));
             }
             this.SetStyle(ControlStyles.UserPaint, true);
         }
 
         private Rectangle getCloseButtonRect(int tabPageIndex)
         {
+            int a = 8;
             Rectangle rect = GetTabRect(tabPageIndex);
-            return new Rectangle(new Point(rect.Left + rect.Width - 20, rect.Top + (rect.Height - 16) / 2), new Size(16, 16));
+            return new Rectangle(new Point(rect.Left + rect.Width - a - 7, rect.Top + (rect.Height - a) / 2), new Size(a, a));
         }
 
         protected override void OnResize(EventArgs e)
@@ -46,13 +54,16 @@ namespace Cinar.DBTools.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            if (this.SelectedIndex < 0)
+                return;
+
             Rectangle rect = getCloseButtonRect(this.SelectedIndex);
             if (rect.Contains(e.Location))
             {
                 CancelEventArgs arg = new CancelEventArgs(false);
                 if (CloseTab != null)
                     CloseTab(this, arg);
-                if (!arg.Cancel)
+                if (!arg.Cancel && this.SelectedIndex>-1)
                     TabPages.RemoveAt(this.SelectedIndex);
             }
         }

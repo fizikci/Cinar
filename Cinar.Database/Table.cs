@@ -31,11 +31,11 @@ namespace Cinar.Database
     /// Bir tabloya ait yapı bilgisini modelleyen sınıf.
     /// </summary>
     [Serializable]
-    public class Table
+    public class Table : IMetadata
     {
         public Table()
         {
-            this.Fields = new FieldCollection(this);
+            this.Columns = new ColumnCollection(this);
             this.Indices = new IndexCollection(this);
             this.Constraints = new ConstraintCollection(this);
         }
@@ -62,29 +62,29 @@ namespace Cinar.Database
             get { return this.parent.db; }
         }
 	
-        private FieldCollection fields;
+        private ColumnCollection columns;
         /// <summary>
-        /// Tablonun fieldlarını listeler
+        /// Tablonun columnlarını listeler
         /// </summary>
         [Browsable(false)]
-        public FieldCollection Fields
+        public ColumnCollection Columns
         {
-            get { return fields; }
-            set { fields = value; }
+            get { return columns; }
+            set { columns = value; }
         }
 
         /// <summary>
         /// Bu tablonun (varsa) tek alan üzerinde tanımlanmış Primary Index alanı.
         /// </summary>
-        [XmlIgnore, Description("Primary field if exists"), Category("Extra Info")]
-        public Field PrimaryField
+        [XmlIgnore, Description("Primary column if exists"), Category("Extra Info")]
+        public Column PrimaryColumn
         {
             get
             {
                 if(this.Constraints!=null)
                     foreach(Constraint con in this.Constraints)
-                        if(con is PrimaryKeyConstraint && con.FieldNames.Count==1)
-                            return this.Fields[con.FieldNames[0]];
+                        if(con is PrimaryKeyConstraint && con.ColumnNames.Count==1)
+                            return this.Columns[con.ColumnNames[0]];
                 return null;
             }
         }
@@ -98,12 +98,12 @@ namespace Cinar.Database
             }
         }
 
-        private string stringFieldName;
-        [Description("Name of the string representation field"), Category("Extra Info")]
-        public string StringFieldName
+        private string stringColumnName;
+        [Description("Name of the string representation column"), Category("Extra Info")]
+        public string StringColumnName
         {
-            get { return stringFieldName; }
-            set { stringFieldName = value; }
+            get { return stringColumnName; }
+            set { stringColumnName = value; }
         }
 
         /// <summary>
@@ -111,26 +111,26 @@ namespace Cinar.Database
         /// Human readable birşeyler lazım olduğunda kullanılabilir.
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public Field StringField
+        public Column StringColumn
         {
             get
             {
-                if (String.IsNullOrEmpty(stringFieldName))
+                if (String.IsNullOrEmpty(stringColumnName))
                 {
-                    Field res = this.Fields.Find(DbType.VarChar);
-                    if (res == null) res = this.Fields.Find(DbType.Char);
-                    if (res == null) res = this.Fields.Find(DbType.NVarChar);
-                    if (res == null) res = this.Fields.Find(DbType.NChar);
+                    Column res = this.Columns.Find(DbType.VarChar);
+                    if (res == null) res = this.Columns.Find(DbType.Char);
+                    if (res == null) res = this.Columns.Find(DbType.NVarChar);
+                    if (res == null) res = this.Columns.Find(DbType.NChar);
                     return res;
                 }
                 else
-                    return this.Fields[stringFieldName];
+                    return this.Columns[stringColumnName];
             }
         }
 
         private TableCollection referenceTables;
         /// <summary>
-        /// Bu tablonun fieldlarının bağımlı olduğu tabloların listesi.
+        /// Bu tablonun columnlarının bağımlı olduğu tabloların listesi.
         /// Dolayısıyla bu tabloya ait bir kayıt, bu özellik tarafından listelenen tablolardaki ilişkili kayıtların child'ı olmuş olur.
         /// </summary>
         [XmlIgnore, Browsable(false)]
@@ -150,7 +150,7 @@ namespace Cinar.Database
 
         private TableCollection referencedByTables;
         /// <summary>
-        /// Bu tabloya bağımlı başka tablolardaki fieldlar.
+        /// Bu tabloya bağımlı başka tablolardaki columnlar.
         /// </summary>
         [XmlIgnore, Browsable(false)]
         public TableCollection ReferencedByTables
@@ -236,23 +236,23 @@ namespace Cinar.Database
                     break;
             }
 
-            string fields = delimitL + String.Join(delimitR + ", " + delimitL, this.Fields.ToStringArray()) + delimitR;
-            string sql = String.Format("insert into {2}{0}{3} ({1}) values ({{0}});", this.Name, fields, delimitL, delimitR);
+            string columns = delimitL + String.Join(delimitR + ", " + delimitL, this.Columns.ToStringArray()) + delimitR;
+            string sql = String.Format("insert into {2}{0}{3} ({1}) values ({{0}});", this.Name, columns, delimitL, delimitR);
 
             StringBuilder sb = new StringBuilder();
             DataTable dt = this.Database.GetDataTable("select * from [" + this.Name + "]");
             foreach (DataRow dr in dt.Rows)
             {
-                string[] values = new string[this.Fields.Count];
-                for (int i = 0; i < this.Fields.Count; i++)
+                string[] values = new string[this.Columns.Count];
+                for (int i = 0; i < this.Columns.Count; i++)
                 {
-                    string fieldName = this.Fields[i].Name;
+                    string columnName = this.Columns[i].Name;
                     if (dt.Columns[i].DataType == typeof(bool))
-                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + (dr[this.Fields[i].Name].Equals(true) ? 1 : 0) + "'";
+                        values[i] = dr.IsNull(columnName) ? "null" : "'" + (dr[this.Columns[i].Name].Equals(true) ? 1 : 0) + "'";
                     else if (dt.Columns[i].DataType == typeof(DateTime))
-                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + ((DateTime)dr[this.Fields[i].Name]).ToString("yyyy-MM-dd HH:mm") + "'";
+                        values[i] = dr.IsNull(columnName) ? "null" : "'" + ((DateTime)dr[this.Columns[i].Name]).ToString("yyyy-MM-dd HH:mm") + "'";
                     else
-                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + dr[this.Fields[i].Name].ToString().Replace("'", "''").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
+                        values[i] = dr.IsNull(columnName) ? "null" : "'" + dr[this.Columns[i].Name].ToString().Replace("'", "''").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
                 }
                 sb.AppendFormat(sql, String.Join(", ", values));
                 sb.AppendLine();
@@ -264,19 +264,19 @@ namespace Cinar.Database
         {
             Table newTable = new Table();
             newTable.parent = dbDst.Tables;
-            foreach (Field f in this.Fields)
+            foreach (Column f in this.Columns)
             {
-                Field newField = new Field();
-                //newField.DefaultValue = f.DefaultValue;
-                newField.FieldType = f.FieldType;
-                if (f.FieldType == DbType.Timestamp && dbDst.Provider == DatabaseProvider.SQLServer)
-                    newField.FieldType = DbType.DateTime;
-                newField.IsAutoIncrement = f.IsAutoIncrement;
-                newField.IsNullable = f.IsNullable;
-                newField.Length = f.Length <= 0 ? 1000 : f.Length;
-                newField.Name = f.Name;
-                newField.parent = newTable.Fields;
-                newTable.Fields.Add(newField);
+                Column newColumn = new Column();
+                //newColumn.DefaultValue = f.DefaultValue;
+                newColumn.ColumnType = f.ColumnType;
+                if (f.ColumnType == DbType.Timestamp && dbDst.Provider == DatabaseProvider.SQLServer)
+                    newColumn.ColumnType = DbType.DateTime;
+                newColumn.IsAutoIncrement = f.IsAutoIncrement;
+                newColumn.IsNullable = f.IsNullable;
+                newColumn.Length = f.Length <= 0 ? 1000 : f.Length;
+                newColumn.Name = f.Name;
+                newColumn.parent = newTable.Columns;
+                newTable.Columns.Add(newColumn);
             }
             foreach (Index k in this.Indices)
             {
@@ -284,9 +284,9 @@ namespace Cinar.Database
                 newIndex.Name = k.Name;
                 if (k.Name == "PRIMARY")
                     newIndex.Name = "PK_" + tableName;
-                newIndex.FieldNames = new List<string>();
-                foreach (Field fk in k.Fields)
-                    newIndex.FieldNames.Add(fk.Name);
+                newIndex.ColumnNames = new List<string>();
+                foreach (Column fk in k.Columns)
+                    newIndex.ColumnNames.Add(fk.Name);
                 newTable.Indices.Add(newIndex);
             }
             newTable.IsView = this.IsView;
@@ -295,39 +295,42 @@ namespace Cinar.Database
             return newTable;
         }
 
-        public bool HasAutoIncrementField()
+        public bool HasAutoIncrementColumn()
         {
-            foreach (Field f in this.Fields)
+            foreach (Column f in this.Columns)
                 if (f.IsAutoIncrement)
                     return true;
             return false;
         }
 
-        public Field FindFieldWhichRefersTo(Table tblSrc)
+        public Column FindColumnWhichRefersTo(Table tblSrc)
         {
-            foreach (Field f in this.Fields)
-                if (f.ReferenceField != null && f.ReferenceField.Table == tblSrc)
+            foreach (Column f in this.Columns)
+                if (f.ReferenceColumn != null && f.ReferenceColumn.Table == tblSrc)
                     return f;
             return null;
         }
 
         public void GenerateUIMetadata()
         {
+            if (UIMetadata != null)
+                return;
+
             UIMetadata = new TableUIMetadata();
             UIMetadata.DisplayName = Name;
             UIMetadata.DisplayOrder = parent.IndexOf(this);
             UIMetadata.ShortDisplayName = Name;
             UIMetadata.TableType = this.ReferencedByTables.Count > 0 ? TableTypes.Account : TableTypes.Transaction;
-            UIMetadata.ModuleName = "";
+            UIMetadata.ModuleName = this.Database.Name;
             UIMetadata.ShowInMainMenu = UIMetadata.TableType == TableTypes.Account;
-            UIMetadata.DefaultSortField = this.StringField == null ? null : this.StringField.Name;
+            UIMetadata.DefaultSortColumn = this.StringColumn == null ? null : this.StringColumn.Name;
             UIMetadata.DefaultSortType = SortTypes.Ascending;
             UIMetadata.ShowDetailGrids = "";
             for (int i = 0; i < this.ReferencedByTables.Count; i++)
                 UIMetadata.ShowDetailGrids += this.ReferencedByTables[i].Name + ",";
             UIMetadata.ShowDetailGrids = UIMetadata.ShowDetailGrids.Trim(',');
 
-            foreach (Field f in this.Fields)
+            foreach (Column f in this.Columns)
                 f.GenerateUIMetadata();
         }
 
@@ -375,7 +378,7 @@ namespace Cinar.Database
         public TableTypes TableType { get; set; }
         public string ModuleName { get; set; }
         public bool ShowInMainMenu { get; set; }
-        public string DefaultSortField { get; set; }
+        public string DefaultSortColumn { get; set; }
         public SortTypes DefaultSortType { get; set; }
         public string ShowDetailGrids { get; set; }
     }

@@ -55,13 +55,13 @@ namespace Cinar.DBTools.Tools
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             DBDump dbDump = (DBDump)e.Argument;
-            File.WriteAllText(dbDump.FilePath, "");
+            File.WriteAllText(dbDump.FilePath, "", Encoding.UTF8);
             foreach (var tableName in dbDump.TableList)
             {
                 Table t = dbDump.Database.Tables[tableName];
                 backgroundWorker.ReportProgress(0, "dumping " + t.Name + "...\r\n");
-                File.AppendAllText(dbDump.FilePath, dbDump.Database.GetTableDDL(t, dbDump.Provider));
-                File.AppendAllText(dbDump.FilePath, t.Dump(dbDump.Provider));
+                File.AppendAllText(dbDump.FilePath, dbDump.Database.GetTableDDL(t, dbDump.Provider), Encoding.UTF8);
+                File.AppendAllText(dbDump.FilePath, t.Dump(dbDump.Provider), Encoding.UTF8);
             }
             backgroundWorker.ReportProgress(100, "finished :)\r\n");
         }

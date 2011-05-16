@@ -4,7 +4,7 @@
     {
         public string Name { get; set; }
 
-        public override string GetNameField()
+        public override string GetNameColumn()
         {
             return "Name";
         }

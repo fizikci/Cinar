@@ -19,7 +19,7 @@ namespace Cinar.Entities.Standart
             
         }
 
-        [FieldDetail(IsPrimaryKey=true, IsAutoIncrement=true, IsNotNull=true)]
+        [ColumnDetail(IsPrimaryKey=true, IsAutoIncrement=true, IsNotNull=true)]
         public int Id
         {
             get;
@@ -50,7 +50,7 @@ namespace Cinar.Entities.Standart
             Context.Db.ExecuteNonQuery("delete from " + this.GetType().Name + " where Id={0}", this.Id);
         }
 
-        public virtual string GetNameField()
+        public virtual string GetNameColumn()
         {
             return "Id";
         }

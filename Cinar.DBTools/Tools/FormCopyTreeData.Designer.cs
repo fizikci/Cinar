@@ -32,7 +32,7 @@
             this.cbSrcDb = new System.Windows.Forms.ComboBox();
             this.cbSrcTable = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.cbSrcField = new System.Windows.Forms.ComboBox();
+            this.cbSrcColumn = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
@@ -41,16 +41,16 @@
             this.txtLog = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbSrcStringField = new System.Windows.Forms.ComboBox();
+            this.cbSrcStringColumn = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.cbDstDb = new System.Windows.Forms.ComboBox();
             this.cbDstTable = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.cbDstField = new System.Windows.Forms.ComboBox();
+            this.cbDstColumn = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cbDstStringField = new System.Windows.Forms.ComboBox();
+            this.cbDstStringColumn = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.tvSource = new System.Windows.Forms.TreeView();
             this.tvDest = new System.Windows.Forms.TreeView();
@@ -101,16 +101,16 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "Table";
             // 
-            // cbSrcField
+            // cbSrcColumn
             // 
-            this.cbSrcField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSrcField.FormattingEnabled = true;
-            this.cbSrcField.Location = new System.Drawing.Point(126, 83);
-            this.cbSrcField.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbSrcField.Name = "cbSrcField";
-            this.cbSrcField.Size = new System.Drawing.Size(163, 23);
-            this.cbSrcField.TabIndex = 5;
-            this.cbSrcField.SelectedIndexChanged += new System.EventHandler(this.cbSrcField_SelectedIndexChanged);
+            this.cbSrcColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSrcColumn.FormattingEnabled = true;
+            this.cbSrcColumn.Location = new System.Drawing.Point(126, 83);
+            this.cbSrcColumn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbSrcColumn.Name = "cbSrcColumn";
+            this.cbSrcColumn.Size = new System.Drawing.Size(163, 23);
+            this.cbSrcColumn.TabIndex = 5;
+            this.cbSrcColumn.SelectedIndexChanged += new System.EventHandler(this.cbSrcColumn_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -119,7 +119,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(79, 15);
             this.label4.TabIndex = 4;
-            this.label4.Text = "ParentId Field";
+            this.label4.Text = "ParentId Column";
             // 
             // btnStart
             // 
@@ -189,9 +189,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cbSrcStringField);
+            this.groupBox1.Controls.Add(this.cbSrcStringColumn);
             this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.cbSrcField);
+            this.groupBox1.Controls.Add(this.cbSrcColumn);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.cbSrcTable);
             this.groupBox1.Controls.Add(this.cbSrcDb);
@@ -206,16 +206,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Source";
             // 
-            // cbSrcStringField
+            // cbSrcStringColumn
             // 
-            this.cbSrcStringField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSrcStringField.FormattingEnabled = true;
-            this.cbSrcStringField.Location = new System.Drawing.Point(126, 116);
-            this.cbSrcStringField.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbSrcStringField.Name = "cbSrcStringField";
-            this.cbSrcStringField.Size = new System.Drawing.Size(163, 23);
-            this.cbSrcStringField.TabIndex = 7;
-            this.cbSrcStringField.SelectedIndexChanged += new System.EventHandler(this.cbSrcField_SelectedIndexChanged);
+            this.cbSrcStringColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSrcStringColumn.FormattingEnabled = true;
+            this.cbSrcStringColumn.Location = new System.Drawing.Point(126, 116);
+            this.cbSrcStringColumn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbSrcStringColumn.Name = "cbSrcStringColumn";
+            this.cbSrcStringColumn.Size = new System.Drawing.Size(163, 23);
+            this.cbSrcStringColumn.TabIndex = 7;
+            this.cbSrcStringColumn.SelectedIndexChanged += new System.EventHandler(this.cbSrcColumn_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -224,7 +224,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(66, 15);
             this.label8.TabIndex = 6;
-            this.label8.Text = "String Field";
+            this.label8.Text = "String Column";
             // 
             // label6
             // 
@@ -273,24 +273,24 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 15);
             this.label2.TabIndex = 4;
-            this.label2.Text = "ParentId Field";
+            this.label2.Text = "ParentId Column";
             // 
-            // cbDstField
+            // cbDstColumn
             // 
-            this.cbDstField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDstField.FormattingEnabled = true;
-            this.cbDstField.Location = new System.Drawing.Point(126, 87);
-            this.cbDstField.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbDstField.Name = "cbDstField";
-            this.cbDstField.Size = new System.Drawing.Size(163, 23);
-            this.cbDstField.TabIndex = 5;
-            this.cbDstField.SelectedIndexChanged += new System.EventHandler(this.cbDstField_SelectedIndexChanged);
+            this.cbDstColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDstColumn.FormattingEnabled = true;
+            this.cbDstColumn.Location = new System.Drawing.Point(126, 87);
+            this.cbDstColumn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbDstColumn.Name = "cbDstColumn";
+            this.cbDstColumn.Size = new System.Drawing.Size(163, 23);
+            this.cbDstColumn.TabIndex = 5;
+            this.cbDstColumn.SelectedIndexChanged += new System.EventHandler(this.cbDstColumn_SelectedIndexChanged);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cbDstStringField);
+            this.groupBox2.Controls.Add(this.cbDstStringColumn);
             this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.cbDstField);
+            this.groupBox2.Controls.Add(this.cbDstColumn);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.cbDstTable);
             this.groupBox2.Controls.Add(this.cbDstDb);
@@ -305,16 +305,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Destination";
             // 
-            // cbDstStringField
+            // cbDstStringColumn
             // 
-            this.cbDstStringField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbDstStringField.FormattingEnabled = true;
-            this.cbDstStringField.Location = new System.Drawing.Point(126, 117);
-            this.cbDstStringField.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbDstStringField.Name = "cbDstStringField";
-            this.cbDstStringField.Size = new System.Drawing.Size(163, 23);
-            this.cbDstStringField.TabIndex = 7;
-            this.cbDstStringField.SelectedIndexChanged += new System.EventHandler(this.cbDstField_SelectedIndexChanged);
+            this.cbDstStringColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbDstStringColumn.FormattingEnabled = true;
+            this.cbDstStringColumn.Location = new System.Drawing.Point(126, 117);
+            this.cbDstStringColumn.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbDstStringColumn.Name = "cbDstStringColumn";
+            this.cbDstStringColumn.Size = new System.Drawing.Size(163, 23);
+            this.cbDstStringColumn.TabIndex = 7;
+            this.cbDstStringColumn.SelectedIndexChanged += new System.EventHandler(this.cbDstColumn_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -323,7 +323,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(66, 15);
             this.label9.TabIndex = 6;
-            this.label9.Text = "String Field";
+            this.label9.Text = "String Column";
             // 
             // tvSource
             // 
@@ -399,7 +399,7 @@
         private System.Windows.Forms.ComboBox cbSrcDb;
         private System.Windows.Forms.ComboBox cbSrcTable;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox cbSrcField;
+        private System.Windows.Forms.ComboBox cbSrcColumn;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Label label7;
@@ -413,11 +413,11 @@
         private System.Windows.Forms.ComboBox cbDstDb;
         private System.Windows.Forms.ComboBox cbDstTable;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cbDstField;
+        private System.Windows.Forms.ComboBox cbDstColumn;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ComboBox cbSrcStringField;
+        private System.Windows.Forms.ComboBox cbSrcStringColumn;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cbDstStringField;
+        private System.Windows.Forms.ComboBox cbDstStringColumn;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TreeView tvSource;
         private System.Windows.Forms.TreeView tvDest;

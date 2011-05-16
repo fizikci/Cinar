@@ -14,7 +14,7 @@ namespace Cinar.DBTools.Tools
     {
         public static int Def_TableWidth = 150;
         public static int Def_TitleHeight = 20;
-        public static int Def_FieldHeight = 20;
+        public static int Def_ColumnHeight = 20;
         public static ImageList ImageList;
         [XmlIgnore]
         public ConnectionSettings conn;
@@ -26,13 +26,13 @@ namespace Cinar.DBTools.Tools
                 selectedObject = value;
                 Tables.ForEach(tv => { tv.Selected = tv == selectedObject; });
                 ConnectionLines.ForEach(cl => { cl.Selected = cl == selectedObject; });
-                if (selectedObject is Field)
+                if (selectedObject is Column)
                 {
-                    Field f = selectedObject as Field;
-                    Tables.ForEach(tv => { if (tv.TableName == f.Table.Name) tv.SelectedField = f.Name; else tv.SelectedField = ""; });
+                    Column f = selectedObject as Column;
+                    Tables.ForEach(tv => { if (tv.TableName == f.Table.Name) tv.SelectedColumn = f.Name; else tv.SelectedColumn = ""; });
                 }
                 else
-                    Tables.ForEach(tv => { tv.SelectedField = ""; });
+                    Tables.ForEach(tv => { tv.SelectedColumn = ""; });
             }
         }
         private object selectedObject;
@@ -96,7 +96,7 @@ namespace Cinar.DBTools.Tools
                     return tv;
             return null;
         }
-        public Field HitTestField(Point point)
+        public Column HitTestColumn(Point point)
         {
             foreach (TableView tv in this.Tables)
                 if (tv.Rectangle.Contains(point))
@@ -106,9 +106,9 @@ namespace Cinar.DBTools.Tools
 
                     if (point.Y - tv.Position.Y > Diagram.Def_TitleHeight)
                     {
-                        int i = (point.Y - tv.Position.Y - Diagram.Def_TitleHeight) / Diagram.Def_FieldHeight;
-                        if (i < table.Fields.Count)
-                            return table.Fields[i];
+                        int i = (point.Y - tv.Position.Y - Diagram.Def_TitleHeight) / Diagram.Def_ColumnHeight;
+                        if (i < table.Columns.Count)
+                            return table.Columns[i];
                     }
                 }
             return null;
@@ -151,15 +151,15 @@ namespace Cinar.DBTools.Tools
         public Size Size { 
             get 
             {
-                int fieldCount = 0;
+                int columnCount = 0;
                 if (Diagram.conn.Database.Tables[TableName] != null)
-                    fieldCount = Diagram.conn.Database.Tables[TableName].Fields.Count;
-                return new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + fieldCount * Diagram.Def_FieldHeight); 
+                    columnCount = Diagram.conn.Database.Tables[TableName].Columns.Count;
+                return new Size(Diagram.Def_TableWidth, Diagram.Def_TitleHeight + columnCount * Diagram.Def_ColumnHeight); 
             } 
         }
         internal bool Selected;
         public bool ShowFull;
-        public string SelectedField;
+        public string SelectedColumn;
         public bool Modified = false;
 
         [XmlIgnore]
@@ -204,17 +204,17 @@ namespace Cinar.DBTools.Tools
 
             if (ShowFull)
             {
-                StringFormat sf = GetFieldStringFormat();
-                for (int i = 0; i < table.Fields.Count; i++)
+                StringFormat sf = GetColumnStringFormat();
+                for (int i = 0; i < table.Columns.Count; i++)
                 {
-                    Field field = table.Fields[i];
-                    Rectangle rectField = new Rectangle(Position + new Size(1, 1 + Diagram.Def_TitleHeight + Diagram.Def_FieldHeight * i), new Size(Size.Width - 2, Diagram.Def_FieldHeight));
-                    if (field.Name == SelectedField)
-                        graphics.FillRectangle(SystemBrushes.Highlight, rectField);
-                    rectField.Size -= new Size(20, 0);
-                    rectField.Location += new Size(20, 0);
-                    graphics.DrawImageUnscaled(Diagram.ImageList.Images[field.IsPrimaryKey ? "key" : "field"], rectField.Location + new Size(-18, 2));
-                    graphics.DrawString(field.Name, font, field.Name == SelectedField ? SystemBrushes.HighlightText : SystemBrushes.ControlText, rectField.ToRectangleF(), sf);
+                    Column column = table.Columns[i];
+                    Rectangle rectColumn = new Rectangle(Position + new Size(1, 1 + Diagram.Def_TitleHeight + Diagram.Def_ColumnHeight * i), new Size(Size.Width - 2, Diagram.Def_ColumnHeight));
+                    if (column.Name == SelectedColumn)
+                        graphics.FillRectangle(SystemBrushes.Highlight, rectColumn);
+                    rectColumn.Size -= new Size(20, 0);
+                    rectColumn.Location += new Size(20, 0);
+                    graphics.DrawImageUnscaled(Diagram.ImageList.Images[column.IsPrimaryKey ? "key" : "column"], rectColumn.Location + new Size(-18, 2));
+                    graphics.DrawString(column.Name, font, column.Name == SelectedColumn ? SystemBrushes.HighlightText : SystemBrushes.ControlText, rectColumn.ToRectangleF(), sf);
                 }
             }
 
@@ -231,7 +231,7 @@ namespace Cinar.DBTools.Tools
             };
         }
 
-        private StringFormat GetFieldStringFormat()
+        private StringFormat GetColumnStringFormat()
         {
             return new StringFormat
             {

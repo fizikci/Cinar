@@ -35,7 +35,7 @@
             this.menuAddTables = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCreateTable = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemove = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSetAsDisplayField = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSetAsDisplayColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetAsPrimaryKey = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu.SuspendLayout();
@@ -48,7 +48,7 @@
             this.menuAddTables,
             this.menuCreateTable,
             this.menuRemove,
-            this.menuSetAsDisplayField,
+            this.menuSetAsDisplayColumn,
             this.menuSetAsPrimaryKey});
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.Size = new System.Drawing.Size(205, 158);
@@ -77,11 +77,11 @@
             this.menuRemove.Size = new System.Drawing.Size(204, 22);
             this.menuRemove.Text = "Remove from Diagram";
             // 
-            // menuSetAsDisplayField
+            // menuSetAsDisplayColumn
             // 
-            this.menuSetAsDisplayField.Name = "menuSetAsDisplayField";
-            this.menuSetAsDisplayField.Size = new System.Drawing.Size(204, 22);
-            this.menuSetAsDisplayField.Text = "Set As Display Field";
+            this.menuSetAsDisplayColumn.Name = "menuSetAsDisplayColumn";
+            this.menuSetAsDisplayColumn.Size = new System.Drawing.Size(204, 22);
+            this.menuSetAsDisplayColumn.Text = "Set As Display Column";
             // 
             // menuSetAsPrimaryKey
             // 
@@ -96,7 +96,7 @@
             this.imageListTree.Images.SetKeyName(0, "Host");
             this.imageListTree.Images.SetKeyName(1, "Database");
             this.imageListTree.Images.SetKeyName(2, "Table");
-            this.imageListTree.Images.SetKeyName(3, "Field");
+            this.imageListTree.Images.SetKeyName(3, "Column");
             this.imageListTree.Images.SetKeyName(4, "Key");
             // 
             // DiagramEditor
@@ -120,7 +120,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuAddTables;
         private System.Windows.Forms.ToolStripMenuItem menuCreateTable;
         private System.Windows.Forms.ToolStripMenuItem menuRemove;
-        private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayField;
+        private System.Windows.Forms.ToolStripMenuItem menuSetAsDisplayColumn;
         private System.Windows.Forms.ToolStripMenuItem menuSetAsPrimaryKey;
         private System.Windows.Forms.ImageList imageListTree;
     }

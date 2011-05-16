@@ -94,16 +94,16 @@ namespace Cinar.Database.Providers
                 DataTable dtColumns = db.GetDataTable(GetSQLColumnList(tbl.Name));
                 foreach (DataRow drColumn in dtColumns.Rows)
                 {
-                    Field f = new Field();
+                    Column f = new Column();
                     f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
-                    f.FieldTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
-                    f.FieldType = StringToDbType(f.FieldTypeOriginal);
+                    f.ColumnTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
+                    f.ColumnType = StringToDbType(f.ColumnTypeOriginal);
                     f.Length = drColumn.IsNull("CHARACTER_MAXiMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXiMUM_LENGTH"]);
                     f.IsNullable = drColumn["iS_NULLABLE"].ToString() != "NO";
                     f.Name = drColumn["COLUMN_NAME"].ToString();
                     f.IsAutoIncrement = !string.IsNullOrEmpty(drColumn["iS_AUTO_iNCREMENT"].ToString());
 
-                    tbl.Fields.Add(f);
+                    tbl.Columns.Add(f);
                 }
             }
 
@@ -116,7 +116,7 @@ namespace Cinar.Database.Providers
                 Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
                 if (con != null)
                 {
-                    con.FieldNames.Add(drCon["ColumnName"].ToString());
+                    con.ColumnNames.Add(drCon["ColumnName"].ToString());
                     continue;
                 }
 
@@ -137,7 +137,7 @@ namespace Cinar.Database.Providers
                         break;
                 }
                 con.Name = drCon["Name"].ToString();
-                con.FieldNames.Add(drCon["ColumnName"].ToString());
+                con.ColumnNames.Add(drCon["ColumnName"].ToString());
 
                 db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
             }
@@ -180,9 +180,9 @@ namespace Cinar.Database.Providers
                         Index index = new Index();
                         index.Name = drKey["index_name"].ToString();
 
-                        index.FieldNames = new List<string>();
-                        foreach (string fieldName in drKey["index_keys"].ToString().Split(','))
-                            index.FieldNames.Add(fieldName.Trim().Replace("(-)", ""));
+                        index.ColumnNames = new List<string>();
+                        foreach (string columnName in drKey["index_keys"].ToString().Split(','))
+                            index.ColumnNames.Add(columnName.Trim().Replace("(-)", ""));
 
                         tbl.Indices.Add(index);
                     }
@@ -280,7 +280,7 @@ namespace Cinar.Database.Providers
             {DbType.Xml,            "XML"}
         };
 
-        public string[] GetFieldTypes()
+        public string[] GetColumnTypes()
         {
             return DEFStringToDbType.Keys.ToArray();
         }
@@ -331,33 +331,36 @@ namespace Cinar.Database.Providers
             return new NpgsqlParameter(parameterName, value);
         }
 
-        public string GetFieldDDL(Field f)
+        public string GetColumnDDL(Column f)
         {
-            string fieldDDL = "\"" + f.Name + "\" ";
+            string columnDDL = "\"" + f.Name + "\" ";
             //if (!f.IsAutoIncrement)
-                fieldDDL += DbTypeToString(f.FieldType);
-            if (f.FieldType == DbType.Char || f.FieldType == DbType.VarChar || f.FieldType == DbType.NChar || f.FieldType == DbType.NVarChar)
-                fieldDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
+                columnDDL += DbTypeToString(f.ColumnType);
+            if (f.ColumnType == DbType.Char || f.ColumnType == DbType.VarChar || f.ColumnType == DbType.NChar || f.ColumnType == DbType.NVarChar)
+                columnDDL += "(" + (f.Length == 0 ? 50 : f.Length) + ")";
             //if (f.IsAutoIncrement)
-            //    fieldDDL += " SERIAL";
+            //    columnDDL += " SERIAL";
             if (!f.IsNullable)
-                fieldDDL += " NOT NULL";
+                columnDDL += " NOT NULL";
             //if (f.IsPrimaryKey)
-            //    fieldDDL += " PRIMARY KEY";
+            //    columnDDL += " PRIMARY KEY";
             if (!string.IsNullOrEmpty(f.DefaultValue) /*&& !f.DefaultValue.StartsWith("nextval(")*/)
-                fieldDDL += " DEFAULT " + getDefaultValue(f);
-            //if (f.ReferenceField != null)
-            //    fieldDDL += " REFERENCES \"" + f.ReferenceField.Table.Name + "\"(\"" + f.ReferenceField.Name + "\")";
-            return fieldDDL;
+                columnDDL += " DEFAULT " + getDefaultValue(f);
+            //if (f.ReferenceColumn != null)
+            //    columnDDL += " REFERENCES \"" + f.ReferenceColumn.Table.Name + "\"(\"" + f.ReferenceColumn.Name + "\")";
+            return columnDDL;
         }
         public string GetTableDDL(Table table)
         {
+            if (table.Columns.Count == 0)
+                return "";
+
             int len = ("," + Environment.NewLine).Length;
 
-            StringBuilder sbFields = new StringBuilder();
-            foreach (Field f in table.Fields)
-                sbFields.Append("\t" + GetFieldDDL(f) + "," + Environment.NewLine);
-            sbFields = sbFields.Remove(sbFields.Length - len, len);
+            StringBuilder sbColumns = new StringBuilder();
+            foreach (Column f in table.Columns)
+                sbColumns.Append("\t" + GetColumnDDL(f) + "," + Environment.NewLine);
+            sbColumns = sbColumns.Remove(sbColumns.Length - len, len);
 
             StringBuilder sbCons = new StringBuilder();
             foreach (Constraint c in table.Constraints)
@@ -369,7 +372,7 @@ namespace Cinar.Database.Providers
             return String.Format("CREATE {0} \"{1}\"(\r\n{2});\r\n{3}" + Environment.NewLine,
                 (table.IsView ? "VIEW" : "TABLE"),
                 table.Name,
-                sbFields,
+                sbColumns,
                 sbCons);
         }
 
@@ -417,27 +420,27 @@ namespace Cinar.Database.Providers
                         ORDER BY ORDINAL_POSITION", tableName);
         }
 
-        public string GetSQLColumnAdd(string toTable, Field column)
+        public string GetSQLColumnAdd(string toTable, Column column)
         {
-            return string.Format("ALTER TABLE \"{0}\" ADD {1}", toTable, GetFieldDDL(column));
+            return string.Format("ALTER TABLE \"{0}\" ADD {1}", toTable, GetColumnDDL(column));
         }
 
-        public string GetSQLColumnRemove(Field column)
+        public string GetSQLColumnRemove(Column column)
         {
             return string.Format("ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"", column.Table.Name, column.Name);
         }
 
-        public string GetSQLColumnRename(string oldColumnName, Field column)
+        public string GetSQLColumnRename(string oldColumnName, Column column)
         {
             return string.Format("ALTER TABLE \"{0}\" RENAME COLUMN \"{1}\" TO \"{2}\"", column.Table.Name, oldColumnName, column.Name);
         }
 
-        public string GetSQLColumnChangeDataType(Field column)
+        public string GetSQLColumnChangeDataType(Column column)
         {
-            return string.Format("ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" TYPE {2}{3}", column.Table.Name, column.Name, column.FieldTypeOriginal, column.SimpleFieldType == SimpleDbType.String ? "(" + column.Length + ")" : "");
+            return string.Format("ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" TYPE {2}{3}", column.Table.Name, column.Name, column.ColumnTypeOriginal, column.SimpleColumnType == SimpleDbType.String ? "(" + column.Length + ")" : "");
         }
 
-        public string GetSQLColumnChangeDefault(Field column)
+        public string GetSQLColumnChangeDefault(Column column)
         {
             return string.Format("ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" SET DEFAULT {2}", column.Table.Name, column.Name, column.DefaultValue);
         }
@@ -483,17 +486,17 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
 
         public string GetSQLConstraintAdd(UniqueConstraint constraint)
         {
-            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" UNIQUE (\"{2}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.FieldNames.ToArray()));
+            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" UNIQUE (\"{2}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.ColumnNames.ToArray()));
         }
 
         public string GetSQLConstraintAdd(ForeignKeyConstraint constraint)
         {
-            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES \"{3}\"(\"{4}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.FieldNames.ToArray()), constraint.RefTableName, string.Join("\",\"", db.Tables[constraint.RefTableName].Constraints[constraint.RefConstraintName].FieldNames.ToArray()));
+            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES \"{3}\"(\"{4}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.ColumnNames.ToArray()), constraint.RefTableName, string.Join("\",\"", db.Tables[constraint.RefTableName].Constraints[constraint.RefConstraintName].ColumnNames.ToArray()));
         }
 
         public string GetSQLConstraintAdd(PrimaryKeyConstraint constraint)
         {
-            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" PRIMARY KEY (\"{2}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.FieldNames.ToArray()));
+            return string.Format("ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" PRIMARY KEY (\"{2}\")", constraint.Table.Name, constraint.Name, string.Join("\",\"", constraint.ColumnNames.ToArray()));
         }
 
         public string GetSQLConstraintRemove(PrimaryKeyConstraint constraint)
@@ -501,17 +504,17 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
             return GetSQLConstraintRemove(constraint);
         }
 
-        public string GetSQLColumnAddNotNull(Field column)
+        public string GetSQLColumnAddNotNull(Column column)
         {
             return string.Format("ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" SET NOT NULL", column.Table.Name, column.Name);
         }
 
-        public string GetSQLColumnRemoveNotNull(Field column)
+        public string GetSQLColumnRemoveNotNull(Column column)
         {
             return string.Format("ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" DROP NOT NULL", column.Table.Name, column.Name);
         }
 
-        public string GetSQLColumnSetAutoIncrement(Field column)
+        public string GetSQLColumnSetAutoIncrement(Column column)
         {
             return string.Format(@"DECLARE
     seq_name VARCHAR(100);
@@ -526,7 +529,7 @@ BEGIN
 END;", column.Table.Name, column.Name);
         }
 
-        public string GetSQLColumnRemoveAutoIncrement(Field column)
+        public string GetSQLColumnRemoveAutoIncrement(Column column)
         {
             return string.Format(@"DECLARE
     seq_name VARCHAR(100);
@@ -541,7 +544,7 @@ END;", column.Table.Name, column.Name);
 
         public string GetSQLIndexAdd(Index index)
         {
-            return string.Format("CREATE INDEX \"{0}\" ON \"{1}\" (\"{2}\")", index.Name, index.Table.Name, string.Join("\",\"", index.FieldNames.ToArray()));
+            return string.Format("CREATE INDEX \"{0}\" ON \"{1}\" (\"{2}\")", index.Name, index.Table.Name, string.Join("\",\"", index.ColumnNames.ToArray()));
         }
 
         public string GetSQLIndexRemove(Index index)
