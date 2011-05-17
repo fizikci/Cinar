@@ -110,7 +110,6 @@ namespace Cinar.Database.Providers
             // constraints
             // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
             DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
-            ConstraintCollection conCol = new ConstraintCollection();
             foreach (DataRow drCon in dtCons.Rows)
             {
                 Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
