@@ -107,39 +107,72 @@ namespace Cinar.Database.Providers
                 }
             }
 
-            // constraints
-            // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
-            DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
-            ConstraintCollection conCol = new ConstraintCollection();
-            foreach (DataRow drCon in dtCons.Rows)
+            try
             {
-                Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
-                if (con != null)
+                // constraints
+                // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
+                DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
+                foreach (DataRow drCon in dtCons.Rows)
                 {
+                    Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
+                    if (con != null)
+                    {
+                        con.ColumnNames.Add(drCon["ColumnName"].ToString());
+                        continue;
+                    }
+
+                    switch (drCon["Type"].ToString())
+                    {
+                        case "FOREIGN KEY":
+                            con = new ForeignKeyConstraint();
+                            (con as ForeignKeyConstraint).RefConstraintName = drCon["RefConstraintName"].ToString();
+                            (con as ForeignKeyConstraint).RefTableName = drCon["RefTableName"].ToString();
+                            (con as ForeignKeyConstraint).DeleteRule = drCon["DeleteRule"].ToString();
+                            (con as ForeignKeyConstraint).UpdateRule = drCon["UpdateRule"].ToString();
+                            break;
+                        case "PRIMARY KEY":
+                            con = new PrimaryKeyConstraint();
+                            break;
+                        case "UNIQUE":
+                            con = new UniqueConstraint();
+                            break;
+                    }
+                    con.Name = drCon["Name"].ToString();
                     con.ColumnNames.Add(drCon["ColumnName"].ToString());
-                    continue;
-                }
 
-                switch (drCon["Type"].ToString())
+                    db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
+                }
+            }
+            catch (Exception ex) // demek ki MySQL versiyonu < 5.1.16
+            {
+                // foreign keys
+                string sql = @" SELECT
+	                                TBL1.CONSTRAINT_NAME,
+	                                TBL2.TABLE_NAME as TABLE_NAME_1,
+	                                TBL2.COLUMN_NAME as COLUMN_NAME_1,
+	                                TBL2.REFERENCED_TABLE_NAME as TABLE_NAME_2,
+	                                TBL2.REFERENCED_COLUMN_NAME as COLUMN_NAME_2
+                                FROM
+	                                (select *  from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA='{0}' AND CONSTRAINT_TYPE='FOREIGN KEY') AS TBL1,
+	                                (select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA='{0}') AS TBL2
+                                WHERE
+	                                TBL2.CONSTRAINT_NAME = TBL1.CONSTRAINT_NAME";
+                DataTable dtForeigns = db.GetDataTable(String.Format(sql, connection.Database));
+                foreach (DataRow drForeign in dtForeigns.Rows)
                 {
-                    case "FOREIGN KEY":
-                        con = new ForeignKeyConstraint();
-                        (con as ForeignKeyConstraint).RefConstraintName = drCon["RefConstraintName"].ToString();
-                        (con as ForeignKeyConstraint).RefTableName = drCon["RefTableName"].ToString();
-                        (con as ForeignKeyConstraint).DeleteRule = drCon["DeleteRule"].ToString();
-                        (con as ForeignKeyConstraint).UpdateRule = drCon["UpdateRule"].ToString();
-                        break;
-                    case "PRIMARY KEY":
-                        con = new PrimaryKeyConstraint();
-                        break;
-                    case "UNIQUE":
-                        con = new UniqueConstraint();
-                        break;
+                    try
+                    {
+                        ForeignKeyConstraint con = new ForeignKeyConstraint();
+                        con.Name = drForeign["CONSTRAINT_NAME"].ToString();
+                        con.RefConstraintName = db.Tables[drForeign["TABLE_NAME_1"].ToString()].Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint).Name;
+                        con.RefTableName = drForeign["TABLE_NAME_2"].ToString();
+                        //con.DeleteRule = drForeign["DeleteRule"].ToString();
+                        //con.UpdateRule = drForeign["UpdateRule"].ToString();
+                        con.ColumnNames.Add(drForeign["COLUMN_NAME_1"].ToString());
+                        db.Tables[drForeign["TABLE_NAME_1"].ToString()].Constraints.Add(con);
+                    }
+                    catch { }
                 }
-                con.Name = drCon["Name"].ToString();
-                con.ColumnNames.Add(drCon["ColumnName"].ToString());
-
-                db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
             }
 
             // indices

@@ -1,5 +1,5 @@
 Sık Sorulan Sorular
-admin|2011/05/17 11:43:28
+admin|2011/05/17 00:41:00
 ##PAGE##
 ====Zaten bir SQL client kullanıyorum, Çınar'ı kullanmam için tek bir sebep söyleyin====
 * Çok sebep söyleyebiliriz
@@ -13,7 +13,8 @@ admin|2011/05/17 11:43:28
 * Size de kazandırmasını istiyoruz.
 
 ====Çok şey söylediniz, tek bir sebep söyleyin====
-* Metadata ile çalışmak desek... ya da generic programlama?
+* Metadata ile çalışmak desek...
+* Ya da generic programlama.
 * İşte bu, Çınar ile çalışmanız için yeterli tek sebep.
 
 ====Metadata nedir?====
@@ -23,7 +24,7 @@ admin|2011/05/17 11:43:28
 * Bir kere bu şekilde programlamaya başladınız mı, veritabanı programcılığının aslında ne kadar kolay ve zevkli olduğunu göreceksiniz.
 
 ====Hmm, peki o zaman Çınar kütüphanesinin kaynak kodlarını nasıl indirebilirim?====
-* Öncelikle bilgisayarınıza [http://tortoisesvn.net/downloads.html|Tortoise SVN Client] programını kurun
+* Öncelikle bilgisayarınıza [http://www.google.com/?q=Tortoise SVN Client|Tortoise SVN Client] programını kurun
 * Cinar adında bir klasör oluşturun
 * Bu klasörün üzerine sağ tıklayıp "SVN Checkout" menüsünü seçin
 * SVN adresini girmeniz gereken yere [Download] sayfasındaki SVN adresimizi kopyalayın
