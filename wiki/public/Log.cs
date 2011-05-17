@@ -710,3 +710,10 @@ G|2011/05/17 01:31:12|Page Cinar Scripting created|SYSTEM
 G|2011/05/17 01:31:12|Page update requested for Cinar Scripting|admin
 G|2011/05/17 01:31:12|Page Content updated for Cinar Scripting|SYSTEM
 G|2011/05/17 01:31:12|Page Cinar Scripting rebound|SYSTEM
+G|2011/05/17 11:28:49|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/05/17 11:28:49|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/05/17 11:28:49|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/05/17 11:28:49|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/05/17 11:28:49|ScrewTurn Wiki is ready|SYSTEM
+G|2011/05/17 11:31:21|User admin logged in|SYSTEM
+G|2011/05/17 11:32:16|Wiki Configuration change requested|admin
