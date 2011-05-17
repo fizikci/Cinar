@@ -108,6 +108,8 @@ Other:
 21. Eski code generator uçurulsun.
 22. SQL result üzerinden tablo seçerek row update yapılabilmeli
 23. [OK] Schema problems ekranı daha user-friendly olsun
+24. Connection silindiğinde dropdown listeden de silmek lazım
+25. Connectionları sildikten sonra programı kapatırken kaydedeyim mi diye sormadı!
 
 
 

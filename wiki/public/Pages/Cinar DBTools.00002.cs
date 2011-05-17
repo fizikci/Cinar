@@ -1,10 +1,9 @@
 Çınar Database Tools
-admin|2011/05/16 21:02:37
+admin|2011/05/16 21:00:59
 ##PAGE##
-==Tanım==
 Çınar Database Tools, veritabanı programcısının hayatını kolaylaştırmak için geliştirilmiş bir yazılımdır.
 
-==Özellikler==
+Aşağıdaki özelliklere sahiptir:
 * Farklı veritabanı ürünleri ile aynı arayüzden çalışır: Microsoft SQL, MySQL, PostgreSQL 
 * Table, view, constraint, index gibi veritabanı nesnelerini listeler, değiştirmenize ve yeni nesneler eklemenize yardımcı olur.
 * Verilerinizi listeleme, güncelleme, silme işlemlerinizi kolaylaştırır.
@@ -22,5 +21,5 @@ admin|2011/05/16 21:02:37
 * Kod üretmek için projeler oluşturabilirsiniz.
 * Visual Studio kullanıcıları için çok tanıdık bir arayüze sahiptir.
 
-==Kullanım Örnekleri==
+
 <nowiki>(<a href="javascript:showScreenCast('Çınar Database Tools - Giriş ', 'http://www.youtube.com/embed/5EoGyPhBSUM')">İzle</a>)</nowiki>
