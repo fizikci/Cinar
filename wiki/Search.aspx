@@ -13,22 +13,22 @@
 	// -->
 	</script>
 
-	<h1 class="pagetitlesystem"><asp:Literal ID="lblTitle" runat="server" Text="Search Engine" EnableViewState="False" meta:resourcekey="lblTitleResource1" /></h1>
-	<p><asp:Literal ID="lblInstructions" runat="server" Text="Here you can search through the pages of this Namespace, their attachments and the files uploaded to the system.<br /><b>Note</b>: the results will only display the items you have permissions to read." EnableViewState="False" meta:resourcekey="lblInstructionsResource1" /></p>
+	<h1 class="pagetitlesystem"><asp:Literal ID="lblTitle" runat="server" Text="Arama" EnableViewState="False" meta:resourcekey="lblTitleResource1" /></h1>
+	<p><asp:Literal ID="lblInstructions" runat="server" Text="Burada sitedeki tüm dökümanlar üzerinde arama yapabilirsiniz.<br /><b>Þu daha çok iþe yarayabilir</b>: <a href='http://www.google.com?q=site:cinarteknoloji.com'>http://www.google.com?q=site:cinarteknoloji.com</a>." EnableViewState="False" meta:resourcekey="lblInstructionsResource1" /></p>
 	
 	<div id="SearchControlsDiv">
 		<asp:TextBox ID="txtQuery" runat="server" CssClass="textbox" meta:resourcekey="txtQueryResource1" />
-		<asp:Button ID="btnGo" runat="server" Text="Go" EnableViewState="False" CssClass="button" OnClick="btnGo_Click" meta:resourcekey="btnGoResource1" /><br />
+		<asp:Button ID="btnGo" runat="server" Text="ARA" EnableViewState="False" CssClass="button" OnClick="btnGo_Click" meta:resourcekey="btnGoResource1" /><br />
 		
 		<div id="RadiosDiv">
-			<asp:RadioButton ID="rdoAtLeastOneWord" runat="server" Text="At least one word" Checked="True" GroupName="search" meta:resourcekey="rdoAtLeastOneWordResource1" />
-			<asp:RadioButton ID="rdoAllWords" runat="server" Text="All words" GroupName="search" meta:resourcekey="rdoAllWordsResource1" />
-			<asp:RadioButton ID="rdoExactPhrase" runat="server" Text="Exact phrase" GroupName="search" meta:resourcekey="rdoExactPhraseResource1" />
+			<asp:RadioButton ID="rdoAtLeastOneWord" runat="server" Text="En az bir kelime" Checked="True" GroupName="search" meta:resourcekey="rdoAtLeastOneWordResource1" />
+			<asp:RadioButton ID="rdoAllWords" runat="server" Text="Tüm kelimeler" GroupName="search" meta:resourcekey="rdoAllWordsResource1" />
+			<asp:RadioButton ID="rdoExactPhrase" runat="server" Text="Girildiði gibi" GroupName="search" meta:resourcekey="rdoExactPhraseResource1" />
 		</div>
 		
-		<asp:CheckBox ID="chkAllNamespaces" runat="server" Text="Search in all Namespaces and all Categories" Checked="true" onclick="javascript:ToggleCategoriesList();" meta:resourcekey="chkAllNamespacesResource1" />
+		<asp:CheckBox ID="chkAllNamespaces" runat="server" Text="Tüm bölümleri ara" Checked="true" onclick="javascript:ToggleCategoriesList();" meta:resourcekey="chkAllNamespacesResource1" />
 		<br />
-		<asp:CheckBox ID="chkFilesAndAttachments" runat="server" Text="Search Files and Attachments" Checked="true" meta:resourcekey="chkFilesAndAttachmentsResource1" />
+		<asp:CheckBox ID="chkFilesAndAttachments" runat="server" Text="Dosyalarý ve eklentileri de ara" Checked="true" meta:resourcekey="chkFilesAndAttachmentsResource1" />
 	</div>
 	
 	<div id="CategoryFilterDiv">

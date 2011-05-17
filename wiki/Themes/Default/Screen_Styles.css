@@ -11,7 +11,7 @@ body {
 p {
 	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
-	color: #555555;
+	/*color: #555555;*/
 	padding: 0px;
 	margin: 0px;
 }
@@ -27,7 +27,7 @@ p {
 input, label {
 	/*font-family: Verdana, Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
-	color: #000000;
+	/*color: #000000;*/
 	padding: 2px;
 	margin: 0px;
 }
@@ -265,7 +265,7 @@ table.recentchanges {
 }
 
 tr.tableheader td, th {
-	background-color: #DDDDDD;
+	/*background-color: #DDDDDD;*/
 	color: #000000;
 	font-weight: bold;
 	margin: 0px;
@@ -278,21 +278,21 @@ tr.tablerow td {
 	margin: 0px;
 	padding: 2px 5px 2px 5px;
 	border-bottom: solid 1px #DDDDDD;
-	font-size: 11px;
+	/*font-size: 11px;*/
 }
 tr.tablerow:hover, tr.tablerow:hover td {
-	background-color: #FFFFCC;
+	background-color: #202020;
 }
 
 tr.tablerowalternate td {
-	background-color: #F5F5F5;
+	/*background-color: #F5F5F5;*/
 	margin: 0px;
 	padding: 2px 5px 2px 5px;
 	border-bottom: solid 1px #DDDDDD;
-	font-size: 11px;
+	/*font-size: 11px;*/
 }
 tr.tablerowalternate:hover, tr.tablerowalternate:hover td {
-	background-color: #FFFFCC;
+	/*background-color: #FFFFCC;*/
 }
 
 img {
@@ -916,6 +916,7 @@ div.categorycreation {
 
 #SearchControlsDiv {
 	margin-top: 16px;
+	padding-left: 50px;
 }
 
 #SearchControlsDiv input.textbox {
@@ -938,6 +939,7 @@ div.categorycreation {
 
 #CategoryFilterDiv {
 	/*border: solid 1px #DDDDDD;*/
+	display:none;
 	float: right;
 	margin-top: -50px;
 	background-color: #F5F5F5;
@@ -966,7 +968,7 @@ h3.searchresultpage {
 	background-image: url(Images/Page.png);
 	background-repeat: no-repeat;
 	background-position: left center;
-	padding-left: 18px;
+	padding-left: 27px;
 }
 h3.searchresultmessage {
 	margin-top: 14px;
@@ -996,17 +998,17 @@ h3.searchresultpage a, h3.searchresultmessage a, h3.searchresultfile a, h3.searc
 
 p.excerpt {
 	font-size: 11px;
-	margin-left: 4px;
+	margin-left: 20px;
 	padding-left: 8px;
 	padding-top: 4px;
 	padding-bottom: 4px;
 	margin-top: 4px;
-	border-left: solid 4px #DDDDDD;
+	/*border-left: solid 4px #DDDDDD;*/
 }
 
 p.excerpt b.searchkeyword, b.searchkeyword {
-	font-weight: normal;
-	background-color: #FFEE64;
+	color: #FFEE64;
+    font-weight: bold;
 }
 
 /* END Search.aspx */

@@ -4,13 +4,13 @@
 
 <asp:Content ID="CtnPages" ContentPlaceHolderID="CphMaster" Runat="Server">
 
-    <h1 class="pagetitlesystem"><asp:Literal ID="lblPages" runat="server" Text="Page Index" meta:resourcekey="lblPagesResource1" EnableViewState="False" /></h1>
-    <p><asp:Literal ID="lblDescription" runat="server" Text="The list of all pages contained in the current namespace." meta:resourcekey="lblDescriptionResource1" EnableViewState="False" /></p>
+    <h1 class="pagetitlesystem"><asp:Literal ID="lblPages" runat="server" Text="Tüm Sayfalar" meta:resourcekey="lblPagesResource1" EnableViewState="False" /></h1>
+    <p><asp:Literal ID="lblDescription" runat="server" Text="Sitede yer alan tüm sayfalar" meta:resourcekey="lblDescriptionResource1" EnableViewState="False" /></p>
     <br />
     
-    <asp:HyperLink ID="lnkCategories" runat="server" Text="Page Categories" ToolTip="View all Page Categories" meta:resourcekey="lnkCategoriesResource1" />
+    <asp:HyperLink ID="lnkCategories" Visible="False" runat="server" Text="Page Categories" ToolTip="View all Page Categories" meta:resourcekey="lnkCategoriesResource1" />
     &bull;
-    <asp:HyperLink ID="lnkSearch" runat="server" Text="Search" ToolTip="Perform a Search" meta:resourcekey="lnkSearchResource1" />
+    <asp:HyperLink ID="lnkSearch" runat="server" Text="Arama" ToolTip="Arama yapýn" meta:resourcekey="lnkSearchResource1" />
     
     <div id="PageSelectorDiv">
 		<st:PageSelector ID="pageSelector" runat="server" PageSize="<%# ScrewTurn.Wiki.AllPages.PageSize %>" OnSelectedPageChanged="pageSelector_SelectedPageChanged" />
