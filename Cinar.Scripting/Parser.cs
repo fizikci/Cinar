@@ -721,12 +721,30 @@ namespace Cinar.Scripting
             //   {comparison} or {comparison}
             //   {comparison} or {comparison} or ...
 
-            Expression lNode = ParseComparison();
+            Expression lNode = ParseXorExpression();
 
             while (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "||"))
             {
                 ReadNextToken(); // skip '||'
-                lNode = new OrExpression(lNode, ParseComparison());
+                lNode = new OrExpression(lNode, ParseXorExpression());
+            }
+
+            return lNode;
+        }
+
+        Expression ParseXorExpression()
+        {
+            // XOR-expression:
+            //   {comparison}
+            //   {comparison} ^ {comparison}
+            //   {comparison} ^ {comparison} ^ ...
+
+            Expression lNode = ParseComparison();
+
+            while (!AtEndOfSource && fCurrentToken.Equals(TokenType.Symbol, "^"))
+            {
+                ReadNextToken(); // skip '||'
+                lNode = new XorExpression(lNode, ParseComparison());
             }
 
             return lNode;
@@ -858,6 +876,11 @@ namespace Cinar.Scripting
             {
                 ReadNextToken(); // skip '!'
                 return new NotExpression(ParseIsExpression());
+            }
+            else if (fCurrentToken.Equals(TokenType.Symbol, "~"))
+            {
+                ReadNextToken(); // skip '~'
+                return new BitwiseComplementExpression(ParseIsExpression());
             }
             else if (fCurrentToken.Equals(TokenType.Word, "new"))
             {
@@ -1362,6 +1385,8 @@ namespace Cinar.Scripting
                 case '{':
                 case ';':
                 case ':':
+                case '~':
+                case '^':
                     StoreCurrentCharAndReadNext();
                     return new Token(TokenType.Symbol, ExtractStoredChars());
                 // the symbols = ==
