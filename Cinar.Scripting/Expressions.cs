@@ -335,6 +335,26 @@ namespace Cinar.Scripting
             return toString(String.Format("{0} || {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
     }
+    public class XorExpression : BinaryExpression
+    {
+        public XorExpression(Expression leftChildExpression, Expression rightChildExpression)
+            : base(leftChildExpression, rightChildExpression) { }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            object left = LeftChildExpression.Calculate(context, this);
+            object right = RightChildExpression.Calculate(context, this);
+
+            if (left.IsNumeric() && right.IsNumeric())
+                return ((int)left) ^ ((int)right);
+            else
+                return AndExpression.ParseBool(left) ^ AndExpression.ParseBool(right);
+        }
+        public override string ToString()
+        {
+            return toString(String.Format("{0} ^ {1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
+        }
+    }
     public class Addition : BinaryExpression
     {
         public Addition(Expression leftChildExpression, Expression rightChildExpression)
@@ -1039,6 +1059,31 @@ namespace Cinar.Scripting
         public override string ToString()
         {
             return toString(String.Format("!{0}", ChildExpression.ToString()));
+        }
+    }
+    public class BitwiseComplementExpression : UnaryExpression
+    {
+        public BitwiseComplementExpression(Expression childExpression)
+            : base(childExpression) { }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            object val = ChildExpression.Calculate(context, this);
+            if (val == null)
+                throw new Exception("null cannot be the operand of a bitwise complement (~)");
+            if (val.GetType() == typeof(int))
+                return ~((int)val);
+            if (val.GetType() == typeof(uint))
+                return ~((uint)val);
+            if (val.GetType() == typeof(long))
+                return ~((long)val);
+            if (val.GetType() == typeof(ulong))
+                return ~((ulong)val);
+            throw new Exception(val + " cannot be the operand of a bitwise complement (~)");
+        }
+        public override string ToString()
+        {
+            return toString(String.Format("~{0}", ChildExpression.ToString()));
         }
     }
     public class NewExpression : UnaryExpression
