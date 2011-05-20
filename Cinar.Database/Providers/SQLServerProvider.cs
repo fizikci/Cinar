@@ -133,6 +133,8 @@ namespace Cinar.Database.Providers
                     case "UNIQUE":
                         con = new UniqueConstraint();
                         break;
+                    default:
+                        throw new Exception("Unknown constraint type: " + drCon["Type"].ToString());
                 }
                 con.Name = drCon["Name"].ToString();
                 con.ColumnNames.Add(drCon["ColumnName"].ToString());

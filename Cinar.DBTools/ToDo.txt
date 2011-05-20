@@ -107,9 +107,10 @@ Other:
 20. Solution tree'sinde drag/drop, copy/paste çalışsın.
 21. Eski code generator uçurulsun.
 22. SQL result üzerinden tablo seçerek row update yapılabilmeli
-23. [OK] Schema problems ekranı daha user-friendly olsun
-24. Connection silindiğinde dropdown listeden de silmek lazım
-25. Connectionları sildikten sonra programı kapatırken kaydedeyim mi diye sormadı!
+23. [ok] Schema problems ekranı daha user-friendly olsun
+24. [ok] Connection silindiğinde dropdown listeden de silmek lazım
+25. [ok] Connectionları sildikten sonra programı kapatırken kaydedeyim mi diye sormadı!
+26. [ok] MySQL < v5.1.16 için DefaultValue hatası
 
 
 
