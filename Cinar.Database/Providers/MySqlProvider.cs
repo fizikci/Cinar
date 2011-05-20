@@ -96,6 +96,7 @@ namespace Cinar.Database.Providers
                 {
                     Column f = new Column();
                     f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
+                    if (f.DefaultValue == "\0") f.DefaultValue = "";
                     f.ColumnTypeOriginal = drColumn["COLUMN_TYPE"].ToString()=="tinyint(1)" ? "BOOL" : drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
                     f.ColumnType = StringToDbType(f.ColumnTypeOriginal);
                     f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
@@ -136,6 +137,8 @@ namespace Cinar.Database.Providers
                         case "UNIQUE":
                             con = new UniqueConstraint();
                             break;
+                        default:
+                            throw new Exception("Unknown constraint type: " + drCon["Type"].ToString());
                     }
                     con.Name = drCon["Name"].ToString();
                     con.ColumnNames.Add(drCon["ColumnName"].ToString());
@@ -143,7 +146,7 @@ namespace Cinar.Database.Providers
                     db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
                 }
             }
-            catch (Exception ex) // demek ki MySQL versiyonu < 5.1.16
+            catch (MySqlException ex) // demek ki MySQL versiyonu < 5.1.16
             {
                 // foreign keys
                 string sql = @" SELECT

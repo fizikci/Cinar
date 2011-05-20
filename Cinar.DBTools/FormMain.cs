@@ -600,7 +600,6 @@ $"},
             timer.Enabled = true;
         }
 
-
         #region methods
         private void showConnections(string path)
         {
@@ -1184,6 +1183,10 @@ $"},
                     treeView.SelectedNode = currNode.NextNode;
                 Provider.Connections.Remove(cs);
                 currNode.Remove();
+
+                cbActiveConnection.Items.Remove(cs);
+
+                Provider.ConnectionsModified = true;
 
                 statusText.Text = "Connection deleted.";
             }
@@ -1982,7 +1985,6 @@ $"},
             else
                 labelProperties.Text = "      Properties";
         }
-
 
         public event EventHandler<DbObjectChangedArgs> ObjectChanged;
         public event EventHandler<DbObjectRemovedArgs> ObjectRemoved;
