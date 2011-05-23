@@ -117,13 +117,14 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 86);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 15);
+            this.label4.Size = new System.Drawing.Size(97, 15);
             this.label4.TabIndex = 4;
             this.label4.Text = "ParentId Column";
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(99, 649);
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnStart.Location = new System.Drawing.Point(98, 511);
             this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(147, 26);
@@ -143,23 +144,28 @@
             // 
             // lbTables
             // 
+            this.lbTables.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.lbTables.FormattingEnabled = true;
             this.lbTables.ItemHeight = 15;
             this.lbTables.Location = new System.Drawing.Point(17, 364);
             this.lbTables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbTables.Size = new System.Drawing.Size(312, 274);
+            this.lbTables.Size = new System.Drawing.Size(312, 139);
             this.lbTables.TabIndex = 3;
             // 
             // groupBox3
             // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.txtLog);
             this.groupBox3.Location = new System.Drawing.Point(352, 344);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox3.Size = new System.Drawing.Size(617, 329);
+            this.groupBox3.Size = new System.Drawing.Size(617, 193);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Transfer Log";
@@ -176,7 +182,7 @@
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(583, 288);
+            this.txtLog.Size = new System.Drawing.Size(583, 152);
             this.txtLog.TabIndex = 0;
             // 
             // backgroundWorker
@@ -222,7 +228,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(12, 119);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(66, 15);
+            this.label8.Size = new System.Drawing.Size(84, 15);
             this.label8.TabIndex = 6;
             this.label8.Text = "String Column";
             // 
@@ -271,7 +277,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 91);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 15);
+            this.label2.Size = new System.Drawing.Size(97, 15);
             this.label2.TabIndex = 4;
             this.label2.Text = "ParentId Column";
             // 
@@ -321,7 +327,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(12, 121);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 15);
+            this.label9.Size = new System.Drawing.Size(84, 15);
             this.label9.TabIndex = 6;
             this.label9.Text = "String Column";
             // 
@@ -367,7 +373,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(985, 686);
+            this.ClientSize = new System.Drawing.Size(985, 550);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.tvDest);
