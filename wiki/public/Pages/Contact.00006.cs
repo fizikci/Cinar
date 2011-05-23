@@ -1,5 +1,5 @@
 İletişim
-admin|2011/05/16 18:57:32
+admin|2011/05/16 18:58:47
 ##PAGE##
 <font size="3">
 * Yazılımınızla ilgili desteğe mi ihtiyacınız var?
@@ -13,7 +13,7 @@ admin|2011/05/16 18:57:32
 </font>
 '''lütfen irtibata geçmekte tereddüt etmeyin:'''
 
-<div style="width:500px; margin-left:auto; padding:10px; border:1px solid green"><a href="mailto:bulentkeskin@gmail.com"><font size="4">bulentkeskin@gmail.com</font></a></div>
+* <a href="mailto:bulentkeskin@gmail.com"><font size="4">bulentkeskin@gmail.com</font></a>
 
 
 

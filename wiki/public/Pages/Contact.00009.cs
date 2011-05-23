@@ -1,9 +1,9 @@
 İletişim
-admin|2011/05/16 18:58:28
+admin|2011/05/21 13:17:32
 ##PAGE##
 <font size="3">
 * Yazılımınızla ilgili desteğe mi ihtiyacınız var?
-* Projeye nereden başlayacağınızı bilemiyor musunuz?
+* Projeye nereden başlayacağınıza karar veremiyor musunuz?
 </font>
 '''ya da'''
 
@@ -13,7 +13,7 @@ admin|2011/05/16 18:58:28
 </font>
 '''lütfen irtibata geçmekte tereddüt etmeyin:'''
 
-<a href="mailto:bulentkeskin@gmail.com"><font size="4">bulentkeskin@gmail.com</font></a>
+<a style="margin-left:200px" href="mailto:bulentkeskin@gmail.com"><font size="4">bulentkeskin@gmail.com</font></a>
 
 
 

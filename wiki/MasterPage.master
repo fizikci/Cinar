@@ -43,7 +43,7 @@
         </div>
                    
         <div id="ContainerDiv">
-			<%= (Request.RawUrl=="/" || Request.RawUrl.ToLowerInvariant().Contains("mainpage.ashx") || Request.RawUrl.ToLowerInvariant().Contains("default.aspx")) ? "<img id=\"splash\" height=\"399\" width=\"910\" src=\"/Images/cinar/design/splash.jpg\"/>" : "" %>
+			<%= (Request.RawUrl=="/" || Request.RawUrl.ToLowerInvariant().Contains("mainpage.ashx") || Request.RawUrl.ToLowerInvariant().Contains("default.aspx")) ? "<img id=\"splash\" height=\"476\" width=\"910\" src=\"/Images/cinar/design/splash.jpg\"/>" : "" %>
             <div id="MainDiv">
                 <div id="MainHeaderDiv">
                 </div>

@@ -19,6 +19,15 @@ namespace Cinar.DBTools.Tools
         public FormCheckDatabaseSchema()
         {
             InitializeComponent();
+
+            btnFix.Image = FamFamFam.database_gear;
+            btnFix.TextAlign = ContentAlignment.MiddleLeft;
+            btnFix.TextImageRelation = TextImageRelation.ImageBeforeText;
+
+            btnClose.Image = FamFamFam.cancel;
+            btnClose.TextAlign = ContentAlignment.MiddleLeft;
+            btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
+
             checkDatabaseSchema();
         }
 

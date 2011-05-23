@@ -29,12 +29,12 @@ namespace Cinar.DBTools.Tools
 
         private void linkLabel1_MouseEnter(object sender, EventArgs e)
         {
-            (sender as LinkLabel).LinkColor = Color.Gold;
+            (sender as LinkLabel).LinkColor = Color.Blue;
         }
 
         private void linkLabel1_MouseLeave(object sender, EventArgs e)
         {
-            (sender as LinkLabel).LinkColor = Color.White;
+            (sender as LinkLabel).LinkColor = Color.MediumBlue;
         }
     }
 }

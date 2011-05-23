@@ -1862,6 +1862,7 @@ $"},
             {
                 IDBToolsForm form = (IDBToolsForm)Activator.CreateInstance(Type.GetType(arg));
                 form.MainForm = this;
+                (form as Form).Icon = this.Icon;
                 form.Show();
             }
             catch (Exception ex)
@@ -2103,7 +2104,9 @@ $"},
         private void treeView_MouseDown(object sender, MouseEventArgs e)
         {
             treeView.SelectedNode = treeView.GetNodeAt(e.X, e.Y);
-            SelectedObject = treeView.SelectedNode == null ? null : treeView.SelectedNode.Tag;
+            if (treeView.SelectedNode == null) return;
+
+            SelectedObject = treeView.SelectedNode.Tag;
             cmdSetActiveConnection("");
             cmdMan.SetCommandControlsVisibility(typeof(ToolStripMenuItem));
             showSelectedObjectOnPropertyGrid();
