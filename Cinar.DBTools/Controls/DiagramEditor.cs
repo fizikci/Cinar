@@ -324,7 +324,7 @@ namespace Cinar.DBTools.Controls
                 }
                 if (CurrentSchema.SelectedObject is Column)
                 {
-                    DoDragDrop(CurrentSchema.SelectedObject, DragDropEffects.Move);
+                    DoDragDrop(CurrentSchema.SelectedObject, DragDropEffects.Move | DragDropEffects.Copy | DragDropEffects.Link);
                     dragging = false;
                 }
             }
@@ -487,16 +487,24 @@ namespace Cinar.DBTools.Controls
             if (tbl != null)
             {
                 TableView tv = CurrentSchema.GetTableView(tbl.Name);
-                if (tbl != null && tv == null)
-                    e.Effect = DragDropEffects.Move;
+                if (tv == null)
+                {
+                    e.Effect = DragDropEffects.Copy;
+                    if(conn.Database.Tables[tbl.Name]==null)
+                        MainForm.SetStatusText("Drop to create table.");
+                    else
+                        MainForm.SetStatusText("Drop to add table to diagram.");
+                }
                 else
+                {
                     e.Effect = DragDropEffects.None;
+                }
             }
 
-            if (fld != null)
-            {
-                    e.Effect = DragDropEffects.Move;
-            }
+            //if (fld != null)
+            //{
+            //        e.Effect = DragDropEffects.Move;
+            //}
         }
         protected override void OnDragDrop(DragEventArgs e)
         {
@@ -537,25 +545,60 @@ namespace Cinar.DBTools.Controls
                 TableView tv = CurrentSchema.HitTestTable(this.PointToClient(new Point(e.X, e.Y)));
                 if (tv != null)
                 {
-                    column = (Column)column.Clone();
-                    conn.Database.Tables[tv.TableName].Columns.Add(column);
-
-                    try
+                    if ((e.KeyState & 4) == 4) // Shift ile sürüklüyorsa Foreign Key
                     {
-                        string sql = conn.Database.GetSQLColumnAdd(tv.TableName, column);
-                        SQLInputDialog sid = new SQLInputDialog(sql, false);
-                        if (sid.ShowDialog() == DialogResult.OK)
+                        ForeignKeyConstraint fk = new ForeignKeyConstraint();
+                        fk.ColumnNames.Add(column.Name);
+                        fk.Name = "FK_" + column.Table.Name + "_" + tv.TableName;
+                        var pk = conn.Database.Tables[tv.TableName].Constraints.Where(c => c is PrimaryKeyConstraint).FirstOrDefault() as PrimaryKeyConstraint;
+                        if (pk != null)
                         {
-                            conn.Database.ExecuteNonQuery(sid.SQL);
-                            MainForm.populateTreeNodesFor(null, column);
+                            fk.RefConstraintName = pk.Name;
+                            fk.RefTableName = tv.TableName;
+                            column.Table.Constraints.Add(fk);
+
+                            try
+                            {
+                                string sql = conn.Database.GetSQLConstraintAdd(fk);
+                                SQLInputDialog sid = new SQLInputDialog(sql, false);
+                                if (sid.ShowDialog() == DialogResult.OK)
+                                {
+                                    conn.Database.ExecuteNonQuery(sid.SQL);
+                                    MainForm.populateTreeNodesFor(null, fk);
+                                }
+                                else
+                                    column.Table.Constraints.Remove(fk);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message, "Cinar Database Tools");
+                                column.Table.Constraints.Remove(fk);
+                            }
+
                         }
-                        else
-                            conn.Database.Tables[tv.TableName].Columns.Remove(column);
                     }
-                    catch (Exception ex)
+                    else // normal sürüklüyorsa 
                     {
-                        MessageBox.Show(ex.Message, "Cinar Database Tools");
-                        conn.Database.Tables[tv.TableName].Columns.Remove(column);
+                        column = (Column)column.Clone();
+                        conn.Database.Tables[tv.TableName].Columns.Add(column);
+
+                        try
+                        {
+                            string sql = conn.Database.GetSQLColumnAdd(tv.TableName, column);
+                            SQLInputDialog sid = new SQLInputDialog(sql, false);
+                            if (sid.ShowDialog() == DialogResult.OK)
+                            {
+                                conn.Database.ExecuteNonQuery(sid.SQL);
+                                MainForm.populateTreeNodesFor(null, column);
+                            }
+                            else
+                                conn.Database.Tables[tv.TableName].Columns.Remove(column);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Cinar Database Tools");
+                            conn.Database.Tables[tv.TableName].Columns.Remove(column);
+                        }
                     }
                 }
                 else
@@ -581,6 +624,42 @@ namespace Cinar.DBTools.Controls
             }
 
             refreshAll();
+        }
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            Table table = e.Data.GetData(typeof(Table)) as Table;
+            Column column = e.Data.GetData(typeof(Column)) as Column;
+
+            if (column != null)
+            {
+                TableView tv = CurrentSchema.HitTestTable(this.PointToClient(new Point(e.X, e.Y)));
+                if (tv != null)
+                {
+                    if ((e.KeyState & 4) == 4) // Shift ile sürüklüyorsa Foreign Key
+                    {
+                        e.Effect = DragDropEffects.Link;
+                        MainForm.SetStatusText("Drop to create foreign key.");
+                    }
+                    else
+                    {
+                        if (column.Table.Name == tv.TableName)
+                        {
+                            e.Effect = DragDropEffects.None;
+                            MainForm.SetStatusText("");
+                        }
+                        else
+                        {
+                            e.Effect = DragDropEffects.Copy;
+                            MainForm.SetStatusText("Drop to add column to the table.");
+                        }
+                    }
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.Move;
+                    MainForm.SetStatusText("Drop to delete column from table.");
+                }
+            }
         }
 
         public void OnClose()

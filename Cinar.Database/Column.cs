@@ -329,6 +329,11 @@ namespace Cinar.Database
                 res[i] = this[i].Name;
             return res;
         }
+
+        public override string ToString()
+        {
+            return table + " Columns";
+        }
     }
 
     [Serializable, TypeConverter(typeof(ExpandableObjectConverter))]

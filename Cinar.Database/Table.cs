@@ -367,6 +367,12 @@ namespace Cinar.Database
                 return null;
             }
         }
+
+
+        public override string ToString()
+        {
+            return db.Name + " Columns";
+        }
     }
 
     [Serializable, TypeConverter(typeof(ExpandableObjectConverter))]

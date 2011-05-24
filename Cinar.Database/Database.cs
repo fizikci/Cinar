@@ -1927,7 +1927,6 @@ namespace Cinar.Database
             }
         }
         #endregion
-
     }
 
     public delegate void DbAction();

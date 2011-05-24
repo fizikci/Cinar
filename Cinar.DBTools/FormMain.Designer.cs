@@ -74,6 +74,7 @@ namespace Cinar.DBTools
             this.menuTableDrop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableCount = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableOpenWithFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableAnalyze = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableGenerateSQL = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableGenSQLSelect = new System.Windows.Forms.ToolStripMenuItem();
@@ -153,6 +154,7 @@ namespace Cinar.DBTools
             this.menuExecuteScript = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCodeGenerator = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsGenerateTablesFromReflectedMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCheckDatabaseSchema = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsDBTransfer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsViewERDiagram = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,7 +198,6 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsGenerateTablesFromReflectedMetadata = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -417,6 +418,7 @@ namespace Cinar.DBTools
             this.menuTableDrop,
             this.menuTableCount,
             this.menuTableOpen,
+            this.menuTableOpenWithFilter,
             this.menuTableAnalyze,
             this.menuTableGenerateSQL,
             this.menuColumnDistinct,
@@ -429,7 +431,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 642);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 686);
             // 
             // menuConShowHiddenConnections
             // 
@@ -636,6 +638,12 @@ namespace Cinar.DBTools
             this.menuTableOpen.Name = "menuTableOpen";
             this.menuTableOpen.Size = new System.Drawing.Size(265, 22);
             this.menuTableOpen.Text = "Open Table";
+            // 
+            // menuTableOpenWithFilter
+            // 
+            this.menuTableOpenWithFilter.Name = "menuTableOpenWithFilter";
+            this.menuTableOpenWithFilter.Size = new System.Drawing.Size(265, 22);
+            this.menuTableOpenWithFilter.Text = "Open Table with Filter...";
             // 
             // menuTableAnalyze
             // 
@@ -1300,6 +1308,12 @@ namespace Cinar.DBTools
             this.menuToolsCodeGenerator.Size = new System.Drawing.Size(332, 22);
             this.menuToolsCodeGenerator.Text = "Code Generator...";
             // 
+            // menuToolsGenerateTablesFromReflectedMetadata
+            // 
+            this.menuToolsGenerateTablesFromReflectedMetadata.Name = "menuToolsGenerateTablesFromReflectedMetadata";
+            this.menuToolsGenerateTablesFromReflectedMetadata.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsGenerateTablesFromReflectedMetadata.Text = "Generate Tables From Reflected Metadata...";
+            // 
             // menuToolsCheckDatabaseSchema
             // 
             this.menuToolsCheckDatabaseSchema.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsCheckDatabaseSchema.Image")));
@@ -1643,12 +1657,6 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsGenerateTablesFromReflectedMetadata
-            // 
-            this.menuToolsGenerateTablesFromReflectedMetadata.Name = "menuToolsGenerateTablesFromReflectedMetadata";
-            this.menuToolsGenerateTablesFromReflectedMetadata.Size = new System.Drawing.Size(332, 22);
-            this.menuToolsGenerateTablesFromReflectedMetadata.Text = "Generate Tables From Reflected Metadata...";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1864,6 +1872,7 @@ namespace Cinar.DBTools
         internal System.Windows.Forms.ToolStripMenuItem menuShowGeneratedCode;
         internal System.Windows.Forms.ToolStripMenuItem menuAddExistingFolder;
         private System.Windows.Forms.ToolStripMenuItem menuToolsGenerateTablesFromReflectedMetadata;
+        private System.Windows.Forms.ToolStripMenuItem menuTableOpenWithFilter;
 
     }
 }

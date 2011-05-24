@@ -93,6 +93,11 @@ namespace Cinar.Database
                 res[i] = this[i].Name;
             return res;
         }
+
+        public override string ToString()
+        {
+            return table + " Constraints";
+        }
     }
 
 }
