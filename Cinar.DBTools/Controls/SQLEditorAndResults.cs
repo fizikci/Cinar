@@ -61,6 +61,8 @@ namespace Cinar.DBTools.Controls
             btnSave.Click += new EventHandler(btnSave_Click);
             btnRefresh.Click += delegate { bindTableData(); };
             btnDeleteSelectedRows.Click += delegate { deleteSelectedRows(); };
+
+            fExp = new FilterExpression();
         }
 
         public string InitialText;
@@ -189,28 +191,37 @@ namespace Cinar.DBTools.Controls
                 if (value != showTable)
                 {
                     showTable = value;
-                    clearPagingSortingMetadata();
                     if (tabControl.SelectedTab == tpTableData)
+                    {
+                        clearPagingSortingMetadata();
                         bindTableData();
+                    }
                 }
 
                 showTable = value;
             }
         }
 
-        public void ShowTableData(Table table)
+        public void ShowTableData(Table table, FilterExpression filter)
         {
+            tableDataBound = false;
+            this.fExp = filter ?? new FilterExpression();
             this.ShowTable = table;
             tabControl.SelectedTab = tpTableData;
+            if(!tableDataBound)
+                bindTableData();
         }
 
         private void clearPagingSortingMetadata()
         {
             txtPageNo.Text = "1";
-            fExp = new FilterExpression();
+            FilterExpression exp = new FilterExpression();
+            exp.Criterias = fExp.Criterias;
+            fExp = exp;
             btnSave.Text = "";
         }
-        
+
+        bool tableDataBound = false;
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab==tpTableData && ShowTable != null && ShowTable != gridShowTable.Tag)
@@ -270,8 +281,10 @@ namespace Cinar.DBTools.Controls
             if(fExp.Orders.Count>0)
                 gridShowTable.Sort(gridShowTable.Columns[fExp.Orders[0].ColumnName], fExp.Orders[0].Ascending ? ListSortDirection.Ascending : ListSortDirection.Descending);
 
-            btnPrevPage.Enabled = pageNo > 1;
+            btnPrevPage.Enabled = pageNo >= 1;
             btnNextPage.Enabled = gridShowTable.DataSource is DataTable && (gridShowTable.DataSource as DataTable).Rows.Count == int.Parse(txtPageSize.Text);
+
+            tableDataBound = true;
         }
 
         void btnPrevPage_Click(object sender, EventArgs e)

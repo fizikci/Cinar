@@ -465,7 +465,10 @@ $"},
                                  },
                      new Command {
                                      Execute = cmdTableOpen,
-                                     Trigger = new CommandTrigger{ Control = menuTableOpen},
+                                     Triggers = new List<CommandTrigger>{
+                                         new CommandTrigger{ Control = menuTableOpen},
+                                         new CommandTrigger{ Control = menuTableOpenWithFilter, Argument = "WithFilter"},
+                                     },
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
@@ -645,7 +648,7 @@ $"},
                 ds = Provider.Database.GetDataSet(sql);
                 watch.Stop();
 
-                statusText.Text = "Query executed succesfully.";
+                SetStatusText("Query executed succesfully.");
 
                 statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
                 statusNumberOfRows.Text = (ds.Tables.Count == 0 ? 0 : ds.Tables[0].Rows.Count) + " rows";
@@ -668,6 +671,11 @@ $"},
             {
                 CurrSQLEditor.ShowInfoText(ex.Message);
             }
+        }
+
+        public void SetStatusText(string msg)
+        {
+            statusText.Text = msg;
         }
         private bool checkConnection()
         {
@@ -1188,7 +1196,7 @@ $"},
 
                 Provider.ConnectionsModified = true;
 
-                statusText.Text = "Connection deleted.";
+                SetStatusText("Connection deleted.");
             }
         }
 
@@ -1310,7 +1318,7 @@ $"},
 
             CurrSQLEditor.ShowInfoText(engine.Output);
 
-            statusText.Text = "Script executed succesfully.";
+            SetStatusText("Script executed succesfully.");
         }
 
         internal void cmdSetActiveConnection(string arg)
@@ -1337,7 +1345,7 @@ $"},
 
             cbActiveConnection.SelectedItem = Provider.ActiveConnection;
 
-            statusText.Text = "Active connection: " + Provider.ActiveConnection ?? "None";
+            SetStatusText("Active connection: " + Provider.ActiveConnection ?? "None");
         }
 
         private void cmdTableOpen(string arg)
@@ -1346,12 +1354,24 @@ $"},
             if (tbl == null)
                 return;
 
+            FilterExpression fExp = new FilterExpression();
+            if (arg == "WithFilter")
+            {
+                FilterExpressionDialog fed = new FilterExpressionDialog(tbl);
+                if (fed.ShowDialog() == DialogResult.OK)
+                    fExp = fed.FilterExpression;
+                else
+                    return;
+            }
+
             if (CurrSQLEditor != null)
-                CurrSQLEditor.ShowTableData(tbl);
+            {
+                CurrSQLEditor.ShowTableData(tbl, fExp);
+            }
             else
             {
                 findOrCreateNewSQLEditor();
-                CurrSQLEditor.ShowTableData(tbl);
+                CurrSQLEditor.ShowTableData(tbl, fExp);
             }
         }
 
@@ -1551,7 +1571,7 @@ $"},
                     sb.AppendLine("Not available.");
                     break;
             }
-            statusText.Text = "SQL generated.";
+            SetStatusText("SQL generated.");
             addSQLEditor("", sb.ToString());
         }
 
@@ -2090,7 +2110,7 @@ $"},
         {
             TreeNode tn = e.Item as TreeNode;
             if (tn.Tag is Table || tn.Tag is Column)
-                DoDragDrop(tn.Tag, DragDropEffects.Move);
+                DoDragDrop(tn.Tag, DragDropEffects.Copy);
         }
 
         private void treeCodeGen_MouseDown(object sender, MouseEventArgs e)
@@ -2115,7 +2135,7 @@ $"},
             {
                 Table tn = findSelectedTable();
                 if (tn != null)
-                    CurrSQLEditor.ShowTable = tn;
+                    CurrSQLEditor.ShowTableData(tn, new FilterExpression());
             }
         }
     }
