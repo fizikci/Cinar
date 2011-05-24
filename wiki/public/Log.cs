@@ -817,3 +817,20 @@ G|2011/05/21 13:50:10|Page Cinar POP3 rebound|SYSTEM
 G|2011/05/21 13:53:18|Page update requested for Cinar POP3|admin
 G|2011/05/21 13:53:18|Page Content updated for Cinar POP3|SYSTEM
 G|2011/05/21 13:53:18|Page Cinar POP3 rebound|SYSTEM
+G|2011/05/24 15:15:48|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/05/24 15:15:48|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/05/24 15:15:48|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/05/24 15:15:48|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/05/24 15:15:48|ScrewTurn Wiki is ready|SYSTEM
+G|2011/05/24 15:15:58|Starting automatic rebuilding index for provider: Local Pages Provider|SYSTEM
+G|2011/05/24 15:15:59|Finished automatic rebuilding index for provider: Local Pages Provider|SYSTEM
+G|2011/05/24 15:16:27|User admin logged in|SYSTEM
+G|2011/05/24 15:18:15|Page update requested for Download|admin
+G|2011/05/24 15:18:15|Page Content updated for Download|SYSTEM
+G|2011/05/24 15:18:15|Backups (0-0) deleted for Download|SYSTEM
+G|2011/05/24 15:18:15|Page Download rebound|SYSTEM
+G|2011/05/24 15:37:16|Page update requested for Download|admin
+G|2011/05/24 15:37:16|Page Content updated for Download|SYSTEM
+G|2011/05/24 15:37:16|Backups (0-0) deleted for Download|SYSTEM
+G|2011/05/24 15:37:16|Page Download rebound|SYSTEM
+G|2011/05/24 15:37:42|User admin logged out|SYSTEM
