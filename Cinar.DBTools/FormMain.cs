@@ -125,6 +125,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuSelectAll, Argument = "SelectAll"},
                                          new CommandTrigger{ Control = menuFind, Argument = "Find"},
                                          new CommandTrigger{ Control = menuReplace, Argument = "Replace"},
+                                         new CommandTrigger{ Control = menuBeautifySQL, Argument = "Beautify"},
                                      }
                                  },
                      new Command {
@@ -637,7 +638,8 @@ $"},
 
         private void executeSQL(string sql, params object[] args)
         {
-            sql = String.Format(sql, args);
+            if(args.Length>0)
+                sql = String.Format(sql, args);
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -645,27 +647,90 @@ $"},
 
             try
             {
-                ds = Provider.Database.GetDataSet(sql);
-                watch.Stop();
+                if (sql.Length > 500000) // massive SQL
+                {
+                    SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
+                    SQLParser.Token token = tokenizer.ReadNextToken();
+                    List<string> sqlList = new List<string>();
+                    string anSql = "";
+                    while (token != null)
+                    {
+                        if (token.Value == ";")
+                        {
+                            sqlList.Add(anSql);
+                            anSql = "";
+                        }
+                        else
+                        {
+                            anSql += " " + token.Value;
+                        }
+                        token = tokenizer.ReadNextToken();
+                    }
+                    if (anSql != "") sqlList.Add(anSql);
 
-                SetStatusText("Query executed succesfully.");
+                    StringBuilder queriesWithError = new StringBuilder();
 
-                statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
-                statusNumberOfRows.Text = (ds.Tables.Count == 0 ? 0 : ds.Tables[0].Rows.Count) + " rows";
-                sql = sql.Replace("\n", " ").Replace("\r", "").Replace("\t", " ") + (sql.EndsWith(";") ? "" : ";");
-                while (sql.Contains("  ")) sql = sql.Replace("  ", " ");
-                if (sql.Length > 1000) sql = sql.Substring(0, 1000) + "...";
+                    BackgroundWorkerDialog bwd = new BackgroundWorkerDialog();
+                    bwd.Message = "Please wait while " + sqlList.Count + " query executed.";
+                    bwd.DoWork = (e) => {
+                        int sqlListLength = sqlList.Count;
+                        int percent = 0;
+                        for (int i = 0; i < sqlListLength; i++)
+                        {
+                            try
+                            {
+                                Provider.Database.ExecuteNonQuery(sqlList[i]);
+                            }
+                            catch (Exception ex) 
+                            {
+                                queriesWithError.AppendLine("/* " + ex.Message + " */");
+                                queriesWithError.AppendLine(sqlList[i]);
+                            }
 
-                if (CurrSQLEditor == null) findOrCreateNewSQLEditor();
+                            int newPercent = Convert.ToInt32(((float)i / (float)sqlListLength) * 100);
+                            if (percent != newPercent)
+                            {
+                                percent = newPercent;
+                                bwd.ReportProgress(percent);
+                            }
+                        }
+                    };
+                    bwd.ShowDialog();
 
-                CurrSQLEditor.SQLLog.Text += string.Format(Environment.NewLine + "/*[{0} - {1,5} ms]*/ {2}", DateTime.Now.ToString("hh:mm:ss"), watch.ElapsedMilliseconds, sql);
+                    watch.Stop();
+                    SetStatusText("Queries executed succesfully.");
 
-                if (ds.Tables.Count > 1)
-                    CurrSQLEditor.BindGridResults(ds);
-                else if (ds.Tables.Count == 1)
-                    CurrSQLEditor.BindGridResults(ds.Tables[0]);
-                else
-                    CurrSQLEditor.BindGridResults(null);
+                    statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
+                    statusNumberOfRows.Text = "";
+
+                    if (CurrSQLEditor == null) findOrCreateNewSQLEditor();
+                    if (queriesWithError.Length > 0)
+                        CurrSQLEditor.ShowInfoText("/* QUERIES WITH ERROR */\r\n\r\n" + queriesWithError);
+                }
+                else // smaller SQL
+                {
+                    ds = Provider.Database.GetDataSet(sql);
+                    watch.Stop();
+
+                    SetStatusText("Query executed succesfully.");
+
+                    statusExecTime.Text = watch.ElapsedMilliseconds + " ms";
+                    statusNumberOfRows.Text = (ds.Tables.Count == 0 ? 0 : ds.Tables[0].Rows.Count) + " rows";
+                    sql = sql.Replace("\n", " ").Replace("\r", "").Replace("\t", " ") + (sql.EndsWith(";") ? "" : ";");
+                    while (sql.Contains("  ")) sql = sql.Replace("  ", " ");
+                    if (sql.Length > 1000) sql = sql.Substring(0, 1000) + "...";
+
+                    if (CurrSQLEditor == null) findOrCreateNewSQLEditor();
+
+                    CurrSQLEditor.SQLLog.Text += string.Format(Environment.NewLine + "/*[{0} - {1,5} ms]*/ {2}", DateTime.Now.ToString("hh:mm:ss"), watch.ElapsedMilliseconds, sql);
+
+                    if (ds.Tables.Count > 1)
+                        CurrSQLEditor.BindGridResults(ds);
+                    else if (ds.Tables.Count == 1)
+                        CurrSQLEditor.BindGridResults(ds.Tables[0]);
+                    else
+                        CurrSQLEditor.BindGridResults(null);
+                }
             }
             catch (Exception ex)
             {
@@ -1025,7 +1090,50 @@ $"},
                         fd.Show();
                     }
                     break;
+                case "Beautify":
+                    string selectedText = null;
+                    if (c is TextBoxBase)
+                        selectedText = (c as TextBoxBase).SelectedText;
+                    else if (c is TextArea)
+                        selectedText = (c as TextArea).SelectionManager.SelectedText;
+
+                    if (string.IsNullOrEmpty(selectedText))
+                    {
+                        MessageBox.Show("Select SQL statement to beautify", "Cinar Database Tools");
+                        return;
+                    }
+
+                    SQLParser.Parser parser = new SQLParser.Parser(new StringReader(selectedText));
+                    string beautifiedSQL = "";
+                    try
+                    {
+
+                        SQLParser.Statement statement = parser.ReadNextStatement();
+                        while (statement != null)
+                        {
+                            beautifiedSQL += statement.ToString();
+                            statement = parser.ReadNextStatement();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("SQL parse error:\n" + ex.Message, "Cinar Database Tools");
+                        break;
+                    }
+
+                    if (c is TextBoxBase)
+                    {
+                        (c as TextBoxBase).SelectedText = beautifiedSQL;
+                    }
+                    else if (c is TextArea)
+                    {
+                        ISelection sel = (c as TextArea).SelectionManager.SelectionCollection[0];
+                        (c as TextArea).Document.Replace(sel.Offset, sel.Length, beautifiedSQL);
+                        (c as TextArea).SelectionManager.ClearSelection();
+                    }
+                    break;
             }
+            c.Refresh();
         }
 
         private void cmdRefresh(string arg)
@@ -1295,14 +1403,14 @@ $"},
             if (string.IsNullOrEmpty(sel))
                 sel = CurrSQLEditor.SQLEditor.Text;
 
-            Interpreter engine = new Interpreter(sel, null);
-            engine.SetAttribute("db", Provider.Database);
-            engine.SetAttribute("util", new Util());
-            engine.SetAttribute("table", findSelectedTable());
-            engine.SetAttribute("tree", treeView);
-            engine.Parse();
-            engine.Execute();
-            string sql = engine.Output;
+            //Interpreter engine = new Interpreter(sel, null);
+            //engine.SetAttribute("db", Provider.Database);
+            //engine.SetAttribute("util", new Util());
+            //engine.SetAttribute("table", findSelectedTable());
+            //engine.SetAttribute("tree", treeView);
+            //engine.Parse();
+            //engine.Execute();
+            string sql = sel; //engine.Output;
 
             executeSQL(sql);
         }
@@ -2135,7 +2243,7 @@ $"},
             {
                 Table tn = findSelectedTable();
                 if (tn != null)
-                    CurrSQLEditor.ShowTableData(tn, new FilterExpression());
+                    CurrSQLEditor.ShowTableDataIfTableTabActive(tn, new FilterExpression());
             }
         }
     }
@@ -2331,5 +2439,4 @@ $"},
     {
         public object Object { get; set; }
     }
-
 }

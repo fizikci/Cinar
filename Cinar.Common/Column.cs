@@ -32,7 +32,7 @@ namespace Cinar.Database
     [Serializable]
     public class Column : IMetadata
     {
-        internal ColumnCollection parent;
+        public ColumnCollection parent;
 
         /// <summary>
         /// Bu column'ın ait olduğu tablo
@@ -289,7 +289,7 @@ namespace Cinar.Database
 
     public class ColumnCollection : List<Column>
     {
-        internal Table table;
+        public Table table;
         public Table Table { get { return table; } }
 
         public ColumnCollection()

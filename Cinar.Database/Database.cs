@@ -37,7 +37,7 @@ namespace Cinar.Database
     /// Veritabanı metadasını modelleyen sınıf.
     /// </summary>
     [Serializable]
-    public class Database
+    public class Database : IDatabase
     {
         /// <summary>
         /// Farklı veritabanı türleriyle çalışılabilmesi için veritabanı işlemleri bu interface üzerinden yapılır.
@@ -315,17 +315,32 @@ namespace Cinar.Database
 
             sql = sql.Trim();
 
-            //Cinar.SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
-            //SQLParser.Token token = tokenizer.ReadNextToken();
-            //StringBuilder sb = new StringBuilder();
-            //while (token != null) {
-            //    if (token.Type == SQLParser.TokenType.Symbol && (token.Value == "[" || token.Value == "]"))
-            //        sb.Append(token.Value == "[" ? " " + getReservedWordToken(true) : getReservedWordToken(false));
-            //    else
-            //        sb.Append(" " + token.Value);
-            //    token = tokenizer.ReadNextToken();
-            //}
-            //sql = sb.ToString();
+            SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
+            SQLParser.Token token = tokenizer.ReadNextToken();
+            StringBuilder sb = new StringBuilder();
+            while (token != null)
+            {
+                if (token.Type == SQLParser.TokenType.Word && ((token.Value.StartsWith("[") && token.Value.EndsWith("]")) || (token.Value.StartsWith("`") && token.Value.EndsWith("`")) || (token.Value.StartsWith("\"") && token.Value.EndsWith("\""))))
+                    sb.Append(" " + getReservedWordToken(true) + token.Value.Substring(1, token.Value.Length - 2) + getReservedWordToken(false));
+                else if (token.Value == "{")
+                {
+                    sb.Append(" " + token.Value);
+                    token = tokenizer.ReadNextToken();
+                    sb.Append(token.Value);
+                }
+                else if (token.Value == "@")
+                {
+                    sb.Append(" " + token.Value);
+                    token = tokenizer.ReadNextToken();
+                    sb.Append(token.Value);
+                }
+                else if (token.Value == "}")
+                    sb.Append(token.Value);
+                else
+                    sb.Append(" " + token.Value);
+                token = tokenizer.ReadNextToken();
+            }
+            sql = sb.ToString().Trim();
 
             if (provider != DatabaseProvider.SQLServer && (sql.StartsWith("select top ", ic) || sql.StartsWith("select distinct top ", ic)))
             {
@@ -334,18 +349,18 @@ namespace Cinar.Database
                 sql = sql.Replace(" top " + parts[rowCountIndex], "");
                 sql += " limit " + parts[rowCountIndex];
             }
-            sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
+            //sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
 
             if (this.EnableSQLLog)
             {
                 StringBuilder sbSQL = new StringBuilder(sql + "\n");
-                StackTrace st = new StackTrace(true);
-                for (int i = 0; i < st.FrameCount; i++)
-                {
-                    StackFrame sf = st.GetFrame(i);
-                    if (sf.GetFileName() != null && sf.GetFileName().Contains("Sitematik\\Library"))
-                        sbSQL.AppendFormat("{0}({1}), ", sf.GetMethod().DeclaringType.Name + "." + sf.GetMethod().Name, sf.GetFileLineNumber());
-                }
+                //StackTrace st = new StackTrace(true);
+                //for (int i = 0; i < st.FrameCount; i++)
+                //{
+                //    StackFrame sf = st.GetFrame(i);
+                //    if (sf.GetFileName() != null && sf.GetFileName().Contains("Sitematik\\Library"))
+                //        sbSQL.AppendFormat("{0}({1}), ", sf.GetMethod().DeclaringType.Name + "." + sf.GetMethod().Name, sf.GetFileLineNumber());
+                //}
                 SQLLog.Add(sbSQL + "\n");
             }
 
@@ -978,7 +993,7 @@ namespace Cinar.Database
 
         private bool canBeMappedToDBTable(PropertyInfo pi)
         {
-            return (pi.PropertyType.IsValueType || pi.PropertyType.Name == "String" || pi.PropertyType.FullName.Contains("Byte[]")) && pi.GetSetMethod() != null;
+            return (pi.PropertyType.IsValueType || pi.PropertyType.Name == "String" || (pi.PropertyType.FullName !=null && pi.PropertyType.FullName.Contains("Byte[]"))) && pi.GetSetMethod() != null;
         }
 
         public DataRow EntityToDataRow(IDatabaseEntity entity)
@@ -1483,7 +1498,7 @@ namespace Cinar.Database
 
         public void CreateTable(Table tbl, DefaultDataAttribute[] defaultDataArr, bool refreshMetadata)
         {
-            Database originalDb = tbl.parent.db;
+            Database originalDb = (Database)tbl.parent.db;
             tbl.parent.db = this;
 
             IDbCommand cmd = this.CreateCommand(tbl.ToDDL());

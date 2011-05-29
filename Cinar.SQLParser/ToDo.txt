@@ -1,0 +1,46 @@
+﻿1. 
+
+create table dosya (
+	Id int,
+	parentId int,
+	name FileName,
+	path FullPath,
+	tarih CreatedDate
+) from FileSystemProvider
+where
+	Folder = "c:\windows";
+
+2.
+
+create table server_mesaj (
+	Id int,
+	kimden FromEmail,
+	konu Subject,
+	mesaj Body
+) from POP3Provider
+where
+	Server = "mail.falan.com" AND
+	UserName = "ali@falan.com" AND
+	Password = "xxx";
+
+3.
+
+create table mesaj (
+) from MySQL
+where
+	Server = "localhost" AND
+	User = "admin" AND
+	DbName = "crm" AND
+	Query = "select * from mesaj"
+
+4. insert into mesaj select * from server_mesaj.. gibi..
+
+Veri kaynakları:
+- FileSystem
+- FTP Server
+- POP3 Server
+- Google
+- RSSReader
+- RDBMS Data
+- RDBMS Metadata
+- Reflection

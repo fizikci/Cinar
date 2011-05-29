@@ -119,9 +119,8 @@ namespace Cinar.POP3
 
 		public static bool IsMultipart(string line)
 		{
-			return
-				Regex.Match(line,"^multipart/.*").Success;
-		}
+            return Regex.Match(line, "^multipart/.*", RegexOptions.IgnoreCase).Success;
+        }
 
 		public static string MultipartBoundary(string line)
 		{
@@ -197,6 +196,11 @@ namespace Cinar.POP3
 					lineType = Pop3Parse.EndOfHeader;
 					break;
 				}
+                if (line == "Bu, MIME bi?iminde ?ok tarafl? bir iletidir.")
+                {
+                    lineType = Pop3Parse.MultipartBoundaryFound;
+                    break;
+                }
 			}
 
 			return lineType;

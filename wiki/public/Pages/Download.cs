@@ -1,5 +1,5 @@
 Download
-admin|2011/05/24 15:37:16
+admin|2011/05/25 15:48:26
 ##PAGE##
 ==Çınar Database Tools==
 Son derlenmiş Çınar Database Tools programını buradan indirebilirsiniz:{BR}
@@ -10,7 +10,7 @@ Lütfen dikkat:
 * Önce bilgisayarınızda Cinar adında bir klasör oluşturun.
 * Sonra bu zip dosyasını o klasöre açın.
 * Klasör içindeki Cinar.DBTools.exe isimli programı çalıştırın.
-* Eğer yoksa, [http://www.google.com/?q=download .Net Framework 4|.Net Framework 4.0]'ı yükleyin.
+* Eğer daha önce yüklemediyseniz, [http://msdn.microsoft.com/en-us/netframework/aa569263|.Net Framework 4.0]'ı yükleyin.
 
 
 ==Çınar SVN adresi==

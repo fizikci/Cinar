@@ -1,9 +1,9 @@
 Download
-admin|2011/05/24 15:18:15
+admin|2011/05/24 15:37:16
 ##PAGE##
 ==Çınar Database Tools==
 Son derlenmiş Çınar Database Tools programını buradan indirebilirsiniz:{BR}
-&nbsp; &nbsp; &nbsp; <font size="4">'''<a href="/GetFile.aspx?File=%2fcinar_dbtools.zip&AsStreamAttachment=1&Provider=ScrewTurn.Wiki.FilesStorageProvider&NoHit=1">cinar_dbtools.zip</a>'''</font>
+&nbsp; &nbsp; &nbsp; <font size="4">'''<a href="/GetFile.aspx?File=%2fcinar_dbtools.zip&AsStreamAttachment=1&Provider=ScrewTurn.Wiki.FilesStorageProvider">cinar_dbtools.zip</a>'''</font>
 
 Lütfen dikkat:
 * Bu bir kurulum dosyası değildir.

@@ -1,9 +1,10 @@
 Download
-admin|2011/05/17 00:45:41
+admin|2011/05/20 23:17:23
 ##PAGE##
 ==Çınar Database Tools==
 Son derlenmiş Çınar Database Tools programını buradan indirebilirsiniz:{BR}
 &nbsp; &nbsp; &nbsp; <font size="4">'''<a href="/Download/cinar_dbtools.zip">cinar_dbtools.zip</a>'''</font>{BR}
+
 Lütfen dikkat:
 * Bu bir kurulum dosyası değildir.
 * Önce bilgisayarınızda Cinar adında bir klasör oluşturun.

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Cinar.Database;
 using System.IO;
+using Cinar.DBTools.Tools;
 
 namespace Cinar.DBTools.Controls
 {
@@ -61,8 +62,21 @@ namespace Cinar.DBTools.Controls
             btnSave.Click += new EventHandler(btnSave_Click);
             btnRefresh.Click += delegate { bindTableData(); };
             btnDeleteSelectedRows.Click += delegate { deleteSelectedRows(); };
+            btnFilter.Click += new EventHandler(btnFilter_Click);
 
             fExp = new FilterExpression();
+        }
+
+        void btnFilter_Click(object sender, EventArgs e)
+        {
+            FilterExpressionDialog fed = new FilterExpressionDialog(ShowTable);
+            fed.FilterExpression = fExp;
+            if (fed.ShowDialog() == DialogResult.OK)
+            {
+                fExp = fed.FilterExpression;
+                txtPageNo.Text = "1";
+                bindTableData();
+            }
         }
 
         public string InitialText;
@@ -181,35 +195,34 @@ namespace Cinar.DBTools.Controls
         }
 
 
-
-        Table showTable;
         FilterExpression fExp;
         public Table ShowTable
         {
-            get { return showTable; }
-            set {
-                if (value != showTable)
-                {
-                    showTable = value;
-                    if (tabControl.SelectedTab == tpTableData)
-                    {
-                        clearPagingSortingMetadata();
-                        bindTableData();
-                    }
-                }
-
-                showTable = value;
-            }
+            get;
+            set;
         }
 
         public void ShowTableData(Table table, FilterExpression filter)
         {
             tableDataBound = false;
             this.fExp = filter ?? new FilterExpression();
+
             this.ShowTable = table;
             tabControl.SelectedTab = tpTableData;
-            if(!tableDataBound)
+            if (!tableDataBound)
                 bindTableData();
+        }
+        public void ShowTableDataIfTableTabActive(Table table, FilterExpression filter)
+        {
+            tableDataBound = false;
+            this.fExp = filter ?? new FilterExpression();
+            if (this.ShowTable != table && tabControl.SelectedTab == tpTableData)
+            {
+                this.ShowTable = table;
+                if (!tableDataBound)
+                    bindTableData();
+            }
+            this.ShowTable = table;
         }
 
         private void clearPagingSortingMetadata()
