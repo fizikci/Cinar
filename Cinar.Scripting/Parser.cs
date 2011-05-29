@@ -1202,7 +1202,7 @@ namespace Cinar.Scripting
                     SkipWhitespace();
 
                 // if the first character is a letter, the token is a word
-                if (char.IsLetter(fCurrentChar) && fCurrentChar!='$')
+                if ((char.IsLetter(fCurrentChar) || fCurrentChar == '_') && fCurrentChar != '$')
                     return ReadWord();
 
                 // if the first character is a digit, the token is an integer constant

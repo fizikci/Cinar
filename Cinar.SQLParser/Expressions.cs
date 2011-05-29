@@ -40,9 +40,6 @@ namespace Cinar.SQLParser
                 foreach (Expression expression in fArguments)
                     context.Output.Write(expression.Calculate(context, this));
             }
-            else if (context.Functions[Name] != null)
-            {
-            }
             else
                 throw new Exception("Undefined function: " + this);
             return null;
@@ -56,6 +53,29 @@ namespace Cinar.SQLParser
                 sb.Remove(sb.Length - 2, 2);
 
             return String.Format("{0}({1})", fName, sb.ToString());
+        }
+    }
+    public class DbObjectName : Expression
+    {
+        public DbObjectName(string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            if (name.Length == 0) throw new ArgumentException("name cannot be an empty string.", "name");
+            if (ParserNode.ReservedWords.Contains(name)) throw new ArgumentException("name cannot be a variable name", "name");
+
+            fName = name;
+        }
+
+        readonly string fName;
+        public string Name { get { return fName; } }
+
+        public override object Calculate(Context context, ParserNode parentNode)
+        {
+            return context.GetDbObject(fName);
+        }
+        public override string ToString()
+        {
+            return String.Format("{0}", fName);
         }
     }
     public class Variable : Expression
@@ -81,31 +101,7 @@ namespace Cinar.SQLParser
             return String.Format("{0}", fName);
         }
     }
-    public class VariableIncrement : Expression
-    {
-        public VariableIncrement(Variable var, int amount)
-        {
-            fVar = var;
-            fAmount = amount;
-        }
 
-        readonly Variable fVar;
-        public Variable Var { get { return fVar; } }
-
-        readonly int fAmount;
-        public int Amount { get { return fAmount; } }
-
-        public override object Calculate(Context context, ParserNode parentNode)
-        {
-            object res = context.GetVariableValue(fVar.Name);
-            context.SetVariableValue(fVar.Name, new Addition(Var, new IntegerConstant(Amount)).Calculate(context, this));
-            return res;
-        }
-        public override string ToString()
-        {
-            return String.Format("{0}{1}", fVar.Name, fAmount > 0 ? "++" : "--");
-        }
-    }
     public class IntegerConstant : Expression
     {
         public IntegerConstant(int value) { fValue = value; }
@@ -155,7 +151,7 @@ namespace Cinar.SQLParser
         }
         public override string ToString()
         {
-            return String.Format("\"{0}\"", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
+            return String.Format("{0}", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
         }
     }
     public class IfShortCut : Expression
@@ -247,7 +243,7 @@ namespace Cinar.SQLParser
         }
         public override string ToString()
         {
-            return String.Format("({0} && {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("({0} AND {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
 
         public static bool ParseBool(object obj)
@@ -296,7 +292,7 @@ namespace Cinar.SQLParser
         }
         public override string ToString()
         {
-            return String.Format("({0} || {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("({0} OR {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Addition : BinaryExpression
@@ -527,10 +523,10 @@ namespace Cinar.SQLParser
                 case ComparisonOperator.None:
                     break;
                 case ComparisonOperator.Equal:
-                    op = "==";
+                    op = "=";
                     break;
                 case ComparisonOperator.NotEqual:
-                    op = "!=";
+                    op = "<>";
                     break;
                 case ComparisonOperator.LessThan:
                     op = "<";
@@ -558,7 +554,9 @@ namespace Cinar.SQLParser
         LessThan,
         GreaterThan,
         LessThanOrEqual,
-        GreaterThanOrEqual
+        GreaterThanOrEqual,
+        Like,
+        In
     }
     public class MemberAccess : BinaryExpression
     {
@@ -614,7 +612,7 @@ namespace Cinar.SQLParser
         }
         public override string ToString()
         {
-            return String.Format("!{0}", ChildExpression.ToString());
+            return String.Format("NOT {0}", ChildExpression.ToString());
         }
     }
 }

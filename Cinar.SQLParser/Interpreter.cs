@@ -15,10 +15,9 @@ namespace Cinar.SQLParser
         List<Statement> statements;
         Context context;
 
-        public Interpreter(string code, List<string> usings)
+        public Interpreter(string code)
         {
             this.Code = code;
-            this.usings = usings;
         }
 
         public List<Statement> StatementsTree
@@ -41,9 +40,6 @@ namespace Cinar.SQLParser
 
         private string _code;
         public string Code { get { return _code; } set { _code = value; } }
-
-        private List<string> usings;
-        public List<string> Usings { get { return usings; } set { usings = value; } }
 
         private long parsingTime;
         public long ParsingTime { get { return parsingTime; } set { parsingTime = value; } }
@@ -92,63 +88,7 @@ namespace Cinar.SQLParser
 
         private string preParse(string code)
         {
-            code = code.Replace("\\$", "__backSlashDollor__");
-            StringBuilder sb = new StringBuilder(code.Length * 2);
-            using (StringReader sr = new StringReader(code))
-            {
-                string codePart = "", textPart = "";
-                bool readingCode = false, shortcutWrite = false;
-                int i = sr.Read();
-                while (i > 0)
-                {
-                    char c = (char)i;
-                    switch (c)
-                    {
-                        case '$':
-                            if (readingCode)
-                            {
-                                if (shortcutWrite)
-                                {
-                                    codePart += ")";
-                                    shortcutWrite = false;
-                                }
-                                sb.AppendLine(codePart);
-                                codePart = "";
-                                readingCode = false;
-                                i = sr.Read();
-                            }
-                            else
-                            {
-                                if (textPart != "")
-                                    sb.AppendLine("write(\"" + textPart.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\")");
-                                textPart = "";
-                                readingCode = true;
-
-                                i = sr.Read();
-                                if ((char)i == '=')
-                                {
-                                    codePart = "write(";
-                                    shortcutWrite = true;
-                                    i = sr.Read();
-                                }
-                            }
-                            break;
-                        default:
-                            if (readingCode)
-                                codePart += c;
-                            else
-                                textPart += c;
-                            i = sr.Read();
-                            break;
-                    }
-                }
-                if (readingCode && codePart != "")
-                    sb.AppendLine(codePart);
-                if (!readingCode && textPart != "")
-                    sb.AppendLine("write(\"" + textPart.Replace("\\", "\\\\").Replace("\r", "\\r").Replace("\n", "\\n").Replace("\"", "\\\"") + "\")");
-            }
-            sb.Replace("__backSlashDollor__", "$");
-            return sb.ToString();
+            return code;
         }
 
         public void Execute(TextWriter output)
@@ -159,11 +99,6 @@ namespace Cinar.SQLParser
             context.Variables["true"] = true;
             context.Variables["false"] = false;
             context.Variables["null"] = null;
-            context.Using.Add("System");
-            if(this.Usings!=null)
-                foreach (string nameSpace in this.Usings)
-                    if(!string.IsNullOrEmpty(nameSpace))
-                        context.Using.Add(nameSpace);
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -186,62 +121,21 @@ namespace Cinar.SQLParser
             this.Execute(stringWriter);
         }
     }
+
     public class Context
     {
         public Hashtable Variables = new Hashtable();
-        public Hashtable Functions = new Hashtable();
-        public List<string> Using = new List<string>();
-
         public TextWriter Output = null;
-        public object ReturnValue = null;
-        internal bool breakLoop = false;
-        internal bool continueLoop = false;
         internal Context parent = null;
 
-        public Type GetType(string className)
+        internal object GetDbObject(string fName)
         {
-            Type t = null;
-            foreach (string nameSpace in this.Using)
-            {
-                string fullClassName = nameSpace + "." + className;
-                t = Type.GetType(fullClassName);
-                if (t != null) return t;
-                t = Assembly.GetAssembly(typeof(System.Net.WebClient)).GetType(fullClassName);
-                if (t != null) return t;
-                if (Assembly.GetEntryAssembly() != null)
-                {
-                    t = Assembly.GetEntryAssembly().GetType(fullClassName);
-                    if (t != null) return t;
-                }
-                t = Assembly.GetCallingAssembly().GetType(fullClassName);
-                if (t != null) return t;
-            }
-            return t;
+            throw new NotImplementedException();
         }
-        public object GetVariableValue(string name)
+
+        internal object GetVariableValue(string fName)
         {
-            Context currContext = this;
-            while (currContext != null)
-            {
-                if (currContext.Variables.ContainsKey(name))
-                    return currContext.Variables[name];
-                currContext = currContext.parent;
-            }
-            return null;
-        }
-        public void SetVariableValue(string name, object value)
-        {
-            Context currContext = this;
-            while (currContext != null)
-            {
-                if (currContext.Variables.ContainsKey(name))
-                {
-                    currContext.Variables[name] = value;
-                    return;
-                }
-                currContext = currContext.parent;
-            }
-            this.Variables[name] = value;
+            return Variables[fName];
         }
     }
 }

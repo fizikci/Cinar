@@ -40,7 +40,7 @@ namespace Cinar.Database
             this.Constraints = new ConstraintCollection(this);
         }
 
-        internal TableCollection parent;
+        public TableCollection parent;
 
         private string name;
         /// <summary>
@@ -57,7 +57,7 @@ namespace Cinar.Database
         /// Hangi veritabanına ait?
         /// </summary>
         [XmlIgnore, Browsable(false)]
-        public Database Database
+        public IDatabase Database
         {
             get { return this.parent.db; }
         }
@@ -260,7 +260,7 @@ namespace Cinar.Database
             return sb.ToString();
         }
 
-        public Table CloneForDatabase(Database dbDst, string tableName)
+        public Table CloneForDatabase(IDatabase dbDst, string tableName)
         {
             Table newTable = new Table();
             newTable.parent = dbDst.Tables;
@@ -341,12 +341,12 @@ namespace Cinar.Database
     [Serializable]
     public class TableCollection : List<Table>
     {
-        internal Database db;
+        public IDatabase db;
 
         public TableCollection()
         {
         }
-        public TableCollection(Database db)
+        public TableCollection(IDatabase db)
         {
             this.db = db;
         }

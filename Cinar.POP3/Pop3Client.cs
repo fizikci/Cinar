@@ -76,13 +76,18 @@ namespace Cinar.POP3
 				IPHostEntry hostEntry = null;
         
 				// Get host related information.
-				hostEntry = Dns.GetHostEntry(m_credential.Server);
+				//hostEntry = Dns.GetHostEntry(m_credential.Server);
+                IPAddress ipAddress = null;
+                if (IPAddress.TryParse(m_credential.Server, out ipAddress))
+                    hostEntry = Dns.Resolve(m_credential.Server);
+                else
+                    throw new Exception("IP addres is not valid.");
 
 				// Loop through the AddressList to obtain the supported 
 				// AddressFamily. This is to avoid an exception that 
 				// occurs when the host IP Address is not compatible 
 				// with the address family 
-				// (typical in the IPv6 case).
+				// (typical in the IPv6 case).))
 				
 				foreach(IPAddress address in hostEntry.AddressList)
 				{

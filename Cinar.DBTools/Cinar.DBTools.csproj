@@ -91,6 +91,12 @@
     <Compile Include="CodeGen\FolderItem.cs" />
     <Compile Include="CodeGen\Item.cs" />
     <Compile Include="CodeGen\Solution.cs" />
+    <Compile Include="Controls\BackgroundWorkerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\BackgroundWorkerDialog.designer.cs">
+      <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TemplateEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -151,6 +157,9 @@
     <EmbeddedResource Include="CinarSQLEditor.resx">
       <DependentUpon>CinarSQLEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\BackgroundWorkerDialog.resx">
+      <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TemplateEditor.resx">
       <DependentUpon>TemplateEditor.cs</DependentUpon>
@@ -402,6 +411,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
+      <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
+      <Name>Cinar.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
       <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
       <Name>Cinar.Database</Name>
@@ -425,6 +438,10 @@
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
+      <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
+      <Name>Cinar.SQLParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.UICommands\Cinar.UICommands.csproj">
       <Project>{90107230-692B-4EEF-9308-31D954AE722E}</Project>

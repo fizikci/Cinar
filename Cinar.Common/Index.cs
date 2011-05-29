@@ -10,7 +10,7 @@ namespace Cinar.Database
     [Serializable]
     public class Index : BaseIndexConstraint
     {
-        internal IndexCollection parent;
+        public IndexCollection parent;
 
         [Browsable(false)]
         public override Table Table { get { return parent.Table; } }
@@ -61,7 +61,7 @@ namespace Cinar.Database
     [Serializable]
     public class IndexCollection : List<Index>
     {
-        internal Table table;
+        public Table table;
         public Table Table { get { return table; } }
 
         public IndexCollection()
