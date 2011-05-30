@@ -118,6 +118,7 @@ namespace Cinar.SQLParser
 
             if (fCurrentToken.Equals("TOP"))
             {
+                ReadNextToken();
                 ss.Limit = ParseExpression();
             }
 
@@ -144,7 +145,7 @@ namespace Cinar.SQLParser
 
                     ReadNextToken();
 
-                    if (fCurrentToken == null)
+                    if (AtEndOfSource)
                     {
                         ss.From.Add(new Join { Alias = firstAlias, TableName = firstTableName, JoinType = JoinType.Cross });
                         return ss; //***
@@ -154,8 +155,9 @@ namespace Cinar.SQLParser
                     {
                         ReadNextToken();
                         firstAlias = fCurrentToken.Value.TrimQuotation();
+                        ReadNextToken();
                     }
-                    else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("CROSS")))
+                    else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("WHERE") || fCurrentToken.Equals("GROUP") || fCurrentToken.Equals("LIMIT") || fCurrentToken.Equals("ORDER")))
                     {
                         firstAlias = fCurrentToken.Value.TrimQuotation();
                         ReadNextToken();
@@ -179,7 +181,7 @@ namespace Cinar.SQLParser
                 }
             }
 
-            if (fCurrentToken == null)
+            if (AtEndOfSource)
                 return ss;
 
             if (fCurrentToken.Equals("WHERE"))
@@ -189,7 +191,7 @@ namespace Cinar.SQLParser
                 ss.Where = ParseExpression();
             }
 
-            if (fCurrentToken == null)
+            if (AtEndOfSource)
                 return ss;
 
             if (fCurrentToken.Equals("GROUP"))
@@ -199,6 +201,9 @@ namespace Cinar.SQLParser
 
                 ss.GroupBy.Add(ParseExpression());
 
+                if (AtEndOfSource)
+                    return ss;
+
                 while (fCurrentToken.Value == ",")
                 {
                     ReadNextToken(); // skip ,
@@ -206,7 +211,7 @@ namespace Cinar.SQLParser
                 }
             }
 
-            if (fCurrentToken == null)
+            if (AtEndOfSource)
                 return ss;
 
             if (fCurrentToken.Equals("HAVING"))
@@ -216,7 +221,7 @@ namespace Cinar.SQLParser
                 ss.Having = ParseExpression();
             }
 
-            if (fCurrentToken == null)
+            if (AtEndOfSource)
                 return ss;
 
             if (fCurrentToken.Equals("ORDER"))
@@ -226,10 +231,32 @@ namespace Cinar.SQLParser
 
                 ss.OrderBy.Add(parseOrder());
 
+                if (AtEndOfSource)
+                    return ss;
+
                 while (fCurrentToken.Value == ",")
                 {
                     ReadNextToken(); // skip ,
                     ss.OrderBy.Add(parseOrder());
+                }
+            }
+
+            if (AtEndOfSource)
+                return ss;
+
+            if (fCurrentToken.Equals("LIMIT"))
+            {
+                ReadNextToken(); // skip 'limit'
+
+                ss.Limit = ParseExpression();
+
+                if (AtEndOfSource)
+                    return ss;
+
+                if (fCurrentToken.Equals(",") || fCurrentToken.Equals("OFFSET"))
+                {
+                    ReadNextToken();
+                    ss.Offset = ParseExpression();
                 }
             }
 
@@ -298,7 +325,7 @@ namespace Cinar.SQLParser
                 join.Alias = fCurrentToken.Value.TrimQuotation();
                 ReadNextToken();
             }
-            else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("ON") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("CROSS")))
+            else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("ON") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("CROSS") || fCurrentToken.Equals("WHERE") || fCurrentToken.Equals("GROUP") || fCurrentToken.Equals("LIMIT") || fCurrentToken.Equals("ORDER")))
             {
                 join.Alias = fCurrentToken.Value.TrimQuotation();
                 ReadNextToken();
@@ -1042,7 +1069,7 @@ namespace Cinar.SQLParser
             ReadNextToken(); // skip ')'
 
             // if this ends with ; skip it.
-            skipEmptyStatements();
+            //skipEmptyStatements();
 
             return new FunctionCall(name, lArguments.ToArray());
         }
@@ -1154,28 +1181,25 @@ namespace Cinar.SQLParser
         {
             SkipWhitespace();
 
+            Token token = null;
+
             if (AtEndOfSource)
-                return null;
-
-            // if the first character is a letter, the token is a word
-            if (currentCharIsLetter())
-                return ReadWord();
-
-            // if the first character is a digit, the token is an integer constant
-            if (char.IsDigit(fCurrentChar))
-                return ReadIntegerOrDecimalConstant();
-
-            // if the first character is a quote, the token is a string constant
-            if (fCurrentChar == '\'')
-                return ReadStringConstant();
-
-            // in all other cases, the token should be a symbol
-            Token token = ReadSymbol();
-
-            if (token.Value == "/*" || token.Value == "//" || token.Value == "--")
+                token =  null;
+            else if (currentCharIsLetter())      // if the first character is a letter, the token is a word
+                token = ReadWord();
+            else if (char.IsDigit(fCurrentChar)) // if the first character is a digit, the token is an integer constant
+                token = ReadIntegerOrDecimalConstant();
+            else if (fCurrentChar == '\'')       // if the first character is a quote, the token is a string constant
+                token = ReadStringConstant();
+            else                                 // in all other cases, the token should be a symbol
             {
-                SkipComment(token.Value);
-                token = ReadNextToken();
+                token = ReadSymbol();
+
+                if (token.Value == "/*" || token.Value == "//" || token.Value == "--")
+                {
+                    SkipComment(token.Value);
+                    token = ReadNextToken();
+                }
             }
 
             return token;
@@ -1188,11 +1212,27 @@ namespace Cinar.SQLParser
         }
         Token ReadWord()
         {
-            do
+            if (fCurrentChar == '`')
             {
+                do StoreCurrentCharAndReadNext(); while (fCurrentChar != '`');
                 StoreCurrentCharAndReadNext();
             }
-            while (currentCharIsLetter() || char.IsLetterOrDigit(fCurrentChar));
+            else if (fCurrentChar == '[')
+            {
+                do StoreCurrentCharAndReadNext(); while (fCurrentChar != ']');
+                StoreCurrentCharAndReadNext();
+            }
+            else if (fCurrentChar == '"')
+            {
+                do StoreCurrentCharAndReadNext(); while (fCurrentChar != '"');
+                StoreCurrentCharAndReadNext();
+            }
+            else
+                do
+                {
+                    StoreCurrentCharAndReadNext();
+                }
+                while (currentCharIsLetter() || char.IsLetterOrDigit(fCurrentChar));
 
             return new Token(TokenType.Word, ExtractStoredChars());
         }

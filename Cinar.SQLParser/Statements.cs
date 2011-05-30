@@ -118,16 +118,16 @@ namespace Cinar.SQLParser
             if (this.Where != null) 
                 res += "\r\nWHERE\r\n\t" + this.Where;
             if (this.GroupBy.Count > 0)
-                res += "\r\nGROUP BY\r\n" + string.Join(",\r\n\t", this.GroupBy.Select(g => g.ToString()).ToArray());
+                res += "\r\nGROUP BY\r\n\t" + string.Join(",\r\n\t", this.GroupBy.Select(g => g.ToString()).ToArray());
             if (this.Having != null)
-                res += "\r\nHAVING\r\n" + this.Having;
+                res += "\r\nHAVING\r\n\t" + this.Having;
             if (this.OrderBy.Count > 0)
-                res = "\r\nORDER BY\r\n" + string.Join(",\r\n\t", this.OrderBy.Select(o => o.ToString()).ToArray());
+                res += "\r\nORDER BY\r\n\t" + string.Join(",\r\n\t", this.OrderBy.Select(o => o.ToString()).ToArray());
             if(this.Limit!=null)
                 res += "\r\nLIMIT " + this.Limit;
             if (this.Offset != null)
                 res += " OFFSET " + this.Offset;
-
+            res += ";\r\n";
             return res;
         }
     }
@@ -177,6 +177,7 @@ namespace Cinar.SQLParser
             string res = "\t[" + this[0].TableName + "]" + ((!string.IsNullOrEmpty(this[0].Alias) && this[0].Alias != this[0].TableName) ? " AS [" + this[0].Alias + "]" : "") + "\r\n";
             for (int i = 1; i < this.Count; i++)
                 res += "\t" + this[i].ToString() + "\r\n";
+            res = res.TrimEnd();
             return res;
         }
     }
@@ -242,6 +243,7 @@ namespace Cinar.SQLParser
                 res += "(\r\n\t" + string.Join(",\r\n\t", Fields.Select(f => "[" + f + "]").ToArray()) + "\r\n)";
             res += " VALUES \r\n\t(";
             res += string.Join("),\r\n\t(", Values.Select(values => string.Join(", ", values.Select(e => e.ToString()).ToArray())).ToArray()) + ")";
+            res += ";\r\n";
             return res;
         }
     }
@@ -276,7 +278,7 @@ namespace Cinar.SQLParser
                 res += "\r\nFROM\r\n" + this.From;
             if (this.Where != null)
                 res += "\r\nWHERE\r\n\t" + this.Where;
-
+            res += ";\r\n";
             return res;
         }
     }
@@ -302,6 +304,7 @@ namespace Cinar.SQLParser
             string res = "DELETE FROM\r\n\t[" + TableName + "]";
             if (this.Where != null)
                 res += "\r\nWHERE\r\n\t" + this.Where;
+            res += ";\r\n";
             return res;
         }
     }
@@ -318,7 +321,7 @@ namespace Cinar.SQLParser
 
         public override string ToString()
         {
-            return "CREATE DATABASE [" + DatabaseName + "]";
+            return "CREATE DATABASE [" + DatabaseName + "];\r\n";
         }
     }
 
@@ -346,7 +349,7 @@ namespace Cinar.SQLParser
             if (this.Constraints.Count > 0)
                 res += ",\r\n\t";
             res += string.Join(",\r\n\t", this.Constraints.Select(c => c.ToString()).ToArray());
-            res += "\r\n)";
+            res += "\r\n);\r\n";
             return res;
         }
     }
