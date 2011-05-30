@@ -433,7 +433,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 686);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 664);
             // 
             // menuConShowHiddenConnections
             // 
