@@ -553,6 +553,11 @@ END;", column.Table.Name, column.Name);
             return string.Format("DROP INDEX \"{0}\"", index.Name);
         }
 
+        public string GetSQLViewCreate(Table view)
+        {
+            return "CREATE VIEW \"" + view.Name + "\" AS " + db.GetString("select definition from pg_catalog.pg_views where viewname = '"+view.Name+"'");
+        }
+
         #endregion
     }
 }

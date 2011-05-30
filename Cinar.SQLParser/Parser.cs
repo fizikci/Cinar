@@ -144,19 +144,29 @@ namespace Cinar.SQLParser
 
                     ReadNextToken();
 
-                    if (fCurrentToken!=null && fCurrentToken.Equals("AS"))
+                    if (fCurrentToken == null)
+                    {
+                        ss.From.Add(new Join { Alias = firstAlias, TableName = firstTableName, JoinType = JoinType.Cross });
+                        return ss; //***
+                    }
+
+                    if (fCurrentToken.Equals("AS"))
                     {
                         ReadNextToken();
                         firstAlias = fCurrentToken.Value.TrimQuotation();
                     }
+                    else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("CROSS")))
+                    {
+                        firstAlias = fCurrentToken.Value.TrimQuotation();
+                        ReadNextToken();
+                    }
 
                     ss.From.Add(new Join { Alias = firstAlias, TableName = firstTableName, JoinType = JoinType.Cross });
 
-                    if (fCurrentToken == null)
-                        return ss; //***
 
                     while (fCurrentToken!=null &&
                         (fCurrentToken.Equals(",") ||
+                        fCurrentToken.Equals("JOIN") ||
                         fCurrentToken.Equals("LEFT") ||
                         fCurrentToken.Equals("RIGHT") ||
                         fCurrentToken.Equals("INNER") ||
@@ -261,6 +271,7 @@ namespace Cinar.SQLParser
                     join.JoinType = JoinType.Full;
                     break;
                 case "CROSS":
+                case "JOIN":
                     join.JoinType = JoinType.Cross;
                     break;
                 default:
@@ -284,6 +295,11 @@ namespace Cinar.SQLParser
             if (fCurrentToken.Equals("AS"))
             {
                 ReadNextToken();
+                join.Alias = fCurrentToken.Value.TrimQuotation();
+                ReadNextToken();
+            }
+            else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("ON") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("CROSS")))
+            {
                 join.Alias = fCurrentToken.Value.TrimQuotation();
                 ReadNextToken();
             }
@@ -1167,6 +1183,7 @@ namespace Cinar.SQLParser
 
         private bool currentCharIsLetter()
         {
+            //                                                                       mysql quote           MS SQL quote                              postgre quote
             return char.IsLetter(fCurrentChar) || fCurrentChar == '_' || fCurrentChar == '`' || fCurrentChar == '[' || fCurrentChar == ']' || fCurrentChar == '"';
         }
         Token ReadWord()

@@ -688,7 +688,7 @@ namespace Cinar.DBTools
             // 
             this.menuTableGenSQLCreateTable.Name = "menuTableGenSQLCreateTable";
             this.menuTableGenSQLCreateTable.Size = new System.Drawing.Size(234, 22);
-            this.menuTableGenSQLCreateTable.Text = "Create Table";
+            this.menuTableGenSQLCreateTable.Text = "Create";
             // 
             // menuTableGenSQLDelete
             // 
