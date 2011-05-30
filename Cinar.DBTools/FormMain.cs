@@ -487,12 +487,18 @@ $"},
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuTableGenerateSQL, Argument="-"},
                                          new CommandTrigger{ Control = menuTableGenSQLCreateTable, Argument="CreateTable"},
-                                         new CommandTrigger{ Control = menuTableGenSQLInsert, Argument="Insert"},
                                          new CommandTrigger{ Control = menuTableGenSQLSelect, Argument="Select"},
+                                     },
+                                     IsVisible = ()=> SelectedObject is Table
+                                 },
+                     new Command {
+                                     Execute = cmdGenerateSQL,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuTableGenSQLInsert, Argument="Insert"},
                                          new CommandTrigger{ Control = menuTableGenSQLUpdate, Argument="Update"},
                                          new CommandTrigger{ Control = menuTableGenSQLDump, Argument="Dump"},
                                      },
-                                     IsVisible = ()=> SelectedObject is Table
+                                     IsVisible = ()=> SelectedObject is Table && !(SelectedObject as Table).IsView
                                  },
                      new Command {
                                      Execute = cmdColumnDistinct,
@@ -1630,7 +1636,10 @@ $"},
             switch (arg)
             {
                 case "CreateTable":
-                    sb.Append(table.ToDDL());
+                    if (table.IsView)
+                        sb.Append(Provider.Database.GetSQLViewCreate(table));
+                    else
+                        sb.Append(table.ToDDL());
                     break;
                 case "Insert":
                     sb.AppendLine("insert into " + table.Name + "(");

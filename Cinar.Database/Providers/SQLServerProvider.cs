@@ -500,6 +500,11 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
             return string.Format("DROP INDEX [{0}] ON [{1}]", index.Name, index.Table.Name);
         }
 
+        public string GetSQLViewCreate(Table view)
+        {
+            return db.GetString("sp_helptext '" + view.Name + "';");
+        }
+
         #endregion
     }
 }

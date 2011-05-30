@@ -315,32 +315,32 @@ namespace Cinar.Database
 
             sql = sql.Trim();
 
-            SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
-            SQLParser.Token token = tokenizer.ReadNextToken();
-            StringBuilder sb = new StringBuilder();
-            while (token != null)
-            {
-                if (token.Type == SQLParser.TokenType.Word && ((token.Value.StartsWith("[") && token.Value.EndsWith("]")) || (token.Value.StartsWith("`") && token.Value.EndsWith("`")) || (token.Value.StartsWith("\"") && token.Value.EndsWith("\""))))
-                    sb.Append(" " + getReservedWordToken(true) + token.Value.Substring(1, token.Value.Length - 2) + getReservedWordToken(false));
-                else if (token.Value == "{")
-                {
-                    sb.Append(" " + token.Value);
-                    token = tokenizer.ReadNextToken();
-                    sb.Append(token.Value);
-                }
-                else if (token.Value == "@")
-                {
-                    sb.Append(" " + token.Value);
-                    token = tokenizer.ReadNextToken();
-                    sb.Append(token.Value);
-                }
-                else if (token.Value == "}")
-                    sb.Append(token.Value);
-                else
-                    sb.Append(" " + token.Value);
-                token = tokenizer.ReadNextToken();
-            }
-            sql = sb.ToString().Trim();
+            //SQLParser.Tokenizer tokenizer = new SQLParser.Tokenizer(new StringReader(sql));
+            //SQLParser.Token token = tokenizer.ReadNextToken();
+            //StringBuilder sb = new StringBuilder();
+            //while (token != null)
+            //{
+            //    if (token.Type == SQLParser.TokenType.Word && ((token.Value.StartsWith("[") && token.Value.EndsWith("]")) || (token.Value.StartsWith("`") && token.Value.EndsWith("`")) || (token.Value.StartsWith("\"") && token.Value.EndsWith("\""))))
+            //        sb.Append(" " + getReservedWordToken(true) + token.Value.Substring(1, token.Value.Length - 2) + getReservedWordToken(false));
+            //    else if (token.Value == "{")
+            //    {
+            //        sb.Append(" " + token.Value);
+            //        token = tokenizer.ReadNextToken();
+            //        sb.Append(token.Value);
+            //    }
+            //    else if (token.Value == "@")
+            //    {
+            //        sb.Append(" " + token.Value);
+            //        token = tokenizer.ReadNextToken();
+            //        sb.Append(token.Value);
+            //    }
+            //    else if (token.Value == "}")
+            //        sb.Append(token.Value);
+            //    else
+            //        sb.Append(" " + token.Value);
+            //    token = tokenizer.ReadNextToken();
+            //}
+            //sql = sb.ToString().Trim();
 
             if (provider != DatabaseProvider.SQLServer && (sql.StartsWith("select top ", ic) || sql.StartsWith("select distinct top ", ic)))
             {
@@ -349,7 +349,7 @@ namespace Cinar.Database
                 sql = sql.Replace(" top " + parts[rowCountIndex], "");
                 sql += " limit " + parts[rowCountIndex];
             }
-            //sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
+            sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
 
             if (this.EnableSQLLog)
             {
@@ -1911,6 +1911,11 @@ namespace Cinar.Database
                 return GetSQLIndexRemove((Index)obj);
             else
                 return GetSQLConstraintRemove((Constraint)obj);
+        }
+
+        public string GetSQLViewCreate(Table view)
+        {
+            return dbProvider.GetSQLViewCreate(view);
         }
 
         // http://troels.arvin.dk/db/rdbms/

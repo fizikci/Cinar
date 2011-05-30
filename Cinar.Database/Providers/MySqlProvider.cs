@@ -564,6 +564,12 @@ order by Con.Name, Con.Type, Con.TableName, Col.ColumnName, Col.Position", db.Na
             return string.Format("DROP INDEX `{0}` ON `{1}`", index.Name, index.Table.Name);
         }
 
+        public string GetSQLViewCreate(Table view)
+        {
+            return (string)db.GetDataRow("show create table `" + db.Name + "`.`" + view.Name + "`;")[1];
+        }
+
         #endregion
+
     }
 }
