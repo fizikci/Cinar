@@ -47,10 +47,8 @@ namespace Cinar.SQLParser
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("{");
             foreach (Statement statement in this)
                 sb.AppendLine(statement.ToString());
-            sb.AppendLine("}");
             return sb.ToString();
         }
 
