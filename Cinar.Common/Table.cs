@@ -40,6 +40,7 @@ namespace Cinar.Database
             this.Constraints = new ConstraintCollection(this);
         }
 
+        [XmlIgnore, Browsable(false)]
         public TableCollection parent;
 
         private string name;
@@ -341,6 +342,7 @@ namespace Cinar.Database
     [Serializable]
     public class TableCollection : List<Table>
     {
+        [XmlIgnore, Browsable(false)]
         public IDatabase db;
 
         public TableCollection()

@@ -10,6 +10,7 @@ namespace Cinar.Database
     [Serializable]
     public class Index : BaseIndexConstraint
     {
+        [XmlIgnore, Browsable(false)]
         public IndexCollection parent;
 
         [Browsable(false)]
@@ -61,6 +62,7 @@ namespace Cinar.Database
     [Serializable]
     public class IndexCollection : List<Index>
     {
+        [XmlIgnore, Browsable(false)]
         public Table table;
         public Table Table { get { return table; } }
 

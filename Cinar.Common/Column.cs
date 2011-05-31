@@ -32,6 +32,7 @@ namespace Cinar.Database
     [Serializable]
     public class Column : IMetadata
     {
+        [XmlIgnore, Browsable(false)]
         public ColumnCollection parent;
 
         /// <summary>
@@ -289,6 +290,7 @@ namespace Cinar.Database
 
     public class ColumnCollection : List<Column>
     {
+        [XmlIgnore, Browsable(false)]
         public Table table;
         public Table Table { get { return table; } }
 

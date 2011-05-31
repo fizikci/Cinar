@@ -14,6 +14,7 @@ namespace Cinar.Database
     [XmlInclude(typeof(CheckConstraint))]
     public class Constraint : BaseIndexConstraint
     {
+        [XmlIgnore, Browsable(false)]
         public ConstraintCollection parent;
         [Browsable(false)]
         public override Table Table { get { return parent.Table; } }
@@ -59,6 +60,7 @@ namespace Cinar.Database
     [Serializable]
     public class ConstraintCollection : List<Constraint>
     {
+        [XmlIgnore, Browsable(false)]
         public Table table;
         public Table Table { get { return table; } }
 
