@@ -3,32 +3,33 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Data.Common;
+using System.Collections;
 
 namespace Cinar.SQLEngine
 {
-    public class CinarConnection : IDbConnection
+    public class CinarConnection : DbConnection
     {
-        public IDbTransaction BeginTransaction(IsolationLevel il)
+        public CinarConnection(string dbPath)
+        {
+            this.database = dbPath;
+        }
+
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
             throw new NotImplementedException();
         }
 
-        public IDbTransaction BeginTransaction()
+        public override void ChangeDatabase(string databaseName)
         {
             throw new NotImplementedException();
         }
 
-        public void ChangeDatabase(string databaseName)
+        public override void Close()
         {
-            throw new NotImplementedException();
         }
 
-        public void Close()
-        {
-            
-        }
-
-        public string ConnectionString
+        public override string ConnectionString
         {
             get
             {
@@ -40,59 +41,109 @@ namespace Cinar.SQLEngine
             }
         }
 
-        public int ConnectionTimeout
-        {
-            get { return 30; }
-        }
-
-        public IDbCommand CreateCommand()
+        protected override DbCommand CreateDbCommand()
         {
             return new CinarCommand();
         }
 
+        public override string DataSource
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         private string database;
-        public string Database
+        public override string Database
         {
             get { return database; }
         }
 
-        public void Open()
+        public override void Open()
         {
-            
         }
 
-        public ConnectionState State
+        public override string ServerVersion
+        {
+            get { return "1.0"; }
+        }
+
+        public override ConnectionState State
         {
             get { return ConnectionState.Open; }
         }
 
-        public void Dispose()
-        {
-        }
     }
 
-    public class CinarCommand : IDbCommand
+    public class CinarCommand : DbCommand
     {
-        public void Dispose()
-        {
-        }
 
-        public void Prepare()
+        public override void Cancel()
         {
             throw new NotImplementedException();
         }
 
-        public void Cancel()
+        private string commandText;
+        public override string CommandText
         {
-            throw new NotImplementedException();
+            get { return commandText; }
+            set { commandText = value; }
         }
 
-        public IDbDataParameter CreateParameter()
+        private int cmdTimeout = 30;
+        public override int CommandTimeout
+        {
+            get { return cmdTimeout; }
+            set { cmdTimeout = value; }
+        }
+
+        public override CommandType CommandType
+        {
+            get { return System.Data.CommandType.Text; }
+            set { throw new NotImplementedException("Only text commands supported"); }
+        }
+
+        protected override DbParameter CreateDbParameter()
         {
             return new CinarParameter();
         }
 
-        public int ExecuteNonQuery()
+        CinarConnection con;
+        protected override DbConnection DbConnection
+        {
+            get { return con; }
+            set { con = (CinarConnection)value; }
+        }
+
+        CinarParameterCollection parameters = new CinarParameterCollection();
+        protected override DbParameterCollection DbParameterCollection
+        {
+            get { return parameters; }
+        }
+
+        CinarTransaction tran;
+        protected override DbTransaction DbTransaction
+        {
+            get { return tran; }
+            set { tran = (CinarTransaction)value; }
+        }
+
+        public override bool DesignTimeVisible
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int ExecuteNonQuery()
         {
             Interpreter engine = new Interpreter(this.CommandText);
             engine.Parse();
@@ -101,17 +152,7 @@ namespace Cinar.SQLEngine
             return int.Parse(engine.Output);
         }
 
-        public IDataReader ExecuteReader()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDataReader ExecuteReader(CommandBehavior behavior)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object ExecuteScalar()
+        public override object ExecuteScalar()
         {
             Interpreter engine = new Interpreter(this.CommandText);
             engine.Parse();
@@ -120,308 +161,286 @@ namespace Cinar.SQLEngine
             return engine.Output;
         }
 
-        public DataSet ExecuteDataSet()
+        public override void Prepare()
         {
             throw new NotImplementedException();
         }
 
-        CinarConnection con;
-        public IDbConnection Connection
-        {
-            get { return con; }
-            set { con = (CinarConnection)value; }
-        }
-
-        CinarTransaction tran;
-        public IDbTransaction Transaction
-        {
-            get { return tran; }
-            set { tran = (CinarTransaction)tran; }
-        }
-
-        private string commandText;
-        public string CommandText
-        {
-            get { return commandText; }
-            set { commandText = value; }
-        }
-
-        private int cmdTimeout = 30;
-        public int CommandTimeout
-        {
-            get { return cmdTimeout; }
-            set { cmdTimeout = value; }
-        }
-
-        public CommandType CommandType
-        {
-            get { return System.Data.CommandType.Text; }
-            set { throw new NotImplementedException("Only text commands supported"); }
-        }
-
-        private CinarParameterCollection parameters = new CinarParameterCollection();
-        public CinarParameterCollection Parameters
-        {
-            get { return parameters; }
-        }
-
-        public UpdateRowSource UpdatedRowSource
+        public override UpdateRowSource UpdatedRowSource
         {
             get { return UpdateRowSource.None; }
             set { throw new NotImplementedException("we dont yet know what this is."); }
         }
-
-
-        IDataParameterCollection IDbCommand.Parameters
-        {
-            get { return Parameters; }
-        }
     }
 
-    public class CinarDataAdapter : IDbDataAdapter
+    public class CinarDataAdapter : DbDataAdapter
     {
-        public IDbCommand DeleteCommand
+        public CinarDataAdapter(CinarCommand cinarCommand)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            // TODO: Complete member initialization
+            this.SelectCommand = cinarCommand;
+        }
+ 
+    }
+
+    public class CinarTransaction : DbTransaction
+    {
+        public override void Commit()
+        {
+            throw new NotImplementedException();
         }
 
-        public IDbCommand InsertCommand
+        private CinarConnection conn;
+        protected override DbConnection DbConnection
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get { return conn; }
         }
 
-        private IDbCommand selectCommand;
-        public IDbCommand SelectCommand
+        private IsolationLevel isolationLevel;
+        public override IsolationLevel IsolationLevel
         {
-            get
-            {
-                return selectCommand;
-            }
-            set
-            {
-                selectCommand = value;
-            }
+            get { return isolationLevel; }
         }
 
-        public IDbCommand UpdateCommand
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int Fill(DataSet dataSet)
-        {
-            return 1;
-        }
-
-        public DataTable[] FillSchema(DataSet dataSet, SchemaType schemaType)
-        {
-        }
-
-        public IDataParameter[] GetFillParameters()
-        {
-        }
-
-        public MissingMappingAction MissingMappingAction
-        {
-            get
-            {
-                return System.Data.MissingMappingAction.Passthrough;
-            }
-            set
-            {
-            }
-        }
-
-        public MissingSchemaAction MissingSchemaAction
-        {
-            get
-            {
-                return System.Data.MissingSchemaAction.Ignore;
-            }
-            set
-            {
-                
-            }
-        }
-
-        public ITableMappingCollection TableMappings
-        {
-            get { return null; }
-        }
-
-        public int Update(DataSet dataSet)
+        public override void Rollback()
         {
             throw new NotImplementedException();
         }
     }
 
-    public class CinarTransaction : IDbTransaction
+    public class CinarParameter : DbParameter
     {
-        public void Commit()
+        public override DbType DbType
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override ParameterDirection Direction
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool IsNullable
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override string ParameterName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override void ResetDbType()
         {
             throw new NotImplementedException();
         }
 
-        internal IDbConnection conn;
-        public IDbConnection Connection
+        public override int Size
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override string SourceColumn
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override bool SourceColumnNullMapping
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override DataRowVersion SourceVersion
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override object Value
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+
+    public class CinarParameterCollection : DbParameterCollection
+    {
+        private InternalParameterCollection coll = new InternalParameterCollection();
+
+        public override int Add(object value)
+        {
+            coll.Add((CinarParameter)value);
+            return coll.Count;
+        }
+
+        public override void AddRange(Array values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Clear()
+        {
+            coll.Clear();
+        }
+
+        public override bool Contains(string value)
+        {
+            return coll.Contains(value);
+        }
+
+        public override bool Contains(object value)
+        {
+            return coll.Contains((CinarParameter)value);
+        }
+
+        public override void CopyTo(Array array, int index)
+        {
+            coll.CopyTo(array, index);
+        }
+
+        public override int Count
+        {
+            get { return coll.Count; }
+        }
+
+        public override System.Collections.IEnumerator GetEnumerator()
+        {
+            return coll.GetEnumerator();
+        }
+
+        protected override DbParameter GetParameter(string parameterName)
+        {
+            return coll.getParam(parameterName);
+        }
+
+        protected override DbParameter GetParameter(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int IndexOf(string parameterName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int IndexOf(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Insert(int index, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsFixedSize
         {
             get { throw new NotImplementedException(); }
         }
 
-        public IsolationLevel IsolationLevel
+        public override bool IsReadOnly
         {
             get { throw new NotImplementedException(); }
         }
 
-        public void Rollback()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class CinarParameter : IDbDataParameter
-    {
-        public byte Precision
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public byte Scale
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public DbType DbType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public ParameterDirection Direction
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsNullable
+        public override bool IsSynchronized
         {
             get { throw new NotImplementedException(); }
         }
 
-        public string ParameterName
+        public override void Remove(object value)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
 
-        public string SourceColumn
+        public override void RemoveAt(string parameterName)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
 
-        public DataRowVersion SourceVersion
+        public override void RemoveAt(int index)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
 
-        public object Value
+        protected override void SetParameter(string parameterName, DbParameter value)
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
+        }
+
+        protected override void SetParameter(int index, DbParameter value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object SyncRoot
+        {
+            get { throw new NotImplementedException(); }
         }
     }
-
-    public class CinarParameterCollection : List<CinarParameter>, IDataParameterCollection
+    
+    internal class InternalParameterCollection : ArrayList, IDataParameterCollection
     {
         public bool Contains(string parameterName)
         {
