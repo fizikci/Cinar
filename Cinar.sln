@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.FamFamFam", "Cinar.Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Common", "Cinar.Common\Cinar.Common.csproj", "{E9B26A78-06FF-4D79-9C37-D4198DF126EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.SQLEngine", "Cinar.SQLEngine\Cinar.SQLEngine.csproj", "{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -231,6 +233,15 @@ Global
 		{E9B26A78-06FF-4D79-9C37-D4198DF126EB}.Release64|Any CPU.ActiveCfg = Release|Any CPU
 		{E9B26A78-06FF-4D79-9C37-D4198DF126EB}.Release64|Any CPU.Build.0 = Release|Any CPU
 		{E9B26A78-06FF-4D79-9C37-D4198DF126EB}.Release64|x64.ActiveCfg = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

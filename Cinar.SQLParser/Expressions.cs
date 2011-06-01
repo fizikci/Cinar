@@ -10,9 +10,16 @@ using System.Globalization;
 
 namespace Cinar.SQLParser
 {
+    public interface IContext 
+    { 
+        object GetMaxOf(Expression expression);
+        object GetValueOfCurrent(string fName);
+        object GetVariableValue(string fName);
+    }
+
     public abstract class Expression : ParserNode
     {
-        public abstract object Calculate(Context context, ParserNode parentNode);
+        public abstract object Calculate(IContext context);
     }
 
     public class FunctionCall : Expression
@@ -33,13 +40,10 @@ namespace Cinar.SQLParser
         readonly Expression[] fArguments;
         public Expression[] Arguments { get { return fArguments; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            if (Name == "write" || Name == "print" || Name == "echo")
-            {
-                foreach (Expression expression in fArguments)
-                    context.Output.Write(expression.Calculate(context, this));
-            }
+            if (Name == "max")
+                return context.GetMaxOf(fArguments[0]);
             else
                 throw new Exception("Undefined function: " + this);
             return null;
@@ -48,7 +52,7 @@ namespace Cinar.SQLParser
         {
             StringBuilder sb = new StringBuilder();
             foreach (Expression expression in fArguments)
-                sb.Append(expression.ToString() + ", ");
+                sb.Append(expression + ", ");
             if(sb.Length>=2)
                 sb.Remove(sb.Length - 2, 2);
 
@@ -69,9 +73,9 @@ namespace Cinar.SQLParser
         readonly string fName;
         public string Name { get { return fName; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            return context.GetDbObject(fName);
+            return context.GetValueOfCurrent(fName);
         }
         public override string ToString()
         {
@@ -92,7 +96,7 @@ namespace Cinar.SQLParser
         readonly string fName;
         public string Name { get { return fName; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
             return context.GetVariableValue(fName);
         }
@@ -109,7 +113,7 @@ namespace Cinar.SQLParser
         readonly int fValue;
         public int Value { get { return fValue; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
             return fValue;
         }
@@ -125,7 +129,7 @@ namespace Cinar.SQLParser
         readonly decimal fValue;
         public decimal Value { get { return fValue; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
             return fValue;
         }
@@ -145,7 +149,7 @@ namespace Cinar.SQLParser
         readonly string fValue;
         public string Value { get { return fValue; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
             return fValue;
         }
@@ -170,12 +174,12 @@ namespace Cinar.SQLParser
         readonly Expression falseExpression;
         public Expression FalseExpression { get { return falseExpression; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            return AndExpression.ParseBool(boolExp.Calculate(context, this)) ?
-                trueExpression.Calculate(context, this)
+            return AndExpression.ParseBool(boolExp.Calculate(context)) ?
+                trueExpression.Calculate(context)
                 :
-                falseExpression.Calculate(context, this);
+                falseExpression.Calculate(context);
         }
         public override string ToString()
         {
@@ -195,11 +199,11 @@ namespace Cinar.SQLParser
         readonly Expression notNullExp;
         public Expression NotNullExp { get { return notNullExp; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object val = nullableExp.Calculate(context, this);
+            object val = nullableExp.Calculate(context);
             if (val == null || val.Equals(""))
-                return notNullExp.Calculate(context, this);
+                return notNullExp.Calculate(context);
             else
                 return val;
         }
@@ -231,10 +235,10 @@ namespace Cinar.SQLParser
         public AndExpression(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             bool leftBool = AndExpression.ParseBool(left);
             bool rightBool = AndExpression.ParseBool(right);
@@ -275,10 +279,10 @@ namespace Cinar.SQLParser
         public OrExpression(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             bool leftBool = AndExpression.ParseBool(left);
             bool rightBool = AndExpression.ParseBool(right);
@@ -300,10 +304,10 @@ namespace Cinar.SQLParser
         public Addition(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             if (left == null && right == null)
             {
@@ -339,10 +343,10 @@ namespace Cinar.SQLParser
         public Mod(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             left = left ?? 0;
             right = right ?? 0;
@@ -362,10 +366,10 @@ namespace Cinar.SQLParser
         public Subtraction(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             if (left == null && right == null)
             {
@@ -403,10 +407,10 @@ namespace Cinar.SQLParser
         public Division(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             if (left == null && right == null)
             {
@@ -435,10 +439,10 @@ namespace Cinar.SQLParser
         public Multiplication(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             left = left ?? 0;
             right = right ?? 0;
@@ -464,10 +468,10 @@ namespace Cinar.SQLParser
         readonly ComparisonOperator fOperator;
         public ComparisonOperator Operator { get { return fOperator; } }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
 
             if (left == null && right == null)
             {
@@ -563,7 +567,7 @@ namespace Cinar.SQLParser
         public MemberAccess(Expression leftChildExpression, Expression rightChildExpression)
             : base(leftChildExpression, rightChildExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
             throw new NotImplementedException();
         }
@@ -590,9 +594,9 @@ namespace Cinar.SQLParser
         public Negation(Expression childExpression)
             : base(childExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            int res = Convert.ToInt32(ChildExpression.Calculate(context, this));
+            int res = Convert.ToInt32(ChildExpression.Calculate(context));
             return -1 * res;
         }
         public override string ToString()
@@ -605,9 +609,9 @@ namespace Cinar.SQLParser
         public NotExpression(Expression childExpression)
             : base(childExpression) { }
 
-        public override object Calculate(Context context, ParserNode parentNode)
+        public override object Calculate(IContext context)
         {
-            bool b = Convert.ToBoolean(ChildExpression.Calculate(context, this));
+            bool b = Convert.ToBoolean(ChildExpression.Calculate(context));
             return !b;
         }
         public override string ToString()

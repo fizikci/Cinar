@@ -17,7 +17,6 @@ namespace Cinar.SQLParser
     
     public abstract class Statement : ParserNode
     {
-        public abstract void Execute(Context context, ParserNode parentNode);
     }
 
     public class StatementCollection : ICollection<Statement>
@@ -28,20 +27,6 @@ namespace Cinar.SQLParser
             if (statements == null) throw new ArgumentNullException("statements");
 
             fStatements = statements;
-        }
-
-        public Context Execute(Context context, ParserNode parentNode, Hashtable arguments)
-        {
-            Context fContext = new Context();
-            fContext.parent = context;
-            fContext.Output = context.Output;
-
-            foreach (Statement statement in this)
-            {
-                statement.Execute(fContext, parentNode);
-            }
-
-            return fContext;
         }
 
         public override string ToString()
@@ -101,11 +86,6 @@ namespace Cinar.SQLParser
             From = new ListJoin();
             OrderBy = new List<Order>();
             GroupBy = new List<Expression>();
-        }
-        
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
         }
 
         public override string ToString()
@@ -229,11 +209,6 @@ namespace Cinar.SQLParser
             Values = new List<List<Expression>>();
         }
 
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
             string res = "INSERT INTO [" + TableName + "]";
@@ -263,11 +238,6 @@ namespace Cinar.SQLParser
             From = new ListJoin();
         }
 
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
             string res = "UPDATE [" + TableName + "] SET\r\n\t";
@@ -292,11 +262,6 @@ namespace Cinar.SQLParser
         {
         }
 
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
             string res = "DELETE FROM\r\n\t[" + TableName + "]";
@@ -308,21 +273,19 @@ namespace Cinar.SQLParser
     }
     #endregion
 
+    #region create database statement
     public class CreateDatabaseStatement : Statement
     {
         public string DatabaseName { get; set; }
-
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
-        }
 
         public override string ToString()
         {
             return "CREATE DATABASE [" + DatabaseName + "];\r\n";
         }
     }
+    #endregion
 
+    #region create table statement
     public class CreateTableStatement : Statement
     {
         public string TableName { get; set; }
@@ -335,11 +298,6 @@ namespace Cinar.SQLParser
             Constraints = new List<TableConstraint>();
         }
 
-        public override void Execute(Context context, ParserNode parentNode)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
             string res = "CREATE TABLE [" + TableName + "] (\r\n\t";
@@ -347,7 +305,8 @@ namespace Cinar.SQLParser
             if (this.Constraints.Count > 0)
                 res += ",\r\n\t";
             res += string.Join(",\r\n\t", this.Constraints.Select(c => c.ToString()).ToArray());
-            res += "\r\n);\r\n";
+            res += "\r\n)";
+            res += ";\r\n";
             return res;
         }
     }
@@ -368,7 +327,7 @@ namespace Cinar.SQLParser
         {
             string res = "[" + ColumnName + "] " + ColumnType;
             res += (Length > 0 ? "(" + Length + (Scale > 0 ? "," + Scale : "") + ")" : "");
-            if(Constraints.Count>0)
+            if (Constraints.Count > 0)
                 res += " " + string.Join(" ", this.Constraints.Select(c => c.ToString()).ToArray());
             return res;
         }
@@ -460,6 +419,7 @@ namespace Cinar.SQLParser
         Collate,
         Default
     }
+    #endregion
 
     public static class Utility
     {
