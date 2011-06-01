@@ -46,7 +46,6 @@ namespace Cinar.SQLParser
                 return context.GetMaxOf(fArguments[0]);
             else
                 throw new Exception("Undefined function: " + this);
-            return null;
         }
         public override string ToString()
         {
