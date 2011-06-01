@@ -29,7 +29,8 @@ namespace Cinar.Database
     {
         PostgreSQL,
         MySQL,
-        SQLServer
+        SQLServer,
+        Cinar
     }
 
     public enum DbType

@@ -76,6 +76,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\BaseProvider.cs" />
+    <Compile Include="Providers\CinarProvider.cs" />
     <Compile Include="Providers\PostgreSQLProvider.cs" />
     <Compile Include="Providers\MySqlProvider.cs" />
     <Compile Include="Providers\SQLServerProvider.cs" />
@@ -110,6 +111,10 @@
     <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
       <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
       <Name>Cinar.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.SQLEngine\Cinar.SQLEngine.csproj">
+      <Project>{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}</Project>
+      <Name>Cinar.SQLEngine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
       <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>

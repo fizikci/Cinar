@@ -6,9 +6,11 @@ create table dosya (
 	name FileName,
 	path FullPath,
 	tarih CreatedDate
-) from FileSystemProvider
-where
-	Folder = "c:\windows";
+) 
+from FileSystemProvider(
+	Folder = "c:\windows",
+	Prop = Value
+)
 
 2.
 
