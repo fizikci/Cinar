@@ -60,7 +60,8 @@
             this.cbProvider.Items.AddRange(new object[] {
             "MySQL",
             "PostgreSQL",
-            "SQLServer"});
+            "SQLServer",
+            "Cinar"});
             this.cbProvider.Location = new System.Drawing.Point(88, 16);
             this.cbProvider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbProvider.Name = "cbProvider";

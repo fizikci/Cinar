@@ -118,8 +118,24 @@ namespace Cinar.SQLEngine
         {
             get { return parameters; }
         }
+        public new CinarParameterCollection Parameters { get { return parameters; } }
 
         CinarTransaction tran;
+        public CinarCommand(string cmdText, CinarConnection cinarConnection, CinarTransaction cinarTransaction)
+        {
+            // TODO: Complete member initialization
+            this.commandText = cmdText;
+            this.con = cinarConnection;
+            this.tran = cinarTransaction;
+        }
+
+        public CinarCommand(string cmdText, CinarConnection cinarConnection)
+        {
+            // TODO: Complete member initialization
+            this.commandText = cmdText;
+            this.con = cinarConnection;
+        }
+        internal CinarCommand() { }
         protected override DbTransaction DbTransaction
         {
             get { return tran; }
@@ -140,7 +156,12 @@ namespace Cinar.SQLEngine
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            throw new NotImplementedException();
+            Interpreter engine = new Interpreter(this.CommandText);
+            engine.Parse();
+            engine.Execute();
+
+            CinarDataReader cdr = new CinarDataReader(engine.ResultSet, engine.FieldNames);
+            return cdr;
         }
 
         public override int ExecuteNonQuery()
@@ -210,6 +231,16 @@ namespace Cinar.SQLEngine
 
     public class CinarParameter : DbParameter
     {
+        private string parameterName;
+        private object parameterValue;
+
+        public CinarParameter(string parameterName, object value)
+        {
+            // TODO: Complete member initialization
+            this.parameterName = parameterName;
+            this.parameterValue = value;
+        }
+        internal CinarParameter() { }
         public override DbType DbType
         {
             get
@@ -250,11 +281,11 @@ namespace Cinar.SQLEngine
         {
             get
             {
-                throw new NotImplementedException();
+                return parameterName;
             }
             set
             {
-                throw new NotImplementedException();
+                parameterName = value;
             }
         }
 
@@ -315,11 +346,11 @@ namespace Cinar.SQLEngine
         {
             get
             {
-                throw new NotImplementedException();
+                return parameterValue;
             }
             set
             {
-                throw new NotImplementedException();
+                parameterValue = value;
             }
         }
     }
@@ -376,67 +407,72 @@ namespace Cinar.SQLEngine
 
         protected override DbParameter GetParameter(int index)
         {
-            throw new NotImplementedException();
+            return (DbParameter)coll[index];
         }
 
         public override int IndexOf(string parameterName)
         {
-            throw new NotImplementedException();
+            return coll.IndexOf(parameterName);
         }
 
         public override int IndexOf(object value)
         {
-            throw new NotImplementedException();
+            return coll.IndexOf(value);
         }
 
         public override void Insert(int index, object value)
         {
-            throw new NotImplementedException();
+            coll.Insert(index, value);
         }
 
         public override bool IsFixedSize
         {
-            get { throw new NotImplementedException(); }
+            get { return coll.IsFixedSize; }
         }
 
         public override bool IsReadOnly
         {
-            get { throw new NotImplementedException(); }
+            get { return coll.IsReadOnly; }
         }
 
         public override bool IsSynchronized
         {
-            get { throw new NotImplementedException(); }
+            get { return coll.IsSynchronized; }
         }
 
         public override void Remove(object value)
         {
-            throw new NotImplementedException();
+            coll.Remove(value);
         }
 
         public override void RemoveAt(string parameterName)
         {
-            throw new NotImplementedException();
+            coll.RemoveAt(parameterName);
         }
 
         public override void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            coll.RemoveAt(index);
         }
 
         protected override void SetParameter(string parameterName, DbParameter value)
         {
-            throw new NotImplementedException();
+            coll[parameterName] = value;
         }
 
         protected override void SetParameter(int index, DbParameter value)
         {
-            throw new NotImplementedException();
+            coll[index] = value;
         }
 
         public override object SyncRoot
         {
-            get { throw new NotImplementedException(); }
+            get { return coll.SyncRoot; }
+        }
+
+        public void AddWithValue(string paramName, object paramValue)
+        {
+            coll.AddWithValue(paramName, paramValue);
         }
     }
     
@@ -463,7 +499,7 @@ namespace Cinar.SQLEngine
                 this.Remove(p);
         }
 
-        private CinarParameter getParam(string parameterName)
+        internal CinarParameter getParam(string parameterName)
         {
             foreach (CinarParameter cinarParameter in this)
                 if (parameterName == cinarParameter.ParameterName)
@@ -488,6 +524,192 @@ namespace Cinar.SQLEngine
         public void AddWithValue(string paramName, object paramValue)
         {
             this.Add(new CinarParameter() {ParameterName = paramName, Value = paramValue});
+        }
+    }
+
+    public class CinarDataReader : DbDataReader
+    {
+        private List<Hashtable> list;
+        private int currentIndex = 0;
+        private List<string> fieldNames;
+
+        public CinarDataReader(List<Hashtable> list, List<string> fieldNames)
+        {
+            this.list = list;
+            this.fieldNames = fieldNames;
+        }
+        public override void Close()
+        {
+            isClosed = true;
+        }
+
+        public override int Depth
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override int FieldCount
+        {
+            get { return list==null ? 0 : list[0].Keys.Count; }
+        }
+
+        private object getValue(int ordinal)
+        {
+            return list[currentIndex][fieldNames[ordinal]];
+        }
+
+        public override bool GetBoolean(int ordinal)
+        {
+            return Convert.ToBoolean(getValue(ordinal));
+        }
+
+        public override byte GetByte(int ordinal)
+        {
+            return Convert.ToByte(getValue(ordinal));
+        }
+
+        public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override char GetChar(int ordinal)
+        {
+            return Convert.ToChar(getValue(ordinal));
+        }
+
+        public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetDataTypeName(int ordinal)
+        {
+            return getValue(0).GetType().Name;
+        }
+
+        public override DateTime GetDateTime(int ordinal)
+        {
+            return Convert.ToDateTime(getValue(ordinal));
+        }
+
+        public override decimal GetDecimal(int ordinal)
+        {
+            return Convert.ToDecimal(getValue(ordinal));
+        }
+
+        public override double GetDouble(int ordinal)
+        {
+            return Convert.ToDouble(getValue(ordinal));
+        }
+
+        public override IEnumerator GetEnumerator()
+        {
+            return list.GetEnumerator();
+        }
+
+        public override Type GetFieldType(int ordinal)
+        {
+            return getValue(ordinal).GetType();
+        }
+
+        public override float GetFloat(int ordinal)
+        {
+            return Convert.ToSingle(getValue(ordinal));
+        }
+
+        public override Guid GetGuid(int ordinal)
+        {
+            return new Guid(GetString(ordinal));
+        }
+
+        public override short GetInt16(int ordinal)
+        {
+            return Convert.ToInt16(getValue(ordinal));
+        }
+
+        public override int GetInt32(int ordinal)
+        {
+            return Convert.ToInt32(getValue(ordinal));
+        }
+
+        public override long GetInt64(int ordinal)
+        {
+            return Convert.ToInt64(getValue(ordinal));
+        }
+
+        public override string GetName(int ordinal)
+        {
+            return fieldNames[ordinal];
+        }
+
+        public override int GetOrdinal(string name)
+        {
+            return fieldNames.IndexOf(name);
+        }
+
+        public override DataTable GetSchemaTable()
+        {
+            return new DataTable();
+        }
+
+        public override string GetString(int ordinal)
+        {
+            return Convert.ToString(getValue(ordinal));
+        }
+
+        public override object GetValue(int ordinal)
+        {
+            return getValue(ordinal);
+        }
+
+        public override int GetValues(object[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+                values[i] = getValue(i);
+            return fieldNames.Count;
+        }
+
+        public override bool HasRows
+        {
+            get { return list!=null && list.Count>0; }
+        }
+
+        private bool isClosed = false;
+        public override bool IsClosed
+        {
+            get { return isClosed; }
+        }
+
+        public override bool IsDBNull(int ordinal)
+        {
+            return getValue(ordinal) == null;
+        }
+
+        public override bool NextResult()
+        {
+            return currentIndex < list.Count - 1;
+        }
+
+        public override bool Read()
+        {
+            currentIndex++;
+            return currentIndex < list.Count;
+        }
+
+        public override int RecordsAffected
+        {
+            get { return list.Count; }
+        }
+
+        public override object this[string name]
+        {
+            get { return getValue(GetOrdinal(name)); }
+        }
+
+        public override object this[int ordinal]
+        {
+            get { return getValue(ordinal); }
         }
     }
 }

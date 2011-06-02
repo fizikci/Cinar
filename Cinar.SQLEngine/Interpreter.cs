@@ -6,6 +6,7 @@ using System.Collections;
 using System.IO;
 using System.Diagnostics;
 using Cinar.SQLParser;
+using System.Linq;
 
 namespace Cinar.SQLEngine
 {
@@ -52,6 +53,8 @@ namespace Cinar.SQLEngine
                 return context.Output.ToString();
             }
         }
+        public List<Hashtable> ResultSet = null;
+        public List<string> FieldNames = null;
 
         public void Parse()
         {
@@ -116,7 +119,29 @@ namespace Cinar.SQLEngine
 
         private void execute(StatementCollection coll, Context context)
         {
-            throw new NotImplementedException();
+            foreach (Statement statement in coll)
+                execute(statement, context);
+        }
+
+        private void execute(Statement statement, Context context)
+        {
+            if (statement is SelectStatement)
+            {
+                // Join'den tabloları al
+                // her bir kayıt için hashtable oluştur, context'e ekle, where expressionı üzerinde excute ettir. true ise listeye ekle.
+                // falan filan uzun iş bu. niye yapıyorum ki ben bunu?
+
+                SelectStatement ss = statement as SelectStatement;
+                Expression filter = null;
+                if (ss.From[0].On == null && ss.Where == null) filter = null;
+                else if (ss.From[0].On != null && ss.Where != null) filter = new AndExpression(ss.From[0].On, ss.Where);
+                else if (ss.From[0].On != null) filter = ss.From[0].On;
+                else filter = ss.Where;
+
+                List<Hashtable> data = context.GetData(ss.From[0], filter);
+                this.ResultSet = data;
+                this.FieldNames = ss.Select.Select(s => s.Alias).ToList();
+            }
         }
 
         public void Execute()
@@ -145,6 +170,24 @@ namespace Cinar.SQLEngine
         public object GetVariableValue(string fName)
         {
             throw new NotImplementedException();
+        }
+
+        internal List<Hashtable> GetData(Join join, Expression where)
+        {
+            List<Hashtable> list = new List<Hashtable>();
+
+            switch (join.TableName.ToLowerInvariant())
+            {
+                case "information_schema.tables":
+                    list.Add(new Hashtable() { { "table_name", "RSS" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "POP3" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "File" }, { "table_type", "table" } });
+                    break;
+                case "information_schema.columns":
+                    throw new NotImplementedException("return table columns");
+                    break;
+            }
+            return list;
         }
     }
 }

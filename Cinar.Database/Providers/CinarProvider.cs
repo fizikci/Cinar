@@ -35,6 +35,7 @@ namespace Cinar.Database.Providers
         public CinarProvider(Database db, bool createDatabaseIfNotExist)
         {
             this.db = db;
+            this.connection = new CinarConnection("cinar");
         }
 
         /// <summary>
@@ -336,7 +337,12 @@ namespace Cinar.Database.Providers
         #region
         public string GetSQLTableList()
         {
-            throw new NotImplementedException();
+            return string.Format(@"
+					    SELECT 
+                            table_name, 
+                            table_type 
+                        FROM 
+                            information_schema.tables", db.Name);
         }
 
         public string GetSQLTableRename(string oldName, string newName)
@@ -351,7 +357,19 @@ namespace Cinar.Database.Providers
 
         public string GetSQLColumnList(string tableName)
         {
-            throw new NotImplementedException();
+            return string.Format(@"
+					    select
+							COLUMN_NAME,
+							DATA_TYPE,
+							CHARACTER_MAXIMUM_LENGTH,
+							IS_NULLABLE,
+							COLUMN_DEFAULT,
+                            IS_AUTO_INCREMENT
+						from
+							INFORMATION_SCHEMA.COLUMNS
+						WHERE
+							TABLE_NAME='{0}'
+                        ORDER BY ORDINAL_POSITION", tableName);
         }
 
         public string GetSQLColumnAdd(string toTable, Column column)

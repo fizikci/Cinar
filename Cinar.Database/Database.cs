@@ -236,6 +236,9 @@ namespace Cinar.Database
                 case DatabaseProvider.SQLServer:
                     dbProvider = new Providers.SQLServerProvider(this, createDatabaseIfNotExist);
                     break;
+                case DatabaseProvider.Cinar:
+                    dbProvider = new Providers.CinarProvider(this, createDatabaseIfNotExist);
+                    break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
             }
@@ -265,6 +268,9 @@ namespace Cinar.Database
                 case DatabaseProvider.SQLServer:
                     this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",
                                                           host, dbName, userName, password).Replace("Initial Catalog=;", "");
+                    break;
+                case DatabaseProvider.Cinar:
+                    this.connectionString = "cinar";
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
