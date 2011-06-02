@@ -142,8 +142,15 @@ namespace Cinar.SQLParser
                     // from kısmını sorgula
                     string firstTableName = fCurrentToken.Value.TrimQuotation();
                     string firstAlias = firstTableName;
-
                     ReadNextToken();
+
+                    if (fCurrentToken.Equals("."))
+                    {
+                        ReadNextToken();
+                        firstTableName += "." + fCurrentToken.Value;
+                        firstAlias = firstTableName;
+                        ReadNextToken();
+                    }
 
                     if (AtEndOfSource)
                     {
@@ -270,6 +277,8 @@ namespace Cinar.SQLParser
             o.By = ParseExpression();
             if (o.By is Variable)
                 o.By = new DbObjectName((o.By as Variable).Name.TrimQuotation());
+            if (AtEndOfSource)
+                return o;
             if (fCurrentToken.Equals("ASC"))
                 ReadNextToken();
             if (fCurrentToken.Equals("DESC"))
