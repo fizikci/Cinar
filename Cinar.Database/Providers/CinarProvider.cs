@@ -62,8 +62,8 @@ namespace Cinar.Database.Providers
                     Column f = new Column();
                     f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
                     if (f.DefaultValue == "\0") f.DefaultValue = "";
-                    f.ColumnTypeOriginal = drColumn["COLUMN_TYPE"].ToString() == "tinyint(1)" ? "BOOL" : drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
-                    f.ColumnType = StringToDbType(f.ColumnTypeOriginal);
+                    f.ColumnTypeOriginal = drColumn["DATA_TYPE"].ToString();
+                    f.ColumnType = Column.GetDbTypeOf(Type.GetType("System."+f.ColumnTypeOriginal));
                     f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
                     f.IsNullable = drColumn["IS_NULLABLE"].ToString() != "NO";
                     f.Name = drColumn["COLUMN_NAME"].ToString();

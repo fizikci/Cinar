@@ -1556,7 +1556,7 @@ namespace Cinar.Database
             f.Name = string.IsNullOrEmpty(columnProps.Name) ? pi.Name : columnProps.Name;
             f.DefaultValue = columnProps.DefaultValue;
             if (columnProps.ColumnType == DbType.Undefined)
-                f.ColumnType = GetDbType(pi.PropertyType);
+                f.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
             else
                 f.ColumnType = columnProps.ColumnType;
             f.IsAutoIncrement = columnProps.IsAutoIncrement;
@@ -1585,50 +1585,6 @@ namespace Cinar.Database
             //        }
             //    }
             //}
-        }
-        public DbType GetDbType(Type type)
-        {
-            DbType res = DbType.VarChar;
-
-            if (type.IsEnum)
-                return DbType.Int32;
-
-            if (type.FullName.Contains("Byte[]"))
-                return DbType.BlobLong;
-
-            switch (type.Name)
-            {
-                case "Int16":
-                    res = DbType.Int16;
-                    break;
-                case "Int32":
-                    res = DbType.Int32;
-                    break;
-                case "Int64":
-                    res = DbType.Int64;
-                    break;
-                case "Boolean":
-                    res = DbType.Boolean;
-                    break;
-                case "Byte":
-                    break;
-                case "String":
-                    res = DbType.VarChar;
-                    break;
-                case "DateTime":
-                    res = DbType.DateTime;
-                    break;
-                case "Decimal":
-                    res = DbType.Decimal;
-                    break;
-                case "Float":
-                    res = DbType.Float;
-                    break;
-                case "Double":
-                    res = DbType.Double;
-                    break;
-            }
-            return res;
         }
 
         public void CreateTablesForAllTypesIn(Assembly assembly)

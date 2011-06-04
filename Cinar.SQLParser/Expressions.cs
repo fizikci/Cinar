@@ -142,7 +142,7 @@ namespace Cinar.SQLParser
         public StringConstant(string value)
         {
             if (value == null) throw new ArgumentNullException("value");
-            fValue = value;
+            fValue = value.Trim('\'');
         }
 
         readonly string fValue;

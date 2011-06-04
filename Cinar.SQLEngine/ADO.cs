@@ -555,6 +555,8 @@ namespace Cinar.SQLEngine
 
         private object getValue(int ordinal)
         {
+            if (ordinal < 0 || ordinal >= fieldNames.Count)
+                return DBNull.Value;
             return list[currentIndex][fieldNames[ordinal]];
         }
 
@@ -640,6 +642,8 @@ namespace Cinar.SQLEngine
 
         public override string GetName(int ordinal)
         {
+            if (ordinal < 0 || ordinal >= fieldNames.Count)
+                return null;
             return fieldNames[ordinal];
         }
 

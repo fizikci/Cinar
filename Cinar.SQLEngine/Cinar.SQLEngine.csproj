@@ -46,6 +46,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
+      <Project>{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}</Project>
+      <Name>Cinar.POP3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.RSSReader\Cinar.RSSReader.csproj">
+      <Project>{6A041EA4-3C99-4D22-8E34-30F22392726E}</Project>
+      <Name>Cinar.RSSReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
       <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
       <Name>Cinar.SQLParser</Name>
