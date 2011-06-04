@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Text;
 using System.Collections;
 using System.IO;
@@ -138,9 +139,8 @@ namespace Cinar.SQLEngine
                 else if (ss.From[0].On != null) filter = ss.From[0].On;
                 else filter = ss.Where;
 
-                List<Hashtable> data = context.GetData(ss.From[0], filter);
-                this.ResultSet = data;
                 this.FieldNames = ss.Select.Select(s => s.Alias).ToList();
+                this.ResultSet = context.GetData(ss.From[0], filter, this.FieldNames);
             }
         }
 
@@ -169,10 +169,13 @@ namespace Cinar.SQLEngine
 
         public object GetVariableValue(string fName)
         {
-            throw new NotImplementedException();
+            if (Variables.ContainsKey(fName))
+                return Variables[fName];
+            else
+                return null;
         }
 
-        internal List<Hashtable> GetData(Join join, Expression where)
+        internal List<Hashtable> GetData(Join join, Expression where, List<string> fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
@@ -181,12 +184,46 @@ namespace Cinar.SQLEngine
                 case "information_schema.tables":
                     list.Add(new Hashtable() { { "table_name", "RSS" }, { "table_type", "table" } });
                     list.Add(new Hashtable() { { "table_name", "POP3" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "File" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "FILE" }, { "table_type", "table" } });
                     break;
                 case "information_schema.columns":
-                    throw new NotImplementedException("return table columns");
+                    list.AddRange(getColumnsOf(typeof(RSSReader.RSSItem), "RSS", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(POP3.MailMessage), "POP3", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(FileSystemInfo), "FILE", where, fieldNames));
                     break;
             }
+
+            return list;
+        }
+
+        private List<Hashtable> getColumnsOf(Type type, string tableName, Expression where, List<string> fieldNames)
+        {
+            List<Hashtable> list = new List<Hashtable>();
+            foreach (PropertyInfo pi in type.GetProperties())
+            {
+                if (pi.PropertyType == typeof(string) || pi.PropertyType.IsValueType)
+                {
+                    if (pi.PropertyType.IsEnum) continue;
+
+                    Variables["COLUMN_DEFAULT"] = "";
+                    Variables["DATA_TYPE"] = pi.PropertyType.Name;
+                    Variables["COLUMN_TYPE"] = pi.PropertyType.Name;
+                    Variables["CHARACTER_MAXIMUM_LENGTH"] = 65532;
+                    Variables["IS_NULLABLE"] = false;
+                    Variables["COLUMN_NAME"] = pi.Name;
+                    Variables["IS_AUTO_INCREMENT"] = false;
+                    Variables["TABLE_NAME"] = tableName;
+
+                    if (where==null || (bool)where.Calculate(this))
+                    {
+                        Hashtable ht = new Hashtable();
+                        foreach (string fieldName in fieldNames)
+                            ht[fieldName] = Variables[fieldName];
+                        list.Add(ht);
+                    }
+                }
+            }
+
             return list;
         }
     }
