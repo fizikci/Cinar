@@ -130,8 +130,7 @@ namespace Cinar.SQLParser
                 ss.Select.Add(parseListItem());
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("FROM"))
             {
@@ -142,6 +141,7 @@ namespace Cinar.SQLParser
                     // from kısmını sorgula
                     string firstTableName = fCurrentToken.Value.TrimQuotation();
                     string firstAlias = firstTableName;
+                    Dictionary<string, Expression> tableOptions = null;
                     ReadNextToken();
 
                     if (fCurrentToken.Equals("."))
@@ -158,20 +158,30 @@ namespace Cinar.SQLParser
                         return ss; //***
                     }
 
-                    if (fCurrentToken.Equals("AS"))
+                    if (fCurrentToken.Equals("(")) // Cinar table options
                     {
                         ReadNextToken();
-                        firstAlias = fCurrentToken.Value.TrimQuotation();
-                        ReadNextToken();
+                        tableOptions = parseSetItems();
+                        SkipExpected(")");
                     }
-                    else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("WHERE") || fCurrentToken.Equals("GROUP") || fCurrentToken.Equals("LIMIT") || fCurrentToken.Equals("ORDER")))
+
+                    if (fCurrentToken != null)
                     {
-                        firstAlias = fCurrentToken.Value.TrimQuotation();
-                        ReadNextToken();
+                        if (fCurrentToken.Equals("AS"))
+                        {
+                            ReadNextToken();
+                            firstAlias = fCurrentToken.Value.TrimQuotation();
+                            ReadNextToken();
+                        }
+                        else if (!(fCurrentToken.Equals(",") || fCurrentToken.Equals("JOIN") || fCurrentToken.Equals("LEFT") || fCurrentToken.Equals("RIGHT") || fCurrentToken.Equals("INNER") || fCurrentToken.Equals("WHERE") || fCurrentToken.Equals("GROUP") || fCurrentToken.Equals("LIMIT") || fCurrentToken.Equals("ORDER")))
+                        {
+                            firstAlias = fCurrentToken.Value.TrimQuotation();
+                            ReadNextToken();
+                        }
                     }
+                    ss.From.Add(new Join { Alias = firstAlias, TableName = firstTableName, JoinType = JoinType.Cross, CinarTableOptions = tableOptions });
 
-                    ss.From.Add(new Join { Alias = firstAlias, TableName = firstTableName, JoinType = JoinType.Cross });
-
+                    if (AtEndOfSource) return ss;
 
                     while (fCurrentToken!=null &&
                         (fCurrentToken.Equals(",") ||
@@ -188,8 +198,7 @@ namespace Cinar.SQLParser
                 }
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("WHERE"))
             {
@@ -198,8 +207,7 @@ namespace Cinar.SQLParser
                 ss.Where = ParseExpression();
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("GROUP"))
             {
@@ -208,8 +216,7 @@ namespace Cinar.SQLParser
 
                 ss.GroupBy.Add(ParseExpression());
 
-                if (AtEndOfSource)
-                    return ss;
+                if (AtEndOfSource) return ss;
 
                 while (fCurrentToken.Value == ",")
                 {
@@ -218,8 +225,7 @@ namespace Cinar.SQLParser
                 }
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("HAVING"))
             {
@@ -228,8 +234,7 @@ namespace Cinar.SQLParser
                 ss.Having = ParseExpression();
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("ORDER"))
             {
@@ -238,8 +243,7 @@ namespace Cinar.SQLParser
 
                 ss.OrderBy.Add(parseOrder());
 
-                if (AtEndOfSource)
-                    return ss;
+                if (AtEndOfSource) return ss;
 
                 while (fCurrentToken.Value == ",")
                 {
@@ -248,8 +252,7 @@ namespace Cinar.SQLParser
                 }
             }
 
-            if (AtEndOfSource)
-                return ss;
+            if (AtEndOfSource) return ss;
 
             if (fCurrentToken.Equals("LIMIT"))
             {
@@ -257,8 +260,7 @@ namespace Cinar.SQLParser
 
                 ss.Limit = ParseExpression();
 
-                if (AtEndOfSource)
-                    return ss;
+                if (AtEndOfSource) return ss;
 
                 if (fCurrentToken.Equals(",") || fCurrentToken.Equals("OFFSET"))
                 {
@@ -270,6 +272,23 @@ namespace Cinar.SQLParser
             skipEmptyStatements();
 
             return ss;
+        }
+
+        private Dictionary<string, Expression> parseSetItems()
+        {
+            Dictionary<string, Expression> setItems = new Dictionary<string, Expression>();
+
+            KeyValuePair<string, Expression> kvp = parseSetItem();
+            setItems.Add(kvp.Key, kvp.Value);
+
+            while (fCurrentToken.Value == ",")
+            {
+                ReadNextToken(); // skip ,
+                KeyValuePair<string, Expression> kvp2 = parseSetItem();
+                setItems.Add(kvp2.Key, kvp2.Value);
+            }
+
+            return setItems;
         }
         private Order parseOrder()
         {
@@ -328,6 +347,18 @@ namespace Cinar.SQLParser
             if (fCurrentToken.Equals("JOIN")) ReadNextToken();
             join.TableName = join.Alias = fCurrentToken.Value.TrimQuotation();
             ReadNextToken();
+
+            if (AtEndOfSource) return join;
+
+            if (fCurrentToken.Equals("(")) // Cinar table options
+            {
+                ReadNextToken();
+                join.CinarTableOptions = parseSetItems();
+                SkipExpected(")");
+            }
+
+            if (AtEndOfSource) return join;
+
             if (fCurrentToken.Equals("AS"))
             {
                 ReadNextToken();
@@ -339,6 +370,8 @@ namespace Cinar.SQLParser
                 join.Alias = fCurrentToken.Value.TrimQuotation();
                 ReadNextToken();
             }
+
+            if (AtEndOfSource) return join;
 
             if (fCurrentToken.Equals("ON"))
             {

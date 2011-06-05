@@ -120,9 +120,13 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuUndo, Argument = "Undo"},
                                          new CommandTrigger{ Control = menuRedo, Argument = "Redo"},
                                          new CommandTrigger{ Control = menuCut, Argument = "Cut"},
+                                         new CommandTrigger{ Control = menuCut2, Argument = "Cut"},
                                          new CommandTrigger{ Control = menuCopy, Argument = "Copy"},
+                                         new CommandTrigger{ Control = menuCopy2, Argument = "Copy"},
                                          new CommandTrigger{ Control = menuPaste, Argument = "Paste"},
+                                         new CommandTrigger{ Control = menuPaste2, Argument = "Paste"},
                                          new CommandTrigger{ Control = menuSelectAll, Argument = "SelectAll"},
+                                         new CommandTrigger{ Control = menuSelectAll2, Argument = "SelectAll"},
                                          new CommandTrigger{ Control = menuFind, Argument = "Find"},
                                          new CommandTrigger{ Control = menuReplace, Argument = "Replace"},
                                          new CommandTrigger{ Control = menuBeautifySQL, Argument = "Beautify"},
@@ -201,7 +205,8 @@ namespace Cinar.DBTools
                                 },
                      new Command {
                                      Execute = (arg)=>{
-                                         Process.Start(Path.GetDirectoryName(CurrEditor.FilePath));
+                                         Process.Start("explorer.exe", "/select," + CurrEditor.FilePath);
+                                         //Process.Start(Path.GetDirectoryName(CurrEditor.FilePath));
                                      },
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuTabOpenContainingFolder},
@@ -2413,6 +2418,9 @@ $"},
 
         public override string ToString()
         {
+            if (Provider == DatabaseProvider.Cinar)
+                return "Cinar SQL Engine";
+
             string toStr = DbName + " (";
             if (Host.Contains('.'))
             {

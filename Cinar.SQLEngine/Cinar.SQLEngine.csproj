@@ -42,6 +42,9 @@
     <Compile Include="ADO.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\RSSProvider.cs" />
+    <Compile Include="Providers\POP3Provider.cs" />
+    <Compile Include="Providers\FileProvider.cs" />
     <Compile Include="Interpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

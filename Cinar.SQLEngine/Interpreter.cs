@@ -8,6 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using Cinar.SQLParser;
 using System.Linq;
+using Cinar.SQLEngine.Providers;
 
 namespace Cinar.SQLEngine
 {
@@ -187,9 +188,27 @@ namespace Cinar.SQLEngine
                     list.Add(new Hashtable() { { "table_name", "FILE" }, { "table_type", "table" } });
                     break;
                 case "information_schema.columns":
-                    list.AddRange(getColumnsOf(typeof(RSSReader.RSSItem), "RSS", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(POP3.MailMessage), "POP3", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(FileSystemInfo), "FILE", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(RSSItem), "RSS", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(POP3Item), "POP3", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(FileItem), "FILE", where, fieldNames));
+                    break;
+                case "file":
+                    string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
+                    bool recursive = Convert.ToBoolean(join.CinarTableOptions["Recursive"].Calculate(this));
+                    FileProvider fileProvider = new FileProvider(path, recursive);
+                    list.AddRange(fileProvider.GetData(this, where, fieldNames));
+                    break;
+                case "pop3":
+                    string server = (string)join.CinarTableOptions["Server"].Calculate(this);
+                    string userName = (string)join.CinarTableOptions["UserName"].Calculate(this);
+                    string password = (string)join.CinarTableOptions["Password"].Calculate(this);
+                    POP3Provider pop3Provider = new POP3Provider(server, userName, password);
+                    list.AddRange(pop3Provider.GetData(this, where, fieldNames));
+                    break;
+                case "rss":
+                    string url = (string)join.CinarTableOptions["Url"].Calculate(this);
+                    RSSProvider rssProvider = new RSSProvider(url);
+                    list.AddRange(rssProvider.GetData(this, where, fieldNames));
                     break;
             }
 
@@ -201,7 +220,7 @@ namespace Cinar.SQLEngine
             List<Hashtable> list = new List<Hashtable>();
             foreach (PropertyInfo pi in type.GetProperties())
             {
-                if (pi.PropertyType == typeof(string) || pi.PropertyType.IsValueType)
+                if (pi.PropertyType == typeof(string) || pi.PropertyType.IsValueType || pi.PropertyType==typeof(byte[]))
                 {
                     if (pi.PropertyType.IsEnum) continue;
 

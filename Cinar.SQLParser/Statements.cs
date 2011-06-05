@@ -164,6 +164,7 @@ namespace Cinar.SQLParser
         public JoinType JoinType { get; set; }
         public string TableName { get; set; }
         public string Alias { get; set; }
+        public Dictionary<string, Expression> CinarTableOptions { get; set; }
         public Expression On { get; set; }
 
         public override string ToString()
