@@ -200,6 +200,11 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.menuCopy2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCut2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuPaste2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSelectAll2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -795,13 +800,18 @@ namespace Cinar.DBTools
             this.menuTabClose,
             this.menuTabCloseAll,
             this.menuTabCloseAllButThis,
+            this.toolStripMenuItem11,
+            this.menuCut2,
+            this.menuCopy2,
+            this.menuPaste2,
+            this.menuSelectAll2,
             this.toolStripMenuItem8,
             this.menuTabCompareWithOriginal,
             this.toolStripMenuItem9,
             this.menuTabCopyFullPath,
             this.menuTabOpenContainingFolder});
             this.menuStripEditorTabs.Name = "menuStripEditorTabs";
-            this.menuStripEditorTabs.Size = new System.Drawing.Size(211, 176);
+            this.menuStripEditorTabs.Size = new System.Drawing.Size(211, 270);
             // 
             // menuTabSave
             // 
@@ -1673,6 +1683,39 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // menuCopy2
+            // 
+            this.menuCopy2.Name = "menuCopy2";
+            this.menuCopy2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuCopy2.Size = new System.Drawing.Size(210, 22);
+            this.menuCopy2.Text = "Copy";
+            // 
+            // menuCut2
+            // 
+            this.menuCut2.Name = "menuCut2";
+            this.menuCut2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.menuCut2.Size = new System.Drawing.Size(210, 22);
+            this.menuCut2.Text = "Cut";
+            // 
+            // menuPaste2
+            // 
+            this.menuPaste2.Name = "menuPaste2";
+            this.menuPaste2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.menuPaste2.Size = new System.Drawing.Size(210, 22);
+            this.menuPaste2.Text = "Paste";
+            // 
+            // menuSelectAll2
+            // 
+            this.menuSelectAll2.Name = "menuSelectAll2";
+            this.menuSelectAll2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.menuSelectAll2.Size = new System.Drawing.Size(210, 22);
+            this.menuSelectAll2.Text = "Select All";
+            // 
+            // toolStripMenuItem11
+            // 
+            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(207, 6);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1891,6 +1934,11 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuTableOpenWithFilter;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem10;
         private System.Windows.Forms.ToolStripMenuItem menuBeautifySQL;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem11;
+        private System.Windows.Forms.ToolStripMenuItem menuCut2;
+        private System.Windows.Forms.ToolStripMenuItem menuCopy2;
+        private System.Windows.Forms.ToolStripMenuItem menuPaste2;
+        private System.Windows.Forms.ToolStripMenuItem menuSelectAll2;
 
     }
 }

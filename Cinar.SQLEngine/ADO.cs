@@ -530,11 +530,12 @@ namespace Cinar.SQLEngine
     public class CinarDataReader : DbDataReader
     {
         private List<Hashtable> list;
-        private int currentIndex = 0;
+        private int currentIndex;
         private List<string> fieldNames;
 
         public CinarDataReader(List<Hashtable> list, List<string> fieldNames)
         {
+            this.currentIndex = -1;
             this.list = list;
             this.fieldNames = fieldNames;
         }
@@ -550,7 +551,7 @@ namespace Cinar.SQLEngine
 
         public override int FieldCount
         {
-            get { return list==null ? 0 : list[0].Keys.Count; }
+            get { return list==null ? (fieldNames==null ? 0 : fieldNames.Count) : list[0].Keys.Count; }
         }
 
         private object getValue(int ordinal)
@@ -612,7 +613,10 @@ namespace Cinar.SQLEngine
 
         public override Type GetFieldType(int ordinal)
         {
-            return getValue(ordinal).GetType();
+            currentIndex = 0;
+            Type t = getValue(ordinal).GetType();
+            currentIndex = -1;
+            return t;
         }
 
         public override float GetFloat(int ordinal)
@@ -692,7 +696,7 @@ namespace Cinar.SQLEngine
 
         public override bool NextResult()
         {
-            return currentIndex < list.Count - 1;
+            return false;
         }
 
         public override bool Read()
