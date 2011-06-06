@@ -15,7 +15,7 @@ namespace Cinar.POP3
 	{
 		private Pop3Credential m_credential;
 
-		private const int m_pop3port = 110;
+		private int m_pop3port = 110;
 		private const int MAX_BUFFER_READ_SIZE = 256;
 		
 		private long m_inboxPosition = 0;
@@ -62,10 +62,16 @@ namespace Cinar.POP3
 		}
 
 
-		public Pop3Client(string user, string pass, string server)
-		{
-			m_credential = new Pop3Credential(user,pass,server);
-		}
+        public Pop3Client(string user, string pass, string server)
+        {
+            m_credential = new Pop3Credential(user, pass, server);
+        }
+
+        public Pop3Client(string user, string pass, string server, int port)
+            : this(user, pass, server)
+        {
+            m_pop3port = port;
+        }
 
 		private Socket GetClientSocket()
 		{
