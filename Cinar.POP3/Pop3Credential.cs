@@ -9,7 +9,7 @@ namespace Cinar.POP3
 	{
 		private string m_user;
 		private string m_pass;
-		private string m_server;
+        private string m_server;
 
 		public string User
 		{
@@ -29,12 +29,12 @@ namespace Cinar.POP3
 			get { return m_server; }
 		}
 
-		public Pop3Credential(string user, string pass, string server)
-		{
-			m_user = user;
-			m_pass = pass;
-			m_server = server;
-		}
+        public Pop3Credential(string user, string pass, string server)
+        {
+            m_user = user;
+            m_pass = pass;
+            m_server = server;
+        }
 
 		public Pop3Credential()
 		{
