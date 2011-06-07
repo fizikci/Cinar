@@ -333,7 +333,6 @@ namespace Cinar.Database.Providers
 
         #endregion
 
-
         #region
         public string GetSQLTableList()
         {

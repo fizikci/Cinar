@@ -893,10 +893,10 @@ namespace Cinar.SQLParser
         {
             Expression lNode = ParseAdditiveExpression();
 
-            if (!AtEndOfSource && fCurrentToken.Type == TokenType.Symbol)
+            if (!AtEndOfSource)
             {
-                ComparisonOperator lOperator;
-                switch (fCurrentToken.Value)
+                ComparisonOperator lOperator = ComparisonOperator.None;
+                switch (fCurrentToken.Value.ToLowerInvariant())
                 {
                     case "=": lOperator = ComparisonOperator.Equal; break;
                     case "==": lOperator = ComparisonOperator.Equal; break;
@@ -906,13 +906,17 @@ namespace Cinar.SQLParser
                     case ">": lOperator = ComparisonOperator.GreaterThan; break;
                     case "<=": lOperator = ComparisonOperator.LessThanOrEqual; break;
                     case ">=": lOperator = ComparisonOperator.GreaterThanOrEqual; break;
+                    case "like": lOperator = ComparisonOperator.Like; break;
                     default: return lNode;
                 }
-
-                ReadNextToken(); // skip comparison operator
-                return new Comparison(lOperator, lNode, ParseAdditiveExpression());
+                if (lOperator != ComparisonOperator.None)
+                {
+                    ReadNextToken(); // skip comparison operator
+                    return new Comparison(lOperator, lNode, ParseAdditiveExpression());
+                }
             }
-            else return lNode;
+            
+            return lNode;
         }
 
         Expression ParseAdditiveExpression()

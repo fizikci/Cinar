@@ -512,6 +512,16 @@ namespace Cinar.SQLParser
                     return leftC.CompareTo(right) < 0 || leftC.CompareTo(right) == 0;
                 case ComparisonOperator.GreaterThanOrEqual:
                     return leftC.CompareTo(right) > 0 || leftC.CompareTo(right) == 0;
+                case ComparisonOperator.Like:
+                    string q = right.ToString();
+                    string str = left.ToString();
+                    if(q.StartsWith("%"))
+                    {
+                        if(q.EndsWith("%"))
+                            return str.Contains(q.Replace("%",""));
+                        return str.EndsWith(q.Replace("%",""));
+                    }
+                    return str.StartsWith(q.Replace("%",""));
                 default:
                     break;
             }
