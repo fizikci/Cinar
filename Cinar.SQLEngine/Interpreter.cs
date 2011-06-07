@@ -57,6 +57,7 @@ namespace Cinar.SQLEngine
         }
         public List<Hashtable> ResultSet = null;
         public List<string> FieldNames = null;
+        public List<Type> FieldTypes = null;
 
         public void Parse()
         {
@@ -142,6 +143,15 @@ namespace Cinar.SQLEngine
 
                 this.FieldNames = ss.Select.Select(s => s.Alias).ToList();
                 this.ResultSet = context.GetData(ss.From[0], filter, this.FieldNames);
+                this.FieldTypes = new List<Type>();
+                if (this.ResultSet.Count > 0)
+                {
+                    foreach (string key in FieldNames)
+                        if (this.ResultSet[0][key] != null)
+                            this.FieldTypes.Add(this.ResultSet[0][key].GetType());
+                        else
+                            this.FieldTypes.Add(typeof(string));
+                }
             }
         }
 
@@ -186,11 +196,13 @@ namespace Cinar.SQLEngine
                     list.Add(new Hashtable() { { "table_name", "RSS" }, { "table_type", "table" } });
                     list.Add(new Hashtable() { { "table_name", "POP3" }, { "table_type", "table" } });
                     list.Add(new Hashtable() { { "table_name", "FILE" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "FACEBOOK" }, { "table_type", "table" } });
                     break;
                 case "information_schema.columns":
                     list.AddRange(getColumnsOf(typeof(RSSItem), "RSS", where, fieldNames));
                     list.AddRange(getColumnsOf(typeof(POP3Item), "POP3", where, fieldNames));
                     list.AddRange(getColumnsOf(typeof(FileItem), "FILE", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(FBPost), "FACEBOOK", where, fieldNames));
                     break;
                 case "file":
                     string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
@@ -209,6 +221,11 @@ namespace Cinar.SQLEngine
                     string url = (string)join.CinarTableOptions["Url"].Calculate(this);
                     RSSProvider rssProvider = new RSSProvider(url);
                     list.AddRange(rssProvider.GetData(this, where, fieldNames));
+                    break;
+                case "facebook":
+                    string query = (string)join.CinarTableOptions["Query"].Calculate(this);
+                    FacebookProvider fbProvider = new FacebookProvider(query);
+                    list.AddRange(fbProvider.GetData(this, where, fieldNames));
                     break;
             }
 
