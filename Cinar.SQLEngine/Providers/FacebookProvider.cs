@@ -21,11 +21,11 @@ namespace Cinar.SQLEngine.Providers
             this.query = query;
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, List<string> fieldNames)
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
-            Uri serviceUri = new Uri("https://graph.facebook.com/search?q="+query+"&type=post");
+            Uri serviceUri = new Uri("https://graph.facebook.com/search?q=\""+query+"\"&type=post");
             WebClient downloader = new WebClient();
             string json = downloader.DownloadString(serviceUri);
 
@@ -37,8 +37,8 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (string fieldName in fieldNames)
-                        ht[fieldName] = context.Variables[fieldName];
+                    foreach (Select field in fieldNames)
+                        ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
                     list.Add(ht);
                 }
             }
@@ -59,6 +59,8 @@ namespace Cinar.SQLEngine.Providers
     {
         public string id { get; set; }
         public FBFrom from { get; set; }
+        public string from_id { get { return from.id; } }
+        public string from_name { get { return from.name; } }
         public string picture { get; set; }
         public string link { get; set; }
         public string source { get; set; }
@@ -68,7 +70,7 @@ namespace Cinar.SQLEngine.Providers
         public string icon { get; set; }
         public string type { get; set; }
         public string object_id { get; set; }
-        public FBApplication application { get; set; }
+//        public FBApplication application { get; set; }
         public DateTime created_time { get; set; }
         public DateTime updated_time { get; set; }
 
@@ -76,17 +78,17 @@ namespace Cinar.SQLEngine.Providers
         {
         }
     }
-    public class FBProperty
-    {
-        public string name { get; set; }
-        public string text { get; set; }
-        public string href { get; set; }
-    }
-    public class FBApplication
-    {
-        public string name { get; set; }
-        public string id { get; set; }
-    }
+    //public class FBProperty
+    //{
+    //    public string name { get; set; }
+    //    public string text { get; set; }
+    //    public string href { get; set; }
+    //}
+    //public class FBApplication
+    //{
+    //    public string name { get; set; }
+    //    public string id { get; set; }
+    //}
     public class FBFrom
     {
         public string name { get; set; }

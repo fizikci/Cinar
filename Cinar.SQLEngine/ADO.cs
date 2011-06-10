@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Collections;
+using Cinar.SQLParser;
 
 namespace Cinar.SQLEngine
 {
@@ -531,10 +532,10 @@ namespace Cinar.SQLEngine
     {
         private List<Hashtable> list;
         private int currentIndex;
-        private List<string> fieldNames;
+        private ListSelect fieldNames;
         private List<Type> fieldTypes;
 
-        public CinarDataReader(List<Hashtable> list, List<string> fieldNames, List<Type> fieldTypes)
+        public CinarDataReader(List<Hashtable> list, ListSelect fieldNames, List<Type> fieldTypes)
         {
             this.currentIndex = -1;
             this.list = list;
@@ -553,14 +554,14 @@ namespace Cinar.SQLEngine
 
         public override int FieldCount
         {
-            get { return list==null ? (fieldNames==null ? 0 : fieldNames.Count) : list[0].Keys.Count; }
+            get { return (list==null || list.Count==0) ? (fieldNames==null ? 0 : fieldNames.Count) : list[0].Keys.Count; }
         }
 
         private object getValue(int ordinal)
         {
             if (ordinal < 0 || ordinal >= fieldNames.Count)
                 return DBNull.Value;
-            return list[currentIndex][fieldNames[ordinal]];
+            return list[currentIndex][fieldNames[ordinal].Alias];
         }
 
         public override bool GetBoolean(int ordinal)
@@ -590,7 +591,7 @@ namespace Cinar.SQLEngine
 
         public override string GetDataTypeName(int ordinal)
         {
-            return getValue(0).GetType().Name;
+            return fieldTypes[ordinal].Name;
         }
 
         public override DateTime GetDateTime(int ordinal)
@@ -615,7 +616,7 @@ namespace Cinar.SQLEngine
 
         public override Type GetFieldType(int ordinal)
         {
-            return fieldTypes[ordinal];
+            return fieldTypes.Count==0 ? typeof(string) : fieldTypes[ordinal];
         }
 
         public override float GetFloat(int ordinal)
@@ -647,7 +648,7 @@ namespace Cinar.SQLEngine
         {
             if (ordinal < 0 || ordinal >= fieldNames.Count)
                 return null;
-            return fieldNames[ordinal];
+            return fieldNames[ordinal].Alias;
         }
 
         public override int GetOrdinal(string name)

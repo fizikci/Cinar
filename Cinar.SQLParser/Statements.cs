@@ -135,6 +135,14 @@ namespace Cinar.SQLParser
                 return null;
             }
         }
+
+        public int IndexOf(string aliasName)
+        {
+            for (int i = 0; i < this.Count; i++ )
+                if (this[i].Alias == aliasName)
+                    return i;
+            return -1;
+        }
     }
     public class ListJoin : List<Join>
     {
