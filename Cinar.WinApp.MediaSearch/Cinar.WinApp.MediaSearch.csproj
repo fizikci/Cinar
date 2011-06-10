@@ -60,23 +60,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\EditContentDefinition.cs" />
+    <Compile Include="Controls\EditContentDefinition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\EditContentDefinition.Designer.cs">
       <DependentUpon>EditContentDefinition.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditCategory.cs" />
+    <Compile Include="Controls\EditCategory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\EditCategory.Designer.cs">
       <DependentUpon>EditCategory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditMedia.cs" />
+    <Compile Include="Controls\EditMedia.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\EditMedia.Designer.cs">
       <DependentUpon>EditMedia.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormCSSSelector.cs" />
+    <Compile Include="Forms\FormCSSSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormCSSSelector.Designer.cs">
       <DependentUpon>FormCSSSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTest.cs" />
+    <Compile Include="Forms\FormTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\FormTest.Designer.cs">
       <DependentUpon>FormTest.cs</DependentUpon>
     </Compile>
@@ -84,6 +94,10 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
+      <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
+      <Name>Cinar.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
       <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
       <Name>Cinar.Database</Name>

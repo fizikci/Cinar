@@ -245,7 +245,7 @@ namespace Cinar.SQLParser
 
                 if (AtEndOfSource) return ss;
 
-                while (fCurrentToken.Value == ",")
+                while (!AtEndOfSource && fCurrentToken.Value == ",")
                 {
                     ReadNextToken(); // skip ,
                     ss.OrderBy.Add(parseOrder());

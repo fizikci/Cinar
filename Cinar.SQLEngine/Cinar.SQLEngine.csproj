@@ -42,6 +42,7 @@
     <Compile Include="ADO.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\TwitterProvider.cs" />
     <Compile Include="Providers\FacebookProvider.cs" />
     <Compile Include="Providers\RSSProvider.cs" />
     <Compile Include="Providers\POP3Provider.cs" />

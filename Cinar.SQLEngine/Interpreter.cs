@@ -56,9 +56,10 @@ namespace Cinar.SQLEngine
             }
         }
         public List<Hashtable> ResultSet = null;
-        public List<string> FieldNames = null;
+        public ListSelect FieldNames = null;
         public List<Type> FieldTypes = null;
-
+        
+        //todo: burada korkunç bir hata var. Parse() ve ardından Execute() çalıştırılıyor. Parse hataları yutuyor. Execute çalışıyor. Parse hatası oluşunca execution iptal edilmeli.
         public void Parse()
         {
             Stopwatch watch = new Stopwatch();
@@ -82,13 +83,15 @@ namespace Cinar.SQLEngine
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //statements = new List<Statement>();
-                //statements.Add(new FunctionCallStatement(new FunctionCall("write", new Expression[] { new StringConstant(ex.Message) })));
+                throw new Exception("SQL Parse Error: " + ex.Message);
             }
-            watch.Stop();
-            this.ParsingTime = watch.ElapsedMilliseconds;
+            finally
+            {
+                watch.Stop();
+                this.ParsingTime = watch.ElapsedMilliseconds;
+            }
         }
 
         private string preParse(string code)
@@ -141,16 +144,50 @@ namespace Cinar.SQLEngine
                 else if (ss.From[0].On != null) filter = ss.From[0].On;
                 else filter = ss.Where;
 
-                this.FieldNames = ss.Select.Select(s => s.Alias).ToList();
-                this.ResultSet = context.GetData(ss.From[0], filter, this.FieldNames);
+                this.FieldNames = ss.Select;
+                this.ResultSet = context.GetData(ss.From[0], filter, ss.Select);
                 this.FieldTypes = new List<Type>();
                 if (this.ResultSet.Count > 0)
                 {
-                    foreach (string key in FieldNames)
-                        if (this.ResultSet[0][key] != null)
-                            this.FieldTypes.Add(this.ResultSet[0][key].GetType());
+                    foreach (Select key in ss.Select)
+                        if (this.ResultSet[0][key.Alias] != null)
+                            this.FieldTypes.Add(this.ResultSet[0][key.Alias].GetType());
                         else
                             this.FieldTypes.Add(typeof(string));
+                }
+                if (ss.OrderBy.Count > 0)
+                {
+                    IOrderedEnumerable<Hashtable> orderedList = this.ResultSet.OrderBy(ht=>1);
+                    for (int i = 0; i < ss.OrderBy.Count; i++)
+                    {
+                        object orderBy = null;
+                        if (ss.OrderBy[i].By is IntegerConstant)
+                            orderBy = ((IntegerConstant)ss.OrderBy[i].By).Value;
+                        else
+                            orderBy = ((DbObjectName)ss.OrderBy[i].By).Name;
+
+                        if (orderBy.GetType() == typeof(int))
+                        {
+                            int fieldNo = (int)orderBy - 1;
+                            if (fieldNo < 0 || fieldNo >= FieldNames.Count)
+                                throw new Exception("Order by statement error. No such field to order: " + orderBy);
+                            if (ss.OrderBy[i].Desc)
+                                orderedList = orderedList.ThenByDescending(ht => ht[FieldNames[(int)fieldNo].Alias]);
+                            else
+                                orderedList = orderedList.ThenBy(ht => ht[FieldNames[(int)fieldNo].Alias]);
+                        }
+                        else
+                        {
+                            string alias = orderBy.ToString();
+                            if (FieldNames.IndexOf(alias)==-1)
+                                throw new Exception("Order by statement error. No such field to order: " + orderBy);
+                            if (ss.OrderBy[i].Desc)
+                                orderedList = orderedList.ThenByDescending(ht => ht[alias]);
+                            else
+                                orderedList = orderedList.ThenBy(ht => ht[alias]);
+                        }
+                    }
+                    this.ResultSet = orderedList.ToList();
                 }
             }
         }
@@ -175,7 +212,7 @@ namespace Cinar.SQLEngine
 
         public object GetValueOfCurrent(string fName)
         {
-            throw new NotImplementedException();
+            return Variables[fName];
         }
 
         public object GetVariableValue(string fName)
@@ -186,23 +223,25 @@ namespace Cinar.SQLEngine
                 return null;
         }
 
-        internal List<Hashtable> GetData(Join join, Expression where, List<string> fieldNames)
+        internal List<Hashtable> GetData(Join join, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
             switch (join.TableName.ToLowerInvariant())
             {
                 case "information_schema.tables":
-                    list.Add(new Hashtable() { { "table_name", "RSS" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "POP3" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "FILE" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "FACEBOOK" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "Rss" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "Pop3" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "File" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "Facebook" }, { "table_type", "table" } });
+                    list.Add(new Hashtable() { { "table_name", "Twitter" }, { "table_type", "table" } });
                     break;
                 case "information_schema.columns":
-                    list.AddRange(getColumnsOf(typeof(RSSItem), "RSS", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(POP3Item), "POP3", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(FileItem), "FILE", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(FBPost), "FACEBOOK", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(RSSItem), "Rss", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(POP3Item), "Pop3", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(FileItem), "File", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(FBPost), "Facebook", where, fieldNames));
+                    list.AddRange(getColumnsOf(typeof(Tweet), "Twitter", where, fieldNames));
                     break;
                 case "file":
                     string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
@@ -227,12 +266,18 @@ namespace Cinar.SQLEngine
                     FacebookProvider fbProvider = new FacebookProvider(query);
                     list.AddRange(fbProvider.GetData(this, where, fieldNames));
                     break;
+                case "twitter":
+                    string query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
+                    string lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
+                    TwitterProvider twProvider = new TwitterProvider(query2, lang);
+                    list.AddRange(twProvider.GetData(this, where, fieldNames));
+                    break;
             }
 
             return list;
         }
 
-        private List<Hashtable> getColumnsOf(Type type, string tableName, Expression where, List<string> fieldNames)
+        private List<Hashtable> getColumnsOf(Type type, string tableName, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
             foreach (PropertyInfo pi in type.GetProperties())
@@ -253,8 +298,8 @@ namespace Cinar.SQLEngine
                     if (where==null || (bool)where.Calculate(this))
                     {
                         Hashtable ht = new Hashtable();
-                        foreach (string fieldName in fieldNames)
-                            ht[fieldName] = Variables[fieldName];
+                        foreach (Select field in fieldNames)
+                            ht[field.Alias] = field.Field.Calculate(this);//Variables[fieldName];
                         list.Add(ht);
                     }
                 }

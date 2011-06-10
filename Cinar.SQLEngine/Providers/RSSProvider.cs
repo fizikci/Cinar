@@ -18,7 +18,7 @@ namespace Cinar.SQLEngine.Providers
             this.url = url;
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, List<string> fieldNames)
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
@@ -29,8 +29,8 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (string fieldName in fieldNames)
-                        ht[fieldName] = context.Variables[fieldName];
+                    foreach (Select field in fieldNames)
+                        ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
                     list.Add(ht);
                 }
             }
