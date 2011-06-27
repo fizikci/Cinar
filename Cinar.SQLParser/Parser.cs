@@ -1098,7 +1098,15 @@ namespace Cinar.SQLParser
             List<Expression> lArguments = new List<Expression>();
             if (!fCurrentToken.Equals(")"))
             {
-                lArguments.Add(ParseExpression());
+                Expression arg = null;
+                if (fCurrentToken.Equals("*"))
+                {
+                    arg = new Variable("*");
+                    ReadNextToken();
+                }
+                else
+                    arg = ParseExpression();
+                lArguments.Add(arg);
                 CheckForUnexpectedEndOfSource();
 
                 while (fCurrentToken.Equals(","))

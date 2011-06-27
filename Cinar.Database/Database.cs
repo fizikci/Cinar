@@ -456,11 +456,11 @@ namespace Cinar.Database
         #endregion
 
         #region create DataAdapter, Command, Parameter
-        public IDbDataAdapter CreateDataAdapter(IDbCommand selectCommand)
+        public DbDataAdapter CreateDataAdapter(IDbCommand selectCommand)
         {
             return dbProvider.CreateDataAdapter(selectCommand);
         }
-        public IDbDataAdapter CreateDataAdapter(string selectCommandText)
+        public DbDataAdapter CreateDataAdapter(string selectCommandText)
         {
             return dbProvider.CreateDataAdapter(selectCommandText);
         }
@@ -590,12 +590,58 @@ namespace Cinar.Database
         {
             // validate parameters
             if (data.Count == 0) return -1;
-            
-            Table tbl = this.Tables[tableName];
-            if (tbl == null) //throw new ApplicationException("There is no such table : " + tableName);
-                this.CreateTable(tbl, null, true);
 
-            ColumnCollection columns = tbl.Columns;
+            IDbCommand cmd = CreateInsertCommand(tableName, data, bypassAutoIncrementColumn);
+
+            DbDataAdapter ad = this.CreateDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+
+            if (dt.Rows.Count == 1)
+                return Convert.ToInt32(dt.Rows[0][0]);
+
+            return 0;
+        }
+        public IDbCommand CreateInsertCommand(string tableName, Hashtable data, bool bypassAutoIncrementColumn)
+        {
+            string insertSQL = GetSQLInsert(tableName, data, bypassAutoIncrementColumn);
+
+            Table tbl = this.Tables[tableName];
+
+            IDbCommand cmd = this.CreateCommand(insertSQL);
+            for (int i = 0; i < tbl.Columns.Count; i++)
+            {
+                Column column = tbl.Columns[i];
+                if (column.IsAutoIncrement && bypassAutoIncrementColumn) continue;
+                if (data.ContainsKey(column.Name))
+                {
+                    // if column is reference and the value equals 0, continue
+                    if (column.ReferenceColumn != null && column.IsNullable && column.IsNumericType())
+                    {
+                        if (data[column.Name] == null || data[column.Name] == DBNull.Value) data[column.Name] = 0;
+                        int refId = (int)data[column.Name];
+                        if (refId == 0) continue; //***
+                    }
+                    // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
+                    if (provider == DatabaseProvider.SQLServer && column.IsDateType())
+                        if (DBNull.Value.Equals(data[column.Name]) || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                            continue; //***
+
+                    IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name]);
+                    if (column.ColumnType == DbType.Image)
+                        param.DbType = System.Data.DbType.Binary;
+                    cmd.Parameters.Add(param);
+                }
+            }
+            return cmd;
+        }
+        public string GetSQLInsert(string tableName, Hashtable data, bool bypassAutoIncrementColumn)
+        {
+            Table tbl = this.Tables[tableName];
+            if (tbl == null)
+                throw new ApplicationException("There is no such table : " + tableName); //this.CreateTable(tbl, null, true);
+
+            //ColumnCollection columns = tbl.Columns;
             int validColumnNumber = 0;
             foreach (Column fld in tbl.Columns)
                 if (data.ContainsKey(fld.Name) && !(fld.IsAutoIncrement && bypassAutoIncrementColumn))
@@ -607,16 +653,17 @@ namespace Cinar.Database
 
             StringBuilder sb = new StringBuilder();
             sb.Append("insert into [" + tableName + "] (");
-            for (int i = 0; i < columns.Count; i++)
+            for (int i = 0; i < tbl.Columns.Count; i++)
             {
-                Column fld = columns[i];
+                Column fld = tbl.Columns[i];
                 if (fld.IsAutoIncrement && bypassAutoIncrementColumn) continue;
                 if (data.ContainsKey(fld.Name))
                 {
                     // if column is reference and the value equals 0, continue
-                    if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType==DbType.Int32) {
+                    if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType == DbType.Int32)
+                    {
                         if (data[fld.Name] == null || data[fld.Name] == DBNull.Value) data[fld.Name] = 0;
-                        int refId = (int) data[fld.Name];
+                        int refId = (int)data[fld.Name];
                         if (refId == 0) continue; //***
                     }
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
@@ -630,9 +677,9 @@ namespace Cinar.Database
             sb.Append(String.Join(",", tmpList.ToArray()));
             tmpList.Clear();
             sb.Append(") values (");
-            for (int i = 0; i < columns.Count; i++)
+            for (int i = 0; i < tbl.Columns.Count; i++)
             {
-                Column fld = columns[i];
+                Column fld = tbl.Columns[i];
                 if (fld.IsAutoIncrement && bypassAutoIncrementColumn) continue;
                 if (data.ContainsKey(fld.Name))
                 {
@@ -660,36 +707,19 @@ namespace Cinar.Database
                 sb.Append(Environment.NewLine + "SET IDENTITY_INSERT [" + tbl.Name + "] OFF;");
             }
 
-            IDbCommand cmd = this.CreateCommand(sb.ToString());
-            for (int i = 0; i < columns.Count; i++)
+            if (bypassAutoIncrementColumn && tbl.HasAutoIncrementColumn())
             {
-                Column column = columns[i];
-                if (column.IsAutoIncrement && bypassAutoIncrementColumn) continue;
-                if (data.ContainsKey(column.Name))
-                {
-                    // if column is reference and the value equals 0, continue
-                    if (column.ReferenceColumn != null && column.IsNullable && column.ColumnType == DbType.Int32)
-                    {
-                        if (data[column.Name] == null || data[column.Name] == DBNull.Value) data[column.Name] = 0;
-                        int refId = (int)data[column.Name];
-                        if (refId == 0) continue; //***
-                    }
-                    // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
-                    if (provider == DatabaseProvider.SQLServer && column.IsDateType())
-                        if (DBNull.Value.Equals(data[column.Name]) || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
-                            continue; //***
-
-                    IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name]);
-                    if (column.ColumnType == DbType.Image)
-                        param.DbType = System.Data.DbType.Binary;
-                    cmd.Parameters.Add(param);
-                }
+                if (provider == DatabaseProvider.SQLServer)
+                    sb.AppendLine("SELECT @@identity;");
+                if (provider == DatabaseProvider.MySQL)
+                    sb.AppendLine("SELECT LAST_INSERT_ID();");
+                if (provider == DatabaseProvider.PostgreSQL)
+                    ; //TODO: Get auto increment for Postgres
             }
 
-            int res = this.ExecuteNonQuery(cmd);
-
-            return res;
+            return sb.ToString();
         }
+
         public int Insert(string tableName, DataRow dataRow, bool bypassAutoIncrementColumn)
         {
             Hashtable ht = new Hashtable();
