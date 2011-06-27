@@ -189,6 +189,13 @@ namespace Cinar.SQLEngine
                     }
                     this.ResultSet = orderedList.ToList();
                 }
+
+                if (ss.Limit != null)
+                {
+                    int offset = ss.Offset == null ? 0 : Convert.ToInt32(ss.Offset.Calculate(context));
+                    int limit = Convert.ToInt32(ss.Limit.Calculate(context));
+                    this.ResultSet = this.ResultSet.Skip(offset).Take(limit).ToList();
+                }
             }
         }
 

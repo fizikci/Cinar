@@ -861,3 +861,15 @@ G|2011/06/05 12:18:18|Provider Local Users Provider loaded (Enabled)|SYSTEM
 G|2011/06/05 12:18:18|Provider Local Pages Provider loaded (Enabled)|SYSTEM
 G|2011/06/05 12:18:18|Provider Local Cache Provider loaded (Enabled)|SYSTEM
 G|2011/06/05 12:18:18|ScrewTurn Wiki is ready|SYSTEM
+G|2011/06/21 21:28:51|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/06/21 21:28:51|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/06/21 21:28:51|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/06/21 21:28:51|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/06/21 21:28:51|ScrewTurn Wiki is ready|SYSTEM
+G|2011/06/21 21:29:01|Starting automatic rebuilding index for provider: Local Pages Provider|SYSTEM
+G|2011/06/21 21:29:02|Finished automatic rebuilding index for provider: Local Pages Provider|SYSTEM
+G|2011/06/22 00:40:02|Provider Local Files Provider loaded (Enabled)|SYSTEM
+G|2011/06/22 00:40:02|Provider Local Users Provider loaded (Enabled)|SYSTEM
+G|2011/06/22 00:40:02|Provider Local Pages Provider loaded (Enabled)|SYSTEM
+G|2011/06/22 00:40:02|Provider Local Cache Provider loaded (Enabled)|SYSTEM
+G|2011/06/22 00:40:02|ScrewTurn Wiki is ready|SYSTEM

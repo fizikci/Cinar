@@ -36,7 +36,8 @@ namespace Cinar.WinApp.MediaSearch.Forms
         {
             if (index < rss.Items.Count)
                 webBrowser.Navigate(rss.Items[index].Link);
-            else
+            //else
+            grid.DataSource = null;
                 grid.DataSource = list;
         }
 

@@ -126,7 +126,7 @@ namespace Cinar.HTMLParser
             return strColor.ToUpperInvariant().ToColor();
         }
 
-        public CinarBrowser IDocument;
+        //public CinarBrowser IDocument;
         internal float lastLineHeight;
 
         public RectangleF Layout;
@@ -171,7 +171,7 @@ namespace Cinar.HTMLParser
 
         public virtual void CalculateLayout(Graphics g)
         {
-            AvailableWidth = Parent == null ? IDocument.Width : Parent.InnerLayout.Width;
+            //AvailableWidth = Parent == null ? IDocument.Width : Parent.InnerLayout.Width;
         }
         public virtual void Draw(Graphics g)
         {

@@ -287,7 +287,7 @@ namespace Cinar.WinApp.DefaultPlugIn.Controls
                                 paramVal = false;
                                 break;
                             case ReportParamTypes.Entity:
-                                paramVal = 0L;
+                                paramVal = 0;
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
