@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -42,6 +44,7 @@
     <Compile Include="ADO.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\YoutubeProvider.cs" />
     <Compile Include="Providers\TwitterProvider.cs" />
     <Compile Include="Providers\FacebookProvider.cs" />
     <Compile Include="Providers\RSSProvider.cs" />
@@ -51,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
       <Project>{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}</Project>
       <Name>Cinar.POP3</Name>

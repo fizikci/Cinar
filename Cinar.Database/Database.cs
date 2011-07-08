@@ -707,7 +707,7 @@ namespace Cinar.Database
                 sb.Append(Environment.NewLine + "SET IDENTITY_INSERT [" + tbl.Name + "] OFF;");
             }
 
-            if (bypassAutoIncrementColumn && tbl.HasAutoIncrementColumn())
+            if (tbl.HasAutoIncrementColumn())
             {
                 if (provider == DatabaseProvider.SQLServer)
                     sb.AppendLine("SELECT @@identity;");
@@ -717,7 +717,7 @@ namespace Cinar.Database
                     ; //TODO: Get auto increment for Postgres
             }
 
-            return sb.ToString();
+            return editSQLAsForProvider(sb.ToString());
         }
 
         public int Insert(string tableName, DataRow dataRow, bool bypassAutoIncrementColumn)

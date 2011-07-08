@@ -237,48 +237,88 @@ namespace Cinar.SQLEngine
             switch (join.TableName.ToLowerInvariant())
             {
                 case "information_schema.tables":
-                    list.Add(new Hashtable() { { "table_name", "Rss" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "Pop3" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "File" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "Facebook" }, { "table_type", "table" } });
-                    list.Add(new Hashtable() { { "table_name", "Twitter" }, { "table_type", "table" } });
-                    break;
+                    {
+                        list.Add(new Hashtable() { { "table_name", "Rss" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "Pop3" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "File" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "Facebook" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "Twitter" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "Youtube" }, { "table_type", "table" } });
+                        break;
+                    }
                 case "information_schema.columns":
-                    list.AddRange(getColumnsOf(typeof(RSSItem), "Rss", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(POP3Item), "Pop3", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(FileItem), "File", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(FBPost), "Facebook", where, fieldNames));
-                    list.AddRange(getColumnsOf(typeof(Tweet), "Twitter", where, fieldNames));
-                    break;
+                    {
+                        list.AddRange(getColumnsOf(typeof(RSSItem), "Rss", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(POP3Item), "Pop3", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(FileItem), "File", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(FBPost), "Facebook", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(Tweet), "Twitter", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(RSSItem), "Youtube", where, fieldNames));
+                        break;
+                    }
                 case "file":
-                    string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
-                    bool recursive = Convert.ToBoolean(join.CinarTableOptions["Recursive"].Calculate(this));
-                    FileProvider fileProvider = new FileProvider(path, recursive);
-                    list.AddRange(fileProvider.GetData(this, where, fieldNames));
-                    break;
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Path") || !join.CinarTableOptions.ContainsKey("Recursive"))
+                            throw new Exception("Provide file path. Exp: select .. from FILE(Path='c:\\...', Recursive=false)");
+                        string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
+                        bool recursive = Convert.ToBoolean(join.CinarTableOptions["Recursive"].Calculate(this));
+                        FileProvider fileProvider = new FileProvider(path, recursive);
+                        list.AddRange(fileProvider.GetData(this, where, fieldNames));
+                        break;
+                    }
                 case "pop3":
-                    string server = (string)join.CinarTableOptions["Server"].Calculate(this);
-                    string userName = (string)join.CinarTableOptions["UserName"].Calculate(this);
-                    string password = (string)join.CinarTableOptions["Password"].Calculate(this);
-                    POP3Provider pop3Provider = new POP3Provider(server, userName, password);
-                    list.AddRange(pop3Provider.GetData(this, where, fieldNames));
-                    break;
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Server") || !join.CinarTableOptions.ContainsKey("UserName") || !join.CinarTableOptions.ContainsKey("Password"))
+                            throw new Exception("Provide mail settings. Exp: select .. from POP3(Server='', UserName='', Password='')");
+                        string server = (string)join.CinarTableOptions["Server"].Calculate(this);
+                        string userName = (string)join.CinarTableOptions["UserName"].Calculate(this);
+                        string password = (string)join.CinarTableOptions["Password"].Calculate(this);
+                        POP3Provider pop3Provider = new POP3Provider(server, userName, password);
+                        list.AddRange(pop3Provider.GetData(this, where, fieldNames));
+                        break;
+                    }
                 case "rss":
-                    string url = (string)join.CinarTableOptions["Url"].Calculate(this);
-                    RSSProvider rssProvider = new RSSProvider(url);
-                    list.AddRange(rssProvider.GetData(this, where, fieldNames));
-                    break;
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Url"))
+                            throw new Exception("Provide url. Exp: select .. from RSS(Url='http://...')");
+                        string url = (string)join.CinarTableOptions["Url"].Calculate(this);
+                        RSSProvider rssProvider = new RSSProvider(url);
+                        list.AddRange(rssProvider.GetData(this, where, fieldNames));
+                        break;
+                    }
                 case "facebook":
-                    string query = (string)join.CinarTableOptions["Query"].Calculate(this);
-                    FacebookProvider fbProvider = new FacebookProvider(query);
-                    list.AddRange(fbProvider.GetData(this, where, fieldNames));
-                    break;
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Query"))
+                            throw new Exception("Provide query. Exp: select .. from Facebook(Query='...')");
+                        string query = (string)join.CinarTableOptions["Query"].Calculate(this);
+                        FacebookProvider fbProvider = new FacebookProvider(query);
+                        list.AddRange(fbProvider.GetData(this, where, fieldNames));
+                        break;
+                    }
                 case "twitter":
-                    string query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
-                    string lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
-                    TwitterProvider twProvider = new TwitterProvider(query2, lang);
-                    list.AddRange(twProvider.GetData(this, where, fieldNames));
-                    break;
+                    {
+                        string query2 = "", lang = "";
+                        if (join.CinarTableOptions.ContainsKey("Query"))
+                        {
+                            query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
+                            if (join.CinarTableOptions.ContainsKey("Lang"))
+                                lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
+                            TwitterProvider twProvider = new TwitterProvider(query2, lang);
+                            list.AddRange(twProvider.GetData(this, where, fieldNames));
+                        }
+                        else
+                            throw new Exception("Provide query. Exp: select .. from Twitter(Query='...')");
+                        break;
+                    }
+                case "youtube":
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Query"))
+                            throw new Exception("Provide query. Exp: select .. from Youtube(Query='...')");
+                        string query = (string)join.CinarTableOptions["Query"].Calculate(this);
+                        YoutubeProvider ytProvider = new YoutubeProvider(query);
+                        list.AddRange(ytProvider.GetData(this, where, fieldNames));
+                        break;
+                    }
             }
 
             return list;

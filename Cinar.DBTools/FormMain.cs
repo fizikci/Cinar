@@ -10,7 +10,6 @@ using Cinar.UICommands;
 using Cinar.Database;
 using Cinar.DBTools.Tools;
 using System.IO;
-using System.Xml.Serialization;
 using System.Collections;
 using Cinar.Scripting;
 using System.Diagnostics;
@@ -19,9 +18,6 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Constraint = Cinar.Database.Constraint;
 using Cinar.DBTools.CodeGen;
-using Menees.DiffUtils.Controls;
-using Menees.DiffUtils;
-using System.Xml;
 
 namespace Cinar.DBTools
 {
@@ -2259,185 +2255,6 @@ $"},
                 if (tn != null)
                     CurrSQLEditor.ShowTableDataIfTableTabActive(tn, new FilterExpression());
             }
-        }
-    }
-
-    public class Provider
-    {
-        public static List<ConnectionSettings> Connections = new List<ConnectionSettings>();
-        public static ConnectionSettings ActiveConnection;
-        public static Database.Database Database
-        {
-            get
-            {
-                if (ActiveConnection == null)
-                    return null;
-
-                return ActiveConnection.Database;
-            }
-        }
-
-        public static bool ConnectionsModified { get; set; }
-
-        public static ConnectionSettings GetConnection(string connectionName)
-        {
-            foreach (ConnectionSettings cs in Connections)
-                if (connectionName == cs.ToString())
-                    return cs;
-            return null;
-        }
-
-        private static bool connectionsLoaded = false;
-
-        public static string ConnectionsPath;
-        public static void LoadConnectionsFromXML(string path)
-        {
-            if (path == Provider.ConnectionsPath && connectionsLoaded)
-                return;
-
-            if(string.IsNullOrEmpty(path))
-                path = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
-
-            Provider.ConnectionsPath = path;
-
-            if (File.Exists(path))
-            {
-                XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    try
-                    {
-                        Provider.Connections = (List<ConnectionSettings>)ser.Deserialize(sr);
-                    }
-                    catch {
-                        MessageBox.Show("This is not a valid connection file", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    foreach (ConnectionSettings cs in Connections)
-                    {
-                        cs.InitializeDatabase();
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("File not found:\n" + path, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            connectionsLoaded = true;
-        }
-        public static void SaveConnections()
-        {
-            if (string.IsNullOrEmpty(ConnectionsPath))
-                ConnectionsPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\constr.xml";
-            XmlSerializer ser = new XmlSerializer(typeof(List<ConnectionSettings>));
-            using (StreamWriter sr = new StreamWriter(ConnectionsPath))
-            {
-                ser.Serialize(sr, Provider.Connections);
-            }
-        }
-
-        public static void CompareCode(string filePath, string modifiedContent)
-        {
-            Form f = new Form();
-            f.WindowState = FormWindowState.Maximized;
-            f.Text = "[Original] vs. [Modified]";
-            //ComponentResourceManager resources = new ComponentResourceManager(this.GetType());
-            //f.Icon = (Icon)(resources.GetObject("$this.Icon"));
-
-            DiffControl diffControl = new DiffControl();
-            diffControl.Dock = DockStyle.Fill;
-            f.Controls.Add(diffControl);
-
-            bool chkIgnoreCase = false;
-            bool chkIgnoreWhitespace = true;
-            bool chkSupportChangeEditType = false;
-            bool chkXML = false;
-
-            string strA = filePath;
-
-            try
-            {
-                TextDiff diff = new TextDiff(HashType.CRC32, chkIgnoreCase, chkIgnoreWhitespace, 0, chkSupportChangeEditType);
-
-                IList<string> code1, code2;
-                if (chkXML)
-                {
-                    code1 = Functions.GetXMLTextLines(strA, WhitespaceHandling.All);
-                    code2 = modifiedContent.Replace("\r", "").Split('\n');
-                }
-                else
-                {
-                    code1 = Functions.GetFileTextLines(strA);
-                    code2 = modifiedContent.Replace("\r", "").Split('\n');
-                }
-
-                EditScript script = diff.Execute(code1, code2);
-
-                diffControl.SetData(code1, code2, script);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            f.Show();
-        }
-
-    }
-    public class ConnectionSettings
-    {
-        [ReadOnly(true), Description("Database vendor of the current connection")]
-        public DatabaseProvider Provider { get; set; }
-        [ReadOnly(true), Description("Host of the current connection")]
-        public string Host { get; set; }
-        [ReadOnly(true), Description("Database name of the current connection")]
-        public string DbName { get; set; }
-        [ReadOnly(true), Description("Username of the current connection")]
-        public string UserName { get; set; }
-        [PasswordPropertyText(true), ReadOnly(true), Description("User password of the current connection")]
-        public string Password { get; set; }
-        [XmlIgnore, Browsable(false)]
-        public bool CreateDatabaseIfNotExist { get; set; }
-
-        public Database.Database Database;
-        public List<Diagram> Schemas = new List<Diagram>();
-
-        public void InitializeDatabase()
-        {
-            if (Database == null)
-            {
-                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
-            }
-            else
-            {
-                Database.SetConnectionString(Provider, Host, DbName, UserName, Password, 30);
-                Database.SetCollectionParents();
-                Database.CreateDbProvider(false);
-            }
-        }
-
-        public override string ToString()
-        {
-            if (Provider == DatabaseProvider.Cinar)
-                return "Cinar SQL Engine";
-
-            string toStr = DbName + " (";
-            if (Host.Contains('.'))
-            {
-                string[] parts = Host.Split('.');
-                toStr += parts[parts.Length - 2] + "." + parts[parts.Length - 1];
-            }
-            else
-                toStr += (Host == "localhost" ? "local" : Host);
-            toStr += " " + Provider + ")";
-
-            return toStr;
-        }
-
-        public void RefreshDatabaseSchema()
-        {
-            Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
-            Cinar.DBTools.Provider.ConnectionsModified = true;
         }
     }
 

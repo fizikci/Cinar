@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Collections;
 using Cinar.SQLParser;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 namespace Cinar.SQLEngine.Providers
 {
@@ -22,8 +24,10 @@ namespace Cinar.SQLEngine.Providers
         {
             List<Hashtable> list = new List<Hashtable>();
 
-            var client = new RSSReader.RSS(url);
-            foreach (RSSReader.RSSItem rItem in client.Items)
+            SyndicationFeed s = new SyndicationFeed();
+            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader(url));
+
+            foreach (SyndicationItem rItem in client.Items)
             {
                 RSSItem item = new RSSItem(rItem);
                 if (item.Filter(context, where))
@@ -42,18 +46,24 @@ namespace Cinar.SQLEngine.Providers
     public class RSSItem : BaseItem
     {
         public string Title { get; set; }
-        public string Link { get; set; }
-        public string Description { get; set; }
-        public string Category { get; set; }
-        public DateTime PubDate { get; set; }
+        public string Links { get; set; }
+        public string Summary { get; set; }
+        public string ContentType { get; set; }
+        public string Categories { get; set; }
+        public string Authors { get; set; }
+        public DateTime PublishDate { get; set; }
+        public DateTime LastUpdatedTime { get; set; }
 
-        public RSSItem(RSSReader.RSSItem item)
+        public RSSItem(SyndicationItem item)
         {
-            this.Title = item.Title;
-            this.Link = item.Link;
-            this.Description = item.Description;
-            this.Category = item.Category;
-            this.PubDate = item.PubDate;
+            this.Title = item.Title!=null ? item.Title.Text : null;
+            this.Links = item.Links == null || item.Links.Count == 0 ? null : item.Links[0].Uri.ToString();//string.Join(",", item.Links.Select(c => c.Uri.ToString()).ToArray());
+            this.Summary = item.Summary != null ? item.Summary.Text : null;
+            this.ContentType = item.Content != null ? item.Content.Type : null;
+            this.Categories = item.Categories == null || item.Categories.Count == 0 ? null : string.Join(",", item.Categories.Skip(1).Select(c => c.Name).ToArray());
+            this.PublishDate = item.PublishDate.DateTime;
+            this.Authors = item.Authors == null || item.Authors.Count == 0 ? null : string.Join(",", item.Authors.Select(c => c.Name).ToArray());
+            this.LastUpdatedTime = item.LastUpdatedTime.DateTime;
         }
     }
 

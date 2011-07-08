@@ -38,7 +38,7 @@ namespace Cinar.SQLEngine.Providers
                 {
                     Hashtable ht = new Hashtable();
                     foreach (Select field in fieldNames)
-                        ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
+                        ht[field.Alias] = field.Field.Calculate(context);
                     list.Add(ht);
                 }
             }

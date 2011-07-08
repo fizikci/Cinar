@@ -616,7 +616,7 @@ namespace Cinar.SQLEngine
 
         public override Type GetFieldType(int ordinal)
         {
-            return fieldTypes.Count==0 ? typeof(string) : fieldTypes[ordinal];
+            return (fieldTypes==null || fieldTypes.Count==0) ? typeof(string) : fieldTypes[ordinal];
         }
 
         public override float GetFloat(int ordinal)
