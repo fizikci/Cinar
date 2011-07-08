@@ -91,6 +91,7 @@
     <Compile Include="CodeGen\FolderItem.cs" />
     <Compile Include="CodeGen\Item.cs" />
     <Compile Include="CodeGen\Solution.cs" />
+    <Compile Include="ConnectionSettings.cs" />
     <Compile Include="Controls\BackgroundWorkerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +281,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Provider.cs" />
     <Compile Include="SQLResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
