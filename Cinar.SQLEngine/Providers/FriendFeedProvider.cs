@@ -12,12 +12,12 @@ using System.Web.Script.Serialization;
 
 namespace Cinar.SQLEngine.Providers
 {
-    public class TwitterProvider
+    public class FriendFeedProvider
     {
         private string query;
         private string lang;
 
-        public TwitterProvider(string query, string lang)
+        public FriendFeedProvider(string query, string lang)
         {
             this.query = query;
             this.lang = lang;
@@ -54,23 +54,15 @@ namespace Cinar.SQLEngine.Providers
 
         }
     }
-    public class TwitterSearch
+    public class FriendFeedSearch
     {
-        public List<Tweet> results { get; set; }
-        public TwitterSearch()
+        public List<FriendFeedItem> entries { get; set; }
+        public FriendFeedSearch()
         {
-            results = new List<Tweet>();
+            entries = new List<FriendFeedItem>();
         }
-
-        public long max_id { get; set; }
-        public long since_id { get; set; }
-        public string refresh_url { get; set; }
-        public string next_page { get; set; }
-        public int results_per_page { get; set; }
-        public int page { get; set; }
-        public string query { get; set; }
     }
-    public class Tweet : BaseItem
+    public class FriendFeedItem : BaseItem
     {
         public string from_user_id_str { get; set; }
         public string profile_image_url { get; set; }

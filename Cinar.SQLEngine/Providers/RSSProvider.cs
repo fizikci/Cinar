@@ -43,8 +43,10 @@ namespace Cinar.SQLEngine.Providers
 
         }
     }
+
     public class RSSItem : BaseItem
     {
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Links { get; set; }
         public string Summary { get; set; }
@@ -56,6 +58,7 @@ namespace Cinar.SQLEngine.Providers
 
         public RSSItem(SyndicationItem item)
         {
+            this.Id = item.Id;
             this.Title = item.Title!=null ? item.Title.Text : null;
             this.Links = item.Links == null || item.Links.Count == 0 ? null : item.Links[0].Uri.ToString();//string.Join(",", item.Links.Select(c => c.Uri.ToString()).ToArray());
             this.Summary = item.Summary != null ? item.Summary.Text : null;

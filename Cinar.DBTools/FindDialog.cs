@@ -103,6 +103,11 @@ namespace Cinar.DBTools
         private void btnReplaceAll_Click(object sender, EventArgs e)
         {
             replaceAll = true;
+            if (txtReplace.Text.Contains(txtFind.Text))
+            {
+                MessageBox.Show("Replace literal contains find literal. This is not implemented yet for replace all.", "Find & Replace");
+                return;
+            }
             find(true);
         }
 

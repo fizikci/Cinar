@@ -21,18 +21,23 @@ namespace Cinar.SQLEngine.Providers
             this.query = query;
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
+        internal List<FBPost> GetData()
         {
-            List<Hashtable> list = new List<Hashtable>();
-
-            Uri serviceUri = new Uri("https://graph.facebook.com/search?q=\""+query+"\"&type=post");
+            Uri serviceUri = new Uri("https://graph.facebook.com/search?q=\"" + query + "\"&type=post");
             WebClient downloader = new WebClient();
             string json = downloader.DownloadString(serviceUri);
 
             JavaScriptSerializer ser = new JavaScriptSerializer();
             FBSearch foo = ser.Deserialize<FBSearch>(json);
 
-            foreach (FBPost item in foo.data)
+            return foo.data;
+        }
+
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
+        {
+            List<Hashtable> list = new List<Hashtable>();
+
+            foreach (FBPost item in GetData())
             {
                 if (item.Filter(context, where))
                 {

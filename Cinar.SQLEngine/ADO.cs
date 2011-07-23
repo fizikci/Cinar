@@ -161,8 +161,13 @@ namespace Cinar.SQLEngine
             engine.Parse();
             engine.Execute();
 
-            CinarDataReader cdr = new CinarDataReader(engine.ResultSet, engine.FieldNames, engine.FieldTypes);
-            return cdr;
+            if (string.IsNullOrEmpty(engine.Output))
+            {
+                CinarDataReader cdr = new CinarDataReader(engine.ResultSet, engine.FieldNames, engine.FieldTypes);
+                return cdr;
+            }
+            else
+                throw new Exception(engine.Output);
         }
 
         public override int ExecuteNonQuery()

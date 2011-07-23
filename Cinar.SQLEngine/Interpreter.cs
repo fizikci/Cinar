@@ -169,22 +169,24 @@ namespace Cinar.SQLEngine
                         if (orderBy.GetType() == typeof(int))
                         {
                             int fieldNo = (int)orderBy - 1;
-                            if (fieldNo < 0 || fieldNo >= FieldNames.Count)
-                                throw new Exception("Order by statement error. No such field to order: " + orderBy);
-                            if (ss.OrderBy[i].Desc)
-                                orderedList = orderedList.ThenByDescending(ht => ht[FieldNames[(int)fieldNo].Alias]);
-                            else
-                                orderedList = orderedList.ThenBy(ht => ht[FieldNames[(int)fieldNo].Alias]);
+                            if (!(fieldNo < 0 || fieldNo >= FieldNames.Count))
+                            {
+                                if (ss.OrderBy[i].Desc)
+                                    orderedList = orderedList.ThenByDescending(ht => ht[FieldNames[(int)fieldNo].Alias]);
+                                else
+                                    orderedList = orderedList.ThenBy(ht => ht[FieldNames[(int)fieldNo].Alias]);
+                            }
                         }
                         else
                         {
                             string alias = orderBy.ToString();
-                            if (FieldNames.IndexOf(alias)==-1)
-                                throw new Exception("Order by statement error. No such field to order: " + orderBy);
-                            if (ss.OrderBy[i].Desc)
-                                orderedList = orderedList.ThenByDescending(ht => ht[alias]);
-                            else
-                                orderedList = orderedList.ThenBy(ht => ht[alias]);
+                            if (FieldNames.IndexOf(alias) > -1)
+                            {
+                                if (ss.OrderBy[i].Desc)
+                                    orderedList = orderedList.ThenByDescending(ht => ht[alias]);
+                                else
+                                    orderedList = orderedList.ThenBy(ht => ht[alias]);
+                            }
                         }
                     }
                     this.ResultSet = orderedList.ToList();
@@ -244,6 +246,8 @@ namespace Cinar.SQLEngine
                         list.Add(new Hashtable() { { "table_name", "Facebook" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "Twitter" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "Youtube" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "SocialMedia" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "Yahoo" }, { "table_type", "table" } });
                         break;
                     }
                 case "information_schema.columns":
@@ -254,6 +258,8 @@ namespace Cinar.SQLEngine
                         list.AddRange(getColumnsOf(typeof(FBPost), "Facebook", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(Tweet), "Twitter", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(RSSItem), "Youtube", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(SocialMediaItem), "SocialMedia", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(YahooResultItem), "Yahoo", where, fieldNames));
                         break;
                     }
                 case "file":
@@ -317,6 +323,31 @@ namespace Cinar.SQLEngine
                         string query = (string)join.CinarTableOptions["Query"].Calculate(this);
                         YoutubeProvider ytProvider = new YoutubeProvider(query);
                         list.AddRange(ytProvider.GetData(this, where, fieldNames));
+                        break;
+                    }
+                case "socialmedia":
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Query"))
+                            throw new Exception("Provide query. Exp: select .. from SocialMedia(Query='...')");
+                        string query = (string)join.CinarTableOptions["Query"].Calculate(this);
+                        string lang = "";
+                        if (join.CinarTableOptions.ContainsKey("Lang"))
+                            lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
+                        SocialMediaProvider provider = new SocialMediaProvider(query, lang);
+                        list.AddRange(provider.GetData(this, where, fieldNames));
+                        break;
+                    }
+                case "yahoo":
+                    {
+                        string query2 = "";
+                        if (join.CinarTableOptions.ContainsKey("Query"))
+                        {
+                            query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
+                            YahooBossProvider twProvider = new YahooBossProvider(query2);
+                            list.AddRange(twProvider.GetData(this, where, fieldNames));
+                        }
+                        else
+                            throw new Exception("Provide query. Exp: select .. from Yahoo(Query='...')");
                         break;
                     }
             }
