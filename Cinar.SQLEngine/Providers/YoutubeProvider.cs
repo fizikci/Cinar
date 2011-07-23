@@ -23,16 +23,20 @@ namespace Cinar.SQLEngine.Providers
             this.query = query;
         }
 
+        internal List<RSSItem> GetData()
+        {
+            SyndicationFeed s = new SyndicationFeed();
+            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader("http://gdata.youtube.com/feeds/api/videos?q=\"" + query + "\"&max-results=50&lr=tr"));
+
+            return client.Items.Select(i => new RSSItem(i)).ToList();
+        }
+
         internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
-            SyndicationFeed s = new SyndicationFeed();
-            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader("http://gdata.youtube.com/feeds/api/videos?q=\"" + query + "\"&max-results=50&lr=tr"));
-
-            foreach (SyndicationItem rItem in client.Items)
+            foreach (RSSItem item in GetData())
             {
-                RSSItem item = new RSSItem(rItem);
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();

@@ -175,6 +175,11 @@ namespace Cinar.SQLParser
         public Dictionary<string, Expression> CinarTableOptions { get; set; }
         public Expression On { get; set; }
 
+        public Join()
+        {
+            CinarTableOptions = new Dictionary<string, Expression>();
+        }
+
         public override string ToString()
         {
             return JoinType.ToString().ToUpperInvariant() + " JOIN [" + TableName +"]" + ((!string.IsNullOrEmpty(Alias) && Alias != TableName) ? " AS [" + Alias + "]" : "") + (On!=null ? " ON " + On : "");

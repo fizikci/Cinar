@@ -144,7 +144,7 @@ namespace Cinar.SQLParser
                     Dictionary<string, Expression> tableOptions = null;
                     ReadNextToken();
 
-                    if (fCurrentToken.Equals("."))
+                    if (!AtEndOfSource && fCurrentToken.Equals("."))
                     {
                         ReadNextToken();
                         firstTableName += "." + fCurrentToken.Value;
