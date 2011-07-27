@@ -39,6 +39,7 @@ namespace Cinar.SQLEngine.Providers
 
             Uri serviceUri = new Uri(string.Format("{0}?{1}&oauth_signature={2}", url, param, signature));
             WebClient downloader = new WebClient();
+            downloader.Encoding = Encoding.UTF8;
             string json = downloader.DownloadString(serviceUri);
             if (json.StartsWith("json2")) json = json.Substring(5);
             if (json.StartsWith("json")) json = json.Substring(4);

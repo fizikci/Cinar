@@ -12,35 +12,35 @@ using System.Web.Script.Serialization;
 
 namespace Cinar.SQLEngine.Providers
 {
-    public class FriendFeedProvider
+    public class DailyMotionProvider
     {
         private string query;
         private string lang;
 
-        public FriendFeedProvider(string query, string lang)
+        public DailyMotionProvider(string query, string lang)
         {
             this.query = query;
             this.lang = lang;
         }
 
-        internal List<FriendFeedItem> GetData()
+        internal List<DailyMotionItem> GetData()
         {
-            Uri serviceUri = new Uri("http://friendfeed.com/api/feed/search?q=\"" + query + "\"&locale=" + lang);
+            Uri serviceUri = new Uri("https://api.dailymotion.com/videos?fields=id,url,title,description,created_time,modified_time,owner_screenname&search=\"" + query + "\"" + (!string.IsNullOrEmpty(lang) ? "&language=" + lang : ""));
             WebClient downloader = new WebClient();
             downloader.Encoding = Encoding.UTF8;
             string json = downloader.DownloadString(serviceUri);
 
             JavaScriptSerializer ser = new JavaScriptSerializer();
-            FriendFeedSearch foo = ser.Deserialize<FriendFeedSearch>(json);
+            DailyMotionSearch foo = ser.Deserialize<DailyMotionSearch>(json);
 
-            return foo.entries;
+            return foo.list;
         }
 
         internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
-            foreach (FriendFeedItem item in GetData())
+            foreach (DailyMotionItem item in GetData())
             {
                 if (item.Filter(context, where))
                 {
@@ -55,34 +55,31 @@ namespace Cinar.SQLEngine.Providers
 
         }
     }
-    public class FriendFeedSearch
+    public class DailyMotionSearch
     {
-        public List<FriendFeedItem> entries { get; set; }
-        public FriendFeedSearch()
+        public int page { get; set; }
+        public int limit { get; set; }
+        public bool hasmore { get; set; }
+
+        public List<DailyMotionItem> list { get; set; }
+        public DailyMotionSearch()
         {
-            entries = new List<FriendFeedItem>();
+            list = new List<DailyMotionItem>();
         }
     }
-    public class FriendFeedItem : BaseItem
+    public class DailyMotionItem : BaseItem
     {
         public string id { get; set; }
-        public DateTime updated { get; set; }
+        public int modified_time { get; set; }
+        public DateTime LastUpdate { get { return new DateTime(1970, 1, 1).AddSeconds(modified_time); } }
         public string title { get; set; }
-        public string link { get { return "http://friendfeed.com/" + user.nickname + "/" + id.Split('-')[0]; } }
-        public DateTime published { get; set; }
-        public FriendFeedUser user { get; set; }
-        public string FromUser { get { return user.name; } }
+        public string description { get; set; }
+        public string url { get; set; }
+        public int created_time { get; set; }
+        public DateTime PublishDate { get { return new DateTime(1970, 1, 1).AddSeconds(created_time); } }
+        public string owner_screenname { get; set; }
 
-        public FriendFeedItem()
-        {
-        }
-    }
-    public class FriendFeedUser
-    {
-        public string name { get; set; }
-        public string nickname { get; set; }
-
-        public FriendFeedUser()
+        public DailyMotionItem()
         {
         }
     }

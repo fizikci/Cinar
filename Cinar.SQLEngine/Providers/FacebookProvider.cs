@@ -25,6 +25,7 @@ namespace Cinar.SQLEngine.Providers
         {
             Uri serviceUri = new Uri("https://graph.facebook.com/search?q=\"" + query + "\"&type=post");
             WebClient downloader = new WebClient();
+            downloader.Encoding = Encoding.UTF8;
             string json = downloader.DownloadString(serviceUri);
 
             JavaScriptSerializer ser = new JavaScriptSerializer();
