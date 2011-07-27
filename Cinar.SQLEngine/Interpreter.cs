@@ -248,6 +248,8 @@ namespace Cinar.SQLEngine
                         list.Add(new Hashtable() { { "table_name", "Youtube" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "SocialMedia" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "Yahoo" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "FriendFeed" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "DailyMotion" }, { "table_type", "table" } });
                         break;
                     }
                 case "information_schema.columns":
@@ -260,6 +262,8 @@ namespace Cinar.SQLEngine
                         list.AddRange(getColumnsOf(typeof(RSSItem), "Youtube", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(SocialMediaItem), "SocialMedia", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(YahooResultItem), "Yahoo", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(FriendFeedItem), "FriendFeed", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(DailyMotionItem), "DailyMotion", where, fieldNames));
                         break;
                     }
                 case "file":
@@ -348,6 +352,34 @@ namespace Cinar.SQLEngine
                         }
                         else
                             throw new Exception("Provide query. Exp: select .. from Yahoo(Query='...')");
+                        break;
+                    }
+                case "friendfeed":
+                    {
+                        string query2 = "";
+                        if (join.CinarTableOptions.ContainsKey("Query"))
+                        {
+                            query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
+                            FriendFeedProvider twProvider = new FriendFeedProvider(query2, "");
+                            list.AddRange(twProvider.GetData(this, where, fieldNames));
+                        }
+                        else
+                            throw new Exception("Provide query. Exp: select .. from Yahoo(Query='...')");
+                        break;
+                    }
+                case "dailymotion":
+                    {
+                        string query2 = "", lang = "";
+                        if (join.CinarTableOptions.ContainsKey("Query"))
+                        {
+                            query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
+                            if (join.CinarTableOptions.ContainsKey("Lang"))
+                                lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
+                            DailyMotionProvider twProvider = new DailyMotionProvider(query2, lang);
+                            list.AddRange(twProvider.GetData(this, where, fieldNames));
+                        }
+                        else
+                            throw new Exception("Provide query. Exp: select .. from Twitter(Query='...')");
                         break;
                     }
             }

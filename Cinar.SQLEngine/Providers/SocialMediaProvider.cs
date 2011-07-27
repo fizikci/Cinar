@@ -34,6 +34,10 @@ namespace Cinar.SQLEngine.Providers
                 items.Add(new SocialMediaItem(item));
             foreach (RSSItem item in new YoutubeProvider(query).GetData())
                 items.Add(new SocialMediaItem(item));
+            foreach (FriendFeedItem item in new FriendFeedProvider(query, lang).GetData())
+                items.Add(new SocialMediaItem(item));
+            foreach (DailyMotionItem item in new DailyMotionProvider(query, lang).GetData())
+                items.Add(new SocialMediaItem(item));
 
             
             List<Hashtable> list = new List<Hashtable>();
@@ -106,6 +110,34 @@ namespace Cinar.SQLEngine.Providers
             this.Text = item.Summary;
             this.PublishDate = item.PublishDate;
             this.LastUpdate = item.LastUpdatedTime;
+        }
+
+        public SocialMediaItem(FriendFeedItem item)
+        {
+            this.Source = "FriendFeed";
+            this.Id = item.id;
+            //this.FromUserId = item.from_id;
+            this.FromUser = item.FromUser;
+            //this.FromUserPicture = item.picture;
+            this.Link = item.link;
+            this.Title = item.title;
+            //this.Text = item.Summary;
+            this.PublishDate = item.published;
+            this.LastUpdate = item.updated;
+        }
+
+        public SocialMediaItem(DailyMotionItem item)
+        {
+            this.Source = "DailyMotion";
+            this.Id = item.id;
+            //this.FromUserId = item.from_id;
+            this.FromUser = item.owner_screenname;
+            //this.FromUserPicture = item.picture;
+            this.Link = item.url;
+            this.Title = item.title;
+            this.Text = item.description;
+            this.PublishDate = item.PublishDate;
+            this.LastUpdate = item.LastUpdate;
         }
 
     }

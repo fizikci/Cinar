@@ -27,6 +27,7 @@ namespace Cinar.SQLEngine.Providers
         {
             Uri serviceUri = new Uri("http://search.twitter.com/search.json?q=\"" + query + "\"&lang=" + lang);
             WebClient downloader = new WebClient();
+            downloader.Encoding = Encoding.UTF8;
             string json = downloader.DownloadString(serviceUri);
 
             JavaScriptSerializer ser = new JavaScriptSerializer();

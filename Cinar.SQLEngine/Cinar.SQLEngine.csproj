@@ -45,6 +45,7 @@
     <Compile Include="ADO.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\DailyMotionProvider.cs" />
     <Compile Include="Providers\FriendFeedProvider.cs" />
     <Compile Include="Providers\YahooBossProvider.cs" />
     <Compile Include="Providers\SocialMediaProvider.cs" />

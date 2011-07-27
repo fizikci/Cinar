@@ -25,22 +25,24 @@ namespace Cinar.SQLEngine.Providers
             List<Hashtable> list = new List<Hashtable>();
 
             SyndicationFeed s = new SyndicationFeed();
-            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader(url));
-
-            foreach (SyndicationItem rItem in client.Items)
+            using (XmlTextReader reader = new XmlTextReader(url))
             {
-                RSSItem item = new RSSItem(rItem);
-                if (item.Filter(context, where))
+                SyndicationFeed client = SyndicationFeed.Load(reader);
+
+                foreach (SyndicationItem rItem in client.Items)
                 {
-                    Hashtable ht = new Hashtable();
-                    foreach (Select field in fieldNames)
-                        ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
-                    list.Add(ht);
+                    RSSItem item = new RSSItem(rItem);
+                    if (item.Filter(context, where))
+                    {
+                        Hashtable ht = new Hashtable();
+                        foreach (Select field in fieldNames)
+                            ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
+                        list.Add(ht);
+                    }
                 }
+
+                return list;
             }
-
-            return list;
-
         }
     }
 
