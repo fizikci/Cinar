@@ -157,6 +157,40 @@ namespace Cinar.SQLParser
             return String.Format("{0}", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
         }
     }
+    public class CaseWhen : Expression
+    {
+        public CaseWhen(Dictionary<Expression, Expression> caseWhen, Expression _else)
+        {
+            this.caseWhen = caseWhen;
+            this._else = _else;
+        }
+
+        readonly Dictionary<Expression,Expression> caseWhen;
+        readonly Expression _else;
+
+        public override object Calculate(IContext context)
+        {
+            foreach(Expression when in caseWhen.Keys)
+                if(when.Calculate(context).Equals(true))
+                    return caseWhen[when].Calculate(context);
+
+            if(_else!=null)
+                return _else.Calculate(context);
+
+            return null;
+        }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("CASE");
+            foreach(Expression when in caseWhen.Keys)
+               sb.AppendFormat(" WHEN {0} THEN {1}", when, caseWhen[when]);
+            if(_else!=null)
+                sb.AppendFormat(" ELSE {0}", _else);
+            sb.Append(" END");
+            return sb.ToString();
+        }
+    }
     public class IfShortCut : Expression
     {
         public IfShortCut(Expression boolExp, Expression trueExpression, Expression falseExpression)

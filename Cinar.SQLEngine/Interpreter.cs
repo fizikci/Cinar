@@ -332,12 +332,15 @@ namespace Cinar.SQLEngine
                 case "socialmedia":
                     {
                         if (!join.CinarTableOptions.ContainsKey("Query"))
-                            throw new Exception("Provide query. Exp: select .. from SocialMedia(Query='...')");
+                            throw new Exception("Provide query. Exp: select .. from SocialMedia(Query='...'[, Lang='tr'][, Source='Twitter,Facebook'])");
                         string query = (string)join.CinarTableOptions["Query"].Calculate(this);
                         string lang = "";
                         if (join.CinarTableOptions.ContainsKey("Lang"))
                             lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
-                        SocialMediaProvider provider = new SocialMediaProvider(query, lang);
+                        string source = "All";
+                        if (join.CinarTableOptions.ContainsKey("Source"))
+                            source = (string)join.CinarTableOptions["Source"].Calculate(this);
+                        SocialMediaProvider provider = new SocialMediaProvider(query, lang, source);
                         list.AddRange(provider.GetData(this, where, fieldNames));
                         break;
                     }
