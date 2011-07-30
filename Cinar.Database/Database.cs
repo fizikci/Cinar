@@ -1250,15 +1250,31 @@ namespace Cinar.Database
         public Dictionary<TKey, TValue> GetDictionary<TKey, TValue>(string sql, params object[] parameters)
         {
             DataTable dt = GetDataTable(sql, parameters);
-            if(dt.Columns.Count<2)
+            if (dt.Columns.Count < 2)
                 throw new Exception("select at least 2 columns for dictionary");
 
             Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
             foreach (DataRow dr in dt.Rows)
             {
-                TKey key = (TKey) Convert.ChangeType(dr[0], typeof (TKey));
-                if(!dict.ContainsKey(key))
-                    dict.Add(key, (TValue) Convert.ChangeType(dr[1], typeof (TValue)));
+                TKey key = (TKey)Convert.ChangeType(dr[0], typeof(TKey));
+                if (!dict.ContainsKey(key))
+                    dict.Add(key, (TValue)Convert.ChangeType(dr[1], typeof(TValue)));
+            }
+
+            return dict;
+        }
+        public Hashtable GetKeyValueList(string sql, params object[] parameters)
+        {
+            DataTable dt = GetDataTable(sql, parameters);
+            if (dt.Columns.Count < 2)
+                throw new Exception("select at least 2 columns for dictionary");
+
+            Hashtable dict = new Hashtable();
+            foreach (DataRow dr in dt.Rows)
+            {
+                object key = dr[0];
+                if (!dict.ContainsKey(key))
+                    dict.Add(key, dr[1]);
             }
 
             return dict;

@@ -820,7 +820,35 @@ namespace Cinar.SQLParser
 
         Expression ParseExpression()
         {
-            return ParseIfShortCutExpression();
+            return ParseCaseWhenExpression();
+        }
+
+        Expression ParseCaseWhenExpression()
+        {
+            if(!fCurrentToken.Equals("CASE"))
+                return ParseIfShortCutExpression();
+
+            Dictionary<Expression,Expression> caseWhenList = new Dictionary<Expression,Expression>();
+            Expression _else = null;
+
+            SkipExpected("CASE");
+            while(fCurrentToken.Equals("WHEN"))
+            {
+                SkipExpected("WHEN");
+                Expression when = ParseExpression();
+                SkipExpected("THEN");
+                Expression then = ParseExpression();
+                caseWhenList.Add(when, then);
+            }
+            if(fCurrentToken.Equals("ELSE"))
+            {
+                SkipExpected("ELSE");
+                _else = ParseExpression();
+            }
+
+            SkipExpected("END");
+
+            return new CaseWhen(caseWhenList, _else);
         }
 
         Expression ParseIfShortCutExpression()

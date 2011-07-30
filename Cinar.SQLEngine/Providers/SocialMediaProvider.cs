@@ -18,26 +18,34 @@ namespace Cinar.SQLEngine.Providers
     {
         private string query;
         private string lang;
+        private string source;
 
-        public SocialMediaProvider(string query, string lang)
+        public SocialMediaProvider(string query, string lang, string source)
         {
             this.query = query;
             this.lang = lang;
+            this.source = source;
         }
 
         internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
         {
             List<SocialMediaItem> items = new List<SocialMediaItem>();
-            foreach (FBPost item in new FacebookProvider(query).GetData())
-                items.Add(new SocialMediaItem(item));
-            foreach (Tweet item in new TwitterProvider(query, lang).GetData())
-                items.Add(new SocialMediaItem(item));
-            foreach (RSSItem item in new YoutubeProvider(query).GetData())
-                items.Add(new SocialMediaItem(item));
-            foreach (FriendFeedItem item in new FriendFeedProvider(query, lang).GetData())
-                items.Add(new SocialMediaItem(item));
-            foreach (DailyMotionItem item in new DailyMotionProvider(query, lang).GetData())
-                items.Add(new SocialMediaItem(item));
+
+            if (source == "All" || source.IndexOf("Facebook", StringComparison.InvariantCultureIgnoreCase) > -1)
+                foreach (FBPost item in new FacebookProvider(query).GetData())
+                    items.Add(new SocialMediaItem(item));
+            if (source == "All" || source.IndexOf("Twitter", StringComparison.InvariantCultureIgnoreCase) > -1)
+                foreach (Tweet item in new TwitterProvider(query, lang).GetData())
+                    items.Add(new SocialMediaItem(item));
+            if (source == "All" || source.IndexOf("Youtube", StringComparison.InvariantCultureIgnoreCase) > -1)
+                foreach (RSSItem item in new YoutubeProvider(query).GetData())
+                    items.Add(new SocialMediaItem(item));
+            if (source == "All" || source.IndexOf("FriendFeed", StringComparison.InvariantCultureIgnoreCase) > -1)
+                foreach (FriendFeedItem item in new FriendFeedProvider(query, lang).GetData())
+                    items.Add(new SocialMediaItem(item));
+            if (source == "All" || source.IndexOf("DailyMotion", StringComparison.InvariantCultureIgnoreCase) > -1)
+                foreach (DailyMotionItem item in new DailyMotionProvider(query, lang).GetData())
+                    items.Add(new SocialMediaItem(item));
 
             
             List<Hashtable> list = new List<Hashtable>();
@@ -72,7 +80,7 @@ namespace Cinar.SQLEngine.Providers
 
         public SocialMediaItem(FBPost item)
         {
-            this.Source = "Facebook";
+            this.Source = "FACEBOOK";
             this.Id = item.id;
             this.FromUserId = item.from_id;
             this.FromUser = item.from_name;
@@ -86,7 +94,7 @@ namespace Cinar.SQLEngine.Providers
 
         public SocialMediaItem(Tweet item)
         {
-            this.Source = "Twitter";
+            this.Source = "TWITTER";
             this.Id = item.id.ToString();
             this.FromUserId = item.from_user_id.ToString();
             this.FromUser = item.from_user;
@@ -100,7 +108,7 @@ namespace Cinar.SQLEngine.Providers
 
         public SocialMediaItem(RSSItem item)
         {
-            this.Source = "Youtube";
+            this.Source = "YOUTUBE";
             this.Id = item.Id;
             //this.FromUserId = item.from_id;
             this.FromUser = item.Authors;
@@ -114,7 +122,7 @@ namespace Cinar.SQLEngine.Providers
 
         public SocialMediaItem(FriendFeedItem item)
         {
-            this.Source = "FriendFeed";
+            this.Source = "FRIENDFEED";
             this.Id = item.id;
             //this.FromUserId = item.from_id;
             this.FromUser = item.FromUser;
@@ -128,7 +136,7 @@ namespace Cinar.SQLEngine.Providers
 
         public SocialMediaItem(DailyMotionItem item)
         {
-            this.Source = "DailyMotion";
+            this.Source = "DAILYMOTION";
             this.Id = item.id;
             //this.FromUserId = item.from_id;
             this.FromUser = item.owner_screenname;
