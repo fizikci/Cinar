@@ -26,7 +26,7 @@ namespace Cinar.SQLEngine.Providers
         internal List<RSSItem> GetData()
         {
             SyndicationFeed s = new SyndicationFeed();
-            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader("http://gdata.youtube.com/feeds/api/videos?q=\"" + query + "\"&max-results=50&lr=tr"));
+            SyndicationFeed client = SyndicationFeed.Load(new XmlTextReader("http://gdata.youtube.com/feeds/api/videos?q=\"" + query + "\"&max-results=10&lr=tr&orderby=published"));
 
             return client.Items.Select(i => new RSSItem(i)).ToList();
         }
