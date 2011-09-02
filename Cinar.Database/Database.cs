@@ -1459,6 +1459,10 @@ namespace Cinar.Database
                 list.Add(DataRowToEntity<T>(dr));
             return list;
         }
+        public List<T> ReadList<T>() where T : IDatabaseEntity
+        {
+            return ReadList<T>(new FilterExpression());
+        }
         public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
         {
             DataTable dt = GetDataTableFor(entityType, filterExpression);
