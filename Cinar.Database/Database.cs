@@ -851,9 +851,14 @@ namespace Cinar.Database
             sb.Append("DELETE FROM [" + tableName + "]");
 
             Column[] whereColumns = null;
+            IDbCommand cmd = null;
 
             if (tbl.PrimaryColumn != null)
+            {
                 sb.AppendFormat(" WHERE [{0}] = @_{0}", tbl.PrimaryColumn.Name);
+                cmd = this.CreateCommand(sb.ToString());
+                cmd.Parameters.Add(this.CreateParameter(" @_" + tbl.PrimaryColumn.Name, data[tbl.PrimaryColumn.Name]));
+            }
             else
             {
                 whereColumns = tbl.Columns.Where(f => !(f.SimpleColumnType == SimpleDbType.ByteArray || f.SimpleColumnType == SimpleDbType.Text)).ToArray();
@@ -867,20 +872,18 @@ namespace Cinar.Database
                 if (count < 1)
                     throw new Exception("There is no row to be deleted!");
                 sb.AppendFormat(" WHERE " + string.Join(" AND ", whereColumns.Select(f => data[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_{0}", f.Name)).ToArray()));
+
+                cmd = this.CreateCommand(sb.ToString());
+                if (whereColumns != null && whereColumns.Length > 0)
+                    foreach (Column f in whereColumns)
+                    {
+                        if (data[f.Name] == null) continue;
+                        IDbDataParameter param = this.CreateParameter("@_" + f.Name, data[f.Name]);
+                        cmd.Parameters.Add(param);
+                    }
             }
 
-            IDbCommand cmd = this.CreateCommand(sb.ToString());
-            if (whereColumns != null && whereColumns.Length > 0)
-                foreach (Column f in whereColumns)
-                {
-                    if (data[f.Name] == null) continue;
-                    IDbDataParameter param = this.CreateParameter("@_" + f.Name, data[f.Name]);
-                    cmd.Parameters.Add(param);
-                }
-
-            int res = this.ExecuteNonQuery(cmd);
-
-            return res;
+            return this.ExecuteNonQuery(cmd);
         }
         public int Delete(string tableName, DataRow dataRow)
         {
@@ -1107,21 +1110,22 @@ namespace Cinar.Database
                 PropertyInfo pi = GetPropertyInfoForColumn(table.Columns[colName]);
                 if (pi == null) continue;
 
-                object val = dr[colName, rowVersion];
-                if (val.Equals(DBNull.Value))
-                    val = null;
+                object drValue = dr[colName, rowVersion];
+
+                if (drValue.Equals(DBNull.Value))
+                    drValue = null;
 
                 if (pi.PropertyType.IsEnum)
                 {
-                    if (val!=null && val.GetType()==typeof(string))
-                        val = Enum.Parse(pi.PropertyType, val.ToString());
+                    if (drValue!=null && drValue.GetType()==typeof(string))
+                        drValue = Enum.Parse(pi.PropertyType, drValue.ToString());
                     else
-                        val = Enum.ToObject(pi.PropertyType, val);
+                        drValue = Enum.ToObject(pi.PropertyType, drValue);
                 }
                 else
-                    val = Convert.ChangeType(val, pi.PropertyType);
+                    drValue = Convert.ChangeType(drValue, pi.PropertyType);
 
-                pi.SetValue(entity, val, null);
+                pi.SetValue(entity, drValue, null);
 
                 //if (pi.PropertyType == typeof(string))
                 //    pi.SetValue(entity, val.ToString(), null);

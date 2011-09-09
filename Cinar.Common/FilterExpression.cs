@@ -202,10 +202,10 @@ namespace Cinar.Database
                     str += " NOT LIKE {" + index + "}";
                     break;
                 case CriteriaTypes.In:
-                    str += " IN {" + index + "}";
+                    str += " IN (" + columnValue + ")";
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " NOT IN {" + index + "}";
+                    str += " NOT IN (" + columnValue + ")";
                     break;
             }
 

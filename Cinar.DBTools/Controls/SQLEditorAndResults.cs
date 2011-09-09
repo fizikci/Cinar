@@ -372,7 +372,7 @@ namespace Cinar.DBTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + (ex.InnerException!=null ? "\n" + ex.InnerException.Message : ""), "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
