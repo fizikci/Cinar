@@ -10,6 +10,9 @@ namespace Cinar.Extensions
     {
         public static MatchResult Match(string content, string keyword)
         {
+            if (keyword != null)
+                keyword = keyword.Replace(".", "\\.");
+
             KeywordParser p = new KeywordParser();
             p.Parse(keyword);
             return p.Match(content);
@@ -34,6 +37,44 @@ namespace Cinar.Extensions
             currentToken = readNextToken();
             if (!(currentToken.IsWord || currentToken.Value == "("))
                 throw new Exception("Keyword <kelime> veya parantez ile başlamalıdır.");
+
+            /*
+            Expression currExp = new Word { TheWord = t.Value };
+            while (t != null)
+            {
+                string tValue = t.Value;
+                if (!t.IsWord && (tValue == "+" || tValue == "-" || tValue == "^"))
+                {
+                    t = readNextToken();
+                    if (t == null)
+                        throw new Exception("Bir keyword +, - ya da ^ ile bitemez.");
+                    if (!t.IsWord)
+                        throw new Exception("<kelime> gerekli");
+
+                    if (tValue == "+")
+                        currExp = new PlusExpression() { Exp1 = currExp, Exp2 = new Word { TheWord = t.Value } };
+                    else if (tValue == "-")
+                        currExp = new MinusExpression() { Exp1 = currExp, Exp2 = new Word { TheWord = t.Value } };
+                    else
+                        currExp = new ButNotExpression() { Exp1 = (Word)currExp, Exp2 = new Word { TheWord = t.Value } };
+                }
+                else if (!t.IsWord && t.Value == "|")
+                {
+                    list.Add(currExp);
+                    t = readNextToken();
+                    if (!t.IsWord)
+                        throw new Exception("Yeni keyword <kelime> ile başlamalıdır");
+                    currExp = new Word { TheWord = t.Value };
+                }
+                else
+                {
+                    t = readNextToken();
+                    if (t == null)
+                        break;
+                }
+            }
+             */
+
 
             parsedExpression = parseExpression();
 
@@ -297,8 +338,15 @@ namespace Cinar.Extensions
 
         internal override MatchResult Match(string content)
         {
+            bool caseSensitive = TheWord.EndsWith("/CS", StringComparison.InvariantCultureIgnoreCase);
+            if (caseSensitive) TheWord = TheWord.Substring(0, TheWord.Length - 3);
+
             string reg = "\\b" + TheWord.Replace("*", "[A-Za-z0-9ğüşıöçĞÜŞİÖÇ+\\-*/!'^+%&/()=?_]*") + "\\b";
-            Regex r = new Regex(reg, RegexOptions.IgnoreCase);
+            Regex r = null;
+            if (caseSensitive)
+                r = new Regex(reg);
+            else
+                r = new Regex(reg, RegexOptions.IgnoreCase);
             MatchCollection coll = r.Matches(content);
 
             MatchResult res = new MatchResult();
