@@ -100,6 +100,9 @@ namespace Cinar.WinApp.MediaSearch.Forms
             HtmlElement elm = webBrowser.Document.Body;
             foreach (string node in selector.Split(new[] { " > " }, StringSplitOptions.RemoveEmptyEntries))
             {
+                if (elm == null)
+                    break;
+
                 if (node.StartsWith("#"))
                     elm = webBrowser.Document.GetElementById(node.Substring(1));
                 else if (node.Contains("."))
