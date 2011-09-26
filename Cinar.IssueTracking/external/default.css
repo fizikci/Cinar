@@ -1,0 +1,252 @@
+﻿body {
+    color: #000000;
+    font: 12px/1.5 Arial,Helvetica,'Liberation Sans',FreeSans,sans-serif;
+    letter-spacing: normal;
+    margin:0px;
+    padding:0px;
+}
+input[type="text"], input[type="password"], textarea, select {
+    border: 1px solid #999999;
+}
+h1  {
+    clear:both;
+}
+#header {
+    background: #15478C;
+    color: #D4DCE8;
+    padding:10px;
+    clear:both;
+}
+#logo {
+    font-size:24px;
+    font-weight:bold;
+}
+#userPanel 
+{
+    float:right;
+}
+#userPanel a
+{
+    color: White;
+    text-decoration:none;
+}
+#page 
+{
+    padding:10px;
+    min-height:600px;
+}
+#footer {
+    padding:10px;
+    text-align:right;
+    border-top:3px solid #15478C;
+    margin-top:10px;
+    clear:both;
+}
+#ticketList .groupTitle h3 {
+    background-color: #D4DCE8;
+    border: 1px solid #CCCCCC;
+    margin: 1em 0 0;
+    padding: 0.1em 0.5em;
+}
+#ticketList table {
+    border-collapse:collapse;
+    width:100%;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+#ticketList table th {
+    background-color: #EEEEEE !important;
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    color: #15478C !important;
+    font-size: 1em;
+    text-transform: capitalize;
+    white-space: nowrap;
+    text-align:left;
+    padding:3px;
+}
+#ticketList th.Name {min-width:100%;}
+#ticketList th.Status {width:100px;}
+#ticketList th.Priority {width:100px;}
+#ticketList th.Component {width:200px;}
+#ticketList th.AssignedTo {width:250px;}
+#ticketList th.ReportedBy {width:250px;}
+#ticketList th.CreatedOn {width:150px;}
+
+#ticketList tr.even {
+    background: none repeat scroll 0 0 #FCFCFC;
+    color: #444444;
+}
+
+#ticketList tr.odd {
+    background: none repeat scroll 0 0 #F8F8F8;
+    color: #333333;
+}
+#ticketList tr:hover  {
+    background:#eaf3fa;
+    color:#000000;
+}
+
+#ticketList table td {
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-top: 1px solid #EEEEEE;
+    padding: 3px;
+    text-align: left;
+    vertical-align: top;
+    overflow: hidden;
+
+    min-width: 150px;
+    white-space: normal;
+}
+
+span.ticketName {color: #15478C; cursor:pointer;}
+span.ticketName img {vertical-align:top;}
+span.ticketName:hover {text-decoration:underline;}
+
+.statusIndicator {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    border:1px solid #CCCCCC;
+    vertical-align:middle;
+}
+
+div.bigInput {
+    padding: 14px 16px;
+}
+.New {background: #D4DCFA;}
+.Accepted {background: #FAFAD4;}
+.Rejected {background: #FADCD4;}
+.Resolved {background: #D4FADC;}
+
+div.bigInput input {
+    font-size:20px;
+    font-weight:bold;
+    width:90%;
+}
+
+#ticket {
+    border:1px solid #D4DCE8;
+    width:1000px;
+    float:left;
+}
+div.halfWidth {
+    width: 45%;
+    float:left;
+}
+div.fullWidth {
+    clear:both;
+}
+div.controlWithLabel {
+    padding:10px 0 3px 10px;
+    margin:10px 0 0 10px;
+    border-bottom:1px solid #D4DCE8;
+    min-height:20px;
+}
+div.controlWithLabel span {
+    display:inline-block;
+    width:35%;
+    font-weight:bold;
+}
+
+
+#ticketHistory {float:left; min-width:600px; margin-left:20px;}
+#ticketHistory .thumb-col {
+    background: url("/images/arrow-tickets-changeset.gif") no-repeat scroll right -6px transparent;
+    float: left;
+    width: 68px;
+}
+#ticketHistory .thumb-col img {
+    border: 1px solid #DFE5EE;
+    width: 50px;
+}
+#ticketHistory .changeset-wrap .changeset-col {
+    border: 1px solid #DFE5EE;
+    margin: 0 0 10px 67px;
+}
+#ticketHistory .changeset-wrap .changeset-col .header-gray {
+    background-color: #F6F6F6;
+}
+#ticketHistory .changeset-wrap .changeset-col .changeset-header {
+    padding: 4px 12px 1px 9px;
+}
+#ticketHistory .changeset-description {
+    margin: 0 1px;
+    padding: 0 6px 4px 0;
+}
+
+
+
+.user-pic-wrap {
+    float: left;
+    margin-right: 20px;
+    max-width: 102px;
+}
+.avatar {
+    background: url("/Images/uyelik/noavatar.png") no-repeat scroll left top transparent;
+    border: 1px solid #D4DCE8;
+    display: block;
+    float: none;
+    height: 100px;
+    margin-bottom: 7px;
+    width: 100px;
+}
+a.edit-profile {
+    background: url("/Images/uyelik/profile_edit.png") no-repeat scroll left top transparent;
+    padding-left: 21px;
+    font-size: 12px;
+}
+a.logout {
+    background: url("/Images/uyelik/logout.png") no-repeat scroll left top transparent;
+    padding-left: 21px;
+    font-size: 12px;
+}
+a.toProfileLink 
+{
+    background: url("/Images/uyelik/user.png") no-repeat scroll left top transparent;
+    color:White;
+    padding-left: 21px;
+    font-size: 12px;
+}
+.user-status-wrap {
+    float: left;
+}
+
+.memberProfile h1 {
+    clear: both;
+    color: #327BBF;
+    display: block;
+    font-family: Helvetica Neue,Arial,Helvetica,'Liberation Sans',FreeSans,sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    line-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.memberProfile h2 {
+    clear: both;
+    font-size: 15px;
+    margin: 0;
+    padding-bottom: 5px;
+}
+.memberProfile table.hist {
+    border-bottom: 4px solid #D4DCE8;
+    border-collapse: collapse;
+    border-top: 4px solid #D4DCE8;
+    margin-bottom: 0.75em;
+    width: 100%;
+}
+.memberProfile td span {
+    background: none repeat scroll 0 0 #EEEEEE;
+    color: #333333;
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 5px;
+    padding: 4px 0 !important;
+    text-align: center;
+    text-decoration: none;
+}

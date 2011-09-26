@@ -56,6 +56,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,6 +67,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IssueTracking\ProjectUser.cs" />
+    <Compile Include="IssueTracking\Project.cs" />
+    <Compile Include="IssueTracking\Ticket.cs" />
+    <Compile Include="IssueTracking\TicketQuery.cs" />
     <Compile Include="MediaSearch\Author.cs" />
     <Compile Include="MediaSearch\Category.cs" />
     <Compile Include="MediaSearch\Content.cs" />
@@ -75,7 +80,8 @@
     <Compile Include="MediaSearch\Media.cs" />
     <Compile Include="MediaSearch\Tag.cs" />
     <Compile Include="Standart\BaseEntity.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="CinarContext.cs" />
+    <Compile Include="Standart\CriticalEntity.cs" />
     <Compile Include="Standart\EntityHistory.cs" />
     <Compile Include="Standart\NamedEntity.cs" />
     <Compile Include="Standart\UsageReport.cs" />
@@ -93,9 +99,9 @@
       <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
       <Name>Cinar.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
-      <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
-      <Name>Cinar.Database</Name>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Name>Cinar.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

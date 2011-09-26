@@ -71,13 +71,5 @@ namespace Cinar.Database
     public interface IMetadata
     { 
     }
-    public interface IDatabase
-    {
-        TableCollection Tables { get; set; }
-        string GetTableDDL(Table table);
-        DatabaseProvider Provider { get; }
-        DataTable GetDataTable(string sql);
-        string Name { get; set; }
-        Constraint GetConstraint(string constraintName);
-    }
+    
 }

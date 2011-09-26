@@ -24,7 +24,7 @@ namespace Cinar.Entities.Standart
             get
             {
                 if (role == null && RoleId > 0)
-                    role = Context.Db.Read<Role>(RoleId);
+                    role = CinarContext.Db.Read<Role>(RoleId);
                 return role;
             }
             set 
@@ -40,7 +40,7 @@ namespace Cinar.Entities.Standart
             get
             {
                 if (right == null && RightId > 0)
-                    right = Context.Db.Read<Right>(RightId);
+                    right = CinarContext.Db.Read<Right>(RightId);
                 return right;
             }
             set

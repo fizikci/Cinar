@@ -133,6 +133,12 @@ namespace Cinar.Database
         {
             return OrderBy(columnName, true);
         }
+        public FilterExpression Desc()
+        {
+            if (Orders.Count > 0)
+                this.Orders.Last().Ascending = false;
+            return this;
+        }
     }
 
     public class Criteria

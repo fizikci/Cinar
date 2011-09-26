@@ -13,7 +13,7 @@ namespace Cinar.Database.Providers
             get { return connection; }
         }
 
-        protected Database db = null;
+        protected IDatabase db = null;
 
         /// <summary>
         /// Veritabanından string olarak gelen column tip bilgisini DbType enum'una dönüştürür.

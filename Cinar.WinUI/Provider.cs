@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using System.Timers;
+using Cinar.Entities;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
@@ -27,15 +28,15 @@ namespace Cinar.WinUI
             get { return clientUser; }
         }
 
-        private Database.Database db;
+        //private Database.IDatabase db;
         public Database.Database Db 
         { 
             get 
             {
-                if (db == null)
-                    db = new Cinar.Database.Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]));
+                if (CinarContext.Db == null)
+                   CinarContext.Db = new Cinar.Database.Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]));
 
-                return db;
+                return (Database.Database)CinarContext.Db;
             } 
         }
 
@@ -53,7 +54,7 @@ namespace Cinar.WinUI
                 {
                     try
                     {
-                        Entities.Context.Db = Db;
+                        Entities.CinarContext.Db = Db;
 
                         clientUser = Db.Read<User>("[UserName]={0} AND [Password]={1}", giris.Username, giris.Password);
 
@@ -66,7 +67,7 @@ namespace Cinar.WinUI
                                     clientUser.AddRight(right.Name);
                                 }
 
-                            Entities.Context.ClientUser = clientUser;
+                            Entities.CinarContext.ClientUser = clientUser;
 
                             return true;
                         }

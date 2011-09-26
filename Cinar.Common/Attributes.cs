@@ -62,7 +62,7 @@ namespace Cinar.Database
             set { defaultValue = value; }
         }
 
-        private long length = 50;
+        private long length = 100;
         /// <summary>
         /// Eğer bu bir varchar veya char türü bir alan ise maximum karekter boyu nedir?
         /// </summary>

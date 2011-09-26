@@ -32,7 +32,7 @@ namespace Cinar.Database.Providers
     /// </summary>
     internal class PostgreSQLProvider : BaseProvider, IDatabaseProvider
     {
-        public PostgreSQLProvider(Database db, bool createDatabaseIfNotExist)
+        public PostgreSQLProvider(IDatabase db, bool createDatabaseIfNotExist)
         {
             this.db = db;
             try
@@ -80,7 +80,7 @@ namespace Cinar.Database.Providers
         public void ReadDatabaseMetadata()
         {
             // tables and views
-            db.Tables = new TableCollection((Database)db);
+            db.Tables = new TableCollection(db);
 
             // columns
             DataTable dtTables = db.GetDataTable(GetSQLTableList());

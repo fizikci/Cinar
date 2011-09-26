@@ -46,6 +46,7 @@
     <Compile Include="Constraint.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="FilterExpression.cs" />
+    <Compile Include="IDatabase.cs" />
     <Compile Include="UI\Form.cs" />
     <Compile Include="IDatabaseEntity.cs" />
     <Compile Include="IDatabaseProvider.cs" />
