@@ -352,8 +352,11 @@ namespace Cinar.Database
             {
                 string[] parts = sql.Split(' ');
                 int rowCountIndex = sql.StartsWith("select distinct top ", ic) ? 3 : 2;
-                sql = sql.Replace(" top " + parts[rowCountIndex], "");
-                sql += " limit " + parts[rowCountIndex];
+                parts[rowCountIndex - 1] = "";
+                string count = parts[rowCountIndex];
+                parts[rowCountIndex] = "";
+                sql = string.Join(" ", parts);//sql.Replace(" top " + parts[rowCountIndex], "");
+                sql += " limit " + count;
             }
             sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
 
@@ -526,7 +529,7 @@ namespace Cinar.Database
             this.Connection.Close();
         }
 
-        public void Execute(DbAction dbAction)
+        public void Execute(Action dbAction)
         {
             try
             {
@@ -959,52 +962,8 @@ namespace Cinar.Database
             while (baseType.BaseType.GetInterface("ISerializeSubclassFields") != null)
                 baseType = baseType.BaseType;
 
-            StringBuilder sb = new StringBuilder();
-            foreach (PropertyInfo pi in entity.GetType().GetProperties())
-            {
-                if (pi.Name == "Item") continue;
-                if (pi.GetSetMethod() == null) continue;
-                if (!pi.DeclaringType.IsSubclassOf(baseType)) continue;
-
-                object val = pi.GetValue(entity, null);
-                if (val != null)
-                {
-                    string valStr = val.ToString();
-                    sb.AppendFormat("{0},{1},{2}", pi.Name, valStr.Length, valStr);
-                }
-            }
-            entity.Details = sb.ToString();
+            entity.Details = entity.SerializeToString(pi => pi.DeclaringType.IsSubclassOf(baseType));
             entity.TypeName = entity.GetType().Name;
-        }
-        private void deserialize(ISerializeSubclassFields entity)
-        {
-            string data = entity.Details;
-            try
-            {
-                while (data.Length > 0)
-                {
-                    string propName = data.Substring(0, data.IndexOf(','));
-                    data = data.Substring(propName.Length + 1);
-                    string valLengthStr = data.Substring(0, data.IndexOf(','));
-                    data = data.Substring(valLengthStr.Length + 1);
-                    int length = Int32.Parse(valLengthStr);
-                    string valStr = data.Substring(0, length);
-                    data = data.Substring(length);
-
-                    PropertyInfo pi = entity.GetType().GetProperty(propName);
-                    object val = null;
-                    if (pi.PropertyType.IsEnum)
-                        val = Enum.Parse(pi.PropertyType, valStr);
-                    else
-                        val = Convert.ChangeType(valStr, pi.PropertyType);
-
-                    pi.SetValue(entity, val, null);
-                }
-            }
-            catch
-            {
-                throw new Exception("Error while deserializing the module. This may be because module changed or database charset problem.");
-            }
         }
 
         public Hashtable EntityToHashtable(IDatabaseEntity entity)
@@ -1136,7 +1095,7 @@ namespace Cinar.Database
             }
 
             if(entity is ISerializeSubclassFields)
-                deserialize(entity as ISerializeSubclassFields);
+                entity.DeserializeFromString((entity as ISerializeSubclassFields).Details);
         }
         public void FillEntity(IDatabaseEntity entity)
         {
@@ -1249,7 +1208,7 @@ namespace Cinar.Database
 
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
-            return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr=>(T)dr[0]).ToList();
+            return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr => (T)(dr[0] == DBNull.Value ? default(T) : dr[0])).ToList();
         }
         public Dictionary<TKey, TValue> GetDictionary<TKey, TValue>(string sql, params object[] parameters)
         {
@@ -1367,6 +1326,11 @@ namespace Cinar.Database
             return Convert.ToInt32(o ?? 0);
         }
 
+        public void ClearEntityWebCache(Type entityType, int id)
+        {
+            HttpContext.Current.Items[entityType.Name + "_" + id] = null;
+        }
+
         public IDatabaseEntity Read(Type entityType, int id)
         {
             if (HttpContext.Current != null)
@@ -1402,7 +1366,9 @@ namespace Cinar.Database
                 if (table == null)
                     table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
 
-                result = DataRowToEntity(entityType, this.GetDataRow("select * from [" + table.Name + "] where " + where, parameters));
+                string sql = where.StartsWith("select", StringComparison.InvariantCultureIgnoreCase) ? where : ("select * from [" + table.Name + "] where " + where);
+                sql = editSQLAsForProvider(sql);
+                result = DataRowToEntity(entityType, this.GetDataRow(sql, parameters));
 
                 this.Commit();
             }
@@ -1964,6 +1930,4 @@ namespace Cinar.Database
         }
         #endregion
     }
-
-    public delegate void DbAction();
 }

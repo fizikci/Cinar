@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cinar.Database;
 
 namespace Cinar.Entities.Standart
 {
-    [DefaultData(ColumnList="Username,Password", ValueList="'bulent','offoff'")]
+    [DefaultData(ColumnList="Username,Password,Name", ValueList="'bulent','offoff','Bülent Keskin'")]
     public class User : NamedEntity
     {
         string username;
@@ -17,6 +18,12 @@ namespace Cinar.Entities.Standart
         {
             get { return password; }
             set { password = value; }
+        }
+
+        public string Avatar
+        {
+            get;
+            set;
         }
 
         private List<string> userRights = new List<string>();

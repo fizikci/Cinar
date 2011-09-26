@@ -373,7 +373,7 @@ namespace System
         public static string EvaluateAsTemplate(this string template, object obj)
         {
             Dictionary<string, object> expressions = new Dictionary<string, object>();
-            Regex re = new Regex(@"\#\{(?<exp>[A-Za-z0-9._]+)\}");
+            Regex re = new Regex(@"\#\{(?<exp>[A-Za-z0-9._\[\]""]+)\}");
             foreach (Match m in re.Matches(template))
             {
                 string exp = m.Groups["exp"].Value;
@@ -669,6 +669,7 @@ namespace System
                 stringIndexer = memberName.Contains("\"");
                 indexer = memberName.Substring(memberName.IndexOf('[')).Trim('[', ']', '"');
                 memberName = memberName.Substring(0, memberName.IndexOf('['));
+                if (memberName == "") memberName = "Item";
             }
             MemberInfo[] mis = member.GetType().GetMember(memberName, MemberTypes.Field | MemberTypes.Property, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mis.Length != 1)
@@ -681,10 +682,15 @@ namespace System
                 PropertyInfo pi = mi as PropertyInfo;
                 if (indexer != null)
                 {
-                    object collectionObject = pi.GetValue(member, null);
-                    MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                    pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                    if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+                    object collectionObject = obj;
+                    if (memberName != "Item")
+                    {
+                        collectionObject = pi.GetValue(member, null);
+                        MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
+                        pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
+                        if (pi == null)
+                            throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+                    }
                     ParameterInfo[] indexerParams = pi.GetIndexParameters();
                     object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
                     result = pi.GetValue(collectionObject, new object[] { indexerParam });
@@ -870,21 +876,56 @@ namespace System
             return (T)Enum.Parse(typeof(T), "");
         }
 
-        public static string ToXML(this object obj)
+        public static string SerializeToString(this object entity, Predicate<PropertyInfo> serializeThisProperty)
         {
-            if (obj == null)
-                return "";
+            StringBuilder sb = new StringBuilder();
+            foreach (PropertyInfo pi in entity.GetType().GetProperties())
+            {
+                if (pi.Name == "Item") continue;
+                if (pi.GetSetMethod() == null) continue;
+                if (!serializeThisProperty(pi)) continue;
 
-            throw new NotImplementedException();
+                object val = pi.GetValue(entity, null);
+                if (val != null)
+                {
+                    string valStr = val.ToString();
+                    sb.AppendFormat("{0},{1},{2}", pi.Name, valStr.Length, valStr);
+                }
+            }
+            return sb.ToString();
+        }
+        public static string SerializeToString(this object entity)
+        {
+            return entity.SerializeToString(pi => true);
+        }
+        public static void DeserializeFromString(this object entity, string data)
+        {
+            try
+            {
+                while (data.Length > 0)
+                {
+                    string propName = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(propName.Length + 1);
+                    string valLengthStr = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(valLengthStr.Length + 1);
+                    int length = Int32.Parse(valLengthStr);
+                    string valStr = data.Substring(0, length);
+                    data = data.Substring(length);
 
-            //StringBuilder sb = new StringBuilder();
-            //DataContractSerializer ser = new DataContractSerializer(obj.GetType());
-            //using (XmlWriter sw = XmlWriter.Create(sb))
-            //{
-            //    ser.WriteObject(sw, obj);
-            //    sw.Flush();
-            //    return sb.ToString();
-            //}
+                    PropertyInfo pi = entity.GetType().GetProperty(propName);
+                    object val = null;
+                    if (pi.PropertyType.IsEnum)
+                        val = Enum.Parse(pi.PropertyType, valStr);
+                    else
+                        val = Convert.ChangeType(valStr, pi.PropertyType);
+
+                    pi.SetValue(entity, val, null);
+                }
+            }
+            catch
+            {
+                throw new Exception("Error while deserializing the module. This may be because module changed or database charset problem.");
+            }
         }
 
         public static string CompareFields(this object obj1, object obj2, Func<PropertyInfo, bool> predicate)
@@ -1137,6 +1178,15 @@ namespace System
                 i++;
             }
             return -1;
+        }
+
+        public static string StringJoin<T>(this IEnumerable<T> source, string seperator)
+        {
+            return string.Join(seperator, source.Select(t => t == null ? "" : t.ToString()).ToArray());
+        }
+        public static string StringJoin<T>(this IEnumerable<T> source)
+        {
+            return source.StringJoin("");
         }
     }
 

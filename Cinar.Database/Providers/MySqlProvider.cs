@@ -32,7 +32,7 @@ namespace Cinar.Database.Providers
     /// </summary>
     internal class MySqlProvider : BaseProvider, IDatabaseProvider
     {
-        public MySqlProvider(Database db, bool createDatabaseIfNotExist)
+        public MySqlProvider(IDatabase db, bool createDatabaseIfNotExist)
         {
             this.db = db;
             try
@@ -80,7 +80,7 @@ namespace Cinar.Database.Providers
         public void ReadDatabaseMetadata()
         {
             // tables and views
-            db.Tables = new TableCollection((Database)db);
+            db.Tables = new TableCollection(db);
 
             // columns
             DataTable dtTables = db.GetDataTable(GetSQLTableList());

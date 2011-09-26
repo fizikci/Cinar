@@ -32,7 +32,7 @@ namespace Cinar.Database.Providers
     /// </summary>
     internal class CinarProvider : BaseProvider, IDatabaseProvider
     {
-        public CinarProvider(Database db, bool createDatabaseIfNotExist)
+        public CinarProvider(IDatabase db, bool createDatabaseIfNotExist)
         {
             this.db = db;
             this.connection = new CinarConnection("cinar");
@@ -45,7 +45,7 @@ namespace Cinar.Database.Providers
         public void ReadDatabaseMetadata()
         {
             // tables and views
-            db.Tables = new TableCollection((Database)db);
+            db.Tables = new TableCollection(db);
 
             // columns
             DataTable dtTables = db.GetDataTable(GetSQLTableList());

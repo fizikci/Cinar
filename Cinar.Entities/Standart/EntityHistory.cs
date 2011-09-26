@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Cinar.Database;
 
 namespace Cinar.Entities.Standart
 {
     public class EntityHistory : BaseEntity
     {
         private string entityName = "";
-        private string userName = "";
         private CRUDOperation operation;
         private string details = "";
         private long entityId = -1;
@@ -24,22 +24,28 @@ namespace Cinar.Entities.Standart
             set { entityId = value; }
         }
 
-        public virtual string UserName
-        {
-            get { return userName; }
-            set { userName = value; }
-        }
-
         public virtual CRUDOperation Operation
         {
             get { return operation; }
             set { operation = value; }
         }
 
+        [ColumnDetail(ColumnType = DbType.Text)]
         public virtual string Details
         {
             get { return details; }
             set { details = value; }
+        }
+
+        public User InsertedBy
+        {
+            get
+            {
+                if (InsertUserId > 0)
+                    return CinarContext.Db.Read<User>(InsertUserId);
+
+                return new User() {Name = "Anonim"};
+            }
         }
 
     }
@@ -49,7 +55,6 @@ namespace Cinar.Entities.Standart
         public const string InsertDate = "InsertDate";
         public const string EntityName = "EntityName";
         public const string EntityId = "EntityId";
-        public const string UserName = "UserName";
         public const string Operation = "Operation";
         public const string Details = "Details";
     }

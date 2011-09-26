@@ -17,7 +17,7 @@ namespace Cinar.Entities.MediaSearch
             get 
             {
                 if (media == null && MediaId != 0)
-                    media = Context.Db.Read<Media>(MediaId);
+                    media = CinarContext.Db.Read<Media>(MediaId);
                 return media;
             }
             set

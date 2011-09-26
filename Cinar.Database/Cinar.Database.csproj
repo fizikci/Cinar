@@ -113,6 +113,10 @@
       <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
       <Name>Cinar.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.SQLEngine\Cinar.SQLEngine.csproj">
       <Project>{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}</Project>
       <Name>Cinar.SQLEngine</Name>

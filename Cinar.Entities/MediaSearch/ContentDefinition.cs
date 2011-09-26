@@ -21,7 +21,7 @@ namespace Cinar.Entities.MediaSearch
             get
             {
                 if (category == null && CategoryId != 0)
-                    category = Context.Db.Read<Category>(CategoryId);
+                    category = CinarContext.Db.Read<Category>(CategoryId);
                 return category;
             }
             set
@@ -40,7 +40,7 @@ namespace Cinar.Entities.MediaSearch
             get
             {
                 if (media == null && MediaId != 0)
-                    media = Context.Db.Read<Media>(MediaId);
+                    media = CinarContext.Db.Read<Media>(MediaId);
                 return media;
             }
             set
