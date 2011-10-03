@@ -46,7 +46,7 @@
 
     protected void Application_BeginRequest(object sender, EventArgs e)
     {
-        if(Cinar.Entities.CinarContext.Db==null)
+        if(CinarContext.Db==null)
             setDb();
     }
 </script>

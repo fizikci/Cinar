@@ -8,7 +8,7 @@ using Cinar.Entities.Standart;
 
 namespace Cinar.Entities.IssueTracking
 {
-    [DefaultData(ColumnList = "ShowFields, Name", ValueList = "'Name, Status, Priority, Component, AssignedTo, CreatedOn', 'All Tickets'")]
+    [DefaultData(ColumnList = "ShowFields, Name", ValueList = "'Name, Status, Priority, Project, Component, AssignedTo, CreatedOn', 'All Tickets'")]
     public class TicketQuery : NamedEntity
     {
         public string ValType { get; set; } // Bug, Task
@@ -16,6 +16,7 @@ namespace Cinar.Entities.IssueTracking
         public string ValStatus { get; set; } // New, Accepted, Rejected, Resolved
         public string ValPriority { get; set; } // Low, Normal, High
         public string ValComponent { get; set; }
+        public int ValProjectId { get; set; }
 
         public int ValReportedById { get; set; }
         public int ValAssignedToId { get; set; }
@@ -28,9 +29,27 @@ namespace Cinar.Entities.IssueTracking
         public string OrderByField { get; set; }
         public int PageSize { get; set; }
 
+        public string Project
+        {
+            get
+            {
+                if (ValProjectId <= 0)
+                    return "";
+
+                return CinarContext.Db.Read<Project>(ValProjectId).Name;
+            }
+        }
+
+
         public List<Ticket> ExecuteQuery(int pageNo)
         {
             FilterExpression where = new FilterExpression();
+
+            string userProjectIds = CinarContext.Db.ReadList<ProjectUser>(FilterExpression.Where("UserId", CriteriaTypes.Eq, CinarContext.ClientUser.Id)).Select(pu => pu.ProjectId).StringJoin(",");
+            if (!string.IsNullOrEmpty(userProjectIds))
+                where.Criterias.Add(new Criteria {ColumnName = "ProjectId", CriteriaType = CriteriaTypes.In, ColumnValue = userProjectIds});
+            else
+                return new List<Ticket>();
 
             if (!string.IsNullOrWhiteSpace(ValType))
                 where.Criterias.Add(new Criteria { ColumnName = "Type", CriteriaType = CriteriaTypes.Eq, ColumnValue = ValType });
@@ -44,6 +63,9 @@ namespace Cinar.Entities.IssueTracking
                     ValComponent = "%" + ValComponent + "%";
                 where.Criterias.Add(new Criteria { ColumnName = "Component", CriteriaType = CriteriaTypes.Like, ColumnValue = ValComponent });
             }
+
+            if (ValProjectId > 0)
+                where.Criterias.Add(new Criteria { ColumnName = "ProjectId", CriteriaType = CriteriaTypes.Eq, ColumnValue = ValProjectId });
 
             if (ValReportedById > 0)
                 where.Criterias.Add(new Criteria { ColumnName = "ReportedById", CriteriaType = CriteriaTypes.Eq, ColumnValue = ValReportedById });
@@ -81,7 +103,7 @@ namespace Cinar.Entities.IssueTracking
         public static TicketQuery GetDefault()
         {
             return new TicketQuery {
-                ShowFields = "Name, Status, Priority, Component, AssignedTo, CreatedOn",
+                ShowFields = "Name, Status, Priority, Project, Component, AssignedTo, CreatedOn",
                 OrderByField = "Status",
                 PageSize = 25,
                 Name = "All Tickets"

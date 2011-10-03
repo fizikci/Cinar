@@ -995,7 +995,7 @@ namespace System
             {
                 sb.Append("[\n");
                 foreach (var item in (IEnumerable)obj)
-                    sb.Append(item.ToJSON() + ",\n");
+                    sb.Append(item.ToJS() + ",\n");
                 if (sb.ToString().EndsWith(",\n"))
                     sb.Remove(sb.Length - 2, 2);
                 sb.Append("]");

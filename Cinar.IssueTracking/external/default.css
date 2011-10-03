@@ -101,9 +101,9 @@ h1  {
     white-space: normal;
 }
 
-span.ticketName {color: #15478C; cursor:pointer;}
-span.ticketName img {vertical-align:top;}
-span.ticketName:hover {text-decoration:underline;}
+span.link {color: #15478C; cursor:pointer;}
+span.link img {vertical-align:top;}
+span.link:hover {text-decoration:underline;}
 
 .statusIndicator {
     display:inline-block;
@@ -185,7 +185,7 @@ div.controlWithLabel span {
     max-width: 102px;
 }
 .avatar {
-    background: url("/Images/uyelik/noavatar.png") no-repeat scroll left top transparent;
+    background: url("/Images/membership/noavatar.png") no-repeat scroll left top transparent;
     border: 1px solid #D4DCE8;
     display: block;
     float: none;
@@ -194,18 +194,18 @@ div.controlWithLabel span {
     width: 100px;
 }
 a.edit-profile {
-    background: url("/Images/uyelik/profile_edit.png") no-repeat scroll left top transparent;
+    background: url("/images/membership/profile_edit.png") no-repeat scroll left top transparent;
     padding-left: 21px;
     font-size: 12px;
 }
 a.logout {
-    background: url("/Images/uyelik/logout.png") no-repeat scroll left top transparent;
+    background: url("/images/membership/logout.png") no-repeat scroll left top transparent;
     padding-left: 21px;
     font-size: 12px;
 }
 a.toProfileLink 
 {
-    background: url("/Images/uyelik/user.png") no-repeat scroll left top transparent;
+    background: url("/images/membership/user.png") no-repeat scroll left top transparent;
     color:White;
     padding-left: 21px;
     font-size: 12px;
