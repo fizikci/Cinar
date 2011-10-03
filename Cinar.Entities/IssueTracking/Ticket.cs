@@ -46,6 +46,14 @@ namespace Cinar.Entities.IssueTracking
             }
         }
 
+        public Project GetProject()
+        {
+            if (ProjectId <= 0)
+                return null;
+
+            return CinarContext.Db.Read<Project>(ProjectId);
+        }
+
         public User ReportedBy
         {
             get

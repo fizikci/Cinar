@@ -16,6 +16,7 @@
             $(".btnDel").button({ icons: { primary: "ui-icon-minusthick"} });
             $(".btnSave").button({ icons: { primary: "ui-icon-disk"} });
             $(".btnFilter").button({ icons: { primary: "ui-icon-search"} });
+            $(".btnBack").button({ icons: { primary: "ui-icon-arrow-1-w"} });
         });
     </script>
     <asp:ContentPlaceHolder id="head" runat="server">
@@ -24,10 +25,10 @@
 <body>
 <div id="header">
 <div id="logo">Cinar Issue Tracking</div>
-<b>to bring you a full tracking satisfaction :)</b>
+<b>to bring you a full tracking pleasure :)</b>
 <%if (CinarContext.ClientUser.Id > 0){ %>
 <div id="userPanel">
-<a href="Member.aspx"><%=CinarContext.ClientUser.UserName%></a> | <a href="Logout.aspx">Logout</a>
+<a href="Member.aspx"><%=CinarContext.ClientUser.Name%></a> | <a href="Login.aspx?logout=1">Logout</a>
 </div>
 <% } %>
 </div>

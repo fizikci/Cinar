@@ -4,22 +4,54 @@
 <%@ Import Namespace="Cinar.Entities.IssueTracking" %>
 <%@ Import Namespace="Cinar.Entities.Standart" %>
 <script runat="server">
-    TicketQuery query = null;
+    TicketQuery query {
+        get
+        {
+            return Session["query"] as TicketQuery;
+        }
+        set {
+            Session["query"] = value;
+        }
+    }
     protected void Page_Load(object sender, EventArgs e)
     {
         int queryId;
         int.TryParse(Request["queryId"], out queryId);
-        if (queryId == 0) queryId = 1;
-        query = CinarContext.Db.Read<TicketQuery>(queryId);
-        query.SetFieldsByPostData(Request.Form);
+        if (query != null && queryId == 0)
+            queryId = query.Id;
+         
+        int projectId;
+        int.TryParse(Request["projectId"], out projectId);
 
-        if (Request["command"] == "save")
+        if (query == null)
+        {
+            query = CinarContext.Db.Read<TicketQuery>(1);
+        }
+
+        if (Request["command"] == "filter")
+        {
+            query.SetFieldsByPostData(Request.Form);
+        }
+        else if (Request["command"] == "save")
+        {
+            query.SetFieldsByPostData(Request.Form);
             query.Save();
+        }
         else if (Request["command"] == "saveAs")
         {
+            query.SetFieldsByPostData(Request.Form);
             query.Id = 0;
             query.Save();
         }
+
+        if(queryId!=query.Id)
+        {
+            if (queryId == 0) queryId = 1;
+            query = CinarContext.Db.Read<TicketQuery>(queryId);
+        }
+
+        if (projectId > 0)
+            query.ValProjectId = projectId;
     }
     bool rowEven = false;
 
@@ -32,7 +64,7 @@
                 val = "<div class=\"statusIndicator " + val + "\"></div> " + val;
                 break;
             case "Name":
-                val = "<span class=\"ticketName\" onclick=\"location.href = '/Ticket.aspx?ticketId=" + ticket.Id + "';\"><img src=\"/images/" + ticket.Type + ".png\"/> " + val + "</span>";
+                val = "<span class=\"link\" onclick=\"location.href = '/Ticket.aspx?ticketId=" + ticket.Id + "';\"><img src=\"/images/" + ticket.Type + ".png\"/> " + val + "</span>";
                 break;
             case "Id":
                 val = "<b>#" + ticket.Id + "</b>";
@@ -49,15 +81,38 @@
 <script>
     function filterTickets() {
         $("#editTicketQuery").dialog({
-            height: 420,
+            height: 450,
             modal: true
         });
     }
-</script>
+    var query = <%=query.ToJSON() %>;
+    function projectChanged(projectId) {
+        var selComponent = $('#Component'); selComponent.html("");
+        var selAssignedTo = $('#AssignedTo'); selAssignedTo.html("");
+        var selReportedBy = $('#ReportedBy'); selReportedBy.html("");
+        if(projectId<=0)
+            return;
+
+        var data = { projectId: projectId, command: 'getUsersAndComponents' };
+        $.post("/DoCommand.ashx", data, function (resp) {
+            resp = eval("(" + resp + ")");
+            if (resp.success) {
+                for (var i = 0; i < resp.components.length; i++)
+                    selComponent.append($("<option></option>").attr("value", resp.components[i]).text(resp.components[i]));
+                for (var i = 0; i < resp.users.length; i++) {
+                    selAssignedTo.append($("<option></option>").attr("value", resp.users[i].Id).text(resp.users[i].Name));
+                    selReportedBy.append($("<option></option>").attr("value", resp.users[i].Id).text(resp.users[i].Name));
+                }
+                selComponent.val(query.ValComponent);
+                selAssignedTo.val(query.ValAssignedToId);
+                selReportedBy.val(query.ValReportedById);
+            }
+        });
+    }</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="content" runat="Server">
     <div>
-        <a class="btnAdd" href="/Ticket.aspx">New Ticket</a>
+        <a class="btnAdd" href="/Ticket.aspx?projectId=<%=query.ValProjectId %>">New Ticket</a>
         <a class="btnFilter" href="#" onclick="return filterTickets()">Filter Tickets</a>
     </div>
     <h1 style="float:left"><%=query.Name %></h1>
@@ -66,6 +121,7 @@
                     </select> <a href="#" onclick="filterTickets()">edit</a></div>
     <div style="clear:both"></div>
     <div id="ticketList">
+    <%=query.ValProjectId>0 ? "<h2>Project: "+ query.Project+"</h2>":"" %>
     <%
         List<Ticket> list = query.ExecuteQuery(0);
         List<string> distinctGroupBy = new List<string>() { "" };
@@ -79,7 +135,7 @@
         foreach(var groupByValue in distinctGroupBy.OrderBy(x=>x))
     {
         List<Ticket> groupList = list;
-        if (groupByValue != null)
+        if (groupByValue != "")
         {
             Response.Write("<div class='groupTitle'><h3>" + groupByValue + "</h3></div>");
             groupList = list.Where(t => { var v = t.GetMemberValue(query.GroupByField) ?? ""; return groupByValue == v.ToString(); }).ToList();
@@ -126,9 +182,9 @@
                     Reported by
                 </td>
                 <td>
-                    <select name="ValReportedById">
-                        <option value="0"></option>
-                        <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User", query.ValReportedById).Select(u=>"<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                    <select name="ValReportedById" id="ReportedBy">
+                        <option value="0">[all]</option>
+                        <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User where Id in (select UserId from ProjectUser where UserId={1})", query.ValReportedById, CinarContext.ClientUser.Id).Select(u=>"<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
                     </select>
                 </td>
             </tr>
@@ -148,9 +204,20 @@
                     Assigned to
                 </td>
                 <td>
-                    <select name="ValAssignedToId">
-                        <option value="0"></option>
-                        <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User", query.ValAssignedToId).Select(u=>"<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                    <select name="ValAssignedToId" id="AssignedTo">
+                        <option value="0">[all]</option>
+                        <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User where Id in (select UserId from ProjectUser where UserId={1})", query.ValAssignedToId, CinarContext.ClientUser.Id).Select(u => "<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Project is
+                </td>
+                <td>
+                    <select name="ValProjectId" id="ProjectId" onchange="projectChanged($(this).val())">
+                        <option value="0">[all]</option>
+                        <%=CinarContext.Db.ReadList<Project>("select Id, Name from Project where Id in (SELECT ProjectId FROM ProjectUser WHERE UserId={0})", CinarContext.ClientUser.Id).Select(p=>"<option value=\""+p.Id+"\" "+(p.Id==query.ValProjectId?"selected":"")+">"+p.Name+"</option>").StringJoin()%>
                     </select>
                 </td>
             </tr>
@@ -159,9 +226,9 @@
                     Component is
                 </td>
                 <td>
-                    <select name="ValComponent">
+                    <select name="ValComponent" id="Component">
                         <option value=""></option>
-                        <%=CinarContext.Db.GetList<string>("select distinct Component from Ticket").Select(s => "<option value=\"" + s + "\"" + (query.ValComponent == s ? " selected" : "") + ">" + s + "</option>").StringJoin()%>
+                        <%=CinarContext.Db.GetList<string>("select distinct Component from Ticket where ProjectId = {0}", query.ValProjectId).Select(s => "<option value=\"" + s + "\"" + (query.ValComponent == s ? " selected" : "") + ">" + s + "</option>").StringJoin()%>
                     </select>
                 </td>
             </tr>
@@ -197,7 +264,7 @@
             </tr>
         </table>
         <input type="hidden" name="queryId" value="<%=query.Id %>" />
-        <input type="hidden" name="command" id="command" />
+        <input type="hidden" name="command" id="command" value="filter" />
         <p align="right">
             <a class="btnFilter" href="#" onclick="$('#command').val('filter'); $('#f1').submit()">Filter</a>
             <a class="btnSave" href="#" onclick="$('#command').val('save'); $('#f1').submit()">Save</a>

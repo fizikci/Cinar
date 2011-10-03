@@ -58,45 +58,53 @@ namespace Cinar.Entities.Standart
                 InsertDate = DateTime.Now;
             }
 
+            bool isNewEntity = this.Id == 0;
+            string changes = null;
+
+            if (this is ICriticalEntity && !isNewEntity)
+            {
+                CinarContext.Db.ClearEntityWebCache(this.GetType(), this.Id);
+                IDatabaseEntity originalEntity = CinarContext.Db.Read(this.GetType(), this.Id);
+                changes = originalEntity.CompareFields(this);
+            }
+
+            CinarContext.Db.Save(this);
+
             if (this is ICriticalEntity)
             {
                 // EntityHistory tablosuna bu işlemi loglayalım
-                if (this.Id == 0)
+                if (isNewEntity)
                 {
                     EntityHistory eh = new EntityHistory()
-                                           {
-                                               Details = "",
-                                               EntityName = this.GetType().Name,
-                                               EntityId = this.Id,
-                                               InsertDate = DateTime.Now,
-                                               InsertUserId = CinarContext.ClientUser.Id,
-                                               Operation = CRUDOperation.Insert
-                                           };
+                    {
+                        Details = "",
+                        EntityName = this.GetType().Name,
+                        EntityId = this.Id,
+                        InsertDate = DateTime.Now,
+                        InsertUserId = CinarContext.ClientUser.Id,
+                        Operation = CRUDOperation.Insert
+                    };
                     eh.Save();
                 }
                 else
                 {
-                    CinarContext.Db.ClearEntityWebCache(this.GetType(), this.Id);
-                    IDatabaseEntity originalEntity = CinarContext.Db.Read(this.GetType(), this.Id);
-                    string changes = originalEntity.CompareFields(this);
                     if (!string.IsNullOrEmpty(changes))
                     {
                         EntityHistory eh = new EntityHistory()
-                                               {
-                                                   Details = changes,
-                                                   EntityName = this.GetType().Name,
-                                                   EntityId = this.Id,
-                                                   InsertDate = DateTime.Now,
-                                                   InsertUserId = CinarContext.ClientUser.Id,
-                                                   Operation = CRUDOperation.Update
-                                               };
+                        {
+                            Details = changes,
+                            EntityName = this.GetType().Name,
+                            EntityId = this.Id,
+                            InsertDate = DateTime.Now,
+                            InsertUserId = CinarContext.ClientUser.Id,
+                            Operation = CRUDOperation.Update
+                        };
                         eh.Save();
                     }
                 }
             }
-
-            CinarContext.Db.Save(this);
         }
+
         public virtual void Delete()
         {
             if (CinarContext.Db == null)

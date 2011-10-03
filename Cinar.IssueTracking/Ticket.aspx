@@ -1,24 +1,28 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Default.master" %>
 
 <%@ Import Namespace="Cinar.Database" %>
-
 <%@ Import Namespace="Cinar.Entities" %>
 <%@ Import Namespace="Cinar.Entities.Standart" %>
 <%@ Import Namespace="Cinar.Entities.IssueTracking" %>
+
 <script runat="server">
     Ticket ticket = null;
     List<EntityHistory> history = null;
+    List<User> teamMembers = null;
     
     protected void Page_Load(object sender, EventArgs e)
     {
         bool isPostBack = Request["Id"] != null;
+        int projectId = 0;
+        int.TryParse(Request["projectId"], out projectId);
+        
         if (isPostBack)
         {
             int id = int.Parse(Request["Id"]);
 
             if (Request["command"] == "delete")
             {
-                CinarContext.Db.ExecuteNonQuery("delete from Ticket where Id={0}", id);
+                CinarContext.Db.ExecuteNonQuery("delete from Ticket where Id = {0}", id);
                 Response.Redirect("/TicketList.aspx", true);
                 return;
             }
@@ -42,23 +46,76 @@
                 );
             }
             else
+            {
                 ticket = new Ticket();
+                if (projectId>0)
+                    ticket.ProjectId = projectId;
+                else
+                    ticket.ProjectId = CinarContext.Db.GetInt("select min(ProjectId) from ProjectUser where UserId={0}", CinarContext.ClientUser.Id);
+            }
+            teamMembers = ticket.GetProject().GetTeamMembers();
+        }
+
+        if (teamMembers == null || teamMembers.Count == 0)
+        {
+            teamMembers = new List<User>();
+            teamMembers.Add(CinarContext.ClientUser);
         }
     }
 
 </script>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 <script type="text/javascript">
-    function addNewItem(msg, control) {
-        var n = prompt(msg);
+    function addNewComponent(control) {
+        var n = prompt('Enter new component name');
         if (n) {
             control.append($("<option></option>").attr("value", n).text(n));
             control.val(n);
         }
     }
+    function addNewProject(control) {
+        var n = prompt('Enter new project name');
+        if (n) {
+            var data = { projectName: n, command: 'addProject', noRedirect: 1 };
+            $.post("/DoCommand.ashx", data, function (resp) {
+                resp = eval("(" + resp + ")");
+                if (resp.success) {
+                    control.append($("<option></option>").attr("value", resp.data.Id).text(n));
+                    control.val(resp.data.Id);
+                }
+            });
+        }
+    }
+    var ticket = <%=ticket.ToJSON() %>;
+    function projectChanged(projectId) {
+        var selComponent = $('#Component'); selComponent.html("");
+        var selAssignedTo = $('#AssignedTo'); selAssignedTo.html("");
+        var selReportedBy = $('#ReportedBy'); selReportedBy.html("");
+        if(projectId<=0)
+            return;
+
+        var data = { projectId: projectId, command: 'getUsersAndComponents' };
+        $.post("/DoCommand.ashx", data, function (resp) {
+            resp = eval("(" + resp + ")");
+            if (resp.success) {
+                for (var i = 0; i < resp.components.length; i++)
+                    selComponent.append($("<option></option>").attr("value", resp.components[i]).text(resp.components[i]));
+                for (var i = 0; i < resp.users.length; i++) {
+                    selAssignedTo.append($("<option></option>").attr("value", resp.users[i].Id).text(resp.users[i].Name));
+                    selReportedBy.append($("<option></option>").attr("value", resp.users[i].Id).text(resp.users[i].Name));
+                }
+                selComponent.val(ticket.Component);
+                selAssignedTo.val(ticket.AssignedToId);
+                selReportedBy.val(ticket.ReportedById);
+            }
+        });
+    }
 </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="content" runat="Server">
+    <div>
+        <a class="btnBack" href="/TicketList.aspx">Return to List</a>
+    </div>
     <form id="f1" action="Ticket.aspx" method="post">
     <input type="hidden" name="Id" value="<%=ticket.Id %>" />
     <h1>
@@ -71,9 +128,9 @@
         </div>
         <div class="controlWithLabel halfWidth">
             <span>Project</span>
-            <select name="Project" id="Project">
-                <%=CinarContext.Db.GetList<string>("select distinct Project from Ticket").Select(s => "<option value=\"" + s + "\"" + (ticket.Project == s ? " selected" : "") + ">" + s + "</option>").StringJoin()%>
-            </select> <a href="#" onclick="addNewItem('Enter new project name', $(this).prev())">new</a>
+            <select name="ProjectId" id="ProjectId" onchange="projectChanged($(this).val())">
+                <%=CinarContext.Db.ReadList<Project>("select Id, Name from Project where Id in (SELECT ProjectId FROM ProjectUser WHERE UserId={0})", CinarContext.ClientUser.Id).Select(p=>"<option value=\""+p.Id+"\" "+(p.Id==ticket.ProjectId?"selected":"")+">"+p.Name+"</option>").StringJoin()%>
+            </select> <a href="#" onclick="addNewProject($(this).prev())">new</a>
         </div>
         <div class="controlWithLabel halfWidth">
             <span>Created On</span>
@@ -82,8 +139,8 @@
         <div class="controlWithLabel halfWidth">
             <span>Component</span>
             <select name="Component" id="Component">
-                <%=CinarContext.Db.GetList<string>("select distinct Component from Ticket").Select(s => "<option value=\"" + s + "\"" + (ticket.Component == s ? " selected" : "") + ">" + s + "</option>").StringJoin()%>
-            </select> <a href="#" onclick="addNewItem('Enter new component name', $(this).prev())">new</a>
+                <%=CinarContext.Db.GetList<string>("select distinct Component from Ticket where ProjectId = {0}", ticket.ProjectId).Select(s => "<option value=\"" + s + "\"" + (ticket.Component == s ? " selected" : "") + ">" + s + "</option>").StringJoin()%>
+            </select> <a href="#" onclick="addNewComponent($(this).prev())">new</a>
         </div>
         <div class="controlWithLabel halfWidth">
             <span>Type</span>
@@ -93,9 +150,9 @@
         </div>
         <div class="controlWithLabel halfWidth">
             <span>Reported By</span>
-            <select name="ReportedById">
+            <select name="ReportedById" id="ReportedBy">
                 <option value="0"></option>
-                <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User", ticket.ReportedById).Select(u=>"<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                <%=teamMembers.Select(u=>"<option value=\""+u.Id+"\" "+(u.Id==ticket.ReportedById?"selected":"")+">"+u.Name+"</option>").StringJoin()%>
             </select>
         </div>
         <div class="controlWithLabel halfWidth">
@@ -106,9 +163,9 @@
         </div>
         <div class="controlWithLabel halfWidth">
             <span>Assigned To</span>
-            <select name="AssignedToId">
+            <select name="AssignedToId" id="AssignedTo">
                 <option value="0"></option>
-                <%=CinarContext.Db.ReadList<User>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from User", ticket.AssignedToId).Select(u=>"<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                <%=teamMembers.Select(u=>"<option value=\""+u.Id+"\" "+(u.Id==ticket.AssignedToId?"selected":"")+">"+u.Name+"</option>").StringJoin()%>
             </select> <a href="#" onclick="$(this).prev().val(<%=CinarContext.ClientUser.Id %>)">me</a>
         </div>
         <div class="controlWithLabel halfWidth">
@@ -143,7 +200,7 @@
         <div class="changeset-col">
           <div class="changeset-header header-gray">
                
-                By <b><%=entityHistory.InsertedBy.Name %></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                By <b><%=entityHistory.InsertedBy.Name %></b>
                 on <%=entityHistory.InsertDate.ToString("MMM dd, yyyy @ hh:mm") %>
                 
                   <div class="changeset-description">

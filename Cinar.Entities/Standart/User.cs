@@ -4,7 +4,7 @@ using Cinar.Database;
 
 namespace Cinar.Entities.Standart
 {
-    [DefaultData(ColumnList="Username,Password,Name", ValueList="'bulent','offoff','Bülent Keskin'")]
+    [DefaultData(ColumnList="Username,Password,Name,Deleted", ValueList="'bulent','offoff','Bülent Keskin',0")]
     public class User : NamedEntity
     {
         string username;
