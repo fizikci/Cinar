@@ -6,7 +6,7 @@ using System.Text;
 using System.Drawing;
 using System.Collections;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Template
     {

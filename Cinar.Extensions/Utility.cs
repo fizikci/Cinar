@@ -20,17 +20,18 @@ namespace System
         #region Drawing
         public static Bitmap ScaleImage(this Bitmap orjImg, int width, int height)
         {
-            if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
-            if (width == 0) width = Convert.ToInt32(height * (double)orjImg.Width / (double)orjImg.Height);
+            if (height == 0) height = Convert.ToInt32(width * (float)orjImg.Height / orjImg.Width);
+            if (width == 0) width = Convert.ToInt32(height * (float)orjImg.Width / orjImg.Height);
 
             Bitmap imgDest = new Bitmap(width, height);
             imgDest.SetResolution(orjImg.HorizontalResolution, orjImg.VerticalResolution);
-            Graphics grDest = Graphics.FromImage(imgDest);
-            grDest.SmoothingMode = SmoothingMode.AntiAlias;
-            grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            grDest.DrawImage(orjImg, 0f, 0f, (float)width, (float)height);
-            grDest.Dispose();
+            using(Graphics grDest = Graphics.FromImage(imgDest))
+            {
+                grDest.SmoothingMode = SmoothingMode.AntiAlias;
+                grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                grDest.DrawImage(orjImg, 0f, 0f, width, height);
+            }
             return imgDest;
         }
         public static void SaveJpeg(this Image img, string path, long quality)
@@ -234,7 +235,32 @@ namespace System
         }
         public static string StripHtmlTags(this string str)
         {
-            return Regex.Replace(str, @"<(.|\n)*?>", string.Empty);
+            if (str == null) return null;
+
+            char[] array = new char[str.Length];
+            int arrayIndex = 0;
+            bool inside = false;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                char let = str[i];
+                if (let == '<')
+                {
+                    inside = true;
+                    continue;
+                }
+                if (let == '>')
+                {
+                    inside = false;
+                    continue;
+                }
+                if (!inside)
+                {
+                    array[arrayIndex] = let;
+                    arrayIndex++;
+                }
+            }
+            return new string(array, 0, arrayIndex);
         }
         public static string StrCrop(this string str, int length)
         {

@@ -1,5 +1,5 @@
 ﻿
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Picture : Element
     {

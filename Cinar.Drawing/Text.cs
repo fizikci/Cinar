@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Collections;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Text : Element
     {

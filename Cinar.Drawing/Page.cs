@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Xml.Serialization;
 using System.IO;
-using System.Drawing.Imaging;
 using System.ComponentModel;
 using System.Collections;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Page
     {
@@ -41,7 +38,7 @@ namespace Cinar.TemplateDesign
             }
         }
 
-        internal float ScaleFactor = 1.0f;
+        public float ScaleFactor = 1.0f;
 
         public void SendBack(Element element)
         {

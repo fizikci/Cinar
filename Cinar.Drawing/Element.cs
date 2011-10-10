@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Collections;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using Rectangle = Cinar.Drawing.Rectangle;
+//using System.Windows.Forms;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     [XmlInclude(typeof(Text))]
     [XmlInclude(typeof(Picture))]
@@ -49,24 +52,24 @@ namespace Cinar.TemplateDesign
             Padding = new MarginPadding();
         }
 
-        public Element(PageDesigner parent) : this()
-        {
-            this.parent = parent;
-        }
+        //public Element(PageDesigner parent) : this()
+        //{
+        //    this.parent = parent;
+        //}
 
-        private PageDesigner parent;
-        [XmlIgnore, Browsable(false)]
-        public PageDesigner Parent
-        {
-            get
-            {
-                return this.parent;
-            }
-            set 
-            {
-                this.parent = value;
-            }
-        }
+        //private PageDesigner parent;
+        //[XmlIgnore, Browsable(false)]
+        //public PageDesigner Parent
+        //{
+        //    get
+        //    {
+        //        return this.parent;
+        //    }
+        //    set 
+        //    {
+        //        this.parent = value;
+        //    }
+        //}
 
         private bool selected;
         [XmlIgnore, Browsable(false)]
@@ -81,6 +84,23 @@ namespace Cinar.TemplateDesign
                 this.selected = value;
             }
         }
+
+        private Hashtable tags = new Hashtable();
+        [XmlIgnore, Browsable(false)]
+        public Hashtable Tags
+        {
+            get { return tags; }
+        }
+
+        private Cursor cursor = Cursors.Default;
+        [XmlIgnore, Browsable(false)]
+        public Cursor Cursor
+        {
+            get { return cursor; }
+            set { cursor = value; }
+        }
+
+        public Action OnClick;
 
         public virtual void Paint(Graphics g)
         {

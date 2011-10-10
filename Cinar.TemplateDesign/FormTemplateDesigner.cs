@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Cinar.Drawing;
 using DevExpress.XtraEditors;
 using DevExpress.XtraBars;
 using System.Drawing.Imaging;

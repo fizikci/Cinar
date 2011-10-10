@@ -6,7 +6,7 @@ using System.Drawing.Design;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class BorderComplex
@@ -149,13 +149,13 @@ namespace Cinar.TemplateDesign
             set
             {
                 image = value;
-                if (image != null)
-                {
-                    TypeConverter converter = TypeDescriptor.GetConverter(image.GetType());
-                    imageData = Convert.ToBase64String((byte[])converter.ConvertTo(image, typeof(byte[])));
-                }
-                else
-                    imageData = null;
+                //if (image != null)
+                //{
+                //    TypeConverter converter = TypeDescriptor.GetConverter(image.GetType());
+                //    imageData = Convert.ToBase64String((byte[])converter.ConvertTo(image, typeof(byte[])));
+                //}
+                //else
+                //    imageData = null;
             }
         }
         private string imageData;
@@ -310,6 +310,8 @@ namespace Cinar.TemplateDesign
         public bool Underline { get; set; }
         [DefaultValue(false)]
         public bool LineThrough { get; set; }
+        [DefaultValue(GraphicsUnit.Pixel)]
+        public GraphicsUnit SizeUnit { get; set; }
 
         public override string ToString()
         {
@@ -329,11 +331,11 @@ namespace Cinar.TemplateDesign
         {
             try
             {
-                return new Font(Family, Size, GetStyle(), GraphicsUnit.Pixel);
+                return new Font(Family, Size, GetStyle(), SizeUnit);
             }
             catch 
             {
-                return new Font("Tahoma", 16, GetStyle(), GraphicsUnit.Pixel);
+                return new Font("Tahoma", 16, GetStyle(), SizeUnit);
             }
         }
     }

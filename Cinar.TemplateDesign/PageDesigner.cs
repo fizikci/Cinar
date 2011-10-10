@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Text;
 using System.Reflection;
+using Cinar.Drawing;
 
 namespace Cinar.TemplateDesign
 {

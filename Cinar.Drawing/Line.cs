@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.ComponentModel;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Line : Element
     {

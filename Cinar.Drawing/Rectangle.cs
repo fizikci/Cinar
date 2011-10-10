@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class Rectangle : Element
     {
