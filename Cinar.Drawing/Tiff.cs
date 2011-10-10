@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Drawing2D;
 
-namespace Cinar.TemplateDesign
+namespace Cinar.Drawing
 {
     public class TiffUtil
     {

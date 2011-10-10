@@ -66,6 +66,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cinar.IssueTracking", "Cina
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Drawing", "Cinar.Drawing\Cinar.Drawing.csproj", "{503A444F-2A33-4CC5-BBAD-7440F1BF3916}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -274,6 +276,15 @@ Global
 		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Any CPU.ActiveCfg = Debug|Any CPU
 		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Any CPU.Build.0 = Debug|Any CPU
 		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|x64.ActiveCfg = Debug|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release|x64.ActiveCfg = Release|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Release64|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

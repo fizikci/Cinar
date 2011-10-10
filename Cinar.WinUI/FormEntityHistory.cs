@@ -21,7 +21,7 @@ namespace Cinar.WinUI
             DMT.Provider.PopulateGridColumns(new List<ColumnDefinition> { 
                 new ColumnDefinition{Name=EntityHistoryFields.InsertDate, DisplayName="Tarih", Width=120, FormatType=FormatType.DateTime, FormatString="dd.MM.yyyy HH:mm"},
                 new ColumnDefinition{Name=EntityHistoryFields.Operation, DisplayName="Ýþlem", Width=80},
-                new ColumnDefinition{Name=EntityHistoryFields.UserName, DisplayName="Kullanýcý", Width=140},
+                //new ColumnDefinition{Name=EntityHistoryFields.UserName, DisplayName="Kullanýcý", Width=140},
             }, gridView);
 
             grid.DataSource = DMT.Provider.Db.ReadList<EntityHistory>(
