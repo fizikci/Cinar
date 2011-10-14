@@ -111,6 +111,14 @@ namespace Cinar.Database
                 }
             };
         }
+
+        public static FilterExpression Empty
+        {
+            get
+            {
+                return new FilterExpression();
+            }
+        }
         public FilterExpression And(string columnName, CriteriaTypes criteriaType, object columnValue)
         {
             this.Criterias.Add(new Criteria { 
