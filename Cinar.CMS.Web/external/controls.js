@@ -38,7 +38,7 @@ var Control = Class.create(); Control.prototype = {
         var inpType = 'text';
         if(this.options.password) inpType='password';        
         
-        new Insertion.Bottom(this.options.container, '<div id="bk-ctrl'+idCounter+'"><input id="ctrlInp'+idCounter+'" type="'+inpType+'" name="'+this.id+'" style="width:160px"/><input id="ctrlBtn'+idCounter+'" type="button" style="position:absolute;display:none" value="..."/></div>');
+        new Insertion.Bottom(this.options.container, '<div id="bk-ctrl'+idCounter+'"><input id="ctrlInp'+idCounter+'" type="'+inpType+'" name="'+this.id+'" style="width:100%"/><input id="ctrlBtn'+idCounter+'" type="button" style="position:absolute;display:none" value="..."/></div>');
         this.div = $('bk-ctrl'+idCounter);
         this.input = $('ctrlInp'+idCounter);
         if(this.options.readOnly) this.input.readOnly = true;
@@ -68,7 +68,7 @@ var Control = Class.create(); Control.prototype = {
         if(this.options.hideBtn) return;
         var dim = this.input.getDimensions();
         var pos = Position.positionedOffset(this.input);
-        this.button.setStyle({left:pos[0]+dim.width+'px', top:(pos[1]-1)+'px'}).show();
+        this.button.setStyle({left:(pos[0]+dim.width-20)+'px', top:(pos[1]+1)+'px', width:20+'px', height:(dim.height-2)+'px'}).show();
     },
     hideBtn: function(event){
         if(this.options.hideBtn) return;
@@ -424,7 +424,6 @@ var LookUp = Class.create(); LookUp.prototype = {
 //#         MemoEdit         #
 //############################
 
-//var __oldBtnOKClick, __oldBtnCancelClick; // already defined
 var MemoEdit = Class.create();MemoEdit.prototype = {
     memoEditor: '__memoEditor',
     initialize: function(id, value, options) {
@@ -437,19 +436,13 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
             $(this.memoEditor).remove();
             return;
         }
-        //if(!$(this.memoEditor))
         new Insertion.Bottom(document.body, '<div class="editor" id="' + this.memoEditor + '" style="width:800px;height:600px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.memoEditor + 'ta" style="width:796px;height:575px" onkeydown="return insertTab(event,this);"></textarea><br/><center><span id="' + this.memoEditor + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.memoEditor + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.memoEditor + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
 
         var list = $(this.memoEditor);
-        //if(list.visible()){list.hide(); return;}
         if (this.input.disabled) return;
 
         var btnOK = $(this.memoEditor + 'btnOK');
         var btnCancel = $(this.memoEditor + 'btnCancel');
-        //Event.stopObserving(btnOK, 'click', __oldBtnOKClick);
-        //Event.stopObserving(btnCancel, 'click', __oldBtnCancelClick);
-        //__oldBtnOKClick = this.setValueByEditor.bind(this);
-        //__oldBtnCancelClick = this.showEditor.bind(this);
         btnOK.observe('click', this.setValueByEditor.bind(this));
         btnCancel.observe('click', this.showEditor.bind(this));
 
@@ -460,7 +453,6 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
         this.setEditorPos(list);
 
         list.show();
-        //list.down().focus();
         Event.stop(event);
     },
     afterShowEditor: null,
@@ -1302,7 +1294,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
     fieldsComboItems: [],
     opComboItems: ["like@", "<=@", ">=@", "<>@", "<@", ">@", "=@", "like", "<=", ">=", "<>", "<", ">", "="],
     parameterOptions: [['',lang('Select')],['Category',lang('Category')],['Hierarchy',lang('Hierarchy')],['Content',lang('Content')],['Author',lang('Author')],['Source',lang('Source')],['Yesterday',lang('Yesterday')],['LastDay',lang('The day before yesterday')],['LastWeek',lang('Last week')],['LastMonth',lang('Last month')]],
-    rowHtml: '<tr class="filterRow"><td class="tdField" width="40%"></td><td class="tdOp" width="20%"></td><td class="tdControl" width="40%"></td></tr>',
+    rowHtml: '<tr class="filterRow"><td class="tdField"></td><td class="tdOp"></td><td class="tdControl"></td></tr>',
     initialize: function(container, fields){
         this.container = $(container);
         if(this.container==null) this.container = $(document.body);
@@ -1310,7 +1302,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         this.fields = fields.sortBy(function(f){return __letters.indexOf(f.label.substr(0,1));});
         this.fieldsComboItems = [];
         
-        new Insertion.Bottom(this.container, '<table>'+this.rowHtml+'</table>');
+        new Insertion.Bottom(this.container, '<table class="filterTable">'+this.rowHtml+'</table>');
         var tdField = this.container.select('.tdField').last();
         var ths = this;
         this.fieldsComboItems.push(['none',lang('None')]);
@@ -1342,7 +1334,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         else {
             // op yoksa op'u oluştur varsa bişey yapma.
             if(tdOp.innerHTML==''){
-                var cb = new ComboBox('o'+rowCount, null, {items:this.getRevOpItems(), container:tdOp, width:30});
+                var cb = new ComboBox('o'+rowCount, null, {items:this.getRevOpItems(), container:tdOp});
                 cb.options.onChange = this.opChanged.bind(this);
             }
             // control yoksa da varsa da oluştur.
@@ -1412,7 +1404,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
             cb.setValue(h['f_'+i]);
             cb.options.onChange = this.fieldChanged.bind(this);
             // operators combo
-            var oCb = new ComboBox('o'+i, null, {items:this.getRevOpItems(), container:tdOp, width:30});
+            var oCb = new ComboBox('o'+i, null, {items:this.getRevOpItems(), container:tdOp});
             oCb.setValue(h['o_'+i]);
             // control for value
             var fieldMetadata = this.fields.find(function(f){return f.id==h['f_'+i]});
@@ -1437,6 +1429,15 @@ function createControl(id, fieldMetadata, container){
         case 'StringEdit':
             aControl = new StringEdit(id, fieldMetadata.value, fieldMetadata.options);
             break;
+        case 'CSSEdit':
+            aControl = new CSSEdit(id, fieldMetadata.value, fieldMetadata.options);
+            break;
+        case 'MemoEdit':
+            aControl = new MemoEdit(id, fieldMetadata.value, fieldMetadata.options);
+            break;
+        case 'FilterEdit':
+            aControl = new FilterEdit(id, fieldMetadata.value, fieldMetadata.options);
+            break;
         case 'IntegerEdit':
             aControl = new IntegerEdit(id, fieldMetadata.value, fieldMetadata.options);
             break;
@@ -1456,7 +1457,7 @@ function createControl(id, fieldMetadata, container){
             aControl = new LookUp(id, fieldMetadata.value, fieldMetadata.options);
             break;
         default:
-            throw 'No control of this kind: '+control.type;
+            throw 'No control of this kind: ' + fieldMetadata.type;
             break;
     }
     return aControl;
