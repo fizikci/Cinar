@@ -8,13 +8,6 @@
     void Application_Start(object sender, EventArgs e)
     {
         // Code that runs on application startup
-        setDb();
-    }
-
-    private void setDb()
-    {
-        CinarContext.Db = new Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]));
-        //CinarContext.ClientUser = new User() {Name = "Anonim", UserName = "anonim"};
     }
 
     void Application_End(object sender, EventArgs e) 
@@ -46,7 +39,7 @@
 
     protected void Application_BeginRequest(object sender, EventArgs e)
     {
-        if(CinarContext.Db==null)
-            setDb();
+        if (CinarContext.Db == null)
+            CinarContext.Db = new Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]));
     }
 </script>

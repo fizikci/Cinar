@@ -1,0 +1,230 @@
+using System;
+using System.Text;
+using System.Reflection;
+using System.Data;
+using Cinar.CMS.Library.Entities;
+using Cinar.Database;
+
+
+namespace Cinar.CMS.Library.Modules
+{
+    [ModuleInfo(Grup = "Development")]
+    public class FormField : Module
+    {
+        private string fieldName = "";
+        [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
+        public string FieldName
+        {
+            get { return fieldName; }
+            set { fieldName = value; }
+        }
+
+        private string controlType = "";
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_UICONTROLTYPE_")]
+        public string UIControlType
+        {
+            get { return controlType; }
+            set { controlType = value; }
+        }
+
+        private string label = "";
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        public string Label
+        {
+            get { return label; }
+            set { label = value; }
+        }
+
+        private string entityName = "";
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes,hideItems:true")]
+        public string EntityName
+        {
+            get { return entityName; }
+            set { entityName = value; }
+        }
+
+        private string where = "";
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        public string Where
+        {
+            get { return where; }
+            set { where = value; }
+        }
+
+        private string fixedValue = "";
+        [EditFormFieldProps(Options = "noHTML:true")]
+        public string FixedValue
+        {
+            get { return fixedValue; }
+            set { fixedValue = value; }
+        }
+
+        internal DataRow data;
+        internal string value = "";
+        internal Form form;
+
+        protected override string show()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (String.IsNullOrEmpty(fieldName))
+                return Provider.DesignMode ? Provider.GetResource("Select field name") : String.Empty;
+
+            Type entityType = Provider.GetEntityType(entityName);
+            Type fieldType = entityType.GetProperty(fieldName).PropertyType;
+            PropertyInfo pi = entityType.GetProperty(fieldName);
+            ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+            EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
+            ControlType ct = attrEdit.ControlType;
+            if (ct == ControlType.Undefined)
+                ct = Provider.GetDefaultControlType(attrField.ColumnType, fieldType);
+
+            if (String.IsNullOrEmpty(label)) label = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
+            if (String.IsNullOrEmpty(label)) label = fieldName;
+            if (!String.IsNullOrEmpty(fixedValue))
+            {
+                if (fixedValue.StartsWith("@") && !String.IsNullOrEmpty(Provider.Request[fixedValue.Substring(1)]))
+                    value = Provider.Request[fixedValue.Substring(1)];
+                else
+                    value = fixedValue;
+            }
+
+            // CONTROL
+            if (controlType == "Hidden")
+            {
+                if (Provider.DesignMode)
+                {
+                    sb.AppendFormat("<div class=\"label\">{0} (gizli)</div>", label);
+                    sb.Append(getControlHTML(fieldType, attrField, attrEdit, ct));
+                }
+                else 
+                {
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                }
+            }
+            else
+            {
+                // eðer PictureEdit ise label'a "Sil" linki ekleyelim
+                if (ct == ControlType.PictureEdit)
+                    label += String.Format(" (<span style=\"color:blue;cursor:pointer\" onclick=\"if(ajax({{url:'EntityInfo.ashx?method=setField&entityName={0}&id={1}&fieldName={2}&value=',isJSON:false,noCache:false}})) {{ $('form{3}').{2}.value=''; $('form{3}').submit(); }}\">{4}</span>)",
+                        entityName,
+                        (data == null ? 0 : (int)data["Id"]),
+                        fieldName,
+                        form == null ? 0 : form.Id,
+                        Provider.GetModuleResource("Delete"));
+                // label'ý gösterelim
+                sb.AppendFormat("<div class=\"label\">{0}</div>", label);
+                sb.Append(getControlHTML(fieldType, attrField, attrEdit, ct));
+            }
+
+            return sb.ToString();
+        }
+
+        private string getControlHTML(Type fieldType, ColumnDetailAttribute attrField, EditFormFieldPropsAttribute attrEdit, ControlType ct)
+        {
+            StringBuilder sb = new StringBuilder();
+            switch (ct)
+            {
+                case ControlType.StringEdit:
+                    if (controlType == "Textarea")
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", fieldName, Utility.HtmlEncode(value));
+                    else
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    break;
+                case ControlType.IntegerEdit:
+                case ControlType.DecimalEdit:
+                case ControlType.DateTimeEdit:
+                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    break;
+                case ControlType.PictureEdit:
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", fieldName, Utility.HtmlEncode(value));
+                    break;
+                case ControlType.ComboBox:
+                case ControlType.LookUp:
+                    if (fieldType == typeof(bool))
+                    {
+                        bool b = (value == "True" || value == "1");
+                        sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", fieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                    }
+                    else if (attrField.References != null)
+                    {
+                        IDatabaseEntity[] entities = Provider.GetIdNameList(attrField.References.Name, "", this.where);
+                        sb.AppendFormat("<select name=\"{0}\">", fieldName);
+                        sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
+                        foreach (BaseEntity entity in entities)
+                            sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", Utility.HtmlEncode(entity.GetNameValue()));
+                        sb.AppendFormat("</select>");
+                    }
+                    else
+                    {
+                        bool optionsFound = false;
+                        // örnek "items:[['Content','Ýçerik'],['Category','Kategori'],['News','Haber'],['Article','Makale'],['Gallery','Galeri'],['Video','Video'],['LastMinute','Son Dakika']]";
+                        attrEdit.Options = Provider.ParseOptions(attrEdit.Options);
+                        int startIndex = attrEdit.Options.IndexOf("items:[[");
+                        int endIndex = -1;
+                        if (startIndex > -1) {
+                            startIndex += "items:[[".Length;
+                            endIndex = attrEdit.Options.IndexOf("]]", startIndex);
+                            if (endIndex > -1)
+                            {
+                                optionsFound = true;
+                                string options = attrEdit.Options.Substring(startIndex, endIndex - startIndex);
+                                string[] optionsArr = options.Split(new string[] { "],[" }, StringSplitOptions.RemoveEmptyEntries);
+                                sb.AppendFormat("<select name=\"{0}\">", fieldName);
+                                sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", "", String.IsNullOrEmpty(value) ? "selected" : "", Provider.GetResource("Select"));
+                                for (int i = 0; i < optionsArr.Length; i++)
+                                {
+                                    string[] keyVal = optionsArr[i].Trim('\'').Split(new string[] { "','" }, StringSplitOptions.RemoveEmptyEntries);
+                                    sb.AppendFormat("<option value=\"{0}\" {1}>{2}</option>", keyVal[0], keyVal[0] == value ? "selected" : "", keyVal[1]);
+                                }
+                                sb.AppendFormat("</select>");
+                            }
+                        }
+                        if(!optionsFound)
+                            sb.AppendFormat("<input type=\"text\" value=\"{0}\"/>", "Kombo olmasý gerekiyor ama henüz enum tarzý kombo problemi çözülmedi."); ;
+                    }
+                    break;
+                case ControlType.CSSEdit:
+                case ControlType.MemoEdit:
+                    if(controlType == "Input")
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    else
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", fieldName, Utility.HtmlEncode(value));
+                    break;
+                case ControlType.Undefined:
+                case ControlType.FilterEdit:
+                default:
+                    throw new Exception(Provider.GetResource("This kind of form field is not supported: {0}", ct));
+                    break;
+            }
+            return sb.ToString();
+        }
+
+        protected override void beforeSave(bool isUpdate)
+        {
+            base.beforeSave(isUpdate);
+
+            if (String.IsNullOrEmpty(this.entityName))
+            {
+                Form parentForm = (Form)Module.Read("Form", this.ParentModuleId);
+                this.EntityName = parentForm.EntityName;
+            }
+        }
+
+        public override string GetDefaultCSS()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("#{0}_{1} {{width:50%;padding:4px 4px 0px 0px;float:left;clear:none}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} div.label {{width:100%;overflow:hidden}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} input {{width:100%}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} select {{width:100%}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} textarea {{width:100%}}\n", this.Name, this.Id);
+            return sb.ToString();
+        }
+
+        protected override bool canBeCachedInternal()
+        {
+            return false;
+        }
+    }
+}
