@@ -1,0 +1,149 @@
+<table class="bk-grid" border="0" cellspacing="0" cellpadding="2">
+	<tr>
+		<th id="h_Id">Id</th>
+		<th id="h_Content.Title">Baþlýk</th>
+		<th id="h_Content.CategoryId">Kategori</th>
+		<th id="h_Content.PublishDate">Yayýnlanma tarihi</th>
+		<th id="h_BaseEntity.Visible">Aktif</th>
+	</tr>
+	<tr id="r_230">
+		<td>230</td>
+		<td>Sat&#252;rn'le Eþikte...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_231">
+		<td>231</td>
+		<td>Anormallik ve...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_232">
+		<td>232</td>
+		<td>Paris Paris'e Karþý</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_233">
+		<td>233</td>
+		<td>Kamplaþmaya boyun...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_234">
+		<td>234</td>
+		<td>Medya mahallesi</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_235">
+		<td>235</td>
+		<td>Tokyo'da  iftar ve...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_236">
+		<td>236</td>
+		<td>Kovuk (2)</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_237">
+		<td>237</td>
+		<td>Batý ve din</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_238">
+		<td>238</td>
+		<td>Babam patates ve...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_239">
+		<td>239</td>
+		<td>Gen&#231; Werther'in...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_240">
+		<td>240</td>
+		<td>Sanayinin devleri,...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_241">
+		<td>241</td>
+		<td>Hem holding...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_242">
+		<td>242</td>
+		<td>Engellilere tanýnan...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_243">
+		<td>243</td>
+		<td>[WASHINGTON]...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_244">
+		<td>244</td>
+		<td>[BR&#220;KSEL]...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_245">
+		<td>245</td>
+		<td>Kanarya normale...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_246">
+		<td>246</td>
+		<td>G&#252;nd&#252;z g&#246;z&#252;yle...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_247">
+		<td>247</td>
+		<td>Þeytan ne zaman...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_248">
+		<td>248</td>
+		<td>Zorunlu deðil...</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+	<tr id="r_249">
+		<td>249</td>
+		<td>Bir devrim öyküsü</td>
+		<td>Yazarlar</td>
+		<td>25 Eylül 2007</td>
+		<td>Evet</td>
+	</tr>
+</table>

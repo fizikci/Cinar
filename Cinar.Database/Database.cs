@@ -367,7 +367,7 @@ namespace Cinar.Database
                 //for (int i = 0; i < st.FrameCount; i++)
                 //{
                 //    StackFrame sf = st.GetFrame(i);
-                //    if (sf.GetFileName() != null && sf.GetFileName().Contains("Sitematik\\Library"))
+                //    if (sf.GetFileName() != null && sf.GetFileName().Contains("Cinar.CMS\\Cinar.CMS.Library"))
                 //        sbSQL.AppendFormat("{0}({1}), ", sf.GetMethod().DeclaringType.Name + "." + sf.GetMethod().Name, sf.GetFileLineNumber());
                 //}
                 SQLLog.Add(sbSQL + "\n");

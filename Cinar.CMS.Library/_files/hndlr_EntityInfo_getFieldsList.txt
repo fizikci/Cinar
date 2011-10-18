@@ -1,0 +1,223 @@
+[
+	{
+		label:'Ýçerik türü', 
+		description:'Ne tür bir içeriktir bu?', 
+		type:'ComboBox', 
+		id:'ClassName', 
+		value:'Content', 
+		options:{
+			required:true, 
+			items:[['Content','Ýçerik'],['Category','Kategori'],['News','Haber'],['Article','Makale'],['Gallery','Galeri'],['Video','Video'],['LastMinute','Son Dakika']]}},
+	{
+		label:'Baþlýk', 
+		description:'Baþlýk', 
+		type:'MemoEdit', 
+		id:'Title', 
+		value:null, 
+		options:{required:true}},
+	{
+		label:'Açýklama', 
+		description:'Açýklayýnýz', 
+		type:'StringEdit', 
+		id:'Description', 
+		value:null, 
+		options:{maxLength:2147483647}},
+	{
+		label:'Metin', 
+		description:'Ýçerik metni', 
+		type:'StringEdit', 
+		id:'Metin', 
+		value:null, 
+		options:{maxLength:2147483647}},
+	{
+		label:'Hierarchy',
+		description:'', 
+		type:'StringEdit', 
+		id:'Hierarchy', 
+		value:'', 
+		options:{required:true,maxLength:100}},
+	{
+		label:'Yazar', 
+		description:'Bu içerik bir yazara aitse belirtebilirsiniz.', 
+		type:'LookUp', 
+		id:'AuthorId', 
+		value:0, 
+		options:{
+			entityName:'Author', 
+			itemsUrl:'EntityInfo.ashx'}},
+	{
+		label:'Kaynak', 
+		description:'Bu içerik bir alýntý ise kaynaðýný belirtebilirsiniz.', 
+		type:'LookUp', 
+		id:'SourceId', 
+		value:0, 
+		options:{
+			entityName:'Source', 
+			itemsUrl:'EntityInfo.ashx'}},
+	{
+		label:'Yayýnlanma tarihi', 
+		description:'Bu içeriðin kaynaðýndaki yayýnlanma tarihi', 
+		type:'DateTimeEdit', 
+		id:'PublishDate', 
+		value:'15-11-2008 1:6', 
+		options:{required:true}},
+	{
+		label:'Resim', 
+		description:'Resim seçiniz.', 
+		type:'PictureEdit', 
+		id:'Picture', 
+		value:null},
+	{
+		label:'Etiketler', 
+		description:'Ýçerikle ilgili önemli kelimeler (aramalar, iliþkili içerikler için)', 
+		type:'MemoEdit', 
+		id:'Tags', 
+		value:''},
+	{
+		label:'Kategori', 
+		description:'Bu içerik hangi kategoriye aittir?', 
+		type:'LookUp', 
+		id:'CategoryId', 
+		value:1, 
+		options:{
+			required:true,
+			entityName:'Content', 
+			itemsUrl:'EntityInfo.ashx', 
+			extraFilter:'ClassName=Category'}},
+	{
+		label:'Sayfa', 
+		description:'Bu içerik hangi sayfada gösterilsin?', 
+		type:'ComboBox', 
+		id:'ShowInPage', 
+		value:'', 
+		options:{ 
+			items:window.templates, 
+			addBlankItem:true}},
+	{label:'Alt Ýçerik Sayfasý', description:'Bu kategorinin altýndaki içerikler hangi sayfada gösterilsin?', type:'ComboBox', id:'ShowContentsInPage', value:'', options:{ items:window.templates, addBlankItem:true}},
+	{label:'Alt Kategori Sayfasý', description:'Bu kategorinin altýndaki kategoriler hangi sayfada gösterilsin?', type:'ComboBox', id:'ShowCategoriesInPage', value:'', options:{ items:window.templates, addBlankItem:true}},
+	{
+		label:'Manþet', 
+		description:'Manþet olacak deðerde bir içerik midir bu?', 
+		type:'ComboBox', 
+		id:'IsManset', 
+		value:false, 
+		options:{
+			required:true,
+			items:[[false,'Hayýr'],[true,'Evet']]}},
+	{
+		label:'Spot Baþlýk', 
+		description:'Özellikle manþet olarak kullanýlan kýsa ve vurucu baþlýk', 
+		type:'MemoEdit', 
+		id:'SpotTitle', 
+		value:null},
+	{
+		label:'OtoÝçerik Kaynaðý', 
+		description:'Eðer bu içerik otomatik olarak bir içerik kaynaðý ile oluþturulduysa bu alan dolu gelecektir. Deðiþtirmeyiniz.', 
+		type:'LookUp', 
+		id:'ContentSourceId', 
+		value:0, 
+		options:{
+			entityName:'ContentSource', 
+			itemsUrl:'EntityInfo.ashx', 
+			readOnly:true}},
+	{
+		label:'Kaynak Adresi', 
+		description:'Bu içeriðin alýndýðý kaynaðýn adresi. (Eðer kendi içeriðiniz deðilse kaynak belirtmek yasalar gereðidir, ihmal etmeyiniz.)', 
+		type:'MemoEdit', 
+		id:'SourceLink', 
+		value:null},
+	{
+		label:'Okunma sayýsý', 
+		description:'Kaç defa okundu? Bu alan otomatik artar, deðiþtirmeyiniz.', 
+		type:'IntegerEdit', 
+		id:'ViewCount', 
+		value:0, 
+		options:{
+			required:true,
+			maxLength:10, 
+			readOnly:true}},
+	{
+		label:'Yorum sayýsý', 
+		description:'Kaç defa yorum yazýldý? Bu alan otomatik artar, deðiþtirmeyiniz.', 
+		type:'IntegerEdit', 
+		id:'CommentCount', 
+		value:0, 
+		options:{
+			required:true,
+			maxLength:10, 
+			readOnly:true}},
+	{
+		label:'Tavsiye sayýsý', 
+		description:'Kaç defa tavsiye edildi? Bu alan otomatik artar, deðiþtirmeyiniz.', 
+		type:'IntegerEdit', 
+		id:'RecommendCount', 
+		value:0, 
+		options:{
+			required:true,
+			maxLength:10, 
+			readOnly:true}},
+	{
+		label:'Id', 
+		description:'Id', 
+		type:'IntegerEdit', 
+		id:'Id', 
+		value:0, 
+		options:{
+			required:true,
+			maxLength:10}},
+	{
+		label:'Kayýt Tarihi', 
+		description:'Kayýt tarihi', 
+		type:'DateTimeEdit', 
+		id:'InsertDate', 
+		value:'1-1-1970 0:0', 
+		options:{required:true}},
+	{
+		label:'Kaydeden',
+		description:'Bu kaydý kim ekledi?', 
+		type:'IntegerEdit', 
+		id:'InsertUserId', 
+		value:0, 
+		options:{maxLength:10}},
+	{
+		label:'Güncelleme Tarihi', 
+		description:'Güncelleme tarihi', 
+		type:'DateTimeEdit', 
+		id:'UpdateDate', 
+		value:'1-1-1970 0:0'},
+	{
+		label:'Güncelleyen', 
+		description:'Bu kaydý en son kim güncelledi?', 
+		type:'IntegerEdit', 
+		id:'UpdateUserId', 
+		value:0, 
+		options:{maxLength:10}},
+	{
+		label:'Aktif', 
+		description:'Bu kayýt sitede görünsün mü?', 
+		type:'ComboBox', 
+		id:'Visible', 
+		value:true, 
+		options:{
+			required:true,
+			items:[[false,'Hayýr'],[true,'Evet']]}},
+	{
+		label:'Sýra No', 
+		description:'Bu alan kayýtlarý sýralamak için ekstra bir alan olarak kullanýlabilir. Sýra numarasý giriniz.', 
+		type:'IntegerEdit', 
+		id:'OrderNo', 
+		value:0, 
+		options:{maxLength:10}},
+	{
+		label:'Resimler', 
+		description:'? ContentPictureDesc', 
+		type:'ListForm', 
+		entityName:'ContentPicture', 
+		relatedFieldName:'ContentId'},
+	{
+		label:'Ýçerik Çevirisi', 
+		description:'? ContentLangDesc', 
+		type:'ListForm', 
+		entityName:'ContentLang', 
+		relatedFieldName:'ContentId'}
+]

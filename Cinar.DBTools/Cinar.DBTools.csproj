@@ -502,7 +502,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(TargetDir)
-zip -r ..\..\..\wiki\public\Upload\cinar_dbtools.zip *.*</PostBuildEvent>
+zip -r ..\..\..\cinar_dbtools.zip *.*</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

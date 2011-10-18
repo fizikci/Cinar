@@ -1,0 +1,177 @@
+﻿.editor 
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	letter-spacing: normal;
+	line-height:normal;
+	color:#404040;
+}
+.editor div.item {cursor:pointer;padding-left:2px}
+.editor div.selItem {background:#316AC5;color:white}
+.editor div.checkedItem {background:#316AC5;color:white}
+.editor textarea {overflow:auto}
+
+#mdlSel 
+{
+	position:absolute;
+	border:2px solid #316AC5;
+	z-index:10;
+}
+#mdlSel div
+{
+	float:right;
+	width:auto;
+	padding:2px 0px 2px 12px;
+	background: #316AC5 url(icons/mdlSelBg.png) no-repeat;
+}
+#mdlSel div img
+{
+	margin-right:4px;
+	cursor: pointer;
+}
+
+span.btn 
+{
+	color: #316AC5;
+	padding: 4px 20px 2px 20px;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+span.OK {background-image:url(icons/ok.png);}
+span.cancel {background-image:url(icons/cancel.png);}
+span.save {background-image:url(icons/save.png);}
+span.filter {background-image:url(icons/filter.png);}
+span.load {background-image:url(icons/load.png);}
+
+div.smMenu 
+{
+	color: #404040;
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	letter-spacing: normal;
+	line-height:normal;
+	position:absolute;
+	background:white;
+	width:200px;
+	border:solid 1px #808080;
+	padding:3px;
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC,strength=4,direction=135);
+	z-index:1500;
+	text-align:left;
+}
+div.smMenu div.menuFolder
+{
+	background-image: url(icons/go.png);
+	background-position: right center;
+	background-repeat:no-repeat;
+}
+div.smMenu div 
+{
+	padding: 2px 15px 2px 5px;
+	cursor:pointer
+}
+div.smMenu img 
+{
+	vertical-align:middle
+}
+div.smMenu div:hover 
+{
+	background:#316AC5;
+	color:white
+}
+div.treeChildren {padding-left:16px}
+div.treeChildren img {vertical-align:middle}
+div.treeChildren span {cursor:pointer}
+
+td 
+{
+	vertical-align:top
+}
+
+/* EditForm classes */
+table.editForm
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	letter-spacing: normal;
+	line-height:normal;}
+table.cntrlsTbl 
+{
+	width:100%;
+	color:#404040;
+	border-left:8px solid #F1EFE2;
+	border-top:1px solid #F1EFE2}
+table.cntrlsTbl td {width:50%;border-bottom:1px solid #F1EFE2;border-left:1px solid #F1EFE2;text-align:left}
+table.cntrlsTbl input {border:none;padding-left:2px}
+table.cntrlsTbl input[type=button] {padding:0px; margin:0px}
+
+
+/* ListForm classes */
+div.lf-dataArea 
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	letter-spacing: normal;
+	line-height:normal;
+	overflow:auto;
+	height:320px;
+	text-align:left}
+div.lf-listFormFooter {text-align:right}
+div.lf-listFormFooter img {cursor:pointer;margin-left:8px}
+div.lf-listFormFooter input {width:70px}
+
+/* ListGrid classes */
+table.bk-grid 
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	letter-spacing: normal;
+	line-height:normal;
+	width:100%;
+	margin-top:4px;
+	color:#404040;}
+table.bk-grid th {font-size:12px; background:#404040; color:White; text-align:left; padding:2px; empty-cells:show; cursor:pointer}
+table.bk-grid td {padding:2px; empty-cells:show; cursor:pointer;text-align:left}
+tr.selected {background: #316AC5; color:white}
+tr.hover {background: #efefef; color:#404040;}
+
+/* tab control*/
+.panel {
+	clear: both;
+	display: none;
+	background-color: white;
+	border-top: 1px solid #444;
+	padding:4px;
+}
+.panel.active-tab-body {
+	display: block;
+}
+ul.tabs {
+	list-style: none;
+	margin-left:0px;
+}
+ul.tabs li {
+	float: left;
+}
+ul.tabs a {
+	float: left;
+	padding: 5px 8px;
+	margin-left: 6px;
+	background-color: #DCDCDC;
+	text-decoration: none;
+	color: #999999;
+}
+ul.tabs a:hover {
+	border-top: 3px solid orange;
+	padding-top: 3px;
+}
+ul.tabs a.active-tab 
+{
+	background-color: white;
+	border-left: 1px solid #444;
+	border-right: 1px solid #444;
+	border-top: 3px solid orange;
+	padding-top: 3px;
+	color: #444;
+}

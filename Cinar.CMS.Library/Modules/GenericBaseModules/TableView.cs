@@ -1,0 +1,85 @@
+﻿using System;
+using System.Text;
+using Cinar.Database;
+
+namespace Cinar.CMS.Library.Modules
+{
+    public abstract class TableView : Module
+    {
+        private bool displayAsTable;
+        public bool DisplayAsTable
+        {
+            get { return displayAsTable; }
+            set { displayAsTable = value; }
+        }
+
+        protected int cols = 1;
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1")]
+        public int Cols
+        {
+            get { return cols; }
+            set { cols = value; }
+        }
+
+        private bool encloseWithDiv;
+        public bool EncloseWithDiv
+        {
+            get { return encloseWithDiv; }
+            set { encloseWithDiv = value; }
+        }
+
+        protected abstract int rowCount { get; }
+
+        protected abstract string getCellHTML(int row, int col);
+
+        protected override string show()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (rowCount == 0)
+                return ""; //***
+
+            if (displayAsTable) // table layout
+            {
+                sb.Append("<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n");
+
+                for (int i = 0; i < this.rowCount; i++)
+                {
+                    sb.Append("<tr>\n");
+                    for (int j = 0; j < this.cols; j++)
+                    {
+                        sb.Append("<td>\n");
+                        sb.Append(this.getCellHTML(i, j));
+                        sb.Append("</td>\n");
+                    }
+                    sb.Append("</tr>\n");
+                }
+                sb.Append("</table>\n");
+            }
+            else                // flow layout
+            {
+                for (int i = 0; i < this.rowCount; i++)
+                {
+                    for (int j = 0; j < this.cols; j++)
+                    {
+                        if(encloseWithDiv)
+                            sb.Append("<div>\n");
+                        sb.Append(this.getCellHTML(i, j));
+                        if(encloseWithDiv)
+                            sb.Append("</div>\n");
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        protected override void beforeSave(bool isUpdate)
+        {
+            base.beforeSave(isUpdate);
+
+            if (this.cols == 0)
+                throw new Exception(Provider.GetResource("Columns number cannot be zero"));
+        }
+    }
+}

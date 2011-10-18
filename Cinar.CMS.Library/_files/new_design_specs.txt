@@ -1,0 +1,198 @@
+﻿see: AjaxCat.js, Default.html, controls_2.0.js
+
+     Module: Shows data in different formats on UI.
+     Entity: The data itself
+    Command: A piece of code - ServerCommand (handler) or ClientCommand (js code)
+    Project: Entities + Modules + Commands
+
+EditControl: 
+	StringEdit, 
+	IntegerEdit, 
+	DecimalEdit, 
+	PictureEdit, 
+	LookUp, 
+	FilterEdit, 
+	CSSEdit, 
+	DateTimeEdit, 
+	ComboBox
+	
+CommandControl: 
+	CommandButton, 
+	LinkButton
+	
+RichControl:
+	PropertyGrid, 
+	GridView, 
+	FilterEditor, 
+	TreeView, 
+	ContextMenu
+	
+Component:
+	DataSource, 
+	DataBinder, 
+	ValueReader, 
+	Criteria, 
+	FilterBuilder, 
+	Command
+	
+Form: A combination of controls, components and client commands.
+
+
+NOTHING SHOULD BE RUN AUTOMATICALLY. IF PROGRAMMER WANTS, CALLS THE METHODS.
+IN THIS WAY, PAGE LIFE CYCLE DETERMINED BY THE PROGRAMMER.
+BY THE WAY, THERE SHOULD BE GENERATED CODE TO MAKE PROGRAMMERS' WORK EASY.
+
+
+Metadata: {   // Type: (metadata of an instance)
+	typeClass: 'Entity | Module'
+	typeName: 'Content',
+	namespace: 'CMS',         //projectName
+	
+	displayName: 'İçerik',
+	description: 'Kategori veya içerik bilgisi',
+	
+	fields: [
+		{
+			fieldName: 'ClassName',
+			fieldType: 'string',
+			
+			isNotNull: true,
+			isPrimaryKey: false,
+			referenceTypeName: '',
+			maxLength: 20,
+			
+			displayName:'İçerik türü', 
+			description:'Ne tür bir içeriktir bu?', 
+			defaultControlType:'ComboBox',
+			controlOptions:{items:[['Article','Makale'],['News','Haber']]}
+		},
+		...
+	],
+	
+	primaryKeyField: 'Id',
+	displayField: 'Title',
+	
+	relatedTypes: [
+		{namespace:'ECommerce', typeName:'Product', fieldName:'ContentId', relationType:'OneToOne'},
+		{namespace:'CMS', typeName:'Content', fieldName:'CategoryId', relationType:'ManyToOne'}
+	]
+}
+
+
+
+DataTable: (data of instances)
+{
+	metadata: 'Content',
+	rows: [
+		{id:1, ClassName:'Category', Title:'Hakkımızda', ...},
+		{id:2, ClassName:'Category', Title:'Hakkımızda', ...}
+	]	
+}
+
+EditControl:
+{
+	value: '...',
+	text: '...',
+	setValue: function(val){}, // sets text too
+	
+	dataSource: 'dsContent',
+	dataField: 'ClassName'
+}
+ComboBox:
+{
+    optionsDataSource: 'dsSehir', // if string then dataSource.id else data itself.
+    textField: 'ad',
+    valueField: 'id',
+	multiSelect: false
+}
+
+
+
+Command: // Bu Form'un javascript koduna yazılır ve forma eklenir. form.Commands.push() gibi..
+{
+	id:'cmdSave',
+    executeFuncBody:'',
+    isEnabledFuncBody:''
+}
+
+Button:
+{
+	id:'btnSave',
+	commandName: 'cmdSave',
+	text: 'Kaydet'
+}
+
+DataSource: // a.k.a. AjaxDataRequester
+{
+	id: 'dsInvoice',
+	dataProvidingURL: 'read.ashx?entityName=Invoice',
+
+	orderBy: {fieldName:'inv_no', direction:'Asc' },
+	
+	rowCountPerPage: 20,
+	currentPageIndex: 0,
+	
+	dataTable: {}, // type & data
+
+	selectedIndex:0, // current row
+	
+	fetchNextPage: function(){},   // ajax requests the data
+	bindData: function(){},    // sets data bound controls' values.
+	
+}
+
+
+Sample code 1: DataSource, FilterBuilder and Grid
+-------------------------------------------------
+
+var dsContent = new DataSource('dsContent');
+dsContent.dataProvidingUrl = 'read.ashx?entityName=Content';
+
+dsContent.orderBy = [{fieldName:'PublishDate', direction:'desc'}];
+dsContent.rowCountPerPage = 20;
+
+var fbContent = new FilterBuilder();
+fbContent.criterias = [
+	{fieldName:'ClassName', op:'=', value:{type='Control', id:'cbClassName'}},
+	{fieldName:'Visible', op:'=', value:1},
+	{fieldName:'CategoryId', op:'=', value:{type='QueryString', key:'catId'}}
+];
+
+dsContent.filter = fbContent;   // if filter is FilterBuilder then uses dsContent.filter.getFilter();
+
+dsContent.fetchNextPage(function(data){
+	grid.dataSource = data;
+	grid.dataBind();
+});
+
+
+Sample code 2: DataSource, EditControls
+---------------------------------------
+
+<input type="text" 
+	id='cbClassName' 
+	optionsDataSource='dsClassNames' 
+	textField='name' 
+	valueField='code',
+	dataSource='dsContent',
+	dataField='ClassName'/>
+
+veya
+
+var cb = new ComboBox({
+	id:'cbClassName',
+	optionsDataSource:'dsClassNames',
+	textField:'name',
+	valueField:'code',
+	dataSource:'dsContent',
+	dataField:'ClassName'});
+
+
+form.controls.add(...);
+		
+Control'lerin özellikleri <input>'a attribute olarak yazılabilir.
+Eğer control on-the-fly create edilecekse container belirtilebilir.
+
+
+Sample code 3:
+---------------------

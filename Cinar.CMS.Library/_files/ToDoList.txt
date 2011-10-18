@@ -1,0 +1,306 @@
+  1. [OK] Yazarlara resim ekle
+  2. [OK] ContentPicture'ýn infoForm'unda resim alaný HTMLEditör olmuþ, PictureEdit yapmak lazým.
+  3. [OK] Resim galerisi modülü (kaç sütun)
+  4. [OK] ContentList'de kategorilerin altýndaki içerikler her zaman görünmüyor..
+  5. [OK] Ýçerikler'e tag ekleme imkaný
+  6. [OK] ContentListByAuthor'da mevcut content listeye çýkmasýn
+  7. [OK] ContentPicture modülü!!! (ContentDisplay'in içine koymak için)
+  8. [OK] ContentDisplay'e özellik: ShowSummary: bool
+  9. [OK] Module listesinde abstract classlarýn (ContentList) görünmesini engelle.
+ 10. [OK] IE'de yan gelen modül CSS'lerine bir çözüm
+ 11. [OK] Modüller için default CSSler belirtilmeli
+ 12. [OK] BaseForm'da bütün modüllerin CSS'leri bir defada yazýlmalý (external da olabilir)
+ 13. [OK] Anket sonuçlarý için grafik
+ 14. [OK] Eski anketler modülü
+ 15. [OK] ContentList.cs ile LastContents.cs ayný base classtan türetilecek.
+ 16. [OK] Search modulü
+ 17. [OK] SearchResults modülü
+ 19. [OK] Comments modülü
+ 20. [OK] Membership modülü
+ 21. Döviz Kurlarý modülü
+ 22. Hava Durumu modülü
+ 23. Namaz vakitleri
+ 24. [OK] Manshet modülü
+ 25. [OK] Siteye ait default.css'i düzenleme ekraný
+ 26. [OK] Konfigürasyon menüsü.
+ 27. [OK] Modüllerin default style'larýný modül adýyla default.css içinde tanýmlamak lazým. Id'li selector'lar kullanýcý tanýmlarsa olmalý.
+ 28. [OK] Category ve Content'e hangi sayfada görüntüleneceðine dair alan ekleyelim. Boþsa 
+ 29. [OK] Title otomatik olarak oluþturulsun.
+ 30. [OK] Ýçerik türü (Son Dakika, Makale, vb.)
+ 31. [OK] ContenList'e SmallIcon
+ 32. [OK] Resim'ler için width ve height beraber.
+ 34. [OK] Tree görünümü
+ 35. [OK] Konfigürasyon'u genel iþlemler modülünden aç.
+ 36. [OK] Comments'de Anonim yazabilsin olayý implement edilmemiþ.
+ 37. [OK] Hýzlý makale yazma ekraný
+ 38. Menü üzerine gelince alt içerik baþlýklarýný listele (popup menu þeklinde)
+ 39. [OK] Ýçerik listesinde sadece ilk içerik resimli
+ 40. [OK] Çok okunanlar
+ 41. [OK] QuickEntry'de Yeni ekle deyince günün baþlýklarý kombosunu selectedIndex=0 yap.
+ 42. [OK] QuickEntry'de Resim seçilince biþeyler göster.
+ 43. [OK] QuickEntry'de metin ve description için str_replace("\n", "<br>") yap.
+ 44. [OK] Module.canReadFromCache() yarým kaldý. Bitir.
+ 45. [OK] Author ve Source tablolarýna yeni alanlarý ekle, eskilerini sil.
+ 46. PictureEdit'in daha güzel bi versiyonunu yapalým
+ 47. [OK] Module'e beforeShow metodu ekle, Content gibi show içinde yapýlan veritabaný updatelerini bu metodda yap.
+ 48. [OK] addModule metodunda modül belirtilmemiþse sor
+ 49. [OK] avatarDir, memberDir, uploadDir gibi parametrelerin kullanýmýný saðlayalým.
+ 50. [OK] Bir sayfanýn adý deðiþtirilince Content tablosunda ilgili alan update edilsin.
+ 51. [OK] Menü modülü düzgün çalýþmýyor. Belli bir kategori ve altýný paerent/child þeklinde göstermesi lazým.
+ 52. [OK] ContentList modülüne Sonraki Sayfa özelliði eklemek lazým. (DataList modülüne yapýldý)
+ 53. [OK] ContentList'e "Link olsun" default evet olan bi özellik lazým.
+ 54. [OK] ContentDisplay, eðer description yoksa ilgili div'i yazmasýn
+ 55. [OK] Filtre'de KategoriTam olmasýn mý, olsun mu yoksa, karar verilsin. (Hiyerarþi var artýk. Saksýyý çalýþtýran kullanýr)
+ 56. Formlara captcha otomatik eklensin.
+ 57. [OK] Ýçerik albümü: eðer çok büyük resim yüklenirse default 640 px'e küçültsün.
+ 58. [OK] Bütün tablolarýn tasarým modunda listelenmesi lazým(mesela anket-cevap)
+ 59. [Cancel] FormField modulunde etiket görünmeyebilsin.
+ 60. PropertyGrid'de kategoriler görünsün, kapatýlýp, açýlabilsin.
+ 61. EditForm'larýn yüksekliði document height kadar olsun. Fieldlar scroll edebilsin.
+ 62. [OK] ComboBox'lar seçili item'a scroll etsin
+ 63. [OK] Her hangi bir içerik linkine sað týklandýðýnda menüde içeriði düzenle görünsün.
+ 64. [OK] Ýçerik listesinde sadece açýklama olduðu zaman da link olsun.
+ 65. [OK] Yazar ve Kaynak Detayý modüllerinde Ýþ/Cep gibi labellarý uçur.
+ 66. Admin paneli için gridi filtreleyen bi filtre modülü yapalým, Form modülü gibi alan eklenebilir þekilde olsun.
+ 67. [OK] Ýçerik listesinde hangi resimin gösterileceði seçilebilsin. (Ýçerik, yazar ya da kaynak)
+ 68. [OK] Print.ashx'i yazalým. (Sitenin logosu + baþlýk + yazý + window.print)
+ 69. Ýçerik listesi modülünde paging yapmak durumundayýz :(
+ 70. [OK] Konfigürasona NoPicture özelliði ekle, olmayan resimlerin yerine onu kullan
+ 71. [OK] Yazar ve Kaynak detayýnda http:// yazýsýný kaldýr
+ 72. [OK] Etiket bulutu modülü
+ 73. [OK] Etiketler için bir tablo ve etiket-içerik iliþkisini tutan bir tablo daha oluþtur. Her bir etiket kaç içerikte geçiyor (calculated field)
+ 74. [OK] Ýçerik kaydedilirken etiket tablolarýnýn güncellenmesini saðla
+ 75. [OK] Ýçerik modülünün etiketleri de gösterebilmesi lazým. Bunlar link olmalý, ayný etikete sahip diðer içerikleri listelemeli
+ 76. Etiketleri yazarken autocomplete yapan bir JS kontrolü güzel olur
+ 77. Admin panelindeki kontrollerin de JS kontrolleri gibi geliþmiþ olmasý lazým. (mesela DateTimePicker yok henüz)
+ 78. [OK] Kaynak ve yazar linkini Redirect.ashx üzerinden gönderip kaç defa redirect ettiðimizi sayalým.
+ 79. mailto linklerini bir JS fonksiyonundan geçirerek botlardan gizleyelim
+ 80. [Designer] Baþka sitelerin bizim içeriðimizi yayýnlamasý için script kodu hazýrlayalým
+ 81. [OK] {Content} gibi parametreler için daha hýzlý bir çözüm geliþtirelim. Mesela BasePage'in renderýndan sonra Provider üzerinden reflectionla parametreleri replace etmek gibi.
+ 82. [OK] DataList modülüne de resim geniþliði ve yüksekliði için property ekleyelim
+ 83. [OK] DataList'te resimler için geniþlik ve yükseklik belirtilebilsin
+ 84. [OK] Ýçerik listesi modülünde rastgele N tane göster özelliði olsun. (3ün biri olayý)
+ 85. Banner modülü
+ 	 1. [OK] Dönüþümlü banner yüklenebilsin.
+ 	 2. [Cancel - Bu çok kasar] Ip bazlý banner yönetilebilsin. (Burada ülke ve þehir listesi alýnabiliyor zannedersem Ülke kesin varda þehiri öðrenmek lazým.)
+ 	 3. [OK] Saðlýk’ta veya basýn bültelerinde mesela gözle ilgili etiket varsa bu banner çýksýn diyebilmemiliyiz. Banner etiket diye bir ayrý field olabilir. Biz ayarlayabiliriz.
+ 	 4. [OK - design] Gösterim, týklanma, {hangi sayfada - bu olmaz} gibi raporlar alýnabilmeli.
+ 	 5. [OK] Týklanma sayýsýna veya gösterime göre bitirilebilir.
+ 	 6. [OK] Sabit reklam denebilir. Bitiþ süresi verilir.
+ 	 7. [OK] Banner bittiðinde bize otomatik email atsýn.
+	 8. [OK - design] Dýþarýdan banner verenler kendi panellerine girip anlýk rapor alabilirler.
+	 9. [OK] Web Spiders Detection - automatically block web spiders and non-human browsers to protect your ads and stats.
+	10. Banner reklamý ile Source arasýnda iliþki olmalý
+ 86. [OK] Etiket modül ve entitileri için resource stringlerini yaz
+ 87. [OK] Request["tagId"] gelirse içerik listesinin sadece o etikete ait içerikleri listeemesini saðla
+ 88. [OK] Bu yazýlýmla ilgili en azýndan 2 sayfa tanýtým metni hazýrlayalým
+ 89. [OK] Etiket isminin içerik listesi üzerinde gösterilmesi saðlanacak. => $Tag.Name$ olarak yapýldý.
+ 90. [OK] Etiketler Meta taglarýna eklenecek
+ 91. [OK] Açýklama ve baþlýk uzunluðu -1 yapýlýrsa crop yapmasýn.
+ 92. [OK] Ýçerik araçlarýnýn defaul CSS'ini düzenle
+ 93. [OK] Etiket SQL'lerine Visible=1 eklensin
+ 94. [OK] tagId'nin içerik listesini filtrlemesi çok kötü bi çözüm bulmalý (yeni modül yazýldý: Ýçerik listesi (etikete filtreli))
+ 95. [OK] Prototype ve Scriptaculo'nun yeni versiyonlarý yüklenecek
+ 96. [OK] StaticHTML modülünden {SourceName} türü þeyler kaldýrýlsýn. => Dikkat!!! Artýk þöyle yazýlýyor: $Context.Content.SourceName$
+ 97. [OK] Ýçerik sayýsý 0 olan etiketler otomatik olarak silinecek.
+ 98. [OK] Template DesignMode'da da çalýþsýn.
+ 99. [OK] Konfigürasyona DefaultDateFormat ekleyelim.
+100. [OK] Page-Module Tree
+101. [OK] Edit Page!
+102. RSSReader modülü
+103. InstantChat modülü (Ziyaretçilerin mesaj býrakabilecekleri board)
+104. VisitorStats modülü (toplam hit, toplam visit, kaç kiþi var)
+105. [OK] Controls.js'de Control sýnýfýna regEx validation ekleyelim ve submitten önce kontrollerin deðerlerinin regEx'e match edip etmediðine bakalým
+106. [OK] Controls.js'de Control sýnýfýna required validation ekleyelim ve submitten önce required kontrollerin deðer içerip içermediðine bakalým
+107. [OK] Bütün entity ve module property'lerinin attribute'larýný gözden geçirelim
+108. Export/Import olayýna veriyi de ekleyelim
+108. Export/Import ekranlarýný daha fonksiyonel hale getirelim
+109. Ýçerik için ChangeHistory özelliði yapmak lazým. (Deðiþtirilen içeriðin önceki halini ChangeHistory tablosuna atmak þeklinde)
+110. Oldu olacak ChangeHistory üzerinde diff yapan biþey de yapalým.
+111. Etiketlemeyi direk içerik metni üzerinde (bkz gibi) yaptýralým. (Bu wiki ile daha güzel bile yapýlýr)
+112. Url rewriting özelliðini devreye sokalým.
+113. [OK] Browserý ingilizce veya sistem dili ingilizce olanlara ilk önce ingilizce sayfa gelsin. 
+114. [OK] Web.config'deki handlerlarý CMSModule'e yazalým. (Tek bir handler yazýldý)
+115. Site ilk açýldýðýnda web.config’e baksýn. Eðer connection string yoksa veritabaný bilgilerini soran bir sayfa açýlsýn ve kurulum yapsýn.
+116. [OK] Menü modüllerinde sýralama OrderNo'ya göre olsun.
+117. Admin Panel'de içeriðe yeni dil çevirisi eklerken yada deðiþtirirken içeriðin seçili gelmesi lazým. Hatta deðiþtirememeli, bunun için Editbutton desteði koymak lazým.
+118. [OK] JS kontrollerine de EditButton yapalým. (Bu aslýnda çok kolay, butona týklayýnca "seçim için" ListGridi açan ve seçilen kaydý gösteren bir kontrol yazýlacak.)
+119. Plugin mantýðý yapalým. (Commerce plugini yazdýk ayýrdýk. CMS pluginini de ayýrmak lazým. Geri kalaný Core.)
+120. Ýsimlendirmeleri PluginName.Entities.EntityName, PluginName.Modules.ModuleName, PluginName.Handlers.HandlerName þeklinde yapalým.
+121. Pluginlere event mantýðý ekleyelim. Bir plugin baþka bir pluginin entitilerine kod ekleyebilsin.
+
+ 
+ 
+BUGS:
+  0. [OK] Veritabanýna Module tablosunu açamýyor!
+  1. [OK] Ayný sayfada birden fazla anket varsa biri cevaplandýðýnda hepsi grafik moda geçiyor.
+  2. [OK] Kopyalanmýþ Bölge modülü CSS ayarlarýný kopyalamýyor!
+  3. [OK] Önce haberi kaydetmeyi dene ondan sonra pencereyi kapat, kaydedemezsen kapatma. Timeout olunca problem oluyor.
+  4. [OK] Content silinirken ContentPicture ve Comments otomatik silinsin.
+  5. [OK] ContentPictures modülünde resimlere týklayýnca büyüyceðimiþ.
+  6. [OK] Ýçerik listesi (gruplanmýþ) neye göre yazar seçilip kaydediliyor, tekrar açýlýnca içerik oluyor.
+  7. [OK] Liste ekranlarýnda Filtre olayý aðýr saçmalýyo (incele düzelt)
+  8. [OK] ContentDisplay'de içerdeki bölgenin içindekiler silinince bir daha region görünmüyor.
+  9. [OK] Yazar manþeti
+ 10. [OK] popup menu sayfanýn en altýnýn altýna düþüyor.
+ 11. [OK] =@ þeklindeki filtreler anlamsýzmýþ. ilgili js kodlarýný uçur! (Bu farklý bir þekilde düzeltildi, uçurmaya gerek kalmadý)
+ 12. [OK] Menu modülüne ikon özelliði ekle
+ 13. [OK] Tablo ilk eklendiðinde hata veriyor F5 yapýnca düzeliyor
+ 14. [OK] Modülleri bir sayfadan kopyala diðer sayfaya yapýþtýr.
+ 15. [OK] Kategori modülü
+ 16. [OK] Kategori resmi modülü
+ 16. [OK] Kategoriye verilen özel template menü modülü tarafýndan gösterilmiyor.
+ 17. [OK] Statik olan herþeyi iptal et!!! (Farklý çözüldü, Context.Items kullanýldý.)
+ 18. [OK] Boolean ComboBox'lar Hayýr oluyor..
+ 19. [OK] Üyelik bilgisi admin'den deðiþtirilince þifre deðiþiyor! Saçmalýk!
+ 20. [OK] Datetimepicker kontrolünde bugün seçilemiyor.
+ 21. PNG resimlerde resimin thumbnail’ini yaparken background siyah oluyor
+ 22. [OK] Ajanda'da en alt satýrda bir hafta fazladan gösteriyor.
+ 23. [OK] Ýçerik listesi Source bilgisini göstermiyor.
+ 24. [OK] Combolarý açýnca seçili olaný göstericem derken sayfayý aþaðý kaydýrýyor.
+ 25. [OK] Admin panelinden yazarýn resmini deðiþtirdiðim zaman deðiþmiyor.
+ 26. [OK] #NL# olayý
+ 27. [OK] Ýçerik araçlarýnýn labellarýnýn visibilitisini belirleyen bi property
+ 28. [OK] Yorumlar’ýn galiba yazýlarý resource’dan gelmediði için hiçbir þey görünmüyor
+ 29. Manset’te falan “Hangi Resim” özelliði görünmesin
+ 30. [OK] Tavsiye olayý email göndermesine raðmen hata veriyor
+ 31. [??] Hotmail'e mail gitmiyor ne yapmak lazým?
+ 32. [OK] Tasarým modunda açýlan alt menüler düzgün kapanmýyor.
+ 33. [OK] Ýçerik modülünde Tags'ýn class'ý text yazýlmýþ.
+ 34. [OK] Arkadaþýna gönder sayfanýn ortasýnda açýlsýn geri kalan alan siyah görunsun. LightBox ile denemek lazým.
+ 35. [OK] Arkadaþýna gönder boþþa göndermesin. Uyarý versýn!
+ 36. [OK] Ýçerik modülünde alan sýrasýnýn acýklamasýnda Tags'ýnda eklenmesi gerekiyo
+ 37. [OK] Template olayýnda <#Content.PublishDate#> çalýþmýyor(muþ).
+ 38. [OK] Ýçerik araçlarý modülü sayfanýn kaydýrma çubuklarýný yok ediyor, F5 yapmak gerekiyor.
+ 39. [OK] $Context.Content.PublishDate$ in formatý çok kötü. 
+ 40. [OK] Filtre açýlýyor deðiþtiriliyor fakat forma gelmiyor.
+ 41. [OK] Firefox'ta tasarým modunda JS kodlarý hepten göçmüþ..!
+ 42. [OK] Form modülünün kaydet olayý "object referense not set" diyor.
+ 43. [CANCEL] Firefox'ta module selektörünün düzgün çalýþmasý için seçim divinin innerHTML'ine seçili modülün içeriðini koyalým. (Denedim, güzel olmadý)
+ 44. [OK] Design modda Kök seçilemiyor.
+ 45. [OK] Form modülü hep Metin Kutusu alaný yapýyor.
+ 46. [OK] Uyelik Formu modülü eklenince hata veriyor.
+ 47. [OK] RSS son girilen içerikleri getirmiyor
+ 48. [OK] Login modülü "beni hatýrla" çalýþmýyor
+ 49. Design Mode'da yazar listesi list formunu ada göre sýralayýnca "unknown column NamedEntity.Name" diyor.
+
+
+MULTILANGUAGE SUPPORT
+---------------------
+
+ 1. [Cancel] TableName, RowId, LangId, FieldName, FieldValue alanlarýna sahip MultiLang tablosu yapalým.
+ 2. [OK] Code, Name alanlarýna sahip Lang tablosu yapalým
+ 3. [OK] Her tablonun Lang suffix'iyle biten bir versiyonunu oluþturalým (aslýnda sadece ContentLang yeterli)
+ 4. [OK] Bu iþi client tarafýnda desteklemek için EditForm kontrolüne bi tab açmak lazým.
+ 5. [OK] Bi de konfigürasyona "bool MultiLanguage" ve "int DefaultLanguage" alanlarý ekleyelim.
+ 6. [OK] Default Language'in adýný da sormak lazým (Farklý bi þekilde yapýldý)
+ 7. [OK] Site sabitleri (Ana sayfa, Beni hatýrla, vb..) resource olarak tanýmlanabilsin.
+ 8. Bunlarý arayüzden deðiþtirme imkaný verelim. Kolay biþey olsun.
+ 9. Configuration'a AuthLang ekleyelim. Site sahibine email atarken o dili kullanýrýz.
+10. [OK] Resource'larý Provider'dan silelim, xml dosyalarýna yazalým.
+
+
+
+COMMERCE
+--------
+
+ 0. Konfigürasyon
+	- Havale indirim yüzdesi
+	
+ 1. Tüm ürünlerin ortak özellikleri
+	[OK] - ListPrice 
+	[OK] - Indirim 
+	[OK] - KDV 
+	[OK] - OTV
+	[OK] - Kazandýrdýðý puan
+	[OK] - En, Boy, Yükseklik, Aðýrlýk (Kargoyla ilgili bilgiler)
+
+ 2. Ayný kategorideki ürünlerin ortak özellikleri
+	- PropertyKeys (Id, CategoryId, Name, Group, ValueType, DefaultValue)
+	- PropertyOptions (Id, PropertyKeyId, Name, PriceDelta)
+	- PropertyValues (Id, ContentId, KeyId, Value)
+
+ 3. Kýyaslama listesi
+	- Bu ürün en çok þunlarla kýyaslandý
+	- Kýyaslama listesine ekle
+	- Kýyas listesinden çýkart
+
+ 4. Alýþveriþ Listesi
+	- Alýþveriþ listesine ekle
+	- Sepete gönder
+
+ 5. Basket
+	[OK] - Ürün miktarlarýný deðiþtir, güncelle
+	- Taksit Hesapla (kredi kartýna göre taksit imkanlarý listelenir)
+	- Kargo hesapla
+ 
+ 6. [OK] Basket Summary
+ 
+ 7. Markaya göre sayý listesi
+	> Fotoðraf Makineleri
+	Canon (100)
+	Sony (34)
+	gibi..
+	
+ 8. Product modülü. (Ýçerik modülünün yanýna konularak içerik hakkýnda detay bilgi saðlar)
+    - Fiyat Bilgileri (liste, Bizim, KDV, OTV, Havaleli)
+    - Sepete Ekle, Alýþveriþ Listeme Ekle, Kýyaslama Listesine Ekle linkleri
+    - Resmi büyüt linki
+
+ 9. Ürün oylama, yorumlama
+
+
+
+ADMÝN
+-----
+
+1. Default case'inde yönetim panelinin layoutunu ya da login formunu yükleyen bir Admin.ashx
+   Header:
+       - Sola yaslý Cinar CMS Logosu ve yanýnda yönetilen site adresi
+       - Saða yaslanmýþ "username, profilim, oturumu kapat" linkleri
+
+Örnek menü aðacý:
+
+- Ana Sayfa
+	- Son içerikler
+	- Son eklenen yorumlar
+	- ve diðer kýsa yollar
+
+- Þablonlar
+	- Tüm Þablonlar
+		- Sayfa1.aspx
+			- Kopyala
+			- Sil
+			- Yeniden adlandýr
+		- Sayfa2.aspx
+		- ...
+	- Ýçeri al
+	- Dýþarý aktar
+
+- Ýçerik
+	- Kategoriler
+	- Ýçerikler
+	- Yazarlar
+	- Kaynaklar
+
+- Etkileþim
+	- Anketler
+	- Ziyaretçi mesajlarý
+	- Yorumlar
+	- Tavsiyeler
+
+- Dosya Yönetimi
+	- Dizinler (solda)
+	- File Listesi
+		- Edit
+		- Delete
+		- Rename
+
+- Kullanýcýlar
+	- Roller
+		- Haklar
+	- Kullanýcý rolleri
+
+- Genel Ayarlar
+	- Genel CSS Dosyasý
+	- Site Konfigürasyonu
