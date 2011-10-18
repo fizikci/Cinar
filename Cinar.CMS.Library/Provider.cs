@@ -413,7 +413,7 @@ namespace Cinar.CMS.Library
                 // check tables
                 if (Provider.Database.Tables["Module"] == null)
                 {
-                    Provider.Database.CreateTableForType(typeof(Module));
+                    Provider.Database.CreateTableForType(typeof(Modules.Module));
                     HttpContext.Current.RewritePath("Main.aspx");
                 }
 
