@@ -22,6 +22,8 @@ using System.Security.Principal;
 using System.IO;
 using Cinar.Scripting;
 using Module = System.Reflection.Module;
+using System.Linq;
+using DbType = Cinar.Database.DbType;
 
 
 namespace Cinar.CMS.Library
@@ -124,7 +126,11 @@ namespace Cinar.CMS.Library
                             ct = ControlType.ComboBox;
                             break;
                         default:
-                            throw new Exception(Provider.GetResource("A control type cannot be acquired from the field type!"));
+                            if (type.IsEnum)
+                                ct = ControlType.ComboBox;
+                            else
+                                throw new Exception(Provider.GetResource("A control type cannot be acquired from the field type!"));
+                            break;
                     }
                     break;
             }
@@ -154,6 +160,8 @@ namespace Cinar.CMS.Library
                     fieldProps.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
                 if (fieldProps.ColumnType == Cinar.Database.DbType.Text)
                     fieldProps.Length = Int32.MaxValue;
+                if (pi.PropertyType.IsEnum && fieldProps.ColumnType == DbType.Undefined)
+                    fieldProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
@@ -182,6 +190,8 @@ namespace Cinar.CMS.Library
                     case ControlType.FilterEdit:
                         break;
                     case ControlType.ComboBox:
+                        if (pi.PropertyType.IsEnum)
+                            options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select((s,i)=>"["+i+",'"+s+"']").StringJoin(","));
                         if (fieldProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
                             options += String.Format(",items:[[false,'{0}'],[true,'{1}']]", Provider.GetResource("No"), Provider.GetResource("Yes"));
                         if (fieldProps.References != null)
@@ -1568,6 +1578,10 @@ namespace Cinar.CMS.Library
         public static string ToJS(object val)
         {
             if (val == null) return "null";
+
+            if (val.GetType().IsEnum)
+                return "'" + val + "'";
+
             switch (val.GetType().Name)
             {
                 case "String":
@@ -1576,6 +1590,7 @@ namespace Cinar.CMS.Library
                 case "Int32":
                 case "Int64":
                 case "Decimal":
+                case "Single":
                     return val.ToString();
                 case "DateTime":
                     if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
@@ -2353,6 +2368,12 @@ namespace Cinar.CMS.Library
             get
             {
                 return Provider.Tag;
+            }
+        }
+
+        public Database.Database Database {
+            get {
+                return Provider.Database;
             }
         }
 

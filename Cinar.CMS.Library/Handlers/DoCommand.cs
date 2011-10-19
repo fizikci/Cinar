@@ -478,7 +478,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 Provider.User = null;
                 Provider.DesignMode = false;
-                context.Response.Redirect(Provider.Configuration.MainPage);
+                context.Response.Redirect("/" + Provider.Configuration.MainPage);
             }
 
             // eğer şifremi hatırlat modundaysa
@@ -531,7 +531,7 @@ namespace Cinar.CMS.Library.Handlers
                     Provider.Response.Cookies.Add(cookie);
                 }
                 if (context.Request.Form["RedirectURL"] == null)
-                    context.Response.Redirect("Main.aspx?DesignMode=On");
+                    context.Response.Redirect("/Main.aspx?DesignMode=On");
                 else
                     context.Response.Redirect(context.Request.Form["RedirectURL"]);
             }
