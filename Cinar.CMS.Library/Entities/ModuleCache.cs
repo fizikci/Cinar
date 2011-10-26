@@ -6,41 +6,25 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = false)]
     public class ModuleCache : BaseEntity
     {
-        private int moduleId = 0;
-        public int ModuleId
+        public ModuleCache()
         {
-            get { return moduleId; }
-            set { moduleId = value; }
+            ContentId = 1;
         }
 
-        private int contentId = 1;
-        [ColumnDetail(IsNotNull = true, References = typeof(Content))]
-        [EditFormFieldProps(ControlType = ControlType.LookUp)]
-        public int ContentId
-        {
-            get { return contentId; }
-            set { contentId = value; }
-        }
+        public int ModuleId { get; set; }
 
-        private int langId;
+        [ColumnDetail(IsNotNull = true, References = typeof(Content)), EditFormFieldProps(ControlType = ControlType.LookUp)]
+        public int ContentId { get; set; }
+
         [ColumnDetail(IsNotNull = true, References = typeof(Lang)), EditFormFieldProps(ControlType = ControlType.LookUp)]
-        public int LangId
-        {
-            get { return langId; }
-            set { langId = value; }
-        }
+        public int LangId { get; set; }
 
-        private string cachedHTML;
         [ColumnDetail(IsNotNull = true, ColumnType = DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string CachedHTML
-        {
-            get { return cachedHTML; }
-            set { cachedHTML = value; }
-        }
+        public string CachedHTML { get; set; }
 
         public override string GetNameValue()
         {
-            return this.moduleId.ToString();
+            return this.ModuleId.ToString();
         }
         public override string GetNameColumn()
         {

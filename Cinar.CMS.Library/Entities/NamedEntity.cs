@@ -7,34 +7,18 @@ namespace Cinar.CMS.Library.Entities
 {
     public abstract class NamedEntity : BaseEntity
     {
-        private string name;
         [ColumnDetail(IsNotNull=true, Length=100)]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get; set; }
 
-        private string description;
         [ColumnDetail(ColumnType = DbType.Text)]
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        public string Description { get; set; }
 
-        private string picture;
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
-        [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
-        public string Picture
-        {
-            get { return picture; }
-            set { picture = value; }
-        }
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture { get; set; }
 
         public override string GetNameValue()
         {
-            return this.name;
+            return this.Name;
         }
         public override string GetNameColumn()
         {
@@ -53,7 +37,7 @@ namespace Cinar.CMS.Library.Entities
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings[this.GetType().Name.ToLower() + "Dir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Bitmap bmp = (Bitmap)Bitmap.FromStream(Provider.Request.Files["PictureFile"].InputStream);
+                    Bitmap bmp = (Bitmap)Image.FromStream(Provider.Request.Files["PictureFile"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
                         Bitmap bmp2 = Utility.ScaleImage(bmp, Provider.Configuration.ImageUploadMaxWidth, 0);

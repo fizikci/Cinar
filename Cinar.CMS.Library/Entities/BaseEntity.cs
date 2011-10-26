@@ -8,13 +8,7 @@ namespace Cinar.CMS.Library.Entities
     public abstract class BaseEntity : ObjectWithTags, IDatabaseEntity
     {
         #region fields
-        private int id;
-        private DateTime insertDate;
-        private int insertUserId;
-        private DateTime updateDate;
-        private int updateUserId;
-        private bool visible = true;
-        private int orderNo;
+
         #endregion
 
         public virtual void Initialize()
@@ -22,76 +16,44 @@ namespace Cinar.CMS.Library.Entities
         }
 
         [ColumnDetail(IsAutoIncrement = true, IsNotNull = true, IsPrimaryKey = true), EditFormFieldProps(Visible = false)]
-        public int Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
+        public int Id { get; set; }
 
         [ColumnDetail(IsNotNull = true, DefaultValue="1990-01-01"), EditFormFieldProps(Visible = false)]
-        public DateTime InsertDate
-        {
-            get { return insertDate; }
-            set { insertDate = value; }
-        }
+        public DateTime InsertDate { get; set; }
 
         [ColumnDetail(References = typeof(User)), EditFormFieldProps(Visible = false)]
-        public int InsertUserId
-        {
-            get { return insertUserId; }
-            set { insertUserId = value; }
-        }
+        public int InsertUserId { get; set; }
 
         private User _insertUser;
         [XmlIgnore]
         public User InsertUser
         {
-            get
-            {
-                if (_insertUser == null)
-                    _insertUser = (User)Provider.Database.Read(typeof(User), this.InsertUserId);
-                return _insertUser;
-            }
+            get { return _insertUser ?? (_insertUser = (User) Provider.Database.Read(typeof (User), this.InsertUserId)); }
         }
 
         [EditFormFieldProps(Visible = false)]
-        public DateTime UpdateDate
-        {
-            get { return updateDate; }
-            set { updateDate = value; }
-        }
+        public DateTime UpdateDate { get; set; }
 
         [ColumnDetail(References = typeof(User)), EditFormFieldProps(Visible = false)]
-        public int UpdateUserId
-        {
-            get { return updateUserId; }
-            set { updateUserId = value; }
-        }
+        public int UpdateUserId { get; set; }
 
         private User _updateUser;
+
+        public BaseEntity()
+        {
+            Visible = true;
+        }
+
         [XmlIgnore]
         public User UpdateUser
         {
-            get
-            {
-                if (_updateUser == null)
-                    _updateUser = (User)Provider.Database.Read(typeof(User), this.UpdateUserId);
-                return _updateUser;
-            }
+            get { return _updateUser ?? (_updateUser = (User) Provider.Database.Read(typeof (User), this.UpdateUserId)); }
         }
 
         [ColumnDetail(IsNotNull = true, DefaultValue = "1")]
-        public bool Visible
-        {
-            get { return visible; }
-            set { visible = value; }
-        }
+        public bool Visible { get; set; }
 
-        public int OrderNo
-        {
-            get { return orderNo; }
-            set { orderNo = value; }
-        }
+        public int OrderNo { get; set; }
 
         public virtual string GetNameValue()
         {

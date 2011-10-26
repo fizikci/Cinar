@@ -1142,7 +1142,6 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            int dotPos = path.LastIndexOf('.');
             string thumbUrl = "./_thumbs/" + prefWidth + "x" + prefHeight + "_" + System.IO.Path.GetFileNameWithoutExtension(path) + ".jpg";
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
@@ -1259,7 +1258,7 @@ namespace Cinar.CMS.Library
                 MailAddress _to = new MailAddress(to, toDisplayName);
                 MailMessage mail = new MailMessage(_from, _to);
                 if (!String.IsNullOrEmpty(from))
-                    mail.ReplyTo = new MailAddress(from, fromDisplayName);
+                    mail.ReplyToList.Add(new MailAddress(from, fromDisplayName));
                 mail.Subject = subject;
                 if (to != _from.Address)
                     mail.Bcc.Add(new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName));
@@ -1309,8 +1308,8 @@ namespace Cinar.CMS.Library
             }
 
             WebRequest req = WebRequest.Create(content.SourceLink);
-            req.Proxy = WebProxy.GetDefaultProxy();
-            req.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            if(req.Proxy!=null)
+                req.Proxy.Credentials = CredentialCache.DefaultCredentials;
             WebResponse webResponse = req.GetResponse();
             string response = new System.IO.StreamReader(webResponse.GetResponseStream(), Encoding.GetEncoding("iso-8859-9")).ReadToEnd();
             response = response.Replace(Environment.NewLine, "\n");
@@ -1373,8 +1372,8 @@ namespace Cinar.CMS.Library
         {
             bool contentFetched = false;
             WebRequest req = WebRequest.Create(url);
-            req.Proxy = WebProxy.GetDefaultProxy();
-            req.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            if (req.Proxy != null)
+                req.Proxy.Credentials = CredentialCache.DefaultCredentials;
             HttpWebResponse webResponse = (HttpWebResponse)req.GetResponse();
             string response = null;
             if (!String.IsNullOrEmpty(contentSource.Encoding))
@@ -2068,7 +2067,7 @@ namespace Cinar.CMS.Library
         /// <summary>
         /// Returns all get & set properties
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
         public static PropertyInfo[] GetProperties(Type type)
         {
