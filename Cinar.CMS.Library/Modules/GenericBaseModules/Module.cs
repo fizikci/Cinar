@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Modules
 {
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = "'LoginForm','Main.aspx','Content','<?xml version=\"1.0\" encoding=\"utf-16\"?><LoginForm xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><Id>1</Id><Template>Login.aspx</Template><Region>Content</Region><OrderNo>1</OrderNo><Name>LoginForm</Name><CSS/></LoginForm>'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = "'LoginForm','Main.aspx','Content','Cinar.CMS.Serialization\nRedirect,0,ShowMembershipLink,4,TrueShowMembershipInfoLink,4,TrueShowPasswordForgetLink,4,TrueShowRememberMe,4,TrueShowActivationLink,4,TrueId,1,1Template,9,Main.aspxRegion,7,ContentOrderNo,1,0Name,9,LoginFormCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
     public abstract class Module : ObjectWithTags, IDatabaseEntity
     {
         #region fields
