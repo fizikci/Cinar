@@ -7,25 +7,15 @@ namespace Cinar.CMS.Library.Entities
     [DefaultData(ColumnList="Code, Name", ValueList="'tr-TR', 'Türkçe'")]
     public class Lang : BaseEntity
     {
-        private string code;
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_LANGS_")]
-        public string Code
-        {
-            get { return code; }
-            set { code = value; }
-        }
+        public string Code { get; set; }
 
-        private string name;
         [ColumnDetail(IsNotNull=true), EditFormFieldProps(Options = "isHTML:false")]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get; set; }
 
         public override string GetNameValue()
         {
-            return this.name;
+            return this.Name;
         }
         public override string GetNameColumn()
         {

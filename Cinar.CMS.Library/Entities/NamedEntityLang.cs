@@ -9,58 +9,33 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id, TagLang.Name as [TagLang.Name], TLangId.Name as [Lang], TagLang.Visible as [BaseEntity.Visible] from [TagLang] left join [Lang] as TLangId ON TLangId.Id = [TagLang].LangId")]
     public class NamedEntityLang : BaseEntity
     {
-        private int langId;
         [ColumnDetail(IsNotNull = true, References = typeof(Lang)), EditFormFieldProps(ControlType = ControlType.LookUp)]
-        public int LangId
-        {
-            get { return langId; }
-            set { langId = value; }
-        }
+        public int LangId { get; set; }
+
         private Lang _lang;
         [XmlIgnore]
         public Lang Lang
         {
-            get
-            {
-                if (_lang == null)
-                    _lang = (Lang)Provider.Database.Read(typeof(Lang), this.langId);
-                return _lang;
-            }
+            get { return _lang ?? (_lang = (Lang) Provider.Database.Read(typeof (Lang), this.LangId)); }
         }
 
-        private string name;
         [ColumnDetail(IsNotNull = true, Length = 200)]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get; set; }
 
-        private string description;
         [ColumnDetail(Length = 300)]
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        public string Description { get; set; }
 
         public override string GetNameValue()
         {
-            return this.name;
+            return this.Name;
         }
         public override string GetNameColumn()
         {
             return "Name";
         }
 
-        private string picture;
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
-        [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
-        public string Picture
-        {
-            get { return picture; }
-            set { picture = value; }
-        }
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture { get; set; }
 
         protected override void beforeSave(bool isUpdate)
         {
@@ -73,7 +48,7 @@ namespace Cinar.CMS.Library.Entities
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Bitmap bmp = (Bitmap)Bitmap.FromStream(Provider.Request.Files["PictureFile"].InputStream);
+                    Bitmap bmp = (Bitmap)Image.FromStream(Provider.Request.Files["PictureFile"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
                         Bitmap bmp2 = Utility.ScaleImage(bmp, Provider.Configuration.ImageUploadMaxWidth, 0);

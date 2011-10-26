@@ -271,7 +271,7 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
-        public void Save()
+        public new void Save()
         {
             // default dil değişmiş olabilir, set edelim
             Lang lang = Provider.Database.Read<Lang>(this.DefaultLang);

@@ -14,213 +14,102 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email as [User.Email], Roles as [User.Roles], Visible as [BaseEntity.Visible] from [User]")]
     public class User : BaseEntity
     {
-        private string email;
         [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
-        public string Email
-        {
-            get { return email; }
-            set { email = value; }
-        }
+        public string Email { get; set; }
 
-        private string password = "";
         [ColumnDetail(IsNotNull = true, Length = 16), EditFormFieldProps(Options = "password:true,required:false")]
-        public string Password
-        {
-            get { return password; }
-            set { password = value; }
-        }
+        public string Password { get; set; }
 
-        private string keyword;
         [ColumnDetail(Length = 16), EditFormFieldProps(Visible = false)]
-        public string Keyword
-        {
-            get { return keyword; }
-            set { keyword = value; }
-        }
+        public string Keyword { get; set; }
 
-        private string nick;
         [ColumnDetail(IsNotNull = true, Length = 100)]
-        public string Nick
-        {
-            get { return nick; }
-            set { nick = value; }
-        }
+        public string Nick { get; set; }
 
-        private string roles = "User";
         [ColumnDetail(IsNotNull = true, Length = 100)]
-        public string Roles
-        {
-            get { return roles; }
-            set { roles = value; }
-        }
+        public string Roles { get; set; }
 
         #region kişisel
-        private string name;
-        [ColumnDetail(Length = 50)]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
 
-        private string surname;
         [ColumnDetail(Length = 50)]
-        public string Surname
-        {
-            get { return surname; }
-            set { surname = value; }
-        }
+        public string Name { get; set; }
 
-        private string gender;
         [ColumnDetail(Length = 50)]
-        public string Gender
-        {
-            get { return gender; }
-            set { gender = value; }
-        }
+        public string Surname { get; set; }
+
+        [ColumnDetail(Length = 50)]
+        public string Gender { get; set; }
+
         #endregion
 
         #region meslek
-        private string occupation;
-        [ColumnDetail(Length = 50)]
-        public string Occupation
-        {
-            get { return occupation; }
-            set { occupation = value; }
-        }
 
-        private string company;
+        [ColumnDetail(Length = 50)]
+        public string Occupation { get; set; }
+
         [ColumnDetail(Length = 100)]
-        public string Company
-        {
-            get { return company; }
-            set { company = value; }
-        }
+        public string Company { get; set; }
 
-        private string department;
         [ColumnDetail(Length = 50)]
-        public string Department
-        {
-            get { return department; }
-            set { department = value; }
-        }
+        public string Department { get; set; }
+
         #endregion
 
         #region iletişim (tel, adres, web)
-        private string phoneCell;
-        [ColumnDetail(Length = 50)]
-        public string PhoneCell
-        {
-            get { return phoneCell; }
-            set { phoneCell = value; }
-        }
 
-        private string phoneWork;
         [ColumnDetail(Length = 50)]
-        public string PhoneWork
-        {
-            get { return phoneWork; }
-            set { phoneWork = value; }
-        }
+        public string PhoneCell { get; set; }
 
-        private string phoneHome;
         [ColumnDetail(Length = 50)]
-        public string PhoneHome
-        {
-            get { return phoneHome; }
-            set { phoneHome = value; }
-        }
+        public string PhoneWork { get; set; }
 
-        private string addressLine1;
+        [ColumnDetail(Length = 50)]
+        public string PhoneHome { get; set; }
+
         [ColumnDetail(Length = 200)]
-        public string AddressLine1
-        {
-            get { return addressLine1; }
-            set { addressLine1 = value; }
-        }
+        public string AddressLine1 { get; set; }
 
-        private string addressLine2;
         [ColumnDetail(Length = 200)]
-        public string AddressLine2
-        {
-            get { return addressLine2; }
-            set { addressLine2 = value; }
-        }
+        public string AddressLine2 { get; set; }
 
-        private string city;
         [ColumnDetail(Length = 50)]
-        public string City
-        {
-            get { return city; }
-            set { city = value; }
-        }
+        public string City { get; set; }
 
-        private string country;
         [ColumnDetail(Length = 50)]
-        public string Country
-        {
-            get { return country; }
-            set { country = value; }
-        }
+        public string Country { get; set; }
 
-        private string zipCode;
         [ColumnDetail(Length = 5)]
-        public string ZipCode
-        {
-            get { return zipCode; }
-            set { zipCode = value; }
-        }
+        public string ZipCode { get; set; }
 
-        private string web;
         [ColumnDetail(Length = 150), EditFormFieldProps(Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
-        public string Web
-        {
-            get { return web; }
-            set { web = value; }
-        }
+        public string Web { get; set; }
+
         #endregion
 
         #region diğer
-        private string education;
+
         [ColumnDetail(Length = 50)]
-        public string Education
-        {
-            get { return education; }
-            set { education = value; }
-        }
+        public string Education { get; set; }
 
-        private string certificates;
         [ColumnDetail(Length = 200)]
-        public string Certificates
-        {
-            get { return certificates; }
-            set { certificates = value; }
-        }
+        public string Certificates { get; set; }
 
-        private string about;
         [ColumnDetail(Length = 200)]
-        public string About
-        {
-            get { return about; }
-            set { about = value; }
-        }
+        public string About { get; set; }
 
-        private string avatar;
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
-        [PictureFieldProps(SpecialFolder = "avatarDir", SpecialNameField = "Nick", AddRandomNumber = false, UseYearMonthDayFolders = false)]
-        public string Avatar
-        {
-            get { return avatar; }
-            set { avatar = value; }
-        }
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "avatarDir", SpecialNameField = "Nick", AddRandomNumber = false, UseYearMonthDayFolders = false)]
+        public string Avatar { get; set; }
+
         #endregion
 
-        private int redirectCount = 0;
-        public int RedirectCount
+        public User()
         {
-            get { return redirectCount; }
-            set { redirectCount = value; }
+            RedirectCount = 0;
+            Roles = "User";
+            Password = "";
         }
+
+        public int RedirectCount { get; set; }
 
         public bool IsAnonim() {
             return this.Email == "anonim";
@@ -252,7 +141,7 @@ namespace Cinar.CMS.Library.Entities
                 if (!avatarDir.EndsWith("/")) avatarDir += "/";
                 string avatarFilePath = Provider.Server.MapPath(avatarDir + this.Email + System.IO.Path.GetExtension(postedFile.FileName));
                 Provider.Request.Files["Avatar"].SaveAs(avatarFilePath);
-                this.avatar = System.IO.Path.GetFileName(avatarFilePath);
+                this.Avatar = System.IO.Path.GetFileName(avatarFilePath);
             }
         }
 
@@ -300,7 +189,7 @@ namespace Cinar.CMS.Library.Entities
 
         public override string GetNameValue()
         {
-            return this.nick;
+            return this.Nick;
         }
         public override string GetNameColumn()
         {
@@ -310,10 +199,10 @@ namespace Cinar.CMS.Library.Entities
         public string GetAddress()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(this.addressLine1 + "<br/>");
-            sb.AppendLine(this.addressLine2 + "<br/>");
+            sb.AppendLine(this.AddressLine1 + "<br/>");
+            sb.AppendLine(this.AddressLine2 + "<br/>");
             sb.AppendLine(this.City + " / " + this.Country);
-            sb.AppendLine(" (" + this.zipCode + ")<br/>");
+            sb.AppendLine(" (" + this.ZipCode + ")<br/>");
 
             return sb.ToString();
         }
