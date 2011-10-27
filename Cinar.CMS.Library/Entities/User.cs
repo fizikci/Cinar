@@ -170,7 +170,7 @@ namespace Cinar.CMS.Library.Entities
         {
             base.afterSave(isUpdate);
 
-            if (!isUpdate)
+            if (!isUpdate && !Provider.Request.Url.IsLoopback)
             {
                 string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>

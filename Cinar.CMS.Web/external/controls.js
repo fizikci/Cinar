@@ -271,8 +271,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
     }
 }
 var _pictureInput;
-function SetUrl( url, width, height, alt )
-{
+function SetUrl( url, width, height, alt ){
     _pictureInput.value = url.substr(url.indexOf('UserFile')) ;
 }
 
@@ -1104,7 +1103,7 @@ var ListForm = Class.create();ListForm.prototype = {
             //            new Insertion.Bottom(this.container.down(), '<div align="right"><span id="btnFilter'+this.hndl+'" class="btn filter">'+lang('Apply')+'</span></div>');
             //            $('btnFilter'+this.hndl).observe('click', this.fetchData.bind(this));
             new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter">' + lang('Apply') + '</span></td></table>');
-            this.filter = new FilterEdit('id', '', { entityName: 'Content', container: 'filter' + this.hndl });
+            this.filter = new FilterEdit('id', '', { entityName: 'Content', container: 'filter' + this.hndl, readOnly:true });
             $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
         }
 
@@ -1346,10 +1345,11 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
             var fieldMetadata = this.fields[sender.selectedIndex-1];
             var aControl = createControl('c'+rowCount, fieldMetadata, tdControl);
             aControl.label = fieldMetadata.label;
-            new Insertion.After(row, this.rowHtml);
-            
-            var cb2 = new ComboBox('f'+(rowCount+1), null, {items:this.fieldsComboItems, container:row.next().down('.tdField')});
-            cb2.options.onChange = this.fieldChanged.bind(this);
+			if(!row.next()){
+				new Insertion.After(row, this.rowHtml);
+				var cb2 = new ComboBox('f'+(rowCount+1), null, {items:this.fieldsComboItems, container:row.next().down('.tdField')});
+				cb2.options.onChange = this.fieldChanged.bind(this);
+			}
         }
     },
     opChanged: function(sender){

@@ -11,8 +11,7 @@ var regionDivs = [];
 var navigationEnabled = true;
 
 window.onload = onPageLoaded;
-function onPageLoaded()
-{
+function onPageLoaded(){
     try{
         trace = new Trace();
         trace.write({id:'Sistem'}, 'page load started');
@@ -89,9 +88,6 @@ function selectModule(mdl){
     
     selMod = mdl;
     selReg = selMod.up('.Region');
-
-    console.log("selMod: "+selMod.id);
-    console.log("selReg: "+selReg.id);
     
     var pos = Position.cumulativeOffset(mdl);
     var dim = mdl.getDimensions();
@@ -100,8 +96,7 @@ function selectModule(mdl){
     //new Effect.Appear(mdlSel, { duration: 0.1, from: 0.0, to: 0.7 });
     mdlSel.show();
 }
-function findNextModule(mdl)
-{
+function findNextModule(mdl){
     var modules = $$('div.Module');
     for(var i=0; i<modules.length; i++)
         if(modules[i]==mdl)
@@ -110,8 +105,7 @@ function findNextModule(mdl)
             else
                 return modules[i+1];
 }
-function findPrevModule(mdl)
-{
+function findPrevModule(mdl){
     var modules = $$('div.Module');
     for(var i=0; i<modules.length; i++)
         if(modules[i]==mdl)
@@ -132,8 +126,8 @@ document.observe('dom:loaded', function(){
         }
     });
 });
-function selectNext(event)
-{
+
+function selectNext(event){
     //alert(event.keyCode);
     var win = Windows.getFocusedWindow();
     
@@ -279,7 +273,7 @@ function showPopupMenu(event){
     
     var elm = Event.element(event);
     if(elm.tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.up('a');
-    //selReg = elm.className.indexOf('Region')>-1 ? elm : elm.up('div.Region');
+    selReg = elm.className.indexOf('Region')>-1 ? elm : elm.up('div.Region');
 
     popupMenu.show(Event.pointerX(event), Event.pointerY(event));
 }
@@ -451,8 +445,7 @@ function pasteModule(event){
     });
 }
 
-function saveModule(pe)
-{
+function saveModule(pe){
     var params = pe.serialize();
 
     new Ajax.Request('ModuleInfo.ashx?method=saveModule&name='+pe.entityName+'&id='+pe.entityId, {
