@@ -1080,80 +1080,84 @@ var EditForm = Class.create(); EditForm.prototype = {
 //#        ListForm        #
 //##########################
 
-var ListForm = Class.create(); ListForm.prototype = {
+var ListForm = Class.create();ListForm.prototype = {
     hndl: 0,
     formType: 'ListForm',
     container: null,
     filter: null,
     options: null,
     listGrid: null,
-    pageIndex:0,
-    limit:20,
-    initialize: function(container, options){
+    pageIndex: 0,
+    limit: 20,
+    initialize: function (container, options) {
         idCounter++;
         this.hndl = idCounter;
 
         container = $(container);
-        if(container==null) container = $(document.body);
+        if (container == null) container = $(document.body);
         this.container = container;
         this.options = options;
 
-        if(!this.options.hideFilter){
-            new Insertion.Top(this.container, '<fieldset><legend>'+lang('Filter')+'</legend></fieldset>');
-            this.filter = new FilterEditor(this.container.down(), this.options.fields);
-            new Insertion.Bottom(this.container.down(), '<div align="right"><span id="btnFilter'+this.hndl+'" class="btn filter">'+lang('Apply')+'</span></div>');
-            $('btnFilter'+this.hndl).observe('click', this.fetchData.bind(this));
+        if (!this.options.hideFilter) {
+            //            new Insertion.Top(this.container, '<fieldset><legend>'+lang('Filter')+'</legend></fieldset>');
+            //            this.filter = new FilterEditor(this.container.down(), this.options.fields);
+            //            new Insertion.Bottom(this.container.down(), '<div align="right"><span id="btnFilter'+this.hndl+'" class="btn filter">'+lang('Apply')+'</span></div>');
+            //            $('btnFilter'+this.hndl).observe('click', this.fetchData.bind(this));
+            new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter">' + lang('Apply') + '</span></td></table>');
+            this.filter = new FilterEdit('id', '', { entityName: 'Content', container: 'filter' + this.hndl });
+            $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
         }
 
-        new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea'+this.hndl+'"></div>');
-        
+        new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"></div>');
+
         var str = '<div class="lf-listFormFooter">';
-        str += '<img src="external/icons/prev.gif" id="btnPrev'+this.hndl+'" alt="'+lang('Previous Page')+' (PgUp)"/>';
-        str += '<img src="external/icons/next.gif" id="btnNext'+this.hndl+'" alt="'+lang('Next Page')+' (PgDw)" style="margin-right:50px"/>';
-        str += '<img src="external/icons/add.png" id="btnAdd'+this.hndl+'" alt="'+lang('Add')+' (Ins)"/>';
-        str += '<img src="external/icons/edit.png" id="btnEdit'+this.hndl+'" alt="'+lang('Edit')+' (Ent)"/>';
-        str += '<img src="external/icons/delete.png" id="btnDelete'+this.hndl+'" alt="'+lang('Delete')+' (Del)">';
-        str += '<img src="external/icons/refresh.png" id="btnRefresh'+this.hndl+'" alt="'+lang('Refresh')+'"/>';
-        str += '<img src="external/icons/info.png" id="btnInfo'+this.hndl+'" alt="'+lang('Info')+'">';
+        str += '<img src="external/icons/prev.gif" id="btnPrev' + this.hndl + '" alt="' + lang('Previous Page') + ' (PgUp)"/>';
+        str += '<img src="external/icons/next.gif" id="btnNext' + this.hndl + '" alt="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"/>';
+        str += '<img src="external/icons/add.png" id="btnAdd' + this.hndl + '" alt="' + lang('Add') + ' (Ins)"/>';
+        str += '<img src="external/icons/edit.png" id="btnEdit' + this.hndl + '" alt="' + lang('Edit') + ' (Ent)"/>';
+        str += '<img src="external/icons/delete.png" id="btnDelete' + this.hndl + '" alt="' + lang('Delete') + ' (Del)">';
+        str += '<img src="external/icons/refresh.png" id="btnRefresh' + this.hndl + '" alt="' + lang('Refresh') + '"/>';
+        str += '<img src="external/icons/info.png" id="btnInfo' + this.hndl + '" alt="' + lang('Info') + '">';
         str += '</div>';
         new Insertion.Bottom(this.container, str);
-        $('btnPrev'+this.hndl).observe('click', this.cmdPrev.bind(this));
-        $('btnNext'+this.hndl).observe('click', this.cmdNext.bind(this));
-        $('btnAdd'+this.hndl).observe('click', this.cmdAdd.bind(this));
-        $('btnEdit'+this.hndl).observe('click', this.cmdEdit.bind(this));
-        $('btnDelete'+this.hndl).observe('click', this.cmdDelete.bind(this));
-        $('btnRefresh'+this.hndl).observe('click', this.fetchData.bind(this));
-        $('btnInfo'+this.hndl).observe('click', this.cmdInfo.bind(this));
+        $('btnPrev' + this.hndl).observe('click', this.cmdPrev.bind(this));
+        $('btnNext' + this.hndl).observe('click', this.cmdNext.bind(this));
+        $('btnAdd' + this.hndl).observe('click', this.cmdAdd.bind(this));
+        $('btnEdit' + this.hndl).observe('click', this.cmdEdit.bind(this));
+        $('btnDelete' + this.hndl).observe('click', this.cmdDelete.bind(this));
+        $('btnRefresh' + this.hndl).observe('click', this.fetchData.bind(this));
+        $('btnInfo' + this.hndl).observe('click', this.cmdInfo.bind(this));
 
         this.fetchData();
     },
-    fetchData: function(){
+    fetchData: function () {
         var params = null;
-        if(this.options.hideFilter){
+        if (this.options.hideFilter) {
             params = new Object();
             params['f_0'] = this.options.relatedFieldName;
             params['o_0'] = '=';
             params['c_0'] = this.options.parentEditForm.entityId;
         } else {
-            params = this.filter.serialize();
+            if(this.filter && this.filter.filter)
+                params = this.filter.filter.serialize();
         }
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri+'?method=getGridList&entityName='+this.options.entityName + (this.options.extraFilter?'&extraFilter='+this.options.extraFilter:'') + (this.options.orderBy?'&orderBy='+this.options.orderBy:'') + '&page='+this.pageIndex + '&limit='+this.limit, {
+        new Ajax.Request(this.options.ajaxUri + '?method=getGridList&entityName=' + this.options.entityName + (this.options.extraFilter ? '&extraFilter=' + this.options.extraFilter : '') + (this.options.orderBy ? '&orderBy=' + this.options.orderBy : '') + '&page=' + this.pageIndex + '&limit=' + this.limit, {
             method: 'post',
             parameters: params,
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-                var dataArea = $('lf-dataArea'+ths.hndl);
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                var dataArea = $('lf-dataArea' + ths.hndl);
                 dataArea.innerHTML = req.responseText;
                 ths.listGrid = new ListGrid(dataArea.down(), ths.options.selectCallback, ths.sortCallback.bind(ths));
             },
-            onException: function(req, ex){throw ex;}
+            onException: function (req, ex) { throw ex; }
         });
     },
-    sortCallback: function(sortColumnId){
+    sortCallback: function (sortColumnId) {
         var sortColumn = sortColumnId.split('_')[1];
-        if(this.options.orderBy && this.options.orderBy.startsWith(sortColumn)){
-            if(this.options.orderBy.endsWith('desc'))
+        if (this.options.orderBy && this.options.orderBy.startsWith(sortColumn)) {
+            if (this.options.orderBy.endsWith('desc'))
                 this.options.orderBy = sortColumn;
             else
                 this.options.orderBy = sortColumn + ' desc';
@@ -1162,34 +1166,34 @@ var ListForm = Class.create(); ListForm.prototype = {
             this.options.orderBy = sortColumn;
         this.fetchData();
     },
-    cmdPrev: function(){
-        if(this.pageIndex>0){
+    cmdPrev: function () {
+        if (this.pageIndex > 0) {
             this.pageIndex--;
             this.fetchData();
         }
     },
-    cmdNext: function(){
-        if(this.listGrid.mayHaveNextPage(this.limit)){
+    cmdNext: function () {
+        if (this.listGrid.mayHaveNextPage(this.limit)) {
             this.pageIndex++;
             this.fetchData();
         }
     },
-    cmdAdd: function(){
+    cmdAdd: function () {
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri+'?method=new&entityName='+this.options.entityName, {
+        new Ajax.Request(this.options.ajaxUri + '?method=new&entityName=' + this.options.entityName, {
             method: 'get',
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
 
                 var dim = $(document.body).getDimensions();
-                var left=dim.width-390, top=10, width=350, height=dim.height-60;
-                var caption = '<img src="external/icons/'+ths.options.entityName+'.png" style="vertical-align:middle"> ' + lang('New')+' '+ths.options.hrEntityName;
-                var win = new Window({className: 'alphacube', title: caption, left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+                var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
+                var caption = '<img src="external/icons/' + ths.options.entityName + '.png" style="vertical-align:middle"> ' + lang('New') + ' ' + ths.options.hrEntityName;
+                var win = new Window({ className: 'alphacube', title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
-                try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
+                try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
                 var pe = null;
-                if(ths.options.parentEditForm!=null)
+                if (ths.options.parentEditForm != null)
                     pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.options.relatedFieldName, ths.options.parentEditForm.entityId);
                 else
                     pe = new EditForm(winContent, res, ths.options.entityName, 0);
@@ -1197,43 +1201,43 @@ var ListForm = Class.create(); ListForm.prototype = {
                 win.show();
                 win.toFront();
             },
-            onException: function(req, ex){throw ex;}
+            onException: function (req, ex) { throw ex; }
         });
     },
-    insertEntity: function(pe){
+    insertEntity: function (pe) {
         var params = pe.serialize();
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri+'?method=insertNew&entityName='+pe.entityName, {
+        new Ajax.Request(this.options.ajaxUri + '?method=insertNew&entityName=' + pe.entityName, {
             method: 'post',
             parameters: params,
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 Windows.getFocusedWindow().destroy();
                 ths.fetchData();
-                ths.cmdAdd();
+                //ths.cmdAdd();
             },
-            onException: function(req, ex){throw ex;}
+            onException: function (req, ex) { throw ex; }
         });
     },
-    cmdEdit: function(){
+    cmdEdit: function () {
         var selRows = this.listGrid.getSelectedRows() || [];
-        if(selRows.length==0) return;
+        if (selRows.length == 0) return;
         var entityName = this.options.entityName;
         var id = selRows[0].id.split('_')[1];
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri+'?method=edit&entityName='+entityName+'&id='+id, {
+        new Ajax.Request(this.options.ajaxUri + '?method=edit&entityName=' + entityName + '&id=' + id, {
             method: 'get',
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 var dim = $(document.body).getDimensions();
-                var left=dim.width-390, top=10, width=350, height=dim.height-60;
-                var caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + lang('Edit')+" : " + ths.options.hrEntityName;
-                var win = new Window({className: "alphacube", title: caption, left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+                var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
+                var caption = '<img src="external/icons/' + entityName + '.png" style="vertical-align:middle"> ' + lang('Edit') + " : " + ths.options.hrEntityName;
+                var win = new Window({ className: "alphacube", title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
-                try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
+                try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
                 var pe = null;
-                if(ths.options.parentEditForm!=null)
+                if (ths.options.parentEditForm != null)
                     pe = new EditForm(winContent, res, entityName, id, ths.options.relatedFieldName, ths.options.parentEditForm.entityId);
                 else
                     pe = new EditForm(winContent, res, entityName, id);
@@ -1241,46 +1245,46 @@ var ListForm = Class.create(); ListForm.prototype = {
                 win.show();
                 win.toFront();
             },
-            onException: function(req, ex){throw ex;}
+            onException: function (req, ex) { throw ex; }
         });
     },
-    saveEntity: function(pe){
+    saveEntity: function (pe) {
         var params = pe.serialize();
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri+'?method=save&entityName='+pe.entityName+'&id='+pe.entityId, {
+        new Ajax.Request(this.options.ajaxUri + '?method=save&entityName=' + pe.entityName + '&id=' + pe.entityId, {
             method: 'post',
             parameters: params,
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 ths.fetchData();
                 Windows.getFocusedWindow().destroy();
             },
-            onException: function(req, ex){throw ex;}
+            onException: function (req, ex) { throw ex; }
         });
     },
-    cmdDelete: function(){
+    cmdDelete: function () {
         var ths = this;
-        niceConfirm(lang('The record will be deleted!'), function(){
+        niceConfirm(lang('The record will be deleted!'), function () {
             var selRows = ths.listGrid.getSelectedRows() || [];
-            if(selRows.length==0) return;
+            if (selRows.length == 0) return;
             var name = ths.options.entityName;
             var id = selRows[0].id.split('_')[1];
-            new Ajax.Request(ths.options.ajaxUri+'?method=delete&entityName='+ths.options.entityName+'&id='+id, {
+            new Ajax.Request(ths.options.ajaxUri + '?method=delete&entityName=' + ths.options.entityName + '&id=' + id, {
                 method: 'get',
-                onComplete: function(req) {
-                    if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+                onComplete: function (req) {
+                    if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                     Element.remove(selRows[0]);
                 },
-                onException: function(req, ex){throw ex;}
+                onException: function (req, ex) { throw ex; }
             });
         });
     },
-    cmdInfo: function(){
+    cmdInfo: function () {
         var selRows = this.listGrid.getSelectedRows() || [];
-        if(selRows.length==0) return;
+        if (selRows.length == 0) return;
         var name = this.options.entityName;
         var id = selRows[0].id.split('_')[1];
-        niceInfo(ajax({url:this.options.ajaxUri+'?method=info&entityName='+name+'&id='+id,isJSON:false,noCache:true}));
+        niceInfo(ajax({ url: this.options.ajaxUri + '?method=info&entityName=' + name + '&id=' + id, isJSON: false, noCache: true }));
     }
 }
 
