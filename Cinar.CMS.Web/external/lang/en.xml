@@ -77,7 +77,8 @@
 	<entry key="BannerAd.ViewConditionDesc" value="According to which rule is this banner ad will be shown?"/>
 	<entry key="BannerAd.ViewCount" value="Impression Count"/>
 	<entry key="BannerAd.ViewCountDesc" value="How many times has this banner been displayed till now?"/>
-	<entry key="BaseEntity.Id" value="Id"/>
+  <entry key="BaseEntity" value="Base"/>
+  <entry key="BaseEntity.Id" value="Id"/>
   <entry key="BaseEntity.IdDesc" value="Id"/>
   <entry key="BaseEntity.InsertDate" value="Insert Date"/>
 	<entry key="BaseEntity.InsertDateDesc" value="Insert Date"/>
@@ -335,8 +336,10 @@
 	<entry key="ContentList.ForceToUseTemplateDesc" value="When a content is defined with a page, it links to that page. By this field you can force to use &quot;Link To Page&quot;."/>
 	<entry key="ContentList.HowManyItems" value="How Many Items"/>
 	<entry key="ContentList.HowManyItemsDesc" value="How many contents should be displayed max?"/>
-	<entry key="ContentList.OrderBy" value="Order By"/>
-	<entry key="ContentList.OrderByDesc" value="By which field will the contents be ordered?"/>
+  <entry key="ContentList.MoreLink" value="More Link"/>
+  <entry key="ContentList.MoreLinkDesc" value="Text to be used for 'More...' link"/>
+  <entry key="ContentList.OrderBy" value="Order By"/>
+  <entry key="ContentList.OrderByDesc" value="By which field will the contents be ordered?"/>
 	<entry key="ContentList.PictureHeight" value="Picture Height"/>
 	<entry key="ContentList.PictureHeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
 	<entry key="ContentList.PictureWidth" value="Picture Width"/>
@@ -959,6 +962,7 @@
   <entry key="UserPrefferedAuthor.UserIdDesc" value="Related User"/>
   <entry key="UserPrefferedAuthor.AuthorId" value="Author"/>
   <entry key="UserPrefferedAuthor.AuthorIdDesc" value="The author that the user like."/>
+  <entry key="UserRelatedEntity" value="User Relation"/>
   <entry key="UserRelatedEntity.UserId" value="User"/>
   <entry key="UserRelatedEntity.UserIdDesc" value="Related User"/>
   <entry key="View Mode" value="View Mode"/>

@@ -72,7 +72,7 @@ namespace Cinar.CMS.Library.Modules
             set { this.name = value; }
         }
 
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit, Category = "Module")]
         public string CSS
         {
             get { return css; }
@@ -87,7 +87,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string topHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
         public string TopHtml
         {
             get { return topHtml; }
@@ -95,7 +95,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string bottomHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
         public string BottomHtml
         {
             get { return bottomHtml; }
@@ -109,6 +109,7 @@ namespace Cinar.CMS.Library.Modules
             set { parentModuleId = value; }
         }
 
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
         public string CSSClass
         {
             get
@@ -403,7 +404,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int cacheLifeTime = 0;
-        [EditFormFieldProps()]
+        [EditFormFieldProps(Category = "Advanced")]
         public int CacheLifeTime
         {
             get { return cacheLifeTime; }

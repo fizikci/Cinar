@@ -29,7 +29,7 @@ function onPageLoaded(){
         
         Event.observe(document, 'keydown', selectNext);
         
-        mdlSel = $('mdlSel');
+        mdlSel = $('mdlSel'); mdlSel2 = $('mdlSel2'); mdlSel3 = $('mdlSel3'); mdlSel4 = $('mdlSel4');
         $$('div.Module').each(function(mdl){
             Event.observe(mdl, 'mouseover', highlightModule);
         });
@@ -64,9 +64,9 @@ wr('<div id="mdlSel">');
     wr('<img src="external/icons/arrow_down.png" onclick="downModule()" title="'+lang('Move Down')+'">');
     wr('<img src="external/icons/module_add.png" onclick="addModule()" title="'+lang('Add Module')+'">');
     wr('</nobr></div>');
-wr('</div>');
+wr('</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>');
 
-var mdlSel = null;
+var mdlSel = null, mdlSel2 = null, mdlSel3 = null, mdlSel4 = null;
 function highlightModule(event){
     if(!navigationEnabled) return;
     
@@ -91,10 +91,13 @@ function selectModule(mdl){
     
     var pos = Position.cumulativeOffset(mdl);
     var dim = mdl.getDimensions();
-    mdlSel.hide();
-    mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:dim.height+'px'});
+    mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
+    mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
+    mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
+    mdlSel3.setStyle({left:pos[0]+'px', top:(pos[1]+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
+    mdlSel4.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
     //new Effect.Appear(mdlSel, { duration: 0.1, from: 0.0, to: 0.7 });
-    mdlSel.show();
+    mdlSel.show();mdlSel2.show();mdlSel3.show();mdlSel4.show();
 }
 function findNextModule(mdl){
     var modules = $$('div.Module');
@@ -353,7 +356,6 @@ function editModule(name, id){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function deleteModule(event){
     niceConfirm(
         lang('The module will be deleted!'), function(){
@@ -375,7 +377,6 @@ function deleteModule(event){
         }
     );
 }
-
 function upModule(event){
     var id = selMod.id.split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=upModule&id='+id, {
@@ -390,7 +391,6 @@ function upModule(event){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function downModule(event){
     var id = selMod.id.split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=downModule&id='+id, {
@@ -407,7 +407,6 @@ function downModule(event){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function copyModule(event){
     if(!selMod) {niceAlert(lang('Module is not copied! Please right-click on the module to be copied.')); return;}
     
@@ -416,7 +415,6 @@ function copyModule(event){
     setCookie('copyModId', id);
     setCookie('copyModNm', name);
 }
-
 function pasteModule(event){
     if(getCookie('copyModId')==null){
         niceAlert(lang('Copy a module first.'));
@@ -444,7 +442,6 @@ function pasteModule(event){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function saveModule(pe){
     var params = pe.serialize();
 
@@ -467,7 +464,6 @@ function saveModule(pe){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback){
     caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
@@ -562,7 +558,6 @@ function editData(entityName, id){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function saveEditForm(pe){
         var params = pe.serialize();
         new Ajax.Request('EntityInfo.ashx?method=save&entityName='+pe.entityName+'&id='+pe.entityId, {
@@ -623,7 +618,6 @@ function renameTemplate(){
         }
     );
 }
-
 function editTemplate(templateName){
     if(!templateName) templateName = currTemplate;
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/page.png" style="vertical-align:middle"> ' + templateName, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
@@ -769,7 +763,6 @@ function clearCache(){
         onException: function(req, ex){throw ex;}
     });
 }
-
 function endDesignMode(){
     var url = location.href;
     if(url.indexOf('DesignMode=On')>-1)
@@ -780,19 +773,16 @@ function endDesignMode(){
         url = url + '?DesignMode=Off';
     location.href = url;
 }
-
 function editContent(){
     var params = rightClickLinkElement.href.toQueryParams();
     if(params && params.item)
         editData('Content', params.item);
 }
-
 function editTag() {
     var params = rightClickLinkElement.href.toQueryParams();
     if (params && params.tagId)
         editData('Tag', params.tagId);
 }
-
 function openConsole(){
     new Console('Console.ashx');
 }

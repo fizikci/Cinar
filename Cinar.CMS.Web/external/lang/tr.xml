@@ -36,7 +36,7 @@
 	<entry key="Author.DisableAutoContent" value="Otoİçerik Pasif"/>
 	<entry key="Author.DisableAutoContentDesc" value="Bu yazar için otomatik içerik alınmasın."/>
 	<entry key="AuthorDetail" value="Yazar Detayı"/>
-	<entry key="AuthorSourceDetailBase" value="İsimsiz Modül"/>
+	<entry key="AuthorSourceDetailBase" value="Temel"/>
 	<entry key="AuthorSourceDetailBase.FieldOrder" value="Alan sırası"/>
 	<entry key="AuthorSourceDetailBase.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: image,name,description,email,web,adres,telWork,telCell"/>
 	<entry key="AuthorSourceDetailBase.PictureHeight" value="Resim yüksekliği (px)"/>
@@ -77,8 +77,9 @@
 	<entry key="BannerAd.ViewConditionDesc" value="Bu banner reklamı gösterim sayısına mı, yoksa tıklama sayısına mı yoksa zaman aralığına mı bağlı olarak gösterilecek?"/>
 	<entry key="BannerAd.ViewCount" value="Gösterim Sayısı"/>
 	<entry key="BannerAd.ViewCountDesc" value="Bu banner şu ana kadar kaç defa gösterildi?"/>
-	<entry key="BaseEntity.Id" value="Id"/>
-	<entry key="BaseEntity.IdDesc" value="Id"/>
+  <entry key="BaseEntity" value="Temel"/>
+  <entry key="BaseEntity.Id" value="Id"/>
+  <entry key="BaseEntity.IdDesc" value="Id"/>
 	<entry key="BaseEntity.InsertDate" value="Kayıt Tarihi"/>
 	<entry key="BaseEntity.InsertDateDesc" value="Kayıt tarihi"/>
 	<entry key="BaseEntity.InsertUserId" value="Kaydeden"/>
@@ -316,7 +317,7 @@
 	<entry key="ContentLang.SpotTitleDesc" value="Özellikle manşet olarak kullanılan kısa ve vurucu başlık"/>
 	<entry key="ContentLang.Title" value="Başlık"/>
 	<entry key="ContentLang.TitleDesc" value="Başlık"/>
-	<entry key="ContentList" value="İsimsiz Modül"/>
+	<entry key="ContentList" value="İçerik Listesi"/>
 	<entry key="ContentList.Ascending" value="Sıralama türü"/>
 	<entry key="ContentList.AscendingDesc" value="Kayıtlar artan sırada mı, yoksa azalan sırada mı gösterilsin?"/>
 	<entry key="ContentList.BulletIcon" value="İkon"/>
@@ -335,7 +336,9 @@
 	<entry key="ContentList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için zorunlu olmasını sağlar"/>
 	<entry key="ContentList.HowManyItems" value="Kaç içerik"/>
 	<entry key="ContentList.HowManyItemsDesc" value="En fazla kaç içerik listelensin."/>
-	<entry key="ContentList.OrderBy" value="Sıralama alanı"/>
+  <entry key="ContentList.MoreLink" value="Devam Linki"/>
+  <entry key="ContentList.MoreLinkDesc" value="'Devamı...' linki için kullanılacak metin"/>
+  <entry key="ContentList.OrderBy" value="Sıralama alanı"/>
 	<entry key="ContentList.OrderByDesc" value="Listelenen içerikler hangi alana göre sıralansın?"/>
 	<entry key="ContentList.PictureHeight" value="Resim yüksekliği (px)"/>
 	<entry key="ContentList.PictureHeightDesc" value="İçerik resminin bu yükseklikte kopyası oluşturulacaktır"/>
@@ -440,7 +443,7 @@
 	<entry key="DataConverter.EntityNameDesc" value="Entity Adı"/>
 	<entry key="DataConverter.UserCode" value="Dönüştürücü C# Kodu"/>
 	<entry key="DataConverter.UserCodeDesc" value="Parametre ile verilen entitiyi ilgili entitiye cast edip alanlarını değiştirebilirsiniz."/>
-	<entry key="DataList" value="DataList"/>
+	<entry key="DataList" value="Data List"/>
 	<entry key="DataList.Ascending" value="Sıralama türü"/>
 	<entry key="DataList.AscendingDesc" value="Kayıtlar artan sırada mı, yoksa azalan sırada mı gösterilsin?"/>
 	<entry key="DataList.DataTemplate" value="Şablon"/>
@@ -557,7 +560,7 @@
 	<entry key="LastContents" value="İçerik Listesi (gruplanmış)"/>
 	<entry key="LastContents.GroupBy" value="Neye göre"/>
 	<entry key="LastContents.GroupByDesc" value="İçerikler neye göre gruplanarak gösterilsin?"/>
-	<entry key="LinkList" value="İsimsiz Modül"/>
+	<entry key="LinkList" value="Link Listesi"/>
 	<entry key="LinkList.ForceToUseTemplate" value="Her zaman bu link"/>
 	<entry key="LinkList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için geçerli olmasını sağlar"/>
 	<entry key="LinkList.UseTemplate" value="Şu sayfaya linkle"/>
@@ -624,8 +627,9 @@
 	<entry key="MembershipForm.NewFormHtmlDesc" value=""/>
 	<entry key="Message" value="Mesajlaşma"/>
 	<entry key="Misc" value="Çeşitli"/>
-	<entry key="Module.BottomHtml" value="Alt HTML"/>
-	<entry key="Module.BottomHtmlDesc" value="Bu modülün altında gösterilecek olan HTML"/>
+  <entry key="Module" value="Modül"/>
+  <entry key="Module.BottomHtml" value="Alt HTML"/>
+  <entry key="Module.BottomHtmlDesc" value="Bu modülün altında gösterilecek olan HTML"/>
 	<entry key="Module.CacheLifeTime" value="Önbellek süresi (dk)"/>
 	<entry key="Module.CacheLifeTimeDesc" value="Bu modül için önbellekte durma süresi kaç dk olsun? (Önbelleğin uzun süreli olması iyidir, ama o süre boyunca modülün hep aynı görünmesine neden olur)"/>
 	<entry key="Module.CSS" value="CSS"/>
@@ -637,7 +641,7 @@
   <entry key="Module.UseCache" value="Önbellek olsun"/>
   <entry key="Module.UseCacheDesc" value="Bu modülün ürettiği HTML kodu önbelleğe alınsın mı? Varsayılan konfigürasyondaki ayar anlamına gelir."/>
   <entry key="ModuleContainer" value="İsimsiz Modül"/>
-	<entry key="NamedEntity" value="NamedEntity"/>
+	<entry key="NamedEntity" value="Ad/Açıklama"/>
 	<entry key="NamedEntity.Description" value="Açıklama"/>
 	<entry key="NamedEntity.DescriptionDesc" value=""/>
 	<entry key="NamedEntity.Name" value="Adı"/>
@@ -818,14 +822,14 @@
 	<entry key="Table.ColsDesc" value="Sütun sayısı"/>
 	<entry key="Table.Rows" value="Satır sayısı"/>
 	<entry key="Table.RowsDesc" value="Satır sayısı"/>
-	<entry key="TableView" value="İsimsiz Modül"/>
+	<entry key="TableView" value="Tablo"/>
 	<entry key="TableView.Cols" value="Sütun sayısı"/>
 	<entry key="TableView.ColsDesc" value="Sütun sayısı"/>
 	<entry key="TableView.DisplayAsTable" value="Tablo olarak göster"/>
 	<entry key="TableView.DisplayAsTableDesc" value="İçerik tablolanmış (TR, TD) olarak mı, yoksa blok elementlerle mi (DIV) gösterilsin?"/>
 	<entry key="TableView.EncloseWithDiv" value="Div içine al"/>
 	<entry key="TableView.EncloseWithDivDesc" value="Her bir maddeyi div elementi içinde göstersin mi?"/>
-	<entry key="TabView" value="TabView"/>
+	<entry key="TabView" value="Tab View"/>
 	<entry key="TabView.Tabs" value="Tab sayfaları"/>
 	<entry key="TabView.TabsDesc" value="Tab sayfaları"/>
 	<entry key="Tag" value="Etiket"/>
@@ -959,8 +963,9 @@
   <entry key="UserPrefferedAuthor.UserIdDesc" value="Kullanıcı"/>
   <entry key="UserPrefferedAuthor.AuthorId" value="Yazar"/>
   <entry key="UserPrefferedAuthor.AuthorIdDesc" value="Kullanıcının tercihlerine eklediği yazar."/>
+  <entry key="UserRelatedEntity" value="İlişkili User"/>
   <entry key="UserRelatedEntity.UserId" value="İlişkili User"/>
-	<entry key="UserRelatedEntity.UserIdDesc" value=""/>
+  <entry key="UserRelatedEntity.UserIdDesc" value=""/>
   <entry key="View Mode" value="İzleme Modu"/>
 	<entry key="WhereAmI" value="Neredeyim Linkleri"/>
 	<entry key="WhereAmI.SkipFirst" value="Kaç tane atla"/>
@@ -970,9 +975,4 @@
 	<entry key="You are not authorized to carry out this process!" value="Bu işlemi yapma yetkiniz yok!"/>
 	<entry key="You may use only letters, space and comma for the field Tags" value="Etiketler alanı için sadece harf, boşluk ve virgül kullanabilirsiniz"/>
 	<entry key="You should enter title" value="Başlık girmelisiniz"/>
-  <entry key="AnketAtama.UserId" value="Dolduran"/>
-  <entry key="AnketAtama.VotedForId" value="Kim için?"/>
-	<entry key="AnketAtama.AnketId" value="Anket"/>
-	<entry key="AnketAtama.Finished" value="Dolduruldu"/>
-	<entry key="AnketAtama.FinishDate" value="Dold. Tarihi"/>
 </resources>
