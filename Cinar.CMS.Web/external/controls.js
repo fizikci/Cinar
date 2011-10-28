@@ -285,9 +285,10 @@ var LookUp = Class.create(); LookUp.prototype = {
     lastValue:0,
     items:[],
     listHeight:200,
+    lookUpEditor: '__lookUpEditor',
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
-        this.button.observe('click', this.showList.bind(this));
+        this.button.observe('click', this.showEditor.bind(this));
         //this.input.observe('keyup', this.complete.bind(this));
         this.input.observe('focus', this.focus.bind(this));
         this.input.observe('blur', this.blur.bind(this));
@@ -298,8 +299,44 @@ var LookUp = Class.create(); LookUp.prototype = {
             this.setText(txt);
         }
     },
-    showList: function(event){
-        openEntityListForm(this.options.entityName, this.label +' '+ lang('Select'), this.options.extraFilter, true, this.onSelect.bind(this));
+    showEditor: function(event){
+        //openEntityListForm(this.options.entityName, this.label +' '+ lang('Select'), this.options.extraFilter, true, this.onSelect.bind(this));
+        if ($(this.lookUpEditor)) {
+            $(this.lookUpEditor).remove();
+            return;
+        }
+
+        new Insertion.Bottom(document.body, '<div class="editor alphacube_content" id="' + this.lookUpEditor + '" style="width:800px;height:424px;position:absolute;border:1px inset;padding:2px;display:none;background:white;z-index:5000;"></div>');
+
+        var list = $(this.lookUpEditor);
+        if (this.input.disabled) return;
+		
+		var entityName = this.options.entityName;
+		var extraFilter = this.options.extraFilter;
+		var selectCallback = this.onSelect.bind(this);
+
+	    var options = {
+			entityName: entityName,
+			hrEntityName: entityTypes.find(function(item){return item[0]==entityName;})[1],
+			fields: ajax({url:'EntityInfo.ashx?method=getFieldsList&entityName='+entityName,isJSON:true,noCache:false}),
+			ajaxUri: 'EntityInfo.ashx',
+			forSelect: true,
+			selectCallback: selectCallback
+		}
+		if(extraFilter) options.extraFilter = extraFilter;
+		new ListForm(list, options);
+		
+		new Insertion.Bottom(list, '<center><span id="' + this.lookUpEditor + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center>');
+
+        var btnCancel = $(this.lookUpEditor + 'btnCancel');
+        btnCancel.observe('click', this.showEditor.bind(this));
+
+        if (this.afterShowEditor) this.afterShowEditor();
+
+        this.setEditorPos(list);
+
+        list.show();
+        Event.stop(event);
     },
     complete: function(){
         if(this.input.value && this.input.value.length>=1){
@@ -406,7 +443,7 @@ var LookUp = Class.create(); LookUp.prototype = {
     onSelect: function(v, txt){
         this.setValue(v);
         this.setText(txt);
-        Windows.getFocusedWindow().close();
+        $(this.lookUpEditor).remove();
     },
     getValue: function(){
         return this.value;
@@ -944,20 +981,25 @@ var EditForm = Class.create(); EditForm.prototype = {
         this.entityName = entityName;
         this.entityId = entityId ? entityId : 0;
         
-        controls = controls.sortBy(function(ctrl){return __letters.indexOf(ctrl.label.substr(0,1));});
+        controls = controls.sortBy(function(ctrl){return ctrl.orderNo;});
         
         var ths = this;
 
         var str = '<table class="editForm" width="99%" height="100%" cellpadding=0 cellspacing=0 border=0>';
         str += '<tr><td><div><table class="cntrlsTbl" cellpadding="0" cellspacing="0" border="0"><tbody>';
-        for(var i=0; i<controls.length; i++){
-            var control = controls[i];
-            if(control.type=='ListForm') continue;
-            str += '<tr>';
-            str += '<td onclick="$(this).up().down(\'input\').focus()">&nbsp;'+(control.id==hideFieldName?'':control.label)+'</td>';
-            str += '<td id="'+this.cntrlId+i+'"></td>';
-            str += '</tr>';
-        }
+		var categories = controls.collect(function(item){return item.category;}).uniq().compact();
+		for(var k=0; k<categories.length; k++){
+			var cat = categories[k];
+			str += '<tr class="category"><td colspan="2">'+cat+'</td></tr>';
+			for(var i=0; i<controls.length; i++){
+				var control = controls[i];
+				if(control.category!=cat || control.type=='ListForm') continue;
+				str += '<tr>';
+				str += '<td onclick="$(this).up().down(\'input\').focus()">&nbsp;'+(control.id==hideFieldName?'':control.label)+'</td>';
+				str += '<td id="'+this.cntrlId+i+'"></td>';
+				str += '</tr>';
+			}
+		}
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td><fieldset id="details'+this.hndl+'"><legend>İlişkili Veriler</legend></fieldset></td></tr>';
         str += '<tr><td style="height:50px"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';

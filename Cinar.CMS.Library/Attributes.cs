@@ -7,56 +7,35 @@ namespace Cinar.CMS.Library
     {
         public EditFormFieldPropsAttribute()
         {
+            Options = "";
+            ControlType = ControlType.Undefined;
+            Visible = true;
         }
 
-        private bool visible = true;
-        public bool Visible
-        {
-            get { return visible; }
-            set { visible = value; }
-        }
+        public bool Visible { get; set; }
 
-        private ControlType controlType = ControlType.Undefined;
-        public ControlType ControlType
-        {
-            get { return controlType; }
-            set { controlType = value; }
-        }
+        public ControlType ControlType { get; set; }
 
-        private string options = "";
-        public string Options
-        {
-            get { return options; }
-            set { options = value; }
-        }
+        public string Options { get; set; }
 
+        public string Category { get; set; }
+
+        public int OrderNo { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
     public sealed class ListFormPropsAttribute : Attribute
     {
-        public ListFormPropsAttribute(){}
-
-        private bool visible = false;
-        public bool VisibleAtMainMenu
+        public ListFormPropsAttribute()
         {
-            get { return visible; }
-            set { visible = value; }
+            VisibleAtMainMenu = false;
         }
 
-        private string querySelect;
-        public string QuerySelect
-        {
-            get { return querySelect; }
-            set { querySelect = value; }
-        }
+        public bool VisibleAtMainMenu { get; set; }
 
-        private string queryOrderBy;
-        public string QueryOrderBy
-        {
-            get { return queryOrderBy; }
-            set { queryOrderBy = value; }
-        }
+        public string QuerySelect { get; set; }
+
+        public string QueryOrderBy { get; set; }
     }
 
 
@@ -65,20 +44,9 @@ namespace Cinar.CMS.Library
     {
         public EditFormDetailsAttribute() { }
 
-        private Type detailType;
-        public Type DetailType
-        {
-            get { return detailType; }
-            set { detailType = value; }
-        }
+        public Type DetailType { get; set; }
 
-        private string relatedFieldName;
-        public string RelatedFieldName
-        {
-            get { return relatedFieldName; }
-            set { relatedFieldName = value; }
-        }
-
+        public string RelatedFieldName { get; set; }
     }
 
     public enum ControlType
@@ -99,17 +67,15 @@ namespace Cinar.CMS.Library
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class ModuleInfoAttribute : Attribute
     {
-        public ModuleInfoAttribute() { }
-
-        private string grup = "Diğer";
-        //private string name = "İsimsiz Modül";
-        private bool visible = true;
-
-        public string Grup
+        public ModuleInfoAttribute()
         {
-            get { return grup; }
-            set { grup = value; }
+            Visible = true;
+            Grup = "Diğer";
         }
+
+        //private string name = "İsimsiz Modül";
+
+        public string Grup { get; set; }
 
         //public string Name
         //{
@@ -117,46 +83,24 @@ namespace Cinar.CMS.Library
         //    set { name = value; }
         //}
 
-        public bool Visible
-        {
-            get { return visible; }
-            set { visible = value; }
-        }
+        public bool Visible { get; set; }
     }
     [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class PictureFieldPropsAttribute : Attribute
     {
         public PictureFieldPropsAttribute()
         {
+            SpecialFolder = "";
+            SpecialNameField = "";
         }
 
-        private string specialNameField = "";
-        public string SpecialNameField
-        {
-            get { return specialNameField; }
-            set { specialNameField = value; }
-        }
+        public string SpecialNameField { get; set; }
 
-        private string specialFolder = "";
-        public string SpecialFolder
-        {
-            get { return specialFolder; }
-            set { specialFolder = value; }
-        }
+        public string SpecialFolder { get; set; }
 
-        private bool addRandomNumber;
-        public bool AddRandomNumber
-        {
-            get { return addRandomNumber; }
-            set { addRandomNumber = value; }
-        }
+        public bool AddRandomNumber { get; set; }
 
-        private bool useYearMonthDayFolders;
-        public bool UseYearMonthDayFolders
-        {
-            get { return useYearMonthDayFolders; }
-            set { useYearMonthDayFolders = value; }
-        }
+        public bool UseYearMonthDayFolders { get; set; }
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
@@ -164,41 +108,23 @@ namespace Cinar.CMS.Library
     {
         public OverrideAttributeAttribute()
         {
+            AttribProps = "";
+            FieldName = "";
         }
 
-        private Type attributeType;
-        public Type AttributeType
-        {
-            get { return attributeType; }
-            set { attributeType = value; }
-        }
+        public Type AttributeType { get; set; }
 
-        private string fieldName = "";
-        public string FieldName
-        {
-            get { return fieldName; }
-            set { fieldName = value; }
-        }
+        public string FieldName { get; set; }
 
-        private string attribProps = "";
         /// <summary>
         /// Pipe seperated attribute property names
         /// </summary>
-        public string AttribProps
-        {
-            get { return attribProps; }
-            set { attribProps = value; }
-        }
+        public string AttribProps { get; set; }
 
-        private string newValues;
         /// <summary>
         /// Pipe seperated attribute values
         /// </summary>
-        public string NewValues
-        {
-            get { return newValues; }
-            set { newValues = value; }
-        }
+        public string NewValues { get; set; }
     }
 
 }

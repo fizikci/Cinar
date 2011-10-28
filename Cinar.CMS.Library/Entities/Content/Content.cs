@@ -22,6 +22,26 @@ namespace Cinar.CMS.Library.Entities
             set { className = value; }
         }
 
+        private int catId = 1;
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1", References = typeof(Content)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "extraFilter:'ClassName=Category'")]
+        public int CategoryId
+        {
+            get { return catId; }
+            set { catId = value; }
+        }
+
+        private Content _category;
+        [XmlIgnore]
+        public Content Category
+        {
+            get
+            {
+                if (_category == null)
+                    _category = (Content)Provider.Database.Read(typeof(Content), this.CategoryId);
+                return _category;
+            }
+        }
+
         private string title;
         [ColumnDetail(IsNotNull = true, Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string Title
@@ -38,20 +58,37 @@ namespace Cinar.CMS.Library.Entities
             set { description = value; }
         }
 
-        private string keywords;
-        [ColumnDetail(ColumnType = DbType.Text)]
-        public string Keywords
-        {
-            get { return keywords; }
-            set { keywords = value; }
-        }
-
         private string metin;
         [ColumnDetail(ColumnType = DbType.Text)]
         public string Metin
         {
             get { return metin; }
             set { metin = value; }
+        }
+
+        private DateTime publishDate = DateTime.Now;
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1990-01-01")]
+        public DateTime PublishDate
+        {
+            get { return publishDate; }
+            set { publishDate = value; }
+        }
+
+        private string picture;
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
+        [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture
+        {
+            get { return picture; }
+            set { picture = value; }
+        }
+
+        private string keywords;
+        [ColumnDetail(ColumnType = DbType.Text)]
+        public string Keywords
+        {
+            get { return keywords; }
+            set { keywords = value; }
         }
 
         private string hierarchy = "";
@@ -111,23 +148,6 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        private DateTime publishDate = DateTime.Now;
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1990-01-01")]
-        public DateTime PublishDate
-        {
-            get { return publishDate; }
-            set { publishDate = value; }
-        }
-
-        private string picture;
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
-        [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]
-        public string Picture
-        {
-            get { return picture; }
-            set { picture = value; }
-        }
-
         private string tags = "";
         [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string Tags
@@ -142,26 +162,6 @@ namespace Cinar.CMS.Library.Entities
         {
             get { return tagRanks; }
             set { tagRanks = value; }
-        }
-
-        private int catId = 1;
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1", References = typeof(Content)), EditFormFieldProps(ControlType = ControlType.LookUp, Options="extraFilter:'ClassName=Category'")]
-        public int CategoryId
-        {
-            get { return catId; }
-            set { catId = value; }
-        }
-
-        private Content _category;
-        [XmlIgnore]
-        public Content Category
-        {
-            get
-            {
-                if (_category == null)
-                    _category = (Content)Provider.Database.Read(typeof(Content), this.CategoryId);
-                return _category;
-            }
         }
 
         private string showInPage = "";

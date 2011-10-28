@@ -144,6 +144,7 @@ namespace Cinar.CMS.Library
             StringBuilder sb = new StringBuilder();
             sb.Append("[\n");
             ArrayList res = new ArrayList();
+            int ctrlOrderNo = 0;
             foreach (PropertyInfo pi in Utility.GetProperties(obj))
             {
                 if (pi.Name == "Item") continue;
@@ -152,6 +153,10 @@ namespace Cinar.CMS.Library
                 EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
                 if (!addInvisibles && !editProps.Visible)
                     continue; //***
+
+                editProps.Category = Provider.GetResource(pi.DeclaringType.Name);
+                editProps.OrderNo = ctrlOrderNo++;
+
                 ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 if (editProps.ControlType == ControlType.Undefined)
@@ -191,7 +196,7 @@ namespace Cinar.CMS.Library
                         break;
                     case ControlType.ComboBox:
                         if (pi.PropertyType.IsEnum)
-                            options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select((s,i)=>"["+i+",'"+s+"']").StringJoin(","));
+                            options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select((s, i) => "[" + i + ",'" + s + "']").StringJoin(","));
                         if (fieldProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
                             options += String.Format(",items:[[false,'{0}'],[true,'{1}']]", Provider.GetResource("No"), Provider.GetResource("Yes"));
                         if (fieldProps.References != null)
@@ -209,11 +214,13 @@ namespace Cinar.CMS.Library
                 if (!String.IsNullOrEmpty(options))
                     options = ", options:{" + options.Substring(1) + "}";
 
-                res.Add("\t{" + String.Format("label:'{0}', description:'{1}', type:'{2}', id:'{3}', value:{4}{5}",
+                res.Add("\t{" + String.Format("label:'{0}', description:'{1}', type:'{2}', id:'{3}', category:{4}, orderNo:{5}, value:{6}{7}",
                     Utility.ToHTMLString(caption),
                     Utility.ToHTMLString(description),
                     editProps.ControlType,
                     pi.Name,
+                    editProps.Category.ToJS(),
+                    editProps.OrderNo.ToJS(),
                     Utility.ToJS(pi.GetValue(obj, null)),
                     options) + "}\n,");
             }
@@ -236,12 +243,13 @@ namespace Cinar.CMS.Library
                 foreach (PropertyInfo pi in entityType.GetProperties())
                 {
                     ColumnDetailAttribute fda = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
-                    if (fda.References == obj.GetType()) {
+                    if (fda.References == obj.GetType())
+                    {
                         sb.Append("\t{");
                         sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'",
                             Utility.ToHTMLString(Provider.GetResource(entityType.Name)),
                             Utility.ToHTMLString(Provider.GetResource(entityType.Name + "Desc")),
-                            entityType.Name, 
+                            entityType.Name,
                             pi.Name);
                         sb.Append("}\n,");
                     }
@@ -1120,7 +1128,7 @@ namespace Cinar.CMS.Library
             }
 
             if (!imageUrl.StartsWith("/")) imageUrl = "/" + imageUrl;
-            if (!imageUrl.StartsWith(".")) imageUrl = "." + imageUrl;
+            //if (!imageUrl.StartsWith(".")) imageUrl = "." + imageUrl;
 
             if (prefWidth == 0 && prefHeight == 0)
             {
@@ -1142,7 +1150,7 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "./_thumbs/" + prefWidth + "x" + prefHeight + "_" + System.IO.Path.GetFileNameWithoutExtension(path) + ".jpg";
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + System.IO.Path.GetFileNameWithoutExtension(path) + ".jpg";
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))
@@ -1561,9 +1569,9 @@ namespace Cinar.CMS.Library
         public static string GetPageUrl(string template, int id, string title)
         {
             if (Provider.DesignMode)
-                return string.Format("{0}?item={1}", template, id);
+                return string.Format("/{0}?item={1}", template, id);
             else
-                return string.Format("sm.{0}.{1}.{2}.aspx", template.Replace(".aspx",""), id, title.MakeFileName().Replace(".", "").ToLowerInvariant());
+                return string.Format("/sm/{0}/{1}/{2}.aspx", template.Replace(".aspx",""), id, title.MakeFileName().Replace(".", "").ToLowerInvariant());
         }
     }
 
