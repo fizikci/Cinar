@@ -15,7 +15,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int howManyItems = 10;
-        [EditFormFieldProps(Category = "Basic")]
         public int HowManyItems
         {
             get { return howManyItems; }
@@ -23,7 +22,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int skipFirst = 0;
-        [EditFormFieldProps(Category = "Details")]
         public int SkipFirst
         {
             get { return skipFirst; }
@@ -31,7 +29,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int random = 0;
-        [EditFormFieldProps(Category = "Details")]
         public int Random
         {
             get { return random; }
@@ -92,7 +89,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool showPictureLeftRight = false;
-        [EditFormFieldProps(Category = "Details")]
         public bool ShowPictureLeftRight
         {
             get { return showPictureLeftRight; }
@@ -100,7 +96,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool showCurrentContent = false;
-        [EditFormFieldProps(Category = "Details")]
         public bool ShowCurrentContent
         {
             get { return showCurrentContent; }
@@ -108,7 +103,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool showFirstItemWithPicture = false;
-        [EditFormFieldProps(Category = "Details")]
         public bool ShowFirstItemWithPicture
         {
             get { return showFirstItemWithPicture; }
@@ -124,7 +118,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int pictureWidth = 0;
-        [EditFormFieldProps(Category = "Basic")]
         public int PictureWidth
         {
             get { return pictureWidth; }
@@ -132,7 +125,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int pictureHeight = 0;
-        [EditFormFieldProps(Category = "Basic")]
         public int PictureHeight
         {
             get { return pictureHeight; }
@@ -148,7 +140,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int titleLength = 50;
-        [EditFormFieldProps(Category = "Basic")]
         public int TitleLength
         {
             get { return titleLength; }
@@ -156,7 +147,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int descriptionLength = 150;
-        [EditFormFieldProps(Category = "Basic")]
         public int DescriptionLength
         {
             get { return descriptionLength; }
@@ -181,7 +171,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool createLink = true;
-        [EditFormFieldProps(Category = "Advanced")]
         public bool CreateLink
         {
             get { return createLink; }
@@ -197,7 +186,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool showDescriptionAsLink = false;
-        [EditFormFieldProps(Category = "Basic")]
         public bool ShowDescriptionAsLink
         {
             get { return showDescriptionAsLink; }
@@ -213,7 +201,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected bool forceToUseTemplate = false;
-        [EditFormFieldProps(Category = "Details")]
         public bool ForceToUseTemplate
         {
             get { return forceToUseTemplate; }

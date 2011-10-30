@@ -72,7 +72,7 @@ namespace Cinar.CMS.Library.Modules
             set { this.name = value; }
         }
 
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit, Category = "Module")]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit)]
         public string CSS
         {
             get { return css; }
@@ -87,7 +87,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string topHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string TopHtml
         {
             get { return topHtml; }
@@ -95,7 +95,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string bottomHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string BottomHtml
         {
             get { return bottomHtml; }
@@ -109,13 +109,10 @@ namespace Cinar.CMS.Library.Modules
             set { parentModuleId = value; }
         }
 
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Module")]
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string CSSClass
         {
-            get
-            {
-                return this.cssClass;
-            }
+            get { return this.cssClass; }
             set { this.cssClass = value; }
         }
         #endregion
@@ -404,7 +401,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int cacheLifeTime = 0;
-        [EditFormFieldProps(Category = "Advanced")]
         public int CacheLifeTime
         {
             get { return cacheLifeTime; }

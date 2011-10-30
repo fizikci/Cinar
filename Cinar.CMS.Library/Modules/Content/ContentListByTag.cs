@@ -45,7 +45,7 @@ namespace Cinar.CMS.Library.Modules
                            (this.showCurrentContent ? "" : whereMevcutIcerik) + (where != "" ? " AND " + where : ""),
                            this.OrderBy,
                            this.Ascending ? "asc" : "desc",
-                           tagJoin);
+                           Provider.Tag != null ? tagJoin : "");
             
             IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams());
             return contents;

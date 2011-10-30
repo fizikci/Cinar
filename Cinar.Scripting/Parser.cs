@@ -1259,13 +1259,18 @@ namespace Cinar.Scripting
         {
             do
             {
-                StoreCurrentCharAndReadNext();
+                bool dolarFound = false;
                 if (fCurrentChar == '\\')
                 {
-                    StoreCurrentCharAndReadNext();
+                    ReadNextChar();
                     if (fCurrentChar == '$')
+                    {
                         StoreCurrentCharAndReadNext();
+                        dolarFound = true;
+                    }
                 }
+                if(!dolarFound)
+                    StoreCurrentCharAndReadNext();
             }
             while (!(fCurrentChar == '$' || fCurrentChar=='\0'));
 
