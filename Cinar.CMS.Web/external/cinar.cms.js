@@ -31,9 +31,10 @@ function onPageLoaded(){
         
         mdlSel = $('mdlSel'); mdlSel2 = $('mdlSel2'); mdlSel3 = $('mdlSel3'); mdlSel4 = $('mdlSel4');
         $$('div.Module').each(function(mdl){
-            Event.observe(mdl, 'mouseover', highlightModule);
+            Event.observe(mdl, 'mousedown', highlightModule);
         });
         selectFirstModule();
+		setInterval(refreshModuleHighlighter, 50);
         
         trace.write({id:'Sistem'}, 'page load finished');
     }
@@ -88,9 +89,14 @@ function selectModule(mdl){
     
     selMod = mdl;
     selReg = selMod.up('.Region');
-    
-    var pos = Position.cumulativeOffset(mdl);
-    var dim = mdl.getDimensions();
+
+	refreshModuleHighlighter();
+}
+function refreshModuleHighlighter(){
+	if(!selMod) return;
+	
+    var pos = Position.cumulativeOffset(selMod);
+    var dim = selMod.getDimensions();
     mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
     mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
     mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
@@ -319,14 +325,12 @@ function addModule(elmId){
                 selReg.innerHTML = '';
             new Insertion.Bottom(selReg, req.responseText);
             var newModule = selReg.immediateDescendants().last();
-            Event.observe(newModule, 'mouseover', highlightModule);
+            Event.observe(newModule, 'mousedown', highlightModule);
             selectModule(newModule);
         },
         onException: function(req, ex){throw ex;}
     });
 }
-
-
 function editModule(name, id){ 
     if(!name) name = selMod.id.split('_')[0];
     if(!id) id = selMod.id.split('_')[1];
@@ -436,7 +440,7 @@ function pasteModule(event){
             var newModule = selReg.immediateDescendants().last();
             var ssm = new StyleSheetManager('moduleStyles');
             ssm.applyStyleSheet(ajax({url:'ModuleInfo.ashx?method=getModuleCSS&name='+name+'&id='+newModule.id.split('_')[1],isJSON:false,noCache:false}));
-            Event.observe(newModule, 'mouseover', highlightModule);
+            Event.observe(newModule, 'mousedown', highlightModule);
             selectModule(newModule);            
         },
         onException: function(req, ex){throw ex;}
@@ -456,7 +460,7 @@ function saveModule(pe){
             ssm.applyStyleSheet(pe.getControl('CSS').getValue());
             var mdl = $(pe.entityName+'_'+pe.entityId);
             if(mdl){
-                Event.observe(mdl, 'mouseover', highlightModule);
+                Event.observe(mdl, 'mousedown', highlightModule);
                 //new Effect.Pulsate(mdl, {duration:1.0, pulses:3});
                 selectModule(mdl);            
             }

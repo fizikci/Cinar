@@ -15,7 +15,7 @@ namespace Cinar.CMS.Library.Entities
     public class Content : BaseEntity
     {
         private string className = "Content";
-        [ColumnDetail(IsNotNull = true, DefaultValue="Content"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_CLASSNAMELIST_")]
+        [ColumnDetail(IsNotNull = true, DefaultValue="Content"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_CLASSNAMELIST_", Category = "Temel Bilgiler")]
         public string ClassName
         {
             get { return className; }
@@ -23,7 +23,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private int catId = 1;
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1", References = typeof(Content)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "extraFilter:'ClassName=Category'")]
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1", References = typeof(Content)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "extraFilter:'ClassName=Category'", Category = "Temel Bilgiler")]
         public int CategoryId
         {
             get { return catId; }
@@ -43,7 +43,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string title;
-        [ColumnDetail(IsNotNull = true, Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(IsNotNull = true, Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Temel Bilgiler")]
         public string Title
         {
             get { return title; }
@@ -51,7 +51,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string description;
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text), EditFormFieldProps(Category = "Temel Bilgiler")]
         public string Description
         {
             get { return description; }
@@ -59,7 +59,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string metin;
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text), EditFormFieldProps(Category = "Temel Bilgiler")]
         public string Metin
         {
             get { return metin; }
@@ -67,7 +67,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private DateTime publishDate = DateTime.Now;
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1990-01-01")]
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1990-01-01"), EditFormFieldProps(Category = "Temel Bilgiler")]
         public DateTime PublishDate
         {
             get { return publishDate; }
@@ -75,7 +75,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string picture;
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit, Category = "Temel Bilgiler")]
         [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]
         public string Picture
         {

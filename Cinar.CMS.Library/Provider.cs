@@ -154,7 +154,7 @@ namespace Cinar.CMS.Library
                 if (!addInvisibles && !editProps.Visible)
                     continue; //***
 
-                editProps.Category = Provider.GetResource(pi.DeclaringType.Name);
+                editProps.Category = editProps.Category ?? Provider.GetResource(pi.DeclaringType.Name);
                 editProps.OrderNo = ctrlOrderNo++;
 
                 ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));

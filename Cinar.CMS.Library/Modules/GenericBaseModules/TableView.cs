@@ -63,7 +63,7 @@ namespace Cinar.CMS.Library.Modules
                     for (int j = 0; j < this.cols; j++)
                     {
                         if(encloseWithDiv)
-                            sb.Append("<div>\n");
+                            sb.Append("<div class=\"extraItemDiv\">\n");
                         sb.Append(this.getCellHTML(i, j));
                         if(encloseWithDiv)
                             sb.Append("</div>\n");
@@ -81,5 +81,14 @@ namespace Cinar.CMS.Library.Modules
             if (this.cols == 0)
                 throw new Exception(Provider.GetResource("Columns number cannot be zero"));
         }
+
+        public override string GetDefaultCSS()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(base.GetDefaultCSS());
+            sb.AppendFormat("#{0}_{1} div.extraItemDiv {{}}\n", this.Name, this.Id);
+            return sb.ToString();
+        }
+
     }
 }
