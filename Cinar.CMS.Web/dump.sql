@@ -1,6 +1,6 @@
 /*
-SQLyog Community v8.71 
-MySQL - 5.1.50-community : Database - blank
+SQLyog Trial v9.30 
+MySQL - 5.5.9 : Database - blank
 *********************************************************************
 */
 

@@ -250,30 +250,167 @@ var StringEdit = Class.create();StringEdit.prototype = {
 //#       PictureEdit        #
 //############################
 
+var fileBrowserCurrInput, list, footer, currFolder, currPicEdit;
 var PictureEdit = Class.create(); PictureEdit.prototype = {
+	width: 600,
+	height: 500,
+	title: 'Select file',
+	folder: '/UserFiles',
+	listMode: 'pics',
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
         this.input['ctrl'] = this;
     },
     showEditor: function(event){
-        _pictureInput = this.input;
-        //TODO: save the framework from these taklas.
-        var url = virtualDir + '/FCKEditor/editor/filemanager/browser/default/browser.html?Type=Image&Connector=connectors/aspx/connector.aspx';
-        var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes,scrollbars=yes,width=560,height=420,left=120,top=90';
-        window.open(url, 'FCKBrowseWindow', sOptions);
+        if ($('__pictureEditor')) {
+            $('__pictureEditor').remove();
+            return;
+        }
+		currPicEdit = this;
+        new Insertion.Bottom(document.body, '<div class="editor" id="__pictureEditor" style="width:800px;height:600px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;">' +
+												'<div id="fileBrowserList"></div>' +
+												'<div id="fileBrowserFooter">' +
+													'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm">' +
+														'<input type="hidden" name="folder"/>' +
+														'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
+														'<iframe name="fakeUplFrm" style="visibility:hidden;width:0px;height:0px;"></iframe>' +
+													'</form>' +
+													'<span id="__pictureEditorbtnCancel" class="btn cancel">' + lang('Cancel') + '</span>' +
+												'</div>' +
+											'</div>');
+
+        var list = $('__pictureEditor');
+        if (this.input.disabled) return;
+		
+		list.down('form').on('submit', function () {
+			$('fileBrowserLoading').show();
+			list.down('form').down('input[name=folder]').setValue(currFolder);
+		});
+
+        var btnCancel = $('__pictureEditorbtnCancel');
+        btnCancel.observe('click', this.showEditor.bind(this));
+
+        if (this.afterShowEditor) this.afterShowEditor();
+
+        list.down().value = this.input.value.gsub('#NL#', '\n');
+
+        this.setEditorPos(list);
+		
+                currFolder = this.input.value!='' ? this.input.value.substring(0, this.input.value.lastIndexOf("/")) : this.folder;
+                fileBrowserCurrInput = this.input;
+				this.getFileList();
+
+        list.show();
+        Event.stop(event);
     },
     getValue: function(){
         return this.input.value;
     },
     setValue: function(val){
         this.input.value = val ? val : '';
-    }
+    },
+
+    getFileList: function () {
+		var list = $('fileBrowserList');
+
+		$('fileBrowserLoading').show();
+		var ths = this;
+		new Ajax.Request('SystemInfo.ashx?method=getFileList&folder=' + currFolder, {
+			onComplete: function (resp) {
+				resp = eval("(" + resp.responseText + ")");
+				if (resp.success) {
+					var folders = currFolder.substring(1).split('/');
+					var folderLinks = '';
+					for(var i = 0; i<folders.length; i++){
+						var str = '';
+						for(var k = 0; k<=i; k++)
+							str += '/' + folders[k];
+						folderLinks += '<span onclick="currFolder = \''+str+'\'; currPicEdit.getFileList();">'+folders[i]+'</span>' + ' / ';
+					}
+					var str = '<div class="nav">' + folderLinks + '</div>';
+					if (ths.listMode == 'details') {
+						str = '<table class="fileList" cellspacing="0" border="0">'; //<tr><th>Ad</th><th>Boyut</th><th>Tarih</th></tr>
+						if (currFolder.length > ths.folder.length) str += '<tr><td class="fileName folder" name="..">..</td><td class="size"></td><td class="date"></td></tr>';
+						for (var i = 0; i < resp.root.length; i++) {
+							var item = resp.root[i];
+							str += '<tr><td class="fileName ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + '" name="..">' + item.name + '</td><td class="size">' + ths.getSize(item) + '</td><td class="date">' + ths.formatDate(item.date) + '</td></tr>';
+						}
+						str += '</table>';
+					} else {
+						if (currFolder.length > ths.folder.length) str += '<div class="fileNameBox folder ui-widget-content ui-corner-all" name=".."><img src="/external/icons/folder.png' + '"/><br/>..</div>';
+						for (var i = 0; i < resp.root.length; i++) {
+							var item = resp.root[i];
+							var fileClass = ths.getFileClassName(item);
+							if (fileClass == 'picture') {
+								var src = (currFolder + '/' + item.name);
+								str += '<div class="fileNameBox ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + ' ui-widget-content ui-corner-all" name="' + item.name + '"><img src="' + src + '"/><br/>' + item.name + '</div>';
+							}
+							else {
+								var src = ('/external/icons/' + fileClass + '.png');
+								str += '<div class="fileNameBox ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + ' ui-widget-content ui-corner-all" name="' + item.name + '"><img src="' + src + '"/><br/>' + item.name + '</div>';
+							}
+
+						}
+					}
+					list.innerHTML = str;
+					list.select('.folder').each(function (elm) {
+						elm.on('click', function(){
+							var f = elm.readAttribute('name');
+							if (f == '..')
+								currFolder = currFolder.substr(0, currFolder.lastIndexOf('/'));
+							else
+								currFolder = currFolder + '/' + f;
+							ths.getFileList();
+						});
+					});
+					list.select('.fileItem').each(function (elm) {
+						elm.on('click', function(){
+							var path = currFolder + '/' + elm.readAttribute('name');
+							fileBrowserCurrInput.setValue(path);
+							ths.showEditor();
+						});
+					});
+				}
+				else
+					alert(resp.errorMessage);
+
+				$('fileBrowserLoading').hide();
+			}
+		});
+
+    },
+    getSize: function (item) {
+            if (item.size < 0) return ''; //***
+
+            if (item.size >= 1024 * 1024) return Math.round(item.size / 1024 / 1024) + ' MB';
+            if (item.size >= 1024) return Math.round(item.size / 1024) + ' KB';
+            return item.size + ' B';
+        },
+    getFileClassName: function (item) {
+            if (item.size == -1)
+                return 'folder';
+            if (item.name.endsWith('.png') || item.name.endsWith('.jpg') || item.name.endsWith('.gif') || item.name.endsWith('.jpe'))
+                return 'picture';
+            if (item.name.endsWith('.wmv') || item.name.endsWith('.flv') || item.name.endsWith('.avi') || item.name.endsWith('.3gp') || item.name.endsWith('.rm') || item.name.endsWith('.mov'))
+                return 'video';
+            if (item.name.endsWith('.wav') || item.name.endsWith('.mp3') || item.name.endsWith('.wma') || item.name.endsWith('.mid') || item.name.endsWith('.rm') || item.name.endsWith('.mov'))
+                return 'audio';
+            return 'file';
+        },
+    formatDate:    function (d) {
+            var date = d.getDate(), month = d.getMonth() + 1, hour = d.getHours(), minute = d.getMinutes();
+            if (date.toString().length == 1) date = '0' + date;
+            if (month.toString().length == 1) month = '0' + month;
+            if (hour.toString().length == 1) hour = '0' + hour;
+            if (minute.toString().length == 1) minute = '0' + minute;
+            return date + '/' + month + '/' + d.getFullYear() + ' ' + hour + ':' + minute;
+        }
 }
-var _pictureInput;
-function SetUrl( url, width, height, alt ){
-    _pictureInput.value = url.substr(url.indexOf('UserFile')) ;
-}
+fileBrowserUploadFeedback = function (msg, url) {
+	//fileBrowserCurrInput.value = url;
+	currPicEdit.getFileList();
+};
 
 
 //############################

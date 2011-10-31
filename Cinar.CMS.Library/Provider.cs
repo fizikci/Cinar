@@ -1143,14 +1143,14 @@ namespace Cinar.CMS.Library
             try
             {
                 path = Provider.Server.MapPath(imageUrl);
-                if (!System.IO.File.Exists(path))
+                if (!File.Exists(path))
                     path = Provider.Server.MapPath(Provider.Configuration.SiteLogo);
             }
             catch (Exception ex) {
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + System.IO.Path.GetFileNameWithoutExtension(path) + ".jpg";
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + Path.GetFileNameWithoutExtension(path) + ".jpg";
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))
