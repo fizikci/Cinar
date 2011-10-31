@@ -38,7 +38,7 @@
 	<entry key="AuthorDetail" value="Yazar Detayı"/>
 	<entry key="AuthorSourceDetailBase" value="Temel"/>
 	<entry key="AuthorSourceDetailBase.FieldOrder" value="Alan sırası"/>
-	<entry key="AuthorSourceDetailBase.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: image,name,description,email,web,adres,telWork,telCell"/>
+	<entry key="AuthorSourceDetailBase.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: image, name, description, email, web, adres, telWork, telCell"/>
 	<entry key="AuthorSourceDetailBase.PictureHeight" value="Resim yüksekliği (px)"/>
 	<entry key="AuthorSourceDetailBase.PictureHeightDesc" value="İçerik resminin bu yükseklikte kopyası oluşturulacaktır"/>
 	<entry key="AuthorSourceDetailBase.PictureWidth" value="Resim genişliği (px)"/>
@@ -331,7 +331,7 @@
 	<entry key="ContentList.DescriptionLength" value="Açıklama uzunluğu"/>
 	<entry key="ContentList.DescriptionLengthDesc" value="Açıklamalar en fazla kaç karakter gösterilsin? Tamamının görünmesi için -1 giriniz."/>
 	<entry key="ContentList.FieldOrder" value="Alan sırası"/>
-	<entry key="ContentList.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: title,spot,category,image,author,date,description,text,source"/>
+	<entry key="ContentList.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: title, spot, category, image, author, date, description, text, source"/>
 	<entry key="ContentList.ForceToUseTemplate" value="Her zaman bu link"/>
 	<entry key="ContentList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için zorunlu olmasını sağlar"/>
 	<entry key="ContentList.HowManyItems" value="Kaç içerik"/>

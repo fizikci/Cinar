@@ -97,6 +97,11 @@ namespace Cinar.CMS.Library.Handlers
                         deleteFile();
                         break;
                     }
+                case "createFolder":
+                    {
+                        createFolder();
+                        break;
+                    }
                 default:
                     {
                         sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
@@ -326,6 +331,31 @@ namespace Cinar.CMS.Library.Handlers
             path = Path.Combine(path, fileName);
             File.Delete(path);
             context.Response.Write(@"Dosya silindi");
+        }
+
+        private void createFolder()
+        {
+            try
+            {
+                string folderName = context.Request["folder"] ?? "";
+                string path = Provider.Server.MapPath(folderName);
+                if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                {
+                    path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+                    context.Response.Write(@"<script>window.parent.alert('Error. There is no such folder.');</script>");
+                    return;
+                }
+
+                string newFolderName = context.Request["name"].MakeFileName();
+                path = Path.Combine(path, newFolderName);
+                Directory.CreateDirectory(path);
+
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Folder created.');</script>");
+            }
+            catch (Exception ex)
+            {
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
+            }
         }
 
         #region import/export utility

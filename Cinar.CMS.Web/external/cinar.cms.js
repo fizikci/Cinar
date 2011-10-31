@@ -141,8 +141,8 @@ function selectNext(event){
     var win = Windows.getFocusedWindow();
     
     if(win){
-        if(event.keyCode==Event.KEY_ESC)
-            win.close();
+        //if(event.keyCode==Event.KEY_ESC)
+        //    win.close();
         if(win['form'] && win['form'].formType=='ListForm'){
             var listGrid = win['form'].listGrid;
             switch(event.keyCode){
