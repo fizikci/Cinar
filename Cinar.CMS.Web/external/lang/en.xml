@@ -432,7 +432,7 @@
 	<entry key="ContentTools.RecommendMessage" value="Recommendation Message"/>
 	<entry key="ContentTools.RecommendMessageDesc" value="Please keep the parameters [name1], [name2] and [link] in the message."/>
 	<entry key="ContentTools.ToolOrder" value="Tool Order"/>
-	<entry key="ContentTools.ToolOrderDesc" value="In which order will the tools be displayed? For example: comment,email,print,recommendation"/>
+	<entry key="ContentTools.ToolOrderDesc" value="In which order will the tools be displayed? For example: comment, email, print, recommendation"/>
 	<entry key="ContentTools.PrintIcon" value="Print Icon"/>
 	<entry key="ContentTools.PrintIconDesc" value=""/>
 	<entry key="ContentTools.CommentIcon" value="Comment Icon"/>
@@ -593,7 +593,7 @@
 	<entry key="Logout" value="Logout"/>
 	<entry key="Manset" value="Headline"/>
 	<entry key="Manset.MansetFieldOrder" value="Headline Field Order"/>
-	<entry key="Manset.MansetFieldOrderDesc" value="In which order to display the parts of headline. For example: title,spot,image,description"/>
+	<entry key="Manset.MansetFieldOrderDesc" value="In which order to display the parts of headline. For example: title, spot, image, description"/>
 	<entry key="Manset.PictureHeightM" value="Big Picture Height"/>
 	<entry key="Manset.PictureHeightMDesc" value=""/>
 	<entry key="Manset.PictureWidthM" value="Big Picture Width"/>
@@ -606,7 +606,7 @@
 	<entry key="Manset.WithAnimationDesc" value="When the mouse hovers change the picture and the title"/>
 	<entry key="MansetByGrouping" value="Headline By Grouping"/>
 	<entry key="MansetByGrouping.MansetFieldOrder" value="Manset Field Order"/>
-	<entry key="MansetByGrouping.MansetFieldOrderDesc" value="In which order to display the parts of headline. For example: title,spot,image,description"/>
+	<entry key="MansetByGrouping.MansetFieldOrderDesc" value="In which order to display the parts of headline. For example: title, spot, image, description"/>
 	<entry key="MansetByGrouping.PictureHeightM" value="Big Picture Height"/>
 	<entry key="MansetByGrouping.PictureHeightMDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
 	<entry key="MansetByGrouping.PictureWidthM" value="Big Picture Width"/>

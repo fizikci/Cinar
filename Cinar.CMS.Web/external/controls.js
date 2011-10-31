@@ -9,6 +9,7 @@
 var __letters = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVWXYZ[\\]^_`{|}~';
 var idCounter = 0;
 var ctrlButton = null;
+var currEditor;
 
 //############################
 //#         Control          #
@@ -19,6 +20,7 @@ var Control = Class.create(); Control.prototype = {
     id: null,
     div: null,
     editor: null,
+    editorId: null,
     value: '',
     options: null,
     input: null,
@@ -27,6 +29,7 @@ var Control = Class.create(); Control.prototype = {
     initialize: function(id, value, options){
         idCounter++;
         this.hndl = idCounter;
+		this.editorId = 'editor' + this.hndl;
         this.id = id;
         this.value = value;
         
@@ -77,6 +80,8 @@ var Control = Class.create(); Control.prototype = {
     },
     setEditorPos: function(editor){
         var editor = $(editor);
+		currEditor = editor;
+		currEditor.parentControl = this;
         var div = $(this.div);
         var dim = $(document.body).getDimensions();
         var pos = Position.cumulativeOffset(div);
@@ -105,6 +110,15 @@ var Control = Class.create(); Control.prototype = {
     }
 }
 
+document.observe('dom:loaded', function(){
+	Event.observe(document, 'keydown', function(event){
+		if(event.keyCode==Event.KEY_ESC && currEditor && currEditor.parentControl && currEditor.parentControl.showEditor){
+			currEditor.parentControl.showEditor();
+			currEditor = null;
+		}
+	});
+});
+
 //############################
 //#       IntegerEdit        #
 //############################
@@ -119,6 +133,8 @@ var IntegerEdit = Class.create(); IntegerEdit.prototype = {
         this.input['ctrl'] = this;
     },
     onKeyDown: function(event){
+		if(event.keyCode>=96 && event.keyCode<=105)
+			return;
         switch(event.keyCode){
             case Event.KEY_END:
             case Event.KEY_HOME:
@@ -157,6 +173,8 @@ var DecimalEdit = Class.create(); DecimalEdit.prototype = {
         this.input['ctrl'] = this;
     },
     onKeyDown: function(event){
+		if(event.keyCode>=96 && event.keyCode<=105)
+			return;
         switch(event.keyCode){
             case Event.KEY_END:
             case Event.KEY_HOME:
@@ -186,7 +204,6 @@ var DecimalEdit = Class.create(); DecimalEdit.prototype = {
 
 var __oldBtnOKClick, __oldBtnCancelClick;
 var StringEdit = Class.create();StringEdit.prototype = {
-    htmlEditor: '__htmlEditor',
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         if (this.options.noHTML)
@@ -194,27 +211,20 @@ var StringEdit = Class.create();StringEdit.prototype = {
         else
             this.button.observe('click', this.showEditor.bind(this));
 
-        if (!$(this.htmlEditor))
-            new Insertion.Bottom(document.body, '<div class="editor" id="' + this.htmlEditor + '" style="width:800px;height:600px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"></div>')
+        if (!$(this.editorId))
+            new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"></div>')
 
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
-        var list = $(this.htmlEditor);
+        var list = $(this.editorId);
         list.innerHTML = '';
 
-        new Insertion.Bottom(list, '<textarea id="' + this.htmlEditor + 'ta" style="width:796px;"  onkeydown="return insertTab(event,this);"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
-        $(this.htmlEditor + 'ta').value = this.input.value.gsub('#NL#', '\n');
-        if (useHTMLEditor) {
-//            var oFCKeditor = new FCKeditor(this.htmlEditor + 'ta');
-//            oFCKeditor.BasePath = 'FCKEditor/';
-//            oFCKeditor.Height = '575';
-//            oFCKeditor.ReplaceTextarea();
-        }
-        else
-            $(this.htmlEditor + 'ta').style.height = '575px';
+        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" style="width:633px;"  onkeydown="return insertTab(event,this);"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+        $(this.editorId + 'ta').value = this.input.value.gsub('#NL#', '\n');
+        $(this.editorId + 'ta').style.height = '452px';
 
-        if (list.visible()) { list.hide(); return; }
+        if (list.visible()) { list.hide(); currEditor = null; return; }
         if (this.input.disabled) return;
 
         var btnOK = list.down('.OK');
@@ -238,10 +248,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
         this.input.value = val ? val.gsub('\n', '#NL#') : '';
     },
     setHtml: function(event) {
-        var list = $(this.htmlEditor);
-//        if(useHTMLEditor)
-//            $A(list.getElementsByTagName('IFRAME')).last().contentWindow.FCK.UpdateLinkedField();
-        this.input.value = $(this.htmlEditor + 'ta').value.gsub('\n', '#NL#');
+        var list = $(this.editorId);
+        this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
         list.hide();
     }
 }
@@ -263,32 +271,39 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
         this.input['ctrl'] = this;
     },
     showEditor: function(event){
-        if ($('__pictureEditor')) {
-            $('__pictureEditor').remove();
+        if ($(this.editorId)) {
+            $(this.editorId).remove();
+			currEditor = null;
             return;
         }
 		currPicEdit = this;
-        new Insertion.Bottom(document.body, '<div class="editor" id="__pictureEditor" style="width:800px;height:600px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;">' +
+        new Insertion.Bottom(document.body, '<div class="editor" id="'+this.editorId+'" style="width:643px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;">' +
 												'<div id="fileBrowserList"></div>' +
 												'<div id="fileBrowserFooter">' +
-													'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm">' +
+													'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
 														'<input type="hidden" name="folder"/>' +
 														'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
 														'<iframe name="fakeUplFrm" style="visibility:hidden;width:0px;height:0px;"></iframe>' +
 													'</form>' +
-													'<span id="__pictureEditorbtnCancel" class="btn cancel">' + lang('Cancel') + '</span>' +
+													'<form action="SystemInfo.ashx?method=createFolder" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+														'<input type="hidden" name="folder"/>' +
+														'Klasör: <input type="text" name="name" style="width:80px"/><input type="submit" value="Oluştur"/>' +
+													'</form>' +
+													'<div style="float:right;margin-top:10px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>' +
 												'</div>' +
 											'</div>');
 
-        var list = $('__pictureEditor');
+        var list = $(this.editorId);
         if (this.input.disabled) return;
 		
-		list.down('form').on('submit', function () {
-			$('fileBrowserLoading').show();
-			list.down('form').down('input[name=folder]').setValue(currFolder);
+		list.select('form').each(function(frm){
+			frm.on('submit', function () {
+				$('fileBrowserLoading').show();
+				frm.down('input[name=folder]').setValue(currFolder);
+			});
 		});
 
-        var btnCancel = $('__pictureEditorbtnCancel');
+        var btnCancel = $(this.editorId+'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
 
         if (this.afterShowEditor) this.afterShowEditor();
@@ -328,7 +343,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 							str += '/' + folders[k];
 						folderLinks += '<span onclick="currFolder = \''+str+'\'; currPicEdit.getFileList();">'+folders[i]+'</span>' + ' / ';
 					}
-					var str = '<div class="nav">' + folderLinks + '</div>';
+					var str = '<div class="nav ui-widget-content ui-corner-all">' + folderLinks + '</div>';
 					if (ths.listMode == 'details') {
 						str = '<table class="fileList" cellspacing="0" border="0">'; //<tr><th>Ad</th><th>Boyut</th><th>Tarih</th></tr>
 						if (currFolder.length > ths.folder.length) str += '<tr><td class="fileName folder" name="..">..</td><td class="size"></td><td class="date"></td></tr>';
@@ -422,7 +437,6 @@ var LookUp = Class.create(); LookUp.prototype = {
     lastValue:0,
     items:[],
     listHeight:200,
-    lookUpEditor: '__lookUpEditor',
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
@@ -438,14 +452,15 @@ var LookUp = Class.create(); LookUp.prototype = {
     },
     showEditor: function(event){
         //openEntityListForm(this.options.entityName, this.label +' '+ lang('Select'), this.options.extraFilter, true, this.onSelect.bind(this));
-        if ($(this.lookUpEditor)) {
-            $(this.lookUpEditor).remove();
+        if ($(this.editorId)) {
+            $(this.editorId).remove();
+			currEditor = null;
             return;
         }
 
-        new Insertion.Bottom(document.body, '<div class="editor alphacube_content" id="' + this.lookUpEditor + '" style="width:800px;height:424px;position:absolute;border:1px inset;padding:2px;display:none;background:white;z-index:5000;"></div>');
+        new Insertion.Bottom(document.body, '<div class="editor alphacube_content" id="' + this.editorId + '" style="width:800px;height:424px;position:absolute;border:1px inset;padding:2px;display:none;background:white;z-index:5000;"></div>');
 
-        var list = $(this.lookUpEditor);
+        var list = $(this.editorId);
         if (this.input.disabled) return;
 		
 		var entityName = this.options.entityName;
@@ -461,11 +476,15 @@ var LookUp = Class.create(); LookUp.prototype = {
 			selectCallback: selectCallback
 		}
 		if(extraFilter) options.extraFilter = extraFilter;
-		new ListForm(list, options);
+		var lf = new ListForm(list, options);
+		$('btnAdd' + lf.hndl).hide();
+		$('btnEdit' + lf.hndl).hide();
+		$('btnDelete' + lf.hndl).hide();
+		$('btnInfo' + lf.hndl).hide();
 		
-		new Insertion.Bottom(list, '<center><span id="' + this.lookUpEditor + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center>');
+		new Insertion.Bottom(list, '<center><span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center>');
 
-        var btnCancel = $(this.lookUpEditor + 'btnCancel');
+        var btnCancel = $(this.editorId + 'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
 
         if (this.afterShowEditor) this.afterShowEditor();
@@ -580,7 +599,7 @@ var LookUp = Class.create(); LookUp.prototype = {
     onSelect: function(v, txt){
         this.setValue(v);
         this.setText(txt);
-        $(this.lookUpEditor).remove();
+        $(this.editorId).remove();
     },
     getValue: function(){
         return this.value;
@@ -598,24 +617,24 @@ var LookUp = Class.create(); LookUp.prototype = {
 //############################
 
 var MemoEdit = Class.create();MemoEdit.prototype = {
-    memoEditor: '__memoEditor',
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
-        if ($(this.memoEditor)) {
-            $(this.memoEditor).remove();
+        if ($(this.editorId)) {
+            $(this.editorId).remove();
+			currEditor = null;
             return;
         }
-        new Insertion.Bottom(document.body, '<div class="editor" id="' + this.memoEditor + '" style="width:800px;height:600px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.memoEditor + 'ta" style="width:796px;height:575px" onkeydown="return insertTab(event,this);"></textarea><br/><center><span id="' + this.memoEditor + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.memoEditor + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.memoEditor + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
+        new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.editorId + 'ta" style="width:633px;height:452px" onkeydown="return insertTab(event,this);"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
 
-        var list = $(this.memoEditor);
+        var list = $(this.editorId);
         if (this.input.disabled) return;
 
-        var btnOK = $(this.memoEditor + 'btnOK');
-        var btnCancel = $(this.memoEditor + 'btnCancel');
+        var btnOK = $(this.editorId + 'btnOK');
+        var btnCancel = $(this.editorId + 'btnCancel');
         btnOK.observe('click', this.setValueByEditor.bind(this));
         btnCancel.observe('click', this.showEditor.bind(this));
 
@@ -636,8 +655,8 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
         this.input.value = val ? val.gsub('\n', '#NL#') : '';
     },
     setValueByEditor: function(event) {
-        var list = $(this.memoEditor);
-        this.input.value = $(this.memoEditor + 'ta').value.gsub('\n', '#NL#');
+        var list = $(this.editorId);
+        this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
         list.hide();
     }
 }
@@ -655,8 +674,8 @@ var CSSEdit = Class.create(); CSSEdit.prototype = {
         Object.extend(this, memo);
     },
     afterShowEditor: function(){
-        var list = $(this.memoEditor);
-        var btnDefault = $(this.memoEditor+'btnDefault');;
+        var list = $(this.editorId);
+        var btnDefault = $(this.editorId+'btnDefault');;
         Event.stopObserving(btnDefault, 'click', __oldCSSBtnDefaultClick);
         __oldCSSBtnDefaultClick = this.loadDefaultCSS.bind(this);
         btnDefault.observe('click', __oldCSSBtnDefaultClick);
@@ -671,7 +690,7 @@ var CSSEdit = Class.create(); CSSEdit.prototype = {
                 if(req.responseText.startsWith('ERR:'))
                     niceAlert(req.responseText);
                 else
-                    $(ths.memoEditor+'ta').value = req.responseText;
+                    $(ths.editorId+'ta').value = req.responseText;
             }
         });
     },
@@ -686,11 +705,10 @@ var CSSEdit = Class.create(); CSSEdit.prototype = {
 
 var __oldFilterBtnOKClick, __oldFilterBtnCancelClick;
 var FilterEdit = Class.create(); FilterEdit.prototype = {
-    filterEditor: '__filterEditor',
     filter: null,
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
-        var filtEdit = $(this.filterEditor);
+        var filtEdit = $(this.editorId);
         if(filtEdit)
             filtEdit.down().innerHTML = '';
         this.button.observe('click', this.showEditor.bind(this));
@@ -698,24 +716,24 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
         this.input['ctrl'] = this;
     },
     showEditor: function(event){
-        if(!$(this.filterEditor))
-            new Insertion.Bottom(document.body, '<div class="editor" id="'+this.filterEditor+'" style="width:500px;height:300px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><div id="'+this.filterEditor+'div"></div><center><span id="'+this.filterEditor+'btnOK" class="btn OK">'+lang('OK')+'</span> <span id="'+this.filterEditor+'btnCancel" class="btn cancel">'+lang('Cancel')+'</span></center></div>');
+        if(!$(this.editorId))
+            new Insertion.Bottom(document.body, '<div class="editor" id="'+this.editorId+'" style="width:324px;height:300px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><div id="'+this.editorId+'div" style="overflow:auto;height:280px"></div><center><span id="'+this.editorId+'btnOK" class="btn OK">'+lang('OK')+'</span> <span id="'+this.editorId+'btnCancel" class="btn cancel">'+lang('Cancel')+'</span></center></div>');
         else
-            $(this.filterEditor).down().innerHTML = "";
+            $(this.editorId).down().innerHTML = "";
         var entityNameToUse = this.options.entityName;
         if(this.options.relatedEditForm && entityNameToUse.startsWith('use#')){
                entityNameToUse = entityNameToUse.substr(4);
                entityNameToUse = this.options.relatedEditForm.getControl(entityNameToUse).getValue();
         }
         
-        this.filter = new FilterEditor($(this.filterEditor).down(), ajax({url:'EntityInfo.ashx?method=getFieldsList&entityName='+entityNameToUse,isJSON:true,noCache:false}));
+        this.filter = new FilterEditor($(this.editorId).down(), ajax({url:'EntityInfo.ashx?method=getFieldsList&entityName='+entityNameToUse,isJSON:true,noCache:false}));
             
-        var list = $(this.filterEditor);
-        if(list.visible()){list.hide(); return;}
+        var list = $(this.editorId);
+        if(list.visible()){list.hide(); currEditor = null; return;}
         if(this.input.disabled) return;
         
-        var btnOK = $(this.filterEditor+'btnOK');
-        var btnCancel = $(this.filterEditor+'btnCancel');
+        var btnOK = $(this.editorId+'btnOK');
+        var btnCancel = $(this.editorId+'btnCancel');
         Event.stopObserving(btnOK, 'click', __oldFilterBtnOKClick);
         Event.stopObserving(btnCancel, 'click', __oldFilterBtnCancelClick);
         __oldFilterBtnOKClick = this.setValueByEditor.bind(this);
@@ -741,7 +759,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
         this.input.value = val ? val : '';
     },
     setValueByEditor: function(){
-        var list = $(this.filterEditor);
+        var list = $(this.editorId);
         var h = this.filter.serialize();
         var str = '';
         var i=0;
@@ -763,7 +781,6 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
 var __monthCombo = null;
 var __yearCombo = null;
 var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
-    dateEditor: '__dateEditor',
     dateValue: null,
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
@@ -774,18 +791,19 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         this.input.readOnly = true;
     },
     showEditor: function(event){
-        if(!$(this.dateEditor)){
-            new Insertion.Bottom(document.body, '<div class="editor hideOnOut" id="'+this.dateEditor+'" style="width:200px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
-            var editor = $(this.dateEditor);
+        if(!$(this.editorId)){
+            new Insertion.Bottom(document.body, '<div class="editor hideOnOut" id="'+this.editorId+'" style="width:200px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
+            var editor = $(this.editorId);
             __monthCombo = new ComboBox('_cH1', this.dateValue.getMonth()+1, {container:$('__cH1'), width:80, listHeight:100, items:[[1,lang('January')],[2,lang('February')],[3,lang('March')],[4,lang('April')],[5,lang('May')],[6,lang('June')],[7,lang('July')],[8,lang('August')],[9,lang('September')],[10,lang('October')],[11,lang('November')],[12,lang('December')]], onChange:this.monthYearChanged.bind(this)});
             __yearCombo = new ComboBox('_cH2', this.dateValue.getFullYear(), {container:$('__cH2'), width:60, listHeight:100, items:$R(1950,2010).toArray(), onChange:this.monthYearChanged.bind(this)});
         }
 
-        var editor = $(this.dateEditor);
+        var editor = $(this.editorId);
         var ctrl = this.div;
         
         if(editor.visible()){
             editor.hide();
+			currEditor = null;
             return;
         } else {
             this.buildCal(this.dateValue.getMonth()+1, this.dateValue.getFullYear());
@@ -807,7 +825,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
             this.input.value = str;
             this.options.onChange();
         }
-        $(this.dateEditor).hide();
+        $(this.editorId).hide();
     },
     // thanks to Brian Gosselin for the function below
     buildCal: function(m, y){
@@ -842,7 +860,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
 
         $('__cM').innerHTML = t;
         var ths = this;
-        $(this.dateEditor).select('.calDay').each(function(elm){elm.observe('click', ths.selectDay.bind(ths));});
+        $(this.editorId).select('.calDay').each(function(elm){elm.observe('click', ths.selectDay.bind(ths));});
     },
     parse: function(val){
         var dmy = val.split(' ')[0];
@@ -917,7 +935,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
     },
     beforeOpenList: function(){
         if(!this.editor){
-            new Insertion.After(this.div, '<div class="editor hideOnOut" style="text-align:left;overflow:auto;position:absolute;border:1px solid black;display:none;background:white"></div>');
+            new Insertion.After(this.div, '<div class="editor hideOnOut" style="text-align:left;overflow-y:auto;overflow-x:hidden;position:absolute;border:1px solid black;display:none;background:white"></div>');
             this.editor = this.div.next();
             this.fetchData();
         }
@@ -995,7 +1013,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         for(var i=0;i<this.options.items.length;i++){
             var row = this.options.items[i];
             var text = typeof row == 'object' ? (row.length>1 ? row[1] : row[0]) : row;
-            insertionHtml += '<div class="item" id="__itm'+this.hndl+'_'+i+'">'+text+'</div>';
+            insertionHtml += '<div class="item" id="__itm'+this.hndl+'_'+i+'"><nobr>'+text+'</nobr></div>';
         }
         new Insertion.Bottom(list, insertionHtml);
         
@@ -1277,10 +1295,6 @@ var ListForm = Class.create();ListForm.prototype = {
         this.options = options;
 
         if (!this.options.hideFilter) {
-            //            new Insertion.Top(this.container, '<fieldset><legend>'+lang('Filter')+'</legend></fieldset>');
-            //            this.filter = new FilterEditor(this.container.down(), this.options.fields);
-            //            new Insertion.Bottom(this.container.down(), '<div align="right"><span id="btnFilter'+this.hndl+'" class="btn filter">'+lang('Apply')+'</span></div>');
-            //            $('btnFilter'+this.hndl).observe('click', this.fetchData.bind(this));
             new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter">' + lang('Apply') + '</span></td></table>');
             this.filter = new FilterEdit('id', '', { entityName: 'Content', container: 'filter' + this.hndl, readOnly:true });
             $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));

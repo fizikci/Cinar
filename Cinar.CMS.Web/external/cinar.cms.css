@@ -7,10 +7,14 @@
 	color:#404040;
 	text-align:left;
 }
-.editor div.item {cursor:pointer;padding-left:2px}
+.editor div.item {cursor:default;padding:2px}
 .editor div.selItem {background:#316AC5;color:white}
 .editor div.checkedItem {background:#316AC5;color:white}
 .editor textarea {overflow:auto}
+.editor input, .editor textarea {
+  font-family: Tahoma,Arial,sans-serif;
+  font-size: 12px;
+}
 
 #mdlSel, #mdlSel2, #mdlSel3, #mdlSel4 
 {
@@ -105,7 +109,8 @@ table.cntrlsTbl
 	border-top:1px solid #F1EFE2;
 	table-layout: fixed;}
 table.cntrlsTbl .category {background:#F1EFE2; color: #316AC5; font-weight:bold}
-table.cntrlsTbl td {width:50%;border-bottom:1px solid #F1EFE2;border-left:1px solid #F1EFE2;text-align:left}
+table.cntrlsTbl .category td {padding:2px}
+table.cntrlsTbl td {width:50%;border-bottom:1px solid #F1EFE2;border-left:1px solid #F1EFE2;text-align:left;padding:1px;cursor:default}
 table.cntrlsTbl input {border:none;padding-left:2px}
 table.cntrlsTbl input[type=button] {padding:0px; margin:0px}
 
@@ -190,11 +195,11 @@ ul.tabs a.active-tab
 {
     font-size:.8em;
 }
-#fileBrowserList {height:90%;overflow:auto;}
-#fileBrowserList .nav {margin-left:10px;}
+#fileBrowserList {height:90%;overflow:auto;padding:10px}
+#fileBrowserList .nav {padding:4px;}
 #fileBrowserList .nav  span{cursor:pointer; color:#316AC5}
-#fileBrowserFooter {height:10%;}
-#fileBrowserFooter form {padding-top:10px;}
+#fileBrowserFooter {height:10%;padding:10px;}
+#fileBrowserFooter form {padding:4px; margin-right:10px; float:left;}
 #fileBrowser table {width:100%;}
 #fileBrowser td.fileName {cursor:pointer; background-repeat:no-repeat; background-position:left center; padding-left:20px;}
 #fileBrowser td.audio {background-image:url(/external/icons/audio.gif);}
@@ -207,7 +212,7 @@ ul.tabs a.active-tab
 
 #fileBrowserLoading {background-image:url(icons/loading.gif);width:43px; height:11px;display:none;float:right;}
 
-div.fileNameBox {float:left; text-align:center;width:110px;height:110px;margin-left:10px;margin-top:10px;cursor:pointer;}
+div.fileNameBox {float:left; text-align:center;width:110px;height:110px;margin-right:10px;margin-top:10px;cursor:pointer;padding-top:10px}
 div.fileNameBox img {max-width:80px; max-height:80px}
 
 .ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
