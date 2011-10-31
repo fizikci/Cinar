@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Xml;
@@ -78,6 +80,21 @@ namespace Cinar.CMS.Library.Handlers
                 case "getMetadata":
                     {
                         getMetadata();
+                        break;
+                    }
+                case "getFileList":
+                    {
+                        getFileList();
+                        break;
+                    }
+                case "uploadFile":
+                    {
+                        uploadFile();
+                        break;
+                    }
+                case "deleteFile":
+                    {
+                        deleteFile();
                         break;
                     }
                 default:
@@ -233,6 +250,82 @@ namespace Cinar.CMS.Library.Handlers
         {
             string entityName = context.Request["entityName"];
             context.Response.Write(Utility.ToJSON(Provider.GetEntityType(entityName)));
+        }
+
+        private void getFileList()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            string path = Provider.Server.MapPath(folderName);
+            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+
+            List<string> resList = new List<string>();
+
+            string[] items = Directory.GetDirectories(path).OrderBy(s => s).ToArray();
+            for (int i = 0; i < items.Length; i++)
+            {
+                bool isHidden = ((File.GetAttributes(items[i]) & FileAttributes.Hidden) == FileAttributes.Hidden);
+                if (!isHidden)
+                {
+                    DirectoryInfo d = new DirectoryInfo(items[i]);
+                    resList.Add("{name:" + d.Name.ToJS() + ", size:-1, date:" + d.LastWriteTime.ToJS() + "}");
+                }
+            }
+
+            items = Directory.GetFiles(path).OrderBy(s => s).ToArray();
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                bool isHidden = ((File.GetAttributes(items[i]) & FileAttributes.Hidden) == FileAttributes.Hidden);
+                if (!isHidden)
+                {
+                    FileInfo f = new FileInfo(items[i]);
+                    resList.Add("{name:" + f.Name.ToJS() + ", size:" + f.Length.ToJS() + ", date:" + f.LastWriteTime.ToJS() + "}");
+                }
+            }
+
+            context.Response.Write("{success:true, root:[" + String.Join(",", resList.ToArray()) + "]}");
+        }
+
+        private void uploadFile()
+        {
+            try
+            {
+                string folderName = context.Request["folder"] ?? "";
+                string path = Provider.Server.MapPath(folderName);
+                if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                    path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+
+                if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                    path = Path.GetDirectoryName(path);
+
+                string fileName = Path.GetFileName(context.Request.Files["upload"].FileName).MakeFileName();
+                context.Request.Files["upload"].SaveAs(Path.Combine(path, fileName));
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
+            }
+            catch (Exception ex)
+            {
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
+            }
+        }
+
+        private void deleteFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1); else folderName = "~/" + folderName;
+            string path = Provider.Server.MapPath(folderName);
+            if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                path = Path.GetDirectoryName(path);
+            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["imagesDir"])))
+                path = Provider.Server.MapPath(Provider.AppSettings["imagesDir"]);
+
+            string fileName = context.Request["fileName"];
+            if (string.IsNullOrEmpty(fileName) || fileName.Trim() == "")
+                throw new Exception("Dosya seçiniz");
+
+            path = Path.Combine(path, fileName);
+            File.Delete(path);
+            context.Response.Write(@"Dosya silindi");
         }
 
         #region import/export utility

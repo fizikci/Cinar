@@ -5,6 +5,7 @@
 	letter-spacing: normal;
 	line-height:normal;
 	color:#404040;
+	text-align:left;
 }
 .editor div.item {cursor:pointer;padding-left:2px}
 .editor div.selItem {background:#316AC5;color:white}
@@ -183,3 +184,32 @@ ul.tabs a.active-tab
 	padding-top: 3px;
 	color: #444;
 }
+
+/* picture edit*/
+#fileBrowser
+{
+    font-size:.8em;
+}
+#fileBrowserList {height:90%;overflow:auto;}
+#fileBrowserList .nav {margin-left:10px;}
+#fileBrowserList .nav  span{cursor:pointer; color:#316AC5}
+#fileBrowserFooter {height:10%;}
+#fileBrowserFooter form {padding-top:10px;}
+#fileBrowser table {width:100%;}
+#fileBrowser td.fileName {cursor:pointer; background-repeat:no-repeat; background-position:left center; padding-left:20px;}
+#fileBrowser td.audio {background-image:url(/external/icons/audio.gif);}
+#fileBrowser td.video {background-image:url(/external/icons/video.png);}
+#fileBrowser td.folder {background-image:url(/external/icons/folder.png);}
+#fileBrowser td.file {background-image:url(/external/icons/file.png);}
+#fileBrowser td.picture {background-image:url(/external/icons/picture.png);}
+#fileBrowser .size {text-align:right;}
+#fileBrowser .date {text-align:right;}
+
+#fileBrowserLoading {background-image:url(icons/loading.gif);width:43px; height:11px;display:none;float:right;}
+
+div.fileNameBox {float:left; text-align:center;width:110px;height:110px;margin-left:10px;margin-top:10px;cursor:pointer;}
+div.fileNameBox img {max-width:80px; max-height:80px}
+
+.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
+.ui-widget-content a { color: #333333; }
+.ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
