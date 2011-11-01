@@ -220,7 +220,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
         var list = $(this.editorId);
         list.innerHTML = '';
 
-        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" style="width:633px;"  onkeydown="return insertTab(event,this);"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" style="width:633px;"  onkeydown="return insertTab(event,this);" wrap="off"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
         $(this.editorId + 'ta').value = this.input.value.gsub('#NL#', '\n');
         $(this.editorId + 'ta').style.height = '452px';
 
@@ -628,7 +628,7 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
 			currEditor = null;
             return;
         }
-        new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.editorId + 'ta" style="width:633px;height:452px" onkeydown="return insertTab(event,this);"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
+        new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.editorId + 'ta" style="width:633px;height:452px" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
 
         var list = $(this.editorId);
         if (this.input.disabled) return;
