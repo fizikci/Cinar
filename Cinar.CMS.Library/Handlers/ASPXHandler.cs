@@ -113,6 +113,7 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<link href=\"DefaultStyleSheet.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
+                sb.Append("<link href=\"/external/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var useHTMLEditor={0};</script>", Provider.Configuration.UseHTMLEditor.ToString().ToLower());
                 sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/prototype.js\"></script>\n");

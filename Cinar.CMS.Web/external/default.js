@@ -1,4 +1,36 @@
-﻿// ilk üç parametreden sonrası method parametreleridir
+﻿// on load
+document.observe('dom:loaded', function(){
+	// on body click find visible editors and hide if not the click is within
+    Event.observe(document.body,'mousedown', function(event){
+        $$('.hideOnOut').each(function(editor){
+            if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event))){
+                if(editor.id=='smMenu' && editor.visible())
+                    popupMenu.onHide();
+                editor.hide();
+            }
+        });
+	});
+	// listelerde resimlerin google.images'deki gibi pırtlaması için
+	$$('.gogPop img').each(function(img){
+		img.on('mouseover', gogPop);
+	});
+	// listelerde resimlerin google.images'deki gibi pırtlaması için
+	$$('.lightBox img').each(function(img){
+		img.on('click', function(){lightBox(img);});
+	});
+	// listelerde description alanlarının görünüp gizlenmesi
+	$$('.toogleDesc').each(function(elm){
+		var elmDesc = elm.down('div.clDesc');
+		if(elmDesc){
+			elmDesc.hide();
+			Event.observe(elm, 'mouseover', function(){elmDesc.show();});
+			Event.observe(elm, 'mouseleave', function(){elmDesc.hide();});
+		}
+    });
+	// 
+});
+
+// ilk üç parametreden sonrası method parametreleridir
 function runModuleMethod(moduleName, moduleId, methodName, params, callback)
 {
     new Ajax.Request('RunModuleMethod.ashx?name='+moduleName+'&id='+moduleId+'&methodName='+methodName, {
@@ -28,38 +60,16 @@ function showElementWithOverlay(elm, autoHide){
     
     var perde = $('___perde');
     if(!perde){
-        //var dim = $(document.body).getDimensions();
         new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90;width:3000px;height:3000px;background-color: #000;"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
         perde = $('___perde');
     }
 
     $(document.body).setStyle({overflow:'hidden'});
-    new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){
-                                                                        elm.setStyle({
-                                                                            position:'absolute',
-                                                                            zIndex:100
-                                                                        });
-                                                                        elm.show();
-                                                                    } });
+    new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){ elm.setStyle({position:'absolute', zIndex:100}); elm.show(); } });
 }
 function hideOverlay(){
-    new Effect.Appear('___perde', { duration: .2, from: 0.8, to: 0.0, afterFinish:function(){
-            $('___perde').hide();
-            $(document.body).setStyle({overflow:'auto'});
-        } });
+    new Effect.Appear('___perde', { duration: .2, from: 0.8, to: 0.0, afterFinish:function(){ $('___perde').hide(); $(document.body).setStyle({overflow:'auto'});} });
 }
-
-// on body click find visible editors and hide if not the click is within
-document.observe('dom:loaded', function(){
-    Event.observe(document.body,'mousedown', function(event){
-        $$('.hideOnOut').each(function(editor){
-            if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event))){
-                if(editor.id=='smMenu' && editor.visible())
-                    popupMenu.onHide();
-                editor.hide();
-            }
-        });
-});});
 
 /*
 #############################
@@ -143,6 +153,7 @@ function showManset(event, id){
         if(picPlace && picUrl) picPlace.src = picUrl.innerHTML;
     }
 }
+
 // ContentDisplay için etiket linkleme
 function linkTags(contentId){
 	var tags = $$('#'+contentId+' div.tags a');
@@ -157,8 +168,42 @@ function linkTags(contentId){
 	textElms[0].innerHTML = text;
 }
 
-// chart modülü için
+// resimlerin images.google'daki gibi pırtlaması için
+function gogPop(event){
+	var pop = $('gogPopDiv'); if(pop) pop.remove();
+	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
+	
+	var img = $(Event.element(event));
 
+	$(document.body).insert('<div id="gogPopDiv" class="hideOnOut"><img src="'+img.src+'"/></div>');
+	pop = $('gogPopDiv');
+	if(img.up('.lightBox'))
+		pop.down('img').on('click', function(){lightBox(img);});
+	var pos = Position.cumulativeOffset(img);
+	var dim = img.getDimensions();
+	var popDim = pop.getDimensions();
+	pop.setStyle({left:(pos[0]-(popDim.width-dim.width)/2)+'px', top:(pos[1]-(popDim.height-dim.height)/2)+'px'});
+	pop.hide();
+	new Effect.Appear(pop, { duration: 0.2, from: 0.0, to: 1.0 });
+}
+function lightBox(img){
+	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
+	
+	var allImg = img.up('.lightBox').select('img');
+	$(document.body).insert('<div id="lightBoxDiv" class="hideOnOut"><div style="position:relative"><img src="/external/icons/lbPrev.png" id="lbPrev"><img src="'+img.readAttribute('path')+'"/><img src="/external/icons/lbNext.png" id="lbNext"></div></div>');
+	lightBoxDiv = $('lightBoxDiv');
+
+	var pos = Position.cumulativeOffset(img);
+	var dim = img.getDimensions();
+	var lbDim = lightBoxDiv.getDimensions();
+	lightBoxDiv.setStyle({left:(pos[0]-(lbDim.width-dim.width)/2)+'px', top:(pos[1]-(lbDim.height-dim.height)/2)+'px'});
+	$('lbPrev').setStyle({top:(lbDim.height/2-19)+'px'});
+	$('lbNext').setStyle({top:(lbDim.height/2-19)+'px'});
+	lightBoxDiv.hide();
+	new Effect.Appear(lightBoxDiv, { duration: 0.2, from: 0.0, to: 1.0, afterFinish: function(){var pop = $('gogPopDiv'); if(pop) pop.remove();} });
+}
+
+// chart modülü için
 var Chart = Class.create({
     
     data: [[10,20,30,40],[40,30,20,10],[100,80,60,40],[80,80,80,80]],
@@ -393,40 +438,37 @@ document.getHeight = function(){ return $(document.body).getDimensions().height;
 
 // for scrolling elemnts in overflowed elements, thanks to robmadole, http://dev.rubyonrails.org/ticket/8208
 Scroll = Class.create(); 
-Scroll = 
-{ 
-    to: function(element) 
-    { 
+Scroll = { 
+    to: function(element) { 
         element = $(element); 
- 
-         var elementOverflow = element; 
-         var valueT = 0, valueL = 0; 
+
+		var elementOverflow = element; 
+        var valueT = 0, valueL = 0; 
   
-         do 
-         { 
-             if (!elementOverflow.parentNode) { break; } 
+        do 
+        { 
+            if (!elementOverflow.parentNode) { break; } 
   
-             valueT += elementOverflow.cumulativeOffset().top  || 0; 
-             valueL += elementOverflow.cumulativeOffset().left || 0; 
+            valueT += elementOverflow.cumulativeOffset().top  || 0; 
+            valueL += elementOverflow.cumulativeOffset().left || 0; 
   
-             if (elementOverflow.parentNode.getHeight() < elementOverflow.parentNode.scrollHeight) 
-             { 
-                 elementOverflow.parentNode.scrollTop  = valueT; 
-                 elementOverflow.parentNode.scrollLeft = valueL; 
+            if (elementOverflow.parentNode.getHeight() < elementOverflow.parentNode.scrollHeight) 
+            { 
+                elementOverflow.parentNode.scrollTop  = valueT; 
+                elementOverflow.parentNode.scrollLeft = valueL; 
   
-                 Element.scrollTo(elementOverflow); 
-  
-                 return; 
-             } 
+                Element.scrollTo(elementOverflow); 
+                return; 
+            } 
   
              elementOverflow = elementOverflow.parentNode; 
-         } while (true); 
+        } while (true); 
   
          var pos = Position.cumulativeOffset(element); 
          window.scrollTo(pos[0], pos[1]); 
          return element; 
-     } 
- }; 
+    } 
+};
 
 ////////////////////////////
 //
@@ -434,8 +476,8 @@ Scroll =
 //
 ////////////////////////////
 
-function setCookie(name, value, expires, path) // expires as days
-{
+// expires as days
+function setCookie(name, value, expires, path){
 	var today = new Date();
 	today.setTime(today.getTime());
 
@@ -445,8 +487,7 @@ function setCookie(name, value, expires, path) // expires as days
 
 	document.cookie = name + "=" +escape(value) + (expires ? ";expires=" + expires_date.toGMTString() : "") + (path ? ";path=" + path : "");
 }
-function getCookie(name)
-{
+function getCookie(name){
 	var start = document.cookie.indexOf(name + "=");
 	var len = start + name.length + 1;
 	if(!start && name != document.cookie.substring(0, name.length))
@@ -459,8 +500,7 @@ function getCookie(name)
 	
 	return unescape(document.cookie.substring(len, end));
 }
-function delCookie(name, path, domain)
-{
+function delCookie(name, path, domain){
 	if(getCookie(name))
 		document.cookie = name + "=" + (path ? ";path=" + path : "") + (domain ? ";domain=" + domain : "") + ";expires=Thu, 01-Jan-1970 00:00:01 GMT";
 }
