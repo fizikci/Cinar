@@ -211,12 +211,12 @@ namespace Cinar.CMS.Library.Modules
             if (pageNo > 0)
             {
                 uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
-                prevPageLink = String.Format("<a href=\"{0}\"><< {1}</a>&nbsp;&nbsp;", uriParser.Uri.ToString(), Provider.GetModuleResource("Previous Page"));
+                prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Previous Page"));
             }
             if (data.Rows.Count == howManyItems)
             {
                 uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
-                nextPageLink = String.Format("&nbsp;&nbsp;<a href=\"{0}\">{1} >></a>", uriParser.Uri.ToString(), Provider.GetModuleResource("Next Page"));
+                nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
             }
 
             sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
@@ -242,6 +242,8 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.paging {{background:#0C51B1;font-weight:bold;padding:4px;text-align:center}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.paging a {{color:white}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} div.paging a.prev {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} div.paging a.next {{}}\n", this.Name, this.Id);
             return sb.ToString();
         }
 
@@ -291,7 +293,7 @@ namespace Cinar.CMS.Library.Modules
                 if (!dr.IsNull("Picture"))
                     return Provider.GetThumbPath(dr["Picture"].ToString(), this.pictureWidth, this.pictureHeight);
                 else if (!dr.IsNull("FileName"))
-                    return Provider.GetThumbPath(dr["Picture"].ToString(), this.pictureWidth, this.pictureHeight);
+                    return Provider.GetThumbPath(dr["FileName"].ToString(), this.pictureWidth, this.pictureHeight);
                 else
                     return "Could not find a picture field - Try something else";
             }

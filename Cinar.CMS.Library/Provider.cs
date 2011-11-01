@@ -1170,15 +1170,15 @@ namespace Cinar.CMS.Library
                         double prefRatio = (double)prefWidth / (double)prefHeight;
                         if (picRatio >= prefRatio)
                         {
-                            imgScaled = Utility.ScaleImage(orjImg, 0, prefHeight);
-                            int x = Convert.ToInt32((double)(imgScaled.Width - prefWidth) / 2d);
-                            imgDest = Utility.CropImage(imgScaled, x, 0, prefWidth, prefHeight);
-                        }
-                        else
-                        {
                             imgScaled = Utility.ScaleImage(orjImg, prefWidth, 0);
                             int y = Convert.ToInt32((double)(imgScaled.Height - prefHeight) / 2d);
                             imgDest = Utility.CropImage(imgScaled, 0, y, prefWidth, prefHeight);
+                        }
+                        else
+                        {
+                            imgScaled = Utility.ScaleImage(orjImg, 0, prefHeight);
+                            int x = Convert.ToInt32((double)(imgScaled.Width - prefWidth) / 2d);
+                            imgDest = Utility.CropImage(imgScaled, x, 0, prefWidth, prefHeight);
                         }
                     }
                     Utility.SaveJpeg(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
@@ -1848,6 +1848,7 @@ namespace Cinar.CMS.Library
             grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
             grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            grPhoto.FillRectangle(Brushes.White, new Rectangle(0, 0, width, height));
             grPhoto.DrawImage(orjImg, new Rectangle(0, 0, width, height), x, y, width, height, GraphicsUnit.Pixel);
             grPhoto.Dispose();
             return bmPhoto;
