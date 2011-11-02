@@ -1,5 +1,10 @@
 ﻿#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
 #gogPopDiv img {width:auto; height:auto;}
-#lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px}
+#lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center}
 #lightBoxDiv #lbPrev {position:absolute; cursor:pointer}
 #lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
+#lightBoxDiv #lbCounter {text-align:right; margin-bottom:20px}
+#lightBoxDiv #lbTitle {font-weight:bold}
+#lightBoxDiv #lbDesc {font-weight:normal}
+#lightBoxDiv #lbLike {position:absolute;right:5px; bottom:-25px;}
+#lightBoxDiv #lbLike  img{curor:pointer;}

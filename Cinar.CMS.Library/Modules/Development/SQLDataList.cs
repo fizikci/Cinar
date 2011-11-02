@@ -10,35 +10,23 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class SQLDataList : TableView
     {
-        private string sql = "";
+        public SQLDataList()
+        {
+            PictureHeight = 0;
+            PictureWidth = 0;
+            DataTemplate = "";
+            SQL = "";
+        }
+
         [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string SQL
-        {
-            get { return sql; }
-            set { sql = value; }
-        }
+        public string SQL { get; set; }
 
-        private string dataTemplate = "";
         [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string DataTemplate
-        {
-            get { return dataTemplate; }
-            set { dataTemplate = value; }
-        }
+        public string DataTemplate { get; set; }
 
-        protected int pictureWidth = 0;
-        public int PictureWidth
-        {
-            get { return pictureWidth; }
-            set { pictureWidth = value; }
-        }
+        public int PictureWidth { get; set; }
 
-        protected int pictureHeight = 0;
-        public int PictureHeight
-        {
-            get { return pictureHeight; }
-            set { pictureHeight = value; }
-        }
+        public int PictureHeight { get; set; }
 
         DataTable data = null;
 
@@ -46,15 +34,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
 
-            if (this.sql == "")
+            if (this.SQL == "")
                 return "";
 
-            Interpreter engine = Provider.GetInterpreter(sql, this);
+            Interpreter engine = Provider.GetInterpreter(SQL, this);
             engine.Parse();
             engine.Execute();
-            sql = engine.Output;
+            SQL = engine.Output;
 
-            data = Provider.Database.GetDataTable(sql);
+            data = Provider.Database.GetDataTable(SQL);
 
             if (data==null || data.Rows.Count == 0)
                 return "";
@@ -78,9 +66,10 @@ namespace Cinar.CMS.Library.Modules
 
         DataRow dr;
         Interpreter engineCell = null;
+
         protected override string getCellHTML(int row, int col)
         {
-            string html = this.dataTemplate;
+            string html = this.DataTemplate;
 
             if (html.Trim() == "")
                 return "";
@@ -110,7 +99,7 @@ namespace Cinar.CMS.Library.Modules
         {
             get
             {
-                return Provider.GetThumbPath(dr["Picture"].ToString(), this.pictureWidth, this.pictureHeight);
+                return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight);
             }
         }
     }
