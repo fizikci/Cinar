@@ -11,52 +11,38 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class Grid : Module
     {
+        public Grid()
+        {
+            Deletable = true;
+            Editable = true;
+            NewRecordLink = "<img border=\"0\" src=\"external/icons/yonetim_yeni_kayit.gif\" />";
+            HowManyItems = 30;
+            EditPage = "";
+            Filter = "";
+            ShowFields = "";
+            EntityName = "";
+        }
 
-        private string entityName = "";
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes")]
-        public string EntityName
-        {
-            get { return entityName; }
-            set { entityName = value; }
-        }
+        public string EntityName { get; set; }
 
-        private string showFields = "";
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName',multiSelect:true")]
-        public string ShowFields
-        {
-            get { return showFields; }
-            set { showFields = value; }
-        }
+        public string ShowFields { get; set; }
 
-        protected string filter = "";
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.FilterEdit, Options = "entityName:'use#EntityName'")]
-        public string Filter
-        {
-            get { return filter; }
-            set { filter = value; }
-        }
+        public string Filter { get; set; }
 
-        protected string editPage = "";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates, addBlankItem:true")]
-        public string EditPage
-        {
-            get { return editPage; }
-            set { editPage = value; }
-        }
+        public string EditPage { get; set; }
 
-        protected int howManyItems = 30;
-        public int HowManyItems
-        {
-            get { return howManyItems; }
-            set { howManyItems = value; }
-        }
+        public int HowManyItems { get; set; }
 
         protected string orderBy = "Id";
         [ColumnDetail(Length = 20), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
         public string OrderBy
         {
             get {
-                if (!String.IsNullOrEmpty(Provider.Request["orderBy"]) && showFields.Contains(Provider.Request["orderBy"]))
+                if (!String.IsNullOrEmpty(Provider.Request["orderBy"]) && ShowFields.Contains(Provider.Request["orderBy"]))
                     return Provider.Request["orderBy"];
                 return orderBy; 
             }
@@ -77,38 +63,23 @@ namespace Cinar.CMS.Library.Modules
             set { ascending = value; }
         }
 
-        private string newRecordLink = "<img border=\"0\" src=\"external/icons/yonetim_yeni_kayit.gif\" />";
         [ColumnDetail(Length=200)]
-        public string NewRecordLink
-        {
-            get { return newRecordLink; }
-            set { newRecordLink = value; }
-        }
+        public string NewRecordLink { get; set; }
 
-        protected bool editable = true;
-        public bool Editable
-        {
-            get { return editable; }
-            set { editable = value; }
-        }
+        public bool Editable { get; set; }
 
-        protected bool deletable = true;
-        public bool Deletable
-        {
-            get { return deletable; }
-            set { deletable = value; }
-        }
+        public bool Deletable { get; set; }
 
         protected override string show()
         {
             StringBuilder sb = new StringBuilder();
 
-            if (String.IsNullOrEmpty(entityName))
+            if (String.IsNullOrEmpty(EntityName))
                 return Provider.GetResource("Select entity");
 
-            Cinar.Database.Table tbl = Provider.Database.Tables[entityName];
+            Cinar.Database.Table tbl = Provider.Database.Tables[EntityName];
             if(tbl==null)
-                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]", entityName);
+                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]", EntityName);
 
             string pageUrl = Provider.Request.Url.ToString();
             UriParser uriParser = new UriParser(pageUrl);
@@ -120,16 +91,16 @@ namespace Cinar.CMS.Library.Modules
                 pageUrl = uriParser.ToString();
             }
 
-            BaseEntity testEntity = Provider.CreateEntity(entityName);
+            BaseEntity testEntity = Provider.CreateEntity(EntityName);
 
-            if (String.IsNullOrEmpty(showFields))
-                showFields = String.Format("{0},Visible", testEntity.GetNameColumn());
+            if (String.IsNullOrEmpty(ShowFields))
+                ShowFields = String.Format("{0},Visible", testEntity.GetNameColumn());
 
             StringBuilder sbFrom = new StringBuilder();
-            sbFrom.AppendFormat("[{0}]\n", entityName);
+            sbFrom.AppendFormat("[{0}]\n", EntityName);
 
             // generate SQL
-            string[] showFieldsArr = showFields.Split(',');
+            string[] showFieldsArr = ShowFields.Split(',');
             string[] showFieldsArrWithAs = new string[showFieldsArr.Length];
             for (int i = 0; i < showFieldsArr.Length; i++)
             {
@@ -145,15 +116,15 @@ namespace Cinar.CMS.Library.Modules
                     BaseEntity testRefEntity = Provider.CreateEntity(fieldProps.References.Name);
                     showFieldsArrWithAs[i] = "T"+field + "." + testRefEntity.GetNameColumn() + " as [" + caption + "]";
 
-                    sbFrom.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", fieldProps.References.Name, "T"+field, "Id", entityName, field);
+                    sbFrom.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", fieldProps.References.Name, "T"+field, "Id", EntityName, field);
                 }
                 else
-                    showFieldsArrWithAs[i] = entityName + "." + field + " as [" + caption + "]";
+                    showFieldsArrWithAs[i] = EntityName + "." + field + " as [" + caption + "]";
             }
-            showFields = String.Join(",", showFieldsArrWithAs);
-            showFields = entityName+".Id," + showFields;
+            ShowFields = String.Join(",", showFieldsArrWithAs);
+            ShowFields = EntityName+".Id," + ShowFields;
 
-            FilterParser filterParser = new FilterParser(this.filter, entityName);
+            FilterParser filterParser = new FilterParser(this.Filter, EntityName);
             string where = filterParser.GetWhere();
 
             int pageNo = 0;
@@ -170,13 +141,13 @@ namespace Cinar.CMS.Library.Modules
                     {3} {4}
                 limit {5} offset {6}
             ", 
-                                        showFields, 
+                                        ShowFields, 
                                         sbFrom.ToString(), 
                                         String.IsNullOrEmpty(where) ? "" : ("and " + where), 
-                                        entityName + "." + this.OrderBy, 
+                                        EntityName + "." + this.OrderBy, 
                                         this.Ascending ? "asc" : "desc", 
-                                        howManyItems, 
-                                        pageNo*howManyItems);
+                                        HowManyItems, 
+                                        pageNo*HowManyItems);
 
             DataTable dt = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
@@ -200,8 +171,8 @@ namespace Cinar.CMS.Library.Modules
                     uriParser.QueryPart["ascending"] = "True";
                 sb.AppendFormat("<td><a href=\"{0}\">{1}</a>{2}</td>\n", uriParser.ToString(), colName, img);
             }
-            if (this.editable) sb.AppendFormat("<td>{0}</td>\n", "&nbsp;");
-            if (this.deletable) sb.AppendFormat("<td>{0}</td>\n", "&nbsp;");
+            if (this.Editable) sb.AppendFormat("<td>{0}</td>\n", "&nbsp;");
+            if (this.Deletable) sb.AppendFormat("<td>{0}</td>\n", "&nbsp;");
             sb.Append("</tr>\n");
 
             string nameField = testEntity.GetNameColumn();
@@ -211,24 +182,24 @@ namespace Cinar.CMS.Library.Modules
             foreach (DataRow dr in dt.Rows)
             {
                 sb.Append("<tr class=\"data\">\n");
-                string editUrl = this.editPage + "?item=" + dr[0] + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl);
+                string editUrl = this.EditPage + "?item=" + dr[0] + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl);
                 for (int i = 0; i < dt.Columns.Count; i++)
                 {
                     if (i == 0)
                         continue;
                     object data = (dr.IsNull(i) || dr[i].Equals("")) ? "&nbsp;" : dr[i];
-                    if (showFieldsArr[i-1] == nameField && this.editable)
+                    if (showFieldsArr[i-1] == nameField && this.Editable)
                         data = "<a href=\"" + editUrl + "\">" + data + "</a>";
                     if (dr.Table.Columns[i].DataType == typeof(bool))
                         data = ((bool)data) ? Provider.GetResource("Yes") : Provider.GetResource("No");
                     sb.AppendFormat("<td>{0}</td>\n", data);
                 }
-                if (this.deletable)
+                if (this.Deletable)
                 {
                     uriParser.QueryPart["delete"] = dr[0].ToString();
                     sb.AppendFormat("<td><img src=\"external/icons/delete.png\" onclick=\"if(confirm('Kayýt silinecek!')) location.href='{0}'\"/></td>\n", uriParser.ToString());
                 }
-                if (this.editable)
+                if (this.Editable)
                     sb.AppendFormat("<td><img src=\"external/icons/edit.png\" onclick=\"location.href='{0}'\"/></td>\n", editUrl);
                 sb.Append("</tr>\n");
             }
@@ -241,7 +212,7 @@ namespace Cinar.CMS.Library.Modules
                 uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
                 prevPageLink = String.Format("<a href=\"{0}\"><< {1}</a>&nbsp;&nbsp;", uriParser.Uri.ToString(), Provider.GetModuleResource("Previous Page"));
             }
-            if (dt.Rows.Count == howManyItems)
+            if (dt.Rows.Count == HowManyItems)
             {
                 uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
                 nextPageLink = String.Format("&nbsp;&nbsp;<a href=\"{0}\">{1} >></a>", uriParser.Uri.ToString(), Provider.GetModuleResource("Next Page"));
@@ -250,8 +221,8 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("<tr class=\"footer\"><td colspan=\"100\">{0} {1}</td></tr>\n", prevPageLink, nextPageLink);
             sb.Append("</table>\n");
 
-            if (!String.IsNullOrEmpty(newRecordLink)) {
-                sb.AppendFormat("<p class=\"newRec\"><a href=\"{0}\">{1}</a></p>\n", this.editPage + "?returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl), newRecordLink);
+            if (!String.IsNullOrEmpty(NewRecordLink)) {
+                sb.AppendFormat("<p class=\"newRec\"><a href=\"{0}\">{1}</a></p>\n", this.EditPage + "?returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl), NewRecordLink);
             }
 
             return sb.ToString();
@@ -263,7 +234,7 @@ namespace Cinar.CMS.Library.Modules
             Int32.TryParse(Provider.Request["delete"], out id);
             if (id > 0)
             {
-                BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), id);
+                BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(EntityName), id);
                 entity.Delete();
             }
         }

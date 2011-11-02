@@ -11,53 +11,33 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class FormField : Module
     {
-        private string fieldName = "";
+        public FormField()
+        {
+            FixedValue = "";
+            Where = "";
+            EntityName = "";
+            Label = "";
+            UIControlType = "";
+            FieldName = "";
+        }
+
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
-        public string FieldName
-        {
-            get { return fieldName; }
-            set { fieldName = value; }
-        }
+        public string FieldName { get; set; }
 
-        private string controlType = "";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_UICONTROLTYPE_")]
-        public string UIControlType
-        {
-            get { return controlType; }
-            set { controlType = value; }
-        }
+        public string UIControlType { get; set; }
 
-        private string label = "";
         [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string Label
-        {
-            get { return label; }
-            set { label = value; }
-        }
+        public string Label { get; set; }
 
-        private string entityName = "";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes,hideItems:true")]
-        public string EntityName
-        {
-            get { return entityName; }
-            set { entityName = value; }
-        }
+        public string EntityName { get; set; }
 
-        private string where = "";
         [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string Where
-        {
-            get { return where; }
-            set { where = value; }
-        }
+        public string Where { get; set; }
 
-        private string fixedValue = "";
         [EditFormFieldProps(Options = "noHTML:true")]
-        public string FixedValue
-        {
-            get { return fixedValue; }
-            set { fixedValue = value; }
-        }
+        public string FixedValue { get; set; }
 
         internal DataRow data;
         internal string value = "";
@@ -67,53 +47,53 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
 
-            if (String.IsNullOrEmpty(fieldName))
+            if (String.IsNullOrEmpty(FieldName))
                 return Provider.DesignMode ? Provider.GetResource("Select field name") : String.Empty;
 
-            Type entityType = Provider.GetEntityType(entityName);
-            Type fieldType = entityType.GetProperty(fieldName).PropertyType;
-            PropertyInfo pi = entityType.GetProperty(fieldName);
+            Type entityType = Provider.GetEntityType(EntityName);
+            Type fieldType = entityType.GetProperty(FieldName).PropertyType;
+            PropertyInfo pi = entityType.GetProperty(FieldName);
             ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
             EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
             ControlType ct = attrEdit.ControlType;
             if (ct == ControlType.Undefined)
                 ct = Provider.GetDefaultControlType(attrField.ColumnType, fieldType);
 
-            if (String.IsNullOrEmpty(label)) label = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
-            if (String.IsNullOrEmpty(label)) label = fieldName;
-            if (!String.IsNullOrEmpty(fixedValue))
+            if (String.IsNullOrEmpty(Label)) Label = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
+            if (String.IsNullOrEmpty(Label)) Label = FieldName;
+            if (!String.IsNullOrEmpty(FixedValue))
             {
-                if (fixedValue.StartsWith("@") && !String.IsNullOrEmpty(Provider.Request[fixedValue.Substring(1)]))
-                    value = Provider.Request[fixedValue.Substring(1)];
+                if (FixedValue.StartsWith("@") && !String.IsNullOrEmpty(Provider.Request[FixedValue.Substring(1)]))
+                    value = Provider.Request[FixedValue.Substring(1)];
                 else
-                    value = fixedValue;
+                    value = FixedValue;
             }
 
             // CONTROL
-            if (controlType == "Hidden")
+            if (UIControlType == "Hidden")
             {
                 if (Provider.DesignMode)
                 {
-                    sb.AppendFormat("<div class=\"label\">{0} (gizli)</div>", label);
+                    sb.AppendFormat("<div class=\"label\">{0} (gizli)</div>", Label);
                     sb.Append(getControlHTML(fieldType, attrField, attrEdit, ct));
                 }
                 else 
                 {
-                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
                 }
             }
             else
             {
                 // eðer PictureEdit ise label'a "Sil" linki ekleyelim
                 if (ct == ControlType.PictureEdit)
-                    label += String.Format(" (<span style=\"color:blue;cursor:pointer\" onclick=\"if(ajax({{url:'EntityInfo.ashx?method=setField&entityName={0}&id={1}&fieldName={2}&value=',isJSON:false,noCache:false}})) {{ $('form{3}').{2}.value=''; $('form{3}').submit(); }}\">{4}</span>)",
-                        entityName,
+                    Label += String.Format(" (<span style=\"color:blue;cursor:pointer\" onclick=\"if(ajax({{url:'EntityInfo.ashx?method=setField&entityName={0}&id={1}&fieldName={2}&value=',isJSON:false,noCache:false}})) {{ $('form{3}').{2}.value=''; $('form{3}').submit(); }}\">{4}</span>)",
+                        EntityName,
                         (data == null ? 0 : (int)data["Id"]),
-                        fieldName,
+                        FieldName,
                         form == null ? 0 : form.Id,
                         Provider.GetModuleResource("Delete"));
                 // label'ý gösterelim
-                sb.AppendFormat("<div class=\"label\">{0}</div>", label);
+                sb.AppendFormat("<div class=\"label\">{0}</div>", Label);
                 sb.Append(getControlHTML(fieldType, attrField, attrEdit, ct));
             }
 
@@ -126,30 +106,30 @@ namespace Cinar.CMS.Library.Modules
             switch (ct)
             {
                 case ControlType.StringEdit:
-                    if (controlType == "Textarea")
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", fieldName, Utility.HtmlEncode(value));
+                    if (UIControlType == "Textarea")
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, Utility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
                     break;
                 case ControlType.IntegerEdit:
                 case ControlType.DecimalEdit:
                 case ControlType.DateTimeEdit:
-                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
                     break;
                 case ControlType.PictureEdit:
-                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", fieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", FieldName, Utility.HtmlEncode(value));
                     break;
                 case ControlType.ComboBox:
                 case ControlType.LookUp:
                     if (fieldType == typeof(bool))
                     {
                         bool b = (value == "True" || value == "1");
-                        sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", fieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                        sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", FieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
                     }
                     else if (attrField.References != null)
                     {
-                        IDatabaseEntity[] entities = Provider.GetIdNameList(attrField.References.Name, "", this.where);
-                        sb.AppendFormat("<select name=\"{0}\">", fieldName);
+                        IDatabaseEntity[] entities = Provider.GetIdNameList(attrField.References.Name, "", this.Where);
+                        sb.AppendFormat("<select name=\"{0}\">", FieldName);
                         sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
                         foreach (BaseEntity entity in entities)
                             sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", Utility.HtmlEncode(entity.GetNameValue()));
@@ -170,7 +150,7 @@ namespace Cinar.CMS.Library.Modules
                                 optionsFound = true;
                                 string options = attrEdit.Options.Substring(startIndex, endIndex - startIndex);
                                 string[] optionsArr = options.Split(new string[] { "],[" }, StringSplitOptions.RemoveEmptyEntries);
-                                sb.AppendFormat("<select name=\"{0}\">", fieldName);
+                                sb.AppendFormat("<select name=\"{0}\">", FieldName);
                                 sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", "", String.IsNullOrEmpty(value) ? "selected" : "", Provider.GetResource("Select"));
                                 for (int i = 0; i < optionsArr.Length; i++)
                                 {
@@ -186,10 +166,10 @@ namespace Cinar.CMS.Library.Modules
                     break;
                 case ControlType.CSSEdit:
                 case ControlType.MemoEdit:
-                    if(controlType == "Input")
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", fieldName, Utility.HtmlEncode(value));
+                    if(UIControlType == "Input")
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", fieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, Utility.HtmlEncode(value));
                     break;
                 case ControlType.Undefined:
                 case ControlType.FilterEdit:
@@ -204,7 +184,7 @@ namespace Cinar.CMS.Library.Modules
         {
             base.beforeSave(isUpdate);
 
-            if (String.IsNullOrEmpty(this.entityName))
+            if (String.IsNullOrEmpty(this.EntityName))
             {
                 Form parentForm = (Form)Module.Read("Form", this.ParentModuleId);
                 this.EntityName = parentForm.EntityName;

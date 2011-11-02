@@ -14,7 +14,7 @@ document.observe('dom:loaded', function(){
 	$$('.gogPop img').each(function(img){
 		img.on('mouseover', gogPop);
 	});
-	// listelerde resimlerin google.images'deki gibi pırtlaması için
+	// lightBox olayı
 	$$('.lightBox img').each(function(img){
 		img.on('click', function(){lightBox(img);});
 	});
@@ -54,6 +54,7 @@ function lang(code){
 }
 
 // opacity'si düşerekten sayfanın ortasında div gösterme olayı
+var showingElementWithOverlay = false;
 function showElementWithOverlay(elm, autoHide){
     elm = $(elm);
     elm.hide();
@@ -64,11 +65,14 @@ function showElementWithOverlay(elm, autoHide){
         perde = $('___perde');
     }
 
-    $(document.body).setStyle({overflow:'hidden'});
+    //$(document.body).setStyle({overflow:'hidden'});
     new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){ elm.setStyle({position:'absolute', zIndex:100}); elm.show(); } });
+	showingElementWithOverlay = elm;
 }
 function hideOverlay(){
     new Effect.Appear('___perde', { duration: .2, from: 0.8, to: 0.0, afterFinish:function(){ $('___perde').hide(); $(document.body).setStyle({overflow:'auto'});} });
+	showingElementWithOverlay.hide();
+	showingElementWithOverlay = false;
 }
 
 /*
@@ -190,9 +194,37 @@ function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
 	var allImg = img.up('.lightBox').select('img');
-	$(document.body).insert('<div id="lightBoxDiv" class="hideOnOut"><div style="position:relative"><img src="/external/icons/lbPrev.png" id="lbPrev"><img src="'+img.readAttribute('path')+'"/><img src="/external/icons/lbNext.png" id="lbNext"></div></div>');
+	
+	$(document.body).insert('<div id="lightBoxDiv"><div style="position:relative"><img src="/external/icons/lbPrev.png" id="lbPrev"><img id="lbImg" src="'+img.readAttribute('path')+'"/><img src="/external/icons/lbNext.png" id="lbNext"><div id="lbCounter">1/20</div><div id="lbTitle"></div><div id="lbDesc"></div><div id="lbLike"><img src="/external/icons/love.png"/> <span>25</span></div></div></div>');
 	lightBoxDiv = $('lightBoxDiv');
-
+	$('lbPrev').on('click',function(){img = img.previous('img'); showPic();});
+	$('lbNext').on('click',function(){img = img.next('img'); showPic();});
+	function showPic(){
+		lbImg.src = img.readAttribute('path'); 
+		lightBoxDiv.hide();
+		$('lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
+		$('lbTitle').innerHTML = img.readAttribute('title'); 
+		$('lbDesc').innerHTML = img.readAttribute('desc'); 
+		$('lbLike').down('span').innerHTML = img.readAttribute('like'); 
+	}
+	lightBoxDiv.hide();
+	var lbImg = $('lbImg');
+	lbImg.on('load', function(){
+		if(img.previous('img')) $('lbPrev').show(); else $('lbPrev').hide();
+		if(img.next('img')) $('lbNext').show(); else $('lbNext').hide();
+		lightBoxDiv.setStyle({width:'auto', height:'auto', top:'auto',left:'auto',right:'auto',bottom:'auto', margin:'default'});
+		var lbDim = lightBoxDiv.getDimensions();
+		var imgDim = img.getDimensions();
+		lightBoxDiv.setStyle({width:lbDim.width+'px', height:lbDim.height+'px', top:0,left:0,right:0,bottom:0, margin:'auto'});
+		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px'});
+		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px'});
+		$('lbTitle').setStyle({width:imgDim.width+'px'});
+		$('lbDesc').setStyle({width:imgDim.width+'px'});
+		if(!showingElementWithOverlay)
+			showElementWithOverlay(lightBoxDiv, true);
+		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){var pop = $('gogPopDiv'); if(pop) pop.remove();} });
+	});
+	/*
 	var pos = Position.cumulativeOffset(img);
 	var dim = img.getDimensions();
 	var lbDim = lightBoxDiv.getDimensions();
@@ -201,6 +233,7 @@ function lightBox(img){
 	$('lbNext').setStyle({top:(lbDim.height/2-19)+'px'});
 	lightBoxDiv.hide();
 	new Effect.Appear(lightBoxDiv, { duration: 0.2, from: 0.0, to: 1.0, afterFinish: function(){var pop = $('gogPopDiv'); if(pop) pop.remove();} });
+	*/
 }
 
 // chart modülü için

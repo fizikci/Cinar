@@ -10,24 +10,17 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class Form : Container
     {
-        private string entityName = "";
-        [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes")]
-        public string EntityName
+        public Form()
         {
-            get { return entityName; }
-            set { entityName = value; }
+            AfterSaveBehavior = "BackToList";
+            EntityName = "";
         }
 
-        protected string afterSaveBehavior = "BackToList";
+        [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes")]
+        public string EntityName { get; set; }
+
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_AFTERSAVEBEHAVIOR_")]
-        public string AfterSaveBehavior
-        {
-            get
-            {
-                return afterSaveBehavior;
-            }
-            set { afterSaveBehavior = value; }
-        }
+        public string AfterSaveBehavior { get; set; }
 
         DataRow data;
         string error = "";
@@ -39,7 +32,7 @@ namespace Cinar.CMS.Library.Modules
                 try
                 {
                     int id = saveEntity();
-                    switch (afterSaveBehavior)
+                    switch (AfterSaveBehavior)
                     {
                         case "RedirectToSameUrl":
                             Provider.Response.Redirect(Provider.Request.RawUrl, true);
@@ -62,9 +55,9 @@ namespace Cinar.CMS.Library.Modules
             }
 
             if (Provider.Request["item"] != null)
-                data = Provider.Database.GetDataRow("select * from " + entityName + " where Id={0}", Provider.Request["item"]);
+                data = Provider.Database.GetDataRow("select * from " + EntityName + " where Id={0}", Provider.Request["item"]);
             if (data == null)
-                data = Provider.Database.EntityToDataRow(Provider.CreateEntity(this.entityName));
+                data = Provider.Database.EntityToDataRow(Provider.CreateEntity(this.EntityName));
 
             foreach (Module field in this.ChildModules)
             {
@@ -108,15 +101,16 @@ namespace Cinar.CMS.Library.Modules
             int id = Int32.Parse(Provider.Request.Form["Id"]);
             BaseEntity entity = null;
             if (id > 0)
-                entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), id);
+                entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(EntityName), id);
             else
-                entity = (BaseEntity)Provider.CreateEntity(entityName);
+                entity = (BaseEntity)Provider.CreateEntity(EntityName);
             entity.SetFieldsByPostData(Provider.Request.Form);
             entity.Save();
             return entity.Id;
         }
 
         bool entityNameChanged = false;
+
         public override void SetFieldsByPostData(System.Collections.Specialized.NameValueCollection postData)
         {
             string oldEntityName = this.EntityName;
@@ -132,12 +126,12 @@ namespace Cinar.CMS.Library.Modules
                     foreach (Module mdl in Module.Read(Provider.Database.GetDataTable("select * from Module where Name='FormField' and ParentModuleId=" + this.Id)))
                         mdl.Delete();
 
-                if (entityName != "")
-                    foreach (Column field in Provider.Database.Tables[entityName].Columns)
+                if (EntityName != "")
+                    foreach (Column field in Provider.Database.Tables[EntityName].Columns)
                     {
-                        Type fieldType = Provider.GetEntityType(entityName).GetProperty(field.Name).PropertyType;
-                        ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(Provider.GetEntityType(entityName).GetProperty(field.Name), typeof(ColumnDetailAttribute));
-                        EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(Provider.GetEntityType(entityName).GetProperty(field.Name), typeof(EditFormFieldPropsAttribute));
+                        Type fieldType = Provider.GetEntityType(EntityName).GetProperty(field.Name).PropertyType;
+                        ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(ColumnDetailAttribute));
+                        EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(EditFormFieldPropsAttribute));
 
                         if (field.IsPrimaryKey || !attrEdit.Visible)
                             continue; //***

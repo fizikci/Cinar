@@ -140,17 +140,14 @@ namespace Cinar.CMS.Library.Modules
                     }
                     else if (htParams[field].Equals("Author"))
                     {
-                        if (content == null) throw new Exception(Provider.GetResource("Yazar cannot be used as a parameter because there is no active content"));
                         fov.Value = content.AuthorId;
                     }
                     else if (htParams[field].Equals("Source"))
                     {
-                        if (content == null) throw new Exception(Provider.GetResource("Kaynak cannot be used as a parameter because there is no active content"));
                         fov.Value = content.SourceId;
                     }
                     else if (htParams[field].Equals("Content"))
                     {
-                        if (content == null) throw new Exception(Provider.GetResource("İçerik cannot be used as a parameter because there is no active content"));
                         fov.Value = content.Id;
                     }
                     else if (htParams[field].Equals("Yesterday"))

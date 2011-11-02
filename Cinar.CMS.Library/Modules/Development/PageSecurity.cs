@@ -6,36 +6,29 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class PageSecurity : Module
     {
-        private string roleToRead = "";
-        [EditFormFieldProps(Options = "noHTML:true")]
-        public string RoleToRead
+        public PageSecurity()
         {
-            get { return roleToRead; }
-            set { roleToRead = value; }
-        }
-        private string roleToChange = "Designer";
-        [EditFormFieldProps(Options = "noHTML:true")]
-        public string RoleToChange
-        {
-            get { return roleToChange; }
-            set { roleToChange = value; }
+            RedirectPage = "";
+            RoleToChange = "Designer";
+            RoleToRead = "";
         }
 
-        protected string redirectPage = "";
+        [EditFormFieldProps(Options = "noHTML:true")]
+        public string RoleToRead { get; set; }
+
+        [EditFormFieldProps(Options = "noHTML:true")]
+        public string RoleToChange { get; set; }
+
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates, addBlankItem:true")]
-        public string RedirectPage
-        {
-            get { return redirectPage; }
-            set { redirectPage = value; }
-        }
+        public string RedirectPage { get; set; }
 
         protected override string show()
         {
             if (Provider.DesignMode)
                 return "<div style=\"background:crimson;color:white;font-weight:bold;margin:4px;padding:4px\">" +
                     Provider.GetResource("This page can be seen by <i>{0}</i> and modified by <i>{1}</i>", 
-                    roleToRead == "" ? "herkes" : (roleToRead + " rolündeki kullanýcýlar "), 
-                    roleToChange == "" ? "herkes" : (roleToChange + " rolündeki kullanýcýlar ")) + "</div>";
+                    RoleToRead == "" ? "herkes" : (RoleToRead + " rolündeki kullanýcýlar "), 
+                    RoleToChange == "" ? "herkes" : (RoleToChange + " rolündeki kullanýcýlar ")) + "</div>";
             else
                 return String.Empty;
         }

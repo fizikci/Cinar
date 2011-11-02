@@ -11,37 +11,13 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Development")]
     public class DataList : TableView
     {
-
-        private string entityName = "";
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes")]
-        public string EntityName
-        {
-            get { return entityName; }
-            set { entityName = value; }
-        }
-/*
-        private string showFields = "";
-        [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName',multiSelect:true")]
-        public string ShowFields
-        {
-            get { return showFields; }
-            set { showFields = value; }
-        }
-*/
-        protected string filter = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.FilterEdit, Options = "entityName:'use#EntityName'")]
-        public string Filter
-        {
-            get { return filter; }
-            set { filter = value; }
-        }
+        public string EntityName { get; set; }
 
-        protected int howManyItems = 30;
-        public int HowManyItems
-        {
-            get { return howManyItems; }
-            set { howManyItems = value; }
-        }
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.FilterEdit, Options = "entityName:'use#EntityName'")]
+        public string Filter { get; set; }
+
+        public int HowManyItems { get; set; }
 
         protected string orderBy = "Id";
         [ColumnDetail(Length = 20), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
@@ -67,27 +43,12 @@ namespace Cinar.CMS.Library.Modules
             set { ascending = value; }
         }
 
-        private string dataTemplate = "$entity.Id$ numaralý kayýt";
         [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
-        public string DataTemplate
-        {
-            get { return dataTemplate; }
-            set { dataTemplate = value; }
-        }
+        public string DataTemplate { get; set; }
 
-        protected int pictureWidth = 0;
-        public int PictureWidth
-        {
-            get { return pictureWidth; }
-            set { pictureWidth = value; }
-        }
+        public int PictureWidth { get; set; }
 
-        protected int pictureHeight = 0;
-        public int PictureHeight
-        {
-            get { return pictureHeight; }
-            set { pictureHeight = value; }
-        }
+        public int PictureHeight { get; set; }
 
         protected internal string defaultWhere = "1=1";
         protected internal bool sayNoRecord = true;
@@ -98,12 +59,12 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
 
-            if (String.IsNullOrEmpty(entityName))
+            if (String.IsNullOrEmpty(EntityName))
                 return Provider.GetResource("Select entity");
 
-            Cinar.Database.Table tbl = Provider.Database.Tables[entityName];
+            Cinar.Database.Table tbl = Provider.Database.Tables[EntityName];
             if(tbl==null)
-                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]",entityName);
+                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]",EntityName);
 
             string pageUrl = Provider.Request.Url.ToString();
             UriParser uriParser = new UriParser(pageUrl);
@@ -115,68 +76,12 @@ namespace Cinar.CMS.Library.Modules
                 return String.Empty; //***
             }
 
-            /*
-            BaseEntity testEntity = Provider.CreateEntity(entityName);
-
-            if (String.IsNullOrEmpty(showFields))
-                showFields = String.Format("{0},Visible", testEntity.GetNameColumn());
-
-            StringBuilder sbFrom = new StringBuilder();
-            sbFrom.AppendFormat("[{0}]\n", entityName);
-
-            // generate SQL
-            string[] showFieldsArr = showFields.Split(',');
-            ArrayList showFieldsArrWithAs = new ArrayList();
-            for (int i = 0; i < showFieldsArr.Length; i++)
-            {
-                string field = showFieldsArr[i];
-                PropertyInfo pi = testEntity.GetType().GetProperty(field);
-                EditFormFieldPropsAttribute attrib = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
-                ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
-
-                string caption = field; //Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
-
-                if (fieldProps.References != null)
-                {
-                    BaseEntity testRefEntity = Provider.CreateEntity(fieldProps.References.Name);
-                    showFieldsArrWithAs.Add(field);
-                    showFieldsArrWithAs.Add("T"+field + "." + testRefEntity.GetNameColumn() + " as [" + caption + "]");
-
-                    sbFrom.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", fieldProps.References.Name, "T"+field, "Id", entityName, field);
-                }
-                else
-                    showFieldsArrWithAs.Add(entityName + "." + field + " as [" + caption + "]");
-            }
-            showFields = String.Join(",", (string[])showFieldsArrWithAs.ToArray(typeof(string)));
-            showFields = entityName+".Id," + showFields;
-            */
-
-            FilterParser filterParser = new FilterParser(this.filter, entityName);
+            FilterParser filterParser = new FilterParser(this.Filter, EntityName);
             string where = filterParser.GetWhere();
 
             int pageNo = 0;
             Int32.TryParse(Provider.Request["pageNo"], out pageNo);
 
-            /*
-            string sql = String.Format(@"
-                select
-                    {0}
-                from
-                    {1}
-                where
-                    {7} {2}
-                order by
-                    {3} {4}
-                limit {5} offset {6}", 
-                                     showFields, 
-                                     sbFrom.ToString(), 
-                                     String.IsNullOrEmpty(where) ? "" : ("and " + where), 
-                                     entityName + "." + this.OrderBy, 
-                                     this.Ascending ? "asc" : "desc", 
-                                     howManyItems, 
-                                     pageNo*howManyItems,
-                                     defaultWhere);
-            */
             string sql = String.Format(@"
                 select
                     {0}
@@ -188,17 +93,17 @@ namespace Cinar.CMS.Library.Modules
                     {3} {4}
                 limit {5} offset {6}",
                                      "*",
-                                     this.entityName,
+                                     this.EntityName,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
                                      this.Ascending ? "asc" : "desc",
-                                     howManyItems,
-                                     pageNo * howManyItems,
+                                     HowManyItems,
+                                     pageNo * HowManyItems,
                                      defaultWhere);
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
-            Provider.Translate(entityName, data);
+            Provider.Translate(EntityName, data);
 
             if (data.Rows.Count == 0)
                 return this.sayNoRecord ? Provider.GetResource("No record") : "";
@@ -213,7 +118,7 @@ namespace Cinar.CMS.Library.Modules
                 uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
                 prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Previous Page"));
             }
-            if (data.Rows.Count == howManyItems)
+            if (data.Rows.Count == HowManyItems)
             {
                 uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
                 nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
@@ -230,7 +135,7 @@ namespace Cinar.CMS.Library.Modules
             Int32.TryParse(Provider.Request["delete"], out id);
             if (id > 0)
             {
-                BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), id);
+                BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(EntityName), id);
                 if(entity!=null)
                     entity.Delete();
             }
@@ -253,9 +158,20 @@ namespace Cinar.CMS.Library.Modules
         }
 
         DataRow dr;
+
+        public DataList()
+        {
+            PictureHeight = 0;
+            PictureWidth = 0;
+            DataTemplate = "$entity.Id$ numaralý kayýt";
+            HowManyItems = 30;
+            Filter = "";
+            EntityName = "";
+        }
+
         protected override string getCellHTML(int row, int col)
         {
-            string html = this.dataTemplate;
+            string html = this.DataTemplate;
 
             int index = row * this.cols + col;
 
@@ -291,9 +207,9 @@ namespace Cinar.CMS.Library.Modules
             get
             {
                 if (!dr.IsNull("Picture"))
-                    return Provider.GetThumbPath(dr["Picture"].ToString(), this.pictureWidth, this.pictureHeight);
+                    return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight);
                 else if (!dr.IsNull("FileName"))
-                    return Provider.GetThumbPath(dr["FileName"].ToString(), this.pictureWidth, this.pictureHeight);
+                    return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight);
                 else
                     return "Could not find a picture field - Try something else";
             }
