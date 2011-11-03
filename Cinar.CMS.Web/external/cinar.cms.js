@@ -18,7 +18,7 @@ function onPageLoaded(){
 
         if (!designMode) return;
 
-        $(document.body).style.height = '100%';
+        //$(document.body).style.height = '100%';
         
         regionDivs = $$('div.Region');//$('Header','Left','Content','Right','Footer').compact();
         regionDivs.each(function(elm){
@@ -354,6 +354,9 @@ function editModule(name, id){
             win['form'] = pe;
             win.show();
             win.toFront();
+			
+			var dimWin = winContent.down('.editForm').getDimensions();
+			win.setSize(350,dimWin.height);
             
             pe.controls[0].input.select();
         },
@@ -558,6 +561,8 @@ function editData(entityName, id){
             win['form'] = pe;
             win.show();
             win.toFront();
+			var dimWin = winContent.down('.editForm').getDimensions();
+			win.setSize(350,dimWin.height);
         },
         onException: function(req, ex){throw ex;}
     });
@@ -747,6 +752,8 @@ function configure(){
             win['form'] = pe;
             win.show();
             win.toFront();
+			var dimWin = winContent.down('.editForm').getDimensions();
+			win.setSize(350,dimWin.height);
         },
         onException: function(req, ex){throw ex;}
     });

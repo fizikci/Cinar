@@ -83,7 +83,7 @@ var Control = Class.create(); Control.prototype = {
 		currEditor = editor;
 		currEditor.parentControl = this;
         var div = $(this.div);
-        var dim = $(document.body).getDimensions();
+        var dim = Position.getWindowSize();
         var pos = Position.cumulativeOffset(div);
         
         if(dim.width<pos[0]+editor.getWidth())
@@ -1124,7 +1124,7 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
-    initialize: function(container, controls, entityName, entityId, hideFieldName, hideFieldValue){
+    initialize: function(container, controls, entityName, entityId, strFilterExp){
         container = $(container);
         if(container==null) container = $(document.body);
         
@@ -1137,10 +1137,17 @@ var EditForm = Class.create(); EditForm.prototype = {
         this.entityId = entityId ? entityId : 0;
         
         controls = controls.sortBy(function(ctrl){return ctrl.orderNo;});
-        
+		
+		var filters = parseFilterExp(strFilterExp);
+		var hideFieldName, hideFieldValue;
+		if(filters['f_0'] && filters['o_0']=='='){
+			hideFieldName = filters['f_0'];
+			hideFieldValue = filters['c_0'];
+		}
+			
         var ths = this;
 
-        var str = '<table class="editForm" width="99%" height="100%" cellpadding=0 cellspacing=0 border=0>';
+        var str = '<table class="editForm" width="99%" cellpadding=0 cellspacing=0 border=0>';
         str += '<tr><td><div><table class="cntrlsTbl" cellpadding="0" cellspacing="0" border="0"><tbody>';
 		var categories = controls.collect(function(item){return item.category;}).uniq().compact();
 		for(var k=0; k<categories.length; k++){
@@ -1150,14 +1157,14 @@ var EditForm = Class.create(); EditForm.prototype = {
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
 				str += '<tr>';
-				str += '<td onclick="$(this).up().down(\'input\').focus()">&nbsp;'+(control.id==hideFieldName?'':control.label)+'</td>';
+				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(control.id==hideFieldName?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
 				str += '</tr>';
 			}
 		}
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td><fieldset id="details'+this.hndl+'"><legend>İlişkili Veriler</legend></fieldset></td></tr>';
-        str += '<tr><td style="height:50px"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
+        str += '<tr><td style="height:50px;padding-bottom:10px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
         str += '<tr><td style="height:16px;text-align:right"><span class="btn save" id="btnSave'+this.hndl+'">'+lang('Save')+'</span></td></tr>';
         str += '</table>';
 
@@ -1296,7 +1303,7 @@ var ListForm = Class.create();ListForm.prototype = {
 
         if (!this.options.hideFilter) {
             new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter">' + lang('Apply') + '</span></td></table>');
-            this.filter = new FilterEdit('id', '', { entityName: 'Content', container: 'filter' + this.hndl, readOnly:true });
+            this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
             $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
         }
 
@@ -1377,7 +1384,7 @@ var ListForm = Class.create();ListForm.prototype = {
             onComplete: function (req) {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
 
-                var dim = $(document.body).getDimensions();
+                var dim = Position.getWindowSize();
                 var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
                 var caption = '<img src="external/icons/' + ths.options.entityName + '.png" style="vertical-align:middle"> ' + lang('New') + ' ' + ths.options.hrEntityName;
                 var win = new Window({ className: 'alphacube', title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
@@ -1385,8 +1392,8 @@ var ListForm = Class.create();ListForm.prototype = {
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
                 var pe = null;
-                if (ths.options.parentEditForm != null)
-                    pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.options.relatedFieldName, ths.options.parentEditForm.entityId);
+                if (ths.filter != null)
+                    pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter.value);
                 else
                     pe = new EditForm(winContent, res, ths.options.entityName, 0);
                 pe.onSave = ths.insertEntity.bind(ths);
@@ -1421,7 +1428,7 @@ var ListForm = Class.create();ListForm.prototype = {
             method: 'get',
             onComplete: function (req) {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-                var dim = $(document.body).getDimensions();
+                var dim = Position.getWindowSize();
                 var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
                 var caption = '<img src="external/icons/' + entityName + '.png" style="vertical-align:middle"> ' + lang('Edit') + " : " + ths.options.hrEntityName;
                 var win = new Window({ className: "alphacube", title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
@@ -1483,12 +1490,11 @@ var ListForm = Class.create();ListForm.prototype = {
 //###########################
 //#       FilterEditor      #
 //###########################
-
+var filterOps = ["like@", "<=@", ">=@", "<>@", "<@", ">@", "=@", "like", "<=", ">=", "<>", "<", ">", "="];
 var FilterEditor = Class.create(); FilterEditor.prototype = {
     container: null,
     fields: [],
     fieldsComboItems: [],
-    opComboItems: ["like@", "<=@", ">=@", "<>@", "<@", ">@", "=@", "like", "<=", ">=", "<>", "<", ">", "="],
     parameterOptions: [['',lang('Select')],['Category',lang('Category')],['Hierarchy',lang('Hierarchy')],['Content',lang('Content')],['Author',lang('Author')],['Source',lang('Source')],['Yesterday',lang('Yesterday')],['LastDay',lang('The day before yesterday')],['LastWeek',lang('Last week')],['LastMonth',lang('Last month')]],
     rowHtml: '<tr class="filterRow"><td class="tdField"></td><td class="tdOp"></td><td class="tdControl"></td></tr>',
     initialize: function(container, fields){
@@ -1510,8 +1516,8 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
     getRevOpItems: function(){
         if(this.revOpItems==null){
             var arr = [];
-            for(var i=0; i<this.opComboItems.length; i++)
-                arr[this.opComboItems.length-i-1] = this.opComboItems[i];
+            for (var i = 0; i < filterOps.length; i++)
+                arr[filterOps.length - i - 1] = filterOps[i];
             this.revOpItems = arr;
         }
         return this.revOpItems;
@@ -1569,21 +1575,8 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         return h;
     },
     setFilters: function(filters){
-        var h = new Object();
-        var criterias = filters.split(' AND ');
-        if(!criterias[0]) return;
-        for(var i=0; i<criterias.length; i++){
-            var pair = null;
-            for(var j=0; j<this.opComboItems.length; j++){
-                pair = criterias[i].split(this.opComboItems[j]);
-                if(pair.length==2) break;
-            }
-            var op = criterias[i].substr(pair[0].length, criterias[i].length - pair[0].length - pair[1].length);
-            h['f_'+i] = pair[0];
-            h['o_'+i] = op;
-            h['c_'+i] = pair[1];
-        }
-        i = 0;
+        var h = parseFilterExp(filters);
+        var i = 0;
         var table = this.container.down();
         if(table.tagName!='TBODY') table = table.down();
         var rows = table.immediateDescendants(); var rowCount = rows.length;
@@ -1605,6 +1598,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
             oCb.setValue(h['o_'+i]);
             // control for value
             var fieldMetadata = this.fields.find(function(f){return f.id==h['f_'+i]});
+			fieldMetadata.value = h['c_'+i];
             var aControl = null;
             if(h['o_'+i].indexOf('@')>-1)
                 aControl = new ComboBox('c'+i, null, {items:this.parameterOptions, container:tdControl});
@@ -1616,7 +1610,25 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         }
     }
 }
-
+function parseFilterExp(filters){
+	var h = new Object();
+	if(!filters) return h;
+	
+	var criterias = filters.split(' AND ');
+	if(!criterias[0]) return;
+	for(var i=0; i<criterias.length; i++){
+		var pair = null;
+		for (var j = 0; j < filterOps.length; j++) {
+		    pair = criterias[i].split(filterOps[j]);
+			if(pair.length==2) break;
+		}
+		var op = criterias[i].substr(pair[0].length, criterias[i].length - pair[0].length - pair[1].length);
+		h['f_'+i] = pair[0];
+		h['o_'+i] = op;
+		h['c_'+i] = pair[1];
+	}
+	return h;
+}
 function createControl(id, fieldMetadata, container){
     if(fieldMetadata.options==null) fieldMetadata.options = new Object();
     fieldMetadata.options.container = container;
@@ -1886,7 +1898,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
     },
     show: function(x, y){
         var menu = $('smMenu');
-        var winDim = $(document.body).getDimensions();
+        var winDim = Position.getWindowSize();
         if(!window.innerWidth) {window.innerWidth=winDim.width;window.innerHeight=winDim.height;}
         if(x+menu.getWidth()>window.innerWidth) x -= menu.getWidth();
         if(y+menu.getHeight()>window.innerHeight) y -= menu.getHeight();
@@ -1922,7 +1934,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
 
         var menu = $(id);
         var linkPos = Position.cumulativeOffset(link);
-        var winDim = $(document.body).getDimensions();
+        var winDim = Position.getWindowSize();
         if(!window.innerWidth) {window.innerWidth=winDim.width;window.innerHeight=winDim.height;}
         
         if(linkPos[0]+link.getWidth()+menu.getWidth()<window.innerWidth)
