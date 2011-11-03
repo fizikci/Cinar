@@ -216,7 +216,7 @@ function lightBox(img){
 		var lbDim = lightBoxDiv.getDimensions();
 		var imgDim = img.getDimensions();
 		var posView = document.viewport.getScrollOffsets();
-		var dimView = Prototype.Browser.IE ? {width:document.body.clientWidth, height:document.body.clientHeight} : document.viewport.getDimensions();
+		var dimView = Position.getWindowSize();
 		lightBoxDiv.setStyle({left:(posView[0]+(dimView.width-lbDim.width)/2)+'px', top:(posView[1]+(dimView.height-lbDim.height)/2)+'px'});
 		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px'});
 		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px'});
@@ -458,8 +458,14 @@ Object.extend(String.prototype, {
         return enc;
     }
 });
-document.getWidth = function(){ return $(document.body).getDimensions().width; }
-document.getHeight = function(){ return $(document.body).getDimensions().height; }
+Position.getWindowSize = function(w) {
+	var width, height;
+	w = w ? w : window;
+	width = w.innerWidth || (w.document.documentElement.clientWidth || w.document.body.clientWidth);
+	height = w.innerHeight || (w.document.documentElement.clientHeight || w.document.body.clientHeight);
+
+	return { width: width, height: height };
+}
 
 // for scrolling elemnts in overflowed elements, thanks to robmadole, http://dev.rubyonrails.org/ticket/8208
 Scroll = Class.create(); 

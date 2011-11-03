@@ -24,7 +24,7 @@ DIV {
 
 #page {
 	width: 1000px; 
-	height: 100%; 
+	min-height: 700px; 
 	margin-top:10px; 
 	margin-right:auto;
 	margin-left:auto;
