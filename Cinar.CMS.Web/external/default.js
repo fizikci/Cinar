@@ -202,7 +202,6 @@ function lightBox(img){
 	function showPic(){
 		lbImg.src = img.readAttribute('path'); 
 		lightBoxDiv.hide();
-		$('lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
 		$('lbTitle').innerHTML = img.readAttribute('title'); 
 		$('lbDesc').innerHTML = img.readAttribute('desc'); 
 		$('lbLike').down('span').innerHTML = img.readAttribute('like'); 
@@ -212,28 +211,20 @@ function lightBox(img){
 	lbImg.on('load', function(){
 		if(img.previous('img')) $('lbPrev').show(); else $('lbPrev').hide();
 		if(img.next('img')) $('lbNext').show(); else $('lbNext').hide();
-		lightBoxDiv.setStyle({width:'auto', height:'auto', top:'auto',left:'auto',right:'auto',bottom:'auto', margin:'default'});
+		$('lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
 		var lbDim = lightBoxDiv.getDimensions();
 		var imgDim = img.getDimensions();
-		lightBoxDiv.setStyle({width:lbDim.width+'px', height:lbDim.height+'px', top:0,left:0,right:0,bottom:0, margin:'auto'});
+		var posView = document.viewport.getScrollOffsets();
+		var dimView = Prototype.Browser.IE ? {width:document.body.clientWidth, height:document.body.clientHeight} : document.viewport.getDimensions();
+		lightBoxDiv.setStyle({left:(posView[0]+(dimView.width-lbDim.width)/2)+'px', top:(posView[1]+(dimView.height-lbDim.height)/2)+'px'});
 		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px'});
 		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px'});
 		$('lbTitle').setStyle({width:imgDim.width+'px'});
 		$('lbDesc').setStyle({width:imgDim.width+'px'});
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true);
-		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){var pop = $('gogPopDiv'); if(pop) pop.remove();} });
+		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0 });
 	});
-	/*
-	var pos = Position.cumulativeOffset(img);
-	var dim = img.getDimensions();
-	var lbDim = lightBoxDiv.getDimensions();
-	lightBoxDiv.setStyle({left:(pos[0]-(lbDim.width-dim.width)/2)+'px', top:(pos[1]-(lbDim.height-dim.height)/2)+'px'});
-	$('lbPrev').setStyle({top:(lbDim.height/2-19)+'px'});
-	$('lbNext').setStyle({top:(lbDim.height/2-19)+'px'});
-	lightBoxDiv.hide();
-	new Effect.Appear(lightBoxDiv, { duration: 0.2, from: 0.0, to: 1.0, afterFinish: function(){var pop = $('gogPopDiv'); if(pop) pop.remove();} });
-	*/
 }
 
 // chart modülü için

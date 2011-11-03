@@ -1,7 +1,7 @@
 ﻿#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
 #gogPopDiv img {width:auto; height:auto;}
 #lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center}
-#lightBoxDiv #lbPrev {position:absolute; cursor:pointer}
+#lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
 #lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
 #lightBoxDiv #lbCounter {text-align:right; margin-bottom:20px}
 #lightBoxDiv #lbTitle {font-weight:bold}

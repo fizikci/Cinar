@@ -2199,7 +2199,7 @@ function niceInfo(alert, okCallback){
     win.showCenter();
     win.toFront();
     $('btnPromptOK').observe('click', function(){
-        okCallback();
+        if(okCallback) okCallback();
         Windows.getFocusedWindow().close();
     });
 }
@@ -2214,7 +2214,7 @@ function niceConfirm(confirm, okCallback){
     var selCtrl = $('btnPromptCancel');
     selCtrl.focus();
     $('btnPromptOK').observe('click', function(){
-        okCallback();
+        if(okCallback) okCallback();
         Windows.getFocusedWindow().close();
     });
     $('btnPromptCancel').observe('click', function(){Windows.getFocusedWindow().close();});
