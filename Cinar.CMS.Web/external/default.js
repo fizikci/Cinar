@@ -190,6 +190,7 @@ function gogPop(event){
 	pop.hide();
 	new Effect.Appear(pop, { duration: 0.2, from: 0.0, to: 1.0 });
 }
+// lghtbox faclty
 function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
