@@ -1399,6 +1399,9 @@ var ListForm = Class.create();ListForm.prototype = {
                 pe.onSave = ths.insertEntity.bind(ths);
                 win.show();
                 win.toFront();
+				
+				var dimWin = winContent.down('.editForm').getDimensions();
+				win.setSize(350,dimWin.height);
             },
             onException: function (req, ex) { throw ex; }
         });
@@ -1443,6 +1446,9 @@ var ListForm = Class.create();ListForm.prototype = {
                 pe.onSave = ths.saveEntity.bind(ths);
                 win.show();
                 win.toFront();
+				
+				var dimWin = winContent.down('.editForm').getDimensions();
+				win.setSize(350,dimWin.height);
             },
             onException: function (req, ex) { throw ex; }
         });
@@ -1899,9 +1905,9 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
     show: function(x, y){
         var menu = $('smMenu');
         var winDim = Position.getWindowSize();
-        if(!window.innerWidth) {window.innerWidth=winDim.width;window.innerHeight=winDim.height;}
-        if(x+menu.getWidth()>window.innerWidth) x -= menu.getWidth();
-        if(y+menu.getHeight()>window.innerHeight) y -= menu.getHeight();
+		var scrollPos = document.viewport.getScrollOffsets();
+        if(x>scrollPos[0]+winDim.width-menu.getWidth()) x -= menu.getWidth();
+        if(y>scrollPos[1]+winDim.height-menu.getHeight()) y -= menu.getHeight();
         if(x<0) x=0; if(y<0) y=0;
         menu.setStyle({left: x+'px', top:y+'px'});
         this.onShow();
@@ -1935,14 +1941,14 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         var menu = $(id);
         var linkPos = Position.cumulativeOffset(link);
         var winDim = Position.getWindowSize();
-        if(!window.innerWidth) {window.innerWidth=winDim.width;window.innerHeight=winDim.height;}
+		var scrollPos = document.viewport.getScrollOffsets();
         
-        if(linkPos[0]+link.getWidth()+menu.getWidth()<window.innerWidth)
+        if(linkPos[0]+link.getWidth()+menu.getWidth()<scrollPos[0]+winDim.width)
             x = linkPos[0]+link.getWidth()-5;
         else
             x = linkPos[0]-menu.getWidth()+5;
         
-        if(linkPos[1]+menu.getHeight()<window.innerHeight)
+        if(linkPos[1]+menu.getHeight()<scrollPos[1]+winDim.height)
             y = linkPos[1]-3;
         else
             y = linkPos[1]-menu.getHeight()+link.getHeight()-3;
