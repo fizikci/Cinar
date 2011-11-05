@@ -78,6 +78,7 @@ langRes['Enter new page name'] = 'Enter new page name:';
 langRes['Transfer'] = 'Transfer';
 langRes['Pages have been added.'] = 'Pages have been added.';
 langRes['General CSS'] = 'General CSS';
+langRes['File Manager'] = 'File Manager';
 langRes['Add Default Module Styles'] = 'Add Default Module Styles';
 
 // message.js

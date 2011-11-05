@@ -5,7 +5,7 @@ namespace Cinar.CMS.Library.Entities
     public class Hit : BaseEntity
     {
         private int contentId = 0;
-        [ColumnDetail(IsNotNull = true, References = typeof(Content))]
+        //[ColumnDetail(IsNotNull = true, References = typeof(Content))]
         [EditFormFieldProps(ControlType = ControlType.LookUp)]
         public int ContentId
         {

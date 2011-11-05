@@ -239,21 +239,26 @@ namespace Cinar.CMS.Library
             //    sb.Append("}\n,");
             //}
 
-            foreach (Type entityType in Provider.GetEntityTypes())
-                foreach (PropertyInfo pi in entityType.GetProperties())
-                {
-                    ColumnDetailAttribute fda = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
-                    if (fda.References == obj.GetType())
+            if (obj.GetType() != typeof(Lang))
+            {
+                foreach (Type entityType in Provider.GetEntityTypes())
+                    foreach (PropertyInfo pi in entityType.GetProperties())
                     {
-                        sb.Append("\t{");
-                        sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'",
-                            Utility.ToHTMLString(Provider.GetResource(entityType.Name)),
-                            Utility.ToHTMLString(Provider.GetResource(entityType.Name + "Desc")),
-                            entityType.Name,
-                            pi.Name);
-                        sb.Append("}\n,");
+                        if (pi.DeclaringType == typeof(BaseEntity)) continue; //*** BaseEntity'deki UpdateUserId ve InsertUserId bütün entitilerde var, gereksiz bir ilişki kalabalığı oluşturuyor
+
+                        ColumnDetailAttribute fda = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                        if (fda.References == obj.GetType())
+                        {
+                            sb.Append("\t{");
+                            sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'",
+                                Utility.ToHTMLString(Provider.GetResource(entityType.Name)),
+                                Utility.ToHTMLString(Provider.GetResource(entityType.Name + "Desc")),
+                                entityType.Name,
+                                pi.Name);
+                            sb.Append("}\n,");
+                        }
                     }
-                }
+            }
 
             sb.Remove(sb.Length - 1, 1);
             sb.Append("]");
