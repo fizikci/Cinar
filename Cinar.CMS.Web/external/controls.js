@@ -212,7 +212,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
             this.button.observe('click', this.showEditor.bind(this));
 
         if (!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"></div>')
+            new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
 
         this.input['ctrl'] = this;
     },
@@ -220,9 +220,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
         var list = $(this.editorId);
         list.innerHTML = '';
 
-        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" style="width:633px;"  onkeydown="return insertTab(event,this);" wrap="off"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
         $(this.editorId + 'ta').value = this.input.value.gsub('#NL#', '\n');
-        $(this.editorId + 'ta').style.height = '452px';
 
         if (list.visible()) { list.hide(); currEditor = null; return; }
         if (this.input.disabled) return;
@@ -258,13 +257,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
 //#       PictureEdit        #
 //############################
 
-var fileBrowserCurrInput, list, footer, currFolder, currPicEdit;
 var PictureEdit = Class.create(); PictureEdit.prototype = {
-	width: 600,
-	height: 500,
-	title: 'Select file',
-	folder: '/UserFiles',
-	listMode: 'pics',
+	fileManager: null,
     initialize: function(id, value, options){
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
@@ -276,45 +270,28 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 			currEditor = null;
             return;
         }
-		currPicEdit = this;
-        new Insertion.Bottom(document.body, '<div class="editor" id="'+this.editorId+'" style="width:643px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;">' +
-												'<div id="fileBrowserList"></div>' +
-												'<div id="fileBrowserFooter">' +
-													'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
-														'<input type="hidden" name="folder"/>' +
-														'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
-														'<iframe name="fakeUplFrm" style="visibility:hidden;width:0px;height:0px;"></iframe>' +
-													'</form>' +
-													'<form action="SystemInfo.ashx?method=createFolder" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
-														'<input type="hidden" name="folder"/>' +
-														'Klasör: <input type="text" name="name" style="width:80px"/><input type="submit" value="Oluştur"/>' +
-													'</form>' +
-													'<div style="float:right;margin-top:10px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>' +
-												'</div>' +
+        new Insertion.Bottom(document.body, '<div class="editor PictureEdit" style="display:none" id="'+this.editorId+'">' +
 											'</div>');
 
         var list = $(this.editorId);
         if (this.input.disabled) return;
 		
-		list.select('form').each(function(frm){
-			frm.on('submit', function () {
-				$('fileBrowserLoading').show();
-				frm.down('input[name=folder]').setValue(currFolder);
-			});
-		});
-
+		var ths = this;
+		
+		this.fileManager = new FileManager(list, this.input.value!='' ? this.input.value.substring(0, this.input.value.lastIndexOf("/")) : '', function(path){
+								ths.setValue(path);
+								ths.showEditor();
+							});
+		fileBrowserCurrInput = this.input;
+		
+		$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>');
+		
         var btnCancel = $(this.editorId+'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
 
         if (this.afterShowEditor) this.afterShowEditor();
 
-        list.down().value = this.input.value.gsub('#NL#', '\n');
-
         this.setEditorPos(list);
-		
-                currFolder = this.input.value!='' ? this.input.value.substring(0, this.input.value.lastIndexOf("/")) : this.folder;
-                fileBrowserCurrInput = this.input;
-				this.getFileList();
 
         list.show();
         Event.stop(event);
@@ -324,12 +301,52 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
     },
     setValue: function(val){
         this.input.value = val ? val : '';
-    },
+    }
+}
 
+var fileBrowserCurrInput, list, footer, currFolder, currPicEdit;
+var FileManager = Class.create(); FileManager.prototype = {
+	width: 600,
+	height: 500,
+	title: 'Select file',
+	folder: '/UserFiles',
+	listMode: 'pics',
+	onClickFile: null,
+	canDelete: true,
+	initialize: function(container, selectedFolder, onClickFile, canDelete){
+		this.onClickFile = onClickFile;
+		var container = $(container);
+		var html = 	'<div><div id="fileBrowserList"></div>' +
+					'<div id="fileBrowserFooter">' +
+						'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+							'<input type="hidden" name="folder"/>' +
+							'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
+							'<iframe name="fakeUplFrm"></iframe>' +
+						'</form>' +
+						'<form action="SystemInfo.ashx?method=createFolder" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+							'<input type="hidden" name="folder"/>' +
+							'Klasör: <input type="text" name="name" style="width:80px"/><input type="submit" value="Oluştur"/>' +
+						'</form>' +
+						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+							'<input type="hidden" name="folder"/>' +
+							'<input type="hidden" name="name"/><input type="submit" value="Sil"/>' +
+						'</form>') : '') +
+					'</div></div>';
+		new Insertion.Bottom(container, html);
+		container.select('form').each(function(frm){
+			frm.on('submit', function () {
+				$('fileBrowserLoading').show();
+				frm.down('input[name=folder]').setValue(currFolder);
+			});
+		});
+		currFolder = selectedFolder ? selectedFolder : this.folder;
+		currPicEdit = this;
+		this.getFileList();
+	},
     getFileList: function () {
 		var list = $('fileBrowserList');
 
-		$('fileBrowserLoading').show();
+		if($('fileBrowserLoading')) $('fileBrowserLoading').show();
 		var ths = this;
 		new Ajax.Request('SystemInfo.ashx?method=getFileList&folder=' + currFolder, {
 			onComplete: function (resp) {
@@ -382,8 +399,10 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 					list.select('.fileItem').each(function (elm) {
 						elm.on('click', function(){
 							var path = currFolder + '/' + elm.readAttribute('name');
-							fileBrowserCurrInput.setValue(path);
-							ths.showEditor();
+							if(ths.onClickFile)
+								ths.onClickFile(path);
+							else
+								elm.toggleClassName('fileSelected');
 						});
 					});
 				}
@@ -425,7 +444,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 fileBrowserUploadFeedback = function (msg, url) {
 	//fileBrowserCurrInput.value = url;
 	currPicEdit.getFileList();
-};
+}
 
 
 //############################
@@ -458,7 +477,7 @@ var LookUp = Class.create(); LookUp.prototype = {
             return;
         }
 
-        new Insertion.Bottom(document.body, '<div class="editor alphacube_content" id="' + this.editorId + '" style="width:800px;height:424px;position:absolute;border:1px inset;padding:2px;display:none;background:white;z-index:5000;"></div>');
+        new Insertion.Bottom(document.body, '<div class="editor LookUp" style="display:none" id="' + this.editorId + '"></div>');
 
         var list = $(this.editorId);
         if (this.input.disabled) return;
@@ -628,7 +647,7 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
 			currEditor = null;
             return;
         }
-        new Insertion.Bottom(document.body, '<div class="editor" id="' + this.editorId + '" style="width:640px;height:480px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><textarea id="' + this.editorId + 'ta" style="width:633px;height:452px" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
+        new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '"><textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
 
         var list = $(this.editorId);
         if (this.input.disabled) return;
@@ -717,7 +736,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     },
     showEditor: function(event){
         if(!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor" id="'+this.editorId+'" style="width:324px;height:300px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000;"><div id="'+this.editorId+'div" style="overflow:auto;height:280px"></div><center><span id="'+this.editorId+'btnOK" class="btn OK">'+lang('OK')+'</span> <span id="'+this.editorId+'btnCancel" class="btn cancel">'+lang('Cancel')+'</span></center></div>');
+            new Insertion.Bottom(document.body, '<div class="editor FilterEdit" style="display:none" id="'+this.editorId+'"><div id="'+this.editorId+'div" style="overflow:auto;height:270px"></div><center><span id="'+this.editorId+'btnOK" class="btn OK">'+lang('OK')+'</span> <span id="'+this.editorId+'btnCancel" class="btn cancel">'+lang('Cancel')+'</span></center></div>');
         else
             $(this.editorId).down().innerHTML = "";
         var entityNameToUse = this.options.entityName;
@@ -792,7 +811,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     },
     showEditor: function(event){
         if(!$(this.editorId)){
-            new Insertion.Bottom(document.body, '<div class="editor hideOnOut" id="'+this.editorId+'" style="width:200px;position:absolute;border:1px solid black;padding:2px;display:none;background:white;z-index:5000"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
+            new Insertion.Bottom(document.body, '<div class="editor hideOnOut DateTimeEdit" style="display:none" id="'+this.editorId+'"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
             var editor = $(this.editorId);
             __monthCombo = new ComboBox('_cH1', this.dateValue.getMonth()+1, {container:$('__cH1'), width:80, listHeight:100, items:[[1,lang('January')],[2,lang('February')],[3,lang('March')],[4,lang('April')],[5,lang('May')],[6,lang('June')],[7,lang('July')],[8,lang('August')],[9,lang('September')],[10,lang('October')],[11,lang('November')],[12,lang('December')]], onChange:this.monthYearChanged.bind(this)});
             __yearCombo = new ComboBox('_cH2', this.dateValue.getFullYear(), {container:$('__cH2'), width:60, listHeight:100, items:$R(1950,2010).toArray(), onChange:this.monthYearChanged.bind(this)});
@@ -935,14 +954,14 @@ var ComboBox = Class.create(); ComboBox.prototype = {
     },
     beforeOpenList: function(){
         if(!this.editor){
-            new Insertion.After(this.div, '<div class="editor hideOnOut" style="text-align:left;overflow-y:auto;overflow-x:hidden;position:absolute;border:1px solid black;display:none;background:white"></div>');
+            new Insertion.After(this.div, '<div class="editor hideOnOut ComboBox" style="display:none"></div>');
             this.editor = this.div.next();
             this.fetchData();
         }
     },
     beforeOpenListForFields: function(){
         if(!this.editor){
-            new Insertion.After(this.div, '<div class="editor hideOnOut" style="text-align:left;overflow:auto;position:absolute;border:1px solid black;display:none;background:white"></div>');
+            new Insertion.After(this.div, '<div class="editor hideOnOut ComboBox" style="display:none"></div>');
             this.editor = this.div.next();
         }
         var entityNameToUse = this.options.entityName;
@@ -1162,9 +1181,10 @@ var EditForm = Class.create(); EditForm.prototype = {
 				str += '</tr>';
 			}
 		}
+        str += '<tr class="category" id="detailsHeader'+this.hndl+'"><td colspan="2">İlişkili Veriler</td></tr>';
+        str += '<tr><td colspan="2" id="details'+this.hndl+'"></td></tr>';
         str += '</tbody></table></div></td></tr>';
-        str += '<tr><td><fieldset id="details'+this.hndl+'"><legend>İlişkili Veriler</legend></fieldset></td></tr>';
-        str += '<tr><td style="height:50px;padding-bottom:10px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
+        str += '<tr><td style="height:50px;padding:10px 0px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
         str += '<tr><td style="height:16px;text-align:right"><span class="btn save" id="btnSave'+this.hndl+'">'+lang('Save')+'</span></td></tr>';
         str += '</table>';
 
@@ -1217,7 +1237,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                     break;
                 case 'ListForm':
                     if(this.entityId==0) continue; //***
-                    details.insert('<a href="#" onclick="openEntityListForm(\''+control.entityName+'\', \''+control.label+'\', \''+control.relatedFieldName+'='+this.entityId+'\');return false;">'+control.label+'</a>, ');
+                    details.insert('<span class="btn '+control.entityName+'" onclick="openEntityListForm(\''+control.entityName+'\', \''+control.label+'\', \''+control.relatedFieldName+'='+this.entityId+'\')">'+control.label+'</span>');
                     continue;
                 default:
                     throw 'No control of this kind: '+control.type;
@@ -1237,8 +1257,10 @@ var EditForm = Class.create(); EditForm.prototype = {
                 aControl.setValue(controls[i].value);
         }
         // yoksa detail linklerini gizleyelim
-        if(!details.down('a'))
+        if(!details.down('span')){
             details.hide();
+			$('detailsHeader'+this.hndl).hide();
+		}
     },
     showDesc: function(event){
         var elm = Event.findElement(event,'INPUT');
@@ -1302,7 +1324,7 @@ var ListForm = Class.create();ListForm.prototype = {
         this.options = options;
 
         if (!this.options.hideFilter) {
-            new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter">' + lang('Apply') + '</span></td></table>');
+            new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
             this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
             $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
         }
@@ -1311,6 +1333,7 @@ var ListForm = Class.create();ListForm.prototype = {
 
         var str = '<div class="lf-listFormFooter">';
         str += '<img src="external/icons/prev.gif" id="btnPrev' + this.hndl + '" alt="' + lang('Previous Page') + ' (PgUp)"/>';
+        str += '<span class="pager" id="pageNo' + this.hndl + '">1</span>';
         str += '<img src="external/icons/next.gif" id="btnNext' + this.hndl + '" alt="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"/>';
         str += '<img src="external/icons/add.png" id="btnAdd' + this.hndl + '" alt="' + lang('Add') + ' (Ins)"/>';
         str += '<img src="external/icons/edit.png" id="btnEdit' + this.hndl + '" alt="' + lang('Edit') + ' (Ent)"/>';
@@ -1349,6 +1372,10 @@ var ListForm = Class.create();ListForm.prototype = {
                 var dataArea = $('lf-dataArea' + ths.hndl);
                 dataArea.innerHTML = req.responseText;
                 ths.listGrid = new ListGrid(dataArea.down(), ths.options.selectCallback, ths.sortCallback.bind(ths));
+				
+				$('btnPrev' + ths.hndl).setOpacity(ths.pageIndex<=0 ? 0.3 : 1.0);
+				$('btnNext' + ths.hndl).setOpacity(ths.listGrid.mayHaveNextPage(ths.limit) ? 1.0 : 0.3);
+				$('pageNo' + ths.hndl).innerHTML = (ths.pageIndex+1);
             },
             onException: function (req, ex) { throw ex; }
         });

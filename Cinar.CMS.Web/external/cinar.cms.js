@@ -244,6 +244,7 @@ popupMenu.menuItems = [
     {text:'-'},
     {text:lang('Edit General CSS'), icon:'external/icons/css.png', callback:editStyle},
     {text:lang('Configuration'), icon:'external/icons/Configuration.png', callback:configure},
+    {text:lang('File Manager'), icon:'external/icons/folder_module.png', callback:openFileManager},
     {text:lang('Clear Cache'), icon:'external/icons/cache.gif', callback:clearCache},
     {text:lang('Edit Content'), icon: 'external/icons/edit.png', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'external/icons/edit.png', isEnabled: tagLinkSelected, callback: editTag },
@@ -473,7 +474,7 @@ function saveModule(pe){
 }
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback){
     caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
-    var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: caption, width:800, height:350, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
 
     var options = {
@@ -628,11 +629,13 @@ function renameTemplate(){
     );
 }
 function editTemplate(templateName){
+	if(templateName=='1') return;
     if(!templateName) templateName = currTemplate;
+	
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/page.png" style="vertical-align:middle"> ' + templateName, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
     new Insertion.Bottom(winContent, '<textarea id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
-    $('txtSource').value = ajax({url:'SystemInfo.ashx?method=getTemplateSource&template='+templateName,isJSON:false,noCache:false});
+    $('txtSource').value = ajax({url:'SystemInfo.ashx?method=getTemplateSource&template='+templateName,isJSON:false,noCache:true});
     $('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
     win.showCenter();
     win.toFront();
@@ -712,7 +715,7 @@ function editStyle(){
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/css.png" style="vertical-align:middle"> ' + lang('General CSS'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
     new Insertion.Bottom(winContent, '<textarea id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn load" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn save" id="btnSaveStyles">'+lang('Save')+'</span></p>');
-    $('txtDefStyles').value = ajax({url:'SystemInfo.ashx?method=getDefaultStyles',isJSON:false,noCache:false});
+    $('txtDefStyles').value = ajax({url:'SystemInfo.ashx?method=getDefaultStyles',isJSON:false,noCache:true});
     $('btnSaveStyles').observe('click', saveStyle);
     $('btnModuleDefaultStyles').observe('click', function(){$('txtDefStyles').value += ajax({url:'ModuleInfo.ashx?method=getAllDefaultCSS',isJSON:false,noCache:false});});
     win.showCenter();
@@ -763,6 +766,13 @@ function configure(){
 //#        OTHER UTILITY (clear cache, end design mode, edit right clicked content)         #
 //###########################################################################################
 
+function openFileManager(){
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/css.png" style="vertical-align:middle"> ' + lang('General CSS'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var winContent = $(win.getContent());
+    new FileManager(winContent);
+    win.showCenter();
+    win.toFront();
+}
 function clearCache(){
     new Ajax.Request('SystemInfo.ashx?method=clearCache', {
         method: 'get',

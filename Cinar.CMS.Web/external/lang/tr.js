@@ -78,6 +78,7 @@ langRes['Enter new page name'] = 'Yeni sayfa adını giriniz:';
 langRes['Transfer'] = 'Aktar';
 langRes['Pages have been added.'] = 'Sayfalar oluşturuldu.';
 langRes['General CSS'] = 'Genel CSS Ayarları';
+langRes['File Manager'] = 'Dosya Yöneticisi';
 langRes['Add Default Module Styles'] = 'Varsayılan modül CSSlerini ekle';
 
 // message.js
