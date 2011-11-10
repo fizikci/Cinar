@@ -824,11 +824,13 @@
 	<entry key="TableView" value="Table View"/>
 	<entry key="TableView.Cols" value="Column Number"/>
 	<entry key="TableView.ColsDesc" value=""/>
-	<entry key="TableView.DisplayAsTable" value="Display As Table"/>
-	<entry key="TableView.DisplayAsTableDesc" value="Will the items be displayed as table (TR, TD), or block elements (DIV)?"/>
 	<entry key="TableView.EncloseWithDiv" value="Enclose With Div"/>
 	<entry key="TableView.EncloseWithDivDesc" value="Put each item into a DIV element."/>
-	<entry key="TabView" value="Tab View"/>
+  <entry key="TableView.DisplayAsTable" value="Display As Table"/>
+  <entry key="TableView.DisplayAsTableDesc" value="Will the items be displayed as table (TR, TD), or block elements (DIV)?"/>
+  <entry key="TableView.DivClassName" value="Div Class Name"/>
+  <entry key="TableView.DivClassNameDesc" value="If each item is put into a DIV element, what is the CSS class name for the divs?"/>
+  <entry key="TabView" value="Tab View"/>
 	<entry key="TabView.Tabs" value="Tabs"/>
 	<entry key="TabView.TabsDesc" value="Enter the tab page titles seperating with comma"/>
 	<entry key="Tag" value="Tag"/>

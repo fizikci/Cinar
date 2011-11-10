@@ -135,6 +135,14 @@
 .dialog {
 	display: block;
 	position: absolute;
+
+	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+	box-shadow: 3px 3px 4px #c1c3c2;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
 }
 
 .dialog table.table_window  { 

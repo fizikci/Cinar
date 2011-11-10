@@ -278,10 +278,14 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 		
 		var ths = this;
 		
-		this.fileManager = new FileManager(list, this.input.value!='' ? this.input.value.substring(0, this.input.value.lastIndexOf("/")) : '', function(path){
-								ths.setValue(path);
-								ths.showEditor();
-							});
+		this.fileManager = new FileManager({
+								container:list,
+								folder: ths.input.value!='' ? ths.input.value.substring(0, ths.input.value.lastIndexOf("/")) : undefined,
+								onSelectFile: function(path){
+									ths.setValue(path);
+									ths.showEditor();
+								},
+								canDelete: false});
 		fileBrowserCurrInput = this.input;
 		
 		$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>');
@@ -309,13 +313,15 @@ var FileManager = Class.create(); FileManager.prototype = {
 	width: 600,
 	height: 500,
 	title: 'Select file',
+	container: null,
 	folder: '/UserFiles',
 	listMode: 'pics',
-	onClickFile: null,
+	onSelectFile: null,
 	canDelete: true,
-	initialize: function(container, selectedFolder, onClickFile, canDelete){
-		this.onClickFile = onClickFile;
-		var container = $(container);
+	initialize: function(options){
+		Object.extend(this, options);
+		if(!this.folder) this.folder = '/UserFiles';
+		this.container = $(this.container ? this.container : document.body);
 		var html = 	'<div><div id="fileBrowserList"></div>' +
 					'<div id="fileBrowserFooter">' +
 						'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
@@ -327,19 +333,21 @@ var FileManager = Class.create(); FileManager.prototype = {
 							'<input type="hidden" name="folder"/>' +
 							'Klasör: <input type="text" name="name" style="width:80px"/><input type="submit" value="Oluştur"/>' +
 						'</form>' +
-						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
 							'<input type="hidden" name="folder"/>' +
 							'<input type="hidden" name="name"/><input type="submit" value="Sil"/>' +
 						'</form>') : '') +
 					'</div></div>';
-		new Insertion.Bottom(container, html);
-		container.select('form').each(function(frm){
+		new Insertion.Bottom(this.container, html);
+		this.container.select('form').each(function(frm){
 			frm.on('submit', function () {
 				$('fileBrowserLoading').show();
 				frm.down('input[name=folder]').setValue(currFolder);
+				if(frm.hasClassName('delForm'))
+					frm.down('input[name=name]').setValue($('fileBrowserList').select('.fileSelected').collect(function(elm){return elm.readAttribute('name');}).join('#NL#'));
 			});
 		});
-		currFolder = selectedFolder ? selectedFolder : this.folder;
+		currFolder = this.folder;
 		currPicEdit = this;
 		this.getFileList();
 	},
@@ -363,14 +371,12 @@ var FileManager = Class.create(); FileManager.prototype = {
 					var str = '<div class="nav ui-widget-content ui-corner-all">' + folderLinks + '</div>';
 					if (ths.listMode == 'details') {
 						str = '<table class="fileList" cellspacing="0" border="0">'; //<tr><th>Ad</th><th>Boyut</th><th>Tarih</th></tr>
-						if (currFolder.length > ths.folder.length) str += '<tr><td class="fileName folder" name="..">..</td><td class="size"></td><td class="date"></td></tr>';
 						for (var i = 0; i < resp.root.length; i++) {
 							var item = resp.root[i];
-							str += '<tr><td class="fileName ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + '" name="..">' + item.name + '</td><td class="size">' + ths.getSize(item) + '</td><td class="date">' + ths.formatDate(item.date) + '</td></tr>';
+							str += '<tr><td class="fileName ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + '" name="' + item.name + '">' + item.name + '</td><td class="size">' + ths.getSize(item) + '</td><td class="date">' + ths.formatDate(item.date) + '</td></tr>';
 						}
 						str += '</table>';
 					} else {
-						if (currFolder.length > ths.folder.length) str += '<div class="fileNameBox folder ui-widget-content ui-corner-all" name=".."><img src="/external/icons/folder.png' + '"/><br/>..</div>';
 						for (var i = 0; i < resp.root.length; i++) {
 							var item = resp.root[i];
 							var fileClass = ths.getFileClassName(item);
@@ -387,22 +393,29 @@ var FileManager = Class.create(); FileManager.prototype = {
 					}
 					list.innerHTML = str;
 					list.select('.folder').each(function (elm) {
-						elm.on('click', function(){
+						elm.on('click', function(event){
+							var path = currFolder + '/' + elm.readAttribute('name');
+							if(!event.ctrlKey)
+								list.select('.fileNameBox').each(function(fnm){fnm.removeClassName('fileSelected');});
+							elm.toggleClassName('fileSelected');
+						});
+						elm.on('dblclick', function(){
 							var f = elm.readAttribute('name');
-							if (f == '..')
-								currFolder = currFolder.substr(0, currFolder.lastIndexOf('/'));
-							else
-								currFolder = currFolder + '/' + f;
+							currFolder = currFolder + '/' + f;
 							ths.getFileList();
 						});
 					});
 					list.select('.fileItem').each(function (elm) {
-						elm.on('click', function(){
+						elm.on('dblclick', function(){
 							var path = currFolder + '/' + elm.readAttribute('name');
-							if(ths.onClickFile)
-								ths.onClickFile(path);
-							else
-								elm.toggleClassName('fileSelected');
+							if(ths.onSelectFile)
+								ths.onSelectFile(path);
+						});
+						elm.on('click', function(event){
+							var path = currFolder + '/' + elm.readAttribute('name');
+							if(!event.ctrlKey)
+								list.select('.fileNameBox').each(function(fnm){fnm.removeClassName('fileSelected');});
+							elm.toggleClassName('fileSelected');
 						});
 					});
 				}
@@ -414,6 +427,9 @@ var FileManager = Class.create(); FileManager.prototype = {
 		});
 
     },
+	getSelectedFiles: function(){
+		return $('fileBrowserList').select('.fileSelected').collect(function(elm){return currFolder + '/' + elm.readAttribute('name');});
+	},
     getSize: function (item) {
             if (item.size < 0) return ''; //***
 
@@ -1184,7 +1200,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr class="category" id="detailsHeader'+this.hndl+'"><td colspan="2">İlişkili Veriler</td></tr>';
         str += '<tr><td colspan="2" id="details'+this.hndl+'"></td></tr>';
         str += '</tbody></table></div></td></tr>';
-        str += '<tr><td style="height:50px;padding:10px 0px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
+        str += '<tr><td style="min-height:50px;padding:10px 0px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
         str += '<tr><td style="height:16px;text-align:right"><span class="btn save" id="btnSave'+this.hndl+'">'+lang('Save')+'</span></td></tr>';
         str += '</table>';
 
@@ -1237,7 +1253,9 @@ var EditForm = Class.create(); EditForm.prototype = {
                     break;
                 case 'ListForm':
                     if(this.entityId==0) continue; //***
-                    details.insert('<span class="btn '+control.entityName+'" onclick="openEntityListForm(\''+control.entityName+'\', \''+control.label+'\', \''+control.relatedFieldName+'='+this.entityId+'\')">'+control.label+'</span>');
+					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name'}).value;
+					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.replace("'", "\\'").replace('"','\\"') + ')';
+                    details.insert('<span class="btn '+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                     continue;
                 default:
                     throw 'No control of this kind: '+control.type;
@@ -1332,6 +1350,11 @@ var ListForm = Class.create();ListForm.prototype = {
         new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"></div>');
 
         var str = '<div class="lf-listFormFooter">';
+		if(this.options.commands)
+			for(var i=0; i<this.options.commands.length; i++){
+				var cmd = this.options.commands[i];
+				str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="btn '+cmd.icon+'">' + lang(cmd.name) + '</span></div>';
+			}
         str += '<img src="external/icons/prev.gif" id="btnPrev' + this.hndl + '" alt="' + lang('Previous Page') + ' (PgUp)"/>';
         str += '<span class="pager" id="pageNo' + this.hndl + '">1</span>';
         str += '<img src="external/icons/next.gif" id="btnNext' + this.hndl + '" alt="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"/>';
@@ -1349,6 +1372,11 @@ var ListForm = Class.create();ListForm.prototype = {
         $('btnDelete' + this.hndl).observe('click', this.cmdDelete.bind(this));
         $('btnRefresh' + this.hndl).observe('click', this.fetchData.bind(this));
         $('btnInfo' + this.hndl).observe('click', this.cmdInfo.bind(this));
+		if(this.options.commands)
+			for(var i=0; i<this.options.commands.length; i++){
+				var cmd = this.options.commands[i];
+				$('btnListFormsCmd' + cmd.id + this.hndl).observe('click', cmd.handler.bind(this));
+			}
 
         this.fetchData();
     },
@@ -1449,10 +1477,8 @@ var ListForm = Class.create();ListForm.prototype = {
         });
     },
     cmdEdit: function () {
-        var selRows = this.listGrid.getSelectedRows() || [];
-        if (selRows.length == 0) return;
-        var entityName = this.options.entityName;
-        var id = selRows[0].id.split('_')[1];
+        var id = this.getSelectedEntityId();
+		if(!id || id<=0) return;
         var ths = this;
         new Ajax.Request(this.options.ajaxUri + '?method=edit&entityName=' + entityName + '&id=' + id, {
             method: 'get',
@@ -1480,6 +1506,13 @@ var ListForm = Class.create();ListForm.prototype = {
             onException: function (req, ex) { throw ex; }
         });
     },
+	getSelectedEntityId: function(){
+        var selRows = this.listGrid.getSelectedRows() || [];
+        if (selRows.length == 0) return 0;
+        var entityName = this.options.entityName;
+        var id = parseInt(selRows[0].id.split('_')[1]);
+		return id;
+	},
     saveEntity: function (pe) {
         var params = pe.serialize();
         var ths = this;
@@ -1497,10 +1530,8 @@ var ListForm = Class.create();ListForm.prototype = {
     cmdDelete: function () {
         var ths = this;
         niceConfirm(lang('The record will be deleted!'), function () {
-            var selRows = ths.listGrid.getSelectedRows() || [];
-            if (selRows.length == 0) return;
-            var name = ths.options.entityName;
-            var id = selRows[0].id.split('_')[1];
+			var id = ths.getSelectedEntityId();
+			if(!id || id<=0) return;
             new Ajax.Request(ths.options.ajaxUri + '?method=delete&entityName=' + ths.options.entityName + '&id=' + id, {
                 method: 'get',
                 onComplete: function (req) {
@@ -1512,10 +1543,8 @@ var ListForm = Class.create();ListForm.prototype = {
         });
     },
     cmdInfo: function () {
-        var selRows = this.listGrid.getSelectedRows() || [];
-        if (selRows.length == 0) return;
-        var name = this.options.entityName;
-        var id = selRows[0].id.split('_')[1];
+        var id = this.getSelectedEntityId();
+		if(!id || id<=0) return;
         niceInfo(ajax({ url: this.options.ajaxUri + '?method=info&entityName=' + name + '&id=' + id, isJSON: false, noCache: true }));
     }
 }

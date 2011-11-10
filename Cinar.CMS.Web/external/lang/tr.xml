@@ -825,11 +825,13 @@
 	<entry key="TableView" value="Tablo"/>
 	<entry key="TableView.Cols" value="Sütun sayısı"/>
 	<entry key="TableView.ColsDesc" value="Sütun sayısı"/>
-	<entry key="TableView.DisplayAsTable" value="Tablo olarak göster"/>
-	<entry key="TableView.DisplayAsTableDesc" value="İçerik tablolanmış (TR, TD) olarak mı, yoksa blok elementlerle mi (DIV) gösterilsin?"/>
-	<entry key="TableView.EncloseWithDiv" value="Div içine al"/>
-	<entry key="TableView.EncloseWithDivDesc" value="Her bir maddeyi div elementi içinde göstersin mi?"/>
-	<entry key="TabView" value="Tab View"/>
+  <entry key="TableView.EncloseWithDiv" value="Div içine al"/>
+  <entry key="TableView.EncloseWithDivDesc" value="Her bir maddeyi div elementi içinde göstersin mi?"/>
+  <entry key="TableView.DisplayAsTable" value="Tablo olarak göster"/>
+  <entry key="TableView.DisplayAsTableDesc" value="İçerik tablolanmış (TR, TD) olarak mı, yoksa blok elementlerle mi (DIV) gösterilsin?"/>
+  <entry key="TableView.DivClassName" value="Div CSS class adı"/>
+  <entry key="TableView.DivClassNameDesc" value="Her bir madde div içinde gösterilecekse, CSS class adı ne olsun?"/>
+  <entry key="TabView" value="Tab View"/>
 	<entry key="TabView.Tabs" value="Tab sayfaları"/>
 	<entry key="TabView.TabsDesc" value="Tab sayfaları"/>
 	<entry key="Tag" value="Etiket"/>

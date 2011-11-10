@@ -34,7 +34,7 @@ function onPageLoaded(){
             Event.observe(mdl, 'mousedown', highlightModule);
         });
         selectFirstModule();
-		setInterval(refreshModuleHighlighter, 50);
+		setInterval(refreshModuleHighlighter, 2000);
         
         trace.write({id:'Sistem'}, 'page load finished');
     }
@@ -483,8 +483,14 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         fields: ajax({url:'EntityInfo.ashx?method=getFieldsList&entityName='+entityName,isJSON:true,noCache:false}),
         ajaxUri: 'EntityInfo.ashx',
         forSelect: forSelect,
-        selectCallback: selectCallback
+        selectCallback: selectCallback,
+		commands: []
     }
+	if(entityName=='ContentPicture'){
+		options.commands.push({id:'QuickLoad', icon:'thunder', name:'Quick Load', handler:quickLoadImages});
+		options.commands.push({id:'Tagify', icon:'tag', name:'Tag Picture', handler:tagifySelectedPicture});
+	}
+
     if(extraFilter) options.extraFilter = extraFilter;
     win['form'] = new ListForm(winContent, options);
 
@@ -492,6 +498,44 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
     win.toFront();
     
     return win;
+}
+function quickLoadImages(){
+	var fm = openFileManager();
+	var ths = this; // this is ListForm here
+	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="btn ok">' + lang('OK') + '</span></div>');
+	$('btnOK').observe('click', function(){
+		var selectedFiles = fm.getSelectedFiles();
+		var params = {
+			values: selectedFiles.join('#NL#'),
+			ContentId: ths.filter.value.split('=')[1]
+		};
+	    new Ajax.Request('ModuleInfo.ashx?method=insertBatch&entityName=ContentPicture&fieldName=FileName', {
+			method: 'post',
+			parameters: params,
+			onComplete: function(req) {
+				if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+				Windows.getFocusedWindow().close();
+				ths.fetchData();
+			},
+			onException: function(req, ex){throw ex;}
+		});
+
+	});
+}
+function tagifySelectedPicture(){
+	var listForm = this;
+	var id = listForm.getSelectedEntityId();
+	if(!id || id<=0) return;
+	var entity = ajax({url:'EntityInfo.ashx?method=getEntity&entityName=ContentPicture&id=' + id,isJSON:true,noCache:false});
+	$(document.body).insert('<img id="tagifySelectedPicture" src="'+entity.FileName+'" style="display:none;cursor:crosshair"/>');
+	var img = $('tagifySelectedPicture');
+	img.observe('load', function(){
+		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+10, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+		var winContent = $(win.getContent());
+		winContent.insert(img.show().remove());
+		win.showCenter();
+		win.toFront();
+	});
 }
 
 //#####################################
@@ -512,7 +556,7 @@ function getNodes(catId){
 }
 function nodeClicked(node){
     if(node.type=='category')
-        openEntityListForm('Content', lang('Content List'), 'CategoryId='+node.data);
+        openEntityListForm('Content', lang('Content List') + ' ('+node.text+')', 'CategoryId='+node.data);
     else
         editData('Content', node.data);
 }
@@ -634,7 +678,7 @@ function editTemplate(templateName){
 	
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/page.png" style="vertical-align:middle"> ' + templateName, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
     $('txtSource').value = ajax({url:'SystemInfo.ashx?method=getTemplateSource&template='+templateName,isJSON:false,noCache:true});
     $('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
     win.showCenter();
@@ -671,7 +715,7 @@ function exportTemplate(){
         str += '<input type=checkbox value="'+tmp+'">'+tmp+'<br>';
     });
     str += '</div></td><td>';
-    str += '<textarea id="txtExport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>';
+    str += '<textarea wrap="off" id="txtExport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>';
     str += '</td></tr></table><span class="btn OK" id="btnMakeExport">'+lang('Transfer')+' >></span>';
     new Insertion.Bottom(winContent, str);
     $('btnMakeExport').observe('click', function(){
@@ -687,7 +731,7 @@ function exportTemplate(){
 function importTemplate(){
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/importTemplate.png" style="vertical-align:middle"> ' + lang('Import'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea id="txtImport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveImport">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtImport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveImport">'+lang('Save')+'</span></p>');
     $('btnSaveImport').observe('click', saveImport);
     win.showCenter();
     win.toFront();
@@ -714,7 +758,7 @@ function saveImport(){
 function editStyle(){
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/css.png" style="vertical-align:middle"> ' + lang('General CSS'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn load" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn save" id="btnSaveStyles">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn load" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn save" id="btnSaveStyles">'+lang('Save')+'</span></p>');
     $('txtDefStyles').value = ajax({url:'SystemInfo.ashx?method=getDefaultStyles',isJSON:false,noCache:true});
     $('btnSaveStyles').observe('click', saveStyle);
     $('btnModuleDefaultStyles').observe('click', function(){$('txtDefStyles').value += ajax({url:'ModuleInfo.ashx?method=getAllDefaultCSS',isJSON:false,noCache:false});});
@@ -767,11 +811,12 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/css.png" style="vertical-align:middle"> ' + lang('General CSS'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
-    new FileManager(winContent);
+    var fm = new FileManager({container:winContent});
     win.showCenter();
     win.toFront();
+	return fm;
 }
 function clearCache(){
     new Ajax.Request('SystemInfo.ashx?method=clearCache', {
