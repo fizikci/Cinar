@@ -12,9 +12,7 @@ public class BasePage : Page
 {
 	public BasePage()
 	{
-		//
-		// TODO: Add constructor logic here
-		//
+
 	}
 
     public override void ProcessRequest(HttpContext context)
