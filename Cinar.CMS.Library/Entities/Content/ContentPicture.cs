@@ -54,6 +54,13 @@ namespace Cinar.CMS.Library.Entities
             set { tagData = value; }
         }
 
+        private int like = 0;
+        public int Like
+        {
+            get { return like; }
+            set { like = value; }
+        }
+
         private string fileName;
         [ColumnDetail(IsNotNull=true, Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
         [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]

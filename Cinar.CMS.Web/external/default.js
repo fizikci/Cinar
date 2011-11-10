@@ -279,17 +279,22 @@ function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
 	var allImg = img.up('.lightBox').select('img');
-	
-	$(document.body).insert('<div id="lightBoxDiv"><div style="position:relative"><img src="/external/icons/lbPrev.png" id="lbPrev"><img id="lbImg" src="'+img.readAttribute('path')+'"/><img src="/external/icons/lbNext.png" id="lbNext"><div id="lbCounter">1/20</div><div id="lbTitle"></div><div id="lbDesc"></div><div id="lbLike"><img src="/external/icons/love.png"/> <span>25</span></div></div></div>');
+	var html = '<div id="lightBoxDiv">'+
+					'<img src="/external/icons/lbPrev.png" id="lbPrev"/>'+
+					'<img id="lbImg" src="'+img.readAttribute('path')+'"/>'+
+					'<img src="/external/icons/lbNext.png" id="lbNext"/>'+
+					'<div id="lbLeft"></div>'+
+					'<div id="lbCenter"></div>'+
+					'<div id="lbRight"><div id="lbCounter">1/20</div><img src="/external/icons/love.png"/> <span>25</span></div>'+
+					'</div>';
+	$(document.body).insert(html);
 	lightBoxDiv = $('lightBoxDiv');
 	$('lbPrev').on('click',function(){img = img.previous('img'); showPic();});
 	$('lbNext').on('click',function(){img = img.next('img'); showPic();});
 	function showPic(){
 		lbImg.src = img.readAttribute('path'); 
 		lightBoxDiv.hide();
-		$('lbTitle').innerHTML = img.readAttribute('title'); 
-		$('lbDesc').innerHTML = img.readAttribute('desc'); 
-		$('lbLike').down('span').innerHTML = img.readAttribute('like'); 
+		lightBoxDiv.select('.tag_bg').each(function(tbg){tbg.remove();});
 	}
 	lightBoxDiv.hide();
 	var lbImg = $('lbImg');
@@ -302,13 +307,30 @@ function lightBox(img){
 		var posView = document.viewport.getScrollOffsets();
 		var dimView = Position.getWindowSize();
 		lightBoxDiv.setStyle({left:(posView[0]+(dimView.width-lbDim.width)/2)+'px', top:(posView[1]+(dimView.height-lbDim.height)/2)+'px'});
-		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px'});
-		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px'});
-		$('lbTitle').setStyle({width:imgDim.width+'px'});
-		$('lbDesc').setStyle({width:imgDim.width+'px'});
+		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px', left:'10px'});
+		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px', right:'10px'});
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true);
-		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0 });
+		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){
+			var lbImgDim = lbImg.getDimensions();
+			$('lbLeft').innerHTML = img.readAttribute('desc'); 
+			$('lbCenter').innerHTML = img.readAttribute('title'); 
+			$('lbRight').down('span').innerHTML = img.readAttribute('like'); 
+			$('lbLeft').setStyle({left:'0px',top:(lbImgDim.height+20)+'px'});
+			$('lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+20)+'px'});
+			$('lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+20)+'px'});
+
+			var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
+			if(tagData){
+				var tagText = '';
+				tagData.each(function(tag, i){
+					var x = tag.x, y = tag.y;
+					lightBoxDiv.insert('<div class="tag_bg" style="position:absolute;top:'+y+'px;left:'+x+'px"><a href="'+tag.url+'">'+(tag.tag || '&nbsp;')+'</a></div>');
+					tagText += tag.text + '<br/>';
+				});
+				$('lbCenter').innerHTML = tagText;
+			}
+		} });
 	});
 }
 
