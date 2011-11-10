@@ -1,7 +1,7 @@
 <script type='text/javascript'>
     Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
     Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
-    var currTemplate = 'Main.aspx';
+    var currTemplate = 'Default.aspx';
     var virtualDir = '.';
     var moduleTypes = [
 	{
@@ -116,5 +116,5 @@
 	['ContactUs','Ziyaretçi Mesajý',true]
 	];
 
-    var templates = ['Admin.aspx', 'AdminAnketEdit.aspx', 'AdminAnketler.aspx', 'AdminGiris.aspx', 'AdminHaberler.aspx', 'AdminIletisim.aspx', 'AdminUrunEdit.aspx', 'AdminUrunGrubuEdit.aspx', 'AdminUrunGruplari.aspx', 'AdminUrunLangEdit.aspx', 'AdminUrunler.aspx', 'AdminUrunResimleri.aspx', 'Category.aspx', 'ContactUs.aspx', 'Content.aspx', 'HaberPortali.aspx', 'ListContent.aspx', 'Main.aspx', 'ProductDetail.aspx', 'Products.aspx', 'Test.aspx'];
+    var templates = ['Admin.aspx', 'AdminAnketEdit.aspx', 'AdminAnketler.aspx', 'AdminGiris.aspx', 'AdminHaberler.aspx', 'AdminIletisim.aspx', 'AdminUrunEdit.aspx', 'AdminUrunGrubuEdit.aspx', 'AdminUrunGruplari.aspx', 'AdminUrunLangEdit.aspx', 'AdminUrunler.aspx', 'AdminUrunResimleri.aspx', 'Category.aspx', 'ContactUs.aspx', 'Content.aspx', 'HaberPortali.aspx', 'ListContent.aspx', 'Default.aspx', 'ProductDetail.aspx', 'Products.aspx', 'Test.aspx'];
 </script>

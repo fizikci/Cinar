@@ -46,6 +46,14 @@ namespace Cinar.CMS.Library.Entities
             set { description = value; }
         }
 
+        private string tagData = "";
+        [ColumnDetail(ColumnType = DbType.Text)]//, EditFormFieldProps(Options="hidden:true")]
+        public string TagData
+        {
+            get { return tagData; }
+            set { tagData = value; }
+        }
+
         private string fileName;
         [ColumnDetail(IsNotNull=true, Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
         [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]

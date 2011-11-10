@@ -198,7 +198,7 @@ namespace Cinar.CMS.Library
         #endregion
 
         #region special pages
-        private string mainPage = "Main.aspx";
+        private string mainPage = "Default.aspx";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
         public string MainPage
         {

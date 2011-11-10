@@ -3,7 +3,7 @@ using Cinar.Database;
 
 namespace Cinar.CMS.Library
 {
-    [DefaultData(ColumnList = "FileName, HTMLCode", ValueList = @"'Main.aspx','<html>
+    [DefaultData(ColumnList = "FileName, HTMLCode", ValueList = @"'Default.aspx','<html>
 <head>
 $=this.HeadSection$
 </head>

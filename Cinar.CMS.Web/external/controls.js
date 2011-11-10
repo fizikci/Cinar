@@ -1477,6 +1477,7 @@ var ListForm = Class.create();ListForm.prototype = {
         });
     },
     cmdEdit: function () {
+        var entityName = this.options.entityName;
         var id = this.getSelectedEntityId();
 		if(!id || id<=0) return;
         var ths = this;
@@ -1509,7 +1510,6 @@ var ListForm = Class.create();ListForm.prototype = {
 	getSelectedEntityId: function(){
         var selRows = this.listGrid.getSelectedRows() || [];
         if (selRows.length == 0) return 0;
-        var entityName = this.options.entityName;
         var id = parseInt(selRows[0].id.split('_')[1]);
 		return id;
 	},
