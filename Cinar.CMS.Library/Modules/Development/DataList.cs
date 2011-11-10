@@ -35,13 +35,16 @@ namespace Cinar.CMS.Library.Modules
         [EditFormFieldProps(Options = "items:_ASCENDING_")]
         public bool Ascending
         {
-            get {
+            get
+            {
                 if (!String.IsNullOrEmpty(Provider.Request["ascending"]))
                     Boolean.TryParse(Provider.Request["ascending"], out ascending);
-                return ascending; 
+                return ascending;
             }
             set { ascending = value; }
         }
+
+        public bool ShowPaging { get; set; }
 
         [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string DataTemplate { get; set; }
@@ -111,20 +114,23 @@ namespace Cinar.CMS.Library.Modules
                 sb.Append(base.show());
             
             // paging
-            string prevPageLink = "", nextPageLink = "";
-            uriParser = new UriParser(pageUrl);
-            if (pageNo > 0)
+            if (this.ShowPaging)
             {
-                uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
-                prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Previous Page"));
-            }
-            if (data.Rows.Count == HowManyItems)
-            {
-                uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
-                nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
-            }
+                string prevPageLink = "", nextPageLink = "";
+                uriParser = new UriParser(pageUrl);
+                if (pageNo > 0)
+                {
+                    uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
+                    prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Previous Page"));
+                }
+                if (data.Rows.Count == HowManyItems)
+                {
+                    uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
+                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
+                }
 
-            sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
+                sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
+            }
 
             return sb.ToString();
         }
@@ -167,6 +173,7 @@ namespace Cinar.CMS.Library.Modules
             HowManyItems = 30;
             Filter = "";
             EntityName = "";
+            ShowPaging = true;
         }
 
         protected override string getCellHTML(int row, int col)
@@ -206,9 +213,9 @@ namespace Cinar.CMS.Library.Modules
         {
             get
             {
-                if (!dr.IsNull("Picture"))
+                if (dr.Table.Columns.Contains("Picture") && !dr.IsNull("Picture"))
                     return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight);
-                else if (!dr.IsNull("FileName"))
+                else if (dr.Table.Columns.Contains("FileName") && !dr.IsNull("FileName"))
                     return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight);
                 else
                     return "Could not find a picture field - Try something else";

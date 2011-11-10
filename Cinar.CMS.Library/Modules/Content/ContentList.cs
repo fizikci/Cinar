@@ -268,7 +268,7 @@ namespace Cinar.CMS.Library.Modules
             fields["category"] = content["CategoryName"] == null ? "" : this.getCategoryHTML(content["CategoryName"].ToString(), isFirstItem, template, content, row, col);
             fields["author"] = content["AuthorName"] == null ? "" : this.getAuthorHTML(content["AuthorName"].ToString(), isFirstItem, template, content, row, col);
             fields["source"] = content["SourceName"] == null ? "" : this.getSourceHTML(content["SourceName"].ToString(), isFirstItem, template, content, row, col);
-            fields["date"] = this.getPublishDateHTML(content.PublishDate.ToString(this.dateFormat), row, col);
+            fields["date"] = this.getPublishDateHTML(this.dateFormat.ToLower() == "ago" ? content.PublishDate.ToAgoString() : content.PublishDate.ToString(this.dateFormat), row, col);
             fields["description"] = this.getDescriptionHTML(isFirstItem, template, content, row, col);
             fields["text"] = this.getMetinHTML(content.Metin, row, col);
 

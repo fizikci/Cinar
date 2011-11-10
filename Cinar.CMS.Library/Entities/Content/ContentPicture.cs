@@ -30,15 +30,15 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        private string title;
-        [ColumnDetail(IsNotNull = true, Length = 200)]
+        private string title = "";
+        [ColumnDetail(Length = 200)]
         public string Title
         {
             get { return title; }
             set { title = value; }
         }
 
-        private string description;
+        private string description = "";
         [ColumnDetail(Length = 300)]
         public string Description
         {

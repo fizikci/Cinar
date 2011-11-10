@@ -28,6 +28,13 @@ namespace Cinar.CMS.Library.Modules
             set { encloseWithDiv = value; }
         }
 
+        private string divClassName = "extraItemDiv";
+        public string DivClassName
+        {
+            get { return divClassName; }
+            set { divClassName = value; }
+        }
+
         protected abstract int rowCount { get; }
 
         protected abstract string getCellHTML(int row, int col);
@@ -63,7 +70,7 @@ namespace Cinar.CMS.Library.Modules
                     for (int j = 0; j < this.cols; j++)
                     {
                         if(encloseWithDiv)
-                            sb.Append("<div class=\"extraItemDiv\">\n");
+                            sb.AppendFormat("<div class=\"{0}\">\n", DivClassName);
                         sb.Append(this.getCellHTML(i, j));
                         if(encloseWithDiv)
                             sb.Append("</div>\n");
@@ -86,7 +93,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.extraItemDiv {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} div.{2} {{}}\n", this.Name, this.Id, DivClassName);
             return sb.ToString();
         }
 

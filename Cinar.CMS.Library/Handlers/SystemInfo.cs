@@ -324,12 +324,18 @@ namespace Cinar.CMS.Library.Handlers
             if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["imagesDir"])))
                 path = Provider.Server.MapPath(Provider.AppSettings["imagesDir"]);
 
-            string fileName = context.Request["fileName"];
-            if (string.IsNullOrEmpty(fileName) || fileName.Trim() == "")
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
                 throw new Exception("Dosya seçiniz");
 
-            path = Path.Combine(path, fileName);
-            File.Delete(path);
+            foreach (string fileName in fileNames.Split(new []{"#NL#"}, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string filePath = Path.Combine(path, fileName);
+                if (File.Exists(filePath))
+                    File.Delete(path);
+                else if (Directory.Exists(filePath))
+                    Directory.Delete(filePath, true);
+            }
             context.Response.Write(@"Dosya silindi");
         }
 
