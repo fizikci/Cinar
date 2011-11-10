@@ -8,10 +8,18 @@
 	text-align:left;
 
 	position:absolute;
-	border:1px solid black;
+	border:1px solid #B9B9B9;
 	padding:2px;
 	background:white;
 	z-index:5000;
+	
+	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+	box-shadow: 3px 3px 4px #c1c3c2;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
 }
 .editor div.item {cursor:default;padding:2px}
 .editor div.selItem {background:#316AC5;color:white}
@@ -24,7 +32,7 @@
 div.StringEdit {width:640px; height:480px;}
 div.StringEdit textarea {width:626px; height:440px;}
 div.PictureEdit {width:643px; height:480px;}
-div.LookUp {width:800px; height:424px;}
+div.LookUp {width:800px; height:380px;}
 div.MemoEdit {width:640px; height:480px;}
 div.MemoEdit textarea {width:626px; height:439px}
 div.FilterEdit {width:324px; height:300px;}
@@ -65,6 +73,9 @@ span.cancel {background-image:url(icons/cancel.png);}
 span.save {background-image:url(icons/save.png);}
 span.filter {background-image:url(icons/filter.png);}
 span.load {background-image:url(icons/load.png);}
+span.thunder {background-image:url(icons/DataConverter.png)}
+span.cog {background-image:url(icons/cog.png)}
+span.tag {background-image:url(icons/Tag.png)}
 
 div.smMenu 
 {
@@ -78,9 +89,16 @@ div.smMenu
 	width:200px;
 	border:solid 1px #808080;
 	padding:3px;
-	filter: progid:DXImageTransform.Microsoft.Shadow(color=#CCCCCC,strength=4,direction=135);
 	z-index:1500;
 	text-align:left;
+	/*shadow*/
+	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+	box-shadow: 3px 3px 4px #c1c3c2;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
 }
 div.smMenu div.menuFolder
 {
@@ -146,7 +164,7 @@ div.lf-dataArea
 	letter-spacing: normal;
 	line-height:normal;
 	overflow:auto;
-	height:303px;
+	height:300px;
 	text-align:left}
 div.lf-listFormFooter {text-align:right}
 div.lf-listFormFooter  .pager {margin-left:8px}
@@ -163,7 +181,7 @@ table.bk-grid
 	margin-top:4px;
 	color:#404040;}
 table.bk-grid th {font-size:12px; background:#404040; color:White; text-align:left; padding:2px; empty-cells:show; cursor:pointer}
-table.bk-grid td {padding:2px; empty-cells:show; cursor:pointer;text-align:left;font-size: 12px;}
+table.bk-grid td {padding:0px; empty-cells:show; cursor:pointer;text-align:left;font-size: 12px;}
 tr.selected {background: #316AC5; color:white}
 tr.hover {background: #efefef; color:#404040;}
 

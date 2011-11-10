@@ -1,5 +1,6 @@
 ﻿#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
 #gogPopDiv img {width:auto; height:auto;}
+
 #lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center}
 #lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
 #lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
@@ -8,3 +9,19 @@
 #lightBoxDiv #lbDesc {font-weight:normal}
 #lightBoxDiv #lbLike {position:absolute;right:5px; bottom:-25px;}
 #lightBoxDiv #lbLike  img{curor:pointer;}
+
+.fadeShow {
+	position:relative;
+}
+.fadeShow .indexElms {
+	position:absolute;
+	z-index:3;
+	right:10px;
+	bottom:6px;
+	cursor:pointer;
+}
+.fadeShow .clItem {
+	position:absolute;
+	left:0px;
+	top:0px;
+}

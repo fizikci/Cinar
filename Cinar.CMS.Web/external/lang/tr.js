@@ -80,6 +80,8 @@ langRes['Pages have been added.'] = 'Sayfalar oluşturuldu.';
 langRes['General CSS'] = 'Genel CSS Ayarları';
 langRes['File Manager'] = 'Dosya Yöneticisi';
 langRes['Add Default Module Styles'] = 'Varsayılan modül CSSlerini ekle';
+langRes['Quick Load'] = 'Hızlı Yükle';
+langRes['Tag Picture'] = 'Etiketle';
 
 // message.js
 langRes['Recommend to a friend'] = 'Arkadaşınıza tavsiye edin';

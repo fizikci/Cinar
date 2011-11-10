@@ -19,16 +19,100 @@ document.observe('dom:loaded', function(){
 		img.on('click', function(){lightBox(img);});
 	});
 	// listelerde description alanlarının görünüp gizlenmesi
-	$$('.toogleDesc').each(function(elm){
+	var effectInExecution=null;
+	$$('.toogleDesc .clItem').each(function(elm){
 		var elmDesc = elm.down('div.clDesc');
 		if(elmDesc){
 			elmDesc.hide();
-			Event.observe(elm, 'mouseover', function(){elmDesc.show();});
-			Event.observe(elm, 'mouseleave', function(){elmDesc.hide();});
+			Event.observe(elm, 'mouseenter', function(){
+				//if(effectInExecution) effectInExecution.cancel(); 
+				effectInExecution = new Effect.BlindDown(elmDesc, {duration:0.5, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});//new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'clItem2'})], {duration:0.3});
+			});
+			Event.observe(elm, 'mouseleave', function(){
+				//if(effectInExecution) effectInExecution.cancel(); 
+				effectInExecution = new Effect.BlindUp(elmDesc, {duration:0.5, afterFinish: function(){elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}});
+									//new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2'); elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
+			});
 		}
     });
-	// 
+	// fadeShow (yani fadeIn'li slide show)
+	if($$('.fadeShow').length)
+		$$('.fadeShow').each(function(elm){
+			//elm.down('img').observe('load', function(){var img = elm.down('img'); var dim = img.getDimensions(); elm.setStyle({width:dim.width+'px', height:dim.height+'px'});});
+			elm.insert('<div class="indexElms"></div>');
+			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 5000);
+		});
+	$$('.fadeShow .clItem').each(function(elm, i){
+		if(i==0)
+			elm.up().currentImg = elm;
+		else
+			elm.fade({ duration: 0.05, from: 1, to: 0.01 });
+		elm.up('.fadeShow').select('.indexElms')[0].insert('<img src="/external/icons/bullet_'+(i==0 ? 'red':'white')+'.png" index="'+i+'"/>');
+		var indexElm = elm.up('.fadeShow').select('.indexElms')[0].descendants().last();
+		indexElm.observe('click', function(event){
+			fadeShowShowImg(elm.up('.fadeShow'), indexElm);
+		});
+	});
+	// slideShow
+	if($$('.slideShow').length)
+		$$('.slideShow').each(function(elm){
+			elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
+			var imgs = elm.select('img');
+			var imgCounter = 0;
+			imgs.each(function(img){
+				img.observe('load', function(){
+					imgCounter++;
+					if(imgCounter==imgs.length){
+						var totalWidth = 0;
+						imgs.each(function(i){totalWidth += i.getWidth()+5;});
+						elm.down('.innerDiv').setStyle({width:totalWidth+'px'});
+					}
+				});
+			});
+			elm.select('.paging')[0].observe('click', function(){slideShowSlide(elm,'back');});
+			elm.select('.paging')[1].observe('click', function(){slideShowSlide(elm);});
+		});
 });
+function slideShowSlide(elm, dir){
+    var dimCl = elm.down('.clipper').getDimensions();
+	var posID = Position.cumulativeOffset(elm.down('.innerDiv'));
+    var dimID = elm.down('.innerDiv').getDimensions();
+
+	if(posID[0]+dimID.width<dimCl.width)
+		new Effect.Move(elm.down('.innerDiv'), { x: -1*parseInt(elm.down('.innerDiv').style.left), y: 0, mode: 'relative', duration:3.0 });
+	else if(dir=='back')
+		new Effect.Move(elm.down('.innerDiv'), { x: elm.down('.clipper').getWidth(), y: 0, mode: 'relative', duration:1.0 });
+	else
+		new Effect.Move(elm.down('.innerDiv'), { x: -1*elm.down('.clipper').getWidth(), y: 0, mode: 'relative', duration:1.0 });
+	clearTimeout(elm.timeout);
+	elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
+}
+function fadeShowShowImg(fadeShow, indexElm){
+	var currIndexElm = null;
+	if(!indexElm)
+	{
+		currIndexElm = fadeShow.select('.indexElms')[0].descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
+		indexElm = currIndexElm.next() ? currIndexElm.next() : fadeShow.select('.indexElms img')[0];
+	}
+	else
+		currIndexElm = fadeShow.select('.indexElms')[0].descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
+		
+	indexElm.src = '/external/icons/bullet_red.png';
+	if(currIndexElm)
+		currIndexElm.src = '/external/icons/bullet_white.png';
+	
+	clearTimeout(fadeShow.timeout);
+	var i = parseInt(indexElm.readAttribute('index'));
+	
+	fadeShow.currentImg.fade({ duration: 0.5, from: 1, to: 0.01 });
+	fadeShow.currentImg.setStyle({zIndex:1});
+	
+	fadeShow.currentImg = fadeShow.select('.clItem')[i];
+	fadeShow.currentImg.fade({ duration: 0.5, from: 0, to: 1 });
+	fadeShow.currentImg.setStyle({zIndex:2});
+
+	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 5000);
+}
 
 // ilk üç parametreden sonrası method parametreleridir
 function runModuleMethod(moduleName, moduleId, methodName, params, callback)

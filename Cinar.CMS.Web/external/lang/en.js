@@ -80,6 +80,8 @@ langRes['Pages have been added.'] = 'Pages have been added.';
 langRes['General CSS'] = 'General CSS';
 langRes['File Manager'] = 'File Manager';
 langRes['Add Default Module Styles'] = 'Add Default Module Styles';
+langRes['Quick Load'] = 'Quick Load';
+langRes['Tag Picture'] = 'Tag Picture';
 
 // message.js
 langRes['Recommend to a friend'] = 'Recommend to a friend';
