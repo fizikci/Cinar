@@ -124,7 +124,6 @@ namespace Cinar.SQLEngine
         CinarTransaction tran;
         public CinarCommand(string cmdText, CinarConnection cinarConnection, CinarTransaction cinarTransaction)
         {
-            // TODO: Complete member initialization
             this.commandText = cmdText;
             this.con = cinarConnection;
             this.tran = cinarTransaction;
@@ -132,7 +131,6 @@ namespace Cinar.SQLEngine
 
         public CinarCommand(string cmdText, CinarConnection cinarConnection)
         {
-            // TODO: Complete member initialization
             this.commandText = cmdText;
             this.con = cinarConnection;
         }
@@ -204,7 +202,6 @@ namespace Cinar.SQLEngine
     {
         public CinarDataAdapter(CinarCommand cinarCommand)
         {
-            // TODO: Complete member initialization
             this.SelectCommand = cinarCommand;
         }
  
@@ -242,7 +239,6 @@ namespace Cinar.SQLEngine
 
         public CinarParameter(string parameterName, object value)
         {
-            // TODO: Complete member initialization
             this.parameterName = parameterName;
             this.parameterValue = value;
         }
