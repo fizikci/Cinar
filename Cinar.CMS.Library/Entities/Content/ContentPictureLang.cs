@@ -72,6 +72,14 @@ namespace Cinar.CMS.Library.Entities
             set { fileName = value; }
         }
 
+        private string tagData = "";
+        [ColumnDetail(ColumnType = DbType.Text)]//, EditFormFieldProps(Options="hidden:true")]
+        public string TagData
+        {
+            get { return tagData; }
+            set { tagData = value; }
+        }
+
         public override string GetNameColumn()
         {
             return "Title";

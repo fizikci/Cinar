@@ -125,6 +125,7 @@ namespace Cinar.CMS.Library.Handlers
                 //sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/swfobject.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
 
                 if (Provider.DesignMode)
                 {

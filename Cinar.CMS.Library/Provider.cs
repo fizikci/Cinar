@@ -154,7 +154,7 @@ namespace Cinar.CMS.Library
                 if (!addInvisibles && !editProps.Visible)
                     continue; //***
 
-                editProps.Category = editProps.Category ?? Provider.GetResource(pi.DeclaringType.Name);
+                editProps.Category = editProps.Category ?? Provider.GetResource((pi.DeclaringType == typeof(NamedEntity) ? obj.GetType() : pi.DeclaringType).Name);
                 editProps.OrderNo = ctrlOrderNo++;
 
                 ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
@@ -437,7 +437,7 @@ namespace Cinar.CMS.Library
                 if (Provider.Database.Tables["Module"] == null)
                 {
                     Provider.Database.CreateTableForType(typeof(Modules.Module));
-                    HttpContext.Current.RewritePath("Main.aspx");
+                    HttpContext.Current.RewritePath("Default.aspx");
                 }
 
                 // if language is specified by the browser, use it:
@@ -797,8 +797,8 @@ namespace Cinar.CMS.Library
         {
             if (String.IsNullOrEmpty(template))
                 throw new Exception("Silinecek dosya adı belirtilmemiş.");
-            else if (template == "Main.aspx")
-                throw new Exception("Main.aspx silinemez.");
+            else if (template == "Default.aspx")
+                throw new Exception("Default.aspx silinemez.");
 
             template = template.Trim();
 

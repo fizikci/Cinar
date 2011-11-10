@@ -32,7 +32,7 @@
 div.StringEdit {width:640px; height:480px;}
 div.StringEdit textarea {width:626px; height:440px;}
 div.PictureEdit {width:643px; height:480px;}
-div.LookUp {width:800px; height:380px;}
+div.LookUp {width:800px; height:435px;}
 div.MemoEdit {width:640px; height:480px;}
 div.MemoEdit textarea {width:626px; height:439px}
 div.FilterEdit {width:324px; height:300px;}
@@ -164,7 +164,7 @@ div.lf-dataArea
 	letter-spacing: normal;
 	line-height:normal;
 	overflow:auto;
-	height:300px;
+	height:350px;
 	text-align:left}
 div.lf-listFormFooter {text-align:right}
 div.lf-listFormFooter  .pager {margin-left:8px}

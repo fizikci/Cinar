@@ -474,7 +474,7 @@ function saveModule(pe){
 }
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback){
     caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
-    var win = new Window({className: 'alphacube', title: caption, width:800, height:350, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
 
     var options = {
@@ -488,7 +488,11 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
     }
 	if(entityName=='ContentPicture'){
 		options.commands.push({id:'QuickLoad', icon:'thunder', name:'Quick Load', handler:quickLoadImages});
-		options.commands.push({id:'Tagify', icon:'tag', name:'Tag Picture', handler:tagifySelectedPicture});
+		options.commands.push({id:'Tagify', icon:'tag', name:'Tag Picture', handler:function(){
+			var id = this.getSelectedEntityId();
+			if(!id || id<=0) return;
+			tagifySelectedPicture(id);
+		}});
 	}
 
     if(extraFilter) options.extraFilter = extraFilter;
@@ -522,20 +526,85 @@ function quickLoadImages(){
 
 	});
 }
-function tagifySelectedPicture(){
-	var listForm = this;
-	var id = listForm.getSelectedEntityId();
-	if(!id || id<=0) return;
+function tagifySelectedPicture(id){
 	var entity = ajax({url:'EntityInfo.ashx?method=getEntity&entityName=ContentPicture&id=' + id,isJSON:true,noCache:false});
 	$(document.body).insert('<img id="tagifySelectedPicture" src="'+entity.FileName+'" style="display:none;cursor:crosshair"/>');
 	var img = $('tagifySelectedPicture');
 	img.observe('load', function(){
-		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+10, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+		var tagData = entity.TagData ? eval('('+entity.TagData+')') : [];
+		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 		var winContent = $(win.getContent());
 		winContent.insert(img.show().remove());
+		winContent.insert('<p align="right"><span class="btn OK" id="btnTagifyOK">'+lang('OK')+'</span><span class="btn cancel" id="btnTagifyCancel">'+lang('Cancel')+'</span></p>');
+		if(!$('tagify_edit')){
+			$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="display:none;width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="btn OK" id="btnTagifyEditOK">'+lang('OK')+'</span><span class="btn cancel" id="btnTagifyEditDelete">'+lang('Delete')+'</span></p></div>');
+			$('btnTagifyEditOK').observe('click', function(){
+				var tag = $('tagify_edit').retrieve('tag');
+				tag.tag = $('tagify_edit').down('.tagify_tag').value;
+				tag.text = $('tagify_edit').down('.tagify_text').value;
+				tag.url = $('tagify_edit').down('.tagify_url').value;
+				$('tag'+tagData.indexOf(tag)).innerHTML = tag.tag;
+				$('tagify_edit').hide();
+			});
+			$('btnTagifyEditDelete').observe('click', function(){
+				var tag = $('tagify_edit').retrieve('tag');
+				$('tag'+tagData.indexOf(tag)).remove();
+				tag.remove = true;
+				$('tagify_edit').hide();
+			});
+		}
+		$('btnTagifyOK').observe('click', function(){
+				tagData = tagData.findAll(function(t){return t.remove!=true;});
+				entity.TagData = Object.toJSON(tagData);
+				new Ajax.Request('EntityInfo.ashx?method=save&entityName=ContentPicture&id=' + id, {
+					method: 'post',
+					parameters: entity,
+					onComplete: function (req) {
+						if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+						Windows.getFocusedWindow().destroy();
+					},
+					onException: function (req, ex) { throw ex; }
+				});
+		});
+		$('btnTagifyCancel').observe('click', function(){
+				Windows.getFocusedWindow().close();
+		});
+		tagData.each(function(tag, i){
+			var x = tag.x, y = tag.y;
+			winContent.insert('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px">'+(tag.tag || '&nbsp;')+'</div>');
+			new Draggable('tag'+i, {onEnd:function(){tag.x=parseInt($('tag'+i).style.left);tag.y=parseInt($('tag'+i).style.top);}});
+			$('tag'+i).observe('dblclick', function(){
+				var winPos = win.getLocation();
+				openTagForm(winPos, tag);
+			});
+		});
+		img.observe('click', function(event){
+			var winPos = win.getLocation();
+			var x = Event.pointerX(event) - parseInt(winPos.left), y = Event.pointerY(event) - parseInt(winPos.top);
+			var tagId = 'tag'+tagData.length;
+			winContent.insert('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px"></div>');
+			var tag = {x:x, y:y};
+			tagData.push(tag);
+			new Draggable(tagId, {onEnd:function(){tag.x=parseInt($(tagId).style.left);tag.y=parseInt($(tagId).style.top);}});
+			openTagForm(winPos, tag);
+			
+			$(tagId).observe('dblclick', function(){
+				var formTag = $('tagify_edit');
+				openTagForm(winPos, tag);
+			});
+		});
 		win.showCenter();
 		win.toFront();
 	});
+}
+function openTagForm(winPos, tag)
+{
+	var formTag = $('tagify_edit');
+	formTag.setStyle({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px'});
+	formTag.show().store('tag',tag);
+	formTag.down('.tagify_tag').value = tag.tag || '';
+	formTag.down('.tagify_text').value = tag.text || '';
+	formTag.down('.tagify_url').value = tag.url || '';
 }
 
 //#####################################
@@ -651,7 +720,7 @@ function deleteTemplate(){
         function(){
             var fileDeleted = ajax({url:'SystemInfo.ashx?method=deleteTemplate&template='+currTemplate,isJSON:false,noCache:false});
             if(fileDeleted){
-                window.location.href = 'Main.aspx';
+                window.location.href = 'Default.aspx';
             }
         }
     );

@@ -46,7 +46,7 @@ namespace Cinar.CMS.Library.Modules
 
             if (content.Id == 1)
             {
-                template = Provider.Configuration.MainPage; //"Main.aspx";
+                template = Provider.Configuration.MainPage; //"Default.aspx";
                 content.Title = Provider.GetModuleResource("Home Page");
             }
             else

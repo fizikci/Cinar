@@ -533,7 +533,7 @@ namespace Cinar.CMS.Library.Handlers
                     Provider.Response.Cookies.Add(cookie);
                 }
                 if (context.Request.Form["RedirectURL"] == null)
-                    context.Response.Redirect("/Main.aspx?DesignMode=On");
+                    context.Response.Redirect("/Default.aspx?DesignMode=On");
                 else
                     context.Response.Redirect(context.Request.Form["RedirectURL"]);
             }
