@@ -107,7 +107,7 @@ namespace Cinar.CMS.Library.Modules
                 if (fields.ContainsKey(fieldName))
                     sb.Append(fields[fieldName]);
 
-            return "<div class=\"innerDiv\">" + sb + "</div>";
+            return sb.ToString();
         }
 
         private string getTagsWithLink(string strTags)
@@ -140,7 +140,6 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.innerDiv {{}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.title {{font-weight:bold; font-size:20px;}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.desc {{background-color:#efefef; padding:4px; margin:4px; border:1px dashed black}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.conRegion {{float:right; width:200px}}\n", this.Name, this.Id);

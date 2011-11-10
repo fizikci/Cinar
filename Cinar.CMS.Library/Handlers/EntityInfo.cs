@@ -35,6 +35,11 @@ namespace Cinar.CMS.Library.Handlers
                         getEntityNameValue();
                         break;
                     }
+                case "getEntity":
+                    {
+                        getEntity();
+                        break;
+                    }
                 case "getEntityId":
                     {
                         getEntityId();
@@ -186,8 +191,8 @@ namespace Cinar.CMS.Library.Handlers
                             else if (dc.DataType == typeof(String))
                             {
                                 string str = Regex.Replace(valObj.ToString(), "<.*?>", string.Empty);
-                                if (str.Length > 20)
-                                    val = Utility.HtmlEncode(Utility.StrCrop(str, 20)); // str.Substring(0, 20) + "..."
+                                if (str.Length > 50)
+                                    val = Utility.HtmlEncode(Utility.StrCrop(str, 50)); // str.Substring(0, 50) + "..."
                                 else
                                     val = str;
                             }
@@ -392,6 +397,20 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write(String.Format("{{id:{0},name:{1}}}", entities[0].Id, Utility.ToJS(entities[0].GetNameValue())));
             else
                 context.Response.Write("{id:0,name:''}");
+        }
+        private void getEntity()
+        {
+            string id = context.Request["id"];
+            string entityName = context.Request["entityName"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+
+            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            context.Response.Write(entity.ToJSON());
         }
     }
 }

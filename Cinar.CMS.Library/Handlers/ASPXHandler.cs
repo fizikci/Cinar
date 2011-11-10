@@ -104,45 +104,37 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\">\n");
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<LINK href=\"http://" + Provider.Configuration.SiteAddress + "/" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\">\n");
-                sb.Append("<LINK href=\"RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
+                sb.Append("<LINK href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
 
                 if (Provider.DesignMode)
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.Configuration.DefaultStyleSheet + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 else
                 {
-                    sb.Append("<link href=\"DefaultStyleSheet.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<link href=\"/DefaultStyleSheet.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
                 sb.Append("<link href=\"/external/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var useHTMLEditor={0};</script>", Provider.Configuration.UseHTMLEditor.ToString().ToLower());
-                sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/prototype.js\"></script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"external/default.js\"></script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"external/message.js\"> </script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/default.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/message.js\"> </script>\n");
                 if(Provider.Configuration.UseHTMLEditor)
                     sb.Append("<script type=\"text/javascript\">alert('FCK removed and there is no html editor yet!');</script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"external/lang/" + Provider.CurrentCulture.Split('-')[0] + ".js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/lang/" + Provider.CurrentCulture.Split('-')[0] + ".js\"></script>\n");
                 //sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/swfobject.js\"></script>\n");
 
-                sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/effects.js\"></script>\n");
-                if (this.HasModule(typeof(ContentGallery)))
-                {
-                    sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/lightbox.js\"> </script>\n");
-                    sb.Append("<link rel=\"stylesheet\" href=\"external/javascripts/lightbox.css\" type=\"text/css\" media=\"screen\" />\n");
-                }
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
 
                 if (Provider.DesignMode)
                 {
-                    sb.Append("<link href=\"external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<link href=\"external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    //sb.Append("<link href=\"external/themes/spread.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<link href=\"external/cinar.cms.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<link href=\"/external/cinar.cms.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                    sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/window.js\"> </script>\n");
-                    //sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/dragdrop.js\"> </script>\n");
-                    //sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/rico.js\"> </script>\n");
+                    sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"> </script>\n");
 
-                    sb.Append("<script type=\"text/javascript\" src=\"external/controls.js\"></script>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"/external/controls.js\"></script>\n");
                     sb.Append(@"
 <script type='text/javascript'>
     Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
@@ -154,24 +146,12 @@ namespace Cinar.CMS.Library.Handlers
     var templates = " + getTemplatesJSON() + @";
 </script>
                 ");
-                    sb.Append("<script type=\"text/javascript\" src=\"external/cinar.cms.js\"></script>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"/external/cinar.cms.js\"></script>\n");
                 }
 
                 if (!Provider.DesignMode)
                 {
-                        sb.Append(@"
-<script type='text/javascript'>
-    document.observe('dom:loaded', function(e){
-        //if(!useHTMLEditor) return;
-        $$('.editWithFCK').each(function(elm){
-//            var oFCKeditor = new FCKeditor(elm.id);
-//            oFCKeditor.BasePath = 'FCKEditor/';
-//            oFCKeditor.Height = '300' ;
-//            oFCKeditor.ReplaceTextarea();
-        });
-    }, false);
-</script>
-                ");
+
 
                 }
 
@@ -292,7 +272,7 @@ namespace Cinar.CMS.Library.Handlers
 
             Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
-            #region BScript and attributes
+            #region Cinar Script and attributes
             string pageContent = template.HTMLCode;//.Replace("!#","$=").Replace("#!","$");
             Interpreter engine = Provider.GetInterpreter(pageContent, this);
             engine.Parse();

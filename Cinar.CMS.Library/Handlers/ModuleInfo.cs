@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using Cinar.CMS.Library.Modules;
+using Cinar.CMS.Library.Entities;
 
 
 namespace Cinar.CMS.Library.Handlers
@@ -74,6 +75,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "getModuleList":
                     {
                         getModuleList();
+                        break;
+                    }
+                case "insertBatch":
+                    {
+                        insertBatch();
                         break;
                     }
                 default:
@@ -245,6 +251,28 @@ namespace Cinar.CMS.Library.Handlers
                 items[i++] = "{data:" + drModule["Id"] + ", text:" + Utility.ToJS(Provider.GetResource(drModule["Name"].ToString()) + " - " + drModule["Region"]) + ", type:" + Utility.ToJS(drModule["Name"]) + "}";
 
             context.Response.Write("[" + String.Join(",", items) + "]");
+        }
+
+        private void insertBatch()
+        {
+            string entityName = context.Request["entityName"];
+            string fieldName = context.Request["fieldName"];
+            string values = context.Request["values"];
+
+            if (string.IsNullOrWhiteSpace(entityName) || string.IsNullOrWhiteSpace(fieldName) || string.IsNullOrWhiteSpace(values))
+            {
+                sendErrorMessage("Eksik veya bozuk data!");
+                return;
+            }
+
+            Type entityType = Provider.GetEntityType(entityName);
+            foreach(string val in values.Split(new []{"#NL#"}, StringSplitOptions.RemoveEmptyEntries))
+            {
+                BaseEntity entity = Provider.CreateEntity(entityName);
+                entity.SetFieldsByPostData(context.Request.Form);
+                entity.SetMemberValue(fieldName, val);
+                entity.Save();
+            }
         }
 
         private void moveModule(bool down)

@@ -447,7 +447,7 @@ namespace Cinar.CMS.Library.Modules
                 else
                 {
                     html = cache.CachedHTML;
-                    this.CacheHint = "cached at " + cache.UpdateDate;
+                    this.CacheHint = "cached before at " + cache.UpdateDate;
                 }
                 return html;
             }
