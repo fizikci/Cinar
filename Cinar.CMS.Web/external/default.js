@@ -139,13 +139,15 @@ function lang(code){
 
 // opacity'si düşerekten sayfanın ortasında div gösterme olayı
 var showingElementWithOverlay = false;
-function showElementWithOverlay(elm, autoHide){
+function showElementWithOverlay(elm, autoHide, color){
     elm = $(elm);
     elm.hide();
+	
+	var dim = $$('html')[0].getDimensions();
     
     var perde = $('___perde');
     if(!perde){
-        new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90;width:3000px;height:3000px;background-color: #000;"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
+        new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
         perde = $('___perde');
     }
 
@@ -285,14 +287,25 @@ function lightBox(img){
 					'<img src="/external/icons/lbNext.png" id="lbNext"/>'+
 					'<div id="lbLeft"></div>'+
 					'<div id="lbCenter"></div>'+
-					'<div id="lbRight"><div id="lbCounter">1/20</div><img src="/external/icons/love.png"/> <span>25</span></div>'+
+					'<div id="lbRight"><div id="lbCounter">1/20</div><img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span></div>'+
 					'</div>';
 	$(document.body).insert(html);
 	lightBoxDiv = $('lightBoxDiv');
-	$('lbPrev').on('click',function(){img = img.previous('img'); showPic();});
-	$('lbNext').on('click',function(){img = img.next('img'); showPic();});
+	lightBoxDiv.down('#lbPrev').on('click',function(){img = img.previous('img'); showPic();});
+	lightBoxDiv.down('#lbNext').on('click',function(){img = img.next('img'); showPic();});
+	lightBoxDiv.down('#lbLove').on('click',function(){
+		var id = img.readAttribute('entityId');
+		if(!getCookie('like_' + id)){
+			var likerNumber = ajax({url:'LikeIt.ashx?id='+id, isJSON:false, noCache:true});
+			lightBoxDiv.down('#lbLoveCount').innerHTML = likerNumber;
+			setCookie('like_' + id, 1, 30);
+		}
+	});
 	function showPic(){
 		lbImg.src = img.readAttribute('path'); 
+		lightBoxDiv.down('#lbLeft').hide();
+		lightBoxDiv.down('#lbCenter').hide();
+		lightBoxDiv.down('#lbRight').hide();
 		lightBoxDiv.hide();
 		lightBoxDiv.select('.tag_bg').each(function(tbg){tbg.remove();});
 	}
@@ -300,25 +313,25 @@ function lightBox(img){
 	var lbImg = $('lbImg');
 	lbImg.on('load', function(){
 		if(img.previous('img')) $('lbPrev').show(); else $('lbPrev').hide();
-		if(img.next('img')) $('lbNext').show(); else $('lbNext').hide();
-		$('lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
+		if(img.next('img')) lightBoxDiv.down('#lbNext').show(); else lightBoxDiv.down('#lbNext').hide();
+		lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
 		var lbDim = lightBoxDiv.getDimensions();
 		var imgDim = img.getDimensions();
 		var posView = document.viewport.getScrollOffsets();
 		var dimView = Position.getWindowSize();
 		lightBoxDiv.setStyle({left:(posView[0]+(dimView.width-lbDim.width)/2)+'px', top:(posView[1]+(dimView.height-lbDim.height)/2)+'px'});
-		$('lbPrev').setStyle({top:(imgDim.height/2-19)+'px', left:'10px'});
-		$('lbNext').setStyle({top:(imgDim.height/2-19)+'px', right:'10px'});
+		lightBoxDiv.down('#lbPrev').setStyle({top:(imgDim.height/2-19)+'px', left:'10px'});
+		lightBoxDiv.down('#lbNext').setStyle({top:(imgDim.height/2-19)+'px', right:'10px'});
 		if(!showingElementWithOverlay)
-			showElementWithOverlay(lightBoxDiv, true);
+			showElementWithOverlay(lightBoxDiv, true, 'white');
 		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){
 			var lbImgDim = lbImg.getDimensions();
-			$('lbLeft').innerHTML = img.readAttribute('desc'); 
-			$('lbCenter').innerHTML = img.readAttribute('title'); 
-			$('lbRight').down('span').innerHTML = img.readAttribute('like'); 
-			$('lbLeft').setStyle({left:'0px',top:(lbImgDim.height+20)+'px'});
-			$('lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+20)+'px'});
-			$('lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+20)+'px'});
+			lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc'); 
+			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title'); 
+			lightBoxDiv.down('#lbRight').down('span').innerHTML = img.readAttribute('like'); 
+			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+20)+'px'}).show();
+			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+20)+'px'}).show();
+			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+20)+'px'}).show();
 
 			var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
 			if(tagData){
@@ -328,7 +341,7 @@ function lightBox(img){
 					lightBoxDiv.insert('<div class="tag_bg" style="position:absolute;top:'+y+'px;left:'+x+'px"><a href="'+tag.url+'">'+(tag.tag || '&nbsp;')+'</a></div>');
 					tagText += tag.text + '<br/>';
 				});
-				$('lbCenter').innerHTML = tagText;
+				lightBoxDiv.down('#lbCenter').innerHTML = tagText;
 			}
 		} });
 	});

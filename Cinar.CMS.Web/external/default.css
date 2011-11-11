@@ -5,11 +5,11 @@
 #lightBoxDiv #lbImg {margin-bottom:10px}
 #lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
 #lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
-#lightBoxDiv #lbCounter {}
-#lightBoxDiv #lbLeft {width:20%;position:absolute}
+#lightBoxDiv #lbCounter {margin-bottom:20px;}
+#lightBoxDiv #lbLeft {width:20%;position:absolute;text-align:left;padding-left: 10px;}
 #lightBoxDiv #lbCenter {width:60%;position:absolute}
-#lightBoxDiv #lbRight {width:20%;position:absolute}
-#lightBoxDiv #lbLike  img{curor:pointer;}
+#lightBoxDiv #lbRight {width:20%;position:absolute;text-align:right}
+#lightBoxDiv #lbLove {cursor:pointer;}
 
 .fadeShow {
 	position:relative;

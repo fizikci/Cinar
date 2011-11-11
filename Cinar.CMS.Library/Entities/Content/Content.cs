@@ -252,6 +252,13 @@ namespace Cinar.CMS.Library.Entities
             set { recommendCount = value; }
         }
 
+        [ColumnDetail(IsNotNull = true, DefaultValue = "0"), EditFormFieldProps(Options = "readOnly:true")]
+        public int LikeIt
+        {
+            get;
+            set;
+        }
+
         protected override void beforeSave(bool isUpdate)
         {
             base.beforeSave(isUpdate);
