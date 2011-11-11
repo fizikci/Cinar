@@ -54,11 +54,11 @@ namespace Cinar.CMS.Library.Entities
             set { tagData = value; }
         }
 
-        private int like = 0;
-        public int Like
+        [ColumnDetail(IsNotNull = true, DefaultValue = "0"), EditFormFieldProps(Options = "readOnly:true")]
+        public int LikeIt
         {
-            get { return like; }
-            set { like = value; }
+            get;
+            set;
         }
 
         private string fileName;

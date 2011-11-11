@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Data;
 using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
+using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
 using Module = System.Reflection.Module;
 
 //using System.IO;
@@ -101,6 +102,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "AutoCompleteTag":
                     {
                         autoCompleteTag();
+                        break;
+                    }
+                case "LikeIt":
+                    {
+                        likeIt();
                         break;
                     }
             }
@@ -545,6 +551,18 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        private void likeIt()
+        {
+            int id = Convert.ToInt32(context.Request["id"]);
+            if (context.Request.Cookies["like_" + id] != null)
+                return;
+
+            var cp = Provider.Database.Read<ContentPicture>(id);
+            cp.LikeIt += 1;
+            cp.Save();
+
+            context.Response.Write(cp.LikeIt);
+        }
 
         //private string vx34ftd24()
         //{
