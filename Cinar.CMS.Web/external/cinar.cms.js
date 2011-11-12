@@ -98,6 +98,7 @@ function refreshModuleHighlighter(){
     var pos = Position.cumulativeOffset(selMod);
     var dim = selMod.getDimensions();
     mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
+	//todo: aşağıdaki setStyle'ları eğer gerekli değilse yapmamak lazım, browserı yoruyor.
     mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
     mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
     mdlSel3.setStyle({left:pos[0]+'px', top:(pos[1]+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
@@ -597,8 +598,7 @@ function tagifySelectedPicture(id){
 		win.toFront();
 	});
 }
-function openTagForm(winPos, tag)
-{
+function openTagForm(winPos, tag){
 	var formTag = $('tagify_edit');
 	formTag.setStyle({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px'});
 	formTag.show().store('tag',tag);

@@ -129,7 +129,8 @@ namespace Cinar.CMS.Library.Modules
                     nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
                 }
 
-                sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
+                if(!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
+                    sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
             }
 
             return sb.ToString();

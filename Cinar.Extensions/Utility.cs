@@ -290,12 +290,14 @@ namespace System
         }
         public static string MakeFileName(this string str)
         {
-            string replace = "öoçcşsıiğgüuÖOÇCŞSİIĞGÜU _\t_";
+            string replace = "öoçcşsıiğgüuÖOÇCŞSİIĞGÜU _\t_&_";
             for (int i = 0; i < replace.Length; i += 2)
                 str = str.Replace(replace[i], replace[i + 1]);
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = string.Format(@"[{0}]", invalidChars);
-            return Regex.Replace(str, invalidReStr, "_");
+            string res = Regex.Replace(str, invalidReStr, "_");
+            while (res.Contains("__")) res = res.Replace("__", "_");
+            return res;
         }
         public static string ConvertToAbsoluteURL(this string relativeUrl, string baseUrl)
         {
