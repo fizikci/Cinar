@@ -115,7 +115,7 @@ namespace Cinar.CMS.Library.Handlers
                 }
                 sb.Append("<link href=\"/external/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                sb.AppendFormat("<script type='text/javascript'>var useHTMLEditor={0};</script>", Provider.Configuration.UseHTMLEditor.ToString().ToLower());
+                sb.AppendFormat("<script type='text/javascript'>var useHTMLEditor={0}; var designMode = {1};</script>", Provider.Configuration.UseHTMLEditor.ToString().ToLower(), Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/default.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/message.js\"> </script>\n");
@@ -127,7 +127,7 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
 
-                if (Provider.DesignMode)
+                if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {
                     sb.Append("<link href=\"/external/cinar.cms.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
@@ -138,8 +138,10 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<script type=\"text/javascript\" src=\"/external/controls.js\"></script>\n");
                     sb.Append(@"
 <script type='text/javascript'>
-    Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
-    Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
+    if(designMode){
+        Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
+        Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
+    }
     var currTemplate = '" + template.FileName + @"';
     var virtualDir = '" + WebConfigurationManager.AppSettings["virtualDir"] + @"';
     var moduleTypes = " + getModuleTypesJSON() + @";

@@ -109,7 +109,7 @@ namespace Cinar.CMS.Library.Entities
         }
         
         private int authorId = 1;
-        [ColumnDetail(References = typeof(Author)), EditFormFieldProps(ControlType = ControlType.LookUp)]
+        [ColumnDetail(References = typeof(Author)), EditFormFieldProps(ControlType = ControlType.LookUp, Category = "Temel Bilgiler")]
         public int AuthorId
         {
             get { return authorId; }

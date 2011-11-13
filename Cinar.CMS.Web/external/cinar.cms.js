@@ -3,20 +3,28 @@
 }
 
 var traceMode = false;
-var designMode = true;
 var trace = null;
 var regions = [];
 var regionNames = [];
 var regionDivs = [];
 var navigationEnabled = true;
 
-window.onload = onPageLoaded;
-function onPageLoaded(){
+document.observe('dom:loaded', function(){
     try{
         trace = new Trace();
         trace.write({id:'Sistem'}, 'page load started');
+		
+		Windows.addObserver({
+			onShow: function(){
+				navigationEnabled = false;
+			},
+			onClose: function(){
+				if(!Windows.getFocusedWindow())
+					navigationEnabled = true;
+			}
+		});
 
-        if (!designMode) return;
+        if (!designMode) return; //***
 
         //$(document.body).style.height = '100%';
         
@@ -24,6 +32,17 @@ function onPageLoaded(){
         regionDivs.each(function(elm){
             regionNames.push(elm.id);
         });
+		
+		var mdlSelHTML = '<div id="mdlSel">';
+		mdlSelHTML += '<div><nobr>';
+		mdlSelHTML += '<img src="external/icons/module_edit.png" onclick="editModule()" title="'+lang('Edit')+'">';
+		mdlSelHTML += '<img src="external/icons/module_delete.png" onclick="deleteModule()" title="'+lang('Delete')+'">';
+		mdlSelHTML += '<img src="external/icons/arrow_up.png" onclick="upModule()" title="'+lang('Move Up')+'">';
+		mdlSelHTML += '<img src="external/icons/arrow_down.png" onclick="downModule()" title="'+lang('Move Down')+'">';
+		mdlSelHTML += '<img src="external/icons/module_add.png" onclick="addModule()" title="'+lang('Add Module')+'">';
+		mdlSelHTML += '</nobr></div>';
+		mdlSelHTML += '</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>';
+		$(document.body).insert(mdlSelHTML);
 
         clearFlashes();
         
@@ -44,7 +63,7 @@ function onPageLoaded(){
         else
             trace.warn({id:'PageLoad'}, e.name + ' : ' + e.message);
     }
-}
+});
 
 function clearFlashes(){
     $$('object').each(function(elm){
@@ -56,16 +75,6 @@ function clearFlashes(){
 //######################################################################
 //#          SELECT MODULE (select first/next/prev) FUNCTIONS          #
 //######################################################################
-
-wr('<div id="mdlSel">');
-    wr('<div><nobr>');
-    wr('<img src="external/icons/module_edit.png" onclick="editModule()" title="'+lang('Edit')+'">');
-    wr('<img src="external/icons/module_delete.png" onclick="deleteModule()" title="'+lang('Delete')+'">');
-    wr('<img src="external/icons/arrow_up.png" onclick="upModule()" title="'+lang('Move Up')+'">');
-    wr('<img src="external/icons/arrow_down.png" onclick="downModule()" title="'+lang('Move Down')+'">');
-    wr('<img src="external/icons/module_add.png" onclick="addModule()" title="'+lang('Add Module')+'">');
-    wr('</nobr></div>');
-wr('</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>');
 
 var mdlSel = null, mdlSel2 = null, mdlSel3 = null, mdlSel4 = null;
 function highlightModule(event){
@@ -124,18 +133,6 @@ function findPrevModule(mdl){
             else
                 return modules[i-1];
 }
-
-document.observe('dom:loaded', function(){
-    Windows.addObserver({
-        onShow: function(){
-            navigationEnabled = false;
-        },
-        onClose: function(){
-            if(!Windows.getFocusedWindow())
-                navigationEnabled = true;
-        }
-    });
-});
 
 function selectNext(event){
     //alert(event.keyCode);
@@ -659,19 +656,19 @@ function nodeModuleClicked(node){
 //#       EDIT & SAVE ANY DATA SUCH AS CONTENT, AUTHOR, etc..       #
 //###################################################################
 
-function editData(entityName, id){
-    new Ajax.Request('EntityInfo.ashx?method=edit&entityName='+entityName+'&id='+id, {
+function editData(entityName, id, callback, filter){
+    new Ajax.Request('EntityInfo.ashx?method='+(id>0 ? 'edit' : 'new')+'&entityName='+entityName+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
             var dim = $(document.body).getDimensions();
             var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({className: 'alphacube', title: '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + lang('Edit ' + entityName), left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+            var win = new Window({className: 'alphacube', title: '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + (id<=0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName)), left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
             var winContent = $(win.getContent());
-            var pe = new EditForm(winContent, res, entityName, id);
-            pe.onSave = saveEditForm;
+            var pe = new EditForm(winContent, res, entityName, id, filter);
+            pe.onSave = function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }
             win['form'] = pe;
             win.show();
             win.toFront();
@@ -681,17 +678,44 @@ function editData(entityName, id){
         onException: function(req, ex){throw ex;}
     });
 }
-function saveEditForm(pe){
-        var params = pe.serialize();
-        new Ajax.Request('EntityInfo.ashx?method=save&entityName='+pe.entityName+'&id='+pe.entityId, {
-            method: 'post',
-            parameters: params,
-            onComplete: function(req) {
-                if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-                Windows.getFocusedWindow().close();
-            },
-            onException: function(req, ex){throw ex;}
-        });
+function deleteData(entityName, id, callback){
+	niceConfirm(lang('The record will be deleted!'), function () {
+		if(!id || id<=0) return;
+		new Ajax.Request('EntityInfo.ashx?method=delete&entityName=' + entityName + '&id=' + id, {
+			method: 'get',
+			onComplete: function (req) {
+				if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+				if(callback) callback();
+			},
+			onException: function (req, ex) { throw ex; }
+		});
+	});
+}
+function saveEditForm(pe, callback){
+	var params = pe.serialize();
+	new Ajax.Request('EntityInfo.ashx?method=save&entityName='+pe.entityName+'&id='+pe.entityId, {
+		method: 'post',
+		parameters: params,
+		onComplete: function(req) {
+			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+			Windows.getFocusedWindow().close();
+			if(callback) callback();
+		},
+		onException: function(req, ex){throw ex;}
+	});
+}
+function insertEditForm(pe, callback){
+	var params = pe.serialize();
+	new Ajax.Request('EntityInfo.ashx?method=insertNew&entityName='+pe.entityName, {
+		method: 'post',
+		parameters: params,
+		onComplete: function(req) {
+			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+			Windows.getFocusedWindow().close();
+			if(callback) callback();
+		},
+		onException: function(req, ex){throw ex;}
+	});
 }
 
 //################################################################
