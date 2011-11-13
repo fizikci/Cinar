@@ -214,9 +214,9 @@ namespace Cinar.CMS.Library.Modules
         {
             get
             {
-                if (dr.Table.Columns.Contains("Picture") && !dr.IsNull("Picture"))
+                if (dr.Table.Columns.Contains("Picture"))
                     return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight);
-                else if (dr.Table.Columns.Contains("FileName") && !dr.IsNull("FileName"))
+                else if (dr.Table.Columns.Contains("FileName"))
                     return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight);
                 else
                     return "Could not find a picture field - Try something else";

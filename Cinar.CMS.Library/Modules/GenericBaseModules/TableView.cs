@@ -55,8 +55,11 @@ namespace Cinar.CMS.Library.Modules
                     sb.Append("<tr>\n");
                     for (int j = 0; j < this.cols; j++)
                     {
+                        string cellHtml = this.getCellHTML(i, j);
+                        if (this.rowCount==1 && string.IsNullOrWhiteSpace(cellHtml)) break;
+
                         sb.Append("<td>\n");
-                        sb.Append(this.getCellHTML(i, j));
+                        sb.Append(cellHtml);
                         sb.Append("</td>\n");
                     }
                     sb.Append("</tr>\n");

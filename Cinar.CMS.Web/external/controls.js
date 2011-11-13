@@ -1174,11 +1174,10 @@ var EditForm = Class.create(); EditForm.prototype = {
         controls = controls.sortBy(function(ctrl){return ctrl.orderNo;});
 		
 		var filters = parseFilterExp(strFilterExp);
-		var hideFieldName, hideFieldValue;
-		if(filters['f_0'] && filters['o_0']=='='){
-			hideFieldName = filters['f_0'];
-			hideFieldValue = filters['c_0'];
-		}
+		var hideFieldValue = {}, ind = -1;
+		while(filters['f_'+(++ind)]!=undefined)
+			if(filters['o_'+ind]=='=')
+				hideFieldValue[filters['f_'+ind]] = filters['c_'+ind];
 			
         var ths = this;
 
@@ -1192,7 +1191,7 @@ var EditForm = Class.create(); EditForm.prototype = {
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
 				str += '<tr>';
-				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(control.id==hideFieldName?'':('&nbsp;'+control.label))+'</td>';
+				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
 				str += '</tr>';
 			}
@@ -1216,9 +1215,9 @@ var EditForm = Class.create(); EditForm.prototype = {
             control.options.container = $(this.cntrlId+i);
             control.options.relatedEditForm = ths;
             // Eğer bu EditForm bir EditForm'un içindeki detail ListForm'unda "Yeni Ekle" butonuna tıklayarak açılıyorsa... (ilişkili kontrolü gizle)
-            if(control.id && control.id==hideFieldName){
+            if(control.id && hideFieldValue[control.id]!=undefined){
                 control.options.hidden = true;
-                control.value = hideFieldValue;
+                control.value = hideFieldValue[control.id];
             }
             switch(control.type){
                 case 'StringEdit':
@@ -1477,26 +1476,25 @@ var ListForm = Class.create();ListForm.prototype = {
         });
     },
     cmdEdit: function () {
-        var entityName = this.options.entityName;
         var id = this.getSelectedEntityId();
 		if(!id || id<=0) return;
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri + '?method=edit&entityName=' + entityName + '&id=' + id, {
+        new Ajax.Request(this.options.ajaxUri + '?method=edit&entityName=' + ths.options.entityName + '&id=' + id, {
             method: 'get',
             onComplete: function (req) {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 var dim = Position.getWindowSize();
                 var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
-                var caption = '<img src="external/icons/' + entityName + '.png" style="vertical-align:middle"> ' + lang('Edit') + " : " + ths.options.hrEntityName;
+                var caption = '<img src="external/icons/' + ths.options.entityName + '.png" style="vertical-align:middle"> ' + lang('Edit') + " : " + ths.options.hrEntityName;
                 var win = new Window({ className: "alphacube", title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
                 var pe = null;
-                if (ths.options.parentEditForm != null)
-                    pe = new EditForm(winContent, res, entityName, id, ths.options.relatedFieldName, ths.options.parentEditForm.entityId);
+                if (ths.filter != null)
+                    pe = new EditForm(winContent, res, ths.options.entityName, id, ths.filter.value);
                 else
-                    pe = new EditForm(winContent, res, entityName, id);
+                    pe = new EditForm(winContent, res, ths.options.entityName, id);
                 pe.onSave = ths.saveEntity.bind(ths);
                 win.show();
                 win.toFront();

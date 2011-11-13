@@ -122,7 +122,7 @@ namespace Cinar.CMS.Library.Modules
                     }
                 }
                 if (Provider.ContextUser.IsInRole("Editor"))
-                        sb.AppendFormat("<a href=\"{0}\">{1}</a>", "Admin/"/*Provider.Configuration.AdminPage*/, Provider.GetResource("Site Management"));
+                        sb.AppendFormat("<a href=\"{0}\">{1}</a>", Provider.Configuration.AdminPage, Provider.GetResource("Site Management"));
                 sb.AppendFormat("<a href=\"{0}\">{1}</a>", Provider.Configuration.MainPage, Provider.GetModuleResource("Home Page"));
                 sb.AppendFormat("<a href=\"DoLogin.ashx?logout=1\">{0}</a>", Provider.GetResource("Logout"));
             }
