@@ -470,7 +470,7 @@ function saveModule(pe){
         onException: function(req, ex){throw ex;}
     });
 }
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback){
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel){
     caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
@@ -482,7 +482,8 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         ajaxUri: 'EntityInfo.ashx',
         forSelect: forSelect,
         selectCallback: selectCallback,
-		commands: []
+		commands: [],
+		hideFilterPanel: hideFilterPanel
     }
 	if(entityName=='ContentPicture'){
 		options.commands.push({id:'QuickLoad', icon:'thunder', name:'Quick Load', handler:quickLoadImages});
@@ -904,7 +905,7 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(selectedPath, onSelectFile){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), zIndex:10000, width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
     var fm = new FileManager({
 		container:winContent,
