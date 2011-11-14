@@ -95,6 +95,9 @@ var Control = Class.create(); Control.prototype = {
             editor.setStyle({top: (pos[1] - editor.getHeight())+'px'});
         else
             editor.setStyle({top: (pos[1] + div.getHeight())+'px'});
+		
+		Windows.maxZIndex += 1;
+		editor.setStyle({zIndex:Windows.maxZIndex});
     },
     validate: function(){
         var maxLengthValidation = '';
@@ -263,7 +266,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
 						var pos = $(ths.editorId + 'ta').cumulativeOffset();
 						pos = {left:pos.left+1, top:pos.top+1};
 						dim = {width:dim.width-2, height:dim.height-2};
-						$(document.body).insert('<div id="'+ths.editorId+'Preview" style="background:white;overflow:auto;text-align:left;left:'+pos.left+'px;top:'+pos.top+'px;z-index:10000;width:'+dim.width+'px;height:'+dim.height+'px;position:absolute;"></div>');
+						Windows.maxZIndex++;
+						$(document.body).insert('<div id="'+ths.editorId+'Preview" style="background:white;overflow:auto;text-align:left;left:'+pos.left+'px;top:'+pos.top+'px;z-index:'+Windows.maxZIndex+';width:'+dim.width+'px;height:'+dim.height+'px;position:absolute;"></div>');
 					}
 					$(ths.editorId+'Preview').innerHTML = $(ths.editorId + 'ta').value;
 					showElementWithOverlay(ths.editorId+'Preview', true, 'black');
@@ -1377,11 +1381,9 @@ var ListForm = Class.create();ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        if (!this.options.hideFilter) {
-            new Insertion.Top(this.container, '<table width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
-            this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
-            $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
-        }
+        new Insertion.Top(this.container, '<table style="'+(this.options.hideFilterPanel ? 'display:none' : '')+'" width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
+        $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
 
         new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"></div>');
 
@@ -1418,15 +1420,8 @@ var ListForm = Class.create();ListForm.prototype = {
     },
     fetchData: function () {
         var params = null;
-        if (this.options.hideFilter) {
-            params = new Object();
-            params['f_0'] = this.options.relatedFieldName;
-            params['o_0'] = '=';
-            params['c_0'] = this.options.parentEditForm.entityId;
-        } else {
-            if(this.filter && this.filter.filter)
-                params = this.filter.filter.serialize();
-        }
+        if(this.filter && this.filter.filter)
+            params = this.filter.filter.serialize();
         var ths = this;
         new Ajax.Request(this.options.ajaxUri + '?method=getGridList&entityName=' + this.options.entityName + (this.options.extraFilter ? '&extraFilter=' + this.options.extraFilter : '') + (this.options.orderBy ? '&orderBy=' + this.options.orderBy : '') + '&page=' + this.pageIndex + '&limit=' + this.limit, {
             method: 'post',
