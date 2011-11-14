@@ -656,7 +656,7 @@ function nodeModuleClicked(node){
 //#       EDIT & SAVE ANY DATA SUCH AS CONTENT, AUTHOR, etc..       #
 //###################################################################
 
-function editData(entityName, id, callback, filter){
+function editData(entityName, id, hideCategory, callback, filter){
     new Ajax.Request('EntityInfo.ashx?method='+(id>0 ? 'edit' : 'new')+'&entityName='+entityName+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -667,7 +667,7 @@ function editData(entityName, id, callback, filter){
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
             var winContent = $(win.getContent());
-            var pe = new EditForm(winContent, res, entityName, id, filter);
+            var pe = new EditForm(winContent, res, entityName, id, filter, hideCategory);
             pe.onSave = function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }
             win['form'] = pe;
             win.show();
@@ -903,10 +903,14 @@ function configure(){
 //#        OTHER UTILITY (clear cache, end design mode, edit right clicked content)         #
 //###########################################################################################
 
-function openFileManager(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+function openFileManager(selectedPath, onSelectFile){
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), zIndex:10000, width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
-    var fm = new FileManager({container:winContent});
+    var fm = new FileManager({
+		container:winContent,
+		folder: selectedPath ? selectedPath.substring(0, selectedPath.lastIndexOf("/")) : undefined,
+		onSelectFile: onSelectFile
+	});
     win.showCenter();
     win.toFront();
 	return fm;
