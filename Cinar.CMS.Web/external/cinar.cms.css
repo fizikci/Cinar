@@ -24,13 +24,18 @@
 .editor div.item {cursor:default;padding:2px}
 .editor div.selItem {background:#316AC5;color:white}
 .editor div.checkedItem {background:#316AC5;color:white}
-.editor input, .editor textarea, .editor td {
-  font-family: Tahoma,Arial,sans-serif;
-  font-size: 12px;
+.editor input, .editor td {
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+}
+.editor textarea {
+  font-family: Lucida Console, Courier, monospace;
+  font-size: 13px;
 }
  
 div.StringEdit {width:640px; height:480px;}
-div.StringEdit textarea {width:626px; height:440px;}
+div.StringEdit img {cursor:pointer;margin:2px;}
+div.StringEdit textarea {width:626px; height:420px;}
 div.PictureEdit {width:643px; height:480px;}
 div.LookUp {width:800px; height:435px;}
 div.MemoEdit {width:640px; height:480px;}

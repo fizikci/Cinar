@@ -220,7 +220,17 @@ var StringEdit = Class.create();StringEdit.prototype = {
         var list = $(this.editorId);
         list.innerHTML = '';
 
-        new Insertion.Bottom(list, '<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+        new Insertion.Bottom(list, 
+								'<div>'+
+									'<img src="/external/icons/editor_bold.png"/>'+
+									'<img src="/external/icons/editor_italic.png"/>'+
+									'<img src="/external/icons/editor_underline.png"/>'+
+									'<img src="/external/icons/picture.png"/>'+
+									'<img src="/external/icons/eye.png" style="margin-left:40px"/>'+
+								'</div>'+
+								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);"></textarea>'+
+								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+								
         $(this.editorId + 'ta').value = this.input.value.gsub('#NL#', '\n');
 
         if (list.visible()) { list.hide(); currEditor = null; return; }
@@ -234,6 +244,31 @@ var StringEdit = Class.create();StringEdit.prototype = {
         __oldBtnCancelClick = this.showEditor.bind(this);
         btnOK.observe('click', __oldBtnOKClick);
         btnCancel.observe('click', __oldBtnCancelClick);
+		
+		var ths = this;
+		
+		list.select('img').each(function(img){
+			if(img.src.indexOf('bold.png')>-1)
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<b>', '</b>');});
+			if(img.src.indexOf('italic.png')>-1)
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<i>', '</i>');});
+			if(img.src.indexOf('underline.png')>-1)
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<u>', '</u>');});
+			if(img.src.indexOf('picture.png')>-1)
+				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
+			if(img.src.indexOf('eye.png')>-1)
+				img.observe('click', function(){
+					if(!$(ths.editorId+'Preview')){
+						var dim = $(ths.editorId + 'ta').getDimensions();
+						var pos = $(ths.editorId + 'ta').cumulativeOffset();
+						pos = {left:pos.left+1, top:pos.top+1};
+						dim = {width:dim.width-2, height:dim.height-2};
+						$(document.body).insert('<div id="'+ths.editorId+'Preview" style="background:white;overflow:auto;text-align:left;left:'+pos.left+'px;top:'+pos.top+'px;z-index:10000;width:'+dim.width+'px;height:'+dim.height+'px;position:absolute;"></div>');
+					}
+					$(ths.editorId+'Preview').innerHTML = $(ths.editorId + 'ta').value;
+					showElementWithOverlay(ths.editorId+'Preview', true, 'black');
+				});
+		});
 
         this.setEditorPos(list);
 
@@ -1159,7 +1194,7 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
-    initialize: function(container, controls, entityName, entityId, strFilterExp){
+    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory){
         container = $(container);
         if(container==null) container = $(document.body);
         
@@ -1186,10 +1221,12 @@ var EditForm = Class.create(); EditForm.prototype = {
 		var categories = controls.collect(function(item){return item.category;}).uniq().compact();
 		for(var k=0; k<categories.length; k++){
 			var cat = categories[k];
-			str += '<tr class="category"><td colspan="2">'+cat+'</td></tr>';
+			if(hideCategory!=cat)
+				str += '<tr class="category"><td colspan="2">'+cat+'</td></tr>';
 			for(var i=0; i<controls.length; i++){
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
+				if(hideCategory==cat) hideFieldValue[control.id] = control.value;
 				str += '<tr>';
 				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';

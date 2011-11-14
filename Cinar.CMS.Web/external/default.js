@@ -9,6 +9,10 @@ document.observe('dom:loaded', function(){
                 editor.hide();
             }
         });
+        $$('.removeOnOut').each(function(editor){
+            if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event)))
+                editor.remove();
+        });
 	});
 	// listelerde resimlerin google.images'deki gibi pırtlaması için
 	$$('.gogPop img').each(function(img){
@@ -139,25 +143,28 @@ function lang(code){
 
 // opacity'si düşerekten sayfanın ortasında div gösterme olayı
 var showingElementWithOverlay = false;
+var showingElementWithOverlayZIndex = 0;
 function showElementWithOverlay(elm, autoHide, color){
     elm = $(elm);
+	showingElementWithOverlayZIndex = elm.style.zIndex;
     elm.hide();
 	
 	var dim = $$('html')[0].getDimensions();
     
     var perde = $('___perde');
     if(!perde){
-        new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
+        new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90000;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
         perde = $('___perde');
     }
 
     //$(document.body).setStyle({overflow:'hidden'});
-    new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){ elm.setStyle({position:'absolute', zIndex:100}); elm.show(); } });
+    new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){ elm.setStyle({position:'absolute', zIndex:100000}); elm.show(); } });
 	showingElementWithOverlay = elm;
 }
 function hideOverlay(){
     new Effect.Appear('___perde', { duration: .2, from: 0.8, to: 0.0, afterFinish:function(){ $('___perde').hide(); $(document.body).setStyle({overflow:'auto'});} });
 	showingElementWithOverlay.hide();
+	showingElementWithOverlay.style.zIndex = showingElementWithOverlayZIndex;
 	showingElementWithOverlay = false;
 }
 
@@ -734,3 +741,50 @@ document.observe('keyup', function(e){
 	    }
 	}
 });
+
+var TextAreaUtil = {
+	getSelection: function(textArea){
+		var textArea = $(textArea);
+		var startPos = 0;
+		var endPos = 0;
+		if(Prototype.Browser.IE)
+		{
+			textArea.focus();
+			var range = document.selection.createRange();
+			var strLen = range.text.length;
+			range.moveStart ('character', -textArea.value.length);
+			startPos = range.text.length;
+			endPos = startPos + strLen;
+		}
+		else
+		{
+			startPos = textArea.selectionStart
+			endPos = textArea.selectionEnd;
+		}
+		var text = (textArea.value).substring(startPos,endPos);
+		return {startPos:startPos, endPos:endPos, text:text};
+	},
+	addTag: function(textArea, front, back){
+		var textArea = $(textArea);
+		var scrollPos = textArea.scrollTop;
+		var sel = TextAreaUtil.getSelection(textArea);
+		var newValue = textArea.value.substring(0,sel.startPos) + front + sel.text + back + textArea.value.substring(sel.endPos, textArea.value.length);
+		textArea.value = newValue;
+
+		if (Prototype.Browser.IE) { 
+			textArea.focus();
+			var range = document.selection.createRange();
+			range.moveStart ('character', -textArea.value.length);
+			range.moveStart ('character', sel.startPos);
+			range.moveEnd ('character', 0);
+			range.select();
+		}
+		else {
+			textArea.selectionStart = sel.startPos;
+			textArea.selectionEnd = sel.startPos;
+			textArea.focus();
+		}
+		textArea.scrollTop = scrollPos;
+	}
+}
+
