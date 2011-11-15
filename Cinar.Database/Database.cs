@@ -973,8 +973,15 @@ namespace Cinar.Database
                 if (canBeMappedToDBTable(pi))
                 {
                     Column f = GetColumnForProperty(pi);
-                    if (f != null)
-                        ht[f.Name] = pi.GetValue(entity, null);
+                    if (f == null) continue;
+
+                    object val = null;
+
+                    if (pi.PropertyType.IsEnum && f.IsStringType())
+                        val = pi.GetValue(entity, null).ToString();
+                    else
+                        val = pi.GetValue(entity, null);
+                    ht[f.Name] = val;
                 }
             return ht;
         }

@@ -42,11 +42,13 @@ namespace Cinar.CMS.Library
                     if (strVal.ToLower() != "true") strVal = "False";
                 }
 
-
                 object val = null;
                 try
                 {
-                    val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
+                    if (pi.PropertyType.IsEnum)
+                        val = Enum.Parse(pi.PropertyType, strVal); 
+                    else
+                        val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
                 }
                 catch
                 {

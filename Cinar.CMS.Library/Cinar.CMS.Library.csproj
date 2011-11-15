@@ -192,6 +192,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\default.css" />
+    <None Include="Resources\conf_default.css" />
+    <None Include="Resources\controls.js" />
+    <None Include="Resources\default.js" />
+    <None Include="Resources\message.js" />
+    <None Include="Resources\cinar.cms.css" />
+    <None Include="Resources\cinar.cms.js" />
     <Content Include="_files\BasePage.js.txt" />
     <Content Include="_files\hndlr_EntityInfo_getFieldsList.txt" />
     <Content Include="_files\hndlr_EntityInfo_getGridList.txt" />

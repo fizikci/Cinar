@@ -61,6 +61,67 @@ namespace Cinar.CMS.Library.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .editor 
+        ///{
+        ///	font-family: Tahoma, Arial, sans-serif;
+        ///	font-size: 12px;
+        ///	letter-spacing: normal;
+        ///	line-height:normal;
+        ///	color:#404040;
+        ///	text-align:left;
+        ///
+        ///	position:absolute;
+        ///	border:1px solid #B9B9B9;
+        ///	padding:2px;
+        ///	background:white;
+        ///	
+        ///	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+        ///	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+        ///	box-shadow: 3px 3px 4px #c1c3c2;
+        ///	/* For IE 8 */
+        ///	-ms-filter: &quot;progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color=&apos;#c1c3c2&apos;)&quot;;
+        ///	/* For IE 5.5 - 7 */
+        ///	filt [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string cinar_cms_css {
+            get {
+                return ResourceManager.GetString("cinar_cms_css", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to var CinarCMS = {
+        ///    version: &apos;1.0&apos;
+        ///}
+        ///
+        ///var traceMode = false;
+        ///var trace = null;
+        ///var regions = [];
+        ///var regionNames = [];
+        ///var regionDivs = [];
+        ///var navigationEnabled = true;
+        ///
+        ///document.observe(&apos;dom:loaded&apos;, function(){
+        ///    try{
+        ///        trace = new Trace();
+        ///        trace.write({id:&apos;Sistem&apos;}, &apos;page load started&apos;);
+        ///		
+        ///		Windows.addObserver({
+        ///			onShow: function(){
+        ///				navigationEnabled = false;
+        ///			},
+        ///			onClose: function(){
+        ///				if(!Windows.getFocusedWindow())
+        ///					navigationEnabled = true;
+        ///	 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string cinar_cms_js {
+            get {
+                return ResourceManager.GetString("cinar_cms_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to body {
         ///	font-family:Verdana;
         ///	font-size:12px;
@@ -87,7 +148,7 @@ namespace Cinar.CMS.Library.Properties {
         ///
         ///#page {
         ///	width: 1000px; 
-        ///	height: 100%; 
+        ///	min-height: 700px; 
         ///	margin-top:10px; 
         ///	margin-right:auto;
         ///	margin-left:auto;
@@ -95,11 +156,90 @@ namespace Cinar.CMS.Library.Properties {
         ///}
         ///#Header {text-align:left}
         ///#Content {text-align:left; clear:both}
-        ///#Footer {text-align:l [rest of string was truncated]&quot;;.
+        ///#Footer {text-al [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string _default {
+        internal static string conf_default_css {
             get {
-                return ResourceManager.GetString("_default", resourceCulture);
+                return ResourceManager.GetString("conf_default_css", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*
+        /// UI controls and EditForm for prototype people.
+        /// I don&apos;t like licence, micence..
+        /// Use it for your any need or print it and read it if you like.
+        /// Contains small parts, keep away from childrens of 3 age.
+        /// - bulentkeskin@gmail.com or fizikci @ http://www.bilisim-kulubu.com, 8 March 2007
+        ///*/
+        ///
+        ///var __letters = &apos;!&quot;#$%&amp;\&apos;()*+,-./0123456789:;&lt;=&gt;?@ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVWXYZ[\\]^_`{|}~&apos;;
+        ///var idCounter = 0;
+        ///var ctrlButton = null;
+        ///var currEditor;
+        ///
+        /////############################
+        /////#         Control  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string controls_js {
+            get {
+                return ResourceManager.GetString("controls_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
+        ///#gogPopDiv img {width:auto; height:auto;}
+        ///
+        ///#lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center; padding-bottom:60px;}
+        ///#lightBoxDiv #lbImg {margin-bottom:10px}
+        ///#lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
+        ///#lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
+        ///#lightBoxDiv #lbCounter {margin-bottom:20px;}
+        ///#lightBoxDiv #lbLeft  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string default_css {
+            get {
+                return ResourceManager.GetString("default_css", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // on load
+        ///document.observe(&apos;dom:loaded&apos;, function(){
+        ///	// on body click find visible editors and hide if not the click is within
+        ///    Event.observe(document.body,&apos;mousedown&apos;, function(event){
+        ///        $$(&apos;.hideOnOut&apos;).each(function(editor){
+        ///            if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event))){
+        ///                if(editor.id==&apos;smMenu&apos; &amp;&amp; editor.visible())
+        ///                    popupMenu.onHide();
+        ///                editor.hide();
+        ///            }
+        ///        });
+        ///        $$(&apos;.remov [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string default_js {
+            get {
+                return ResourceManager.GetString("default_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // comments
+        ///
+        ///function commentsShow(moduleId, req, params){
+        ///    new Insertion.Bottom(&apos;comments&apos;+moduleId+&apos;_&apos;+params.parentId, req.responseText);
+        ///}
+        ///
+        ///function commentsAdd(active, id, allowAnon, isUserAnon, withTitle, parentId, showWeb){
+        ///    var frm = $(&apos;commentForm&apos;+id);
+        ///    if(frm)
+        ///        frm.remove();
+        ///    var str = &apos;&lt;div class=&quot;commentForm&quot; id=&quot;commentForm&apos;+id+&apos;&quot;&gt;&lt;form action=&quot;#&quot; onsubmit=&quot;runModuleMethod(\&apos;Comments\&apos;,&apos;+id+&apos;,\&apos;SaveComment\&apos;,$(this).serialize(true),commentSaved); return false;&quot;&gt;&apos;;        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string message_js {
+            get {
+                return ResourceManager.GetString("message_js", resourceCulture);
             }
         }
     }

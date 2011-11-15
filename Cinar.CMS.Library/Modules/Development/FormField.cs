@@ -57,7 +57,7 @@ namespace Cinar.CMS.Library.Modules
             EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
             ControlType ct = attrEdit.ControlType;
             if (ct == ControlType.Undefined)
-                ct = Provider.GetDefaultControlType(attrField.ColumnType, fieldType);
+                ct = Provider.GetDefaultControlType(attrField.ColumnType, pi, attrField);
 
             if (String.IsNullOrEmpty(Label)) Label = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
             if (String.IsNullOrEmpty(Label)) Label = FieldName;
