@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using System.Web.SessionState;
 
@@ -18,6 +19,23 @@ namespace Cinar.CMS.Library.Handlers
             string path = context.Request.Url.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
             string fileName = path.Substring(path.LastIndexOf('/') + 1);
             fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
+
+            if (fileName.Contains(".")) // bu demektir ki cinar.cms.js gibi bir dosya isteniyor
+            {
+                if (context.Request.Url.IsLoopback)
+                {
+                    string resourceFilePath = context.Server.MapPath("/").Replace("Cinar.CMS.Web", "Cinar.CMS.Library") + "Resources\\" + fileName;
+                    if(File.Exists(resourceFilePath))
+                        context.Response.Write(File.ReadAllText(resourceFilePath));
+                }
+                else
+                {
+                    string s = Properties.Resources.ResourceManager.GetString(fileName.Replace(".", "_"));
+                    context.Response.Write(s ?? ("There is no resource with this name: " + fileName.Replace(".", "_")));
+                }
+                return;
+            }
+
             switch (fileName)
             { 
                 case "ModuleInfo":

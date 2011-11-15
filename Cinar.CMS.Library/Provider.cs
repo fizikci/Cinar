@@ -46,9 +46,10 @@ namespace Cinar.CMS.Library
             }
         }
 
-        public static ControlType GetDefaultControlType(Cinar.Database.DbType dbType, Type type)
+        public static ControlType GetDefaultControlType(Cinar.Database.DbType dbType, PropertyInfo pi, ColumnDetailAttribute columnProps)
         {
             ControlType ct = ControlType.Undefined;
+            Type type = pi.PropertyType;
 
             switch (dbType)
             {
@@ -60,6 +61,8 @@ namespace Cinar.CMS.Library
                 case Cinar.Database.DbType.Int32:
                 case Cinar.Database.DbType.Int64:
                     ct = ControlType.IntegerEdit;
+                    if (columnProps.References != null)
+                        ct = ControlType.LookUp;
                     break;
                 case Cinar.Database.DbType.Real:
                 case Cinar.Database.DbType.Float:
@@ -84,7 +87,10 @@ namespace Cinar.CMS.Library
                 case Cinar.Database.DbType.TextTiny:
                 case Cinar.Database.DbType.TextMedium:
                 case Cinar.Database.DbType.TextLong:
-                    ct = ControlType.StringEdit;
+                    if (type.IsEnum)
+                        ct = ControlType.ComboBox;
+                    else
+                        ct = ControlType.StringEdit;
                     break;
                 case Cinar.Database.DbType.Time:
                 case Cinar.Database.DbType.Timetz:
@@ -107,12 +113,20 @@ namespace Cinar.CMS.Library
                     switch (type.Name)
                     {
                         case "String":
-                            ct = ControlType.StringEdit;
+                            if (type.IsEnum)
+                                ct = ControlType.ComboBox;
+                            else
+                                ct = ControlType.StringEdit;
                             break;
                         case "Int16":
                         case "Int32":
                         case "Int64":
-                            ct = ControlType.IntegerEdit;
+                            if (type.IsEnum)
+                                ct = ControlType.ComboBox;
+                            else if (columnProps.References != null)
+                                ct = ControlType.LookUp;
+                            else
+                                ct = ControlType.IntegerEdit;
                             break;
                         case "Decimal":
                         case "Double":
@@ -157,27 +171,27 @@ namespace Cinar.CMS.Library
                 editProps.Category = editProps.Category ?? Provider.GetResource((pi.DeclaringType == typeof(NamedEntity) ? obj.GetType() : pi.DeclaringType).Name);
                 editProps.OrderNo = ctrlOrderNo++;
 
-                ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 if (editProps.ControlType == ControlType.Undefined)
-                    editProps.ControlType = Provider.GetDefaultControlType(fieldProps.ColumnType, pi.PropertyType);
-                if (fieldProps.ColumnType == Cinar.Database.DbType.Undefined)
-                    fieldProps.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
-                if (fieldProps.ColumnType == Cinar.Database.DbType.Text)
-                    fieldProps.Length = Int32.MaxValue;
-                if (pi.PropertyType.IsEnum && fieldProps.ColumnType == DbType.Undefined)
-                    fieldProps.ColumnType = DbType.Int32;
+                    editProps.ControlType = Provider.GetDefaultControlType(columnProps.ColumnType, pi, columnProps);
+                if (columnProps.ColumnType == Cinar.Database.DbType.Undefined)
+                    columnProps.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
+                if (columnProps.ColumnType == Cinar.Database.DbType.Text)
+                    columnProps.Length = Int32.MaxValue;
+                if (pi.PropertyType.IsEnum && columnProps.ColumnType == DbType.Undefined)
+                    columnProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
 
                 string options = "";
-                if (fieldProps.IsNotNull && !editProps.Options.Contains("required:")) options += ",required:true";
+                if (columnProps.IsNotNull && !editProps.Options.Contains("required:")) options += ",required:true";
 
                 switch (editProps.ControlType)
                 {
                     case ControlType.StringEdit:
-                        options += ",maxLength:" + fieldProps.Length;
+                        options += ",maxLength:" + columnProps.Length;
                         break;
                     case ControlType.IntegerEdit:
                         options += ",maxLength:10";
@@ -196,15 +210,20 @@ namespace Cinar.CMS.Library
                         break;
                     case ControlType.ComboBox:
                         if (pi.PropertyType.IsEnum)
-                            options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select((s, i) => "[" + i + ",'" + s + "']").StringJoin(","));
-                        if (fieldProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
+                        {
+                            if (Provider.Database.GetColumnForProperty(pi).IsStringType())
+                                options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select(s => "['" + s + "','" + s + "']").StringJoin(","));
+                            else
+                                options += string.Format(",items:[{0}]", Enum.GetNames(pi.PropertyType).Select((s, i) => "[" + i + ",'" + s + "']").StringJoin(","));
+                        }
+                        if (columnProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
                             options += String.Format(",items:[[false,'{0}'],[true,'{1}']]", Provider.GetResource("No"), Provider.GetResource("Yes"));
-                        if (fieldProps.References != null)
-                            options += ",entityName:'" + fieldProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
+                        if (columnProps.References != null)
+                            options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
                         break;
                     case ControlType.LookUp:
-                        if (fieldProps.References != null)
-                            options += ",entityName:'" + fieldProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
+                        if (columnProps.References != null)
+                            options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
                         break;
                     default:
                         throw new Exception(Provider.GetResource("{0} type of controls not supported yet.", editProps.ControlType));
@@ -1688,21 +1707,21 @@ namespace Cinar.CMS.Library
                 if (pi.GetSetMethod() == null) continue;
 
                 EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
-                ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 if (editProps.ControlType == ControlType.Undefined)
-                    editProps.ControlType = Provider.GetDefaultControlType(fieldProps.ColumnType, pi.PropertyType);
-                if (fieldProps.ColumnType == Cinar.Database.DbType.Undefined)
-                    fieldProps.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
-                if (fieldProps.ColumnType == Cinar.Database.DbType.Text)
-                    fieldProps.Length = Int32.MaxValue;
+                    editProps.ControlType = Provider.GetDefaultControlType(columnProps.ColumnType, pi, columnProps);
+                if (columnProps.ColumnType == DbType.Undefined)
+                    columnProps.ColumnType = Column.GetDbTypeOf(pi.PropertyType);
+                if (columnProps.ColumnType == DbType.Text)
+                    columnProps.Length = Int32.MaxValue;
 
                 string fieldName = pi.Name;
                 string fieldType = pi.PropertyType.Name;
-                bool isNotNull = fieldProps.IsNotNull;
-                bool isPrimaryKey = fieldProps.IsPrimaryKey;
-                string referenceTypeName = fieldProps.References != null ? fieldProps.References.Name : "";
-                long maxLength = fieldProps.Length;
+                bool isNotNull = columnProps.IsNotNull;
+                bool isPrimaryKey = columnProps.IsPrimaryKey;
+                string referenceTypeName = columnProps.References != null ? columnProps.References.Name : "";
+                long maxLength = columnProps.Length;
                 string displayName2 = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
                 string description2 = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
                 string defaultControlType = editProps.ControlType.ToString();
@@ -1712,7 +1731,7 @@ namespace Cinar.CMS.Library
                 switch (editProps.ControlType)
                 {
                     case ControlType.StringEdit:
-                        options += ",maxLength:" + fieldProps.Length;
+                        options += ",maxLength:" + columnProps.Length;
                         break;
                     case ControlType.IntegerEdit:
                         options += ",maxLength:10";
@@ -1730,14 +1749,14 @@ namespace Cinar.CMS.Library
                     case ControlType.FilterEdit:
                         break;
                     case ControlType.ComboBox:
-                        if (fieldProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
+                        if (columnProps.ColumnType == Cinar.Database.DbType.Boolean && editProps.Options.IndexOf("items:") == -1)
                             options += String.Format(",items:[[false,'{0}'],[true,'{1}']]", Provider.GetResource("No"), Provider.GetResource("Yes"));
-                        if (fieldProps.References != null)
-                            options += ",entityName:'" + fieldProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
+                        if (columnProps.References != null)
+                            options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
                         break;
                     case ControlType.LookUp:
-                        if (fieldProps.References != null)
-                            options += ",entityName:'" + fieldProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
+                        if (columnProps.References != null)
+                            options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
                         break;
                     default:
                         throw new Exception(Provider.GetResource("{0} type of controls not supported yet.", editProps.ControlType));

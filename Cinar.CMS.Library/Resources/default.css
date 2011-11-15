@@ -1,38 +1,28 @@
-﻿body {
-	font-family:Verdana;
-	font-size:12px;
-	text-align:center;
-	background: black;
-}
-td {
-	font-size:12px;
-}
-a {
-	color: #9c9c9c;
-	text-decoration:none
-}
-a:hover{
-	color: #0687d5;
-}
+﻿#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
+#gogPopDiv img {width:auto; height:auto;}
 
-DIV {
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
-	margin:0;
-	padding:0;
+#lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center; padding-bottom:60px;}
+#lightBoxDiv #lbImg {margin-bottom:10px}
+#lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
+#lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
+#lightBoxDiv #lbCounter {margin-bottom:20px;}
+#lightBoxDiv #lbLeft {width:20%;position:absolute;text-align:left;padding-left: 10px;}
+#lightBoxDiv #lbCenter {width:60%;position:absolute}
+#lightBoxDiv #lbRight {width:20%;position:absolute;text-align:right}
+#lightBoxDiv #lbLove {cursor:pointer;}
+
+.fadeShow {
+	position:relative;
 }
-
-#page {
-	width: 1000px; 
-	min-height: 700px; 
-	margin-top:10px; 
-	margin-right:auto;
-	margin-left:auto;
-	background: white;
+.fadeShow .indexElms {
+	position:absolute;
+	z-index:3;
+	right:10px;
+	bottom:6px;
+	cursor:pointer;
 }
-#Header {text-align:left}
-#Content {text-align:left; clear:both}
-#Footer {text-align:left; clear:both}
-
-
-
+.fadeShow .clItem {
+	position:absolute;
+	left:0px;
+	top:0px;
+}

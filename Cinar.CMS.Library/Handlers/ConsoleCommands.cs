@@ -694,7 +694,7 @@ namespace Cinar.CMS.Library.Handlers
                     template.Save();
                 }
 
-                string styles = Properties.Resources._default;
+                string styles = Properties.Resources.conf_default_css;
                 if (System.IO.File.Exists(Provider.Server.MapPath("~/default.css")))
                 {
                     styles = System.IO.File.ReadAllText(Provider.Server.MapPath("~/default.css"), Encoding.UTF8);

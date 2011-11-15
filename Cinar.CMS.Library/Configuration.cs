@@ -289,7 +289,7 @@ namespace Cinar.CMS.Library
             if (Provider.Database.Tables["Configuration"] == null)
             {
                 Configuration conf = new Configuration();
-                conf.DefaultStyleSheet = Properties.Resources._default;
+                conf.DefaultStyleSheet = Properties.Resources.conf_default_css;
                 conf.Save();
             }
 
