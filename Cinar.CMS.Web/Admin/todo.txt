@@ -1,4 +1,0 @@
-* Poll ekranýnda cevaplar için editable grid
-* [OK] Listelerde direk baþlýk yazýp kaydet deyince "ID geçersiz" hatasý oluyor. gridden ilk satýrý seçmek yerine newEntity'yi çalýþtýrmak lazým.
-* Bütün titlelar "içerik düzenle" þeklinde. options.title olayý lazým.
-* 
