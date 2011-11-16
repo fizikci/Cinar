@@ -162,13 +162,13 @@ namespace Cinar.CMS.Library.Modules
             } catch (Exception ex){
                 html = Provider.ToString(ex, true);
             }
-            string tooltip = String.Format(" title=\"Name: {0}, Id: {1}, Region: {2}\"", Provider.GetResource(this.name), this.id, this.region);
+
             return String.Format("<div id=\"{0}_{1}\" class=\"{3}{0}{5}\"{4}>{2}</div>\n",
                 this.Name,
                 this.Id,
                 html,
                 this.editable ? "Module " : "",
-                Provider.DesignMode ? tooltip : "",
+                Provider.DesignMode ? String.Format(" title=\"Name: {0}, Id: {1}, Region: {2}\"", Provider.GetResource(this.name), this.id, this.region) : "", // tooltip
                 this.cssClass != "" ? " " + this.cssClass : "");
         }
 

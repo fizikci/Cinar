@@ -152,11 +152,11 @@ namespace Cinar.CMS.Library.Modules
                     }
                     else if (htParams[field].Equals("PreviousContent"))
                     {
-                        fov.Value = Provider.Database.GetInt("select Id from Content where Id<{0} AND CategoryId={1} order by Id desc limit 1", content.Id, content.CategoryId);
+                        fov.Value = Provider.PreviousContentId; //Provider.Database.GetInt("select Id from Content where Id<{0} AND CategoryId={1} order by Id desc limit 1", content.Id, content.CategoryId);
                     }
                     else if (htParams[field].Equals("NextContent"))
                     {
-                        fov.Value = Provider.Database.GetInt("select Id from Content where Id>{0} AND CategoryId={1} order by Id limit 1", content.Id, content.CategoryId);
+                        fov.Value = Provider.NextContentId; //Provider.Database.GetInt("select Id from Content where Id>{0} AND CategoryId={1} order by Id limit 1", content.Id, content.CategoryId);
                     }
                     else if (htParams[field].Equals("Yesterday"))
                     {

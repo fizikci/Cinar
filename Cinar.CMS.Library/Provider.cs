@@ -583,6 +583,35 @@ namespace Cinar.CMS.Library
                     Provider.Session["item"] = value.Id;
             }
         }
+        public static int PreviousContentId
+        {
+            get
+            {
+                if (Items["previousContentId"] == null)
+                {
+                    string tagSQL = "";
+                    if (Provider.Tag != null && Provider.Tag.Id>0)
+                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = "+Provider.Tag.Id+")";
+                    Items["previousContentId"] = Provider.Database.GetInt("select Id from Content where Id<{0} AND CategoryId={1} " + tagSQL + " order by Id desc limit 1", Content.Id, Content.CategoryId);
+                }
+                return (int)Items["previousContentId"];
+            }
+        }
+        public static int NextContentId
+        {
+            get
+            {
+                if (Items["nextContentId"] == null)
+                {
+                    string tagSQL = "";
+                    if (Provider.Tag != null && Provider.Tag.Id > 0)
+                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = " + Provider.Tag.Id + ")";
+                    Items["nextContentId"] = Provider.Database.GetInt("select Id from Content where Id>{0} AND CategoryId={1} " + tagSQL + " order by Id limit 1", Content.Id, Content.CategoryId);
+                }
+                return (int)Items["nextContentId"];
+            }
+        }
+
         /// <summary>
         /// Request["tag"] veya Request["tagId"] parametrelerini kullanarak aktif tag'ı döndürür
         /// </summary>
@@ -596,13 +625,13 @@ namespace Cinar.CMS.Library
                     {
                         IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Id={0}", Provider.Request["tagId"]);
                         Provider.Translate(items);
-                        Provider.Items["tag"] = (Tag)(items.Length == 1 ? items[0] : null);
+                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
                     }
                     else if (!String.IsNullOrEmpty(Provider.Request["tag"]))
                     {
                         IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]);
                         Provider.Translate(items);
-                        Provider.Items["tag"] = (Tag)(items.Length == 1 ? items[0] : null);
+                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
                     }
                     else
                         return null;

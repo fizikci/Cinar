@@ -115,13 +115,11 @@ namespace Cinar.CMS.Library.Handlers
                 }
                 sb.Append("<link href=\"/external/default.css.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                sb.AppendFormat("<script type='text/javascript'>var useHTMLEditor={0}; var designMode = {1};</script>", Provider.Configuration.UseHTMLEditor.ToString().ToLower(), Provider.DesignMode.ToJS());
+                sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>", Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/default.js.ashx\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/message.js.ashx\"> </script>\n");
-                if(Provider.Configuration.UseHTMLEditor)
-                    sb.Append("<script type=\"text/javascript\">alert('FCK removed and there is no html editor yet!');</script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"/external/lang/" + Provider.CurrentCulture.Split('-')[0] + ".js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/lang/" + Provider.CurrentCulture.Split('-')[0] + ".js.ashx\"></script>\n");
                 //sb.Append("<script type=\"text/javascript\" src=\"external/javascripts/swfobject.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
