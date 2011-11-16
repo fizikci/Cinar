@@ -107,13 +107,6 @@ namespace Cinar.CMS.Library
             set { countTags = value; }
         }
 
-        protected bool useHTMLEditor = false;
-        public bool UseHTMLEditor
-        {
-            get { return useHTMLEditor; }
-            set { useHTMLEditor = value; }
-        }
-
         private string defaultDateFormat = "dd MMMM yyyy";
         [ColumnDetail(Length = 100), EditFormFieldProps(Options = "noHTML:true")]
         public string DefaultDateFormat

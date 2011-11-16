@@ -34,11 +34,11 @@
  
 div.StringEdit {width:640px; height:480px;}
 div.StringEdit img {cursor:pointer;margin:2px;}
-div.StringEdit textarea {width:626px; height:420px;}
+div.StringEdit textarea {width:100%; height:420px;}
 div.PictureEdit {width:643px; height:480px;}
 div.LookUp {width:800px; height:435px;}
 div.MemoEdit {width:640px; height:480px;}
-div.MemoEdit textarea {width:626px; height:439px}
+div.MemoEdit textarea {width:100%; height:439px}
 div.FilterEdit {width:324px; height:300px;}
 div.DateTimeEdit {width:200px;}
 div.ComboBox {text-align:left;overflow-y:auto;overflow-x:hidden;padding:0px;}

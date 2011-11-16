@@ -213,14 +213,36 @@ namespace Cinar.CMS.Library.Properties {
         ///            if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event))){
         ///                if(editor.id==&apos;smMenu&apos; &amp;&amp; editor.visible())
         ///                    popupMenu.onHide();
-        ///                editor.hide();
-        ///            }
-        ///        });
-        ///        $$(&apos;.remov [rest of string was truncated]&quot;;.
+        ///				if(event.element().hasClassName(&apos;hideOnOutException&apos;) || event.element().u [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string default_js {
             get {
                 return ResourceManager.GetString("default_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // controls.js
+        ///langRes[&apos;Select&apos;] = &apos;Select&apos;;
+        ///langRes[&apos;OK&apos;] = &apos;OK&apos;;
+        ///langRes[&apos;Cancel&apos;] = &apos;Cancel&apos;;
+        ///langRes[&apos;Warning&apos;] = &apos;Warning&apos;;
+        ///langRes[&apos;Error&apos;] = &apos;Error&apos;;
+        ///langRes[&apos;Information&apos;] = &apos;Information&apos;;
+        ///langRes[&apos;Load default&apos;] = &apos;Load default&apos;;
+        ///langRes[&apos;January&apos;] = &apos;January&apos;;
+        ///langRes[&apos;February&apos;] = &apos;February&apos;;
+        ///langRes[&apos;March&apos;] = &apos;March&apos;;
+        ///langRes[&apos;April&apos;] = &apos;April&apos;;
+        ///langRes[&apos;May&apos;] = &apos;May&apos;;
+        ///langRes[&apos;June&apos;] = &apos;June&apos;;
+        ///langRes[&apos;July&apos;] = &apos;July&apos;;
+        ///langRes[&apos;August&apos;] = &apos;August&apos;;
+        ///langRes[&apos;September&apos;] = &apos;Septe [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string en_js {
+            get {
+                return ResourceManager.GetString("en_js", resourceCulture);
             }
         }
         
@@ -240,6 +262,31 @@ namespace Cinar.CMS.Library.Properties {
         internal static string message_js {
             get {
                 return ResourceManager.GetString("message_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // controls.js
+        ///langRes[&apos;Select&apos;] = &apos;Seçiniz&apos;;
+        ///langRes[&apos;OK&apos;] = &apos;Tamam&apos;;
+        ///langRes[&apos;Cancel&apos;] = &apos;İptal&apos;;
+        ///langRes[&apos;Warning&apos;] = &apos;Dikkat&apos;;
+        ///langRes[&apos;Error&apos;] = &apos;Hata&apos;;
+        ///langRes[&apos;Information&apos;] = &apos;Bilgi&apos;;
+        ///langRes[&apos;Load default&apos;] = &apos;Varsayılanı yükle&apos;;
+        ///langRes[&apos;January&apos;] = &apos;Ocak&apos;;
+        ///langRes[&apos;February&apos;] = &apos;Şubat&apos;;
+        ///langRes[&apos;March&apos;] = &apos;Mart&apos;;
+        ///langRes[&apos;April&apos;] = &apos;Nisan&apos;;
+        ///langRes[&apos;May&apos;] = &apos;Mayıs&apos;;
+        ///langRes[&apos;June&apos;] = &apos;Haziran&apos;;
+        ///langRes[&apos;July&apos;] = &apos;Temmuz&apos;;
+        ///langRes[&apos;August&apos;] = &apos;Ağustos&apos;;
+        ///langRes[&apos;September&apos;] = &apos;Eylü [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string tr_js {
+            get {
+                return ResourceManager.GetString("tr_js", resourceCulture);
             }
         }
     }

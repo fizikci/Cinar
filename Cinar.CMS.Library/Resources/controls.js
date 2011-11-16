@@ -230,11 +230,13 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<img src="/external/icons/editor_underline.png"/>'+
 									'<img src="/external/icons/picture.png"/>'+
 									'<img src="/external/icons/eye.png" style="margin-left:40px"/>'+
+									'<div style="float:right"><input type="checkbox" checked="true" class="wrapCheck" style=""/> Wrap</div>'+
 								'</div>'+
 								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);"></textarea>'+
 								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
 								
-        $(this.editorId + 'ta').value = this.input.value.gsub('#NL#', '\n');
+        var ta = $(this.editorId + 'ta');
+		ta.value = this.input.value.gsub('#NL#', '\n');
 
         if (list.visible()) { list.hide(); currEditor = null; return; }
         if (this.input.disabled) return;
@@ -247,6 +249,14 @@ var StringEdit = Class.create();StringEdit.prototype = {
         __oldBtnCancelClick = this.showEditor.bind(this);
         btnOK.observe('click', __oldBtnOKClick);
         btnCancel.observe('click', __oldBtnCancelClick);
+		
+		var wrapCheck = list.down('.wrapCheck');
+		wrapCheck.observe('click', function(){
+			if(wrapCheck.checked)
+				ta.writeAttribute('wrap');
+			else
+				ta.writeAttribute('wrap', 'off');
+		});
 		
 		var ths = this;
 		
