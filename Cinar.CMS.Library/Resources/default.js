@@ -6,7 +6,10 @@ document.observe('dom:loaded', function(){
             if(!Position.within(editor, Event.pointerX(event),Event.pointerY(event))){
                 if(editor.id=='smMenu' && editor.visible())
                     popupMenu.onHide();
-                editor.hide();
+				if(event.element().hasClassName('hideOnOutException') || event.element().up('.hideOnOutException'))
+					Prototype.K();
+				else
+					editor.hide();
             }
         });
         $$('.removeOnOut').each(function(editor){
@@ -47,8 +50,10 @@ document.observe('dom:loaded', function(){
 			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 3000);
 		});
 	$$('.fadeShow .clItem').each(function(elm, i){
-		if(i==0)
+		if(i==0){
 			elm.up().currentImg = elm;
+			elm.setStyle({zIndex:2});
+		}
 		else
 			elm.fade({ duration: 0.05, from: 1, to: 0.01 });
 		elm.up('.fadeShow').select('.indexElms')[0].insert('<img src="/external/icons/bullet_'+(i==0 ? 'red':'white')+'.png" index="'+i+'"/>');
@@ -60,6 +65,11 @@ document.observe('dom:loaded', function(){
 	// slideShow
 	if($$('.slideShow').length)
 		$$('.slideShow').each(function(elm){
+			if(elm.select('img').length==0){
+				elm.remove();
+				return;
+			}
+
 			elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
 			var imgs = elm.select('img');
 			var imgCounter = 0;

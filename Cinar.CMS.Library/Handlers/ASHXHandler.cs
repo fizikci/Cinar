@@ -66,6 +66,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "Scriptify":
                 case "AutoCompleteTag":
                 case "LikeIt":
+                case "Subscribe":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "Console":
