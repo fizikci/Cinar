@@ -109,6 +109,11 @@ namespace Cinar.CMS.Library.Handlers
                         likeIt();
                         break;
                     }
+                case "Subscribe":
+                    {
+                        subscribe();
+                        break;
+                    }
             }
         }
 
@@ -205,6 +210,13 @@ namespace Cinar.CMS.Library.Handlers
                 Provider.Log("Error", "UpdateTags", Provider.ToString(ex, true, true, true));
                 context.Response.Write("ERROR");
             }
+        }
+
+        private void subscribe()
+        {
+            string email = context.Request["email"];
+            Provider.Log("Notice", "Subscribe", email);
+            context.Response.Write("OK");
         }
 
         private void defaultStyleSheet()

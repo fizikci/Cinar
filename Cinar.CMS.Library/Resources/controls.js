@@ -1588,7 +1588,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
     container: null,
     fields: [],
     fieldsComboItems: [],
-    parameterOptions: [['',lang('Select')],['Category',lang('Category')],['Hierarchy',lang('Hierarchy')],['Content',lang('Content')],['Author',lang('Author')],['Source',lang('Source')],['Yesterday',lang('Yesterday')],['LastDay',lang('The day before yesterday')],['LastWeek',lang('Last week')],['LastMonth',lang('Last month')]],
+    parameterOptions: [['',lang('Select')],['Category',lang('Category')],['Hierarchy',lang('Hierarchy')],['Content',lang('Content')],['PreviousContent',lang('Previous Content')],['NextContent',lang('Next Content')],['Author',lang('Author')],['Source',lang('Source')],['Yesterday',lang('Yesterday')],['LastDay',lang('The day before yesterday')],['LastWeek',lang('Last week')],['LastMonth',lang('Last month')]],
     rowHtml: '<tr class="filterRow"><td class="tdField"></td><td class="tdOp"></td><td class="tdControl"></td></tr>',
     initialize: function(container, fields){
         this.container = $(container);

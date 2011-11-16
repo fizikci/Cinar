@@ -12,7 +12,7 @@
   <entry key="_LEGENDPOSITIONS_" value="[['l','Left'],['r','Right'],['t','Top'],['b','Bottom']]"/>
   <entry key="_HORIZONTAL_" value="[[false,'Vertical'],[true,'Horizontal']]"/>
 	<entry key="_MODERATED_" value="[[false,'Off'],[true,'On']]"/>
-	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Title'],['Content.PublishDate','Publish Date'],['Content.ViewCount','View Count'],['Content.CommentCount','Comment Count'],['Content.RecommendCount','Recommendation Count'],['Content.OrderNo','Order No'],['TAuthorId.Name','Author Name'],['TSourceId.Name','Source Name']]"/>
+	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Title'],['Content.PublishDate','Publish Date'],['Content.Id','Id'],['Content.ViewCount','View Count'],['Content.CommentCount','Comment Count'],['Content.RecommendCount','Recommendation Count'],['Content.OrderNo','Order No'],['TAuthorId.Name','Author Name'],['TSourceId.Name','Source Name']]"/>
 	<entry key="_SHOWPERCENT_" value="[[false,'As number'],[true,'As percent']]"/>
   <entry key="_UICONTROLTYPE_" value="[['','Automatic'],['Input','Input'],['Textarea','Text Area'],['Hidden','Hidden']]"/>
   <entry key="_USECACHE_" value="[['Default','Default'],['Module','Module Based'],['Item','Item Based'],['False','No Cache']]"/>

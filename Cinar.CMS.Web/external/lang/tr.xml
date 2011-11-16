@@ -12,7 +12,7 @@
 	<entry key="_HORIZONTAL_" value="[[false,'Dikey'],[true,'Yatay']]"/>
   <entry key="_LEGENDPOSITIONS_" value="[['l','Solda'],['r','Sağda'],['t','Üstte'],['b','Altta']]"/>
   <entry key="_MODERATED_" value="[[false,'Kapalı'],[true,'Açık']]"/>
-	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Başlık'],['Content.PublishDate','Yayın Tarihi'],['Content.ViewCount','Okunma Sayısı'],['Content.CommentCount','Yorum Sayısı'],['Content.RecommendCount','Tavsiye Sayısı'],['Content.OrderNo','Sıra Numarası'],['TAuthorId.Name','Yazar Adı'],['TSourceId.Name','Kaynak Adı']]"/>
+	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Başlık'],['Content.PublishDate','Yayın Tarihi'],['Content.Id','Id'],['Content.ViewCount','Okunma Sayısı'],['Content.CommentCount','Yorum Sayısı'],['Content.RecommendCount','Tavsiye Sayısı'],['Content.OrderNo','Sıra Numarası'],['TAuthorId.Name','Yazar Adı'],['TSourceId.Name','Kaynak Adı']]"/>
 	<entry key="_SHOWPERCENT_" value="[[false,'Sayı olarak'],[true,'Yüzde olarak']]"/>
 	<entry key="_UICONTROLTYPE_" value="[['','Otomatik'],['Input','Input'],['Textarea','Metin Kutusu'],['Hidden','Gizli']]"/>
   <entry key="_USECACHE_" value="[['Default','Varsayılan'],['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
