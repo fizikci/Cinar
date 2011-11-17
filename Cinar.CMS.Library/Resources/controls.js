@@ -1490,7 +1490,7 @@ var ListForm = Class.create();ListForm.prototype = {
                 var winContent = $(win.getContent());
                 var pe = null;
                 if (ths.filter != null)
-                    pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter.value);
+                    pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter.getValue());
                 else
                     pe = new EditForm(winContent, res, ths.options.entityName, 0);
                 pe.onSave = ths.insertEntity.bind(ths);
@@ -2073,6 +2073,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         var theItem = this.findMenuItem(link);
         $(link).up().hide();
         this.onHide();
+		$('smMenuContainer').hide();
         theItem.callback(theItem.data, theItem.text);
     },
     findMenuItem: function(link){

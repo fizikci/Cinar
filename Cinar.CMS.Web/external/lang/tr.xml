@@ -375,7 +375,9 @@
 	<entry key="ContentPicture.FileNameDesc" value="Resim seçiniz"/>
 	<entry key="ContentPicture.Height" value="Resim yüksekliği (px)"/>
 	<entry key="ContentPicture.HeightDesc" value="İçerik resminin bu yükseklikte kopyası oluşturulacaktır"/>
-	<entry key="ContentPicture.Title" value="Başlık"/>
+  <entry key="ContentPicture.LikeIt" value="Beğeniler"/>
+  <entry key="ContentPicture.LikeItDesc" value="Bu resmi kaç kişi beğendi"/>
+  <entry key="ContentPicture.Title" value="Başlık"/>
 	<entry key="ContentPicture.TitleDesc" value="Başlık"/>
 	<entry key="ContentPicture.Width" value="Resim genişliği (px)"/>
 	<entry key="ContentPicture.WidthDesc" value="İçerik resminin bu genişlikte kopyası oluşturulacaktır"/>

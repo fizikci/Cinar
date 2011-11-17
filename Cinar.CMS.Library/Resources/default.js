@@ -27,30 +27,35 @@ document.observe('dom:loaded', function(){
 		var elmDesc = elm.down('div.clDesc');
 		if(elmDesc){
 			elmDesc.hide();
-			Event.observe(elm, 'mouseenter', function(){
+			Event.observe(elm, 'mouseenter', function(event){
+				event.stop();
 				//if(effectInExecution) effectInExecution.cancel(); 
-				effectInExecution = new Effect.BlindDown(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});//new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'clItem2'})], {duration:0.3});
+				//effectInExecution = new Effect.BlindDown(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
+				//new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'clItem2'})], {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
+				elmDesc.show(); new Effect.Morph(elm, {style:'clItem2', duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
 			});
-			Event.observe(elm, 'mouseleave', function(){
+			Event.observe(elm, 'mouseleave', function(event){
+				event.stop();
 				//if(effectInExecution) effectInExecution.cancel(); 
-				effectInExecution = new Effect.BlindUp(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}});
-									//new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2'); elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
+				//effectInExecution = new Effect.BlindUp(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}});
+				//new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2');elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
+				elmDesc.hide(); new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2');elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}, duration:0.3});
 			});
 		}
     });
-	// listelerde description alanlarının görünüp gizlenmesi
-	$$('.showDescOnImg .clItem').each(function(elm){
-		var elmDesc = elm.down('div.clDesc');
-		var elmImg = elm.down('img');
+	// listelerde description alanlarının resim üzerinde görünüp gizlenmesi
+	$$('.showDescOnImg img').each(function(elm){
+		var elmImg = elm;//.down('img');
+		var elmDesc = elm.next('div.clDesc');
 		elmDesc.on('click', function(){elmImg.click();});
 		if(elmDesc){
 			elmDesc.hide();
-			Event.observe(elmImg, 'mouseenter', function(){
+			Event.observe(elmImg, 'mouseenter', function(event){
 				var dimImg = elmImg.getDimensions();
 				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width, height:dimImg.height, margin:'5px'});
 				elmDesc.show();
 			});
-			Event.observe(elm, 'mouseleave', function(){
+			Event.observe(elmDesc, 'mouseleave', function(event){
 				elmDesc.hide();
 			});
 		}
@@ -355,7 +360,7 @@ function gogPop(event){
 	pop.hide();
 	new Effect.Appear(pop, { duration: 0.2, from: 0.0, to: 1.0 });
 }
-// lghtbox faclty
+// lightbox faclty
 function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
