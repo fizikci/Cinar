@@ -10,10 +10,16 @@
 #lightBoxDiv #lbCenter {width:60%;position:absolute}
 #lightBoxDiv #lbRight {width:20%;position:absolute;text-align:right}
 #lightBoxDiv #lbLove {cursor:pointer;}
-
-.fadeShow {
-	position:relative;
+.tag_bg {
+	width:97px;
+	height:28px;
+	background:url(/external/icons/tag_bg.png);
+	font-size:18px;
+	padding-left:20px;
+	padding-top:4px;
 }
+
+.fadeShow {position:relative;}
 .fadeShow .indexElms {
 	position:absolute;
 	z-index:3;
@@ -25,4 +31,54 @@
 	position:absolute;
 	left:0px;
 	top:0px;
+}
+
+.slideShow {
+	border:1px solid #C0C0C0;
+	margin-top:40px;
+	padding:40px 0px;
+	position:relative;
+}
+.slideShow .clipper {
+	height:360px;
+	width:908px;
+	float:left;
+	position:relative;
+	overflow:hidden;
+}
+.slideShow .clipper .innerDiv {
+	height:360px;
+	width:30000px;
+	overflow:hidden;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+.slideShow .playBtn {
+	position:absolute;
+	right: 5px;
+	bottom: 5px;
+	cursor:pointer;
+}
+.slideShow .pauseBtn {
+	position:absolute;
+	right: 32px;
+	bottom: 5px;
+	cursor:pointer;
+}
+.slideShow div.paging {
+	float:left;
+	width:40px;
+	height:360px;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+.showDescOnImg {
+}
+.showDescOnImg .clDesc {
+	position:absolute;
+	background: url("/external/icons/black_px_alpha.png") repeat scroll 0 0 transparent;
+	color:white;
+	padding:5px;
+	cursor:pointer;
 }

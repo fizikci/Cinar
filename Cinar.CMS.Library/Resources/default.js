@@ -21,25 +21,6 @@ document.observe('dom:loaded', function(){
 	$$('.gogPop img').each(function(img){
 		img.on('mouseover', gogPop);
 	});
-	// lightBox olayı
-	if($$('.lightBox').length)
-	{
-		document.on('keydown', function(event){
-			var lightBoxDiv = $('lightBoxDiv');
-			if(!lightBoxDiv) return;
-            switch(event.keyCode){
-				case Event.KEY_LEFT:
-					lightBoxDiv.down('#lbPrev').click();
-					break;
-				case Event.KEY_RIGHT:
-					lightBoxDiv.down('#lbNext').click();
-					break;
-			}
-		});
-		$$('.lightBox img').each(function(img){
-			img.on('click', function(){lightBox(img);});
-		});
-	}
 	// listelerde description alanlarının görünüp gizlenmesi
 	var effectInExecution=null;
 	$$('.toogleDesc .clItem').each(function(elm){
@@ -54,6 +35,23 @@ document.observe('dom:loaded', function(){
 				//if(effectInExecution) effectInExecution.cancel(); 
 				effectInExecution = new Effect.BlindUp(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}});
 									//new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2'); elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
+			});
+		}
+    });
+	// listelerde description alanlarının görünüp gizlenmesi
+	$$('.showDescOnImg .clItem').each(function(elm){
+		var elmDesc = elm.down('div.clDesc');
+		var elmImg = elm.down('img');
+		elmDesc.on('click', function(){elmImg.click();});
+		if(elmDesc){
+			elmDesc.hide();
+			Event.observe(elmImg, 'mouseenter', function(){
+				var dimImg = elmImg.getDimensions();
+				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width, height:dimImg.height, margin:'5px'});
+				elmDesc.show();
+			});
+			Event.observe(elm, 'mouseleave', function(){
+				elmDesc.hide();
 			});
 		}
     });
@@ -84,8 +82,29 @@ document.observe('dom:loaded', function(){
 				elm.remove();
 				return;
 			}
-
-			elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
+			elm.innerHTML = '<div class="paging" style="background-image:url(/external/icons/slide_prev.png); background-position:right center;"></div>'+
+							'<div class="clipper">'+
+							'<div class="innerDiv">'+ 
+							elm.innerHTML + 
+							'</div>'+
+							'</div>'+
+							'<div class="paging"  style="background-image:url(/external/icons/slide_next.png); background-position:left center;"></div>'+
+							'<div style="clear:both"></div>'+
+							'<img src="/external/icons/play2.png" class="playBtn"/>'+
+							'<img src="/external/icons/pause.png" class="pauseBtn"/>';
+			
+			elm.down('.playBtn').on('click', function(){
+				elm.down('.playBtn').src = '/external/icons/play.png';
+				elm.down('.pauseBtn').src = '/external/icons/pause2.png';
+				elm.playing = true;
+				slideShowSlide(elm);
+			});
+			elm.down('.pauseBtn').on('click', function(){
+				clearTimeout(elm.timeout);
+				elm.down('.playBtn').src = '/external/icons/play2.png';
+				elm.down('.pauseBtn').src = '/external/icons/pause.png';
+				elm.playing = false;
+			});
 			var imgs = elm.select('img');
 			var imgCounter = 0;
 			imgs.each(function(img){
@@ -101,20 +120,43 @@ document.observe('dom:loaded', function(){
 			elm.select('.paging')[0].observe('click', function(){slideShowSlide(elm,'back');});
 			elm.select('.paging')[1].observe('click', function(){slideShowSlide(elm);});
 		});
+	// lightBox olayı
+	if($$('.lightBox').length)
+	{
+		document.on('keydown', function(event){
+			var lightBoxDiv = $('lightBoxDiv');
+			if(!lightBoxDiv) return;
+            switch(event.keyCode){
+				case Event.KEY_LEFT:
+					lightBoxDiv.down('#lbPrev').click();
+					break;
+				case Event.KEY_RIGHT:
+					lightBoxDiv.down('#lbNext').click();
+					break;
+			}
+		});
+		$$('.lightBox img').each(function(img){
+			img.on('click', function(){lightBox(img);});
+		});
+	}
 });
 function slideShowSlide(elm, dir){
     var dimCl = elm.down('.clipper').getDimensions();
-	var posID = Position.cumulativeOffset(elm.down('.innerDiv'));
+	var leftID = parseInt(elm.down('.innerDiv').style.left);
     var dimID = elm.down('.innerDiv').getDimensions();
 
-	if(posID[0]+dimID.width<dimCl.width)
-		new Effect.Move(elm.down('.innerDiv'), { x: -1*parseInt(elm.down('.innerDiv').style.left), y: 0, mode: 'relative', duration:3.0 });
-	else if(dir=='back')
-		new Effect.Move(elm.down('.innerDiv'), { x: elm.down('.clipper').getWidth(), y: 0, mode: 'relative', duration:1.0 });
-	else
+	if(leftID + dimID.width < dimCl.width)
+		new Effect.Move(elm.down('.innerDiv'), { x: -1*leftID, y: 0, mode: 'relative', duration:3.0 });
+	else if(dir == 'back'){
+		if(leftID < 0)
+			new Effect.Move(elm.down('.innerDiv'), { x: elm.down('.clipper').getWidth(), y: 0, mode: 'relative', duration:1.0 });
+	} else
 		new Effect.Move(elm.down('.innerDiv'), { x: -1*elm.down('.clipper').getWidth(), y: 0, mode: 'relative', duration:1.0 });
+		
 	clearTimeout(elm.timeout);
-	elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
+	if(elm.playing){
+		elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
+	}
 }
 function fadeShowShowImg(fadeShow, indexElm){
 	var currIndexElm = null;
@@ -181,9 +223,9 @@ function showElementWithOverlay(elm, autoHide, color){
         new Insertion.Top(document.body, '<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90000;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
         perde = $('___perde');
 		perde.on('mouseover', function(){
-			if(!$('lbPrev')) return;
-			$('lbPrev').hide();
-			$('lbNext').hide();
+			$$('.hideOnPerde').each(function(hop){
+				hop.hide();
+			});
 		});
     }
 
@@ -319,9 +361,9 @@ function lightBox(img){
 	
 	var allImg = img.up('.lightBox').select('img');
 	var html = '<div id="lightBoxDiv">'+
-					'<img src="/external/icons/lbPrev.png" id="lbPrev" style="display:none"/>'+
+					'<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>'+
 					'<img id="lbImg" src="'+img.readAttribute('path')+'"/>'+
-					'<img src="/external/icons/lbNext.png" id="lbNext" style="display:none"/>'+
+					'<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>'+
 					'<div id="lbLeft"></div>'+
 					'<div id="lbCenter"></div>'+
 					'<div id="lbRight"><div id="lbCounter">1/20</div><img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span></div>'+
@@ -377,8 +419,8 @@ function lightBox(img){
 				var tagText = '';
 				tagData.each(function(tag, i){
 					var x = tag.x, y = tag.y;
-					lightBoxDiv.insert('<div class="tag_bg" style="position:absolute;top:'+y+'px;left:'+x+'px"><a href="'+tag.url+'">'+(tag.tag || '&nbsp;')+'</a></div>');
-					tagText += tag.text + '<br/>';
+					lightBoxDiv.insert('<div id="tagBg'+i+'" class="tag_bg hideOnPerde" style="display:none;position:absolute;top:'+y+'px;left:'+x+'px"><a href="'+tag.url+'" target="_blank">'+(tag.tag || '&nbsp;')+'</a></div>');
+					tagText += '<a href="'+tag.url+'" onmouseover="lightBox_hideAllTags();$(\'tagBg'+i+'\').show()" target="_blank">'+tag.text + '</a><br/>';
 				});
 				lightBoxDiv.down('#lbCenter').innerHTML = tagText;
 			}
@@ -387,6 +429,18 @@ function lightBox(img){
 	lightBoxDiv.on('mouseover', function(){
 		if(img.previous('img')) $('lbPrev').show(); else $('lbPrev').hide();
 		if(img.next('img')) lightBoxDiv.down('#lbNext').show(); else lightBoxDiv.down('#lbNext').hide();
+	});
+	lbImg.on('mouseover', function(){
+		lightBoxDiv.select('.tag_bg').each(function(tagElm){
+			tagElm.show();
+		});
+	});
+}
+function lightBox_hideAllTags(){
+	var lightBoxDiv = $('lightBoxDiv');
+	if(!lightBoxDiv) return;
+	lightBoxDiv.select('.tag_bg').each(function(tagElm){
+		tagElm.hide();
 	});
 }
 
