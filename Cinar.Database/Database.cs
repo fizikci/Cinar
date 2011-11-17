@@ -358,8 +358,14 @@ namespace Cinar.Database
                 sql = string.Join(" ", parts);//sql.Replace(" top " + parts[rowCountIndex], "");
                 sql += " limit " + count;
             }
+            
             sql = sql.Replace("[", getReservedWordToken(true)).Replace("]", getReservedWordToken(false));
+            
+            return sql;
+        }
 
+        private void addToSQLLog(string sql)
+        {
             if (this.EnableSQLLog)
             {
                 StringBuilder sbSQL = new StringBuilder(sql + "\n");
@@ -370,10 +376,8 @@ namespace Cinar.Database
                 //    if (sf.GetFileName() != null && sf.GetFileName().Contains("Cinar.CMS\\Cinar.CMS.Library"))
                 //        sbSQL.AppendFormat("{0}({1}), ", sf.GetMethod().DeclaringType.Name + "." + sf.GetMethod().Name, sf.GetFileLineNumber());
                 //}
-                SQLLog.Add(sbSQL + "\n");
+                SQLLog.Add(sql + "\n");
             }
-
-            return sql;
         }
 
         private string connectionString;
@@ -465,6 +469,7 @@ namespace Cinar.Database
         }
         public DbDataAdapter CreateDataAdapter(string selectCommandText)
         {
+            addToSQLLog(selectCommandText);
             return dbProvider.CreateDataAdapter(selectCommandText);
         }
         public IDbCommand CreateCommand(string cmdText)
@@ -563,6 +568,7 @@ namespace Cinar.Database
             try
             {
                 res = cmd.ExecuteNonQuery();
+                addToSQLLog(cmd.CommandText);
             }
             catch(Exception ex)
             {
@@ -1127,6 +1133,7 @@ namespace Cinar.Database
         public DataSet GetDataSet(DataSet ds, string sql, params object[] parameters)
         {
             sql = editSQLAsForProvider(sql);
+            addToSQLLog(sql);
             DbDataAdapter da = this.dbProvider.CreateDataAdapter(sql, parameters);
             if (useTransaction != null)
             {

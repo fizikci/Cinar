@@ -150,10 +150,9 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<script type=\"text/javascript\" src=\"/external/cinar.cms.js.ashx\"></script>\n");
                 }
 
-                if (!Provider.DesignMode)
+                if (Provider.DevelopmentMode)
                 {
-
-
+                    sb.Append(@"<script>document.observe('dom:loaded', function(){document.body.insert('<div style=""font-family:Lucida Console;font-size:12px;position:absolute;right:10px;top:10px;width:100px;padding:10px;color:white;background:orange;"">Development Mode</div>');});</script>");
                 }
 
                 string title = Provider.Configuration.SiteName;
@@ -197,6 +196,12 @@ namespace Cinar.CMS.Library.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
+            if (Provider.DevelopmentMode)
+            {
+                Provider.Database.EnableSQLLog = true;
+                Provider.Database.ClearSQLLog();
+            }
+
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
 
@@ -214,11 +219,6 @@ namespace Cinar.CMS.Library.Handlers
             string strExecutionTimes = "";
             strExecutionTimes = "<!-- Page read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
 
-            if (Provider.DevelopmentMode)
-            {
-                Provider.Database.EnableSQLLog = true;
-                Provider.Database.ClearSQLLog();
-            }
 
             if (Provider.Request["currentCulture"] != null)
                 Provider.CurrentCulture = Provider.Request["currentCulture"];
