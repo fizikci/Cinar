@@ -24,7 +24,8 @@ namespace Cinar.CMS.Library.Handlers
             {
                 if (context.Request.Url.IsLoopback)
                 {
-                    string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);
+                    //string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);
+                    string resourceFilePath = context.Server.MapPath("/").Replace("Cinar.CMS.Web", "Cinar.CMS.Library") + "Resources\\" + fileName;
                     if(File.Exists(resourceFilePath))
                         context.Response.Write(File.ReadAllText(resourceFilePath));
                 }
