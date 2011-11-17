@@ -373,9 +373,11 @@
 	<entry key="ContentPicture.DescriptionDesc" value=""/>
 	<entry key="ContentPicture.FileName" value="Picture File"/>
 	<entry key="ContentPicture.FileNameDesc" value="Select the picture"/>
-	<entry key="ContentPicture.Height" value="Height"/>
-	<entry key="ContentPicture.HeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
-	<entry key="ContentPicture.Title" value="Title"/>
+  <entry key="ContentPicture.Height" value="Height"/>
+  <entry key="ContentPicture.HeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
+  <entry key="ContentPicture.LikeIt" value="Likes"/>
+  <entry key="ContentPicture.LikeItDesc" value="How many people liked this picture"/>
+  <entry key="ContentPicture.Title" value="Title"/>
 	<entry key="ContentPicture.TitleDesc" value=""/>
 	<entry key="ContentPicture.Width" value="Width"/>
 	<entry key="ContentPicture.WidthDesc" value="Picture will be scaled to this width (enter zero for autoscale)"/>

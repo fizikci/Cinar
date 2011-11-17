@@ -47,7 +47,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string tagData = "";
-        [ColumnDetail(ColumnType = DbType.Text)]//, EditFormFieldProps(Options="hidden:true")]
+        [ColumnDetail(ColumnType = DbType.Text), EditFormFieldProps(Visible = false)]
         public string TagData
         {
             get { return tagData; }

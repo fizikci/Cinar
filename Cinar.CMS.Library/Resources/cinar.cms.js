@@ -598,7 +598,7 @@ function tagifySelectedPicture(id){
 }
 function openTagForm(winPos, tag){
 	var formTag = $('tagify_edit');
-	formTag.setStyle({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px'});
+	formTag.setStyle({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px', zIndex:80000});
 	formTag.show().store('tag',tag);
 	formTag.down('.tagify_tag').value = tag.tag || '';
 	formTag.down('.tagify_text').value = tag.text || '';
