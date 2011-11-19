@@ -19,6 +19,7 @@ namespace Cinar.CMS.Library.Modules
             get { return height; }
             set { height = value; }
         }
+        public bool CropPicture { get; set; }
 
         protected override string show()
         {
@@ -32,7 +33,7 @@ namespace Cinar.CMS.Library.Modules
                     return String.Empty;
             }
 
-            return Provider.GetThumbImgHTML(content.Picture, this.width, this.height, content.Title, null, null);
+            return Provider.GetThumbImgHTML(content.Picture, this.width, this.height, content.Title, null, null, CropPicture);
         }
 
         public override string GetDefaultCSS()

@@ -39,6 +39,8 @@ namespace Cinar.CMS.Library.Modules
             set { pictureHeight = value; }
         }
 
+        public bool CropPicture { get; set; }
+
         protected override string show()
         {
             StringBuilder sb = new StringBuilder();

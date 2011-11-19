@@ -230,7 +230,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<img src="/external/icons/editor_underline.png"/>'+
 									'<img src="/external/icons/picture.png"/>'+
 									'<img src="/external/icons/eye.png" style="margin-left:40px"/>'+
-									'<div style="float:right"><input type="checkbox" checked="true" class="wrapCheck" style=""/> Wrap</div>'+
+									'<div style="float:right"><input type="checkbox" checked="true" class="wrapCheck"/> Wrap <input type="checkbox" checked="true" class="nl2br"/> nl2br</div>'+
 								'</div>'+
 								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);"></textarea>'+
 								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
@@ -256,6 +256,14 @@ var StringEdit = Class.create();StringEdit.prototype = {
 				ta.writeAttribute('wrap');
 			else
 				ta.writeAttribute('wrap', 'off');
+		});
+		
+		ta.on('keydown', function(event){
+			switch(event.keyCode){
+				case Event.KEY_RETURN:
+					if(list.down('.nl2br').checked) TextAreaUtil.addTag(ta, '<br/>', '');
+					break;
+			}
 		});
 		
 		var ths = this;
@@ -489,11 +497,12 @@ var FileManager = Class.create(); FileManager.prototype = {
     getFileClassName: function (item) {
             if (item.size == -1)
                 return 'folder';
-            if (item.name.endsWith('.png') || item.name.endsWith('.jpg') || item.name.endsWith('.gif') || item.name.endsWith('.jpe'))
+			var name = item.name.toLowerCase();
+            if (name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
                 return 'picture';
-            if (item.name.endsWith('.wmv') || item.name.endsWith('.flv') || item.name.endsWith('.avi') || item.name.endsWith('.3gp') || item.name.endsWith('.rm') || item.name.endsWith('.mov'))
+            if (name.endsWith('.wmv') || name.endsWith('.mpg') || name.endsWith('.mpeg') || name.endsWith('.flv') || name.endsWith('.avi') || name.endsWith('.3gp') || name.endsWith('.rm') || name.endsWith('.mov'))
                 return 'video';
-            if (item.name.endsWith('.wav') || item.name.endsWith('.mp3') || item.name.endsWith('.wma') || item.name.endsWith('.mid') || item.name.endsWith('.rm') || item.name.endsWith('.mov'))
+            if (name.endsWith('.wav') || name.endsWith('.mp3') || name.endsWith('.wma') || name.endsWith('.mid'))
                 return 'audio';
             return 'file';
         },

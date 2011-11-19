@@ -1156,9 +1156,9 @@ namespace Cinar.CMS.Library
         }
 
         #region GetThumbPath
-        public static string GetThumbImgHTML(string imageUrl, int prefWidth, int prefHeight, string title, string className, string extraAttributes)
+        public static string GetThumbImgHTML(string imageUrl, int prefWidth, int prefHeight, string title, string className, string extraAttributes, bool cropPicture)
         {
-            string path = Provider.GetThumbPath(imageUrl, prefWidth, prefHeight);
+            string path = Provider.GetThumbPath(imageUrl, prefWidth, prefHeight, cropPicture);
 
             if (path.StartsWith("ERR:"))
                 return path.Substring(5);
@@ -1171,7 +1171,7 @@ namespace Cinar.CMS.Library
                 String.IsNullOrEmpty(className) ? "" : (" class=\"" + className + "\""),
                 String.IsNullOrEmpty(extraAttributes) ? "" : " " + extraAttributes);
         }
-        public static string GetThumbPath(string imageUrl, int prefWidth, int prefHeight)
+        public static string GetThumbPath(string imageUrl, int prefWidth, int prefHeight, bool cropPicture)
         {
             if (String.IsNullOrEmpty(imageUrl))
             {
@@ -1203,12 +1203,12 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + Path.GetFileNameWithoutExtension(path) + ".jpg";
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + Path.GetFileName(path).Replace(".","_") + ".jpg";
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))
             {
-                Bitmap orjImg = null, imgScaled = null, imgDest = null;
+                Bitmap orjImg = null, imgDest = null;
                 try
                 {
                     // burada resize ediyoruz
@@ -1223,15 +1223,17 @@ namespace Cinar.CMS.Library
                         double prefRatio = (double)prefWidth / (double)prefHeight;
                         if (picRatio >= prefRatio)
                         {
-                            imgScaled = Utility.ScaleImage(orjImg, prefWidth, 0);
-                            int y = Convert.ToInt32((double)(imgScaled.Height - prefHeight) / 2d);
-                            imgDest = Utility.CropImage(imgScaled, 0, y, prefWidth, prefHeight);
+                            imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
+                            int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
+                            if(!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                imgDest = Utility.CropImage(imgDest, 0, y, prefWidth, prefHeight);
                         }
                         else
                         {
-                            imgScaled = Utility.ScaleImage(orjImg, 0, prefHeight);
-                            int x = Convert.ToInt32((double)(imgScaled.Width - prefWidth) / 2d);
-                            imgDest = Utility.CropImage(imgScaled, x, 0, prefWidth, prefHeight);
+                            imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
+                            int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
+                            if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                imgDest = Utility.CropImage(imgDest, x, 0, prefWidth, prefHeight);
                         }
                     }
                     Utility.SaveJpeg(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
@@ -1239,12 +1241,10 @@ namespace Cinar.CMS.Library
                 catch (Exception ex)
                 {
                     if (orjImg != null) orjImg.Dispose();
-                    if (imgScaled != null) imgScaled.Dispose();
                     if (imgDest != null) imgDest.Dispose();
                     return "ERR: " + ex.Message;
                 }
                 if (orjImg != null) orjImg.Dispose();
-                if (imgScaled != null) imgScaled.Dispose();
                 if (imgDest != null) imgDest.Dispose();
             }
             return thumbUrl;

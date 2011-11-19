@@ -647,9 +647,11 @@
 	<entry key="NamedEntity.DescriptionDesc" value=""/>
 	<entry key="NamedEntity.Name" value="Name"/>
 	<entry key="NamedEntity.NameDesc" value=""/>
-	<entry key="NamedEntity.Picture" value="Picture"/>
-	<entry key="NamedEntity.PictureDesc" value="Related picture."/>
-	<entry key="Navigation" value="Navigation"/>
+  <entry key="NamedEntity.Picture" value="Picture"/>
+  <entry key="NamedEntity.PictureDesc" value="Related picture."/>
+  <entry key="NamedEntity.Picture2" value="Alt. Picture"/>
+  <entry key="NamedEntity.Picture2Desc" value="Alternative picture."/>
+  <entry key="Navigation" value="Navigation"/>
 	<entry key="Navigation.BulletIcon2" value="Bullet Icon 2"/>
 	<entry key="Navigation.BulletIcon2Desc" value="Select alternating icon."/>
 	<entry key="Navigation.Dynamic" value="Dynamic"/>

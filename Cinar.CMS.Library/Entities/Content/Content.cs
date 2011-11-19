@@ -149,7 +149,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string tags = "";
-        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Temel Bilgiler")]
         public string Tags
         {
             get { return tags; }

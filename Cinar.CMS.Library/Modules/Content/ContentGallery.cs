@@ -20,6 +20,7 @@ namespace Cinar.CMS.Library.Modules
             get { return pictureHeight; }
             set { pictureHeight = value; }
         }
+        public bool CropPicture { get; set; }
 
         private bool showTitle = true;
         public bool ShowTitle
@@ -74,7 +75,7 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("<a href=\"{0}\" rel=\"lightbox[{1}]\" title=\"{2}\">", contentPic.FileName,
                 "gal" + this.Id,
                 contentPic.Title.Replace("\"", "\\\""));
-            sb.Append(Provider.GetThumbImgHTML(contentPic.FileName, this.pictureWidth, this.pictureHeight, "", null, null));
+            sb.Append(Provider.GetThumbImgHTML(contentPic.FileName, this.pictureWidth, this.pictureHeight, "", null, null, CropPicture));
             sb.Append("</a>");
 
             if (this.showTitle && !this.showTitleFirst)

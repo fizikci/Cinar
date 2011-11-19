@@ -54,6 +54,7 @@ namespace Cinar.CMS.Library.Modules
             get { return pictureHeightM; }
             set { pictureHeightM = value; }
         }
+        public bool CropPictureM { get; set; }
 
         protected override string show()
         {
@@ -69,7 +70,7 @@ namespace Cinar.CMS.Library.Modules
             Hashtable fields = new Hashtable();
             fields["title"] = String.Format("<div id=\"Manset_{0}_title\" class=\"mansetTitle\">{1}</div>\n", this.Id, Utility.StrCrop(firstContent.Title, this.titleLength));
             fields["spot"] = String.Format("<div id=\"Manset_{0}_title\" class=\"mansetSTitle\">{1}</div>\n", this.Id, Utility.StrCrop(firstContent.SpotTitle, this.titleLength));
-            fields["image"] = Provider.GetThumbImgHTML(firstContent.Picture, pictureWidthM, pictureHeightM, null, "mansetImage", "id=\"Manset_" + this.Id + "_pic\"");
+            fields["image"] = Provider.GetThumbImgHTML(firstContent.Picture, pictureWidthM, pictureHeightM, null, "mansetImage", "id=\"Manset_" + this.Id + "_pic\"", CropPictureM);
             fields["author"] = String.Format("<div id=\"Manset_{0}_auth\" class=\"mansetAuth\">{1}</div>\n", this.Id, firstContent["AuthorName"]);
             fields["date"] = String.Format("<div id=\"Manset_{0}_date\" class=\"mansetDate\">{1}</div>\n", this.Id, firstContent.PublishDate.ToString(this.dateFormat));
             fields["description"] = String.Format("<div id=\"Manset_{0}_desc\" class=\"mansetDesc\">{1}</div>\n", this.Id, Utility.StrCrop(firstContent.Description, this.descriptionLength));
@@ -88,7 +89,7 @@ namespace Cinar.CMS.Library.Modules
         }
         protected override string getImgHTML(string template, Content content, int row, int col)
         {
-            return String.Format("<div style=\"display:none\" class=\"picUrl\">{0}</div>", Provider.GetThumbPath(content.Picture, pictureWidthM, pictureHeightM))
+            return String.Format("<div style=\"display:none\" class=\"picUrl\">{0}</div>", Provider.GetThumbPath(content.Picture, pictureWidthM, pictureHeightM, CropPictureM))
                 + base.getImgHTML(template, content, row, col);
         }
 

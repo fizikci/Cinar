@@ -28,6 +28,8 @@ namespace Cinar.CMS.Library.Modules
 
         public int PictureHeight { get; set; }
 
+        public bool CropPicture { get; set; }
+
         DataTable data = null;
 
         protected override string show()
@@ -100,9 +102,9 @@ namespace Cinar.CMS.Library.Modules
             get
             {
                 if (dr.Table.Columns.Contains("Picture") && !dr.IsNull("Picture"))
-                    return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight);
+                    return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight, CropPicture);
                 else if (dr.Table.Columns.Contains("FileName") && !dr.IsNull("FileName"))
-                    return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight);
+                    return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight, CropPicture);
                 else
                     return "Could not find a picture field - Try something else";
             }
