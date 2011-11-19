@@ -271,8 +271,6 @@ namespace Cinar.CMS.Library.Handlers
             }
             catch { }
 
-            Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
-
             #region Cinar Script and attributes
             string pageContent = template.HTMLCode;//.Replace("!#","$=").Replace("#!","$");
             Interpreter engine = Provider.GetInterpreter(pageContent, this);
@@ -298,6 +296,9 @@ namespace Cinar.CMS.Library.Handlers
             //    new Hit().Save();
 
             stopWatch.Stop();
+            
+            Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+
             Provider.Response.Write("<!-- TOTAL: " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             Provider.Database.Connection.Close();

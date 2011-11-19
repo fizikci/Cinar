@@ -16,6 +16,9 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
         public string Picture { get; set; }
 
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture2 { get; set; }
+
         public override string GetNameValue()
         {
             return this.Name;

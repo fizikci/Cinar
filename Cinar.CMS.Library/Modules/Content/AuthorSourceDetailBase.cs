@@ -22,6 +22,7 @@ namespace Cinar.CMS.Library.Modules
             get { return pictureHeight; }
             set { pictureHeight = value; }
         }
+        public bool CropPicture { get; set; }
 
         private static string defaultFieldOrder = "image,name,description,email,web,adres,telWork,telCell";
         private string fieldOrder = AuthorDetail.defaultFieldOrder;
@@ -97,7 +98,7 @@ namespace Cinar.CMS.Library.Modules
             if (String.IsNullOrEmpty(Entity.Picture))
                 return Provider.GetResource("There is no related picture");
 
-            return Provider.GetThumbImgHTML(Entity.Picture, this.pictureWidth, this.pictureHeight, Entity.Name, null, null);
+            return Provider.GetThumbImgHTML(Entity.Picture, this.pictureWidth, this.pictureHeight, Entity.Name, null, null, CropPicture);
         }
 
         public override string GetDefaultCSS()

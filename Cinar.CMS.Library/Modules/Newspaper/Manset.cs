@@ -61,6 +61,7 @@ namespace Cinar.CMS.Library.Modules
             get { return pictureHeightM; }
             set { pictureHeightM = value; }
         }
+        public bool CropPictureM { get; set; }
 
         protected override string show()
         {
@@ -78,7 +79,7 @@ namespace Cinar.CMS.Library.Modules
             fields["spot"] = String.Format("<tr><td colspan=\"2\" id=\"{0}_{1}_sTitle\" class=\"mansetSTitle\">{2}</td></tr>\n", this.Name, this.Id, Utility.StrCrop(firstContent.SpotTitle, this.titleLength));
             fields["image"] =
                 "<tr>\n\t<td align=\"center\" valign=\"middle\" width=\"1%\">"
-                + Provider.GetThumbImgHTML(firstContent.Picture, pictureWidthM, pictureHeightM, null, "mansetImage", "id=\"" + this.Name + "_" + this.Id + "_pic\"")
+                + Provider.GetThumbImgHTML(firstContent.Picture, pictureWidthM, pictureHeightM, null, "mansetImage", "id=\"" + this.Name + "_" + this.Id + "_pic\"", CropPictureM)
                 + "</td>\n" + (this.showLinksBelowPicture ? "</tr><tr>" : "") + "\t<td width=\"99%\">"
                 + base.show() + "\n"
                 + "</td></tr>\n";
@@ -108,7 +109,7 @@ namespace Cinar.CMS.Library.Modules
         }
         protected override string getImgHTML(string template, Content content, int row, int col)
         {
-            return String.Format("<div style=\"display:none\" class=\"picUrl\">{0}</div>", Provider.GetThumbPath(content.Picture, pictureWidthM, pictureHeightM))
+            return String.Format("<div style=\"display:none\" class=\"picUrl\">{0}</div>", Provider.GetThumbPath(content.Picture, pictureWidthM, pictureHeightM, CropPictureM))
                 + base.getImgHTML(template, content, row, col);
         }
         protected override string getDescriptionHTML(bool isFirstItem, string template, Content content, int row, int col)

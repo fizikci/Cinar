@@ -650,7 +650,9 @@
 	<entry key="NamedEntity.NameDesc" value=""/>
 	<entry key="NamedEntity.Picture" value="Resim"/>
 	<entry key="NamedEntity.PictureDesc" value="İlgili resim (logo, vesikalık, vb)"/>
-	<entry key="Navigation" value="Menü"/>
+  <entry key="NamedEntity.Picture2" value="Alt. Resim"/>
+  <entry key="NamedEntity.Picture2Desc" value="Alternatif resim"/>
+  <entry key="Navigation" value="Menü"/>
 	<entry key="Navigation.BulletIcon2" value="Alt. İkon"/>
 	<entry key="Navigation.BulletIcon2Desc" value="Alternatif ikon için resim seçiniz."/>
 	<entry key="Navigation.Dynamic" value="Dinamik"/>

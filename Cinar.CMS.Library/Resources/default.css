@@ -12,10 +12,10 @@
 #lightBoxDiv #lbLove {cursor:pointer;}
 .tag_bg {
 	width:97px;
-	height:28px;
-	background:url(/external/icons/tag_bg.png);
+	height:35px;
+	background:url(/external/icons/tag_bg2.png);
 	font-size:18px;
-	padding-left:20px;
+	padding-left:24px;
 	padding-top:4px;
 }
 
@@ -41,7 +41,6 @@
 }
 .slideShow .clipper {
 	height:360px;
-	width:908px;
 	float:left;
 	position:relative;
 	overflow:hidden;

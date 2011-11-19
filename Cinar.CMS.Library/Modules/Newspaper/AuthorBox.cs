@@ -32,6 +32,8 @@ $this.AddToFavoritesLink$
             set { pictureHeight = value; }
         }
 
+        public bool CropPicture { get; set; }
+
         private string _addToFavoritesLink;
         [XmlIgnore]
         public string AddToFavoritesLink
@@ -65,7 +67,7 @@ $this.AddToFavoritesLink$
                     if (String.IsNullOrEmpty(Provider.Content.Author.Picture))
                         _pictureThumb = Provider.GetResource("There is no related picture");
                     else
-                        _pictureThumb = Provider.GetThumbImgHTML(Provider.Content.Author.Picture, this.pictureWidth, this.pictureHeight, Provider.Content.Author.Name, null, null);
+                        _pictureThumb = Provider.GetThumbImgHTML(Provider.Content.Author.Picture, this.pictureWidth, this.pictureHeight, Provider.Content.Author.Name, null, null, CropPicture);
                 }
                 return _pictureThumb;
             }

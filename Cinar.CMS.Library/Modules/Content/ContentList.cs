@@ -131,6 +131,8 @@ namespace Cinar.CMS.Library.Modules
             set { pictureHeight = value; }
         }
 
+        public bool CropPicture { get; set; }
+
         protected string bulletIcon = "";
         [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
         public string BulletIcon
@@ -325,7 +327,7 @@ namespace Cinar.CMS.Library.Modules
             if (this.ShowPicture || (this.showFirstItemWithPicture && row + col == 0))
             {
                 string imgStyle = showPictureLeftRight ? " style=\"float:" + (row % 2 == 0 ? "left" : "right") + "\"" : "";
-                string imgHtml = Provider.GetThumbImgHTML(content.Picture, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle);
+                string imgHtml = Provider.GetThumbImgHTML(content.Picture, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle, CropPicture);
 
                 if(this.createLink)
                     return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Title), imgHtml);
