@@ -1497,11 +1497,7 @@ var ListForm = Class.create();ListForm.prototype = {
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
-                var pe = null;
-                if (ths.filter != null)
-                    pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter.getValue());
-                else
-                    pe = new EditForm(winContent, res, ths.options.entityName, 0);
+                var pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
                 pe.onSave = ths.insertEntity.bind(ths);
                 win.show();
                 win.toFront();
@@ -1542,11 +1538,7 @@ var ListForm = Class.create();ListForm.prototype = {
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
                 var winContent = $(win.getContent());
-                var pe = null;
-                if (ths.filter != null)
-                    pe = new EditForm(winContent, res, ths.options.entityName, id, ths.filter.value);
-                else
-                    pe = new EditForm(winContent, res, ths.options.entityName, id);
+				var pe = new EditForm(winContent, res, ths.options.entityName, id, ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
                 pe.onSave = ths.saveEntity.bind(ths);
                 win.show();
                 win.toFront();

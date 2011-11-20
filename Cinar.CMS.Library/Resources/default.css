@@ -10,6 +10,14 @@
 #lightBoxDiv #lbCenter {width:60%;position:absolute}
 #lightBoxDiv #lbRight {width:20%;position:absolute;text-align:right}
 #lightBoxDiv #lbLove {cursor:pointer;}
+
+.masonry {
+	position:relative;
+}
+.masonry img {
+	position:absolute;
+}
+
 .tag_bg {
 	width:97px;
 	height:35px;
@@ -28,6 +36,27 @@
 	cursor:pointer;
 }
 .fadeShow .clItem {
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+.fadeWithArrows {position:relative;}
+.fadeWithArrows #lbPrev {
+	position:absolute;
+	z-index:3;
+	left:0px;
+	top:180px;
+	cursor:pointer;
+}
+.fadeWithArrows #lbNext {
+	position:absolute;
+	z-index:3;
+	right:0px;
+	top:180px;
+	cursor:pointer;
+}
+.fadeWithArrows .clItem {
 	position:absolute;
 	left:0px;
 	top:0px;
@@ -72,7 +101,9 @@
 	background-repeat:no-repeat;
 	cursor:pointer;
 }
+
 .showDescOnImg {
+	position:relative;
 }
 .showDescOnImg .clDesc {
 	position:absolute;

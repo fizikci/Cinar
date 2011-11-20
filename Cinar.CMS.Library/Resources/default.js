@@ -31,15 +31,15 @@ document.observe('dom:loaded', function(){
 				event.stop();
 				//if(effectInExecution) effectInExecution.cancel(); 
 				//effectInExecution = new Effect.BlindDown(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
-				new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'clItem2'})], {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
+				new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'background:#C1C3C2; border-color:#838383;'})], {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
 				//elmDesc.show(); new Effect.Morph(elm, {style:'clItem2', duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#838383'});}});
 			});
 			Event.observe(elm, 'mouseleave', function(event){
 				event.stop();
 				//if(effectInExecution) effectInExecution.cancel(); 
 				//effectInExecution = new Effect.BlindUp(elmDesc, {duration:0.3, afterFinish: function(){elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}});
-				//new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2');elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
-				elmDesc.hide(); new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2');elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}, duration:0.3});
+				new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'background:#E1E3E2; border-color:#E1E3E2;', afterFinish: function(){elmDesc.setStyle({height:'auto'});}})], {duration:0.3});
+				//elmDesc.hide(); new Effect.Morph(elm, {style:'clItem2', transition: Effect.Transitions.reverse, afterFinish: function(){elm.removeClassName('clItem2');elm.setStyle({borderColor:'#E1E3E2'}); elmDesc.setStyle({height:'auto'});}, duration:0.3});
 			});
 		}
     });
@@ -47,7 +47,7 @@ document.observe('dom:loaded', function(){
 	$$('.showDescOnImg img').each(function(elm){
 		var elmImg = elm;//.down('img');
 		var elmDesc = elm.next('div.clDesc');
-		elmDesc.on('click', function(){elmImg.click();});
+		if(elm.up('.lightBox')) elmDesc.on('click', function(){lightBox(elmImg);});
 		if(elmDesc){
 			elmDesc.hide();
 			Event.observe(elmImg, 'mouseenter', function(event){
@@ -60,10 +60,30 @@ document.observe('dom:loaded', function(){
 			});
 		}
     });
+	// masonry
+	Event.observe(window, 'load', function(){
+		$$('.masonry').each(function(elm){
+			var sorted = elm.select('img').sortBy(function(img){return img.getHeight();});
+			var cols = [[], [], []];
+			for(var i = 0; i<cols.length; i++)
+				for(var j = i; j<sorted.length; j+=cols.length)
+					cols[i].push(sorted[j]);
+			var maxHeight = 0;
+			for(var i = 0; i<cols.length; i++){
+				var left = i * (220 + 5);
+				var top = 0;
+				for(var j = 0; j<cols[i].length; j++){
+					cols[i][j].setStyle({left:left, top:top});
+					top += cols[i][j].getHeight() + 5;
+				}
+				if(top>maxHeight) maxHeight = top;
+			}
+			elm.setStyle({height:maxHeight});
+		});
+	});
 	// fadeShow (yani fadeIn'li slide show)
 	if($$('.fadeShow').length)
 		$$('.fadeShow').each(function(elm){
-			//elm.down('img').observe('load', function(){var img = elm.down('img'); var dim = img.getDimensions(); elm.setStyle({width:dim.width+'px', height:dim.height+'px'});});
 			elm.insert('<div class="indexElms"></div>');
 			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 3000);
 		});
@@ -79,6 +99,24 @@ document.observe('dom:loaded', function(){
 		indexElm.observe('click', function(event){
 			fadeShowShowImg(elm.up('.fadeShow'), indexElm);
 		});
+	});
+	// fadeWithArrows
+	if($$('.fadeWithArrows').length){
+		$$('.fadeWithArrows').each(function(elm){
+			elm.insert('<img src="/external/icons/lbPrev.png" id="lbPrev" style="display:none"/><img src="/external/icons/lbNext.png" id="lbNext" style="display:none"/>');
+			elm.down('#lbPrev').on('click', function(){fadeWithArrowsShow(elm, 'prev');});
+			elm.down('#lbNext').on('click', function(){fadeWithArrowsShow(elm, 'next');});
+			if(elm.select('.clItem').length > 1)
+				elm.down('#lbNext').show();
+		});
+	}
+	$$('.fadeWithArrows .clItem').each(function(elm, i){
+		if(i==0){
+			elm.up('.fadeWithArrows').currentImg = elm;
+			elm.setStyle({zIndex:2});
+		} else {
+			elm.fade({ duration: 0.05, from: 1, to: 0.01 });
+		}
 	});
 	// slideShow
 	if($$('.slideShow').length)
@@ -126,8 +164,7 @@ document.observe('dom:loaded', function(){
 			elm.select('.paging')[1].observe('click', function(){slideShowSlide(elm);});
 		});
 	// lightBox olayı
-	if($$('.lightBox').length)
-	{
+	if($$('.lightBox').length){
 		document.on('keydown', function(event){
 			var lightBoxDiv = $('lightBoxDiv');
 			if(!lightBoxDiv) return;
@@ -146,14 +183,16 @@ document.observe('dom:loaded', function(){
 				img.on('click', function(){lightBox(img);});
 			});
 			var mostLiked = imgs.sortBy(function(img){return parseInt(img.readAttribute('like'));})[imgs.length-1];
-			var f = function(){
-				var pos = mostLiked.viewportOffset();
-				$(document.body).insert('<img src="/external/icons/favori.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-32)+'px;top:'+(pos.top+mostLiked.getHeight()-34)+'px;"/>');
-			};
-			if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
-				f();
-			else
-				mostLiked.on('load', f);
+			if(parseInt(mostLiked.readAttribute('like'))>0){
+				var f = function(){
+					var pos = mostLiked.viewportOffset();
+					$(document.body).insert('<img src="/external/icons/favori.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-32)+'px;top:'+(pos.top+mostLiked.getHeight()-34)+'px;"/>');
+				};
+				if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
+					f();
+				else
+					mostLiked.on('load', f);
+			}
 		}
 	}
 });
@@ -177,8 +216,7 @@ function slideShowSlide(elm, dir){
 }
 function fadeShowShowImg(fadeShow, indexElm){
 	var currIndexElm = null;
-	if(!indexElm)
-	{
+	if(!indexElm){
 		currIndexElm = fadeShow.select('.indexElms')[0].descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
 		indexElm = currIndexElm.next() ? currIndexElm.next() : fadeShow.select('.indexElms img')[0];
 	}
@@ -201,10 +239,19 @@ function fadeShowShowImg(fadeShow, indexElm){
 
 	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 3000);
 }
+function fadeWithArrowsShow(elm, which){
+	var nextImg = which=='next' ? elm.currentImg.next('.clItem') : elm.currentImg.previous('.clItem');
+	if(nextImg){
+		elm.currentImg.fade({ duration: 0.5, from: 1, to: 0.01 });
+		nextImg.fade({ duration: 0.5, from: 0, to: 1 });
+		elm.currentImg = nextImg;
+	}
+	if(elm.currentImg.next('.clItem')) elm.down('#lbNext').show(); else elm.down('#lbNext').hide();
+	if(elm.currentImg.previous('.clItem')) elm.down('#lbPrev').show(); else elm.down('#lbPrev').hide();
+}
 
-// ilk üç parametreden sonrası method parametreleridir
-function runModuleMethod(moduleName, moduleId, methodName, params, callback)
-{
+// params: {}
+function runModuleMethod(moduleName, moduleId, methodName, params, callback){
     new Ajax.Request('RunModuleMethod.ashx?name='+moduleName+'&id='+moduleId+'&methodName='+methodName, {
         method: 'post',
         parameters: params,
@@ -818,8 +865,7 @@ function insertTab(event,obj) {
 // script import (as PHP does)
 // only imports the scripts in the same folder with prototype.js.
 
-function $import(path)
-{
+function $import(path){
     var i, base, src = "prototype.js", scripts = document.getElementsByTagName("script");
     for (i=0; i<scripts.length; i++){
         if (scripts[i].src.match(src)){
@@ -831,8 +877,7 @@ function $import(path)
 } 
 
 // get selection
-function getSelText()
-{
+function getSelText(){
 	var txt = '';
 	if (window.getSelection)
 		txt = window.getSelection();
@@ -881,20 +926,21 @@ var TextAreaUtil = {
 		var textArea = $(textArea);
 		var scrollPos = textArea.scrollTop;
 		var sel = TextAreaUtil.getSelection(textArea);
-		var newValue = textArea.value.substring(0,sel.startPos) + front + sel.text + back + textArea.value.substring(sel.endPos, textArea.value.length);
+		var newStr = front + sel.text + back;
+		var newValue = textArea.value.substring(0,sel.startPos) + newStr + textArea.value.substring(sel.endPos, textArea.value.length);
 		textArea.value = newValue;
 
 		if (Prototype.Browser.IE) { 
 			textArea.focus();
 			var range = document.selection.createRange();
 			range.moveStart ('character', -textArea.value.length);
-			range.moveStart ('character', sel.startPos+front.length);
+			range.moveStart ('character', sel.startPos+newStr.length);
 			range.moveEnd ('character', 0);
 			range.select();
 		}
 		else {
-			textArea.selectionStart = sel.startPos+front.length;
-			textArea.selectionEnd = sel.startPos+front.length;
+			textArea.selectionStart = sel.startPos+newStr.length;
+			textArea.selectionEnd = sel.startPos+newStr.length;
 			textArea.focus();
 		}
 		textArea.scrollTop = scrollPos;

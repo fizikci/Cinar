@@ -470,7 +470,7 @@ function saveModule(pe){
         onException: function(req, ex){throw ex;}
     });
 }
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel){
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory){
     caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
@@ -483,7 +483,8 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         forSelect: forSelect,
         selectCallback: selectCallback,
 		commands: [],
-		hideFilterPanel: hideFilterPanel
+		hideFilterPanel: hideFilterPanel,
+		editFormHideCategory: editFormHideCategory
     }
 	if(entityName=='ContentPicture'){
 		options.commands.push({id:'QuickLoad', icon:'thunder', name:'Quick Load', handler:quickLoadImages});
