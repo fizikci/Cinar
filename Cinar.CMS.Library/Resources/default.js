@@ -52,7 +52,7 @@ document.observe('dom:loaded', function(){
 			elmDesc.hide();
 			Event.observe(elmImg, 'mouseenter', function(event){
 				var dimImg = elmImg.getDimensions();
-				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width, height:dimImg.height, margin:'5px'});
+				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width, height:dimImg.height, margin:'0px 10px 10px 0px'});
 				elmDesc.show();
 			});
 			Event.observe(elmDesc, 'mouseleave', function(event){
@@ -70,11 +70,11 @@ document.observe('dom:loaded', function(){
 					cols[i].push(sorted[j]);
 			var maxHeight = 0;
 			for(var i = 0; i<cols.length; i++){
-				var left = i * (220 + 5);
+				var left = i * (cols[0][0].getWidth() + 10);
 				var top = 0;
 				for(var j = 0; j<cols[i].length; j++){
 					cols[i][j].setStyle({left:left, top:top});
-					top += cols[i][j].getHeight() + 5;
+					top += cols[i][j].getHeight() + 10;
 				}
 				if(top>maxHeight) maxHeight = top;
 			}
