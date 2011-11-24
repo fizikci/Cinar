@@ -335,6 +335,8 @@ namespace Cinar.CMS.Library.Handlers
             {
                 if (dump_what == "schema" || dump_what == "both")
                 {
+                    textWriterForDump.Write(Provider.Database.GetSQLTableDrop(table)+";");
+                    textWriterForDump.WriteLine();
                     textWriterForDump.Write(Provider.Database.GetTableDDL(table, dbProvider));
                     textWriterForDump.WriteLine();
                 }
@@ -776,7 +778,7 @@ namespace Cinar.CMS.Library.Handlers
                     else if (dt.Columns[i].DataType == typeof(DateTime))
                         values[i] = dr.IsNull(fieldName) ? "null" : "'" + ((DateTime)dr[tbl.Columns[i].Name]).ToString("yyyy-MM-dd HH:mm") + "'";
                     else
-                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + dr[tbl.Columns[i].Name].ToString().Replace("'", "''").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
+                        values[i] = dr.IsNull(fieldName) ? "null" : "'" + dr[tbl.Columns[i].Name].ToString().Replace("'", "''").Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
                 }
                 tw.Write(sql, String.Join(", ", values));
                 tw.WriteLine();

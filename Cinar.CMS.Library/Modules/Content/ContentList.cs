@@ -265,7 +265,7 @@ namespace Cinar.CMS.Library.Modules
 
             Hashtable fields = new Hashtable();
             fields["image"] = this.getImgHTML(template, content, row, col);
-            fields["picture2"] = this.getImg2HTML(template, content, row, col);
+            fields["picture2"] = string.IsNullOrEmpty(content.Picture2) ? fields["image"] : this.getImg2HTML(template, content, row, col);
             fields["title"] = this.getTitleHTML(isFirstItem, template, content, row, col);
             fields["spot"] = this.getSpotTitleHTML(isFirstItem, template, content, row, col);
             fields["category"] = content["CategoryName"] == null ? "" : this.getCategoryHTML(content["CategoryName"].ToString(), isFirstItem, template, content, row, col);

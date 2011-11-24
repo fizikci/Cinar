@@ -505,7 +505,8 @@ function lightBox(img){
 		if(img.next('img')) lightBoxDiv.down('#lbNext').show(); else lightBoxDiv.down('#lbNext').hide();
 	});
 	lbImg.on('mousemove', function(event){
-		var pointerPos = {x:event.pointerX(),y:event.pointerY()};
+		var scrollOffset = document.viewport.getScrollOffsets();
+		var pointerPos = {x:event.pointerX()-scrollOffset.left,y:event.pointerY()-scrollOffset.top};
 		lightBoxDiv.select('.tag_bg').each(function(tagElm){
 			tagElm.show();
 			var tagElmPos = tagElm.viewportOffset();
