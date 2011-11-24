@@ -18,7 +18,7 @@
   <entry key="_USECACHE_" value="[['Default','Varsayılan'],['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
   <entry key="_USECACHEFORCONF_" value="[['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
   <entry key="_VIEWCONDITION_" value="[['Click','Tıklama Sayısı'],['View','Gösterim Sayısı'],['DateInterval','Tarih Aralığı']]"/>
-	<entry key="_WHICHPICTURE_" value="[['Content.Picture','İçerik'],['TAuthorId.Picture','Yazar'],['TSourceId.Picture','Kaynak']]"/>
+	<entry key="_WHICHPICTURE_" value="[['Content.Picture','İçerik'],['Content.Picture2','İçerik 2'],['TAuthorId.Picture','Yazar'],['TSourceId.Picture','Kaynak']]"/>
 	<entry key="{0} is not a valid field name. Please use one of the following: {1}" value="{0} geçerli bir alan ismi değil. Lütfen bunlardan birini kullanınız: {1}"/>
 	<entry key="{0} type of controls not supported yet." value="{0} isminde bir control henüz desteklenmiyor."/>
 	<entry key="A control type cannot be acquired from the field type!" value="Field tipinden control tipi elde edilemedi!"/>
@@ -260,6 +260,8 @@
 	<entry key="Content.MetinDesc" value="İçerik metni"/>
 	<entry key="Content.Picture" value="Resim"/>
 	<entry key="Content.PictureDesc" value="Resim seçiniz."/>
+	<entry key="Content.Picture2" value="Resim 2"/>
+	<entry key="Content.Picture2Desc" value="Alternatif resim seçiniz."/>
 	<entry key="Content.PublishDate" value="Yayınlanma tarihi"/>
 	<entry key="Content.PublishDateDesc" value="Bu içeriğin kaynağındaki yayınlanma tarihi"/>
 	<entry key="Content.RecommendCount" value="Tavsiye sayısı"/>
@@ -331,7 +333,7 @@
 	<entry key="ContentList.DescriptionLength" value="Açıklama uzunluğu"/>
 	<entry key="ContentList.DescriptionLengthDesc" value="Açıklamalar en fazla kaç karakter gösterilsin? Tamamının görünmesi için -1 giriniz."/>
 	<entry key="ContentList.FieldOrder" value="Alan sırası"/>
-	<entry key="ContentList.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: title, spot, category, image, author, date, description, text, source"/>
+	<entry key="ContentList.FieldOrderDesc" value="Alan sıralaması nasıl olsun? Örneğin: title, spot, category, image, picture2, author, date, description, text, source"/>
 	<entry key="ContentList.ForceToUseTemplate" value="Her zaman bu link"/>
 	<entry key="ContentList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için zorunlu olmasını sağlar"/>
 	<entry key="ContentList.HowManyItems" value="Kaç içerik"/>

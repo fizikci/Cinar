@@ -73,7 +73,7 @@ namespace Cinar.CMS.Library.Modules
         }
         protected bool ShowPicture
         {
-            get { return this.fieldOrder.Contains("image"); }
+            get { return this.fieldOrder.Contains("image") || this.fieldOrder.Contains("picture2"); }
         }
         protected bool ShowAuthor
         {
@@ -265,6 +265,7 @@ namespace Cinar.CMS.Library.Modules
 
             Hashtable fields = new Hashtable();
             fields["image"] = this.getImgHTML(template, content, row, col);
+            fields["picture2"] = this.getImg2HTML(template, content, row, col);
             fields["title"] = this.getTitleHTML(isFirstItem, template, content, row, col);
             fields["spot"] = this.getSpotTitleHTML(isFirstItem, template, content, row, col);
             fields["category"] = content["CategoryName"] == null ? "" : this.getCategoryHTML(content["CategoryName"].ToString(), isFirstItem, template, content, row, col);
@@ -294,9 +295,9 @@ namespace Cinar.CMS.Library.Modules
                         fields.Remove(fieldName);
                     }
                 // bunu manset icin yazmak zorunda kaldık! :(
-                if(!this.showFirstItemWithPicture)
-                    foreach (string fieldName in fields.Keys)
-                        sb.Append(fields[fieldName]);
+                //if(!this.showFirstItemWithPicture)
+                //    foreach (string fieldName in fields.Keys)
+                //        sb.Append(fields[fieldName]);
             }
 
             if (!string.IsNullOrEmpty(MoreLink))
@@ -329,7 +330,23 @@ namespace Cinar.CMS.Library.Modules
                 string imgStyle = showPictureLeftRight ? " style=\"float:" + (row % 2 == 0 ? "left" : "right") + "\"" : "";
                 string imgHtml = Provider.GetThumbImgHTML(content.Picture, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle, CropPicture);
 
-                if(this.createLink)
+                if (this.createLink)
+                    return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Title), imgHtml);
+                else
+                    return String.Format("{0}", imgHtml);
+
+            }
+            return String.Empty;
+        }
+
+        protected virtual string getImg2HTML(string template, Content content, int row, int col)
+        {
+            if (this.ShowPicture || (this.showFirstItemWithPicture && row + col == 0))
+            {
+                string imgStyle = showPictureLeftRight ? " style=\"float:" + (row % 2 == 0 ? "left" : "right") + "\"" : "";
+                string imgHtml = Provider.GetThumbImgHTML(content.Picture2, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle, CropPicture);
+
+                if (this.createLink)
                     return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Title), imgHtml);
                 else
                     return String.Format("{0}", imgHtml);
@@ -440,7 +457,7 @@ namespace Cinar.CMS.Library.Modules
             if(this.howManyItems-this.skipFirst <= this.random)
                 throw new Exception(Provider.GetResource("[Random] must be less than [How Many Items] - [Skip First]"));
 
-            string defaultFields = ContentList.defaultFieldOrder + ",text";
+            string defaultFields = ContentList.defaultFieldOrder + ",picture2,text";
             if (Regex.Match(this.fieldOrder, "[^\\w,\\,]").Success)
                 throw new Exception(Provider.GetResource("FieldOrder is invalid. Please enter fields as {0}", defaultFields));
             foreach (string fieldName in this.fieldOrder.Split(','))

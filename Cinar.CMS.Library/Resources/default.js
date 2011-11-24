@@ -125,6 +125,8 @@ document.observe('dom:loaded', function(){
 				elm.remove();
 				return;
 			}
+			elm.playing = false;
+			elm.alreadySliding = false;
 			elm.innerHTML = '<div class="paging" style="background-image:url(/external/icons/slide_prev.png); background-position:right center;"></div>'+
 							'<div class="clipper">'+
 							'<div class="innerDiv">'+ 
@@ -133,21 +135,19 @@ document.observe('dom:loaded', function(){
 							'</div>'+
 							'<div class="paging"  style="background-image:url(/external/icons/slide_next.png); background-position:left center;"></div>'+
 							'<div style="clear:both"></div>'+
-							'<img src="/external/icons/play2.png" class="playBtn"/>'+
-							'<img src="/external/icons/pause.png" class="pauseBtn"/>';
+							'<img src="/external/icons/play.png" class="playBtn"/>';
 			
 			elm.down('.playBtn').on('click', function(){
-				elm.down('.playBtn').src = '/external/icons/play.png';
-				elm.down('.pauseBtn').src = '/external/icons/pause2.png';
-				elm.playing = true;
-				slideShowSlide(elm);
+				elm.playing = !elm.playing;
+				if(elm.playing){
+					elm.down('.playBtn').src = '/external/icons/pause.png';
+					slideShowSlide(elm);
+				} else {
+					clearTimeout(elm.timeout);
+					elm.down('.playBtn').src = '/external/icons/play.png';
+				}
 			});
-			elm.down('.pauseBtn').on('click', function(){
-				clearTimeout(elm.timeout);
-				elm.down('.playBtn').src = '/external/icons/play2.png';
-				elm.down('.pauseBtn').src = '/external/icons/pause.png';
-				elm.playing = false;
-			});
+
 			var imgs = elm.select('img');
 			var imgCounter = 0;
 			imgs.each(function(img){
@@ -183,10 +183,11 @@ document.observe('dom:loaded', function(){
 				img.on('click', function(){lightBox(img);});
 			});
 			var mostLiked = imgs.sortBy(function(img){return parseInt(img.readAttribute('like'));})[imgs.length-1];
+			mostLiked.mostLiked=true;
 			if(parseInt(mostLiked.readAttribute('like'))>0){
 				var f = function(){
 					var pos = mostLiked.viewportOffset();
-					$(document.body).insert('<img src="/external/icons/favori.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-32)+'px;top:'+(pos.top+mostLiked.getHeight()-34)+'px;"/>');
+					$(document.body).insert('<img id="mostLikedIcon" src="/external/icons/love.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-32)+'px;top:'+(pos.top+mostLiked.getHeight()-34)+'px;"/>');
 				};
 				if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
 					f();
@@ -197,17 +198,22 @@ document.observe('dom:loaded', function(){
 	}
 });
 function slideShowSlide(elm, dir){
+	if(elm.alreadySliding) return;
+	elm.alreadySliding = true;
+	
     var dimCl = elm.down('.clipper').getDimensions();
 	var leftID = parseInt(elm.down('.innerDiv').style.left);
     var dimID = elm.down('.innerDiv').getDimensions();
 
 	if(leftID + dimID.width < dimCl.width)
-		new Effect.Move(elm.down('.innerDiv'), { x: -1*leftID, y: 0, mode: 'relative', duration:3.0 });
+		new Effect.Move(elm.down('.innerDiv'), { x: -1*leftID, y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
 	else if(dir == 'back'){
 		if(leftID < 0)
-			new Effect.Move(elm.down('.innerDiv'), { x: elm.down('.clipper').getWidth()+20, y: 0, mode: 'relative', duration:1.0 });
+			new Effect.Move(elm.down('.innerDiv'), { x: elm.down('.clipper').getWidth()+20, y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
+		else
+			elm.alreadySliding = false;
 	} else
-		new Effect.Move(elm.down('.innerDiv'), { x: -1*(elm.down('.clipper').getWidth()+20), y: 0, mode: 'relative', duration:1.0 });
+		new Effect.Move(elm.down('.innerDiv'), { x: -1*(elm.down('.clipper').getWidth()+20), y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
 		
 	clearTimeout(elm.timeout);
 	if(elm.playing){
@@ -407,7 +413,11 @@ function gogPop(event){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
 	var img = $(Event.element(event));
-
+	
+	if(img.mostLiked)
+		$('mostLikedIcon').setStyle({zIndex:10});
+	else
+		$('mostLikedIcon').setStyle({zIndex:null});
 	$(document.body).insert('<div id="gogPopDiv" class="hideOnOut"><img src="'+img.src+'"/></div>');
 	pop = $('gogPopDiv');
 	if(img.up('.lightBox'))

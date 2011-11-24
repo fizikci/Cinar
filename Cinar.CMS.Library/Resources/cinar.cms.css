@@ -229,15 +229,12 @@ ul.tabs a.active-tab
 	color: #444;
 }
 
-/* picture edit*/
-#fileBrowser
-{
-    /*font-size:.8em;*/
-}
+#fileBrowser {}
 #fileBrowserList {height:90%;overflow:auto;padding:10px}
 #fileBrowserList .nav {padding:4px;}
 #fileBrowserList .nav  span{cursor:pointer; color:#316AC5}
-#fileBrowserFooter {height:10%;padding:10px;}
+#fileBrowserFooter {height:10%;padding:4px;font-size: smaller;}
+#fileBrowserFooter form input {font-size:smaller;}
 #fileBrowserFooter form {padding:4px; margin-right:10px; float:left;}
 #fileBrowserFooter iframe {visibility:hidden;width:0px;height:0px;}
 #fileBrowser table {width:100%;}
@@ -249,7 +246,6 @@ ul.tabs a.active-tab
 #fileBrowser td.picture {background-image:url(/external/icons/picture.png);}
 #fileBrowser .size {text-align:right;}
 #fileBrowser .date {text-align:right;}
-
 #fileBrowserLoading {background-image:url(icons/loading.gif);width:43px; height:11px;display:none;float:right;}
 
 div.fileNameBox {
