@@ -97,6 +97,11 @@ namespace Cinar.CMS.Library.Handlers
                         deleteFile();
                         break;
                     }
+                case "renameFile":
+                    {
+                        renameFile();
+                        break;
+                    }
                 case "createFolder":
                     {
                         createFolder();
@@ -337,6 +342,34 @@ namespace Cinar.CMS.Library.Handlers
                     Directory.Delete(filePath, true);
             }
             context.Response.Write(@"Dosya silindi");
+        }
+
+        private void renameFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1);
+            else folderName = "~/" + folderName;
+            string path = Provider.Server.MapPath(folderName);
+            if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                path = Path.GetDirectoryName(path);
+            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["imagesDir"])))
+                path = Provider.Server.MapPath(Provider.AppSettings["imagesDir"]);
+
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
+                throw new Exception("Dosya seçiniz");
+            string fileName = fileNames.Split(new[] {"#NL#"}, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            string newFileName = context.Request["newName"].MakeFileName();
+            string newPath = Path.Combine(path, newFileName);
+
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+                File.Move(filePath, newPath);
+            else if (Directory.Exists(filePath))
+                Directory.Move(filePath, newPath);
+
+            context.Response.Write(@"Dosya adı değiştirildi");
         }
 
         private void createFolder()

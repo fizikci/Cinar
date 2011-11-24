@@ -14,7 +14,7 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email as [User.Email], Roles as [User.Roles], Visible as [BaseEntity.Visible] from [User]")]
     public class User : BaseEntity
     {
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Options = @"regEx:'^[\w-\.]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email { get; set; }
 
         [ColumnDetail(IsNotNull = true, Length = 16), EditFormFieldProps(Options = "password:true,required:false")]

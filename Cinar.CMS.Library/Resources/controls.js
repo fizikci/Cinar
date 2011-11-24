@@ -386,11 +386,15 @@ var FileManager = Class.create(); FileManager.prototype = {
 							'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
 							'<iframe name="fakeUplFrm"></iframe>' +
 						'</form>' +
-						'<form action="SystemInfo.ashx?method=createFolder" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+						'<form action="SystemInfo.ashx?method=createFolder" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
 							'<input type="hidden" name="folder"/>' +
 							'Klasör: <input type="text" name="name" style="width:80px"/><input type="submit" value="Oluştur"/>' +
 						'</form>' +
-						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
+						'<form id="fileManagerRenameForm" action="SystemInfo.ashx?method=renameFile" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+							'<input type="hidden" name="folder"/><input type="hidden" name="name"/>' +
+							'Adını: <input type="text" name="newName" style="width:80px"/><input type="submit" value="Değiştir"/>' +
+						'</form>' +
+						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
 							'<input type="hidden" name="folder"/>' +
 							'<input type="hidden" name="name"/><input type="submit" value="Sil"/>' +
 						'</form>') : '') +
@@ -452,9 +456,10 @@ var FileManager = Class.create(); FileManager.prototype = {
 					list.select('.folder').each(function (elm) {
 						elm.on('click', function(event){
 							var path = currFolder + '/' + elm.readAttribute('name');
-							if(!event.ctrlKey)
+							if(!(event.ctrlKey || event.shiftKey || event.metaKey))
 								list.select('.fileNameBox').each(function(fnm){fnm.removeClassName('fileSelected');});
 							elm.toggleClassName('fileSelected');
+							$('fileManagerRenameForm').down('input[name=newName]').value = elm.readAttribute('name');
 						});
 						elm.on('dblclick', function(){
 							var f = elm.readAttribute('name');
@@ -473,6 +478,7 @@ var FileManager = Class.create(); FileManager.prototype = {
 							if(!event.ctrlKey)
 								list.select('.fileNameBox').each(function(fnm){fnm.removeClassName('fileSelected');});
 							elm.toggleClassName('fileSelected');
+							$('fileManagerRenameForm').down('input[name=newName]').value = elm.readAttribute('name');
 						});
 					});
 				}
@@ -1927,12 +1933,12 @@ var StyleSheetManager = Class.create(); StyleSheetManager.prototype = {
         if(!selector || selector.strip().length==0)
             return null;
         selector = selector.strip().toLowerCase();
-        return this.getRules().find(function(rule){return rule.selectorText.toLowerCase()==selector;});
+        return this.getRules().find(function(rule){return rule.selectorText && rule.selectorText.toLowerCase()==selector;});
     },
     removeRule: function(selector){
         var rules = this.getRules();
         for(var i=0; i<rules.length; i++)
-            if(rules[i].selectorText.toLowerCase()==selector.toLowerCase()){
+            if(rules[i].selectorText && rules[i].selectorText.toLowerCase()==selector.toLowerCase()){
                 this.styleSheet.crossDelete(i);
                 break;
             }

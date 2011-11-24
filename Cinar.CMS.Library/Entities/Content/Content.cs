@@ -83,6 +83,15 @@ namespace Cinar.CMS.Library.Entities
             set { picture = value; }
         }
 
+        private string picture2;
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit, Category = "Temel Bilgiler")]
+        [PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Title", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture2
+        {
+            get { return picture2; }
+            set { picture2 = value; }
+        }
+
         private string keywords;
         [ColumnDetail(ColumnType = DbType.Text)]
         public string Keywords
