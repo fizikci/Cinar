@@ -47,7 +47,7 @@ namespace Cinar.CMS.Library.Modules
                     Content.Visible=1 
                     {8} 
                 order by {9} {10}",
-                           this.ShowPicture ? this.WhichPicture + "," : "",
+                           this.ShowPicture ? (this.WhichPicture == "Content.Picture2" ? "Content.Picture2,Content.Picture," : this.WhichPicture + ",") : "",
                            this.ShowMetin ? "Content.Metin," : "",
                            (this.ShowAuthor || this.WhichPicture.Contains("Author")) ? "TAuthorId.Name as AuthorName," : "",
                            (this.ShowSource || this.WhichPicture.Contains("Source")) ? "TSourceId.Name as SourceName," : "",

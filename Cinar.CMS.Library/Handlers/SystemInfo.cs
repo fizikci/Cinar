@@ -326,8 +326,8 @@ namespace Cinar.CMS.Library.Handlers
             string path = Provider.Server.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
-            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["imagesDir"])))
-                path = Provider.Server.MapPath(Provider.AppSettings["imagesDir"]);
+            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
 
             string fileNames = context.Request["name"];
             if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
@@ -337,11 +337,14 @@ namespace Cinar.CMS.Library.Handlers
             {
                 string filePath = Path.Combine(path, fileName);
                 if (File.Exists(filePath))
+                {
+                    File.SetAttributes(path, FileAttributes.Normal);
                     File.Delete(path);
+                }
                 else if (Directory.Exists(filePath))
                     Directory.Delete(filePath, true);
             }
-            context.Response.Write(@"Dosya silindi");
+            context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya silindi');</script>");
         }
 
         private void renameFile()
@@ -352,8 +355,8 @@ namespace Cinar.CMS.Library.Handlers
             string path = Provider.Server.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
-            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["imagesDir"])))
-                path = Provider.Server.MapPath(Provider.AppSettings["imagesDir"]);
+            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
 
             string fileNames = context.Request["name"];
             if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
@@ -369,7 +372,7 @@ namespace Cinar.CMS.Library.Handlers
             else if (Directory.Exists(filePath))
                 Directory.Move(filePath, newPath);
 
-            context.Response.Write(@"Dosya adı değiştirildi");
+            context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya adı değiştirildi');</script>");
         }
 
         private void createFolder()
@@ -389,11 +392,11 @@ namespace Cinar.CMS.Library.Handlers
                 path = Path.Combine(path, newFolderName);
                 Directory.CreateDirectory(path);
 
-                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Folder created.');</script>");
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Klasör oluşturuldu.');</script>");
             }
             catch (Exception ex)
             {
-                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Hata');</script>");
             }
         }
 
