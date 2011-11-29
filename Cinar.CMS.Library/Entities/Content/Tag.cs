@@ -8,7 +8,7 @@ namespace Cinar.CMS.Library.Entities
     public class Tag : NamedEntity
     {
         private string displayName;
-        [ColumnDetail(Length = 100)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category="Ekstra")]
         public string DisplayName
         {
             get { return displayName; }
@@ -16,7 +16,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private bool headline = false;
-        [ColumnDetail(DefaultValue = "0")]
+        [ColumnDetail(DefaultValue = "0"), EditFormFieldProps(Category = "Ekstra")]
         public bool Headline
         {
             get { return headline; }
@@ -24,7 +24,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private int contentCount = 0;
-        [EditFormFieldProps(Options = "readOnly:true")]
+        [EditFormFieldProps(Options = "readOnly:true", Category = "Ekstra")]
         public int ContentCount
         {
             get { return contentCount; }
@@ -32,7 +32,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private bool noise = false;
-        [ColumnDetail(DefaultValue = "0")]
+        [ColumnDetail(DefaultValue = "0"), EditFormFieldProps(Category = "Ekstra")]
         public bool Noise
         {
             get { return noise; }
