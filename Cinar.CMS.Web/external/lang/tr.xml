@@ -450,6 +450,10 @@
 	<entry key="DataList" value="Data List"/>
 	<entry key="DataList.Ascending" value="Sıralama türü"/>
 	<entry key="DataList.AscendingDesc" value="Kayıtlar artan sırada mı, yoksa azalan sırada mı gösterilsin?"/>
+	<entry key="DataList.AjaxPaging" value="Ajax Sayfalama"/>
+	<entry key="DataList.AjaxPagingDesc" value="Sayfalama işlemi AJAX ile mi yapılsın?"/>
+	<entry key="DataList.CropPicture" value="Resmi Kırp"/>
+	<entry key="DataList.CropPictureDesc" value=""/>
 	<entry key="DataList.DataTemplate" value="Şablon"/>
 	<entry key="DataList.DataTemplateDesc" value="Bu şablon her bir kayıt için tekrarlanacaktır. $ içinde parametreleri belirtebilirsiniz. Başlık gelmesi gereken yere $=entity.Title$ veya $=Context.Content.Title$ yazmak gibi. İçerik linki için $=entity.PageLink$ kullanınız. $=this.DeleteLink$ kayıt silme linkinin href kısmı için kullanılabilir. Küçük resimler için $=this.ThumbPicture$ kullanınız."/>
 	<entry key="DataList.EntityName" value="Entity Adı"/>
@@ -458,6 +462,10 @@
 	<entry key="DataList.FilterDesc" value=""/>
 	<entry key="DataList.HowManyItems" value="Kaç kayıt"/>
 	<entry key="DataList.HowManyItemsDesc" value="En fazla kaç kayıt listelensin."/>
+	<entry key="DataList.LabelPrevPage" value="Önceki Sayfa Metni"/>
+	<entry key="DataList.LabelPrevPageDesc" value="Önceki sayfa linki için ne yazılsın? Previous Page değeri localizedir."/>
+	<entry key="DataList.LabelNextPage" value="Sonraki Sayfa Metni"/>
+	<entry key="DataList.LabelNextPageDesc" value="Sonraki sayfa linki için ne yazılsın? Next Page değeri localizedir."/>
 	<entry key="DataList.OrderBy" value="Sıralama alanı"/>
 	<entry key="DataList.OrderByDesc" value="Listelenen kayıtlar hangi alana göre sıralansın?"/>
 	<entry key="DataList.PictureHeight" value="Resim yüksekliği (px)"/>
@@ -466,15 +474,19 @@
 	<entry key="DataList.PictureWidthDesc" value="Resmin bu genişlikte kopyası oluşturulacaktır"/>
 	<entry key="DataList.ShowFields" value="Alanlar"/>
 	<entry key="DataList.ShowFieldsDesc" value="Hangi alanlar gösterilsin?"/>
+	<entry key="DataList.ShowPaging" value="Sayfalama"/>
+	<entry key="DataList.ShowPagingDesc" value="Sayfalama (önceki-sonraki sayfa) gösterilsin mi?"/>
+	<entry key="DataList.SQL" value="SQL"/>
+	<entry key="DataList.SQLDesc" value="Eğer sadece bir entity seçip Filtre uygulamak yetersiz geliyorsa SQL yazın. Limit kısmını yazmayın."/>
 	<entry key="Design Mode" value="Tasarım Modu"/>
 	<entry key="Development" value="Geliştirme"/>
 	<entry key="DumpData" value="Dump Data"/>
 	<entry key="DumpDatabase" value="Dump Database"/>
 	<entry key="DumpDatabase.DBProvider" value="Provider"/>
 	<entry key="DumpDatabase.DBProviderDesc" value="Hangi veritabanına göre?"/>
-  <entry key="Empty content" value="Boş içerik"/>
-  <entry key="Empty region" value="Boş bölge"/>
-  <entry key="Error" value="Hata"/>
+	<entry key="Empty content" value="Boş içerik"/>
+	<entry key="Empty region" value="Boş bölge"/>
+	<entry key="Error" value="Hata"/>
 	<entry key="Fetch Frequency cannot be less than 10 minutes!" value="Okunma sıklığı 10 dakikadan az olamaz!"/>
 	<entry key="Field value cannot be converted to JS syntax" value="Field değeri JS formuna dönüştürülemedi!"/>
 	<entry key="FieldOrder is invalid. Please enter fields as {0}" value="Alan sırası geçersiz. Lütfen bu alanları örnekteki gibi giriniz: {0}"/>

@@ -73,6 +73,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "AutoCompleteTag":
                 case "LikeIt":
                 case "Subscribe":
+                case "GetModuleHtml":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "Console":

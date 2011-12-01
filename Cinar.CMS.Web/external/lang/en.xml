@@ -450,6 +450,10 @@
 	<entry key="DataList" value="Data List"/>
 	<entry key="DataList.Ascending" value="Ascending"/>
 	<entry key="DataList.AscendingDesc" value="Ascending order?"/>
+	<entry key="DataList.AjaxPaging" value="Ajax Paging"/>
+	<entry key="DataList.AjaxPagingDesc" value=""/>
+	<entry key="DataList.CropPicture" value="Crop Picture"/>
+	<entry key="DataList.CropPictureDesc" value=""/>
 	<entry key="DataList.DataTemplate" value="Data Template"/>
 	<entry key="DataList.DataTemplateDesc" value="This template will be repeated for each record of this Data List. You can use parameters like $=entity.Title$ or $=Context.Content.Title$ in the template. Use $=this.DeleteLink$ for the href attribute of record delete links. Use $=this.ThumbPicture$ for the thumb image."/>
 	<entry key="DataList.EntityName" value="Entity Name"/>
@@ -458,6 +462,10 @@
 	<entry key="DataList.FilterDesc" value=""/>
 	<entry key="DataList.HowManyItems" value="How Many Items"/>
 	<entry key="DataList.HowManyItemsDesc" value="The maximum number of records to be displayed."/>
+	<entry key="DataList.LabelPrevPage" value="Prev. Page Label"/>
+	<entry key="DataList.LabelPrevPageDesc" value=""/>
+	<entry key="DataList.LabelNextPage" value="Next Page Label"/>
+	<entry key="DataList.LabelNextPageDesc" value=""/>
 	<entry key="DataList.OrderBy" value="Order By"/>
 	<entry key="DataList.OrderByDesc" value="Order by which field?"/>
 	<entry key="DataList.PictureHeight" value="Picture Height (px)"/>
@@ -466,6 +474,10 @@
 	<entry key="DataList.PictureWidthDesc" value="Picture will be scaled to this width (enter zero for autoscale)"/>
 	<entry key="DataList.ShowFields" value="Show Fields"/>
 	<entry key="DataList.ShowFieldsDesc" value="Which fields will be displayed?"/>
+	<entry key="DataList.ShowPaging" value="Sayfalama"/>
+	<entry key="DataList.ShowPagingDesc" value="Sayfalama (önceki-sonraki sayfa) gösterilsin mi?"/>
+	<entry key="DataList.SQL" value="SQL"/>
+	<entry key="DataList.SQLDesc" value="If it is not sufficient to select an Entity and apply Filter, write your own SQL. Don't write the limit part."/>
 	<entry key="Design Mode" value="Design Mode"/>
 	<entry key="Development" value="Development"/>
 	<entry key="DumpData" value="Dump Data"/>
@@ -473,8 +485,8 @@
 	<entry key="DumpDatabase.DBProvider" value="DB Provider"/>
 	<entry key="DumpDatabase.DBProviderDesc" value="Which database?"/>
 	<entry key="Empty content" value="Empty content"/>
-  <entry key="Empty region" value="Empty region"/>
-  <entry key="Error" value="Error"/>
+	<entry key="Empty region" value="Empty region"/>
+	<entry key="Error" value="Error"/>
 	<entry key="Fetch Frequency cannot be less than 10 minutes!" value="Fetch Frequency cannot be less than 10 minutes!"/>
 	<entry key="Field value cannot be converted to JS syntax" value="Field value cannot be converted to JS syntax"/>
 	<entry key="FieldOrder is invalid. Please enter fields as {0}" value="FieldOrder is invalid. Please enter fields as {0}"/>

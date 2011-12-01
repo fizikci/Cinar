@@ -200,7 +200,7 @@ namespace Cinar.CMS.Library.Modules
                 if (savedBefore)
                 {
                     Provider.Database.ExecuteNonQuery(
-                        "update Module set Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8} where Id={0} and Name={1}", 
+                        "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8} where Id={0}", //  and Name={1}
                         Id, 
                         Name, 
                         Template, 

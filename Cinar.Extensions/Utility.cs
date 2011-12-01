@@ -1020,6 +1020,27 @@ namespace System
             return CompareFields(obj1, obj2, pi => true);
         }
 
+        public static bool CopyPropertiesWithSameName(this object obj1, object obj2)
+        {
+            if (obj1 == null || obj2 == null)
+                return false;
+
+            foreach (PropertyInfo pi1 in obj1.GetProperties())
+            {
+                PropertyInfo pi2 = obj2.GetType().GetProperty(pi1.Name);
+                if (pi2.GetSetMethod() == null || pi2.PropertyType != pi1.PropertyType)
+                    continue;
+
+                try
+                {
+                    pi2.SetValue(obj2, pi1.GetValue(obj1, null), null);
+                }
+                catch { }
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region JSON
