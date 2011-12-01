@@ -1,6 +1,7 @@
 ﻿#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
 #gogPopDiv img {width:auto; height:auto;}
 
+.lightBox img {cursor:pointer}
 #lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center; padding-bottom:60px;}
 #lightBoxDiv #lbImg {margin-bottom:10px}
 #lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}

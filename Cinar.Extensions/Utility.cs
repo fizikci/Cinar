@@ -1028,7 +1028,7 @@ namespace System
             foreach (PropertyInfo pi1 in obj1.GetProperties())
             {
                 PropertyInfo pi2 = obj2.GetType().GetProperty(pi1.Name);
-                if (pi2.GetSetMethod() == null || pi2.PropertyType != pi1.PropertyType)
+                if (pi2 == null || pi2.GetSetMethod() == null || pi2.PropertyType != pi1.PropertyType)
                     continue;
 
                 try
