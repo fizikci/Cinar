@@ -17,6 +17,9 @@ namespace Cinar.CMS.Library.Modules
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.FilterEdit, Options = "entityName:'use#EntityName'")]
         public string Filter { get; set; }
 
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        public string SQL { get; set; }
+
         public int HowManyItems { get; set; }
 
         protected string orderBy = "Id";
@@ -45,6 +48,9 @@ namespace Cinar.CMS.Library.Modules
         }
 
         public bool ShowPaging { get; set; }
+        public bool AjaxPaging { get; set; }
+        public string LabelPrevPage { get; set; }
+        public string LabelNextPage { get; set; }
 
         [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string DataTemplate { get; set; }
@@ -85,24 +91,30 @@ namespace Cinar.CMS.Library.Modules
             int pageNo = 0;
             Int32.TryParse(Provider.Request["pageNo"], out pageNo);
 
-            string sql = String.Format(@"
-                select
-                    {0}
-                from
-                    {1}
-                where
-                    {7} {2}
-                order by
-                    {3} {4}
-                limit {5} offset {6}",
+            string sql = "";
+            if(string.IsNullOrWhiteSpace(this.SQL))
+                sql = String.Format(@"
+                    select
+                        {0}
+                    from
+                        {1}
+                    where
+                        {2} {3}
+                    order by
+                        {4} {5}
+                    limit {6} offset {7}",
                                      "*",
                                      this.EntityName,
+                                     defaultWhere,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
                                      this.Ascending ? "asc" : "desc",
                                      HowManyItems,
-                                     pageNo * HowManyItems,
-                                     defaultWhere);
+                                     pageNo * HowManyItems);
+            else
+                sql = String.Format(SQL + @" limit {0} offset {1}",
+                                     HowManyItems,
+                                     pageNo * HowManyItems);
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
@@ -118,15 +130,27 @@ namespace Cinar.CMS.Library.Modules
             {
                 string prevPageLink = "", nextPageLink = "";
                 uriParser = new UriParser(pageUrl);
+                if (AjaxPaging)
+                {
+                    uriParser.Path = "/GetModuleHtml.ashx";
+                    uriParser.QueryPart["name"] = "DataList";
+                    uriParser.QueryPart["id"] = this.Id.ToString();
+                }
                 if (pageNo > 0)
                 {
                     uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
-                    prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Previous Page"));
+                    prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\"{1}>{2}</a>",
+                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
+                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); return false;\"" : "",
+                        LabelPrevPage == "Previous Page" ? Provider.GetModuleResource("Previous Page") : LabelPrevPage);
                 }
                 if (data.Rows.Count == HowManyItems)
                 {
                     uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
-                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\">{1}</a>", uriParser.Uri, Provider.GetModuleResource("Next Page"));
+                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
+                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
+                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); return false;\"" : "",
+                        LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
                 if(!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
@@ -170,11 +194,13 @@ namespace Cinar.CMS.Library.Modules
         {
             PictureHeight = 0;
             PictureWidth = 0;
-            DataTemplate = "$entity.Id$ numaralý kayýt";
+            DataTemplate = "$=entity.Id$ numaralý kayýt";
             HowManyItems = 30;
             Filter = "";
             EntityName = "";
             ShowPaging = true;
+            LabelNextPage = "Next Page";
+            LabelPrevPage = "Previous Page";
         }
 
         protected override string getCellHTML(int row, int col)

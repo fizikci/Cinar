@@ -42,6 +42,11 @@ namespace Cinar.CMS.Library.Handlers
                         addModule();
                         break;
                     }
+                case "convertModule":
+                    {
+                        convertModule();
+                        break;
+                    }
                 case "copyModule":
                     {
                         copyModule();
@@ -148,6 +153,34 @@ namespace Cinar.CMS.Library.Handlers
             }
             module.Save();
             context.Response.Write(module.Show());
+        }
+
+        private void convertModule()
+        {
+            string newModuleName = context.Request["moduleType"];
+            string moduleName = context.Request["moduleName"];
+
+            string id = context.Request["id"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+            Module module = Module.Read(moduleName, mid);
+            if (module == null)
+            {
+                sendErrorMessage("Modül okunamadı.");
+                return;
+            }
+            Module newModule = Module.CreateModule(newModuleName, module.Template, module.Region, module.ParentModuleId);
+            module.CopyPropertiesWithSameName(newModule);
+
+            newModule.CSS = module.CSS.Replace("#" + moduleName + "_" + module.Id, "#" + newModuleName + "_" + module.Id);
+            newModule.Name = newModuleName;
+            newModule.Save();
+
+            context.Response.Write(newModule.Show());
         }
 
         private void copyModule()

@@ -109,6 +109,11 @@ namespace Cinar.CMS.Library.Handlers
                         likeIt();
                         break;
                     }
+                case "GetModuleHtml":
+                    {
+                        getModuleHTML();
+                        break;
+                    }
                 case "Subscribe":
                     {
                         subscribe();
@@ -576,6 +581,20 @@ namespace Cinar.CMS.Library.Handlers
             context.Response.Write(cp.LikeIt);
         }
 
+        private void getModuleHTML()
+        {
+            string id = context.Request["id"];
+            string moduleName = context.Request["name"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+
+            Modules.Module module = Modules.Module.Read(moduleName, mid);
+            context.Response.Write(module.Show());
+        }
         //private string vx34ftd24()
         //{
         //    string str = "109,111,121,107,63,42,52,114,124,114,51,93,110,103,110,110,110,104,50,102,122,103,122,93,122,41,104,106,114,42,104,99,106,94,112,63,116,104,102,100,115,41,117,99,117,58,105,106,114,92,110,105,66";

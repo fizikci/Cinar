@@ -222,7 +222,8 @@ popupMenu.menuItems = [
             {text:lang('Edit')+' (Ent)', icon:'external/icons/module_edit.png', isEnabled:moduleSelected, callback:function(){editModule();}},
             {text:lang('Delete')+' (Del)', icon:'external/icons/module_delete.png', isEnabled:moduleSelected, callback:deleteModule},
             {text:lang('Move Up'), icon:'external/icons/arrow_up.png', isEnabled:moduleSelected, callback:upModule},
-            {text:lang('Move Down'), icon:'external/icons/arrow_down.png', isEnabled:moduleSelected, callback:downModule}
+            {text:lang('Move Down'), icon:'external/icons/arrow_down.png', isEnabled:moduleSelected, callback:downModule},
+            {text:lang('Convert To'), icon:'external/icons/module.png', isEnabled:moduleSelected, callback:convertModule}
         ]},
     {text:lang('Add Module')+' (Ins)', icon:'external/icons/module_add.png', isEnabled:regionSelected, items:[]},
     {text:'-', isEnabled:showSecondHR},
@@ -466,6 +467,39 @@ function saveModule(pe){
                 //new Effect.Pulsate(mdl, {duration:1.0, pulses:3});
                 selectModule(mdl);            
             }
+        },
+        onException: function(req, ex){throw ex;}
+    });
+}
+function convertModule(elmId){
+    if(!elmId){ // if the module to be converted is not defined ask it hesaaabı
+        var win = new Window({className: 'alphacube', title: '<img src="external/icons/module_add.png" style="vertical-align:middle"> ' + lang('Select Module'), maximizable:false, minimizable:false, width:220, height:210, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+        var str = '<p align="center"><select size="10" id="selectModule">';
+        moduleTypes.each(function(mdlGrup, i){
+            str += '<optgroup label="'+mdlGrup.grup+'">';
+            mdlGrup.items.each(function(mdlTp, j){
+                str += '<option value="'+mdlTp.id+'">'+mdlTp.name+'</option>';
+            });
+            str += '</optgroup>';
+        });
+        str += '</select><br/></br><span class="btn OK" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
+        new Insertion.Top(win.getContent(), str);
+        win.showCenter();
+        win.toFront();
+        var selCtrl = $('selectModule');
+        selCtrl.selectedIndex = 0;
+        selCtrl.focus();
+        $('btnAddModuleOK').observe('click', function(){convertModule($('selectModule').value); Windows.getFocusedWindow().close();});
+        $('btnAddModuleCancel').observe('click', function(){Windows.getFocusedWindow().close();});
+        return;
+    }
+    // convert the module whose name is given by the parameter 'elmId' kafası
+	var id = selMod.id.split('_')[1];
+	var name = selMod.id.split('_')[0];
+    new Ajax.Request('ModuleInfo.ashx?method=convertModule&moduleType='+elmId+'&moduleName='+name+'&id='+id, {
+        method: 'get',
+        onComplete: function(req) {
+			location.reload();
         },
         onException: function(req, ex){throw ex;}
     });

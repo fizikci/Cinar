@@ -475,7 +475,7 @@ var FileManager = Class.create(); FileManager.prototype = {
 						});
 						elm.on('click', function(event){
 							var path = currFolder + '/' + elm.readAttribute('name');
-							if(!event.ctrlKey)
+							if(!(event.ctrlKey || event.shiftKey || event.metaKey))
 								list.select('.fileNameBox').each(function(fnm){fnm.removeClassName('fileSelected');});
 							elm.toggleClassName('fileSelected');
 							$('fileManagerRenameForm').down('input[name=newName]').value = elm.readAttribute('name');
