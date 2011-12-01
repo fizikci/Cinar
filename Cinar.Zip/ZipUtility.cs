@@ -126,7 +126,7 @@ namespace Cinar.Zip
         /// The browser starts to receive data immediately which should avoid timeout problems.
         /// This also avoids an intermediate memorystream, saving memory on large files.        /// </summary>
         /// <param name="zipFileList"></param>
-        private void DownloadZipToBrowser(IEnumerable<string> zipFileList, HttpContext context)
+        public static void DownloadZipToBrowser(IEnumerable<string> zipFileList, HttpContext context)
         {
 
             context.Response.ContentType = "application/zip";
@@ -173,7 +173,7 @@ namespace Cinar.Zip
             context.Response.End();
         }
 
-        public void ExtractZipFile(string archiveFilenameIn, string password, string outFolder)
+        public static void ExtractZipFile(string archiveFilenameIn, string password, string outFolder)
         {
             ZipFile zf = null;
             try

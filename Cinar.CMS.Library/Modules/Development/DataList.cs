@@ -64,6 +64,16 @@ namespace Cinar.CMS.Library.Modules
 
         DataTable data = null;
 
+        private int _pageNo = -1;
+        private int pageNo {
+            get {
+
+                if(_pageNo == -1)
+                    Int32.TryParse(Provider.Request["pageNo"], out _pageNo);
+                return _pageNo;
+            }
+        }
+
         protected override string show()
         {
             StringBuilder sb = new StringBuilder();
@@ -87,9 +97,6 @@ namespace Cinar.CMS.Library.Modules
 
             FilterParser filterParser = new FilterParser(this.Filter, EntityName);
             string where = filterParser.GetWhere();
-
-            int pageNo = 0;
-            Int32.TryParse(Provider.Request["pageNo"], out pageNo);
 
             string sql = "";
             if(string.IsNullOrWhiteSpace(this.SQL))
@@ -218,7 +225,7 @@ namespace Cinar.CMS.Library.Modules
 
             Interpreter engine = Provider.GetInterpreter(html, this);
             engine.SetAttribute("entity", entity);
-            engine.SetAttribute("index", index + 1);
+            engine.SetAttribute("index", index + 1 + pageNo * HowManyItems);
             engine.Parse();
             engine.Execute();
             html = engine.Output;
