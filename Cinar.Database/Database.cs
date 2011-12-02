@@ -276,7 +276,7 @@ namespace Cinar.Database
                     this.connectionString = "cinar";
                     break;
                 case DatabaseProvider.SQLite:
-                    this.connectionString = String.Format("Data Source={1};Version=3;{3}",
+                    this.connectionString = String.Format("Data Source={1};Version=3;UseUTF16Encoding=True;{3}",
                         host, dbName, userName, string.IsNullOrWhiteSpace(password) ? "" : ("Password=" + password + ";"), defaultCommandTimeout).Replace("Data Source=;", "");
                     break;
                 default:
@@ -302,6 +302,9 @@ namespace Cinar.Database
                     break;
                 case DatabaseProvider.SQLServer:
                     db.dbProvider = new Providers.SQLServerProvider(this, true);
+                    break;
+                case DatabaseProvider.SQLite:
+                    db.dbProvider = new Providers.SQLiteProvider(this, true);
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
@@ -730,6 +733,8 @@ namespace Cinar.Database
                     sb.AppendLine("SELECT @@identity;");
                 if (provider == DatabaseProvider.MySQL)
                     sb.AppendLine("SELECT LAST_INSERT_ID();");
+                if (provider == DatabaseProvider.SQLite)
+                    sb.AppendLine("SELECT LAST_INSERT_ROWID();"); //-1 yapmak gerekebilir, öyle bişey vardı sanki
                 if (provider == DatabaseProvider.PostgreSQL)
                     ; //TODO: Get auto increment for Postgres
             }
@@ -1209,6 +1214,9 @@ namespace Cinar.Database
                     break;
                 case DatabaseProvider.MySQL:
                     sql = "SELECT * FROM `" + table.Name + "`" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
+                    break;
+                case DatabaseProvider.SQLite:
+                    sql = "SELECT * FROM [" + table.Name + "]" + where + orderBy + (fExp.PageSize > 0 ? " LIMIT " + fExp.PageSize + " OFFSET " + fExp.PageSize * fExp.PageNo : "");
                     break;
                 case DatabaseProvider.SQLServer:
                     sql = @"WITH _CinarResult AS
@@ -1737,6 +1745,7 @@ namespace Cinar.Database
                     {
                         case DatabaseProvider.MySQL:
                         case DatabaseProvider.PostgreSQL:
+                        case DatabaseProvider.SQLite:
                             sb.AppendLine("DROP TABLE IF EXISTS [" + tbl.Name + "];");
                             break;
                         case DatabaseProvider.SQLServer:
@@ -1770,6 +1779,9 @@ namespace Cinar.Database
                     break;
                 case DatabaseProvider.SQLServer:
                     dbPrvdr = new Providers.SQLServerProvider(this, false);
+                    break;
+                case DatabaseProvider.SQLite:
+                    dbPrvdr = new Providers.SQLiteProvider(this, false);
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
@@ -1934,6 +1946,8 @@ namespace Cinar.Database
                     return this.GetList<string>("SHOW DATABASES");
                 case DatabaseProvider.SQLServer:
                     return this.GetList<string>("EXEC SP_HELPDB");
+                case DatabaseProvider.SQLite:
+                    return new List<string>() {this.Name };
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -1944,6 +1958,8 @@ namespace Cinar.Database
                 case DatabaseProvider.PostgreSQL:
                 case DatabaseProvider.MySQL:
                     return this.GetString("SELECT version()");
+                case DatabaseProvider.SQLite:
+                    return this.GetString("select sqlite_version();");
                 case DatabaseProvider.SQLServer:
                     return this.GetString("SELECT SERVERPROPERTY('ProductVersion') ");
                 default:

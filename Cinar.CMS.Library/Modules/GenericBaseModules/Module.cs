@@ -372,7 +372,7 @@ namespace Cinar.CMS.Library.Modules
         private static Module fromDataRow(DataRow drModule)
         {
             Module module = Deserialize(drModule["Name"].ToString(), drModule["Details"].ToString());
-            module.Id = (int)drModule["Id"];
+            module.Id = Convert.ToInt32(drModule["Id"]);
             module.Name = drModule["Name"].ToString();
             module.Template = drModule["Template"].ToString();
             module.Region = drModule["Region"].ToString();
