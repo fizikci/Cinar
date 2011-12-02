@@ -81,29 +81,71 @@ namespace Cinar.Database.Providers
                 tbl.Name = drTable["TABLE_NAME"].ToString();
                 tbl.IsView = drTable["TABLE_TYPE"].ToString() == "VIEW";
                 db.Tables.Add(tbl);
+            }
 
-                connection.Open();
-                DataTable dtColumns = ((DbConnection)connection).GetSchema("Columns");
-                connection.Close();
-                foreach (DataRow drColumn in dtColumns.Rows)
+            connection.Open();
+            DataTable dtColumns = ((DbConnection)connection).GetSchema("Columns");
+            connection.Close();
+            foreach (DataRow drColumn in dtColumns.Rows)
+            {
+                Table tbl = db.Tables[drColumn["TABLE_NAME"].ToString()];
+                if (tbl==null)
+                    continue;
+
+                Column f = new Column();
+                f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
+                if (f.DefaultValue == "\0") f.DefaultValue = "";
+                f.ColumnTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
+                f.ColumnType = StringToDbType(f.ColumnTypeOriginal);
+                f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
+                f.IsNullable = drColumn["IS_NULLABLE"].ToString() != "NO";
+                f.Name = drColumn["COLUMN_NAME"].ToString();
+                f.IsAutoIncrement = drColumn["AUTOINCREMENT"].ToString() == "True";
+
+                tbl.Columns.Add(f);
+            }
+
+            connection.Open();
+            DataTable dtIndexes = ((DbConnection)connection).GetSchema("Indexes");
+            connection.Close();
+            foreach (DataRow drIndex in dtIndexes.Rows)
+            {
+                bool primary = (bool)drIndex["PRIMARY_KEY"];
+                bool unique = (bool)drIndex["UNIQUE"];
+
+                if(primary && unique)
                 {
-                    if (drColumn["TABLE_NAME"].ToString() != tbl.Name)
-                        continue;
-
-                    Column f = new Column();
-                    f.DefaultValue = drColumn["COLUMN_DEFAULT"].ToString();
-                    if (f.DefaultValue == "\0") f.DefaultValue = "";
-                    f.ColumnTypeOriginal = drColumn["DATA_TYPE"].ToString().ToUpperInvariant();
-                    f.ColumnType = StringToDbType(f.ColumnTypeOriginal);
-                    f.Length = drColumn.IsNull("CHARACTER_MAXIMUM_LENGTH") ? 0 : Convert.ToInt64(drColumn["CHARACTER_MAXIMUM_LENGTH"]);
-                    f.IsNullable = drColumn["IS_NULLABLE"].ToString() != "NO";
-                    f.Name = drColumn["COLUMN_NAME"].ToString();
-                    f.IsAutoIncrement = drColumn["AUTOINCREMENT"].ToString() == "True";
-
-                    tbl.Columns.Add(f);
+                    PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
+                    pk.Name = drIndex["INDEX_NAME"].ToString();
+                    db.Tables[drIndex["TABLE_NAME"].ToString()].Constraints.Add(pk);
+                }
+                else if (unique)
+                {
+                    UniqueConstraint uc = new UniqueConstraint();
+                    uc.Name = drIndex["INDEX_NAME"].ToString();
+                    db.Tables[drIndex["TABLE_NAME"].ToString()].Constraints.Add(uc);
+                }
+                else
+                {
+                    Index index = new Index();
+                    index.Name = drIndex["INDEX_NAME"].ToString();
+                    db.Tables[drIndex["TABLE_NAME"].ToString()].Indices.Add(index);
                 }
             }
 
+            connection.Open();
+            DataTable dtIndexColumns = ((DbConnection)connection).GetSchema("IndexColumns");
+            connection.Close();
+            foreach (DataRow drCol in dtIndexColumns.Rows)
+            {
+                BaseIndexConstraint index = db.GetConstraint(drCol["CONSTRAINT_NAME"].ToString());
+                if(index==null)
+                    index = db.Tables[drCol["TABLE_NAME"].ToString()].Indices[drCol["CONSTRAINT_NAME"].ToString()];
+
+                if (index == null) continue; //***
+
+                index.ColumnNames.Add(drCol["COLUMN_NAME"].ToString());
+            }
         }
 
         #region string <=> dbType conversion
@@ -131,7 +173,7 @@ namespace Cinar.Database.Providers
             {DbType.Guid, "VARCHAR"},
             {DbType.Image, "BLOB"},
             {DbType.Int16, "INT2"},
-            {DbType.Int32, "INT"},
+            {DbType.Int32, "INTEGER"},
             {DbType.Int64, "INT8"},
             {DbType.NChar, "NCHAR"},
             {DbType.NText, "TEXT"},
@@ -143,10 +185,10 @@ namespace Cinar.Database.Providers
             {DbType.TextLong, "TEXT"},
             {DbType.TextMedium, "TEXT"},
             {DbType.TextTiny, "TEXT"},
-            {DbType.Time, "INT"},
-            {DbType.Timestamp, "INT"},
-            {DbType.Timestamptz, "INT"},
-            {DbType.Timetz, "INT"},
+            {DbType.Time, "INTEGER"},
+            {DbType.Timestamp, "INTEGER"},
+            {DbType.Timestamptz, "INTEGER"},
+            {DbType.Timetz, "INTEGER"},
             {DbType.Undefined, "???"},
             {DbType.VarBinary, "BLOB"},
             {DbType.VarChar, "VARCHAR"},
@@ -255,6 +297,9 @@ namespace Cinar.Database.Providers
                 columnDDL.Append(" DEFAULT " + getDefaultValue(column));
             if (column.ReferenceColumn != null)
                 columnDDL.Append(" REFERENCES [" + column.ReferenceColumn.Table.Name + "]([" + column.ReferenceColumn.Name + "])");
+
+            if (column.IsStringType())
+                columnDDL.Append(" COLLATE NOCASE");
 
             return columnDDL.ToString();
         }

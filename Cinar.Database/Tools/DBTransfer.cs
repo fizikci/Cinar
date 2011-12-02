@@ -91,10 +91,10 @@ namespace Cinar.Database.Tools
                     int transferedRows = 0;
 
                     DataTable dt;
-                    if(dbSrc.Provider== DatabaseProvider.MySQL)
-                    dt = dbSrc.GetDataTable("select * from " + tableName + " limit " + pageSize + " offset " + i);
-                    else
+                    if(dbSrc.Provider== DatabaseProvider.SQLServer)
                         dt = dbSrc.GetDataTable("select top " + pageSize + " * from " + tableName);
+                    else
+                        dt = dbSrc.GetDataTable("select * from " + tableName + " limit " + pageSize + " offset " + i);
 
                     DataTable dtDestSample = dbDst.GetDataTable("select top 0 * from " + prefix + tableName);
                     foreach (DataRow dr in dt.Rows)
@@ -119,7 +119,7 @@ namespace Cinar.Database.Tools
                     //GC.Collect();
                     if (dt.Rows.Count < pageSize)
                     {
-                        log(" (" + (i + dt.Rows.Count + 1) + " kayıt, " + transferedRows + " yeni)");
+                        log(" (" + (i + dt.Rows.Count) + " kayıt, " + transferedRows + " yeni)");
                         break; //***
                     }
                 }

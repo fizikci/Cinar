@@ -38,6 +38,7 @@ namespace Cinar.CMS.Library
                 {
                     string sqlCon = Provider.AppSettings["sqlConnection"];
                     DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), Provider.AppSettings["sqlProvider"]);
+                    if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", Server.MapPath("/App_Data"));
                     Database.Database db = new Database.Database(sqlCon, sqlPro);
                     Provider.Items.Add("db", db);
                     db.NoTransactions = Provider.AppSettings["noTransactions"]=="true";

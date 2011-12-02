@@ -231,6 +231,7 @@ namespace Cinar.Database
                     delimitL = "`"; delimitR = "`";
                     break;
                 case DatabaseProvider.SQLServer:
+                case DatabaseProvider.SQLite:
                     delimitL = "["; delimitR = "]";
                     break;
                 default:
