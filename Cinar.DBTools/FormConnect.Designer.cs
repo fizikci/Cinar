@@ -61,7 +61,8 @@
             "MySQL",
             "PostgreSQL",
             "SQLServer",
-            "Cinar"});
+            "Cinar",
+            "SQLite"});
             this.cbProvider.Location = new System.Drawing.Point(88, 16);
             this.cbProvider.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbProvider.Name = "cbProvider";

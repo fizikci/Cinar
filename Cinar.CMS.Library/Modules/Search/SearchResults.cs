@@ -28,8 +28,6 @@ namespace Cinar.CMS.Library.Modules
             else
                 this.defaultWhere = "1<>1";
 
-            this.sayNoRecord = false;
-
             return base.show();
         }
 

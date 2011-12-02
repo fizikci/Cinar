@@ -3130,4 +3130,10 @@
   <data name="sqlserver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sqlserver.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Cinar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cinar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SQLite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SQLite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
