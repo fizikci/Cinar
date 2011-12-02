@@ -60,7 +60,6 @@ namespace Cinar.CMS.Library.Modules
         public bool CropPicture { get; set; }
 
         protected internal string defaultWhere = "1=1";
-        protected internal bool sayNoRecord = true;
 
         DataTable data = null;
 
@@ -128,7 +127,7 @@ namespace Cinar.CMS.Library.Modules
             Provider.Translate(EntityName, data);
 
             if (data.Rows.Count == 0)
-                return this.sayNoRecord ? Provider.GetResource("No record") : "";
+                return "";
             else
                 sb.Append(base.show());
             

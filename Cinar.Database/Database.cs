@@ -239,6 +239,9 @@ namespace Cinar.Database
                 case DatabaseProvider.Cinar:
                     dbProvider = new Providers.CinarProvider(this, createDatabaseIfNotExist);
                     break;
+                case DatabaseProvider.SQLite:
+                    dbProvider = new Providers.SQLiteProvider(this, createDatabaseIfNotExist);
+                    break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
             }
@@ -271,6 +274,10 @@ namespace Cinar.Database
                     break;
                 case DatabaseProvider.Cinar:
                     this.connectionString = "cinar";
+                    break;
+                case DatabaseProvider.SQLite:
+                    this.connectionString = String.Format("Data Source={1};Version=3;{3}",
+                        host, dbName, userName, string.IsNullOrWhiteSpace(password) ? "" : ("Password=" + password + ";"), defaultCommandTimeout).Replace("Data Source=;", "");
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
@@ -311,6 +318,7 @@ namespace Cinar.Database
                 case DatabaseProvider.MySQL:
                     return "`";
                 case DatabaseProvider.SQLServer:
+                case DatabaseProvider.SQLite:
                     return left ? "[" : "]";
             }
             return "";

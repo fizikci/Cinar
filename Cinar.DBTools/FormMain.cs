@@ -50,6 +50,8 @@ namespace Cinar.DBTools
             imageListTree.Images.Add("MySQL", FamFamFam.mysql);
             imageListTree.Images.Add("PostgreSQL", FamFamFam.postgresql);
             imageListTree.Images.Add("SQLServer", FamFamFam.sqlserver);
+            imageListTree.Images.Add("Cinar", FamFamFam.Cinar);
+            imageListTree.Images.Add("SQLite", FamFamFam.SQLite);
             imageListTree.Images.Add("Script", FamFamFam.script);
 
             imageListTabs.Images.Add("Diagram", FamFamFam.chart_organisation);

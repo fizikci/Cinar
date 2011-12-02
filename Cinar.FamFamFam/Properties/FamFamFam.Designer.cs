@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace System {
+namespace Cinar {
     using System;
     
     
@@ -1638,6 +1638,13 @@ namespace System {
         public static System.Drawing.Bitmap chart_pie_link {
             get {
                 object obj = ResourceManager.GetObject("chart_pie_link", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap Cinar {
+            get {
+                object obj = ResourceManager.GetObject("Cinar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -5957,6 +5964,13 @@ namespace System {
         public static System.Drawing.Bitmap sport_tennis {
             get {
                 object obj = ResourceManager.GetObject("sport_tennis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap SQLite {
+            get {
+                object obj = ResourceManager.GetObject("SQLite", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
