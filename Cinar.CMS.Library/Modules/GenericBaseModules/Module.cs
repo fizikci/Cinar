@@ -22,6 +22,7 @@ namespace Cinar.CMS.Library.Modules
         private string css = "";
         private string details;
         private string cssClass = "";
+        private bool visible = true;
         #endregion
 
         public virtual void Initialize()
@@ -115,6 +116,16 @@ namespace Cinar.CMS.Library.Modules
             get { return this.cssClass; }
             set { this.cssClass = value; }
         }
+
+        /// <summary>
+        /// Module always visible in design mode.
+        /// Module visible in view mode if only this property is true.
+        /// </summary>
+        public bool Visible
+        {
+            get { return this.visible; }
+            set { this.visible = value; }
+        }
         #endregion
 
         public virtual string GetNameValue()
@@ -137,6 +148,9 @@ namespace Cinar.CMS.Library.Modules
 
         public string Show()
         {
+            if (!Provider.DesignMode && !this.Visible)
+                return String.Empty; //***
+
             string html = "";
             try
             {
