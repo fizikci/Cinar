@@ -173,6 +173,7 @@ namespace Cinar.CMS.Library.Handlers
                 int moduleCount = 0;
 
                 foreach (Module module in this.modules)
+                {
                     if (module.Region == regionName && module.Template.ToLower() == template.FileName.ToLower())
                     {
                         Stopwatch stopWatch = new Stopwatch();
@@ -180,9 +181,11 @@ namespace Cinar.CMS.Library.Handlers
                         //sb.Append(module.Show());
                         Provider.Response.Write(module.Show());
                         stopWatch.Stop();
-                        Provider.Response.Write(String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds, module.CacheHint));
+                        Provider.Response.Write(String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds,
+                                                              module.CacheHint));
                         moduleCount++;
                     }
+                }
 
                 if (moduleCount == 0 && Provider.DesignMode)
                     Provider.Response.Write(Provider.GetResource("Empty region") + ": " + regionName);
@@ -267,7 +270,7 @@ namespace Cinar.CMS.Library.Handlers
 
             try
             {
-                modules.ForEach(delegate(Module m) { m.beforeShow(); });
+                modules.ForEach(delegate(Module m) { if (Provider.DesignMode || m.Visible) m.beforeShow(); });
             }
             catch { }
 
@@ -285,7 +288,7 @@ namespace Cinar.CMS.Library.Handlers
 
             try
             {
-                modules.ForEach(delegate(Module m) { m.afterShow(); });
+                modules.ForEach(delegate(Module m) { if (Provider.DesignMode || m.Visible) m.afterShow(); });
             }
             catch { }
 
