@@ -276,7 +276,7 @@ namespace Cinar.Database
                     this.connectionString = "cinar";
                     break;
                 case DatabaseProvider.SQLite:
-                    this.connectionString = String.Format("Data Source={1};Version=3;UseUTF16Encoding=True;{3}",
+                    this.connectionString = String.Format("Data Source={1};Version=3;{3}",
                         host, dbName, userName, string.IsNullOrWhiteSpace(password) ? "" : ("Password=" + password + ";"), defaultCommandTimeout).Replace("Data Source=;", "");
                     break;
                 default:
