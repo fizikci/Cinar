@@ -294,6 +294,16 @@ namespace Cinar.Database
             newTable.IsView = this.IsView;
             newTable.Name = tableName;
 
+            foreach (Constraint c in this.Constraints)
+            {
+                if (c is PrimaryKeyConstraint) {
+                    PrimaryKeyConstraint p = new PrimaryKeyConstraint();
+                    p.Name = c.Name;
+                    p.ColumnNames = c.ColumnNames;
+                    newTable.Constraints.Add(p);
+                }
+            }
+
             return newTable;
         }
 
