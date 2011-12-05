@@ -62,6 +62,16 @@ namespace Cinar.CMS.Library.Handlers
                         saveDefaultStyles();
                         break;
                     }
+                case "getDefaultJavascript":
+                    {
+                        getDefaultJavascript();
+                        break;
+                    }
+                case "saveDefaultJavascript":
+                    {
+                        saveDefaultJavascript();
+                        break;
+                    }
                 case "getTemplateSource":
                     {
                         getTemplateSource();
@@ -220,7 +230,6 @@ namespace Cinar.CMS.Library.Handlers
         private void getDefaultStyles()
         {
             context.Response.Write(Configuration.Read().DefaultStyleSheet);
-            //context.Response.Write(File.ReadAllText(context.Server.MapPath("~/default.css")));
         }
 
         private void saveDefaultStyles()
@@ -228,7 +237,19 @@ namespace Cinar.CMS.Library.Handlers
             Configuration conf = Configuration.Read();
             conf.DefaultStyleSheet = context.Request["style"];
             conf.Save();
-            //File.WriteAllText(context.Server.MapPath("~/default.css"), context.Request["style"], Encoding.UTF8);
+            context.Response.Write("ok.");
+        }
+
+        private void getDefaultJavascript()
+        {
+            context.Response.Write(Configuration.Read().DefaultJavascript);
+        }
+
+        private void saveDefaultJavascript()
+        {
+            Configuration conf = Configuration.Read();
+            conf.DefaultJavascript = context.Request["code"];
+            conf.Save();
             context.Response.Write("ok.");
         }
 

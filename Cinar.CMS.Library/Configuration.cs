@@ -100,6 +100,15 @@ namespace Cinar.CMS.Library
             set { defaultStyleSheet = value; }
         }
 
+        private string defaultJavascript = "";
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
+        //[ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        public string DefaultJavascript
+        {
+            get { return defaultJavascript; }
+            set { defaultJavascript = value; }
+        }
+
         protected bool countTags = true;
         public bool CountTags
         {

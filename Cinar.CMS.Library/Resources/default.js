@@ -156,7 +156,7 @@ document.observe('dom:loaded', function(){
 					if(imgCounter==imgs.length){
 						var totalWidth = 0;
 						imgs.each(function(i){totalWidth += i.getWidth()+20;});
-						elm.down('.innerDiv').setStyle({width:totalWidth+'px'});
+						elm.down('.innerDiv').setStyle({width:(totalWidth-20)+'px'});
 					}
 				});
 			});
@@ -170,10 +170,10 @@ document.observe('dom:loaded', function(){
 			if(!lightBoxDiv) return;
             switch(event.keyCode){
 				case Event.KEY_LEFT:
-					lightBoxDiv.down('#lbPrev').click();
+					lightBoxDiv.down('#lbPrev').simulate('click');
 					break;
 				case Event.KEY_RIGHT:
-					lightBoxDiv.down('#lbNext').click();
+					lightBoxDiv.down('#lbNext').simulate('click');
 					break;
 			}
 		});
@@ -187,7 +187,7 @@ document.observe('dom:loaded', function(){
 			if(parseInt(mostLiked.readAttribute('like'))>0){
 				var f = function(){
 					var pos = mostLiked.viewportOffset();
-					$(document.body).insert('<img id="mostLikedIcon" src="/external/icons/love.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-32)+'px;top:'+(pos.top+mostLiked.getHeight()-34)+'px;"/>');
+					$(document.body).insert('<img id="mostLikedIcon" src="/external/icons/love.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-22)+'px;top:'+(pos.top+mostLiked.getHeight()-18)+'px;"/>');
 				};
 				if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
 					f();
@@ -205,7 +205,7 @@ function slideShowSlide(elm, dir){
 	var leftID = parseInt(elm.down('.innerDiv').style.left);
     var dimID = elm.down('.innerDiv').getDimensions();
 
-	if(leftID + dimID.width < dimCl.width)
+	if(leftID + dimID.width < dimCl.width+60)
 		new Effect.Move(elm.down('.innerDiv'), { x: -1*leftID, y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
 	else if(dir == 'back'){
 		if(leftID < 0)
@@ -223,11 +223,13 @@ function slideShowSlide(elm, dir){
 function fadeShowShowImg(fadeShow, indexElm){
 	var currIndexElm = null;
 	if(!indexElm){
-		currIndexElm = fadeShow.select('.indexElms')[0].descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
-		indexElm = currIndexElm.next() ? currIndexElm.next() : fadeShow.select('.indexElms img')[0];
+		indexElm = fadeShow.down('.indexElms');
+		if(!indexElm) return;
+		currIndexElm = indexElm.descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
+		indexElm = currIndexElm.next() ? currIndexElm.next() : fadeShow.down('.indexElms img');
 	}
 	else
-		currIndexElm = fadeShow.select('.indexElms')[0].descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
+		currIndexElm = fadeShow.down('.indexElms').descendants()[fadeShow.select('.clItem').indexOf(fadeShow.currentImg)];
 		
 	indexElm.src = '/external/icons/bullet_gray.png';
 	if(currIndexElm)
@@ -287,6 +289,7 @@ function showElementWithOverlay(elm, autoHide, color){
     elm.hide();
 	
 	var dim = $$('html')[0].getDimensions();
+	if(Prototype.Browser.IE) {dim.height = $$('body')[0].scrollHeight; dim.width -= 20;}
     
     var perde = $('___perde');
     if(!perde){
@@ -417,7 +420,7 @@ function gogPop(event){
 	if(img.mostLiked)
 		$('mostLikedIcon').setStyle({zIndex:10});
 	else
-		$('mostLikedIcon').setStyle({zIndex:null});
+		$('mostLikedIcon').setStyle({zIndex:'auto'});
 	$(document.body).insert('<div id="gogPopDiv" class="hideOnOut"><img src="'+img.src+'"/></div>');
 	pop = $('gogPopDiv');
 	if(img.up('.lightBox'))
@@ -468,8 +471,8 @@ function lightBox(img){
 	}
 	lightBoxDiv.hide();
 	var lbImg = $('lbImg');
-	var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
 	lbImg.on('load', function(){
+		var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
 		lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
 		var lbDim = lightBoxDiv.getDimensions();
 		var imgDim = img.getDimensions();
@@ -482,8 +485,8 @@ function lightBox(img){
 			var lbImgDim = lbImg.getDimensions();
 			lightBoxDiv.down('#lbPrev').setStyle({top:(lbImgDim.height/2-19)+'px', left:'10px'});
 			lightBoxDiv.down('#lbNext').setStyle({top:(lbImgDim.height/2-19)+'px', right:'10px'});
-			lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc'); 
-			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title'); 
+			lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc') || ''; 
+			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title') || ''; 
 			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
 			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+20)+'px'}).show();
 			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+20)+'px'}).show();
@@ -911,13 +914,77 @@ document.observe('keyup', function(e){
 	}
 });
 
+/**
+ * Event.simulate(@element, eventName[, options]) -> Element
+ * 
+ * - @element: element to fire event on
+ * - eventName: name of event to fire (only MouseEvents and HTMLEvents interfaces are supported)
+ * - options: optional object to fine-tune event properties - pointerX, pointerY, ctrlKey, etc.
+ *
+ *    $('foo').simulate('click'); // => fires "click" event on an element with id=foo
+ *
+ **/
+(function(){
+  
+  var eventMatchers = {
+    'HTMLEvents': /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
+    'MouseEvents': /^(?:click|mouse(?:down|up|over|move|out))$/
+  }
+  var defaultOptions = {
+    pointerX: 0,
+    pointerY: 0,
+    button: 0,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    bubbles: true,
+    cancelable: true
+  }
+  
+  Event.simulate = function(element, eventName) {
+    var options = Object.extend(Object.clone(defaultOptions), arguments[2] || { });
+    var oEvent, eventType = null;
+    
+    element = $(element);
+    
+    for (var name in eventMatchers) {
+      if (eventMatchers[name].test(eventName)) { eventType = name; break; }
+    }
+
+    if (!eventType)
+      throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
+
+    if (document.createEvent) {
+      oEvent = document.createEvent(eventType);
+      if (eventType == 'HTMLEvents') {
+        oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+      }
+      else {
+        oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView, 
+          options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
+          options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
+      }
+      element.dispatchEvent(oEvent);
+    }
+    else {
+      options.clientX = options.pointerX;
+      options.clientY = options.pointerY;
+      oEvent = Object.extend(document.createEventObject(), options);
+      element.fireEvent('on' + eventName, oEvent);
+    }
+    return element;
+  }
+  
+  Element.addMethods({ simulate: Event.simulate });
+})();
+
 var TextAreaUtil = {
 	getSelection: function(textArea){
 		var textArea = $(textArea);
 		var startPos = 0;
 		var endPos = 0;
-		if(Prototype.Browser.IE)
-		{
+		if(Prototype.Browser.IE){
 			textArea.focus();
 			var range = document.selection.createRange();
 			var strLen = range.text.length;
@@ -925,8 +992,7 @@ var TextAreaUtil = {
 			startPos = range.text.length;
 			endPos = startPos + strLen;
 		}
-		else
-		{
+		else {
 			startPos = textArea.selectionStart
 			endPos = textArea.selectionEnd;
 		}
@@ -957,4 +1023,3 @@ var TextAreaUtil = {
 		textArea.scrollTop = scrollPos;
 	}
 }
-

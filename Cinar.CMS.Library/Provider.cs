@@ -1204,7 +1204,7 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + Path.GetFileName(path).Replace(".","_") + ".jpg";
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_").Replace(".","_") + ".jpg";
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))

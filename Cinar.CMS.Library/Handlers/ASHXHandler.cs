@@ -68,6 +68,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "UploadContent":
                 case "UploadContentTest":
                 case "DefaultStyleSheet":
+                case "DefaultJavascript":
                 case "UpdateTags":
                 case "Scriptify":
                 case "AutoCompleteTag":

@@ -147,7 +147,7 @@ namespace Cinar.CMS.Library.Modules
                     uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
                     prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\"{1}>{2}</a>",
                         AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); return false;\"" : "",
+                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
                         LabelPrevPage == "Previous Page" ? Provider.GetModuleResource("Previous Page") : LabelPrevPage);
                 }
                 if (data.Rows.Count == HowManyItems)
@@ -155,7 +155,7 @@ namespace Cinar.CMS.Library.Modules
                     uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
                     nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
                         AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); return false;\"" : "",
+                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
                         LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
