@@ -89,6 +89,11 @@ namespace Cinar.CMS.Library.Handlers
                         defaultStyleSheet();
                         break;
                     }
+                case "DefaultJavascript":
+                    {
+                        defaultJavascript();
+                        break;
+                    }
                 case "UpdateTags":
                     {
                         updateTags();
@@ -228,6 +233,12 @@ namespace Cinar.CMS.Library.Handlers
         {
             context.Response.ContentType = "text/css";
             context.Response.Write(Provider.Configuration.DefaultStyleSheet);
+        }
+
+        private void defaultJavascript()
+        {
+            context.Response.ContentType = "text/javascript";
+            context.Response.Write(Provider.Configuration.DefaultJavascript);
         }
 
         private void uploadContent()

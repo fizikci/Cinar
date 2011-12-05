@@ -241,9 +241,10 @@ popupMenu.menuItems = [
     {text:lang('Category-Content Tree'), icon:'external/icons/tree.png', callback:openTree},
     {text:lang('Page-Module Tree'), icon:'external/icons/tree.png', callback:openPageModuleTree},
     {text:'-'},
-    {text:lang('Edit General CSS'), icon:'external/icons/css.png', callback:editStyle},
     {text:lang('Configuration'), icon:'external/icons/Configuration.png', callback:configure},
     {text:lang('File Manager'), icon:'external/icons/folder_module.png', callback:openFileManager},
+    {text:lang('Edit General CSS'), icon:'external/icons/css.png', callback:editStyle},
+    {text:lang('Edit General Javascript'), icon:'external/icons/script.png', callback:editJavascript},
     {text:lang('Clear Cache'), icon:'external/icons/cache.gif', callback:clearCache},
     {text:lang('Edit Content'), icon: 'external/icons/edit.png', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'external/icons/edit.png', isEnabled: tagLinkSelected, callback: editTag },
@@ -881,7 +882,7 @@ function saveImport(){
 }
 
 //#####################################
-//#        EDIT GENERAL CSS           #
+//#    EDIT GENERAL CSS/Javascript    #
 //#####################################
 
 function editStyle(){
@@ -898,6 +899,29 @@ function saveStyle(){
     var params = new Object();
     params['style'] = $('txtDefStyles').value;
     new Ajax.Request('SystemInfo.ashx?method=saveDefaultStyles', {
+        method: 'post',
+        parameters: params,
+        onComplete: function(req) {
+            if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            location.reload();
+        },
+        onException: function(req, ex){throw ex;}
+    });
+}
+
+function editJavascript(){
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/script.png" style="vertical-align:middle"> ' + lang('General Javascript'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var winContent = $(win.getContent());
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefJavascript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveJavascript">'+lang('Save')+'</span></p>');
+    $('txtDefJavascript').value = ajax({url:'SystemInfo.ashx?method=getDefaultJavascript',isJSON:false,noCache:true});
+    $('btnSaveJavascript').observe('click', saveJavascript);
+    win.showCenter();
+    win.toFront();
+}
+function saveJavascript(){
+    var params = new Object();
+    params['code'] = $('txtDefJavascript').value;
+    new Ajax.Request('SystemInfo.ashx?method=saveDefaultJavascript', {
         method: 'post',
         parameters: params,
         onComplete: function(req) {
