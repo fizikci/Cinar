@@ -812,7 +812,8 @@ namespace Cinar.Scripting
                     {
                         try
                         {
-                            paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
+                            if(!paramTypes[j].IsSubclassOf(pinfo[j].ParameterType))
+                                paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
                         }
                         catch
                         {

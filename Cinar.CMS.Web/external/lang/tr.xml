@@ -6,18 +6,18 @@
 	<entry key="[Skip First] must be less than [How Many Items]" value="[Kaç tane atla] alanında [Kaç Kayıt] alanından daha küçük bir sayı olmalıdır."/>
 	<entry key="_AFTERSAVEBEHAVIOR_" value="[['NewRecord','Yeni Kayıt Formu'],['ShowSaved','Kaydedileni göster'],['BackToList','Listeye dön'],['RedirectToSameUrl','Aynı sayfaya yönlendir']]"/>
 	<entry key="_ASCENDING_" value="[[true,'Artan'],[false,'Azalan']]"/>
-  <entry key="_CHARTTYPES_" value="[['lc','Çizgi'],['ls','Kıvılcım (çizgi)'],['lxy','XY Grafik'],['bhs','Yatay Çubuk (stack)'],['bvs','Dikey Çubuk (stack)'],['bhg','Yatay Çubuk (grup)'],['bvg','Dikey Çubuk (grup)'],['p','Pasta'],['p3','3D Pasta'],['pc','Pasta (içiçe)']]"/>
-  <entry key="_CLASSNAMELIST_" value="[['Content','İçerik'],['Category','Kategori'],['News','Haber'],['Article','Makale'],['Gallery','Galeri'],['Video','Video'],['LastMinute','Son Dakika']]"/>
+	<entry key="_CHARTTYPES_" value="[['lc','Çizgi'],['ls','Kıvılcım (çizgi)'],['lxy','XY Grafik'],['bhs','Yatay Çubuk (stack)'],['bvs','Dikey Çubuk (stack)'],['bhg','Yatay Çubuk (grup)'],['bvg','Dikey Çubuk (grup)'],['p','Pasta'],['p3','3D Pasta'],['pc','Pasta (içiçe)']]"/>
+	<entry key="_CLASSNAMELIST_" value="[['Content','İçerik'],['Category','Kategori'],['News','Haber'],['Article','Makale'],['Gallery','Galeri'],['Video','Video'],['LastMinute','Son Dakika']]"/>
 	<entry key="_GROUPBY_" value="[['CategoryId','Kategori'],['AuthorId','Yazar'],['SourceId','Kaynak']]"/>
 	<entry key="_HORIZONTAL_" value="[[false,'Dikey'],[true,'Yatay']]"/>
-  <entry key="_LEGENDPOSITIONS_" value="[['l','Solda'],['r','Sağda'],['t','Üstte'],['b','Altta']]"/>
-  <entry key="_MODERATED_" value="[[false,'Kapalı'],[true,'Açık']]"/>
+	<entry key="_LEGENDPOSITIONS_" value="[['l','Solda'],['r','Sağda'],['t','Üstte'],['b','Altta']]"/>
+	<entry key="_MODERATED_" value="[[false,'Kapalı'],[true,'Açık']]"/>
 	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Başlık'],['Content.PublishDate','Yayın Tarihi'],['Content.Id','Id'],['Content.ViewCount','Okunma Sayısı'],['Content.CommentCount','Yorum Sayısı'],['Content.RecommendCount','Tavsiye Sayısı'],['Content.OrderNo','Sıra Numarası'],['TAuthorId.Name','Yazar Adı'],['TSourceId.Name','Kaynak Adı']]"/>
 	<entry key="_SHOWPERCENT_" value="[[false,'Sayı olarak'],[true,'Yüzde olarak']]"/>
 	<entry key="_UICONTROLTYPE_" value="[['','Otomatik'],['Input','Input'],['Textarea','Metin Kutusu'],['Hidden','Gizli']]"/>
-  <entry key="_USECACHE_" value="[['Default','Varsayılan'],['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
-  <entry key="_USECACHEFORCONF_" value="[['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
-  <entry key="_VIEWCONDITION_" value="[['Click','Tıklama Sayısı'],['View','Gösterim Sayısı'],['DateInterval','Tarih Aralığı']]"/>
+	<entry key="_USECACHE_" value="[['Default','Varsayılan'],['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
+	<entry key="_USECACHEFORCONF_" value="[['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
+	<entry key="_VIEWCONDITION_" value="[['Click','Tıklama Sayısı'],['View','Gösterim Sayısı'],['DateInterval','Tarih Aralığı']]"/>
 	<entry key="_WHICHPICTURE_" value="[['Content.Picture','İçerik'],['Content.Picture2','İçerik 2'],['TAuthorId.Picture','Yazar'],['TSourceId.Picture','Kaynak']]"/>
 	<entry key="{0} is not a valid field name. Please use one of the following: {1}" value="{0} geçerli bir alan ismi değil. Lütfen bunlardan birini kullanınız: {1}"/>
 	<entry key="{0} type of controls not supported yet." value="{0} isminde bir control henüz desteklenmiyor."/>
@@ -77,9 +77,9 @@
 	<entry key="BannerAd.ViewConditionDesc" value="Bu banner reklamı gösterim sayısına mı, yoksa tıklama sayısına mı yoksa zaman aralığına mı bağlı olarak gösterilecek?"/>
 	<entry key="BannerAd.ViewCount" value="Gösterim Sayısı"/>
 	<entry key="BannerAd.ViewCountDesc" value="Bu banner şu ana kadar kaç defa gösterildi?"/>
-  <entry key="BaseEntity" value="Temel"/>
-  <entry key="BaseEntity.Id" value="Id"/>
-  <entry key="BaseEntity.IdDesc" value="Id"/>
+	<entry key="BaseEntity" value="Temel"/>
+	<entry key="BaseEntity.Id" value="Id"/>
+	<entry key="BaseEntity.IdDesc" value="Id"/>
 	<entry key="BaseEntity.InsertDate" value="Kayıt Tarihi"/>
 	<entry key="BaseEntity.InsertDateDesc" value="Kayıt tarihi"/>
 	<entry key="BaseEntity.InsertUserId" value="Kaydeden"/>
@@ -95,51 +95,51 @@
 	<entry key="Basket" value="Sepet"/>
 	<entry key="BasketSummary" value="Sepet Özeti"/>
 	<entry key="Cache problem" value="Cache oluşturulamıyor"/>
-  <entry key="Category is null" value="Kategori belirtilmesi gerekir."/>
-  <entry key="Category or source or author must be specified for RSS" value="RSS için kategory, kaynak ya da yazardan en az biri belirtilmelidir."/>
-  <entry key="Chart" value="Grafik"/>
-  <entry key="Chart.HTMLChart" value="Grafik Formatı"/>
-  <entry key="Chart.HTMLChartDesc" value="Grafik çıktısı resim (image) mi yoksa HTML mi olsun?"/>
-  <entry key="Chart.SQL" value="Data SQL"/>
-  <entry key="Chart.SQLDesc" value="Grafik verisi için SQL giriniz. Dilerseniz bu alanı boş bırakıp değerleri diğer alanlara elle girebilirsiniz. (SQL içinde $=this.Params.dateStart$, $=this.Params.intFoo$, $=this.Params.stringBar$ gibi SQL parametreleri kullanabilirsiniz.)"/>
-  <entry key="Chart.ChartType" value="Grafik Tipi"/>
-  <entry key="Chart.ChartTypeDesc" value="Bir grafik tipi seçiniz"/>
-  <entry key="Chart.Width" value="Genişlik (px)"/>
-  <entry key="Chart.WidthDesc" value="Grafik genişliği"/>
-  <entry key="Chart.Height" value="Yükseklik (px)"/>
-  <entry key="Chart.HeightDesc" value="Grafik yüksekliği"/>
-  <entry key="Chart.Series" value="Data (seriler)"/>
-  <entry key="Chart.SeriesDesc" value="Eğer SQL girdiyseniz o sorguda serileri belirten alan adını giriniz, aksi halde seri isimlerini boru (|) ile ayırarak girebilirsiniz."/>
-  <entry key="Chart.Labels" value="Data (etiketler)"/>
-  <entry key="Chart.LabelsDesc" value="Eğer SQL girdiyseniz o sorguda etiketleri belirten alan adını giriniz, aksi halde etiket isimlerini boru (|) ile ayırarak girebilirsiniz"/>
-  <entry key="Chart.Values" value="Data (değerler)"/>
-  <entry key="Chart.ValuesDesc" value="Eğer SQL girdiyseniz o sorguda değerleri belirten alan adını giriniz, aksi halde etiket isimlerini boru (|) ve virgül (,) ile ayırarak girebilirsiniz. Örn: 10,20,30|23,34,2"/>
-  <entry key="Chart.LabelsFormat" value="Etiket Formatı"/>
-  <entry key="Chart.LabelsFormatDesc" value="Etiketler için format belirtebilirsiniz. Mesela tarih için dd MMMM yyyy gibi"/>
-  <entry key="Chart.LegendPosition" value="Legend Konumu"/>
-  <entry key="Chart.LegendPositionDesc" value="Legendler için konum seçiniz"/>
-  <entry key="Chart.Colors" value="Renkler"/>
-  <entry key="Chart.ColorsDesc" value="Virgülle ayrılmış 16lık sistemde renk değerleri giriniz. Örn: 660000,006600,000066,336600,660033,003366"/>
-  <entry key="Chart.BgFill" value="Dolgu (zemin)"/>
-  <entry key="Chart.BgFillDesc" value="Zemin dolgusunu giriniz. Örn: s,EFEFEF (Ayrıca bkz: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
-  <entry key="Chart.ChartFill" value="Dolgu (grafik)"/>
-  <entry key="Chart.ChartFillDesc" value="Grafik dolgusunu giriniz. Örn: s,EFEFEF (Ayrıca bkz: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
-  <entry key="Chart.Margins" value="Boşluklar"/>
-  <entry key="Chart.MarginsDesc" value="Grafik boşluk ayarları için şu formatı kullanınız: [sol boşluk],[sağ boşluk],[üst boşluk],[alt boşluk]|[legend genişliği],[legend yüksekliği]"/>
-  <entry key="Chart.Title" value="Başlık"/>
-  <entry key="Chart.TitleDesc" value="Grafik başlığını giriniz."/>
-  <entry key="Chart.TitleStyle" value="Başlık Sitili"/>
-  <entry key="Chart.TitleStyleDesc" value="Başlık sitili için şu formatı kullanınız: [renk],[font büyüklüğü]"/>
-  <entry key="Chart.GridLines" value="Izgara Çizgileri"/>
-  <entry key="Chart.GridLinesDesc" value="Izgara çizgileri için şu formatı kullanınız: [X ekseni adım boyu],[Y ekseni adım boyu],[çizgi boyu],[boşluk boyu]"/>
-  <entry key="Circulation" value="Tiraj"/>
-  <entry key="Circulation.WeekStartDate" value="Hafta Başı Tarihi"/>
-  <entry key="Circulation.WeekStartDateDesc" value="Tiraj verisi hangi haftaya ait?"/>
-  <entry key="Circulation.DailyName" value="Gazete Adı"/>
-  <entry key="Circulation.DailyNameDesc" value="Gazete adı"/>
-  <entry key="Circulation.AvgDailySale" value="Günlük Ort. Satış"/>
-  <entry key="Circulation.AvgDailySaleDesc" value="Günlük Ort. Satış"/>
-  <entry key="Code creation failed due to an error, please debug." value="Bir hataya binaen code creation fail oldu, debug edin."/>
+	<entry key="Category is null" value="Kategori belirtilmesi gerekir."/>
+	<entry key="Category or source or author must be specified for RSS" value="RSS için kategory, kaynak ya da yazardan en az biri belirtilmelidir."/>
+	<entry key="Chart" value="Grafik"/>
+	<entry key="Chart.HTMLChart" value="Grafik Formatı"/>
+	<entry key="Chart.HTMLChartDesc" value="Grafik çıktısı resim (image) mi yoksa HTML mi olsun?"/>
+	<entry key="Chart.SQL" value="Data SQL"/>
+	<entry key="Chart.SQLDesc" value="Grafik verisi için SQL giriniz. Dilerseniz bu alanı boş bırakıp değerleri diğer alanlara elle girebilirsiniz. (SQL içinde $=this.Params.dateStart$, $=this.Params.intFoo$, $=this.Params.stringBar$ gibi SQL parametreleri kullanabilirsiniz.)"/>
+	<entry key="Chart.ChartType" value="Grafik Tipi"/>
+	<entry key="Chart.ChartTypeDesc" value="Bir grafik tipi seçiniz"/>
+	<entry key="Chart.Width" value="Genişlik (px)"/>
+	<entry key="Chart.WidthDesc" value="Grafik genişliği"/>
+	<entry key="Chart.Height" value="Yükseklik (px)"/>
+	<entry key="Chart.HeightDesc" value="Grafik yüksekliği"/>
+	<entry key="Chart.Series" value="Data (seriler)"/>
+	<entry key="Chart.SeriesDesc" value="Eğer SQL girdiyseniz o sorguda serileri belirten alan adını giriniz, aksi halde seri isimlerini boru (|) ile ayırarak girebilirsiniz."/>
+	<entry key="Chart.Labels" value="Data (etiketler)"/>
+	<entry key="Chart.LabelsDesc" value="Eğer SQL girdiyseniz o sorguda etiketleri belirten alan adını giriniz, aksi halde etiket isimlerini boru (|) ile ayırarak girebilirsiniz"/>
+	<entry key="Chart.Values" value="Data (değerler)"/>
+	<entry key="Chart.ValuesDesc" value="Eğer SQL girdiyseniz o sorguda değerleri belirten alan adını giriniz, aksi halde etiket isimlerini boru (|) ve virgül (,) ile ayırarak girebilirsiniz. Örn: 10,20,30|23,34,2"/>
+	<entry key="Chart.LabelsFormat" value="Etiket Formatı"/>
+	<entry key="Chart.LabelsFormatDesc" value="Etiketler için format belirtebilirsiniz. Mesela tarih için dd MMMM yyyy gibi"/>
+	<entry key="Chart.LegendPosition" value="Legend Konumu"/>
+	<entry key="Chart.LegendPositionDesc" value="Legendler için konum seçiniz"/>
+	<entry key="Chart.Colors" value="Renkler"/>
+	<entry key="Chart.ColorsDesc" value="Virgülle ayrılmış 16lık sistemde renk değerleri giriniz. Örn: 660000,006600,000066,336600,660033,003366"/>
+	<entry key="Chart.BgFill" value="Dolgu (zemin)"/>
+	<entry key="Chart.BgFillDesc" value="Zemin dolgusunu giriniz. Örn: s,EFEFEF (Ayrıca bkz: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
+	<entry key="Chart.ChartFill" value="Dolgu (grafik)"/>
+	<entry key="Chart.ChartFillDesc" value="Grafik dolgusunu giriniz. Örn: s,EFEFEF (Ayrıca bkz: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
+	<entry key="Chart.Margins" value="Boşluklar"/>
+	<entry key="Chart.MarginsDesc" value="Grafik boşluk ayarları için şu formatı kullanınız: [sol boşluk],[sağ boşluk],[üst boşluk],[alt boşluk]|[legend genişliği],[legend yüksekliği]"/>
+	<entry key="Chart.Title" value="Başlık"/>
+	<entry key="Chart.TitleDesc" value="Grafik başlığını giriniz."/>
+	<entry key="Chart.TitleStyle" value="Başlık Sitili"/>
+	<entry key="Chart.TitleStyleDesc" value="Başlık sitili için şu formatı kullanınız: [renk],[font büyüklüğü]"/>
+	<entry key="Chart.GridLines" value="Izgara Çizgileri"/>
+	<entry key="Chart.GridLinesDesc" value="Izgara çizgileri için şu formatı kullanınız: [X ekseni adım boyu],[Y ekseni adım boyu],[çizgi boyu],[boşluk boyu]"/>
+	<entry key="Circulation" value="Tiraj"/>
+	<entry key="Circulation.WeekStartDate" value="Hafta Başı Tarihi"/>
+	<entry key="Circulation.WeekStartDateDesc" value="Tiraj verisi hangi haftaya ait?"/>
+	<entry key="Circulation.DailyName" value="Gazete Adı"/>
+	<entry key="Circulation.DailyNameDesc" value="Gazete adı"/>
+	<entry key="Circulation.AvgDailySale" value="Günlük Ort. Satış"/>
+	<entry key="Circulation.AvgDailySaleDesc" value="Günlük Ort. Satış"/>
+	<entry key="Code creation failed due to an error, please debug." value="Bir hataya binaen code creation fail oldu, debug edin."/>
 	<entry key="Columns number cannot be zero" value="Sütun sayısı 0 olamaz"/>
 	<entry key="Comments" value="Ziyaretçi Yorumları"/>
 	<entry key="Comments.Active" value="Aktif"/>
@@ -172,15 +172,15 @@
 	<entry key="Configuration.CategoryPageDesc" value="Kategori linklerine tıklandığında aksi belirtilmemişse açılacak olan sayfa"/>
 	<entry key="Configuration.ContentPage" value="İçerik Sayfası"/>
 	<entry key="Configuration.ContentPageDesc" value="İçerik linklerine tıklandığında aksi belirtilmemişse açılacak olan sayfa"/>
-  <entry key="Configuration.CountTags" value="Etiketleri say"/>
-  <entry key="Configuration.CountTagsDesc" value="Bir etiketin kaç içerikte geçtiğini hesaplar. Performans problemi varsa hayır seçiniz."/>
-  <entry key="Configuration.DefaultDateFormat" value="Varsayılan Tarih Formatı"/>
+	<entry key="Configuration.CountTags" value="Etiketleri say"/>
+	<entry key="Configuration.CountTagsDesc" value="Bir etiketin kaç içerikte geçtiğini hesaplar. Performans problemi varsa hayır seçiniz."/>
+	<entry key="Configuration.DefaultDateFormat" value="Varsayılan Tarih Formatı"/>
 	<entry key="Configuration.DefaultDateFormatDesc" value="Sitede tarih formatı aksi belirtilmedikçe nasıl olsun?"/>
 	<entry key="Configuration.DefaultLang" value="Varsayılan Dil"/>
 	<entry key="Configuration.DefaultLangDesc" value="Varsayılan dil, sitenin ana dili"/>
-  <entry key="Configuration.DefaultStyleSheet" value="Genel CSS"/>
-  <entry key="Configuration.DefaultStyleSheetDesc" value="Tüm site için geçerli olan CSS kodları."/>
-  <entry key="Configuration.ImageUploadMaxWidth" value="Max. Resim Genişliği"/>
+	<entry key="Configuration.DefaultStyleSheet" value="Genel CSS"/>
+	<entry key="Configuration.DefaultStyleSheetDesc" value="Tüm site için geçerli olan CSS kodları."/>
+	<entry key="Configuration.ImageUploadMaxWidth" value="Max. Resim Genişliği"/>
 	<entry key="Configuration.ImageUploadMaxWidthDesc" value="Yüklenen resimlerin maksimum genişliği kaç px olsun? Büyük resimler o genişlikte küçültülecektir."/>
 	<entry key="Configuration.LoginPage" value="Login sayfası"/>
 	<entry key="Configuration.LoginPageDesc" value="Login formunun olduğu sayfa"/>
@@ -194,15 +194,15 @@
 	<entry key="Configuration.MainPageDesc" value="Hangi sayfa ana sayfa olsun?"/>
 	<entry key="Configuration.MembershipFormPage" value="Üyelik Sayfası"/>
 	<entry key="Configuration.MembershipFormPageDesc" value="Üyelik formunun olduğu sayfa"/>
-  <entry key="Configuration.MembershipProfilePage" value="Üye Profil Sayfası"/>
-  <entry key="Configuration.MembershipProfilePageDesc" value="Üyeye ait bilgilerin gösterildiği sayfa"/>
-  <entry key="Configuration.MultiLang" value="Çoklu dil desteği"/>
+	<entry key="Configuration.MembershipProfilePage" value="Üye Profil Sayfası"/>
+	<entry key="Configuration.MembershipProfilePageDesc" value="Üyeye ait bilgilerin gösterildiği sayfa"/>
+	<entry key="Configuration.MultiLang" value="Çoklu dil desteği"/>
 	<entry key="Configuration.MultiLangDesc" value="Çoklu dil desteği olsun mu?"/>
 	<entry key="Configuration.NoPicture" value="Resim Yok"/>
 	<entry key="Configuration.NoPictureDesc" value="Olmayan resimler için gösterilecek resmi seçiniz. Ör: resimyok.jpg"/>
 	<entry key="Configuration.RememberPasswordFormPage" value="Şifre Hatırlat Sayfası"/>
 	<entry key="Configuration.RememberPasswordFormPageDesc" value="Üyelik formunun olduğu sayfa"/>
-  <entry key="Configuration.SessionTimeout" value="Oturum süresi (dk)"/>
+	<entry key="Configuration.SessionTimeout" value="Oturum süresi (dk)"/>
 	<entry key="Configuration.SessionTimeoutDesc" value="Editör modunda oturum süresi kaç dk olsun? (Uzun olursa ikide bir oturum açmak zorunda kalmazsınız. Ama çok uzun olması performansı düşürür, artı pek güvenli değildir.)"/>
 	<entry key="Configuration.SiteAddress" value="Site Adresi"/>
 	<entry key="Configuration.SiteAddressDesc" value="&quot;http://&quot; hariç site adresi"/>
@@ -220,9 +220,9 @@
 	<entry key="Configuration.ThumbQualityDesc" value="Küçük resimler hangi kalitede üretilsin? 0-100 arası bir sayı giriniz."/>
 	<entry key="Configuration.UseCache" value="Önbellek olsun"/>
 	<entry key="Configuration.UseCacheDesc" value="Önbelleğe alma mekanizması olsun mu? (Trafiği yoğun sitelerin performansını arttırır)"/>
-  <entry key="Configuration.UseHTMLEditor" value="HTML Editor Kullan"/>
-  <entry key="Configuration.UseHTMLEditorDesc" value="Yazı girişi için HTML editörü kullanılsın mı?"/>
-  <entry key="Configuration.UserActivationPage" value="Üyelik Aktivasyon Sayfası"/>
+	<entry key="Configuration.UseHTMLEditor" value="HTML Editor Kullan"/>
+	<entry key="Configuration.UseHTMLEditorDesc" value="Yazı girişi için HTML editörü kullanılsın mı?"/>
+	<entry key="Configuration.UserActivationPage" value="Üyelik Aktivasyon Sayfası"/>
 	<entry key="Configuration.UserActivationPageDesc" value="Üyelik aktivasyon formunun olduğu sayfa"/>
 	<entry key="ContactUs" value="Ziyaretçi Mesajı"/>
 	<entry key="ContactUs.Email" value="Email"/>
@@ -250,9 +250,9 @@
 	<entry key="Content.ContentSourceIdDesc" value="Eğer bu içerik otomatik olarak bir içerik kaynağı ile oluşturulduysa bu alan dolu gelecektir. Değiştirmeyiniz."/>
 	<entry key="Content.Description" value="Açıklama"/>
 	<entry key="Content.DescriptionDesc" value="Açıklayınız"/>
-  <entry key="Content.Keywords" value="Keywords"/>
-  <entry key="Content.KeywordsDesc" value="Bu içerik sayfada görüntülendiğinde keywords meta tagına yazılacak kelimeler. (Arama motorları için)"/>
-  <entry key="Content.Hierarchy" value="Hierarchy"/>
+	<entry key="Content.Keywords" value="Keywords"/>
+	<entry key="Content.KeywordsDesc" value="Bu içerik sayfada görüntülendiğinde keywords meta tagına yazılacak kelimeler. (Arama motorları için)"/>
+	<entry key="Content.Hierarchy" value="Hierarchy"/>
 	<entry key="Content.HierarchyDesc" value=""/>
 	<entry key="Content.IsManset" value="Manşet"/>
 	<entry key="Content.IsMansetDesc" value="Manşet olacak değerde bir içerik midir bu?"/>
@@ -278,9 +278,9 @@
 	<entry key="Content.SourceLinkDesc" value="Bu içeriğin alındığı kaynağın adresi. (Eğer kendi içeriğiniz değilse kaynak belirtmek yasalar gereğidir, ihmal etmeyiniz.)"/>
 	<entry key="Content.SpotTitle" value="Spot Başlık"/>
 	<entry key="Content.SpotTitleDesc" value="Özellikle manşet olarak kullanılan kısa ve vurucu başlık"/>
-  <entry key="Content.TagRanks" value="Etiket Puanları"/>
-  <entry key="Content.TagRanksDesc" value="Etiketlerin içerikle ne kadar ilgili olduğunu gösteren virgülle ayrılmış 0-100 arası sayılar"/>
-  <entry key="Content.Tags" value="Etiketler"/>
+	<entry key="Content.TagRanks" value="Etiket Puanları"/>
+	<entry key="Content.TagRanksDesc" value="Etiketlerin içerikle ne kadar ilgili olduğunu gösteren virgülle ayrılmış 0-100 arası sayılar"/>
+	<entry key="Content.Tags" value="Etiketler"/>
 	<entry key="Content.TagsDesc" value="İçerikle ilgili önemli kelimeler (aramalar, ilişkili içerikler için)"/>
 	<entry key="Content.Title" value="Başlık"/>
 	<entry key="Content.TitleDesc" value="Başlık"/>
@@ -326,9 +326,9 @@
 	<entry key="ContentList.BulletIconDesc" value="İkon için resim seçiniz."/>
 	<entry key="ContentList.CreateLink" value="Link olsun"/>
 	<entry key="ContentList.CreateLinkDesc" value="İçerik listesinde her bir içerik için link oluşturulsun mu?"/>
-  <entry key="ContentList.LinkTarget" value="Link Target"/>
-  <entry key="ContentList.LinkTargetDesc" value="Linke tıklandığında, ilgili sayfa hangi browser penceresinde açılsın? Popup pencerede açmak için _blank giriniz."/>
-  <entry key="ContentList.DateFormat" value="Tarih formatı"/>
+	<entry key="ContentList.LinkTarget" value="Link Target"/>
+	<entry key="ContentList.LinkTargetDesc" value="Linke tıklandığında, ilgili sayfa hangi browser penceresinde açılsın? Popup pencerede açmak için _blank giriniz."/>
+	<entry key="ContentList.DateFormat" value="Tarih formatı"/>
 	<entry key="ContentList.DateFormatDesc" value="Tarih nasıl görünsün? Y iyidir."/>
 	<entry key="ContentList.DescriptionLength" value="Açıklama uzunluğu"/>
 	<entry key="ContentList.DescriptionLengthDesc" value="Açıklamalar en fazla kaç karakter gösterilsin? Tamamının görünmesi için -1 giriniz."/>
@@ -338,9 +338,9 @@
 	<entry key="ContentList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için zorunlu olmasını sağlar"/>
 	<entry key="ContentList.HowManyItems" value="Kaç içerik"/>
 	<entry key="ContentList.HowManyItemsDesc" value="En fazla kaç içerik listelensin."/>
-  <entry key="ContentList.MoreLink" value="Devam Linki"/>
-  <entry key="ContentList.MoreLinkDesc" value="'Devamı...' linki için kullanılacak metin"/>
-  <entry key="ContentList.OrderBy" value="Sıralama alanı"/>
+	<entry key="ContentList.MoreLink" value="Devam Linki"/>
+	<entry key="ContentList.MoreLinkDesc" value="'Devamı...' linki için kullanılacak metin"/>
+	<entry key="ContentList.OrderBy" value="Sıralama alanı"/>
 	<entry key="ContentList.OrderByDesc" value="Listelenen içerikler hangi alana göre sıralansın?"/>
 	<entry key="ContentList.PictureHeight" value="Resim yüksekliği (px)"/>
 	<entry key="ContentList.PictureHeightDesc" value="İçerik resminin bu yükseklikte kopyası oluşturulacaktır"/>
@@ -377,9 +377,9 @@
 	<entry key="ContentPicture.FileNameDesc" value="Resim seçiniz"/>
 	<entry key="ContentPicture.Height" value="Resim yüksekliği (px)"/>
 	<entry key="ContentPicture.HeightDesc" value="İçerik resminin bu yükseklikte kopyası oluşturulacaktır"/>
-  <entry key="ContentPicture.LikeIt" value="Beğeniler"/>
-  <entry key="ContentPicture.LikeItDesc" value="Bu resmi kaç kişi beğendi"/>
-  <entry key="ContentPicture.Title" value="Başlık"/>
+	<entry key="ContentPicture.LikeIt" value="Beğeniler"/>
+	<entry key="ContentPicture.LikeItDesc" value="Bu resmi kaç kişi beğendi"/>
+	<entry key="ContentPicture.Title" value="Başlık"/>
 	<entry key="ContentPicture.TitleDesc" value="Başlık"/>
 	<entry key="ContentPicture.Width" value="Resim genişliği (px)"/>
 	<entry key="ContentPicture.WidthDesc" value="İçerik resminin bu genişlikte kopyası oluşturulacaktır"/>
@@ -420,9 +420,9 @@
 	<entry key="ContentTag" value="İçerik Etiketi"/>
 	<entry key="ContentTag.ContentId" value="İçerik"/>
 	<entry key="ContentTag.ContentIdDesc" value="İçerik"/>
-  <entry key="ContentTag.Rank" value="Rank"/>
-  <entry key="ContentTag.RankDesc" value="Bu etiket ve içerik birbiriyle ne kadar ilişkili?"/>
-  <entry key="ContentTag.TagId" value="Etiket"/>
+	<entry key="ContentTag.Rank" value="Rank"/>
+	<entry key="ContentTag.RankDesc" value="Bu etiket ve içerik birbiriyle ne kadar ilişkili?"/>
+	<entry key="ContentTag.TagId" value="Etiket"/>
 	<entry key="ContentTag.TagIdDesc" value="Etiket"/>
 	<entry key="ContentTools" value="İçerik Araçları"/>
 	<entry key="ContentTools.EmailIcon" value="Email ikonu"/>
@@ -581,19 +581,19 @@
 	<entry key="LinkList.ForceToUseTemplateDesc" value="Şu sayfaya linkle ile yaptığınız ayarın bütün linkler için geçerli olmasını sağlar"/>
 	<entry key="LinkList.UseTemplate" value="Şu sayfaya linkle"/>
 	<entry key="LinkList.UseTemplateDesc" value="İçerik listesinden bir başlığa tıklandığında hangi sayfada açılsın?"/>
-  <entry key="LinkList.LinkTarget" value="Link Target"/>
-  <entry key="LinkList.LinkTargetDesc" value="Linke tıklandığında, ilgili sayfa hangi browser penceresinde açılsın? Popup pencerede açmak için _blank giriniz."/>
-  <entry key="LinkListWithBullets" value="İsimsiz Modül"/>
+	<entry key="LinkList.LinkTarget" value="Link Target"/>
+	<entry key="LinkList.LinkTargetDesc" value="Linke tıklandığında, ilgili sayfa hangi browser penceresinde açılsın? Popup pencerede açmak için _blank giriniz."/>
+	<entry key="LinkListWithBullets" value="İsimsiz Modül"/>
 	<entry key="LinkListWithBullets.BulletIcon" value="İkon"/>
 	<entry key="LinkListWithBullets.BulletIconDesc" value="İkon için resim seçiniz."/>
-  <entry key="Log" value="Log"/>
-  <entry key="Log.LogType" value="Log Tipi"/>
-  <entry key="Log.LogTypeDesc" value="Error, Notice, vb."/>
-  <entry key="Log.Category" value="Kaynak"/>
-  <entry key="Log.CategoryDesc" value="Log kaydına neden olan kaynak"/>
-  <entry key="Log.Description" value="Açıklama"/>
-  <entry key="Log.DescriptionDesc" value="Log detayı"/>
-  <entry key="LoginForm" value="Login Formu"/>
+	<entry key="Log" value="Log"/>
+	<entry key="Log.LogType" value="Log Tipi"/>
+	<entry key="Log.LogTypeDesc" value="Error, Notice, vb."/>
+	<entry key="Log.Category" value="Kaynak"/>
+	<entry key="Log.CategoryDesc" value="Log kaydına neden olan kaynak"/>
+	<entry key="Log.Description" value="Açıklama"/>
+	<entry key="Log.DescriptionDesc" value="Log detayı"/>
+	<entry key="LoginForm" value="Login Formu"/>
 	<entry key="LoginForm.Redirect" value="Yönlendir"/>
 	<entry key="LoginForm.RedirectDesc" value="Giriş başarılı olursa hangi sayfa açılsın?"/>
 	<entry key="LoginForm.ShowActivationLink" value="Aktivasyon linki"/>
@@ -643,20 +643,22 @@
 	<entry key="MembershipForm.NewFormHtmlDesc" value=""/>
 	<entry key="Message" value="Mesajlaşma"/>
 	<entry key="Misc" value="Çeşitli"/>
-  <entry key="Module" value="Modül"/>
-  <entry key="Module.BottomHtml" value="Alt HTML"/>
-  <entry key="Module.BottomHtmlDesc" value="Bu modülün altında gösterilecek olan HTML"/>
+	<entry key="Module" value="Modül"/>
+	<entry key="Module.BottomHtml" value="Alt HTML"/>
+	<entry key="Module.BottomHtmlDesc" value="Bu modülün altında gösterilecek olan HTML"/>
 	<entry key="Module.CacheLifeTime" value="Önbellek süresi (dk)"/>
 	<entry key="Module.CacheLifeTimeDesc" value="Bu modül için önbellekte durma süresi kaç dk olsun? (Önbelleğin uzun süreli olması iyidir, ama o süre boyunca modülün hep aynı görünmesine neden olur)"/>
 	<entry key="Module.CSS" value="CSS"/>
 	<entry key="Module.CSSDesc" value="Modülle ilgili style tanımları"/>
-  <entry key="Module.CSSClass" value="CSS Class"/>
-  <entry key="Module.CSSClassDesc" value="Bu modül için CSS class adı"/>
-  <entry key="Module.TopHtml" value="Üst HTML"/>
+	<entry key="Module.CSSClass" value="CSS Class"/>
+	<entry key="Module.CSSClassDesc" value="Bu modül için CSS class adı"/>
+	<entry key="Module.RoleToRead" value="Görme Rolü"/>
+	<entry key="Module.RoleToReadDesc" value="Hangi roldeki kullanıcı bu modülü görebilir? Boş bırakırsanız herkes görebilir."/>
+	<entry key="Module.TopHtml" value="Üst HTML"/>
 	<entry key="Module.TopHtmlDesc" value="Bu modülün üstünde gösterilecek olan HTML"/>
-  <entry key="Module.UseCache" value="Önbellek olsun"/>
-  <entry key="Module.UseCacheDesc" value="Bu modülün ürettiği HTML kodu önbelleğe alınsın mı? Varsayılan konfigürasyondaki ayar anlamına gelir."/>
-  <entry key="ModuleContainer" value="İsimsiz Modül"/>
+	<entry key="Module.UseCache" value="Önbellek olsun"/>
+	<entry key="Module.UseCacheDesc" value="Bu modülün ürettiği HTML kodu önbelleğe alınsın mı? Varsayılan konfigürasyondaki ayar anlamına gelir."/>
+	<entry key="ModuleContainer" value="İsimsiz Modül"/>
 	<entry key="NamedEntity" value="Ad/Açıklama"/>
 	<entry key="NamedEntity.Description" value="Açıklama"/>
 	<entry key="NamedEntity.DescriptionDesc" value=""/>
@@ -664,9 +666,9 @@
 	<entry key="NamedEntity.NameDesc" value=""/>
 	<entry key="NamedEntity.Picture" value="Resim"/>
 	<entry key="NamedEntity.PictureDesc" value="İlgili resim (logo, vesikalık, vb)"/>
-  <entry key="NamedEntity.Picture2" value="Alt. Resim"/>
-  <entry key="NamedEntity.Picture2Desc" value="Alternatif resim"/>
-  <entry key="Navigation" value="Menü"/>
+	<entry key="NamedEntity.Picture2" value="Alt. Resim"/>
+	<entry key="NamedEntity.Picture2Desc" value="Alternatif resim"/>
+	<entry key="Navigation" value="Menü"/>
 	<entry key="Navigation.BulletIcon2" value="Alt. İkon"/>
 	<entry key="Navigation.BulletIcon2Desc" value="Alternatif ikon için resim seçiniz."/>
 	<entry key="Navigation.Dynamic" value="Dinamik"/>
@@ -696,9 +698,9 @@
 	<entry key="NavigationWithChildren.ShowHomeLinkDesc" value="Linklerin en başına &quot;Ana Sayfa&quot; linki eklensin mi?"/>
 	<entry key="NavigationWithChildren.UseSpotTitle" value="Spot başlık kullan"/>
 	<entry key="NavigationWithChildren.UseSpotTitleDesc" value="Başlıklar için spot başlık kullanılsın mı? (Spot başlık normal başlıktan daha kısa başlık girmek için kullanılır)"/>
-  <entry key="Newspaper" value="Gazete"/>
-  <entry key="No" value="Hayır"/>
-  <entry key="No picture. And NoPicture image not specified in configuration." value="Resim yok. Ayrıca olmayan resim görseli de konfigürasyonda belirtilmemiş."/>
+	<entry key="Newspaper" value="Gazete"/>
+	<entry key="No" value="Hayır"/>
+	<entry key="No picture. And NoPicture image not specified in configuration." value="Resim yok. Ayrıca olmayan resim görseli de konfigürasyonda belirtilmemiş."/>
 	<entry key="No record" value="Hiç kayıt yok"/>
 	<entry key="One of the module has no name attribute or it is invalid!" value="Modüllerden birinin name niteleyicisi yok ya da geçersiz!"/>
 	<entry key="One of the module has no serializedData node or it is invalid!" value="Modüllerden birinin serializedData düğümü yok ya da geçersiz!"/>
@@ -810,16 +812,16 @@
 	<entry key="Source" value="Kaynak"/>
 	<entry key="Source of this content has not been defined" value="Bu içeriğin kaynağı belli değil"/>
 	<entry key="SourceDetail" value="Kaynak Detayı"/>
-  <entry key="SQLDataList" value="SQL DataList"/>
-  <entry key="SQLDataList.DataTemplate" value="Şablon"/>
-  <entry key="SQLDataList.DataTemplateDesc" value="Bu şablon her bir kayıt için tekrarlanacaktır. $ içinde parametreleri belirtebilirsiniz. Başlık gelmesi gereken yere $=row.Title$ veya $=Context.Content.Title$ yazmak gibi. Küçük resimler için $=this.ThumbPicture$ kullanınız."/>
-  <entry key="SQLDataList.PictureHeight" value="Resim yüksekliği (px)"/>
-  <entry key="SQLDataList.PictureHeightDesc" value="Resmin bu yükseklikte kopyası oluşturulacaktır"/>
-  <entry key="SQLDataList.PictureWidth" value="Resim genişliği (px)"/>
-  <entry key="SQLDataList.PictureWidthDesc" value="Resmin bu genişlikte kopyası oluşturulacaktır"/>
-  <entry key="SQLDataList.SQL" value="SQL"/>
-  <entry key="SQLDataList.SQLDesc" value="SQL sorgusunu yazınız. $ içinde parametreleri belirtebilirsiniz."/>
-  <entry key="SQLLog" value="SQLLog"/>
+	<entry key="SQLDataList" value="SQL DataList"/>
+	<entry key="SQLDataList.DataTemplate" value="Şablon"/>
+	<entry key="SQLDataList.DataTemplateDesc" value="Bu şablon her bir kayıt için tekrarlanacaktır. $ içinde parametreleri belirtebilirsiniz. Başlık gelmesi gereken yere $=row.Title$ veya $=Context.Content.Title$ yazmak gibi. Küçük resimler için $=this.ThumbPicture$ kullanınız."/>
+	<entry key="SQLDataList.PictureHeight" value="Resim yüksekliği (px)"/>
+	<entry key="SQLDataList.PictureHeightDesc" value="Resmin bu yükseklikte kopyası oluşturulacaktır"/>
+	<entry key="SQLDataList.PictureWidth" value="Resim genişliği (px)"/>
+	<entry key="SQLDataList.PictureWidthDesc" value="Resmin bu genişlikte kopyası oluşturulacaktır"/>
+	<entry key="SQLDataList.SQL" value="SQL"/>
+	<entry key="SQLDataList.SQLDesc" value="SQL sorgusunu yazınız. $ içinde parametreleri belirtebilirsiniz."/>
+	<entry key="SQLLog" value="SQLLog"/>
 	<entry key="StaticHtml" value="Statik HTML"/>
 	<entry key="StaticHtml.InnerHtml" value="HTML Kodu"/>
 	<entry key="StaticHtml.InnerHtml1" value="HTML Kodu 1"/>
@@ -843,25 +845,25 @@
 	<entry key="TableView" value="Tablo"/>
 	<entry key="TableView.Cols" value="Sütun sayısı"/>
 	<entry key="TableView.ColsDesc" value="Sütun sayısı"/>
-  <entry key="TableView.EncloseWithDiv" value="Div içine al"/>
-  <entry key="TableView.EncloseWithDivDesc" value="Her bir maddeyi div elementi içinde göstersin mi?"/>
-  <entry key="TableView.DisplayAsTable" value="Tablo olarak göster"/>
-  <entry key="TableView.DisplayAsTableDesc" value="İçerik tablolanmış (TR, TD) olarak mı, yoksa blok elementlerle mi (DIV) gösterilsin?"/>
-  <entry key="TableView.DivClassName" value="Div CSS class adı"/>
-  <entry key="TableView.DivClassNameDesc" value="Her bir madde div içinde gösterilecekse, CSS class adı ne olsun?"/>
-  <entry key="TabView" value="Tab View"/>
+	<entry key="TableView.EncloseWithDiv" value="Div içine al"/>
+	<entry key="TableView.EncloseWithDivDesc" value="Her bir maddeyi div elementi içinde göstersin mi?"/>
+	<entry key="TableView.DisplayAsTable" value="Tablo olarak göster"/>
+	<entry key="TableView.DisplayAsTableDesc" value="İçerik tablolanmış (TR, TD) olarak mı, yoksa blok elementlerle mi (DIV) gösterilsin?"/>
+	<entry key="TableView.DivClassName" value="Div CSS class adı"/>
+	<entry key="TableView.DivClassNameDesc" value="Her bir madde div içinde gösterilecekse, CSS class adı ne olsun?"/>
+	<entry key="TabView" value="Tab View"/>
 	<entry key="TabView.Tabs" value="Tab sayfaları"/>
 	<entry key="TabView.TabsDesc" value="Tab sayfaları"/>
 	<entry key="Tag" value="Etiket"/>
 	<entry key="Tag.ContentCount" value="İçerik sayısı"/>
 	<entry key="Tag.ContentCountDesc" value="Bu etiketle ilişkilendirilmiş kaç içerik olduğunu gösterir"/>
-  <entry key="Tag.DisplayName" value="Görünen Ad"/>
-  <entry key="Tag.DisplayNameDesc" value="Etiketi listelerken kullanılabilecek bir isim"/>
-  <entry key="Tag.Headline" value="Manşette"/>
-  <entry key="Tag.HeadlineDesc" value="Etiket gündemde mi?"/>
-  <entry key="Tag.Noise" value="Gürültü"/>
-  <entry key="Tag.NoiseDesc" value="Bu gereksiz bir etiket midir?"/>
-  <entry key="TagCloud" value="Etiket Bulutu"/>
+	<entry key="Tag.DisplayName" value="Görünen Ad"/>
+	<entry key="Tag.DisplayNameDesc" value="Etiketi listelerken kullanılabilecek bir isim"/>
+	<entry key="Tag.Headline" value="Manşette"/>
+	<entry key="Tag.HeadlineDesc" value="Etiket gündemde mi?"/>
+	<entry key="Tag.Noise" value="Gürültü"/>
+	<entry key="Tag.NoiseDesc" value="Bu gereksiz bir etiket midir?"/>
+	<entry key="TagCloud" value="Etiket Bulutu"/>
 	<entry key="TagCloud.MaxFontSize" value="Max Font (px)"/>
 	<entry key="TagCloud.MaxFontSizeDesc" value="Pixel cinsinden maksimum font büyüklüğünü giriniz"/>
 	<entry key="TagCloud.MinFontSize" value="Min Font (px)"/>
@@ -886,25 +888,25 @@
 	<entry key="The content source couldn't be found. It may be deleted." value="Belirtilen içerik kaynağı bulunamadı. Silinmiş olabilir mi?"/>
 	<entry key="The field {0} cannot have {1} as value." value="{0} alanı için değer olarak {1} girilemez."/>
 	<entry key="The method {0} not found!" value="{0} isimli metod bulunamadı!"/>
-  <entry key="The method {0} cannot be executed by client!" value="{0} isimli metod istemci tarafından çalıştırılamaz!"/>
-  <entry key="The node /template/code not found or not valid" value="/template/code düğümü bulunamadı ya da geçersiz."/>
+	<entry key="The method {0} cannot be executed by client!" value="{0} isimli metod istemci tarafından çalıştırılamaz!"/>
+	<entry key="The node /template/code not found or not valid" value="/template/code düğümü bulunamadı ya da geçersiz."/>
 	<entry key="The parameter {0} cannot be null." value="{0} parametresi null olamaz."/>
 	<entry key="The table [entityName] coulnd't be found" value="[entityName] isimli tablo bulunamadı."/>
 	<entry key="There is no content to display. Either define filter or click a content link to access this page." value="Gösterilecek içerik yok! Burada içerik görünebilmesi için bir filtre tanımlanmış olmalı ya da bu sayfaya bir içerik linkine tıklayarak gelinmesi gerekir."/>
 	<entry key="There is no content to show its comments" value="Yorum gösterilecek içerik yok! Burada içerik yorumlarının görünebilmesi için bu sayfaya bir içerik linkine tıklayarak gelinmesi gerekir."/>
 	<entry key="There is no content with this criteria." value="Bu kriterlere uygun içerik yok."/>
-  <entry key="There is no language record in Lang table with id {0}" value="Lang tablosunda {0} idli dil kaydı yok"/>
-  <entry key="There is no picture added for this content (gallery)" value="Bu galeri için hiç resim girilmemiş"/>
+	<entry key="There is no language record in Lang table with id {0}" value="Lang tablosunda {0} idli dil kaydı yok"/>
+	<entry key="There is no picture added for this content (gallery)" value="Bu galeri için hiç resim girilmemiş"/>
 	<entry key="There is no picture to show because there is no related content" value="Gösterilecek resim yok! Burada resim görünebilmesi için bu sayfaya bir içerik linkine tıklayarak gelinmesi gerekir."/>
-  <entry key="There is no related picture" value="İlgili resim yok"/>
+	<entry key="There is no related picture" value="İlgili resim yok"/>
 	<entry key="There is no suitable banner to show!" value="Gösterilecek banner reklamı yok!"/>
 	<entry key="There must be a content in this page to access author details" value="Yazar bilgilerine erişmek için bu sayfada bir içerik olmalı"/>
 	<entry key="There must be a content in this page to access source details" value="Kaynak bilgilerine erişmek için bu sayfada bir içerik olmalı"/>
 	<entry key="There mustn't be a RegionRepeater in the region selected" value="Kopyalanmış bölge içinde kopyalanmış bölge olamaz"/>
 	<entry key="There was an error while reading auto content" value="Otoİçerik okunurken hata oluştu."/>
 	<entry key="This kind of form field is not supported: {0}" value="Bu tür form alanları desteklenmiyor: {0}"/>
-  <entry key="This module is only module in its region" value="Bu modül bölgesindeki tek modül"/>
-  <entry key="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;" value="Bu sayfayı &lt;i&gt;{0}&lt;/i&gt; görebilir, &lt;i&gt;{1}&lt;/i&gt; değiştirebilir"/>
+	<entry key="This module is only module in its region" value="Bu modül bölgesindeki tek modül"/>
+	<entry key="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;" value="Bu sayfayı &lt;i&gt;{0}&lt;/i&gt; görebilir, &lt;i&gt;{1}&lt;/i&gt; değiştirebilir"/>
 	<entry key="Total {1} comment, {2} reply" value="Toplam {1} yorum, {2} cevap"/>
 	<entry key="Turkish" value="Türkçe"/>
 	<entry key="User" value="Kullanıcı"/>
@@ -978,15 +980,15 @@
 	<entry key="UserComment.TitleDesc" value="Başlık"/>
 	<entry key="UserComment.Web" value="Web"/>
 	<entry key="UserComment.WebDesc" value="Yorumu yazan kişinin web adresi"/>
-  <entry key="UserPrefferedAuthor" value="Tercih Edilen Yazar"/>
-  <entry key="UserPrefferedAuthor.UserId" value="Kullanıcı"/>
-  <entry key="UserPrefferedAuthor.UserIdDesc" value="Kullanıcı"/>
-  <entry key="UserPrefferedAuthor.AuthorId" value="Yazar"/>
-  <entry key="UserPrefferedAuthor.AuthorIdDesc" value="Kullanıcının tercihlerine eklediği yazar."/>
-  <entry key="UserRelatedEntity" value="İlişkili User"/>
-  <entry key="UserRelatedEntity.UserId" value="İlişkili User"/>
-  <entry key="UserRelatedEntity.UserIdDesc" value=""/>
-  <entry key="View Mode" value="İzleme Modu"/>
+	<entry key="UserPrefferedAuthor" value="Tercih Edilen Yazar"/>
+	<entry key="UserPrefferedAuthor.UserId" value="Kullanıcı"/>
+	<entry key="UserPrefferedAuthor.UserIdDesc" value="Kullanıcı"/>
+	<entry key="UserPrefferedAuthor.AuthorId" value="Yazar"/>
+	<entry key="UserPrefferedAuthor.AuthorIdDesc" value="Kullanıcının tercihlerine eklediği yazar."/>
+	<entry key="UserRelatedEntity" value="İlişkili User"/>
+	<entry key="UserRelatedEntity.UserId" value="İlişkili User"/>
+	<entry key="UserRelatedEntity.UserIdDesc" value=""/>
+	<entry key="View Mode" value="İzleme Modu"/>
 	<entry key="WhereAmI" value="Neredeyim Linkleri"/>
 	<entry key="WhereAmI.SkipFirst" value="Kaç tane atla"/>
 	<entry key="WhereAmI.SkipFirstDesc" value="Listelenecek içeriğin başından kaç tanesi atlanacak?"/>

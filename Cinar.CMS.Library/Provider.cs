@@ -1204,7 +1204,7 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_").Replace(".","_") + ".jpg";
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_");
             string thumbPath = Provider.Server.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))
@@ -1237,7 +1237,7 @@ namespace Cinar.CMS.Library
                                 imgDest = Utility.CropImage(imgDest, x, 0, prefWidth, prefHeight);
                         }
                     }
-                    Utility.SaveJpeg(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
+                    Utility.SaveImage(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
                 }
                 catch (Exception ex)
                 {
@@ -1614,6 +1614,15 @@ namespace Cinar.CMS.Library
         {
             Interpreter engine = new Interpreter(template, new List<string>() {"Cinar.CMS.Library"});
             engine.AddAssembly(typeof(Provider).Assembly);
+            if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
+                foreach (string customAssembly in Utility.SplitWithTrim(Provider.AppSettings["customAssemblies"], ','))
+                {
+                    Assembly assembly = GetAssembly(customAssembly);
+                    if (assembly == null)
+                        continue;
+                    engine.AddAssembly(assembly);
+                }
+
             engine.SetAttribute("Context", new ProviderWrapper());
             engine.SetAttribute("this", forThis);
 
@@ -1859,13 +1868,23 @@ namespace Cinar.CMS.Library
         {
             get
             {
-                return Provider.Request.UserAgent.Contains("bot") || Provider.Request.UserAgent.Contains("Slurp");
+                return Provider.Request.UserAgent == null ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("crawler") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("bot") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("spider") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("larbin") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("search") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("indexer") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("archiver") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("nutch") ||
+                    Provider.Request.UserAgent.ToLowerInvariant().Contains("capture");
             }
         }
         public static string GetRequestFileName()
         {
             return System.IO.Path.GetFileName(Provider.Request.PhysicalPath);
         }
+
         public static Bitmap ScaleImage(Bitmap orjImg, int width, int height)
         {
             if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
@@ -1881,7 +1900,6 @@ namespace Cinar.CMS.Library
             grDest.Dispose();
             return imgDest;
         }
-
         public static void SaveJpeg(string path, Image img, long quality)
         {
             // Encoder parameter for image quality
@@ -1906,6 +1924,26 @@ namespace Cinar.CMS.Library
             grPhoto.DrawImage(orjImg, new Rectangle(0, 0, width, height), x, y, width, height, GraphicsUnit.Pixel);
             grPhoto.Dispose();
             return bmPhoto;
+        }
+        public static void SavePng(string path, Image img)
+        {
+            img.Save(path, ImageFormat.Png);
+        }
+        public static void SaveGif(string path, Image img)
+        {
+            img.Save(path, ImageFormat.Gif);
+        }
+        public static void SaveImage(string path, Image img, long quality)
+        {
+            string lowerPath = path.ToLowerInvariant();
+
+            if (lowerPath.EndsWith(".png"))
+                SavePng(path, img);
+            else if (lowerPath.EndsWith(".gif"))
+                SaveGif(path, img);
+            else
+                SaveJpeg(path, img, quality);
+
         }
 
         private static ImageCodecInfo _jpegCodec;

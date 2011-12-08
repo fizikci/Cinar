@@ -23,6 +23,7 @@ namespace Cinar.CMS.Library.Modules
         private string details;
         private string cssClass = "";
         private bool visible = true;
+        private string roleToRead = "";
         #endregion
 
         public virtual void Initialize()
@@ -88,7 +89,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string topHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
         public string TopHtml
         {
             get { return topHtml; }
@@ -96,7 +97,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private string bottomHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
         public string BottomHtml
         {
             get { return bottomHtml; }
@@ -126,6 +127,12 @@ namespace Cinar.CMS.Library.Modules
             get { return this.visible; }
             set { this.visible = value; }
         }
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        public string RoleToRead
+        {
+            get { return this.roleToRead; }
+            set { this.roleToRead = value; }
+        }
         #endregion
 
         public virtual string GetNameValue()
@@ -150,6 +157,8 @@ namespace Cinar.CMS.Library.Modules
         {
             if (!Provider.DesignMode && !this.Visible)
                 return String.Empty; //***
+            if (!Provider.DesignMode && !Provider.User.IsInRole(this.RoleToRead))
+                return string.Empty; //**
 
             string html = "";
             try
