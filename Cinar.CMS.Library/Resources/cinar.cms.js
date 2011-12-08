@@ -19,7 +19,7 @@ document.observe('dom:loaded', function(){
 				navigationEnabled = false;
 			},
 			onClose: function(){
-				if(!Windows.getFocusedWindow())
+				//if(!Windows.getFocusedWindow())
 					navigationEnabled = true;
 			}
 		});
@@ -268,8 +268,12 @@ entityTypes.each(function(entTp,i){
     if(entTp[2])
         popupMenu.menuItems[11].items[_cntr++] = {text:entTp[1], icon:'external/icons/'+entTp[0]+'.png', data:entTp[0], callback:openEntityListForm};
 });
-popupMenu.onShow = function(){navigationEnabled = false;}
-popupMenu.onHide = function(){navigationEnabled = true;}
+popupMenu.onShow = function(){
+	navigationEnabled = false;
+}
+popupMenu.onHide = function(){
+	navigationEnabled = true;
+}
 popupMenu.setup();
 
 var rightClickLinkElement; // sağ tıklanan linki saklamak içün

@@ -139,9 +139,10 @@ namespace Cinar.CMS.Library.Entities
                 if (String.IsNullOrEmpty(avatarDir))
                     throw new Exception(Provider.GetResource("Avatar folder is not specified in config file."));
                 if (!avatarDir.EndsWith("/")) avatarDir += "/";
-                string avatarFilePath = Provider.Server.MapPath(avatarDir + this.Email + System.IO.Path.GetExtension(postedFile.FileName));
+                string avatarUrlPath = avatarDir + this.Email + System.IO.Path.GetExtension(postedFile.FileName);
+                string avatarFilePath = Provider.Server.MapPath(avatarUrlPath);
                 Provider.Request.Files["Avatar"].SaveAs(avatarFilePath);
-                this.Avatar = System.IO.Path.GetFileName(avatarFilePath);
+                this.Avatar = avatarUrlPath;
             }
         }
 

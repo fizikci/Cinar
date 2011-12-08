@@ -2,22 +2,22 @@
 	<entry key="&quot;image&quot; is essential for the Field Order of the Headline module." value="&quot;image&quot; is essential for the Field Order of the Headline module."/>
 	<entry key="(Reply)" value="(Reply)"/>
 	<entry key="(Write comment)" value="(Write comment)"/>
-  <entry key="[Random] must be less than [How Many Items] - [Skip First]" value="[Random] must be less than [How Many Items] - [Skip First]"/>
-  <entry key="[Skip First] must be less than [How Many Items]" value="[Skip First] must be less than [How Many Items]"/>
-  <entry key="_AFTERSAVEBEHAVIOR_" value="[['NewRecord','New record form'],['ShowSaved','Show saved'],['BackToList','Back to list'],['RedirectToSameUrl','Redirect to same page']]"/>
+	<entry key="[Random] must be less than [How Many Items] - [Skip First]" value="[Random] must be less than [How Many Items] - [Skip First]"/>
+	<entry key="[Skip First] must be less than [How Many Items]" value="[Skip First] must be less than [How Many Items]"/>
+	<entry key="_AFTERSAVEBEHAVIOR_" value="[['NewRecord','New record form'],['ShowSaved','Show saved'],['BackToList','Back to list'],['RedirectToSameUrl','Redirect to same page']]"/>
 	<entry key="_ASCENDING_" value="[[true,'Ascending'],[false,'Descending']]"/>
-  <entry key="_CHARTTYPES_" value="[['lc','Line Chart'],['ls','Sparklines'],['lxy','XY Chart'],['bhs','Horz. Bar Stacked'],['bvs','Vert. Bar Stacked'],['bhg','Horz. Bar Grouped'],['bvg','Vert. Bar Grouped'],['p','Pie'],['p3','Pie 3D'],['pc','Pie (concentric)']]"/>
-  <entry key="_CLASSNAMELIST_" value="[['Content','Content'],['Category','Category'],['News','News'],['Article','Article'],['Gallery','Gallery'],['Video','Video'],['LastMinute','Last Minute']]"/>
-  <entry key="_GROUPBY_" value="[['CategoryId','Category'],['AuthorId','Author'],['SourceId','Source']]"/>
-  <entry key="_LEGENDPOSITIONS_" value="[['l','Left'],['r','Right'],['t','Top'],['b','Bottom']]"/>
-  <entry key="_HORIZONTAL_" value="[[false,'Vertical'],[true,'Horizontal']]"/>
+	<entry key="_CHARTTYPES_" value="[['lc','Line Chart'],['ls','Sparklines'],['lxy','XY Chart'],['bhs','Horz. Bar Stacked'],['bvs','Vert. Bar Stacked'],['bhg','Horz. Bar Grouped'],['bvg','Vert. Bar Grouped'],['p','Pie'],['p3','Pie 3D'],['pc','Pie (concentric)']]"/>
+	<entry key="_CLASSNAMELIST_" value="[['Content','Content'],['Category','Category'],['News','News'],['Article','Article'],['Gallery','Gallery'],['Video','Video'],['LastMinute','Last Minute']]"/>
+	<entry key="_GROUPBY_" value="[['CategoryId','Category'],['AuthorId','Author'],['SourceId','Source']]"/>
+	<entry key="_LEGENDPOSITIONS_" value="[['l','Left'],['r','Right'],['t','Top'],['b','Bottom']]"/>
+	<entry key="_HORIZONTAL_" value="[[false,'Vertical'],[true,'Horizontal']]"/>
 	<entry key="_MODERATED_" value="[[false,'Off'],[true,'On']]"/>
 	<entry key="_ORDERCONTENTSBY_" value="[['Content.Title','Title'],['Content.PublishDate','Publish Date'],['Content.Id','Id'],['Content.ViewCount','View Count'],['Content.CommentCount','Comment Count'],['Content.RecommendCount','Recommendation Count'],['Content.OrderNo','Order No'],['TAuthorId.Name','Author Name'],['TSourceId.Name','Source Name']]"/>
 	<entry key="_SHOWPERCENT_" value="[[false,'As number'],[true,'As percent']]"/>
-  <entry key="_UICONTROLTYPE_" value="[['','Automatic'],['Input','Input'],['Textarea','Text Area'],['Hidden','Hidden']]"/>
-  <entry key="_USECACHE_" value="[['Default','Default'],['Module','Module Based'],['Item','Item Based'],['False','No Cache']]"/>
-  <entry key="_USECACHEFORCONF_" value="[['Module','Module based'],['Item','Item based'],['False','No Cache']]"/>
-  <entry key="_VIEWCONDITION_" value="[['Click','Click Count'],['View','Impression Count'],['DateInterval','Date Interval']]"/>
+	<entry key="_UICONTROLTYPE_" value="[['','Automatic'],['Input','Input'],['Textarea','Text Area'],['Hidden','Hidden']]"/>
+	<entry key="_USECACHE_" value="[['Default','Default'],['Module','Module Based'],['Item','Item Based'],['False','No Cache']]"/>
+	<entry key="_USECACHEFORCONF_" value="[['Module','Module based'],['Item','Item based'],['False','No Cache']]"/>
+	<entry key="_VIEWCONDITION_" value="[['Click','Click Count'],['View','Impression Count'],['DateInterval','Date Interval']]"/>
 	<entry key="_WHICHPICTURE_" value="[['Content.Picture','Content'],['Content.Picture','Content 2'],['TAuthorId.Picture','Author'],['TSourceId.Picture','Source']]"/>
 	<entry key="{0} is not a valid field name. Please use one of the following: {1}" value="{0} is not a valid field name. Please use one of the following: {1}"/>
 	<entry key="{0} type of controls not supported yet." value="{0} type of controls not supported yet."/>
@@ -77,10 +77,10 @@
 	<entry key="BannerAd.ViewConditionDesc" value="According to which rule is this banner ad will be shown?"/>
 	<entry key="BannerAd.ViewCount" value="Impression Count"/>
 	<entry key="BannerAd.ViewCountDesc" value="How many times has this banner been displayed till now?"/>
-  <entry key="BaseEntity" value="Base"/>
-  <entry key="BaseEntity.Id" value="Id"/>
-  <entry key="BaseEntity.IdDesc" value="Id"/>
-  <entry key="BaseEntity.InsertDate" value="Insert Date"/>
+	<entry key="BaseEntity" value="Base"/>
+	<entry key="BaseEntity.Id" value="Id"/>
+	<entry key="BaseEntity.IdDesc" value="Id"/>
+	<entry key="BaseEntity.InsertDate" value="Insert Date"/>
 	<entry key="BaseEntity.InsertDateDesc" value="Insert Date"/>
 	<entry key="BaseEntity.InsertUserId" value="Inserted By"/>
 	<entry key="BaseEntity.InsertUserIdDesc" value="Who inserted this record?"/>
@@ -97,49 +97,49 @@
 	<entry key="Cache problem" value="Cache problem"/>
 	<entry key="Category is null" value="Category is null"/>
 	<entry key="Category or source or author must be specified for RSS" value="Category or source or author must be specified for RSS"/>
-  <entry key="Chart" value="Chart"/>
-  <entry key="Chart.HTMLChart" value="Chart Format"/>
-  <entry key="Chart.HTMLChartDesc" value="Is chart output image or HTML?"/>
-  <entry key="Chart.SQL" value="Data SQL"/>
-  <entry key="Chart.SQLDesc" value="Enter SQL for chart data. You can use SQL parameters like $=this.Params.dateStart$, $=this.Params.intFoo$, $=this.Params.stringBar, etc.. "/>
-  <entry key="Chart.ChartType" value="Chart Type"/>
-  <entry key="Chart.ChartTypeDesc" value="Select a chart type"/>
-  <entry key="Chart.Width" value="Chart Width (px)"/>
-  <entry key="Chart.WidthDesc" value="Width of chart"/>
-  <entry key="Chart.Height" value="Chart Height (px)"/>
-  <entry key="Chart.HeightDesc" value="Height of chart"/>
-  <entry key="Chart.Series" value="Data (series)"/>
-  <entry key="Chart.SeriesDesc" value="If SQL is used, enter column name for the series, otherwise enter series' names seperated with pipe (|)"/>
-  <entry key="Chart.Labels" value="Data (labels)"/>
-  <entry key="Chart.LabelsDesc" value="If SQL is used, enter column name for the labels of x axis, otherwise enter label names seperated with pipe (|)"/>
-  <entry key="Chart.Values" value="Data (values)"/>
-  <entry key="Chart.ValuesDesc" value="If SQL is used, enter column name for the values, otherwise enter values seperated with comma (,) and pipe (|) such as: 10,20,30|23,34,2"/>
-  <entry key="Chart.LabelsFormat" value="Labels Format"/>
-  <entry key="Chart.LabelsFormatDesc" value="Specify format to use for labels. For example for dates you can enter dd MMMM yyyy"/>
-  <entry key="Chart.LegendPosition" value="Legend Position"/>
-  <entry key="Chart.LegendPositionDesc" value="Select a position for the legends"/>
-  <entry key="Chart.Colors" value="Colors"/>
-  <entry key="Chart.ColorsDesc" value="Enter comma seperated color hex values for the chart such as: 660000,006600,000066,336600,660033,003366"/>
-  <entry key="Chart.BgFill" value="Fill (background)"/>
-  <entry key="Chart.BgFillDesc" value="Enter background fill style. Ex: s,EFEFEF (See also: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
-  <entry key="Chart.ChartFill" value="Fill (chart)"/>
-  <entry key="Chart.ChartFillDesc" value="Enter chart fill style. Ex: s,EFEFEF (See also: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
-  <entry key="Chart.Margins" value="Margins"/>
-  <entry key="Chart.MarginsDesc" value="For the margins of the chart use following format: [left margin],[right margin],[top margin],[bottom margin]|[legend width],[legend height]"/>
-  <entry key="Chart.Title" value="Title"/>
-  <entry key="Chart.TitleDesc" value="Title of chart"/>
-  <entry key="Chart.TitleStyle" value="Title Style"/>
-  <entry key="Chart.TitleStyleDesc" value="For the style of title use this format: [title color],[font size]"/>
-  <entry key="Chart.GridLines" value="Grid Lines"/>
-  <entry key="Chart.GridLinesDesc" value="For the gridlines use this format: [x axis step size],[y axis step size],[length of line segment],[length of blank segment]"/>
-  <entry key="Circulation" value="Circulation"/>
-  <entry key="Circulation.WeekStartDate" value="Week Start Date"/>
-  <entry key="Circulation.WeekStartDateDesc" value="Date which the circulation data belongs to."/>
-  <entry key="Circulation.DailyName" value="Daily Name"/>
-  <entry key="Circulation.DailyNameDesc" value="Daily Name"/>
-  <entry key="Circulation.AvgDailySale" value="Avg. Daily Sale"/>
-  <entry key="Circulation.AvgDailySaleDesc" value="Avg. Daily Sale"/>
-  <entry key="Code creation failed due to an error, please debug." value="Code creation failed due to an error, please debug."/>
+	<entry key="Chart" value="Chart"/>
+	<entry key="Chart.HTMLChart" value="Chart Format"/>
+	<entry key="Chart.HTMLChartDesc" value="Is chart output image or HTML?"/>
+	<entry key="Chart.SQL" value="Data SQL"/>
+	<entry key="Chart.SQLDesc" value="Enter SQL for chart data. You can use SQL parameters like $=this.Params.dateStart$, $=this.Params.intFoo$, $=this.Params.stringBar, etc.. "/>
+	<entry key="Chart.ChartType" value="Chart Type"/>
+	<entry key="Chart.ChartTypeDesc" value="Select a chart type"/>
+	<entry key="Chart.Width" value="Chart Width (px)"/>
+	<entry key="Chart.WidthDesc" value="Width of chart"/>
+	<entry key="Chart.Height" value="Chart Height (px)"/>
+	<entry key="Chart.HeightDesc" value="Height of chart"/>
+	<entry key="Chart.Series" value="Data (series)"/>
+	<entry key="Chart.SeriesDesc" value="If SQL is used, enter column name for the series, otherwise enter series' names seperated with pipe (|)"/>
+	<entry key="Chart.Labels" value="Data (labels)"/>
+	<entry key="Chart.LabelsDesc" value="If SQL is used, enter column name for the labels of x axis, otherwise enter label names seperated with pipe (|)"/>
+	<entry key="Chart.Values" value="Data (values)"/>
+	<entry key="Chart.ValuesDesc" value="If SQL is used, enter column name for the values, otherwise enter values seperated with comma (,) and pipe (|) such as: 10,20,30|23,34,2"/>
+	<entry key="Chart.LabelsFormat" value="Labels Format"/>
+	<entry key="Chart.LabelsFormatDesc" value="Specify format to use for labels. For example for dates you can enter dd MMMM yyyy"/>
+	<entry key="Chart.LegendPosition" value="Legend Position"/>
+	<entry key="Chart.LegendPositionDesc" value="Select a position for the legends"/>
+	<entry key="Chart.Colors" value="Colors"/>
+	<entry key="Chart.ColorsDesc" value="Enter comma seperated color hex values for the chart such as: 660000,006600,000066,336600,660033,003366"/>
+	<entry key="Chart.BgFill" value="Fill (background)"/>
+	<entry key="Chart.BgFillDesc" value="Enter background fill style. Ex: s,EFEFEF (See also: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
+	<entry key="Chart.ChartFill" value="Fill (chart)"/>
+	<entry key="Chart.ChartFillDesc" value="Enter chart fill style. Ex: s,EFEFEF (See also: &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#solid_fill&quot; target=&quot;_blank&quot;&gt;Solid fill&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_gradient&quot; target=&quot;_blank&quot;&gt;linear gradient&lt;/a&gt;, &lt;a href=&quot;http://code.google.com/intl/tr/apis/chart/colors.html#linear_stripes&quot; target=&quot;_blank&quot;&gt;linear stripes&lt;/a&gt;)"/>
+	<entry key="Chart.Margins" value="Margins"/>
+	<entry key="Chart.MarginsDesc" value="For the margins of the chart use following format: [left margin],[right margin],[top margin],[bottom margin]|[legend width],[legend height]"/>
+	<entry key="Chart.Title" value="Title"/>
+	<entry key="Chart.TitleDesc" value="Title of chart"/>
+	<entry key="Chart.TitleStyle" value="Title Style"/>
+	<entry key="Chart.TitleStyleDesc" value="For the style of title use this format: [title color],[font size]"/>
+	<entry key="Chart.GridLines" value="Grid Lines"/>
+	<entry key="Chart.GridLinesDesc" value="For the gridlines use this format: [x axis step size],[y axis step size],[length of line segment],[length of blank segment]"/>
+	<entry key="Circulation" value="Circulation"/>
+	<entry key="Circulation.WeekStartDate" value="Week Start Date"/>
+	<entry key="Circulation.WeekStartDateDesc" value="Date which the circulation data belongs to."/>
+	<entry key="Circulation.DailyName" value="Daily Name"/>
+	<entry key="Circulation.DailyNameDesc" value="Daily Name"/>
+	<entry key="Circulation.AvgDailySale" value="Avg. Daily Sale"/>
+	<entry key="Circulation.AvgDailySaleDesc" value="Avg. Daily Sale"/>
+	<entry key="Code creation failed due to an error, please debug." value="Code creation failed due to an error, please debug."/>
 	<entry key="Columns number cannot be zero" value="Columns number cannot be zero"/>
 	<entry key="Comments" value="Comments"/>
 	<entry key="Comments.Active" value="Active"/>
@@ -170,17 +170,17 @@
 	<entry key="Configuration.CacheLifeTimeDesc" value="Default cache lifetime for the modules? (Cache increases performance while causing resource waste. Use with care.)"/>
 	<entry key="Configuration.CategoryPage" value="Category Page"/>
 	<entry key="Configuration.CategoryPageDesc" value="Default page for using category links"/>
-  <entry key="Configuration.ContentPage" value="Content Page"/>
-  <entry key="Configuration.ContentPageDesc" value="Default page for using content links"/>
-  <entry key="Configuration.CountTags" value="Count Tags"/>
-  <entry key="Configuration.CountTagsDesc" value="Counts the number of contents which have a tag. Select no for performance."/>
-  <entry key="Configuration.DefaultDateFormat" value="Default Date Format"/>
+	<entry key="Configuration.ContentPage" value="Content Page"/>
+	<entry key="Configuration.ContentPageDesc" value="Default page for using content links"/>
+	<entry key="Configuration.CountTags" value="Count Tags"/>
+	<entry key="Configuration.CountTagsDesc" value="Counts the number of contents which have a tag. Select no for performance."/>
+	<entry key="Configuration.DefaultDateFormat" value="Default Date Format"/>
 	<entry key="Configuration.DefaultDateFormatDesc" value="What is the default date format for the web site if not specified?"/>
 	<entry key="Configuration.DefaultLang" value="Default Language"/>
 	<entry key="Configuration.DefaultLangDesc" value="Select the mother language of your web site"/>
-  <entry key="Configuration.DefaultStyleSheet" value="Default Style Sheet"/>
-  <entry key="Configuration.DefaultStyleSheetDesc" value="Style sheets for the whole web site"/>
-  <entry key="Configuration.ImageUploadMaxWidth" value="Image Upload Max Width"/>
+	<entry key="Configuration.DefaultStyleSheet" value="Default Style Sheet"/>
+	<entry key="Configuration.DefaultStyleSheetDesc" value="Style sheets for the whole web site"/>
+	<entry key="Configuration.ImageUploadMaxWidth" value="Image Upload Max Width"/>
 	<entry key="Configuration.ImageUploadMaxWidthDesc" value="Uploaded pictures will be scaled to this width if they are bigger than this."/>
 	<entry key="Configuration.LoginPage" value="Login Page"/>
 	<entry key="Configuration.LoginPageDesc" value="The page which contains the login form"/>
@@ -192,17 +192,17 @@
 	<entry key="Configuration.MailUsernameDesc" value="SMTP username. If your SMTP server requires authentication..."/>
 	<entry key="Configuration.MainPage" value="Main Page"/>
 	<entry key="Configuration.MainPageDesc" value=""/>
-  <entry key="Configuration.MembershipFormPage" value="Membership Form Page"/>
-  <entry key="Configuration.MembershipFormPageDesc" value="The page which contains membership form"/>
-  <entry key="Configuration.MembershipProfilePage" value="Membership Profile Page"/>
-  <entry key="Configuration.MembershipProfilePageDesc" value="The page which contains member profile info"/>
-  <entry key="Configuration.MultiLang" value="Multiple Language"/>
+	<entry key="Configuration.MembershipFormPage" value="Membership Form Page"/>
+	<entry key="Configuration.MembershipFormPageDesc" value="The page which contains membership form"/>
+	<entry key="Configuration.MembershipProfilePage" value="Membership Profile Page"/>
+	<entry key="Configuration.MembershipProfilePageDesc" value="The page which contains member profile info"/>
+	<entry key="Configuration.MultiLang" value="Multiple Language"/>
 	<entry key="Configuration.MultiLangDesc" value="Is your web site in multiple language?"/>
 	<entry key="Configuration.NoPicture" value="No Picture"/>
 	<entry key="Configuration.NoPictureDesc" value="Select the picture to be shown where there is no picture. Ex: nopicture.jpg"/>
-  <entry key="Configuration.RememberPasswordFormPage" value="Remember Password Page"/>
-  <entry key="Configuration.RememberPasswordFormPageDesc" value="The page which contains remember password module"/>
-  <entry key="Configuration.SessionTimeout" value="Session Timeout"/>
+	<entry key="Configuration.RememberPasswordFormPage" value="Remember Password Page"/>
+	<entry key="Configuration.RememberPasswordFormPageDesc" value="The page which contains remember password module"/>
+	<entry key="Configuration.SessionTimeout" value="Session Timeout"/>
 	<entry key="Configuration.SessionTimeoutDesc" value="Login lifetime."/>
 	<entry key="Configuration.SiteAddress" value="Site Address"/>
 	<entry key="Configuration.SiteAddressDesc" value="Site address except &quot;http://&quot;"/>
@@ -218,11 +218,11 @@
 	<entry key="Configuration.SiteNameDesc" value=""/>
 	<entry key="Configuration.ThumbQuality" value="Thumbnail Quality"/>
 	<entry key="Configuration.ThumbQualityDesc" value="Which quality would you like your pictures to be? Enter a number between 0 and 100."/>
-  <entry key="Configuration.UseCache" value="Use Cache"/>
-  <entry key="Configuration.UseCacheDesc" value="Is cache mechanism open? (Increases the performance of the web sites with high traffic)"/>
-  <entry key="Configuration.UseHTMLEditor" value="Use HTML Editor"/>
-  <entry key="Configuration.UseHTMLEditorDesc" value="Use a friendly HTML editor for text inputs"/>
-  <entry key="Configuration.UserActivationPage" value="User Activation Page"/>
+	<entry key="Configuration.UseCache" value="Use Cache"/>
+	<entry key="Configuration.UseCacheDesc" value="Is cache mechanism open? (Increases the performance of the web sites with high traffic)"/>
+	<entry key="Configuration.UseHTMLEditor" value="Use HTML Editor"/>
+	<entry key="Configuration.UseHTMLEditorDesc" value="Use a friendly HTML editor for text inputs"/>
+	<entry key="Configuration.UserActivationPage" value="User Activation Page"/>
 	<entry key="Configuration.UserActivationPageDesc" value="The page which contains user activation module"/>
 	<entry key="ContactUs" value="Contact Us"/>
 	<entry key="ContactUs.Email" value="Email"/>
@@ -248,11 +248,11 @@
 	<entry key="Content.CommentCountDesc" value="How many comments added to this content? Automaticly increases, do not change."/>
 	<entry key="Content.ContentSourceId" value="Content Source"/>
 	<entry key="Content.ContentSourceIdDesc" value="If this content fetched automaticly from a content source, this field will have a value. Please do not change."/>
-  <entry key="Content.Description" value="Description"/>
-  <entry key="Content.DescriptionDesc" value=""/>
-  <entry key="Content.Keywords" value="Keywords"/>
-  <entry key="Content.KeywordsDesc" value="Keywords meta tag value of the page when this content is displayed. (for search engines)"/>
-  <entry key="Content.Hierarchy" value="Hierarchy"/>
+	<entry key="Content.Description" value="Description"/>
+	<entry key="Content.DescriptionDesc" value=""/>
+	<entry key="Content.Keywords" value="Keywords"/>
+	<entry key="Content.KeywordsDesc" value="Keywords meta tag value of the page when this content is displayed. (for search engines)"/>
+	<entry key="Content.Hierarchy" value="Hierarchy"/>
 	<entry key="Content.HierarchyDesc" value=""/>
 	<entry key="Content.IsManset" value="Is Headline"/>
 	<entry key="Content.IsMansetDesc" value="Does this content have value to be headline?"/>
@@ -278,11 +278,11 @@
 	<entry key="Content.SourceLinkDesc" value="If this content fetched automaticly from a content source, this field will have a value. Please do not change."/>
 	<entry key="Content.SpotTitle" value="Spot Title"/>
 	<entry key="Content.SpotTitleDesc" value="Headline title"/>
-  <entry key="Content.TagRanks" value="Tag Ranks"/>
-  <entry key="Content.TagRanksDesc" value="Tag relation ranks"/>
-  <entry key="Content.Tags" value="Tags"/>
-  <entry key="Content.TagsDesc" value="May be used for searching and filtering the contents"/>
-  <entry key="Content.Title" value="Title"/>
+	<entry key="Content.TagRanks" value="Tag Ranks"/>
+	<entry key="Content.TagRanksDesc" value="Tag relation ranks"/>
+	<entry key="Content.Tags" value="Tags"/>
+	<entry key="Content.TagsDesc" value="May be used for searching and filtering the contents"/>
+	<entry key="Content.Title" value="Title"/>
 	<entry key="Content.TitleDesc" value=""/>
 	<entry key="Content.ViewCount" value="View Count"/>
 	<entry key="Content.ViewCountDesc" value="How many times was this content read? Automaticly increases, do not change."/>
@@ -326,9 +326,9 @@
 	<entry key="ContentList.BulletIconDesc" value="Select a picture to put on the beginning of the titles."/>
 	<entry key="ContentList.CreateLink" value="Create Link"/>
 	<entry key="ContentList.CreateLinkDesc" value="Create links? If not list items wont be clickable."/>
-  <entry key="ContentList.LinkTarget" value="Link Target"/>
-  <entry key="ContentList.LinkTargetDesc" value="When a link clicked, in which browser window the page will be opened? To open in another popup window, write _blank."/>
-  <entry key="ContentList.DateFormat" value="Date Format"/>
+	<entry key="ContentList.LinkTarget" value="Link Target"/>
+	<entry key="ContentList.LinkTargetDesc" value="When a link clicked, in which browser window the page will be opened? To open in another popup window, write _blank."/>
+	<entry key="ContentList.DateFormat" value="Date Format"/>
 	<entry key="ContentList.DateFormatDesc" value="How to format date? Try Y."/>
 	<entry key="ContentList.DescriptionLength" value="Description Length"/>
 	<entry key="ContentList.DescriptionLengthDesc" value="How many letters of the descriptions will be displayed? Set -1 to show all."/>
@@ -338,10 +338,10 @@
 	<entry key="ContentList.ForceToUseTemplateDesc" value="When a content is defined with a page, it links to that page. By this field you can force to use &quot;Link To Page&quot;."/>
 	<entry key="ContentList.HowManyItems" value="How Many Items"/>
 	<entry key="ContentList.HowManyItemsDesc" value="How many contents should be displayed max?"/>
-  <entry key="ContentList.MoreLink" value="More Link"/>
-  <entry key="ContentList.MoreLinkDesc" value="Text to be used for 'More...' link"/>
-  <entry key="ContentList.OrderBy" value="Order By"/>
-  <entry key="ContentList.OrderByDesc" value="By which field will the contents be ordered?"/>
+	<entry key="ContentList.MoreLink" value="More Link"/>
+	<entry key="ContentList.MoreLinkDesc" value="Text to be used for 'More...' link"/>
+	<entry key="ContentList.OrderBy" value="Order By"/>
+	<entry key="ContentList.OrderByDesc" value="By which field will the contents be ordered?"/>
 	<entry key="ContentList.PictureHeight" value="Picture Height"/>
 	<entry key="ContentList.PictureHeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
 	<entry key="ContentList.PictureWidth" value="Picture Width"/>
@@ -375,11 +375,11 @@
 	<entry key="ContentPicture.DescriptionDesc" value=""/>
 	<entry key="ContentPicture.FileName" value="Picture File"/>
 	<entry key="ContentPicture.FileNameDesc" value="Select the picture"/>
-  <entry key="ContentPicture.Height" value="Height"/>
-  <entry key="ContentPicture.HeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
-  <entry key="ContentPicture.LikeIt" value="Likes"/>
-  <entry key="ContentPicture.LikeItDesc" value="How many people liked this picture"/>
-  <entry key="ContentPicture.Title" value="Title"/>
+	<entry key="ContentPicture.Height" value="Height"/>
+	<entry key="ContentPicture.HeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
+	<entry key="ContentPicture.LikeIt" value="Likes"/>
+	<entry key="ContentPicture.LikeItDesc" value="How many people liked this picture"/>
+	<entry key="ContentPicture.Title" value="Title"/>
 	<entry key="ContentPicture.TitleDesc" value=""/>
 	<entry key="ContentPicture.Width" value="Width"/>
 	<entry key="ContentPicture.WidthDesc" value="Picture will be scaled to this width (enter zero for autoscale)"/>
@@ -420,11 +420,11 @@
 	<entry key="ContentTag" value="Content Tag"/>
 	<entry key="ContentTag.ContentId" value="Content"/>
 	<entry key="ContentTag.ContentIdDesc" value="Content"/>
-  <entry key="ContentTag.Rank" value="Rank"/>
-  <entry key="ContentTag.RankDesc" value="The relation rank between this content and this tag."/>
-  <entry key="ContentTag.TagId" value="Tag"/>
-  <entry key="ContentTag.TagIdDesc" value="Tag"/>
-  <entry key="ContentTools" value="Content Tools"/>
+	<entry key="ContentTag.Rank" value="Rank"/>
+	<entry key="ContentTag.RankDesc" value="The relation rank between this content and this tag."/>
+	<entry key="ContentTag.TagId" value="Tag"/>
+	<entry key="ContentTag.TagIdDesc" value="Tag"/>
+	<entry key="ContentTools" value="Content Tools"/>
 	<entry key="ContentTools.EmailIcon" value="Email Icon"/>
 	<entry key="ContentTools.EmailIconDesc" value=""/>
 	<entry key="ContentTools.PrintPage" value="Print Page"/>
@@ -581,20 +581,20 @@
 	<entry key="LinkList.ForceToUseTemplateDesc" value="When a content is defined with a page, it links to that page. By this field you can force to use &quot;Link To Page&quot;."/>
 	<entry key="LinkList.UseTemplate" value="Link to Page"/>
 	<entry key="LinkList.UseTemplateDesc" value="When a link clicked, which page will be opened?"/>
-  <entry key="LinkList.LinkTarget" value="Link Target"/>
-  <entry key="LinkList.LinkTargetDesc" value="When a link clicked, in which browser window the page will be opened? To open in another popup window, write _blank."/>
-  <entry key="LinkListWithBullets" value="Link List With Bullets"/>
+	<entry key="LinkList.LinkTarget" value="Link Target"/>
+	<entry key="LinkList.LinkTargetDesc" value="When a link clicked, in which browser window the page will be opened? To open in another popup window, write _blank."/>
+	<entry key="LinkListWithBullets" value="Link List With Bullets"/>
 	<entry key="LinkListWithBullets.BulletIcon" value="Bullet Icon"/>
 	<entry key="LinkListWithBullets.BulletIconDesc" value="Select a picture to put on the beginning of the titles."/>
-  <entry key="Log" value="Log"/>
-  <entry key="Log.LogType" value="Log Type"/>
-  <entry key="Log.LogTypeDesc" value="Error, Notice, etc.."/>
-  <entry key="Log.Category" value="Source"/>
-  <entry key="Log.CategoryDesc" value="Source of log"/>
-  <entry key="Log.Description" value="Description"/>
-  <entry key="Log.DescriptionDesc" value="Log detail"/>
-  <entry key="LoginForm" value="Login Form"/>
-  <entry key="LoginForm.Redirect" value="Redirect"/>
+	<entry key="Log" value="Log"/>
+	<entry key="Log.LogType" value="Log Type"/>
+	<entry key="Log.LogTypeDesc" value="Error, Notice, etc.."/>
+	<entry key="Log.Category" value="Source"/>
+	<entry key="Log.CategoryDesc" value="Source of log"/>
+	<entry key="Log.Description" value="Description"/>
+	<entry key="Log.DescriptionDesc" value="Log detail"/>
+	<entry key="LoginForm" value="Login Form"/>
+	<entry key="LoginForm.Redirect" value="Redirect"/>
 	<entry key="LoginForm.RedirectDesc" value="Which page is displayed when the login is successful?"/>
 	<entry key="LoginForm.ShowActivationLink" value="Show Activation Link"/>
 	<entry key="LoginForm.ShowActivationLinkDesc" value="Show Activation Link"/>
@@ -647,25 +647,27 @@
 	<entry key="Module.BottomHtmlDesc" value="HTML code to be displayed after this module HTML"/>
 	<entry key="Module.CacheLifeTime" value="Cache Lifetime (min)"/>
 	<entry key="Module.CacheLifeTimeDesc" value="Cache lifetime for this module. (Cache increases performance while causing resource waste. Use with care.)"/>
-  <entry key="Module.CSS" value="CSS"/>
-  <entry key="Module.CSSDesc" value="Style definitions for this module"/>
-  <entry key="Module.CSSClass" value="CSS Class"/>
-  <entry key="Module.CSSClassDesc" value="CSS class name for this module"/>
-  <entry key="Module.TopHtml" value="Top HTML"/>
+	<entry key="Module.CSS" value="CSS"/>
+	<entry key="Module.CSSDesc" value="Style definitions for this module"/>
+	<entry key="Module.CSSClass" value="CSS Class"/>
+	<entry key="Module.CSSClassDesc" value="CSS class name for this module"/>
+	<entry key="Module.RoleToRead" value="Görme Rolü"/>
+	<entry key="Module.RoleToReadDesc" value="Hangi roldeki kullanıcı bu modülü görebilir? Boş bırakırsanız herkes görebilir."/>
+	<entry key="Module.TopHtml" value="Top HTML"/>
 	<entry key="Module.TopHtmlDesc" value="HTML code to be displayed before this module HTML"/>
-  <entry key="Module.UseCache" value="Use Cache"/>
-  <entry key="Module.UseCacheDesc" value="Cache the result of this module. Default means the setting in configuration."/>
-  <entry key="ModuleContainer" value="Module Container"/>
+	<entry key="Module.UseCache" value="Use Cache"/>
+	<entry key="Module.UseCacheDesc" value="Cache the result of this module. Default means the setting in configuration."/>
+	<entry key="ModuleContainer" value="Module Container"/>
 	<entry key="NamedEntity" value="Named Entity"/>
 	<entry key="NamedEntity.Description" value="Description"/>
 	<entry key="NamedEntity.DescriptionDesc" value=""/>
 	<entry key="NamedEntity.Name" value="Name"/>
 	<entry key="NamedEntity.NameDesc" value=""/>
-  <entry key="NamedEntity.Picture" value="Picture"/>
-  <entry key="NamedEntity.PictureDesc" value="Related picture."/>
-  <entry key="NamedEntity.Picture2" value="Alt. Picture"/>
-  <entry key="NamedEntity.Picture2Desc" value="Alternative picture."/>
-  <entry key="Navigation" value="Navigation"/>
+	<entry key="NamedEntity.Picture" value="Picture"/>
+	<entry key="NamedEntity.PictureDesc" value="Related picture."/>
+	<entry key="NamedEntity.Picture2" value="Alt. Picture"/>
+	<entry key="NamedEntity.Picture2Desc" value="Alternative picture."/>
+	<entry key="Navigation" value="Navigation"/>
 	<entry key="Navigation.BulletIcon2" value="Bullet Icon 2"/>
 	<entry key="Navigation.BulletIcon2Desc" value="Select alternating icon."/>
 	<entry key="Navigation.Dynamic" value="Dynamic"/>
@@ -695,9 +697,9 @@
 	<entry key="NavigationWithChildren.ShowHomeLinkDesc" value="Should the home page link be displayed first?"/>
 	<entry key="NavigationWithChildren.UseSpotTitle" value="Use Spot Title"/>
 	<entry key="NavigationWithChildren.UseSpotTitleDesc" value="Which title will be displayed? Spot title or normal title? (Spot title can be used to enter shorter titles than normal titles)"/>
-  <entry key="Newspaper" value="Newspaper"/>
-  <entry key="No" value="No"/>
-  <entry key="No picture. And NoPicture image not specified in configuration." value="No picture. And NoPicture image not specified in configuration."/>
+	<entry key="Newspaper" value="Newspaper"/>
+	<entry key="No" value="No"/>
+	<entry key="No picture. And NoPicture image not specified in configuration." value="No picture. And NoPicture image not specified in configuration."/>
 	<entry key="No record" value="No record"/>
 	<entry key="One of the module has no name attribute or it is invalid!" value="One of the module has no name attribute or it is invalid!"/>
 	<entry key="One of the module has no serializedData node or it is invalid!" value="One of the module has no serializedData node or it is invalid!"/>
@@ -785,8 +787,8 @@
 	<entry key="reply" value="reply"/>
 	<entry key="Required field: Name" value="Required field: Name"/>
 	<entry key="Required field: Title" value="Required field: Title"/>
-  <entry key="Root category cannot be updated!" value="Root category cannot be updated!"/>
-  <entry key="Row and column numbers must be between 1 and 30" value="Row and column numbers must be between 1 and 30"/>
+	<entry key="Root category cannot be updated!" value="Root category cannot be updated!"/>
+	<entry key="Row and column numbers must be between 1 and 30" value="Row and column numbers must be between 1 and 30"/>
 	<entry key="Same region of same page cannot be copied" value="Same region of same page cannot be copied"/>
 	<entry key="Search" value="Search"/>
 	<entry key="SearchForm" value="Search Form"/>
@@ -809,16 +811,16 @@
 	<entry key="Source" value="Source"/>
 	<entry key="Source of this content has not been defined" value="Source of this content has not been defined"/>
 	<entry key="SourceDetail" value="Source Detail"/>
-  <entry key="SQLDataList" value="SQL Data List"/>
-  <entry key="SQLDataList.DataTemplate" value="Data Template"/>
-  <entry key="SQLDataList.DataTemplateDesc" value="This template will be repeated for each record of this Data List. You can use parameters like $=row.Title$ or $=Context.Content.Title$ in the template. Use $=this.ThumbPicture$ for the thumb image."/>
-  <entry key="SQLDataList.PictureHeight" value="Picture Height (px)"/>
-  <entry key="SQLDataList.PictureHeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
-  <entry key="SQLDataList.PictureWidth" value="Picture Width (px)"/>
-  <entry key="SQLDataList.PictureWidthDesc" value="Picture will be scaled to this width (enter zero for autoscale)"/>
-  <entry key="SQLDataList.SQL" value="SQL"/>
-  <entry key="SQLDataList.SQLDesc" value="Write the SQL by using templates."/>
-  <entry key="SQLLog" value="SQL Log"/>
+	<entry key="SQLDataList" value="SQL Data List"/>
+	<entry key="SQLDataList.DataTemplate" value="Data Template"/>
+	<entry key="SQLDataList.DataTemplateDesc" value="This template will be repeated for each record of this Data List. You can use parameters like $=row.Title$ or $=Context.Content.Title$ in the template. Use $=this.ThumbPicture$ for the thumb image."/>
+	<entry key="SQLDataList.PictureHeight" value="Picture Height (px)"/>
+	<entry key="SQLDataList.PictureHeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
+	<entry key="SQLDataList.PictureWidth" value="Picture Width (px)"/>
+	<entry key="SQLDataList.PictureWidthDesc" value="Picture will be scaled to this width (enter zero for autoscale)"/>
+	<entry key="SQLDataList.SQL" value="SQL"/>
+	<entry key="SQLDataList.SQLDesc" value="Write the SQL by using templates."/>
+	<entry key="SQLLog" value="SQL Log"/>
 	<entry key="StaticHtml" value="Static Html"/>
 	<entry key="StaticHtml.InnerHtml" value="Inner Html"/>
 	<entry key="StaticHtml.InnerHtml1" value="Inner HTML 1"/>
@@ -844,23 +846,23 @@
 	<entry key="TableView.ColsDesc" value=""/>
 	<entry key="TableView.EncloseWithDiv" value="Enclose With Div"/>
 	<entry key="TableView.EncloseWithDivDesc" value="Put each item into a DIV element."/>
-  <entry key="TableView.DisplayAsTable" value="Display As Table"/>
-  <entry key="TableView.DisplayAsTableDesc" value="Will the items be displayed as table (TR, TD), or block elements (DIV)?"/>
-  <entry key="TableView.DivClassName" value="Div Class Name"/>
-  <entry key="TableView.DivClassNameDesc" value="If each item is put into a DIV element, what is the CSS class name for the divs?"/>
-  <entry key="TabView" value="Tab View"/>
+	<entry key="TableView.DisplayAsTable" value="Display As Table"/>
+	<entry key="TableView.DisplayAsTableDesc" value="Will the items be displayed as table (TR, TD), or block elements (DIV)?"/>
+	<entry key="TableView.DivClassName" value="Div Class Name"/>
+	<entry key="TableView.DivClassNameDesc" value="If each item is put into a DIV element, what is the CSS class name for the divs?"/>
+	<entry key="TabView" value="Tab View"/>
 	<entry key="TabView.Tabs" value="Tabs"/>
 	<entry key="TabView.TabsDesc" value="Enter the tab page titles seperating with comma"/>
 	<entry key="Tag" value="Tag"/>
-  <entry key="Tag.ContentCount" value="Content Count"/>
-  <entry key="Tag.ContentCountDesc" value="Shows how many contents there are related with this tag."/>
-  <entry key="Tag.DisplayName" value="Display Name"/>
-  <entry key="Tag.DisplayNameDesc" value="A name for the tag for displaying purpose."/>
-  <entry key="Tag.Headline" value="Headline"/>
-  <entry key="Tag.HeadlineDesc" value="Is tag on headlines?"/>
-  <entry key="Tag.Noise" value="Noise"/>
-  <entry key="Tag.NoiseDesc" value="Is this an unneccessary tag?"/>
-  <entry key="TagCloud" value="Tag Cloud"/>
+	<entry key="Tag.ContentCount" value="Content Count"/>
+	<entry key="Tag.ContentCountDesc" value="Shows how many contents there are related with this tag."/>
+	<entry key="Tag.DisplayName" value="Display Name"/>
+	<entry key="Tag.DisplayNameDesc" value="A name for the tag for displaying purpose."/>
+	<entry key="Tag.Headline" value="Headline"/>
+	<entry key="Tag.HeadlineDesc" value="Is tag on headlines?"/>
+	<entry key="Tag.Noise" value="Noise"/>
+	<entry key="Tag.NoiseDesc" value="Is this an unneccessary tag?"/>
+	<entry key="TagCloud" value="Tag Cloud"/>
 	<entry key="TagCloud.MaxFontSize" value="Max Font (px)"/>
 	<entry key="TagCloud.MaxFontSizeDesc" value="Enter the maximum font size as pixel"/>
 	<entry key="TagCloud.MinFontSize" value="Min Font (px)"/>
@@ -885,25 +887,25 @@
 	<entry key="The content source couldn't be found. It may be deleted." value="The content source couldn't be found. It may be deleted."/>
 	<entry key="The field {0} cannot have {1} as value." value="The field {0} cannot have {1} as value."/>
 	<entry key="The method {0} not found!" value="The method {0} not found!"/>
-  <entry key="The method {0} cannot be executed by client!" value="The method {0} cannot be executed by client!"/>
-  <entry key="The node /template/code not found or not valid" value="The node /template/code not found or not valid"/>
+	<entry key="The method {0} cannot be executed by client!" value="The method {0} cannot be executed by client!"/>
+	<entry key="The node /template/code not found or not valid" value="The node /template/code not found or not valid"/>
 	<entry key="The parameter {0} cannot be null." value="The parameter {0} cannot be null."/>
 	<entry key="The table [entityName] coulnd't be found" value="The table [entityName] coulnd't be found"/>
 	<entry key="There is no content to display. Either define filter or click a content link to access this page." value="There is no content to display. Either define filter or click a content link to access this page."/>
 	<entry key="There is no content to show its comments" value="There is no content to show its comments"/>
 	<entry key="There is no content with this criteria." value="There is no content with this criteria."/>
-  <entry key="There is no language record in Lang table with id {0}" value="There is no language record in Lang table with id {0}"/>
-  <entry key="There is no picture added for this content (gallery)" value="There is no picture added for this content (gallery)"/>
+	<entry key="There is no language record in Lang table with id {0}" value="There is no language record in Lang table with id {0}"/>
+	<entry key="There is no picture added for this content (gallery)" value="There is no picture added for this content (gallery)"/>
 	<entry key="There is no picture to show because there is no related content" value="There is no picture to show because there is no related content"/>
-  <entry key="There is no related picture" value="There is no related picture"/>
-  <entry key="There is no suitable banner to show!" value="There is no suitable banner to show!"/>
+	<entry key="There is no related picture" value="There is no related picture"/>
+	<entry key="There is no suitable banner to show!" value="There is no suitable banner to show!"/>
 	<entry key="There must be a content in this page to access author details" value="There must be a content in this page to access author details"/>
 	<entry key="There must be a content in this page to access source details" value="There must be a content in this page to access source details"/>
 	<entry key="There mustn't be a RegionRepeater in the region selected" value="There mustn't be a RegionRepeater in the region selected"/>
 	<entry key="There was an error while reading auto content" value="There was an error while reading auto content"/>
 	<entry key="This kind of form field is not supported: {0}" value="This kind of form field is not supported: {0}"/>
-  <entry key="This module is only module in its region" value="This module is only module in its region"/>
-  <entry key="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;" value="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;"/>
+	<entry key="This module is only module in its region" value="This module is only module in its region"/>
+	<entry key="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;" value="This page can be seen by &lt;i&gt;{0}&lt;/i&gt; and modified by &lt;i&gt;{1}&lt;/i&gt;"/>
 	<entry key="Total {1} comment, {2} reply" value="Total {1} comment, {2} reply"/>
 	<entry key="Turkish" value="Türkçe"/>
 	<entry key="User" value="User"/>
@@ -947,9 +949,9 @@
 	<entry key="User.PhoneHomeDesc" value=""/>
 	<entry key="User.PhoneWork" value="Work Phone"/>
 	<entry key="User.PhoneWorkDesc" value=""/>
-  <entry key="User.RedirectCount" value="Redirect Count"/>
-  <entry key="User.RedirectCountDesc" value="How many times we have send visitor to this user web site."/>
-  <entry key="User.Roles" value="Roles"/>
+	<entry key="User.RedirectCount" value="Redirect Count"/>
+	<entry key="User.RedirectCountDesc" value="How many times we have send visitor to this user web site."/>
+	<entry key="User.Roles" value="Roles"/>
 	<entry key="User.RolesDesc" value="Enter the roles seperated with comma. Exmp: Designer, Editor, User"/>
 	<entry key="User.Surname" value="Surname"/>
 	<entry key="User.SurnameDesc" value=""/>
@@ -977,21 +979,21 @@
 	<entry key="UserComment.TitleDesc" value="Title of the comment"/>
 	<entry key="UserComment.Web" value="Web"/>
 	<entry key="UserComment.WebDesc" value="Web address of the comment writer"/>
-  <entry key="UserPrefferedAuthor" value="Preffered Author"/>
-  <entry key="UserPrefferedAuthor.UserId" value="User"/>
-  <entry key="UserPrefferedAuthor.UserIdDesc" value="Related User"/>
-  <entry key="UserPrefferedAuthor.AuthorId" value="Author"/>
-  <entry key="UserPrefferedAuthor.AuthorIdDesc" value="The author that the user like."/>
-  <entry key="UserRelatedEntity" value="User Relation"/>
-  <entry key="UserRelatedEntity.UserId" value="User"/>
-  <entry key="UserRelatedEntity.UserIdDesc" value="Related User"/>
-  <entry key="View Mode" value="View Mode"/>
+	<entry key="UserPrefferedAuthor" value="Preffered Author"/>
+	<entry key="UserPrefferedAuthor.UserId" value="User"/>
+	<entry key="UserPrefferedAuthor.UserIdDesc" value="Related User"/>
+	<entry key="UserPrefferedAuthor.AuthorId" value="Author"/>
+	<entry key="UserPrefferedAuthor.AuthorIdDesc" value="The author that the user like."/>
+	<entry key="UserRelatedEntity" value="User Relation"/>
+	<entry key="UserRelatedEntity.UserId" value="User"/>
+	<entry key="UserRelatedEntity.UserIdDesc" value="Related User"/>
+	<entry key="View Mode" value="View Mode"/>
 	<entry key="WhereAmI" value="Bread Crump"/>
 	<entry key="WhereAmI.SkipFirst" value="Skip First"/>
 	<entry key="WhereAmI.SkipFirstDesc" value="How many items to skip?"/>
 	<entry key="Yazar cannot be used as a parameter because there is no active content" value="Yazar cannot be used as a parameter because there is no active content"/>
 	<entry key="Yes" value="Yes"/>
 	<entry key="You are not authorized to carry out this process!" value="You are not authorized to carry out this process!"/>
-  <entry key="You may use only letters, space and comma for the field Tags" value="You may use only letters, space and comma for the field Tags"/>
-  <entry key="You should enter title" value="You should enter title"/>
+	<entry key="You may use only letters, space and comma for the field Tags" value="You may use only letters, space and comma for the field Tags"/>
+	<entry key="You should enter title" value="You should enter title"/>
 </resources>

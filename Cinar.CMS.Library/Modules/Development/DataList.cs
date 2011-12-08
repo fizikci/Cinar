@@ -98,7 +98,7 @@ namespace Cinar.CMS.Library.Modules
             string where = filterParser.GetWhere();
 
             string sql = "";
-            if(string.IsNullOrWhiteSpace(this.SQL))
+            if (string.IsNullOrWhiteSpace(this.SQL))
                 sql = String.Format(@"
                     select
                         {0}
@@ -118,9 +118,16 @@ namespace Cinar.CMS.Library.Modules
                                      HowManyItems,
                                      pageNo * HowManyItems);
             else
+            {
+                Interpreter engine = Provider.GetInterpreter(SQL, this);
+                engine.Parse();
+                engine.Execute();
+                SQL = engine.Output;
+
                 sql = String.Format(SQL + @" limit {0} offset {1}",
-                                     HowManyItems,
-                                     pageNo * HowManyItems);
+                                    HowManyItems,
+                                    pageNo*HowManyItems);
+            }
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
@@ -250,6 +257,8 @@ namespace Cinar.CMS.Library.Modules
                     return Provider.GetThumbPath(dr["Picture"].ToString(), this.PictureWidth, this.PictureHeight, this.CropPicture);
                 else if (dr.Table.Columns.Contains("FileName"))
                     return Provider.GetThumbPath(dr["FileName"].ToString(), this.PictureWidth, this.PictureHeight, this.CropPicture);
+                else if (dr.Table.Columns.Contains("Avatar"))
+                    return Provider.GetThumbPath(dr["Avatar"].ToString(), this.PictureWidth, this.PictureHeight, this.CropPicture);
                 else
                     return "Could not find a picture field - Try something else";
             }

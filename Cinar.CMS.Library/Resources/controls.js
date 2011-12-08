@@ -230,9 +230,9 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<img src="/external/icons/editor_underline.png"/>'+
 									'<img src="/external/icons/picture.png"/>'+
 									'<img src="/external/icons/eye.png" style="margin-left:40px"/>'+
-									'<div style="float:right"><input type="checkbox" checked="true" class="wrapCheck"/> Wrap <input type="checkbox" checked="true" class="nl2br"/> nl2br</div>'+
+									'<div style="float:right"><input type="checkbox" class="wrapCheck"/> Wrap <input type="checkbox" class="nl2br"/> nl2br</div>'+
 								'</div>'+
-								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);"></textarea>'+
+								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea>'+
 								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
 								
         var ta = $(this.editorId + 'ta');
@@ -2015,6 +2015,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         if(x<0) x=0; if(y<0) y=0;
         menu.setStyle({left: x+'px', top:y+'px'});
         this.onShow();
+		$('smMenuContainer').show();
         menu.show();
 
         var menus = this.menuItems;
