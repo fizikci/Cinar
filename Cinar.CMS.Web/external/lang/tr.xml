@@ -18,7 +18,7 @@
 	<entry key="_USECACHE_" value="[['Default','Varsayılan'],['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
 	<entry key="_USECACHEFORCONF_" value="[['Module','Modül bazında'],['Item','Item bazında'],['False','Önbellek olmasın']]"/>
 	<entry key="_VIEWCONDITION_" value="[['Click','Tıklama Sayısı'],['View','Gösterim Sayısı'],['DateInterval','Tarih Aralığı']]"/>
-	<entry key="_WHICHPICTURE_" value="[['Content.Picture','İçerik'],['Content.Picture2','İçerik 2'],['TAuthorId.Picture','Yazar'],['TSourceId.Picture','Kaynak']]"/>
+	<entry key="_WHICHPICTURE_" value="[['Content.Picture','İçerik'],['Content.Picture2','İçerik 2'],['TCategoryId.Picture','Kategori'],['TAuthorId.Picture','Yazar'],['TSourceId.Picture','Kaynak']]"/>
 	<entry key="{0} is not a valid field name. Please use one of the following: {1}" value="{0} geçerli bir alan ismi değil. Lütfen bunlardan birini kullanınız: {1}"/>
 	<entry key="{0} type of controls not supported yet." value="{0} isminde bir control henüz desteklenmiyor."/>
 	<entry key="A control type cannot be acquired from the field type!" value="Field tipinden control tipi elde edilemedi!"/>

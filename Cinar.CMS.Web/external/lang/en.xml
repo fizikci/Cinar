@@ -18,7 +18,7 @@
 	<entry key="_USECACHE_" value="[['Default','Default'],['Module','Module Based'],['Item','Item Based'],['False','No Cache']]"/>
 	<entry key="_USECACHEFORCONF_" value="[['Module','Module based'],['Item','Item based'],['False','No Cache']]"/>
 	<entry key="_VIEWCONDITION_" value="[['Click','Click Count'],['View','Impression Count'],['DateInterval','Date Interval']]"/>
-	<entry key="_WHICHPICTURE_" value="[['Content.Picture','Content'],['Content.Picture','Content 2'],['TAuthorId.Picture','Author'],['TSourceId.Picture','Source']]"/>
+	<entry key="_WHICHPICTURE_" value="[['Content.Picture','Content'],['Content.Picture','Content 2'],['TCategoryId.Picture','Category'],['TAuthorId.Picture','Author'],['TSourceId.Picture','Source']]"/>
 	<entry key="{0} is not a valid field name. Please use one of the following: {1}" value="{0} is not a valid field name. Please use one of the following: {1}"/>
 	<entry key="{0} type of controls not supported yet." value="{0} type of controls not supported yet."/>
 	<entry key="A control type cannot be acquired from the field type!" value="A control type cannot be acquired from the field type!"/>
