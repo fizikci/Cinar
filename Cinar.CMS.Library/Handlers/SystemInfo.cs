@@ -490,7 +490,7 @@ namespace Cinar.CMS.Library.Handlers
             foreach (Module mdl in modules)
             {
                 sb.AppendFormat("{0}\t<module name=\"{1}\">\n{0}\t\t<serializedData>\n{2}\n{0}\t\t</serializedData>\n", tab, mdl.Name, Utility.HtmlEncode(mdl.Serialize()));
-                if (mdl is ModuleContainer && !(mdl is RegionRepeater))
+                if (mdl is IRegionContainer)
                 {
                     List<Module> childModules = (mdl as ModuleContainer).ChildModules;
                     getSerializedModule(sb, childModules, tab+"\t");

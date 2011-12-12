@@ -79,7 +79,7 @@ namespace Cinar.CMS.Library.Entities
             {
                 object fieldValue = this.GetType().GetProperty(field.Name).GetValue(this, null);
 
-                bool isEmpty = !field.IsNullable && (fieldValue == null || String.IsNullOrEmpty(fieldValue.ToString()));
+                bool isEmpty = !field.IsNullable && (fieldValue == null || String.IsNullOrWhiteSpace(fieldValue.ToString()));
                 if (isEmpty)
                     errorList.Add(field.Name + " alanı boş bırakılamaz!");
 

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Content")]
-    public class ContentDisplay : ModuleContainer
+    public class ContentDisplay : ModuleContainer, IRegionContainer
     {
         public ContentDisplay() 
         {
