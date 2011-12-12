@@ -41,14 +41,14 @@ namespace Cinar.CMS.Library.Modules
             set { id = value; }
         }
 
-        [ColumnDetail(IsNotNull = true, Length = 20), EditFormFieldProps(Visible = false)]
+        [ColumnDetail(IsNotNull = true, Length = 50), EditFormFieldProps(Visible = false)]
         public string Template
         {
             get { return template; }
             set { template = value; }
         }
 
-        [ColumnDetail(IsNotNull = true, Length = 20), EditFormFieldProps(Visible = false)]
+        [ColumnDetail(IsNotNull = true, Length = 50), EditFormFieldProps(Visible = false)]
         public string Region
         {
             get { return region; }
@@ -499,7 +499,7 @@ namespace Cinar.CMS.Library.Modules
                 copy.CSS = copy.CSS.Replace("_" + this.Id, "_" + copy.Id);
                 copy.Save();
 
-                if (this is ModuleContainer)
+                if (this is IRegionContainer)
                 {
                     ModuleContainer iCont = this as ModuleContainer;
                     if (iCont.ChildModules != null && iCont.ChildModules.Count > 0)

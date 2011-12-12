@@ -494,10 +494,16 @@ namespace Cinar.CMS.Library.Handlers
             else
                 user = Provider.User;
             user.SetFieldsByPostData(context.Request.Form);
+            user.Roles = "User"; // yeni bir user user'dan başka bir yetkiye sahip olamaz.
             List<string> errorList = user.Validate();
             if (errorList.Count == 0)
             {
                 string st = Provider.User.IsAnonim() ? "NewUserSaved" : "EditUserSaved";
+
+                // kullanıcı rollerini değiştirmeye izin vermeyelim
+                if (user.Id > 0) 
+                    user.Roles = Provider.Database.GetString("select Roles from User where Id = {0}", user.Id);
+                
                 user.Save();
                 context.Response.Redirect(Provider.Configuration.MembershipFormPage + "?st=" + st);
             }

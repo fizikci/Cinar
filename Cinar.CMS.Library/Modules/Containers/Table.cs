@@ -6,7 +6,7 @@ using Cinar.Database;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Containers")]
-    public class Table : ModuleContainer
+    public class Table : ModuleContainer, IRegionContainer
     {
         protected int cols = 1;
         [ColumnDetail(IsNotNull = true, DefaultValue = "1")]

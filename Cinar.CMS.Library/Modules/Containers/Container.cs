@@ -4,7 +4,7 @@ using System.Text;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Containers")]
-    public class Container : ModuleContainer
+    public class Container : ModuleContainer, IRegionContainer
     {
         protected override string show()
         {

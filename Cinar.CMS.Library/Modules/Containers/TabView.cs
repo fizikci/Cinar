@@ -5,7 +5,7 @@ using Cinar.Database;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Containers")]
-    public class TabView : ModuleContainer
+    public class TabView : ModuleContainer, IRegionContainer
     {
         protected string tabs = "Tab 1,Tab 2";
         [ColumnDetail(IsNotNull = true, DefaultValue = "Tab 1,Tab 2", Length=300)]

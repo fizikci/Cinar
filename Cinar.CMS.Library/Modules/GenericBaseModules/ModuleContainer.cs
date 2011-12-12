@@ -25,4 +25,5 @@ namespace Cinar.CMS.Library.Modules
         }
     }
 
+    public interface IRegionContainer { }
 }
