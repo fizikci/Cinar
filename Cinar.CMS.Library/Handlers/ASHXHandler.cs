@@ -75,6 +75,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "LikeIt":
                 case "Subscribe":
                 case "GetModuleHtml":
+                case "KeepSession":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "Console":

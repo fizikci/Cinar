@@ -155,6 +155,23 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append(@"<script>document.observe('dom:loaded', function(){document.body.insert('<div style=""font-family:Lucida Console;font-size:12px;position:absolute;right:10px;top:10px;width:100px;padding:10px;color:white;background:orange;"">Development Mode</div>');});</script>");
                 }
 
+                if (!Provider.User.IsAnonim())
+                {
+                    sb.Append(@"
+<script type='text/javascript'>
+    var sessionInMinutes = 0;
+    setInterval(function(){
+        new Ajax.Request('KeepSession.ashx', {
+            method: 'post',
+            onComplete: function(req) {
+                sessionInMinutes++;
+            }
+        });
+    }, 60 * 1000);
+</script>
+");
+                }
+
                 sb.Append("<script type=\"text/javascript\" src=\"/DefaultJavascript.ashx\"></script>\n");
 
                 string title = Provider.Configuration.SiteName;
