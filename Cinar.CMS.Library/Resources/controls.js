@@ -342,7 +342,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 									ths.setValue(path);
 									ths.showEditor();
 								},
-								canDelete: false});
+								canDelete: true});
 		fileBrowserCurrInput = this.input;
 		
 		$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>');
