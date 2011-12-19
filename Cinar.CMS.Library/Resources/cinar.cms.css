@@ -230,12 +230,12 @@ ul.tabs a.active-tab
 }
 
 #fileBrowser {}
-#fileBrowserList {height:90%;overflow:auto;padding:10px}
+#fileBrowserList {height:84%;overflow:auto;padding:10px}
 #fileBrowserList .nav {padding:4px;}
 #fileBrowserList .nav  span{cursor:pointer; color:#316AC5}
-#fileBrowserFooter {height:10%;padding:4px;font-size: smaller;}
+#fileBrowserFooter {height:16%;padding:4px;font-size: smaller;}
 #fileBrowserFooter form input {font-size:smaller;}
-#fileBrowserFooter form {padding:4px; margin-right:10px; float:left;}
+#fileBrowserFooter form {padding:4px; margin-right:10px; margin-bottom:8px; float:left;}
 #fileBrowserFooter iframe {visibility:hidden;width:0px;height:0px;}
 #fileBrowser table {width:100%;}
 #fileBrowser td.fileName {cursor:pointer; background-repeat:no-repeat; background-position:left center; padding-left:20px;}

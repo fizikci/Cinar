@@ -359,8 +359,8 @@ namespace Cinar.CMS.Library.Handlers
                 string filePath = Path.Combine(path, fileName);
                 if (File.Exists(filePath))
                 {
-                    File.SetAttributes(path, FileAttributes.Normal);
-                    File.Delete(path);
+                    File.SetAttributes(filePath, FileAttributes.Normal);
+                    File.Delete(filePath);
                 }
                 else if (Directory.Exists(filePath))
                     Directory.Delete(filePath, true);
