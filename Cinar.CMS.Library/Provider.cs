@@ -2481,17 +2481,81 @@ namespace Cinar.CMS.Library
         {
             return Provider.Database.GetDataTable(sql);
         }
+        public DataTable GetDataTable(string sql, object p1)
+        {
+            return Provider.Database.GetDataTable(sql, p1);
+        }
+        public DataTable GetDataTable(string sql, object p1, object p2)
+        {
+            return Provider.Database.GetDataTable(sql, p1, p2);
+        }
+        public DataTable GetDataTable(string sql, object p1, object p2, object p3)
+        {
+            return Provider.Database.GetDataTable(sql, p1, p2, p3);
+        }
+        public DataTable GetDataTable(string sql, object p1, object p2, object p3, object p4)
+        {
+            return Provider.Database.GetDataTable(sql, p1, p2, p3, p4);
+        }
         public DataRow GetDataRow(string sql)
         {
             return Provider.Database.GetDataRow(sql);
+        }
+        public DataRow GetDataRow(string sql, object p1)
+        {
+            return Provider.Database.GetDataRow(sql, p1);
+        }
+        public DataRow GetDataRow(string sql, object p1, object p2)
+        {
+            return Provider.Database.GetDataRow(sql, p1, p2);
+        }
+        public DataRow GetDataRow(string sql, object p1, object p2, object p3)
+        {
+            return Provider.Database.GetDataRow(sql, p1, p2, p3);
+        }
+        public DataRow GetDataRow(string sql, object p1, object p2, object p3, object p4)
+        {
+            return Provider.Database.GetDataRow(sql, p1, p2, p3, p4);
         }
         public object GetValue(string sql)
         {
             return Provider.Database.GetValue(sql);
         }
+        public object GetValue(string sql, object p1)
+        {
+            return Provider.Database.GetValue(sql, p1);
+        }
+        public object GetValue(string sql, object p1, object p2)
+        {
+            return Provider.Database.GetValue(sql, p1, p2);
+        }
+        public object GetValue(string sql, object p1, object p2, object p3)
+        {
+            return Provider.Database.GetValue(sql, p1, p2, p3);
+        }
+        public object GetValue(string sql, object p1, object p2, object p3, object p4)
+        {
+            return Provider.Database.GetValue(sql, p1, p2, p3, p4);
+        }
         public int ExecuteNonQuery(string sql)
         {
             return Provider.Database.ExecuteNonQuery(sql);
+        }
+        public int ExecuteNonQuery(string sql, object p1)
+        {
+            return Provider.Database.ExecuteNonQuery(sql, p1);
+        }
+        public int ExecuteNonQuery(string sql, object p1, object p2)
+        {
+            return Provider.Database.ExecuteNonQuery(sql, p1, p2);
+        }
+        public int ExecuteNonQuery(string sql, object p1, object p2, object p3)
+        {
+            return Provider.Database.ExecuteNonQuery(sql, p1, p2, p3);
+        }
+        public int ExecuteNonQuery(string sql, object p1, object p2, object p3, object p4)
+        {
+            return Provider.Database.ExecuteNonQuery(sql, p1, p2, p3, p4);
         }
     }
 
