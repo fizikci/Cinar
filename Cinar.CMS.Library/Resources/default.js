@@ -477,7 +477,11 @@ function lightBox(img){
 	lbImg.on('load', function(){
 		var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
 		lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
-		centerToView(lightBoxDiv);
+		var lbDim = lightBoxDiv.getDimensions();
+		var imgDim = img.getDimensions();
+		var posView = document.viewport.getScrollOffsets();
+		var dimView = Position.getWindowSize();
+		lightBoxDiv.setStyle({left:(posView[0]+(dimView.width-lbDim.width)/2)+'px', top:(posView[1]+(dimView.height-lbDim.height)/2)+'px'});
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true, 'white');
 		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){
@@ -487,9 +491,9 @@ function lightBox(img){
 			lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc') || ''; 
 			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title') || ''; 
 			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
-			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+20)+'px'}).show();
-			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+20)+'px'}).show();
-			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+20)+'px'}).show();
+			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+15)+'px'}).show();
+			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+15)+'px'}).show();
 
 			if(tagData){
 				var tagText = '';
@@ -525,14 +529,6 @@ function lightBox_hideAllTags(){
 	lightBoxDiv.select('.tag_bg').each(function(tagElm){
 		tagElm.hide();
 	});
-}
-
-function centerToView(elm){
-	elm = $(elm);
-	var dim = elm.getDimensions();
-	var posView = document.viewport.getScrollOffsets();
-	var dimView = Position.getWindowSize();
-	elm.setStyle({left:(posView[0]+(dimView.width-dim.width)/2)+'px', top:(posView[1]+(dimView.height-dim.height)/2)+'px'});	
 }
 
 // chart modülü için
