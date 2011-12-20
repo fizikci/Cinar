@@ -577,10 +577,11 @@ namespace Cinar.CMS.Library.Handlers
                     cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
                     Provider.Response.Cookies.Add(cookie);
                 }
-                if (context.Request.Form["RedirectURL"] == null)
+                string redirect = context.Request.Form["RedirectURL"];
+                if (redirect == null)
                     context.Response.Redirect("/Default.aspx?DesignMode=On");
                 else
-                    context.Response.Redirect(context.Request.Form["RedirectURL"]);
+                    context.Response.Redirect(redirect + (redirect.Contains("?") ? "&formDoLogin=1" : "?formDoLogin=1"));
             }
             else
             {
