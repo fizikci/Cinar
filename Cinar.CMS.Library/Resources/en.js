@@ -86,6 +86,7 @@ langRes['File Manager'] = 'File Manager';
 langRes['Add Default Module Styles'] = 'Add Default Module Styles';
 langRes['Quick Load'] = 'Quick Load';
 langRes['Tag Picture'] = 'Tag Picture';
+langRes['Sort'] = 'Sort';
 
 // message.js
 langRes['Recommend to a friend'] = 'Recommend to a friend';

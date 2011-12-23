@@ -6,6 +6,7 @@ using Cinar.CMS.Library.Modules;
 using Cinar.Database;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -98,6 +99,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "addTag":
                     {
                         addTag();
+                        break;
+                    }
+                case "sortEntities":
+                    {
+                        sortEntities();
                         break;
                     }
                 default:
@@ -411,6 +417,20 @@ namespace Cinar.CMS.Library.Handlers
 
             BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
             context.Response.Write(entity.ToJSON());
+        }
+
+        private void sortEntities() {
+            string entityName = context.Request["entityName"];
+            Type t = Provider.GetEntityType(entityName);
+            if (t == null) return; //***
+
+            string sortOrder = context.Request["sortOrder"];
+            int[] ids = sortOrder.SplitWithTrim(',').Select(s => int.Parse(s)).ToArray();
+
+            for (int i = 0; i < ids.Length; i++)
+                Provider.Database.ExecuteNonQuery("update ["+entityName+"] set [OrderNo]={0} where Id={1}", i, ids[i]);
+
+            context.Response.Write("OK");
         }
     }
 }
