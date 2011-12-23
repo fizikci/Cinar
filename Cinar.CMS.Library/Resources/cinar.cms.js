@@ -532,6 +532,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 			if(!id || id<=0) return;
 			tagifySelectedPicture(id);
 		}});
+		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:sortImages});
 	}
 
     if(extraFilter) options.extraFilter = extraFilter;
@@ -643,6 +644,39 @@ function openTagForm(winPos, tag, tagData){
 	formTag.down('.tagify_tag').value = tag.tag || '';
 	formTag.down('.tagify_text').value = tag.text || '';
 	formTag.down('.tagify_url').value = tag.url || '';
+}
+function sortImages(){
+	var ths = this; // this is ListForm here
+	var table = ths.listGrid.table; // this is ListForm here
+	if(!table)
+		return;
+	
+	var rows = table.select('tr[id]');
+	if(!rows || rows.length==0)
+		return;
+		
+	var html = '<div id="sortableList" style="height:360px;">';
+	for(var i=0; i<rows.length; i++){
+		var row = rows[i];
+		var src = row.select('td')[1].innerHTML;
+		html += '<div id="'+row.id+'" style="display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;"><img src="'+src+'" width="100" height="100"/></div>';
+	}
+	html += '</div><p align="right"><span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
+
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/sort.png" style="vertical-align:middle">Order Pictures', width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var winContent = $(win.getContent());
+	winContent.insert(html);
+    win.showCenter();
+    win.toFront();
+    $('btnSortImagesOK').observe('click', function(){
+		var sortOrder = Sortable.sequence('sortableList');
+		ajax({url:'EntityInfo.ashx?method=sortEntities&sortOrder='+sortOrder+'&entityName=ContentPicture',isJSON:false,noCache:true});
+		Windows.getFocusedWindow().close();
+		ths.fetchData();
+	});
+    $('btnSortImagesCancel').observe('click', function(){Windows.getFocusedWindow().close();});
+
+	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false});
 }
 
 //#####################################

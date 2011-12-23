@@ -86,6 +86,7 @@ langRes['File Manager'] = 'Dosya Yöneticisi';
 langRes['Add Default Module Styles'] = 'Varsayılan modül CSSlerini ekle';
 langRes['Quick Load'] = 'Hızlı Yükle';
 langRes['Tag Picture'] = 'Etiketle';
+langRes['Sort'] = 'Sırala';
 
 // message.js
 langRes['Recommend to a friend'] = 'Arkadaşınıza tavsiye edin';
