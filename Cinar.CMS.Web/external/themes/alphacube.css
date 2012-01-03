@@ -108,6 +108,7 @@
 	background:#FDFDFD;
 	padding:4px;
 	text-align:left;
+	position:relative;
 }
 .alphacube_content td {
     font-size: 12px;

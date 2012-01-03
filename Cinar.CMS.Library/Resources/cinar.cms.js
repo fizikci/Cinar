@@ -533,6 +533,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 			tagifySelectedPicture(id);
 		}});
 		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:sortImages});
+		options.limit = 200;
 	}
 
     if(extraFilter) options.extraFilter = extraFilter;
@@ -655,15 +656,15 @@ function sortImages(){
 	if(!rows || rows.length==0)
 		return;
 		
-	var html = '<div id="sortableList" style="height:360px;">';
+	var html = '<div id="sortableList" style="position:absolute;top:0px;bottom:40px;overflow:scroll">';
 	for(var i=0; i<rows.length; i++){
 		var row = rows[i];
 		var src = row.select('td')[1].innerHTML;
 		html += '<div id="'+row.id+'" style="display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;"><img src="'+src+'" width="100" height="100"/></div>';
 	}
-	html += '</div><p align="right"><span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
+	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
 
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/sort.png" style="vertical-align:middle">Order Pictures', width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: '<img src="external/icons/sort.png" style="vertical-align:middle">Order Pictures', width:1100, height:600, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
 	winContent.insert(html);
     win.showCenter();
@@ -676,7 +677,7 @@ function sortImages(){
 	});
     $('btnSortImagesCancel').observe('click', function(){Windows.getFocusedWindow().close();});
 
-	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false});
+	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList'});
 }
 
 //#####################################
