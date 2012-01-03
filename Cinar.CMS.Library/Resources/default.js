@@ -85,7 +85,7 @@ document.observe('dom:loaded', function(){
 	if($$('.fadeShow').length)
 		$$('.fadeShow').each(function(elm){
 			elm.insert('<div class="indexElms"></div>');
-			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 3000);
+			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 4000);
 		});
 	$$('.fadeShow .clItem').each(function(elm, i){
 		if(i==0){
@@ -248,7 +248,7 @@ function fadeShowShowImg(fadeShow, indexElm){
 	fadeShow.currentImg.fade({ duration: 0.5, from: 0, to: 1 });
 	fadeShow.currentImg.setStyle({zIndex:2});
 
-	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 3000);
+	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 4000);
 }
 function fadeWithArrowsShow(elm, which){
 	var nextImg = which=='next' ? elm.currentImg.next('.clItem') : elm.currentImg.previous('.clItem');
