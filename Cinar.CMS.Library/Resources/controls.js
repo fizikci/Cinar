@@ -1452,7 +1452,7 @@ var ListForm = Class.create();ListForm.prototype = {
         if(this.filter && this.filter.filter)
             params = this.filter.filter.serialize();
         var ths = this;
-        new Ajax.Request(this.options.ajaxUri + '?method=getGridList&entityName=' + this.options.entityName + (this.options.extraFilter ? '&extraFilter=' + this.options.extraFilter : '') + (this.options.orderBy ? '&orderBy=' + this.options.orderBy : '') + '&page=' + this.pageIndex + '&limit=' + this.limit, {
+        new Ajax.Request(this.options.ajaxUri + '?method=getGridList&entityName=' + this.options.entityName + (this.options.extraFilter ? '&extraFilter=' + this.options.extraFilter : '') + (this.options.orderBy ? '&orderBy=' + this.options.orderBy : '') + '&page=' + this.pageIndex + '&limit=' + (this.options.limit || this.limit), {
             method: 'post',
             parameters: params,
             onComplete: function (req) {

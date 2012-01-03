@@ -70,7 +70,7 @@ namespace Cinar.Scripting
                 if (fArguments.Length == 0 || !(fArguments[0] is Variable))
                     throw new Exception("typeof operator argument error. Usage: typeof(DateTime)");
                 string typeName = (fArguments[0] as Variable).Name;
-                return Context.GetType(typeName, Context.ParsedUsing);
+                return Context.GetType(typeName, context.Using);
             }
             else if (context.Functions[Name] != null)
             {
@@ -582,7 +582,7 @@ namespace Cinar.Scripting
         public override object Calculate(Context context, ParserNode parentNode)
         {
             object left = Exp.Calculate(context, this);
-            Type type = Context.GetType(typeName, Context.ParsedUsing);
+            Type type = Context.GetType(typeName, context.Using);
             if (type == null)
                 throw new Exception("There is no such type name: " + typeName);
             return left == null ? false : (left.GetType() == type);
