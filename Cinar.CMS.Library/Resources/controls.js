@@ -225,11 +225,12 @@ var StringEdit = Class.create();StringEdit.prototype = {
 
         new Insertion.Bottom(list, 
 								'<div>'+
-									'<img src="/external/icons/editor_bold.png"/>'+
-									'<img src="/external/icons/editor_italic.png"/>'+
-									'<img src="/external/icons/editor_underline.png"/>'+
-									'<img src="/external/icons/picture.png"/>'+
-									'<img src="/external/icons/eye.png" style="margin-left:40px"/>'+
+									'<img src="/external/icons/editor_bold.png" title="Bold"/>'+
+									'<img src="/external/icons/editor_italic.png" title="Italic"/>'+
+									'<img src="/external/icons/editor_underline.png" title="Underline"/>'+
+									'<img src="/external/icons/editor_font.png" title="Font Size & Color"/>'+
+									'<img src="/external/icons/picture.png" title="Add Picture"/>'+
+									'<img src="/external/icons/eye.png" style="margin-left:40px" title="Preview"/>'+
 									'<div style="float:right"><input type="checkbox" class="wrapCheck"/> Wrap <input type="checkbox" class="nl2br"/> nl2br</div>'+
 								'</div>'+
 								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea>'+
@@ -275,6 +276,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<i>', '</i>');});
 			if(img.src.indexOf('underline.png')>-1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<u>', '</u>');});
+			if(img.src.indexOf('font.png')>-1)
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<font size="5" color="black">', '</font>');});
 			if(img.src.indexOf('picture.png')>-1)
 				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
 			if(img.src.indexOf('eye.png')>-1)

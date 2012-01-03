@@ -767,6 +767,10 @@ namespace Cinar.Scripting
                         else
                             res = mi.Invoke(null, paramValues);
                     }
+                    else if (RightChildExpression is MemberAccess)
+                    {
+                        res = new MemberAccess(new MemberAccess(this.LeftChildExpression, (this.RightChildExpression as MemberAccess).LeftChildExpression), (this.RightChildExpression as MemberAccess).RightChildExpression).Calculate(context, this);
+                    }
                     else
                         res = null;
                 }
@@ -907,7 +911,7 @@ namespace Cinar.Scripting
                         bool birebir = true;
                         for (int i = 0; i < parameters.Length; i++)
                         {
-                            if (parameters[i].ParameterType != parameterTypes[i])
+                            if (!(parameters[i].ParameterType == parameterTypes[i] || parameterTypes[i].IsSubclassOf(parameters[i].ParameterType)))
                             {
                                 birebir = false;
                                 continue; // this is not the method we're looking for
