@@ -189,26 +189,26 @@ namespace Cinar.CMS.Library.Handlers
                         foreach (DataColumn dc in dt.Columns)
                         {
                             object valObj = dr[dc.ColumnName];
-                            string val = "";
+                            string dispVal = "";
                             if (dr.IsNull(dc))
-                                val = "";
+                                dispVal = "";
                             else if (dc.DataType == typeof(Boolean))
-                                val = ((bool)valObj) ? Provider.GetResource("Yes") : Provider.GetResource("No");
+                                dispVal = ((bool)valObj) ? Provider.GetResource("Yes") : Provider.GetResource("No");
                             else if (dc.DataType == typeof(String))
                             {
                                 string str = Regex.Replace(valObj.ToString(), "<.*?>", string.Empty);
                                 if (str.Length > 50)
-                                    val = Utility.HtmlEncode(Utility.StrCrop(str, 50)); // str.Substring(0, 50) + "..."
+                                    dispVal = Utility.HtmlEncode(Utility.StrCrop(str, 50)); // str.Substring(0, 50) + "..."
                                 else
-                                    val = str;
+                                    dispVal = str;
                             }
                             else if (dc.DataType == typeof(DateTime))
                             {
-                                val = ((DateTime)valObj).ToString(Provider.Configuration.DefaultDateFormat);
+                                dispVal = ((DateTime)valObj).ToString(Provider.Configuration.DefaultDateFormat);
                             }
                             else
-                                val = valObj.ToString();
-                            context.Response.Write("\t\t<td>" + val + "</td>\n");
+                                dispVal = valObj.ToString();
+                            context.Response.Write("\t\t<td value=\"" + Utility.HtmlEncode(valObj) + "\">" + dispVal + "</td>\n");
                         }
                         context.Response.Write("\t</tr>\n");
                     }

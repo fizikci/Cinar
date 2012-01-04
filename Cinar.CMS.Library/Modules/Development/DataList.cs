@@ -67,8 +67,8 @@ namespace Cinar.CMS.Library.Modules
         private int pageNo {
             get {
 
-                if(_pageNo == -1)
-                    Int32.TryParse(Provider.Request["pageNo"], out _pageNo);
+                if (_pageNo == -1)
+                    Int32.TryParse(Provider.Request["pageNo" + this.Id], out _pageNo);
                 return _pageNo;
             }
         }
@@ -151,7 +151,7 @@ namespace Cinar.CMS.Library.Modules
                 }
                 if (pageNo > 0)
                 {
-                    uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();
+                    uriParser.QueryPart["pageNo" + this.Id] = (pageNo - 1).ToString();
                     prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\"{1}>{2}</a>",
                         AjaxPaging ? "#" : uriParser.Uri.ToString(),
                         AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
@@ -159,11 +159,16 @@ namespace Cinar.CMS.Library.Modules
                 }
                 if (data.Rows.Count == HowManyItems)
                 {
-                    uriParser.QueryPart["pageNo"] = (pageNo + 1).ToString();
-                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
-                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
-                        LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
+                    // bakalým next page veritabanýnda var mý?
+                    DataTable lastPageData = Provider.Database.GetDataTable(sql.Replace(string.Format("limit {0} offset {1}", HowManyItems, pageNo * HowManyItems), string.Format("limit {0} offset {1}", HowManyItems, (pageNo + 1) * HowManyItems)), filterParser.GetParams());
+                    if (lastPageData != null && lastPageData.Rows.Count > 0)
+                    {
+                        uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
+                        nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
+                            AjaxPaging ? "#" : uriParser.Uri.ToString(),
+                            AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                            LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
+                    }
                 }
 
                 if(!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
