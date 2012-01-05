@@ -660,7 +660,7 @@ function sortImages(){
 	for(var i=0; i<rows.length; i++){
 		var row = rows[i];
 		var src = row.select('td')[1].readAttribute('value');
-		html += '<div id="'+row.id+'" style="display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;"><img src="'+src+'" width="100" height="100"/></div>';
+		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" style="display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;"><img src="'+src+'" width="100" height="100"/></div>';
 	}
 	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
 
