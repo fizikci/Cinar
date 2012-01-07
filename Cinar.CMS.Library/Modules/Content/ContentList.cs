@@ -65,7 +65,7 @@ namespace Cinar.CMS.Library.Modules
         }
         protected bool ShowDescription
         {
-            get { return this.fieldOrder.Contains("description"); }
+            get { return this.fieldOrder.Contains("description") || this.fieldOrder.Contains("cat_description"); }
         }
         protected bool ShowMetin
         {
@@ -273,6 +273,7 @@ namespace Cinar.CMS.Library.Modules
             fields["source"] = content["SourceName"] == null ? "" : this.getSourceHTML(content["SourceName"].ToString(), isFirstItem, template, content, row, col);
             fields["date"] = this.getPublishDateHTML(this.dateFormat.ToLower() == "ago" ? content.PublishDate.ToAgoString() : content.PublishDate.ToString(this.dateFormat), row, col);
             fields["description"] = this.getDescriptionHTML(isFirstItem, template, content, row, col);
+            fields["cat_description"] = this.getCatDescriptionHTML(isFirstItem, template, content, row, col);
             fields["text"] = this.getMetinHTML(content.Metin, row, col);
 
             sb.Append("<div class=\"clItem\">");
@@ -417,6 +418,18 @@ namespace Cinar.CMS.Library.Modules
             return String.Empty;
         }
 
+        protected virtual string getCatDescriptionHTML(bool isFirstItem, string template, Content content, int row, int col)
+        {
+            string desc = Utility.StrCrop(content.Category.Description, this.descriptionLength);
+            if (this.showDescriptionAsLink)
+                desc = getLinkAndIconHTML(desc, isFirstItem, template, content); // bu önemli content'in linki olmalı
+
+            if (this.ShowDescription || (this.showFirstItemWithPicture && isFirstItem))
+                return String.Format("<div class=\"clDesc\">{0}</div>", desc);
+
+            return String.Empty;
+        }
+
         protected virtual string getMetinHTML(string metin, int row, int col)
         {
             if (this.ShowMetin)
@@ -457,7 +470,7 @@ namespace Cinar.CMS.Library.Modules
             if(this.howManyItems-this.skipFirst <= this.random)
                 throw new Exception(Provider.GetResource("[Random] must be less than [How Many Items] - [Skip First]"));
 
-            string defaultFields = ContentList.defaultFieldOrder + ",picture2,text";
+            string defaultFields = ContentList.defaultFieldOrder + ",picture2,text,cat_description";
             if (Regex.Match(this.fieldOrder, "[^\\w,\\,]").Success)
                 throw new Exception(Provider.GetResource("FieldOrder is invalid. Please enter fields as {0}", defaultFields));
             foreach (string fieldName in this.fieldOrder.Split(','))
