@@ -27,6 +27,7 @@ namespace Cinar.CMS.Library.Modules
             string sql = String.Format(@"
                 select distinct top " + this.HowManyItems + @"
                     Content.Id,
+                    Content.CategoryId,
                     Content.ClassName,
                     Content.Hierarchy,
                     Content.Title,

@@ -333,7 +333,7 @@
 	<entry key="ContentList.DescriptionLength" value="Description Length"/>
 	<entry key="ContentList.DescriptionLengthDesc" value="How many letters of the descriptions will be displayed? Set -1 to show all."/>
 	<entry key="ContentList.FieldOrder" value="Field Order"/>
-	<entry key="ContentList.FieldOrderDesc" value="In which order to display the fields. For example: title, spot, category, image, picture2, author, date, description, text, source"/>
+	<entry key="ContentList.FieldOrderDesc" value="In which order to display the fields. For example: title, spot, category, image, picture2, author, date, description, cat_description, text, source"/>
 	<entry key="ContentList.ForceToUseTemplate" value="Force To Link to Page"/>
 	<entry key="ContentList.ForceToUseTemplateDesc" value="When a content is defined with a page, it links to that page. By this field you can force to use &quot;Link To Page&quot;."/>
 	<entry key="ContentList.HowManyItems" value="How Many Items"/>
