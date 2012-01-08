@@ -17,11 +17,11 @@ namespace Cinar.CMS.Library.Handlers
 
             // StopMonitoring app folders deletion
             //TODO: uçur bunu bi şekilde..
-            var theRuntime = typeof(HttpRuntime).GetField("_theRuntime", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-            var fcmField = typeof(HttpRuntime).GetField("_fcm", BindingFlags.NonPublic | BindingFlags.Instance);
+            //var theRuntime = typeof(HttpRuntime).GetField("_theRuntime", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+            //var fcmField = typeof(HttpRuntime).GetField("_fcm", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var fcm = fcmField.GetValue(theRuntime);
-            fcmField.FieldType.GetMethod("Stop", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(fcm, null);
+            //var fcm = fcmField.GetValue(theRuntime);
+            //fcmField.FieldType.GetMethod("Stop", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(fcm, null);
         }
 
         void context_BeginRequest(object sender, EventArgs e)
