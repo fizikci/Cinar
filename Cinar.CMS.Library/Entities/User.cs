@@ -40,6 +40,10 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 50)]
         public string Gender { get; set; }
 
+        public DateTime BirthDate { get; set; }
+
+        public string IdentityNumber { get; set; }
+
         #endregion
 
         #region meslek
@@ -122,7 +126,7 @@ namespace Cinar.CMS.Library.Entities
 
         public override void SetFieldsByPostData(NameValueCollection postData)
         {
-            string oldPasswordHash = this.Password; // eski şifre
+            string oldPasswordHash = this.Id > 0 ? Provider.Database.GetString("select Password from user where Id={0}", this.Id) : this.Password; // eski şifre
 
             base.SetFieldsByPostData(postData); // formdan gelen verileri kaydedelim
 
@@ -170,19 +174,22 @@ namespace Cinar.CMS.Library.Entities
         protected override void afterSave(bool isUpdate)
         {
             base.afterSave(isUpdate);
+            
+            
+            //todo:uncoment this
 
-            if (!isUpdate && !Provider.Request.Url.IsLoopback)
-            {
-                string msg = String.Format(@"
-                                Merhaba {0},<br/><br/>
-                                Aşağıdaki linki kullanarak {1} üyeliğinizi aktif hale getirebilirsiniz:<br/><br/>
-                                <a href=""http://{2}/LoginWithKeyword.ashx?keyword={3}"">http://{2}/LoginWithKeyword.ashx?keyword={3}</a>",
-                                this.GetNameValue(),
-                                Provider.Configuration.SiteName,
-                                Provider.Configuration.SiteAddress,
-                                this.Keyword);
-                Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
-            }
+//            if (!isUpdate && !Provider.Request.Url.IsLoopback)
+//            {
+//                string msg = String.Format(@"
+//                                Merhaba {0},<br/><br/>
+//                                Aşağıdaki linki kullanarak {1} üyeliğinizi aktif hale getirebilirsiniz:<br/><br/>
+//                                <a href=""http://{2}/LoginWithKeyword.ashx?keyword={3}"">http://{2}/LoginWithKeyword.ashx?keyword={3}</a>",
+//                                this.GetNameValue(),
+//                                Provider.Configuration.SiteName,
+//                                Provider.Configuration.SiteAddress,
+//                                this.Keyword);
+//                Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
+//            }
 
             if (this.Id == Provider.User.Id)
                 Provider.User = this;
