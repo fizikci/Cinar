@@ -222,6 +222,9 @@ var StringEdit = Class.create();StringEdit.prototype = {
     showEditor: function(event) {
         var list = $(this.editorId);
         list.innerHTML = '';
+		
+		var wrap = getCookie('wrap');
+		var nl2br = getCookie('nl2br');
 
         new Insertion.Bottom(list, 
 								'<div>'+
@@ -231,9 +234,9 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<img src="/external/icons/editor_font.png" title="Font Size & Color"/>'+
 									'<img src="/external/icons/picture.png" title="Add Picture"/>'+
 									'<img src="/external/icons/eye.png" style="margin-left:40px" title="Preview"/>'+
-									'<div style="float:right"><input type="checkbox" class="wrapCheck"/> Wrap <input type="checkbox" class="nl2br"/> nl2br</div>'+
+									'<div style="float:right"><input type="checkbox" class="wrapCheck" '+(wrap=='1'?'checked':'')+'/> Wrap <input type="checkbox" class="nl2br" '+(nl2br=='1'?'checked':'')+'/> nl2br</div>'+
 								'</div>'+
-								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea>'+
+								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" '+(wrap=='1'?'':'wrap="off"')+'></textarea>'+
 								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
 								
         var ta = $(this.editorId + 'ta');
@@ -257,6 +260,11 @@ var StringEdit = Class.create();StringEdit.prototype = {
 				ta.writeAttribute('wrap');
 			else
 				ta.writeAttribute('wrap', 'off');
+			setCookie('wrap', wrapCheck.checked ? 1:0);
+		});
+		var nl2brCheck = list.down('.nl2br');
+		nl2brCheck.observe('click', function(){
+			setCookie('nl2br', nl2brCheck.checked ? 1:0);
 		});
 		
 		ta.on('keydown', function(event){
