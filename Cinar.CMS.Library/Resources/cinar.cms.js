@@ -656,13 +656,13 @@ function sortImages(){
 	if(!rows || rows.length==0)
 		return;
 		
-	var html = '<div id="sortableList" style="position:absolute;top:0px;bottom:40px;overflow:scroll">';
+	var html = '<div id="sortableList">';
 	for(var i=0; i<rows.length; i++){
 		var row = rows[i];
 		var src = row.select('td')[1].readAttribute('value');
-		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" style="display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;"><img src="'+src+'" width="100" height="100"/></div>';
+		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="$(this).toggleClassName(\'sel\')"><img src="'+src+'" width="100" height="100"/></div>';
 	}
-	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
+	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn delete" id="btnSortImagesDelete">'+lang('Delete')+'</span> <span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
 
     var win = new Window({className: 'alphacube', title: '<img src="external/icons/sort.png" style="vertical-align:middle">Order Pictures', width:1100, height:600, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
@@ -675,8 +675,17 @@ function sortImages(){
 		Windows.getFocusedWindow().close();
 		ths.fetchData();
 	});
-    $('btnSortImagesCancel').observe('click', function(){Windows.getFocusedWindow().close();});
+    $('btnSortImagesCancel').observe('click', function(){ths.fetchData(); Windows.getFocusedWindow().close();});
+    $('btnSortImagesDelete').observe('click', function(){
+		niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
+			$$('#sortableList div.sel').each(function(elm){
+				var id = elm.id.split('_')[1];
+				deleteDataWithoutWarning('ContentPicture', id, function(){elm.remove();});
+			});
+		});
+	});
 
+	Position.includeScrollOffsets = true;
 	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList'});
 }
 
@@ -756,15 +765,18 @@ function editData(entityName, id, hideCategory, callback, filter){
 }
 function deleteData(entityName, id, callback){
 	niceConfirm(lang('The record will be deleted!'), function () {
-		if(!id || id<=0) return;
-		new Ajax.Request('EntityInfo.ashx?method=delete&entityName=' + entityName + '&id=' + id, {
-			method: 'get',
-			onComplete: function (req) {
-				if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-				if(callback) callback();
-			},
-			onException: function (req, ex) { throw ex; }
-		});
+		deleteDataWithoutWarning(entityName, id, callback);
+	});
+}
+function deleteDataWithoutWarning(entityName, id, callback){
+	if(!id || id<=0) return;
+	new Ajax.Request('EntityInfo.ashx?method=delete&entityName=' + entityName + '&id=' + id, {
+		method: 'get',
+		onComplete: function (req) {
+			if(req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+			if(callback) callback();
+		},
+		onException: function (req, ex) { throw ex; }
 	});
 }
 function saveEditForm(pe, callback){

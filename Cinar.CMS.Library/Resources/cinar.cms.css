@@ -81,6 +81,7 @@ span.thunder {background-image:url(icons/DataConverter.png)}
 span.cog {background-image:url(icons/cog.png)}
 span.tag {background-image:url(icons/Tag.png)}
 span.sort {background-image:url(icons/sort.png)}
+span.delete {background-image:url(icons/delete.png)}
 
 div.smMenu 
 {
@@ -266,6 +267,10 @@ div.fileNameBox img {max-width:80px; max-height:80px}
 	background: #316AC5;
 	color:white;
 }
+
+#sortableList {position:absolute;top:0px;bottom:40px;overflow:scroll}
+#sortableList div.sortItem {display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;}
+#sortableList div.sel {border-color:blue; background:blue;}
 
 .ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
 .ui-widget-content a { color: #333333; }

@@ -1209,44 +1209,51 @@ namespace Cinar.CMS.Library
 
             if (!System.IO.File.Exists(thumbPath))
             {
-                Bitmap orjImg = null, imgDest = null;
-                try
+                if (path.EndsWith(".gif") && Utility.IsGifAnimated(path))
                 {
-                    // burada resize ediyoruz
-                    orjImg = (Bitmap)Bitmap.FromFile(path);
-                    if (prefWidth == 0)
-                        imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
-                    else if (prefHeight == 0)
-                        imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
-                    else
+                    File.Copy(path, thumbPath);
+                }
+                else
+                {
+                    Bitmap orjImg = null, imgDest = null;
+                    try
                     {
-                        double picRatio = (double)orjImg.Width / (double)orjImg.Height;
-                        double prefRatio = (double)prefWidth / (double)prefHeight;
-                        if (picRatio >= prefRatio)
-                        {
+                        // burada resize ediyoruz
+                        orjImg = (Bitmap)Bitmap.FromFile(path);
+                        if (prefWidth == 0)
+                            imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
+                        else if (prefHeight == 0)
                             imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
-                            int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
-                            if(!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                imgDest = Utility.CropImage(imgDest, 0, y, prefWidth, prefHeight);
-                        }
                         else
                         {
-                            imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
-                            int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
-                            if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                imgDest = Utility.CropImage(imgDest, x, 0, prefWidth, prefHeight);
+                            double picRatio = (double)orjImg.Width / (double)orjImg.Height;
+                            double prefRatio = (double)prefWidth / (double)prefHeight;
+                            if (picRatio >= prefRatio)
+                            {
+                                imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
+                                int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
+                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                    imgDest = Utility.CropImage(imgDest, 0, y, prefWidth, prefHeight);
+                            }
+                            else
+                            {
+                                imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
+                                int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
+                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                    imgDest = Utility.CropImage(imgDest, x, 0, prefWidth, prefHeight);
+                            }
                         }
+                        Utility.SaveImage(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
                     }
-                    Utility.SaveImage(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
-                }
-                catch (Exception ex)
-                {
+                    catch (Exception ex)
+                    {
+                        if (orjImg != null) orjImg.Dispose();
+                        if (imgDest != null) imgDest.Dispose();
+                        return "ERR: " + ex.Message;
+                    }
                     if (orjImg != null) orjImg.Dispose();
                     if (imgDest != null) imgDest.Dispose();
-                    return "ERR: " + ex.Message;
                 }
-                if (orjImg != null) orjImg.Dispose();
-                if (imgDest != null) imgDest.Dispose();
             }
             return thumbUrl;
         }
@@ -1945,6 +1952,21 @@ namespace Cinar.CMS.Library
                 SaveJpeg(path, img, quality);
 
         }
+        public static bool IsGifAnimated(string path)
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            byte[] netscape = bytes.Skip(0x310).Take(11).ToArray();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var item in netscape)
+            {
+                sb.Append((char)item);
+            }
+
+            return sb.ToString() == "NETSCAPE2.0";
+        }
+
 
         private static ImageCodecInfo _jpegCodec;
         private static ImageCodecInfo jpegCodec

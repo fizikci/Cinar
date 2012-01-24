@@ -27,18 +27,18 @@ namespace Cinar.CMS.Library.Handlers
                 else if (fileName.EndsWith(".js"))
                     context.Response.ContentType = "text/javascript";
 
-                //if (context.Request.Url.IsLoopback)
-                //{
-                //    //string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);
-                //    string resourceFilePath = context.Server.MapPath("/").Replace("Cinar.CMS.Web", "Cinar.CMS.Library") + "Resources\\" + fileName;
-                //    if(File.Exists(resourceFilePath))
-                //        context.Response.Write(File.ReadAllText(resourceFilePath));
-                //}
-                //else
-                //{
+                if (context.Request.Url.IsLoopback)
+                {
+                    //string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);
+                    string resourceFilePath = context.Server.MapPath("/").Replace("Cinar.CMS.Web", "Cinar.CMS.Library") + "Resources\\" + fileName;
+                    if(File.Exists(resourceFilePath))
+                        context.Response.Write(File.ReadAllText(resourceFilePath));
+                }
+                else
+                {
                     string s = Properties.Resources.ResourceManager.GetString(fileName.Replace(".", "_"));
                     context.Response.Write(s ?? ("There is no resource with this name: " + fileName.Replace(".", "_")));
-                //}
+                }
                 return;
             }
 
