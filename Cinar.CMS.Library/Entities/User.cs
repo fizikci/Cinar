@@ -130,7 +130,7 @@ namespace Cinar.CMS.Library.Entities
 
             base.SetFieldsByPostData(postData); // formdan gelen verileri kaydedelim
 
-            if (String.IsNullOrEmpty(this.Password) || this.Password.Trim() == "") // eğer formdan gelen şifre boşsa eski şifreyi koruyalım 
+            if (String.IsNullOrWhiteSpace(this.Password)) // eğer formdan gelen şifre boşsa eski şifreyi koruyalım 
                 this.Password = oldPasswordHash;
             else
                 this.Password = Utility.MD5(this.Password);
