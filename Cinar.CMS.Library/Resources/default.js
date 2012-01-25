@@ -439,7 +439,7 @@ function gogPop(event){
 function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
-	var allImg = img.up('.lightBox').select('img');
+	var allImg = img.up().select('img');
 	var html = '<div id="lightBoxDiv">'+
 					'<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>'+
 					'<img id="lbImg" src="'+img.readAttribute('path')+'"/>'+

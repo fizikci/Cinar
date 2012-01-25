@@ -100,8 +100,8 @@ namespace Cinar.CMS.Library.Handlers
                 StringBuilder sb = new StringBuilder();
                 sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? Utility.HtmlEncode(Provider.Content.Description) + " " : "") + Utility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? Utility.HtmlEncode(Provider.Content.Keywords) + " " + Utility.HtmlEncode(Provider.Content.Tags) + "," : "") + Utility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
-                sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\n");
-                sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\">\n");
+                sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
+                sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<LINK href=\"http://" + Provider.Configuration.SiteAddress + "/" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\">\n");
                 sb.Append("<LINK href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
