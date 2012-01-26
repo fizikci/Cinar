@@ -146,7 +146,6 @@ namespace Cinar.CMS.Library.Handlers
                     templateRec.Id = 0;
                     templateRec.FileName = newName;
                     templateRec.Save();
-                    //File.Copy(context.Server.MapPath("~/" + template), context.Server.MapPath("~/" + newName));
                     context.Response.Write("Template copied.");
                     Provider.Database.Commit();
                 }
@@ -178,7 +177,6 @@ namespace Cinar.CMS.Library.Handlers
                     templateRec.FileName = newName;
                     templateRec.Save();
 
-                    //File.Move(context.Server.MapPath("~/" + template), context.Server.MapPath("~/" + newName));
                     context.Response.Write("Template renamed.");
 
                     Provider.Database.Commit();
@@ -286,9 +284,9 @@ namespace Cinar.CMS.Library.Handlers
         private void getFileList()
         {
             string folderName = context.Request["folder"] ?? "";
-            string path = Provider.Server.MapPath(folderName);
-            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
-                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+            string path = Provider.MapPath(folderName);
+            if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
 
             List<string> resList = new List<string>();
 
@@ -323,9 +321,9 @@ namespace Cinar.CMS.Library.Handlers
             try
             {
                 string folderName = context.Request["folder"] ?? "";
-                string path = Provider.Server.MapPath(folderName);
-                if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
-                    path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+                string path = Provider.MapPath(folderName);
+                if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                    path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
 
                 if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                     path = Path.GetDirectoryName(path);
@@ -344,11 +342,11 @@ namespace Cinar.CMS.Library.Handlers
         {
             string folderName = context.Request["folder"] ?? "";
             if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1); else folderName = "~/" + folderName;
-            string path = Provider.Server.MapPath(folderName);
+            string path = Provider.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
-            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
-                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+            if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
 
             string fileNames = context.Request["name"];
             if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
@@ -373,11 +371,11 @@ namespace Cinar.CMS.Library.Handlers
             string folderName = context.Request["folder"] ?? "";
             if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1);
             else folderName = "~/" + folderName;
-            string path = Provider.Server.MapPath(folderName);
+            string path = Provider.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
-            if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
-                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+            if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
 
             string fileNames = context.Request["name"];
             if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
@@ -401,10 +399,10 @@ namespace Cinar.CMS.Library.Handlers
             try
             {
                 string folderName = context.Request["folder"] ?? "";
-                string path = Provider.Server.MapPath(folderName);
-                if (!path.StartsWith(Provider.Server.MapPath(Provider.AppSettings["userFilesDir"])))
+                string path = Provider.MapPath(folderName);
+                if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
                 {
-                    path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+                    path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
                     context.Response.Write(@"<script>window.parent.alert('Error. There is no such folder.');</script>");
                     return;
                 }
@@ -435,7 +433,7 @@ namespace Cinar.CMS.Library.Handlers
                 else
                     throw new Exception(Provider.GetResource("The attribute /template[@name] not found or not valid"));
 
-                string templatePath = Provider.Server.MapPath("~/" + templateName);
+                string templatePath = Provider.MapPath("~/" + templateName);
 
                 XmlNode codeNode = templateNode.SelectSingleNode("code");
                 string code = "";

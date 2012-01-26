@@ -97,7 +97,7 @@ namespace Cinar.CMS.Library
 
                     WebClient wc = new WebClient();
                     wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                    wc.DownloadFile(val.ToString(), Provider.Server.MapPath(imgFileName));
+                    wc.DownloadFile(val.ToString(), Provider.MapPath(imgFileName));
 
                     pi.SetValue(this, imgFileName, null);
                 }

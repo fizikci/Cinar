@@ -655,12 +655,12 @@ function sortImages(){
 	var rows = table.select('tr[id]');
 	if(!rows || rows.length==0)
 		return;
-		
+	
 	var html = '<div id="sortableList">';
 	for(var i=0; i<rows.length; i++){
 		var row = rows[i];
 		var src = row.select('td')[1].readAttribute('value');
-		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="$(this).toggleClassName(\'sel\')"><img src="'+src+'" width="100" height="100"/></div>';
+		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
 	}
 	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn delete" id="btnSortImagesDelete">'+lang('Delete')+'</span> <span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
 
@@ -686,7 +686,17 @@ function sortImages(){
 	});
 
 	Position.includeScrollOffsets = true;
-	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList'});
+	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList',
+		onChange:function(elm){ draggedPic = elm;},
+		onUpdate:function(){ }
+	});
+}
+var draggedPic = null;
+function selectPic(pic){
+	pic = $(pic);
+	if(pic!=draggedPic)
+		pic.toggleClassName('sel');
+	draggedPic = null;
 }
 
 //#####################################

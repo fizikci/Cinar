@@ -379,6 +379,8 @@
 	<entry key="ContentPicture.HeightDesc" value="Picture will be scaled to this height (enter zero for autoscale)"/>
 	<entry key="ContentPicture.LikeIt" value="Likes"/>
 	<entry key="ContentPicture.LikeItDesc" value="How many people liked this picture"/>
+	<entry key="ContentPicture.Tag" value="Tag"/>
+	<entry key="ContentPicture.TagDesc" value=""/>
 	<entry key="ContentPicture.Title" value="Title"/>
 	<entry key="ContentPicture.TitleDesc" value=""/>
 	<entry key="ContentPicture.Width" value="Width"/>

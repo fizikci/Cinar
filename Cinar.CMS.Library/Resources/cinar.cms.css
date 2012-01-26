@@ -268,9 +268,9 @@ div.fileNameBox img {max-width:80px; max-height:80px}
 	color:white;
 }
 
-#sortableList {position:absolute;top:0px;bottom:40px;overflow:scroll}
+#sortableList {position:absolute;top:0px;bottom:40px;right:0px;left:0px;overflow:scroll}
 #sortableList div.sortItem {display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;}
-#sortableList div.sel {border-color:blue; background:blue;}
+#sortableList div.sel {border-color:blue; background:#316AC5;}
 
 .ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
 .ui-widget-content a { color: #333333; }
