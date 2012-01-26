@@ -38,7 +38,7 @@ namespace Cinar.CMS.Library
                 {
                     string sqlCon = Provider.AppSettings["sqlConnection"];
                     DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), Provider.AppSettings["sqlProvider"]);
-                    if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", Server.MapPath("/App_Data"));
+                    if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", MapPath("/App_Data"));
                     Database.Database db = new Database.Database(sqlCon, sqlPro);
                     Provider.Items.Add("db", db);
                     db.NoTransactions = Provider.AppSettings["noTransactions"]=="true";
@@ -678,7 +678,7 @@ namespace Cinar.CMS.Library
                                     string imgFileName = Provider.AppSettings["authorDir"] + "/" + Utility.MakeFileName(author.Name) + "_" + (DateTime.Now.Millisecond % 1000) + authorPicture.Substring(authorPicture.LastIndexOf('.'));
                                     WebClient wc = new WebClient();
                                     wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                                    wc.DownloadFile(authorPicture, Provider.Server.MapPath(imgFileName));
+                                    wc.DownloadFile(authorPicture, Provider.MapPath(imgFileName));
                                     author.Picture = imgFileName;
                                 }
                                 catch (Exception ex)
@@ -749,12 +749,12 @@ namespace Cinar.CMS.Library
                 string year = DateTime.Now.Year.ToString();
                 string month = DateTime.Now.Month.ToString();
                 string day = DateTime.Now.Day.ToString();
-                if (!System.IO.Directory.Exists(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year)))
-                    System.IO.Directory.CreateDirectory(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year));
-                if (!System.IO.Directory.Exists(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month)))
-                    System.IO.Directory.CreateDirectory(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month));
-                if (!System.IO.Directory.Exists(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day)))
-                    System.IO.Directory.CreateDirectory(Provider.Server.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day));
+                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year)))
+                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year));
+                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month)))
+                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month));
+                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day)))
+                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day));
                 subFolders = "/" + year + "/" + month + "/" + day;
             }
             return Provider.AppSettings[specialFolder] + subFolders + "/" + fileName;
@@ -969,7 +969,7 @@ namespace Cinar.CMS.Library
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(Provider.Server.MapPath("~/external/lang/" + lang + ".xml"));
+                doc.Load(Provider.MapPath("~/external/lang/" + lang + ".xml"));
 
                 foreach (XmlNode node in doc.SelectNodes("/resources/entry"))
                     ht[node.Attributes["key"].Value] = node.Attributes["value"].Value;
@@ -1196,16 +1196,16 @@ namespace Cinar.CMS.Library
             string path = null;
             try
             {
-                path = Provider.Server.MapPath(imageUrl);
+                path = Provider.MapPath(imageUrl);
                 if (!File.Exists(path))
-                    path = Provider.Server.MapPath(Provider.Configuration.SiteLogo);
+                    path = Provider.MapPath(Provider.Configuration.SiteLogo);
             }
             catch (Exception ex) {
                 return "ERR: " + ex.Message;
             }
 
             string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_");
-            string thumbPath = Provider.Server.MapPath(thumbUrl);
+            string thumbPath = Provider.MapPath(thumbUrl);
 
             if (!System.IO.File.Exists(thumbPath))
             {
@@ -1315,6 +1315,12 @@ namespace Cinar.CMS.Library
                 HttpContext.Current.User = value;
             }
         }
+        public static string MapPath(string path)
+        {
+            if (AppSettings.AllKeys.Contains("MapPathPrefix"))
+                path = AppSettings["MapPathPrefix"] + path;
+            return Provider.Server.MapPath(path);
+        }
         #endregion
 
 
@@ -1413,7 +1419,7 @@ namespace Cinar.CMS.Library
                     WebClient wc = new WebClient();
                     wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
                     string imgFileName = Provider.AppSettings["uploadDir"] + "/" + Utility.MakeFileName(content.Title) + contentImgUrl.Substring(contentImgUrl.LastIndexOf('.'));
-                    wc.DownloadFile(contentImgUrl, Server.MapPath(imgFileName));
+                    wc.DownloadFile(contentImgUrl, MapPath(imgFileName));
                     content.Picture = imgFileName;
                 }
             }
@@ -1476,7 +1482,7 @@ namespace Cinar.CMS.Library
                             WebClient wc = new WebClient();
                             wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
                             string imgFileName = Provider.AppSettings["authorDir"] + "/" + Utility.MakeFileName(authorName) + authorImgUrl.Substring(authorImgUrl.LastIndexOf('.'));
-                            wc.DownloadFile(authorImgUrl, Server.MapPath(imgFileName));
+                            wc.DownloadFile(authorImgUrl, MapPath(imgFileName));
                             author.Picture = imgFileName;
                         }
                         author.Save();

@@ -366,10 +366,10 @@ namespace Cinar.CMS.Library.Handlers
         private void getFolderList()
         {
             string folderName = context.Request["node"] ?? "";
-            string path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
+            string path = Provider.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
             if (!Directory.Exists(path))
             {
-                path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"]);
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
                 folderName = "";
             }
 
@@ -390,7 +390,7 @@ namespace Cinar.CMS.Library.Handlers
         private void getFileList()
         {
             string folderName = context.Request["folder"] ?? "";
-            string path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
+            string path = Provider.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
 
             List<string> resList = new List<string>();
 
@@ -425,7 +425,7 @@ namespace Cinar.CMS.Library.Handlers
             try
             {
                 string folderName = context.Request["folder"] ?? "";
-                string path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
+                string path = Provider.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
 
                 string fileName = Path.GetFileName(context.Request.Files["upload"].FileName).MakeFileName();
                 context.Request.Files["upload"].SaveAs(Path.Combine(path, fileName));
@@ -440,7 +440,7 @@ namespace Cinar.CMS.Library.Handlers
         private void deleteFile()
         {
             string folderName = context.Request["folder"] ?? "";
-            string path = Provider.Server.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
+            string path = Provider.MapPath(Provider.AppSettings["userFilesDir"] + folderName);
 
             string fileName = context.Request["fileName"];
             if (string.IsNullOrEmpty(fileName) || fileName.Trim() == "")

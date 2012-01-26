@@ -84,10 +84,15 @@ document.observe('dom:loaded', function(){
 	// fadeShow (yani fadeIn'li slide show)
 	if($$('.fadeShow').length)
 		$$('.fadeShow').each(function(elm){
-			elm.insert('<div class="indexElms"></div>');
-			elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 4000);
+			if(elm.select('.clItem').length>0){
+				elm.insert('<div class="indexElms"></div>');
+				elm.timeout = setTimeout(function(){fadeShowShowImg(elm);}, 4000);
+			}
 		});
 	$$('.fadeShow .clItem').each(function(elm, i){
+		if(elm.up('.fadeShow').select('.clItem').length<=1)
+			return;
+	
 		if(i==0){
 			elm.up().currentImg = elm;
 			elm.setStyle({zIndex:2});
@@ -484,12 +489,19 @@ function lightBox(img){
 			var lbImgDim = lbImg.getDimensions();
 			lightBoxDiv.down('#lbPrev').setStyle({top:(lbImgDim.height/2-19)+'px', left:'10px'});
 			lightBoxDiv.down('#lbNext').setStyle({top:(lbImgDim.height/2-19)+'px', right:'10px'});
-			lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc') || ''; 
+			if(img.readAttribute('tag')!='video')
+				lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc') || ''; 
 			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title') || ''; 
 			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
 			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+15)+'px'}).show();
 			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+15)+'px'}).show();
 			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			
+			if(img.readAttribute('tag')=='video'){
+				var w = lbImgDim.width, h = lbImgDim.height;
+				lbImg.replace(img.readAttribute('desc'));
+				lightBoxDiv.down('iframe').setStyle({width:w+'px', height:h+'px'}).id = 'lbImg';
+			}
 
 			if(tagData){
 				var tagText = '';

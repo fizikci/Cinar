@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentPicture.Id, ContentPicture.FileName as [ContentPicture.FileName], ContentPicture.Visible as [BaseEntity.Visible] from [ContentPicture] left join [Content] as TContentId ON TContentId.Id = [ContentPicture].ContentId", QueryOrderBy = "[ContentPicture].[OrderNo]")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentPicture.Id, ContentPicture.FileName as [ContentPicture.FileName], ContentPicture.Tag as [ContentPicture.Tag], ContentPicture.Visible as [BaseEntity.Visible] from [ContentPicture] left join [Content] as TContentId ON TContentId.Id = [ContentPicture].ContentId", QueryOrderBy = "[ContentPicture].[OrderNo]")]
     [EditFormDetails(DetailType = typeof(ContentPictureLang), RelatedFieldName = "ContentPictureId")]
     public class ContentPicture : BaseEntity
     {
@@ -44,6 +44,14 @@ namespace Cinar.CMS.Library.Entities
         {
             get { return description; }
             set { description = value; }
+        }
+
+        private string tag = "";
+        [ColumnDetail(Length = 200)]
+        public string Tag
+        {
+            get { return tag; }
+            set { tag = value; }
         }
 
         private string tagData = "";
@@ -90,7 +98,7 @@ namespace Cinar.CMS.Library.Entities
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Provider.Request.Files["FileNameFile"].SaveAs(Provider.Server.MapPath(imgUrl));
+                    Provider.Request.Files["FileNameFile"].SaveAs(Provider.MapPath(imgUrl));
                     this.FileName = imgUrl;
                 }
             }

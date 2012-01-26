@@ -295,10 +295,10 @@ namespace Cinar.CMS.Library.Entities
                     {
                         Bitmap bmp2 = Utility.ScaleImage(bmp, Provider.Configuration.ImageUploadMaxWidth, 0);
                         imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        Utility.SaveJpeg(Provider.Server.MapPath(imgUrl), bmp2, Provider.Configuration.ThumbQuality);
+                        Utility.SaveJpeg(Provider.MapPath(imgUrl), bmp2, Provider.Configuration.ThumbQuality);
                     }
                     else
-                        Provider.Request.Files["PictureFile"].SaveAs(Provider.Server.MapPath(imgUrl));
+                        Provider.Request.Files["PictureFile"].SaveAs(Provider.MapPath(imgUrl));
                     this.Picture = imgUrl;
                 }
             }
