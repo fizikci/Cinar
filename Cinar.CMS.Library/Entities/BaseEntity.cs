@@ -108,6 +108,25 @@ namespace Cinar.CMS.Library.Entities
                 }
 
                 this.beforeSave(savedBefore);
+
+                #region if critical entity, log it
+                if (this is ICriticalEntity)
+                {
+                    if (savedBefore)
+                    {
+                        Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
+                        IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
+                        string changes = originalEntity.CompareFields(this);
+
+                        Provider.Log("History_" + this.GetType().Name, "Update", changes);
+                    }
+                    else
+                    {
+                        Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
+                    }
+                }
+                #endregion
+
                 Provider.Database.Save(this);
                 this.afterSave(savedBefore);
 
@@ -139,6 +158,9 @@ namespace Cinar.CMS.Library.Entities
                 Provider.Database.ExecuteNonQuery("delete from ["+this.GetType().Name+"] where Id=" + this.Id);
                 
                 this.afterDelete();
+
+                if (this is ICriticalEntity)
+                    Provider.Log("History_" + this.GetType().Name, "Delete", this.SerializeToString());
 
                 Provider.Database.Commit();
             }
