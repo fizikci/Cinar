@@ -420,6 +420,15 @@ namespace System
 
             return template;
         }
+        public static string CapitalizeInvariant(this string str)
+        {
+            if (str == null)
+                return "";
+            if (str.Length == 1)
+                return char.ToUpperInvariant(str[0]).ToString();
+
+            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+        }
 
         public static float ToFloat(this string s)
         {
