@@ -214,13 +214,14 @@ var StringEdit = Class.create();StringEdit.prototype = {
         else
             this.button.observe('click', this.showEditor.bind(this));
 
-        if (!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
-
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
-        var list = $(this.editorId);
+        if (!$(this.editorId))
+            new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
+
+		var list = $(this.editorId);
+        if (list.visible()) { list.remove(); currEditor = null; return; }
         list.innerHTML = '';
 		
 		var wrap = getCookie('wrap');
@@ -233,6 +234,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<img src="/external/icons/editor_underline.png" title="Underline"/>'+
 									'<img src="/external/icons/editor_font.png" title="Font Size & Color"/>'+
 									'<img src="/external/icons/picture.png" title="Add Picture"/>'+
+									'<img src="/external/icons/editor_anchor.png" title="Add Link"/>'+
 									'<img src="/external/icons/eye.png" style="margin-left:40px" title="Preview"/>'+
 									'<div style="float:right"><input type="checkbox" class="wrapCheck" '+(wrap=='1'?'checked':'')+'/> Wrap <input type="checkbox" class="nl2br" '+(nl2br=='1'?'checked':'')+'/> nl2br</div>'+
 								'</div>'+
@@ -242,7 +244,6 @@ var StringEdit = Class.create();StringEdit.prototype = {
         var ta = $(this.editorId + 'ta');
 		ta.value = this.input.value.gsub('#NL#', '\n');
 
-        if (list.visible()) { list.hide(); currEditor = null; return; }
         if (this.input.disabled) return;
 
         var btnOK = list.down('.OK');
@@ -286,6 +287,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<u>', '</u>');});
 			if(img.src.indexOf('font.png')>-1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<font size="5" color="black">', '</font>');});
+			if(img.src.indexOf('anchor.png')>-1)
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<a href="_prompt_">', '</a>', 'Enter link URL', 'http://');});
 			if(img.src.indexOf('picture.png')>-1)
 				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
 			if(img.src.indexOf('eye.png')>-1)
@@ -317,7 +320,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
     setHtml: function(event) {
         var list = $(this.editorId);
         this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
-        list.hide();
+        list.remove();
     }
 }
 
@@ -767,7 +770,7 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
     setValueByEditor: function(event) {
         var list = $(this.editorId);
         this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
-        list.hide();
+        list.remove();
     }
 }
 
@@ -839,7 +842,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
         this.filter = new FilterEditor($(this.editorId).down(), ajax({url:'EntityInfo.ashx?method=getFieldsList&entityName='+entityNameToUse,isJSON:true,noCache:false}));
             
         var list = $(this.editorId);
-        if(list.visible()){list.hide(); currEditor = null; return;}
+        if(list.visible()){list.remove(); currEditor = null; return;}
         if(this.input.disabled) return;
         
         var btnOK = $(this.editorId+'btnOK');
@@ -880,7 +883,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
             i++;
         }
         this.input.value = str;
-        list.hide();
+        list.remove();
     }
 }
 
@@ -902,7 +905,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     },
     showEditor: function(event){
         if(!$(this.editorId)){
-            new Insertion.Bottom(document.body, '<div class="editor hideOnOut DateTimeEdit" style="display:none" id="'+this.editorId+'"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
+            new Insertion.Bottom(document.body, '<div class="editor removeOnOut DateTimeEdit" style="display:none" id="'+this.editorId+'"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
             var editor = $(this.editorId);
             __monthCombo = new ComboBox('_cH1', this.dateValue.getMonth()+1, {container:$('__cH1'), width:80, listHeight:100, items:[[1,lang('January')],[2,lang('February')],[3,lang('March')],[4,lang('April')],[5,lang('May')],[6,lang('June')],[7,lang('July')],[8,lang('August')],[9,lang('September')],[10,lang('October')],[11,lang('November')],[12,lang('December')]], onChange:this.monthYearChanged.bind(this)});
             __yearCombo = new ComboBox('_cH2', this.dateValue.getFullYear(), {container:$('__cH2'), width:60, listHeight:100, items:$R(1950,2010).toArray(), onChange:this.monthYearChanged.bind(this)});
@@ -912,7 +915,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         var ctrl = this.div;
         
         if(editor.visible()){
-            editor.hide();
+            editor.remove();
 			currEditor = null;
             return;
         } else {
@@ -935,7 +938,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
             this.input.value = str;
             this.options.onChange();
         }
-        $(this.editorId).hide();
+        $(this.editorId).remove();
     },
     // thanks to Brian Gosselin for the function below
     buildCal: function(m, y){
@@ -968,7 +971,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         }
         t+='</tr></table>';
 
-        $('__cM').innerHTML = t;
+        $(this.editorId).down('#__cM').innerHTML = t;
         var ths = this;
         $(this.editorId).select('.calDay').each(function(elm){elm.observe('click', ths.selectDay.bind(ths));});
     },
@@ -1038,8 +1041,8 @@ var ComboBox = Class.create(); ComboBox.prototype = {
                 onException: function(req, ex){throw ex;}
             });
         }
-        
-        //this.setValue(value);
+        else
+			this.setValue(value);
 
         this.input['ctrl'] = this;
     },

@@ -63,7 +63,7 @@ document.observe('dom:loaded', function(){
 	// masonry
 	Event.observe(window, 'load', function(){
 		$$('.masonry').each(function(elm){
-			var sorted = elm.select('img').sortBy(function(img){return img.getHeight();});
+			var sorted = elm.select('img');//.sortBy(function(img){return img.getHeight();});
 			var cols = [[], [], []];
 			for(var i = 0; i<cols.length; i++)
 				for(var j = i; j<sorted.length; j+=cols.length)
@@ -1018,7 +1018,14 @@ var TextAreaUtil = {
 		var text = (textArea.value).substring(startPos,endPos);
 		return {startPos:startPos, endPos:endPos, text:text};
 	},
-	addTag: function(textArea, front, back){
+	addTag: function(textArea, front, back, prompt, prompt_val){
+		if(prompt){
+			prompt_val = window.prompt(prompt, prompt_val);
+			if(!prompt_val) return;
+			front = front.replace('_prompt_', prompt_val);
+			back = back.replace('_prompt_', prompt_val);
+		}
+	
 		var textArea = $(textArea);
 		var scrollPos = textArea.scrollTop;
 		var sel = TextAreaUtil.getSelection(textArea);

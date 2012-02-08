@@ -1425,7 +1425,7 @@ $"},
         }
         private void cmdExecuteScript(string arg)
         {
-            Interpreter engine = new Interpreter(CurrSQLEditor.SQLEditor.Text, null);
+            Interpreter engine = new Interpreter(CurrSQLEditor.SQLEditor.Text, new List<string> { "Cinar.DBTools" });
             engine.SetAttribute("db", Provider.Database);
             engine.SetAttribute("util", new Util());
             engine.SetAttribute("table", findSelectedTable());

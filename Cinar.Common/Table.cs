@@ -86,6 +86,14 @@ namespace Cinar.Database
                     foreach(Constraint con in this.Constraints)
                         if(con is PrimaryKeyConstraint && con.ColumnNames.Count==1)
                             return this.Columns[con.ColumnNames[0]];
+
+                #region mysql'e özgü bir saçmalık nedeniyle
+                if (this.Indices!=null)
+                    foreach (Index ind in this.Indices)
+                        if (ind.Name == "PRIMARY")
+                            return this.Columns[ind.ColumnNames[0]];
+                #endregion
+
                 return null;
             }
         }

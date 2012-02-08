@@ -919,7 +919,7 @@ namespace Cinar.Scripting
 
                             // if we're here, we got the right method
                             methodInfo = method;
-                            break;
+                            //break;
                         }
                         if (birebir)
                         {
