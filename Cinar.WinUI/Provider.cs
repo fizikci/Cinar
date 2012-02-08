@@ -102,12 +102,10 @@ namespace Cinar.WinUI
         {
             ShowMessage(message, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
         public void FeedBack(string message)
         {
             ShowMessage(message, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
         public bool Confirm(string message)
         {
             return ShowMessage(message, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
@@ -127,7 +125,6 @@ namespace Cinar.WinUI
                 SetValueOfEditControl(pi, c, val);
             }
         }
-
         public void SetValueOfEditControl(PropertyInfo pi, BaseEdit c, object val)
         {
             if (c != null)
@@ -159,7 +156,6 @@ namespace Cinar.WinUI
                 c.EditValue = val;
             }
         }
-
         public void UpdateEntityWithEditControlValues(ContainerControl controlContainer, BaseEntity entity)
         {
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
@@ -182,7 +178,6 @@ namespace Cinar.WinUI
                 }
             }
         }
-
         public object GetValueOfEditControl(PropertyInfo pi, BaseEdit c)
         {
             object val = null;

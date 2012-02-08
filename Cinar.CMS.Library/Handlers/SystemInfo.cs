@@ -341,7 +341,7 @@ namespace Cinar.CMS.Library.Handlers
         private void deleteFile()
         {
             string folderName = context.Request["folder"] ?? "";
-            if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1); else folderName = "~/" + folderName;
+            if (!folderName.StartsWith("/")) folderName = "/" + folderName;
             string path = Provider.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
@@ -369,8 +369,8 @@ namespace Cinar.CMS.Library.Handlers
         private void renameFile()
         {
             string folderName = context.Request["folder"] ?? "";
-            if (folderName.StartsWith("/")) folderName = "~/" + folderName.Substring(1);
-            else folderName = "~/" + folderName;
+            if (!folderName.StartsWith("/")) folderName = "/" + folderName.Substring(1);
+            //else folderName = "~/" + folderName;
             string path = Provider.MapPath(folderName);
             if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                 path = Path.GetDirectoryName(path);
@@ -433,7 +433,7 @@ namespace Cinar.CMS.Library.Handlers
                 else
                     throw new Exception(Provider.GetResource("The attribute /template[@name] not found or not valid"));
 
-                string templatePath = Provider.MapPath("~/" + templateName);
+                string templatePath = Provider.MapPath("/" + templateName);
 
                 XmlNode codeNode = templateNode.SelectSingleNode("code");
                 string code = "";

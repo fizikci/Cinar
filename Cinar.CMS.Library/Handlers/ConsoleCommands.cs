@@ -665,7 +665,7 @@ namespace Cinar.CMS.Library.Handlers
             try
             {
 
-                foreach (string aspxPath in System.IO.Directory.GetFiles(Provider.MapPath("~"), "*.aspx"))
+                foreach (string aspxPath in System.IO.Directory.GetFiles(Provider.MapPath("/"), "*.aspx"))
                 {
                     string fileName = System.IO.Path.GetFileName(aspxPath);
 
@@ -697,20 +697,20 @@ namespace Cinar.CMS.Library.Handlers
                 }
 
                 string styles = Properties.Resources.conf_default_css;
-                if (System.IO.File.Exists(Provider.MapPath("~/default.css")))
+                if (System.IO.File.Exists(Provider.MapPath("/default.css")))
                 {
-                    styles = System.IO.File.ReadAllText(Provider.MapPath("~/default.css"), Encoding.UTF8);
+                    styles = System.IO.File.ReadAllText(Provider.MapPath("/default.css"), Encoding.UTF8);
                     sb.Append("default.css added.\n");
                 }
 
-                if (System.IO.File.Exists(Provider.MapPath("~/CMS.conf")))
+                if (System.IO.File.Exists(Provider.MapPath("/CMS.conf")))
                 {
                     Configuration conf = new Configuration();
 
                     System.IO.StreamReader sr = null;
                     try
                     {
-                        sr = new System.IO.StreamReader(Provider.MapPath("~/CMS.conf"), Encoding.UTF8);
+                        sr = new System.IO.StreamReader(Provider.MapPath("/CMS.conf"), Encoding.UTF8);
                         System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
                         conf = (Configuration)ser.Deserialize(sr);
                         sr.Close();

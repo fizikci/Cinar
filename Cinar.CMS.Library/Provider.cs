@@ -39,7 +39,7 @@ namespace Cinar.CMS.Library
                     string sqlCon = Provider.AppSettings["sqlConnection"];
                     DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), Provider.AppSettings["sqlProvider"]);
                     if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", MapPath("/App_Data"));
-                    Database.Database db = new Database.Database(sqlCon, sqlPro);
+                    Database.Database db = new Database.Database(sqlCon, sqlPro, Provider.MapPath("/_thumbs/db.config"));
                     Provider.Items.Add("db", db);
                     db.NoTransactions = Provider.AppSettings["noTransactions"]=="true";
                 }
@@ -969,7 +969,7 @@ namespace Cinar.CMS.Library
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(Provider.MapPath("~/external/lang/" + lang + ".xml"));
+                doc.Load(Provider.MapPath("/external/lang/" + lang + ".xml"));
 
                 foreach (XmlNode node in doc.SelectNodes("/resources/entry"))
                     ht[node.Attributes["key"].Value] = node.Attributes["value"].Value;
