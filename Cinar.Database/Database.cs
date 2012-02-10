@@ -1948,6 +1948,8 @@ namespace Cinar.Database
                     return this.GetList<string>("EXEC SP_HELPDB");
                 case DatabaseProvider.SQLite:
                     return new List<string>() {this.Name };
+                case DatabaseProvider.Cinar:
+                    return new List<string>() {this.Name };
                 default:
                     throw new ArgumentOutOfRangeException();
             }

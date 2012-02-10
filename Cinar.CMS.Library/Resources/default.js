@@ -489,13 +489,15 @@ function lightBox(img){
 			var lbImgDim = lbImg.getDimensions();
 			lightBoxDiv.down('#lbPrev').setStyle({top:(lbImgDim.height/2-19)+'px', left:'10px'});
 			lightBoxDiv.down('#lbNext').setStyle({top:(lbImgDim.height/2-19)+'px', right:'10px'});
+			var desc = img.readAttribute('desc') || '';
+			var title = img.readAttribute('title') || ''; 
 			if(img.readAttribute('tag')!='video')
-				lightBoxDiv.down('#lbLeft').innerHTML = img.readAttribute('desc') || ''; 
-			lightBoxDiv.down('#lbCenter').innerHTML = img.readAttribute('title') || ''; 
+				lightBoxDiv.down('#lbLeft').innerHTML = desc; 
+			lightBoxDiv.down('#lbCenter').innerHTML = title; 
 			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
-			lightBoxDiv.down('#lbLeft').setStyle({left:'0px',top:(lbImgDim.height+15)+'px'}).show();
-			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width/5)+'px',top:(lbImgDim.height+15)+'px'}).show();
-			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width/5*4)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			lightBoxDiv.down('#lbLeft').setStyle({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
+			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width*(desc?0.45:0)+10)+'px',width:(desc?45:90)+'%',top:(lbImgDim.height+15)+'px'}).show();
+			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
 			
 			if(img.readAttribute('tag')=='video'){
 				var w = lbImgDim.width, h = lbImgDim.height;

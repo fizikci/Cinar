@@ -288,7 +288,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
 			if(img.src.indexOf('font.png')>-1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<font size="5" color="black">', '</font>');});
 			if(img.src.indexOf('anchor.png')>-1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<a href="_prompt_">', '</a>', 'Enter link URL', 'http://');});
+				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<a href="_prompt_" target="_blank">', '</a>', 'Enter link URL', 'http://');});
 			if(img.src.indexOf('picture.png')>-1)
 				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
 			if(img.src.indexOf('eye.png')>-1)
@@ -908,7 +908,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
             new Insertion.Bottom(document.body, '<div class="editor removeOnOut DateTimeEdit" style="display:none" id="'+this.editorId+'"><table width="100%"><tr><td class="cH" id="__cH1"></td><td class="cH" id="__cH2"></td></tr></table><div id="__cM"></div></div>');
             var editor = $(this.editorId);
             __monthCombo = new ComboBox('_cH1', this.dateValue.getMonth()+1, {container:$('__cH1'), width:80, listHeight:100, items:[[1,lang('January')],[2,lang('February')],[3,lang('March')],[4,lang('April')],[5,lang('May')],[6,lang('June')],[7,lang('July')],[8,lang('August')],[9,lang('September')],[10,lang('October')],[11,lang('November')],[12,lang('December')]], onChange:this.monthYearChanged.bind(this)});
-            __yearCombo = new ComboBox('_cH2', this.dateValue.getFullYear(), {container:$('__cH2'), width:60, listHeight:100, items:$R(1950,2010).toArray(), onChange:this.monthYearChanged.bind(this)});
+            __yearCombo = new ComboBox('_cH2', this.dateValue.getFullYear(), {container:$('__cH2'), width:60, listHeight:100, items:$R(1970,(new Date()).getFullYear()+5).toArray(), onChange:this.monthYearChanged.bind(this)});
         }
 
         var editor = $(this.editorId);
