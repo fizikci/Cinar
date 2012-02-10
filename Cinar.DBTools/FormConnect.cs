@@ -25,6 +25,7 @@ namespace Cinar.DBTools
             if (provider == DatabaseProvider.SQLite)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
+                ofd.CheckFileExists = false;
                 if (ofd.ShowDialog() == DialogResult.OK)
                     txtDBName.Text = ofd.FileName;
             }
