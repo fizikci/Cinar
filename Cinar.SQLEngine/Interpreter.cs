@@ -308,16 +308,19 @@ namespace Cinar.SQLEngine
                 case "twitter":
                     {
                         string query2 = "", lang = "";
+                        int page = 1;
                         if (join.CinarTableOptions.ContainsKey("Query"))
                         {
                             query2 = (string)join.CinarTableOptions["Query"].Calculate(this);
                             if (join.CinarTableOptions.ContainsKey("Lang"))
                                 lang = (string)join.CinarTableOptions["Lang"].Calculate(this);
-                            TwitterProvider twProvider = new TwitterProvider(query2, lang);
+                            if (join.CinarTableOptions.ContainsKey("Page"))
+                                page = Convert.ToInt32(join.CinarTableOptions["Page"].Calculate(this));
+                            TwitterProvider twProvider = new TwitterProvider(query2, lang, page);
                             list.AddRange(twProvider.GetData(this, where, fieldNames));
                         }
                         else
-                            throw new Exception("Provide query. Exp: select .. from Twitter(Query='...')");
+                            throw new Exception("Provide query. Exp: select .. from Twitter(Query='...' [, Lang='tr'] [, Page=1])");
                         break;
                     }
                 case "youtube":
@@ -332,7 +335,7 @@ namespace Cinar.SQLEngine
                 case "socialmedia":
                     {
                         if (!join.CinarTableOptions.ContainsKey("Query"))
-                            throw new Exception("Provide query. Exp: select .. from SocialMedia(Query='...'[, Lang='tr'][, Source='Twitter,Facebook'])");
+                            throw new Exception("Provide query. Exp: select .. from SocialMedia(Query='...' [, Lang='tr'] [, Source='Twitter,Facebook'] [, Page=1])");
                         string query = (string)join.CinarTableOptions["Query"].Calculate(this);
                         string lang = "";
                         if (join.CinarTableOptions.ContainsKey("Lang"))
@@ -340,7 +343,10 @@ namespace Cinar.SQLEngine
                         string source = "All";
                         if (join.CinarTableOptions.ContainsKey("Source"))
                             source = (string)join.CinarTableOptions["Source"].Calculate(this);
-                        SocialMediaProvider provider = new SocialMediaProvider(query, lang, source);
+                        int page = 1;
+                        if (join.CinarTableOptions.ContainsKey("Page"))
+                            page = Convert.ToInt32(join.CinarTableOptions["Page"].Calculate(this));
+                        SocialMediaProvider provider = new SocialMediaProvider(query, lang, page, source);
                         list.AddRange(provider.GetData(this, where, fieldNames));
                         break;
                     }

@@ -16,16 +16,18 @@ namespace Cinar.SQLEngine.Providers
     {
         private string query;
         private string lang;
+        private int page;
 
-        public TwitterProvider(string query, string lang)
+        public TwitterProvider(string query, string lang, int page)
         {
             this.query = query;
             this.lang = lang;
+            this.page = page;
         }
 
         internal List<Tweet> GetData()
         {
-            Uri serviceUri = new Uri("http://search.twitter.com/search.json?q=\"" + query + "\"&lang=" + lang);
+            Uri serviceUri = new Uri("http://search.twitter.com/search.json?q=\"" + query + "\"&lang=" + lang + "&page=" + page);
             WebClient downloader = new WebClient();
             downloader.Encoding = Encoding.UTF8;
             string json = downloader.DownloadString(serviceUri);

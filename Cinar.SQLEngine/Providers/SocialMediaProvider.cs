@@ -19,11 +19,13 @@ namespace Cinar.SQLEngine.Providers
         private string query;
         private string lang;
         private string source;
+        private int page;
 
-        public SocialMediaProvider(string query, string lang, string source)
+        public SocialMediaProvider(string query, string lang, int page, string source)
         {
             this.query = query;
             this.lang = lang;
+            this.page = page;
             this.source = source;
         }
 
@@ -35,7 +37,7 @@ namespace Cinar.SQLEngine.Providers
                 foreach (FBPost item in new FacebookProvider(query).GetData())
                     items.Add(new SocialMediaItem(item));
             if (source == "All" || source.IndexOf("Twitter", StringComparison.InvariantCultureIgnoreCase) > -1)
-                foreach (Tweet item in new TwitterProvider(query, lang).GetData())
+                foreach (Tweet item in new TwitterProvider(query, lang, page).GetData())
                     items.Add(new SocialMediaItem(item));
             if (source == "All" || source.IndexOf("Youtube", StringComparison.InvariantCultureIgnoreCase) > -1)
                 foreach (RSSItem item in new YoutubeProvider(query).GetData())
