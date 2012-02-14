@@ -743,7 +743,7 @@ $"},
             }
             catch (Exception ex)
             {
-                CurrSQLEditor.ShowInfoText(ex.Message);
+                CurrSQLEditor.ShowInfoText(ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : ""));
             }
         }
 
