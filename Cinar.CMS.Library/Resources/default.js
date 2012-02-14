@@ -161,7 +161,7 @@ document.observe('dom:loaded', function(){
 					if(imgCounter==imgs.length){
 						var totalWidth = 0;
 						imgs.each(function(i){totalWidth += i.getWidth()+20;});
-						elm.down('.innerDiv').setStyle({width:(totalWidth-20)+'px'});
+						elm.down('.innerDiv').setStyle({width:(totalWidth-10)+'px'});
 					}
 				});
 			});
