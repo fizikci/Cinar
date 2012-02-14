@@ -118,7 +118,7 @@ namespace Cinar.POP3
 			}
 			catch(Exception e)
 			{
-				throw new Pop3ConnectException(e.ToString());
+				throw new Pop3ConnectException(e.ToString(), e);
 			}
 
 			// throw exception if can't connect ...
