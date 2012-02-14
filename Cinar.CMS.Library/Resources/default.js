@@ -509,7 +509,14 @@ function lightBox(img){
 				var tagText = '';
 				tagData.each(function(tag, i){
 					var x = tag.x, y = tag.y;
-					lightBoxDiv.insert('<div id="tagBg'+i+'" class="tag_bg hideOnPerde" style="display:none;position:absolute;top:'+y+'px;left:'+x+'px"><a href="'+tag.url+'" target="_blank">'+(tag.tag || '&nbsp;')+'</a></div>');
+					tag.tag = tag.tag || '&nbsp;';
+					var tagProp = {width:95, bg:'tagbg1.png'};
+					if(tag.tag.length>10) tagProp = {width:125, bg:'tagbg2.png'};
+					if(tag.tag.length>14) tagProp = {width:148, bg:'tagbg3.png'};
+					if(tag.tag.length>24) tagProp = {width:245, bg:'tagbg4.png'};
+					if(tag.tag.length>30) tagProp = {width:307, bg:'tagbg5.png'};
+					if(tag.tag.length>40) tagProp = {width:390, bg:'tagbg6.png'};
+					lightBoxDiv.insert('<div id="tagBg'+i+'" class="tag_bg hideOnPerde" style="display:none;position:absolute;top:'+y+'px;left:'+x+'px;width:'+tagProp.width+'px;background:url(/external/icons/'+tagProp.bg+');"><a href="'+tag.url+'" target="_blank">'+tag.tag+'</a></div>');
 					tagText += '<a href="'+tag.url+'" onmouseover="lightBox_hideAllTags();$(\'tagBg'+i+'\').show()" target="_blank">'+tag.text + '</a><br/>';
 				});
 				lightBoxDiv.down('#lbCenter').innerHTML = tagText;
