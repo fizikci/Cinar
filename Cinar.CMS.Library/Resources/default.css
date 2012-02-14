@@ -60,8 +60,8 @@ i {font-style:italic}
 #lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
 #lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
 #lightBoxDiv #lbCounter {margin-bottom:20px;}
-#lightBoxDiv #lbLeft {position:absolute;text-align:left;}
-#lightBoxDiv #lbCenter {position:absolute;text-align:left}
+#lightBoxDiv #lbLeft {position:absolute;text-align:left; padding-top:10px}
+#lightBoxDiv #lbCenter {position:absolute;text-align:left; padding-top:10px}
 #lightBoxDiv #lbRight {width:10%;position:absolute;text-align:right}
 #lightBoxDiv #lbRight img {vertical-align:middle}
 #lightBoxDiv #lbLove {cursor:pointer;}
@@ -74,9 +74,7 @@ i {font-style:italic}
 }
 
 .tag_bg {
-	width:97px;
-	height:35px;
-	background:url(/external/icons/tag_bg2.png);
+	height:34px;
 	font-size:15px;
 	padding-left:24px;
 	padding-top:4px;

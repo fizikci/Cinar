@@ -596,7 +596,7 @@ function tagifySelectedPicture(id){
 		});
 		tagData.each(function(tag, i){
 			var x = tag.x, y = tag.y;
-			winContent.insert('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px">'+(tag.tag || '&nbsp;')+'</div>');
+			winContent.insert('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);">'+(tag.tag || '&nbsp;')+'</div>');
 			new Draggable('tag'+i, {onEnd:function(){tag.x=parseInt($('tag'+i).style.left);tag.y=parseInt($('tag'+i).style.top);}});
 			$('tag'+i).observe('dblclick', function(){
 				var winPos = win.getLocation();
@@ -607,7 +607,7 @@ function tagifySelectedPicture(id){
 			var winPos = win.getLocation();
 			var x = Event.pointerX(event) - parseInt(winPos.left), y = Event.pointerY(event) - parseInt(winPos.top);
 			var tagId = 'tag'+tagData.length;
-			winContent.insert('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px"></div>');
+			winContent.insert('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);"></div>');
 			var tag = {x:x, y:y};
 			tagData.push(tag);
 			new Draggable(tagId, {onEnd:function(){tag.x=parseInt($(tagId).style.left);tag.y=parseInt($(tagId).style.top);}});
@@ -632,6 +632,10 @@ function openTagForm(winPos, tag, tagData){
 		tag.tag = $('tagify_edit').down('.tagify_tag').value;
 		tag.text = $('tagify_edit').down('.tagify_text').value;
 		tag.url = $('tagify_edit').down('.tagify_url').value;
+		if(!tag.tag || tag.tag==''){
+			alert('Boş etiket giremezsiniz. Etiket üzerinde görünecek olan metni yazınız.');
+			return;
+		}
 		$('tag'+tagData.indexOf(tag)).innerHTML = tag.tag;
 		$('tagify_edit').remove();
 	});

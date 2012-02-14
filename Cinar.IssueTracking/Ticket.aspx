@@ -123,7 +123,7 @@
     <div id="ticket">
         <div class="bigInput fullWidth <%=ticket.Status %>">
             <input type="text" name="Name" value='<%=ticket.Id==0?"Enter ticket subject":Server.HtmlEncode(ticket.Name) %>'
-                style="color: #CCC" onfocus="if(this.value=='Enter ticket subject') {this.value = '';this.style.color='';}"
+                style='color: #<%=ticket.Id>0 ? "444":"ccc"%>' onfocus="if(this.value=='Enter ticket subject') {this.value = '';this.style.color='#444';}"
                 onblur="if(this.value=='') {this.value='Enter ticket subject';this.style.color='#CCC';}" />
         </div>
         <div class="controlWithLabel halfWidth">
