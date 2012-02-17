@@ -12,11 +12,6 @@ namespace Cinar.Entities.Standart
 {
     public class BaseEntity : IDatabaseEntity
     {
-        public BaseEntity() 
-        {
-            InsertDate = DateTime.Now;
-        }
-
         public virtual void Initialize()
         {
             
@@ -104,7 +99,6 @@ namespace Cinar.Entities.Standart
                 }
             }
         }
-
         public virtual void Delete()
         {
             if (CinarContext.Db == null)
@@ -173,11 +167,13 @@ namespace Cinar.Entities.Standart
                     if (strVal.ToLower() != "true") strVal = "False";
                 }
 
-
                 object val = null;
                 try
                 {
-                    val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
+                    if (pi.PropertyType.IsEnum)
+                        val = Enum.Parse(pi.PropertyType, strVal);
+                    else
+                        val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
                 }
                 catch
                 {

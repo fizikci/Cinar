@@ -11,12 +11,10 @@ namespace Cinar.Entities.Standart
         {
             return "Name";
         }
-
         public override string GetNameValue()
         {
             return Name;
         }
-
         public override string ToString()
         {
             return Name;
