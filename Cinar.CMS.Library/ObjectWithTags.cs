@@ -31,7 +31,7 @@ namespace Cinar.CMS.Library
             for (int i = 0; i < postData.Count; i++)
             {
                 PropertyInfo pi = this.GetType().GetProperty(postData.GetKey(i));
-                if (pi == null || pi.GetSetMethod()==null) continue;
+                if (pi == null || pi.GetSetMethod() == null) continue;
 
                 string strVal = postData[i];
 

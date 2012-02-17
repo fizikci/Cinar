@@ -9,16 +9,9 @@ namespace Cinar.Test
     {
         static void Main(string[] args)
         {
-            Musteri m = new Musteri();
-            m.Ad = "ldsjfh";
+            Tutorial_1_Metadata.Run();
 
-
+            Console.ReadLine();
         }
-    }
-
-    public class Musteri
-    {
-        public string Ad { get; set; }
-        public string VergiNo { get; set; }
     }
 }

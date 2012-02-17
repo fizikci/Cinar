@@ -9,14 +9,14 @@ namespace Cinar.Entities.IssueTracking
 {
     public class Ticket : NamedEntity, ICriticalEntity
     {
-        [ColumnDetail(Length = 10)]
-        public string Type { get; set; } // Bug, Task
+        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        public TicketType Type { get; set; }
 
-        [ColumnDetail(Length = 10)]
-        public string Status { get; set; } // New, Accepted, Rejected, Resolved
+        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        public TicketStatus Status { get; set; }
 
-        [ColumnDetail(Length = 10)]
-        public string Priority { get; set; } // Low, Normal, High
+        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        public TicketPriority Priority { get; set; }
 
         public int ProjectId { get; set; }
 
@@ -31,9 +31,9 @@ namespace Cinar.Entities.IssueTracking
 
         public Ticket()
         {
-            Type = "Bug";
-            Status = "New";
-            Priority = "Normal";
+            Type = TicketType.Bug;
+            Status = TicketStatus.New;
+            Priority = TicketPriority.Normal;
             ReportedById = CinarContext.ClientUser.Id;
         }
 
@@ -82,5 +82,24 @@ namespace Cinar.Entities.IssueTracking
                 return InsertDate.ToString("dd MMMM yyyy");
             }
         }
+    }
+
+    public enum TicketType
+    {
+        Bug,
+        Task
+    }
+    public enum TicketStatus
+    {
+        New,
+        Accepted,
+        Rejected,
+        Resolved
+    }
+    public enum TicketPriority
+    {
+        Low,
+        Normal,
+        High
     }
 }

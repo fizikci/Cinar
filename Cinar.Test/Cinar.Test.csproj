@@ -11,7 +11,8 @@
     <RootNamespace>Cinar.Test</RootNamespace>
     <AssemblyName>Cinar.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -45,6 +46,20 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tutorial_1_Metadata.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
+      <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
+      <Name>Cinar.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
+      <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
+      <Name>Cinar.Database</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

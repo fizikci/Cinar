@@ -145,7 +145,7 @@
         <div class="controlWithLabel halfWidth">
             <span>Type</span>
             <select name="Type">
-                <%=new[] { "Task", "Bug" }.Select(s => "<option value=\"" + s + "\"" + (ticket.Type == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
+                <%=Enum.GetNames(typeof(TicketType)).Select(s => "<option value=\"" + s + "\"" + (ticket.Type.ToString() == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
             </select>
         </div>
         <div class="controlWithLabel halfWidth">
@@ -158,7 +158,7 @@
         <div class="controlWithLabel halfWidth">
             <span>Status</span>
             <select name="Status">
-                <%=new[] { "New", "Accepted", "Rejected", "Resolved" }.Select(s => "<option value=\"" + s + "\"" + (ticket.Status == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
+                <%=Enum.GetNames(typeof(TicketStatus)).Select(s => "<option value=\"" + s + "\"" + (ticket.Status.ToString() == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
             </select>
         </div>
         <div class="controlWithLabel halfWidth">
@@ -171,7 +171,7 @@
         <div class="controlWithLabel halfWidth">
             <span>Priority</span>
             <select name="Priority">
-                <%=new[] { "Low", "Normal", "High" }.Select(s => "<option value=\"" + s + "\"" + (ticket.Priority == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
+                <%=Enum.GetNames(typeof(TicketPriority)).Select(s => "<option value=\"" + s + "\"" + (ticket.Priority.ToString() == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
             </select>
         </div>
         <div class="controlWithLabel fullWidth">
