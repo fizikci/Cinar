@@ -837,9 +837,9 @@ namespace Cinar.Scripting
                     {
                         res = pi.GetValue(res, null);
                     }
-                    catch
+                    catch(Exception ex)
                     {
-                        throw new Exception("Property found but couldnt be read: " + this);
+                        throw new Exception("Property found but couldnt be read: " + this + " (" + (ex.InnerException != null ? ex.InnerException.Message : ex.Message) + ")");
                     }
                 }
                 else
@@ -851,9 +851,9 @@ namespace Cinar.Scripting
                         {
                             res = fi.GetValue(res);
                         }
-                        catch
+                        catch(Exception ex)
                         {
-                            throw new Exception("Field found but couldnt be read: " + this);
+                            throw new Exception("Field found but couldnt be read: " + this + " (" + (ex.InnerException != null ? ex.InnerException.Message : ex.Message) + ")");
                         }
                     }
                     else
@@ -866,9 +866,9 @@ namespace Cinar.Scripting
                                 object paramObj = Convert.ChangeType(var.Name, mi.GetParameters()[0].ParameterType);
                                 res = mi.Invoke(res, new object[] { paramObj });
                             }
-                            catch
+                            catch(Exception ex)
                             {
-                                throw new Exception("Indexer found but couldnt be read: " + this);
+                                throw new Exception("Indexer found but couldnt be read: " + this + " (" + (ex.InnerException != null ? ex.InnerException.Message : ex.Message) + ")");
                             }
                         }
                         else
