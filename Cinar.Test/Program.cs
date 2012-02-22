@@ -7,9 +7,10 @@ namespace Cinar.Test
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
-            Tutorial_1_Metadata.Run();
+            Tutorial_2_Scripting.Run();
 
             Console.ReadLine();
         }

@@ -171,16 +171,16 @@ namespace Cinar.Database
 
             if (HttpContext.Current != null)
             {
-                if (HttpContext.Current.Application["databaseMetadata"] == null)
+                if (HttpContext.Current.Items["databaseMetadata"] == null)
                 {
                     if (string.IsNullOrEmpty(serializedMetadataFilePath))
                         dbProvider.ReadDatabaseMetadata();
                     else
                         readMetadataFromFile(serializedMetadataFilePath);
-                    HttpContext.Current.Application["databaseMetadata"] = this.tables;
+                    HttpContext.Current.Items["databaseMetadata"] = this.tables;
                 }
                 else
-                    this.tables = (TableCollection)HttpContext.Current.Application["databaseMetadata"];
+                    this.tables = (TableCollection)HttpContext.Current.Items["databaseMetadata"];
             }
             else
             {
@@ -418,8 +418,8 @@ namespace Cinar.Database
 
             if (HttpContext.Current != null)
             {
-                HttpContext.Current.Application.Remove("databaseMetadata");
-                HttpContext.Current.Application["databaseMetadata"] = this.tables;
+                HttpContext.Current.Items.Remove("databaseMetadata");
+                HttpContext.Current.Items["databaseMetadata"] = this.tables;
             }
             else
             {

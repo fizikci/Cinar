@@ -47,6 +47,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tutorial_1_Metadata.cs" />
+    <Compile Include="Tutorial_2_Scripting.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
@@ -56,6 +57,10 @@
     <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
       <Project>{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}</Project>
       <Name>Cinar.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
+      <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
+      <Name>Cinar.Scripting</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
