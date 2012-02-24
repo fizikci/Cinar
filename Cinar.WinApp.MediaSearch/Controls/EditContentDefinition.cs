@@ -56,6 +56,7 @@ namespace Cinar.WinApp.MediaSearch.Controls
                        new Command(){
                                 Execute = cmdTestSelector,
                                 Triggers = new List<CommandTrigger>{
+                                    new CommandTrigger(){Control=editLinkSelector, Event="ButtonClick", Argument="Link"},
                                     new CommandTrigger(){Control=editTitleSelector, Event="ButtonClick", Argument="Baþlýk"},
                                     new CommandTrigger(){Control=editContentSelector, Event="ButtonClick", Argument="Ýçerik"},
                                     new CommandTrigger(){Control=editDateSelector, Event="ButtonClick", Argument="Tarih"},

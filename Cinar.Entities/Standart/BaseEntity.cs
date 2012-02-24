@@ -36,6 +36,8 @@ namespace Cinar.Entities.Standart
         public int InsertUserId { get; set; }
         public User CreatedBy {
             get {
+                if (CinarContext.Db == null)
+                    return null;
                 return CinarContext.Db.Read<User>(InsertUserId);
             }
         }

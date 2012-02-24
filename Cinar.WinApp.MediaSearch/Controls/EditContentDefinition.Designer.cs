@@ -29,6 +29,8 @@ namespace Cinar.WinApp.MediaSearch.Controls
         private void InitializeComponent()
         {
             this.layoutEntity = new DevExpress.XtraLayout.LayoutControl();
+            this.editContentType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.editLinkSelector = new DevExpress.XtraEditors.ButtonEdit();
             this.editImageSelector = new DevExpress.XtraEditors.ButtonEdit();
             this.editDateSelector = new DevExpress.XtraEditors.ButtonEdit();
             this.editAuthorSelector = new DevExpress.XtraEditors.ButtonEdit();
@@ -41,23 +43,23 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.layoutControlItemName = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem8 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.btnAddContentDefinition = new DevExpress.XtraEditors.SimpleButton();
             this.btnSaveContentDefinition = new DevExpress.XtraEditors.SimpleButton();
             this.panelDetail = new DevExpress.XtraEditors.PanelControl();
-            this.listEntityContent = new Cinar.WinUI.ListEntitySimple();
             this.btnDeleteContentDefinition = new DevExpress.XtraEditors.SimpleButton();
             this.btnTest = new DevExpress.XtraEditors.SimpleButton();
-            this.editLinkSelector = new DevExpress.XtraEditors.ButtonEdit();
-            this.layoutControlItem8 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.editContentType = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.listEntityContent = new Cinar.WinUI.ListEntitySimple();
             ((System.ComponentModel.ISupportInitialize)(this.layoutEntity)).BeginInit();
             this.layoutEntity.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editContentType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editLinkSelector.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editImageSelector.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editDateSelector.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editAuthorSelector.Properties)).BeginInit();
@@ -70,27 +72,21 @@ namespace Cinar.WinApp.MediaSearch.Controls
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelDetail)).BeginInit();
             this.panelDetail.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.editLinkSelector.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editContentType.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutEntity
             // 
             this.layoutEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.layoutEntity.Appearance.DisabledLayoutGroupCaption.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.layoutEntity.Appearance.DisabledLayoutGroupCaption.Options.UseForeColor = true;
-            this.layoutEntity.Appearance.DisabledLayoutItem.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.layoutEntity.Appearance.DisabledLayoutItem.Options.UseForeColor = true;
             this.layoutEntity.Controls.Add(this.editContentType);
             this.layoutEntity.Controls.Add(this.editLinkSelector);
             this.layoutEntity.Controls.Add(this.editImageSelector);
@@ -107,49 +103,74 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.layoutEntity.Size = new System.Drawing.Size(553, 161);
             this.layoutEntity.TabIndex = 0;
             // 
+            // editContentType
+            // 
+            this.editContentType.Location = new System.Drawing.Point(368, 36);
+            this.editContentType.Name = "editContentType";
+            this.editContentType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.editContentType.Size = new System.Drawing.Size(173, 20);
+            this.editContentType.StyleController = this.layoutEntity;
+            this.editContentType.TabIndex = 13;
+            // 
+            // editLinkSelector
+            // 
+            this.editLinkSelector.Location = new System.Drawing.Point(102, 60);
+            this.editLinkSelector.Name = "editLinkSelector";
+            this.editLinkSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.editLinkSelector.Size = new System.Drawing.Size(172, 20);
+            this.editLinkSelector.StyleController = this.layoutEntity;
+            this.editLinkSelector.TabIndex = 12;
+            // 
             // editImageSelector
             // 
-            this.editImageSelector.Location = new System.Drawing.Point(98, 131);
+            this.editImageSelector.Location = new System.Drawing.Point(102, 108);
             this.editImageSelector.Name = "editImageSelector";
             this.editImageSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editImageSelector.Size = new System.Drawing.Size(173, 20);
+            this.editImageSelector.Size = new System.Drawing.Size(172, 20);
+            this.editImageSelector.StyleController = this.layoutEntity;
             this.editImageSelector.TabIndex = 11;
             // 
             // editDateSelector
             // 
-            this.editDateSelector.Location = new System.Drawing.Point(373, 100);
+            this.editDateSelector.Location = new System.Drawing.Point(368, 84);
             this.editDateSelector.Name = "editDateSelector";
             this.editDateSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editDateSelector.Size = new System.Drawing.Size(174, 20);
+            this.editDateSelector.Size = new System.Drawing.Size(173, 20);
+            this.editDateSelector.StyleController = this.layoutEntity;
             this.editDateSelector.TabIndex = 10;
             // 
             // editAuthorSelector
             // 
-            this.editAuthorSelector.Location = new System.Drawing.Point(98, 100);
+            this.editAuthorSelector.Location = new System.Drawing.Point(102, 84);
             this.editAuthorSelector.Name = "editAuthorSelector";
             this.editAuthorSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editAuthorSelector.Size = new System.Drawing.Size(173, 20);
+            this.editAuthorSelector.Size = new System.Drawing.Size(172, 20);
+            this.editAuthorSelector.StyleController = this.layoutEntity;
             this.editAuthorSelector.TabIndex = 9;
             // 
             // editContentSelector
             // 
-            this.editContentSelector.Location = new System.Drawing.Point(373, 131);
+            this.editContentSelector.Location = new System.Drawing.Point(368, 108);
             this.editContentSelector.Name = "editContentSelector";
             this.editContentSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editContentSelector.Size = new System.Drawing.Size(174, 20);
+            this.editContentSelector.Size = new System.Drawing.Size(173, 20);
+            this.editContentSelector.StyleController = this.layoutEntity;
             this.editContentSelector.TabIndex = 8;
             // 
             // editTitleSelector
             // 
-            this.editTitleSelector.Location = new System.Drawing.Point(373, 69);
+            this.editTitleSelector.Location = new System.Drawing.Point(368, 60);
             this.editTitleSelector.Name = "editTitleSelector";
             this.editTitleSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editTitleSelector.Size = new System.Drawing.Size(174, 20);
+            this.editTitleSelector.Size = new System.Drawing.Size(173, 20);
+            this.editTitleSelector.StyleController = this.layoutEntity;
             this.editTitleSelector.TabIndex = 7;
             // 
             // editMedia
@@ -157,20 +178,22 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.editMedia.DependentFieldName = null;
             this.editMedia.DependsOn = null;
             this.editMedia.Filter = null;
-            this.editMedia.Location = new System.Drawing.Point(373, 7);
+            this.editMedia.Location = new System.Drawing.Point(368, 12);
             this.editMedia.Name = "editMedia";
             this.editMedia.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.editMedia.ShowComboButton = true;
             this.editMedia.ShowEllipsisButton = false;
-            this.editMedia.Size = new System.Drawing.Size(174, 20);
+            this.editMedia.Size = new System.Drawing.Size(173, 20);
+            this.editMedia.StyleController = this.layoutEntity;
             this.editMedia.TabIndex = 6;
             // 
             // editRSSUrl
             // 
-            this.editRSSUrl.Location = new System.Drawing.Point(98, 38);
+            this.editRSSUrl.Location = new System.Drawing.Point(102, 36);
             this.editRSSUrl.Name = "editRSSUrl";
-            this.editRSSUrl.Size = new System.Drawing.Size(173, 20);
+            this.editRSSUrl.Size = new System.Drawing.Size(172, 20);
+            this.editRSSUrl.StyleController = this.layoutEntity;
             this.editRSSUrl.TabIndex = 5;
             // 
             // editCategory
@@ -178,14 +201,15 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.editCategory.DependentFieldName = null;
             this.editCategory.DependsOn = null;
             this.editCategory.Filter = null;
-            this.editCategory.Location = new System.Drawing.Point(98, 7);
+            this.editCategory.Location = new System.Drawing.Point(102, 12);
             this.editCategory.Name = "editCategory";
             this.editCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.editCategory.Properties.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.editCategory.ShowComboButton = true;
             this.editCategory.ShowEllipsisButton = false;
-            this.editCategory.Size = new System.Drawing.Size(173, 20);
+            this.editCategory.Size = new System.Drawing.Size(172, 20);
+            this.editCategory.StyleController = this.layoutEntity;
             this.editCategory.TabIndex = 4;
             // 
             // layoutControlGroup1
@@ -205,7 +229,6 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "layoutControlGroup1";
             this.layoutControlGroup1.Size = new System.Drawing.Size(553, 161);
-            this.layoutControlGroup1.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.layoutControlGroup1.Text = "layoutControlGroup1";
             this.layoutControlGroup1.TextVisible = false;
             // 
@@ -215,87 +238,99 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.layoutControlItemName.CustomizationFormText = "Kategori";
             this.layoutControlItemName.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItemName.Name = "layoutControlItemName";
-            this.layoutControlItemName.Size = new System.Drawing.Size(275, 31);
+            this.layoutControlItemName.Size = new System.Drawing.Size(266, 24);
             this.layoutControlItemName.Text = "Kategori";
-            this.layoutControlItemName.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItemName.TextSize = new System.Drawing.Size(86, 13);
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.editMedia;
             this.layoutControlItem2.CustomizationFormText = "Medya";
-            this.layoutControlItem2.Location = new System.Drawing.Point(275, 0);
+            this.layoutControlItem2.Location = new System.Drawing.Point(266, 0);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(276, 31);
+            this.layoutControlItem2.Size = new System.Drawing.Size(267, 24);
             this.layoutControlItem2.Text = "Medya";
-            this.layoutControlItem2.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItem2.TextSize = new System.Drawing.Size(86, 13);
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.editRSSUrl;
             this.layoutControlItem1.CustomizationFormText = "RSS Url";
-            this.layoutControlItem1.Location = new System.Drawing.Point(0, 31);
+            this.layoutControlItem1.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(275, 31);
+            this.layoutControlItem1.Size = new System.Drawing.Size(266, 24);
             this.layoutControlItem1.Text = "RSS Url";
-            this.layoutControlItem1.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItem1.TextSize = new System.Drawing.Size(86, 13);
-            // 
-            // layoutControlItem3
-            // 
-            this.layoutControlItem3.Control = this.editTitleSelector;
-            this.layoutControlItem3.CustomizationFormText = "Baþlýk Konumu";
-            this.layoutControlItem3.Location = new System.Drawing.Point(275, 62);
-            this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(276, 31);
-            this.layoutControlItem3.Text = "Baþlýk Konumu";
-            this.layoutControlItem3.TextLocation = DevExpress.Utils.Locations.Left;
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(86, 13);
-            // 
-            // layoutControlItem4
-            // 
-            this.layoutControlItem4.Control = this.editContentSelector;
-            this.layoutControlItem4.CustomizationFormText = "Metin Konumu";
-            this.layoutControlItem4.Location = new System.Drawing.Point(275, 124);
-            this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(276, 35);
-            this.layoutControlItem4.Text = "Metin Konumu";
-            this.layoutControlItem4.TextLocation = DevExpress.Utils.Locations.Left;
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(86, 13);
             // 
             // layoutControlItem5
             // 
             this.layoutControlItem5.Control = this.editAuthorSelector;
             this.layoutControlItem5.CustomizationFormText = "Yazar Adý Konumu";
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 93);
+            this.layoutControlItem5.Location = new System.Drawing.Point(0, 72);
             this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(275, 31);
+            this.layoutControlItem5.Size = new System.Drawing.Size(266, 24);
             this.layoutControlItem5.Text = "Yazar Adý Konumu";
-            this.layoutControlItem5.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItem5.TextSize = new System.Drawing.Size(86, 13);
             // 
             // layoutControlItem6
             // 
             this.layoutControlItem6.Control = this.editDateSelector;
             this.layoutControlItem6.CustomizationFormText = "Tarih Konumu";
-            this.layoutControlItem6.Location = new System.Drawing.Point(275, 93);
+            this.layoutControlItem6.Location = new System.Drawing.Point(266, 72);
             this.layoutControlItem6.Name = "layoutControlItem6";
-            this.layoutControlItem6.Size = new System.Drawing.Size(276, 31);
+            this.layoutControlItem6.Size = new System.Drawing.Size(267, 24);
             this.layoutControlItem6.Text = "Tarih Konumu";
-            this.layoutControlItem6.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItem6.TextSize = new System.Drawing.Size(86, 13);
             // 
             // layoutControlItem7
             // 
             this.layoutControlItem7.Control = this.editImageSelector;
             this.layoutControlItem7.CustomizationFormText = "Image Konumu";
-            this.layoutControlItem7.Location = new System.Drawing.Point(0, 124);
+            this.layoutControlItem7.Location = new System.Drawing.Point(0, 96);
             this.layoutControlItem7.Name = "layoutControlItem7";
-            this.layoutControlItem7.Size = new System.Drawing.Size(275, 35);
+            this.layoutControlItem7.Size = new System.Drawing.Size(266, 45);
             this.layoutControlItem7.Text = "Image Konumu";
-            this.layoutControlItem7.TextLocation = DevExpress.Utils.Locations.Left;
             this.layoutControlItem7.TextSize = new System.Drawing.Size(86, 13);
+            // 
+            // layoutControlItem8
+            // 
+            this.layoutControlItem8.Control = this.editLinkSelector;
+            this.layoutControlItem8.CustomizationFormText = "Link Konumu";
+            this.layoutControlItem8.Location = new System.Drawing.Point(0, 48);
+            this.layoutControlItem8.Name = "layoutControlItem8";
+            this.layoutControlItem8.Size = new System.Drawing.Size(266, 24);
+            this.layoutControlItem8.Text = "Link Konumu";
+            this.layoutControlItem8.TextSize = new System.Drawing.Size(86, 13);
+            // 
+            // layoutControlItem3
+            // 
+            this.layoutControlItem3.Control = this.editTitleSelector;
+            this.layoutControlItem3.CustomizationFormText = "Baþlýk Konumu";
+            this.layoutControlItem3.Location = new System.Drawing.Point(266, 48);
+            this.layoutControlItem3.Name = "layoutControlItem3";
+            this.layoutControlItem3.Size = new System.Drawing.Size(267, 24);
+            this.layoutControlItem3.Text = "Baþlýk Konumu";
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(86, 13);
+            // 
+            // layoutControlItem4
+            // 
+            this.layoutControlItem4.Control = this.editContentSelector;
+            this.layoutControlItem4.CustomizationFormText = "Metin Konumu";
+            this.layoutControlItem4.Location = new System.Drawing.Point(266, 96);
+            this.layoutControlItem4.Name = "layoutControlItem4";
+            this.layoutControlItem4.Size = new System.Drawing.Size(267, 45);
+            this.layoutControlItem4.Text = "Metin Konumu";
+            this.layoutControlItem4.TextSize = new System.Drawing.Size(86, 13);
+            // 
+            // layoutControlItem9
+            // 
+            this.layoutControlItem9.Control = this.editContentType;
+            this.layoutControlItem9.CustomizationFormText = "Ýçerik Türü";
+            this.layoutControlItem9.Location = new System.Drawing.Point(266, 24);
+            this.layoutControlItem9.Name = "layoutControlItem9";
+            this.layoutControlItem9.Size = new System.Drawing.Size(267, 24);
+            this.layoutControlItem9.Text = "Ýçerik Türü";
+            this.layoutControlItem9.TextSize = new System.Drawing.Size(86, 13);
             // 
             // btnAddContentDefinition
             // 
@@ -327,26 +362,6 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.panelDetail.Size = new System.Drawing.Size(554, 379);
             this.panelDetail.TabIndex = 23;
             // 
-            // listEntityContent
-            // 
-            this.listEntityContent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.listEntityContent.DeleteWarningMessage = "Seçilen içerik silinecek. Onaylýyor musunuz?";
-            this.listEntityContent.EntityType = null;
-            this.listEntityContent.ImageForEntity = null;
-            this.listEntityContent.Location = new System.Drawing.Point(3, 3);
-            this.listEntityContent.Name = "listEntityContent";
-            this.listEntityContent.PageSize = 13;
-            this.listEntityContent.ShowAddButton = false;
-            this.listEntityContent.ShowDeleteButton = true;
-            this.listEntityContent.ShowEditButton = false;
-            this.listEntityContent.ShowExcelButton = false;
-            this.listEntityContent.ShowHistoryButton = false;
-            this.listEntityContent.ShowTotalCount = true;
-            this.listEntityContent.Size = new System.Drawing.Size(548, 364);
-            this.listEntityContent.TabIndex = 26;
-            this.listEntityContent.Title = "Bu RSS\'den indirilen haberler";
-            // 
             // btnDeleteContentDefinition
             // 
             this.btnDeleteContentDefinition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -367,45 +382,25 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.btnTest.TabIndex = 25;
             this.btnTest.Text = "Test Et";
             // 
-            // editLinkSelector
+            // listEntityContent
             // 
-            this.editLinkSelector.Location = new System.Drawing.Point(98, 69);
-            this.editLinkSelector.Name = "editLinkSelector";
-            this.editLinkSelector.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton()});
-            this.editLinkSelector.Size = new System.Drawing.Size(173, 20);
-            this.editLinkSelector.TabIndex = 12;
-            // 
-            // layoutControlItem8
-            // 
-            this.layoutControlItem8.Control = this.editLinkSelector;
-            this.layoutControlItem8.CustomizationFormText = "Link Konumu";
-            this.layoutControlItem8.Location = new System.Drawing.Point(0, 62);
-            this.layoutControlItem8.Name = "layoutControlItem8";
-            this.layoutControlItem8.Size = new System.Drawing.Size(275, 31);
-            this.layoutControlItem8.Text = "Link Konumu";
-            this.layoutControlItem8.TextLocation = DevExpress.Utils.Locations.Left;
-            this.layoutControlItem8.TextSize = new System.Drawing.Size(86, 13);
-            // 
-            // editContentType
-            // 
-            this.editContentType.Location = new System.Drawing.Point(373, 38);
-            this.editContentType.Name = "editContentType";
-            this.editContentType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.editContentType.Size = new System.Drawing.Size(174, 20);
-            this.editContentType.TabIndex = 13;
-            // 
-            // layoutControlItem9
-            // 
-            this.layoutControlItem9.Control = this.editContentType;
-            this.layoutControlItem9.CustomizationFormText = "Ýçerik Türü";
-            this.layoutControlItem9.Location = new System.Drawing.Point(275, 31);
-            this.layoutControlItem9.Name = "layoutControlItem9";
-            this.layoutControlItem9.Size = new System.Drawing.Size(276, 31);
-            this.layoutControlItem9.Text = "Ýçerik Türü";
-            this.layoutControlItem9.TextLocation = DevExpress.Utils.Locations.Left;
-            this.layoutControlItem9.TextSize = new System.Drawing.Size(86, 13);
+            this.listEntityContent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listEntityContent.DeleteWarningMessage = "Seçilen içerik silinecek. Onaylýyor musunuz?";
+            this.listEntityContent.EntityType = null;
+            this.listEntityContent.ImageForEntity = null;
+            this.listEntityContent.Location = new System.Drawing.Point(3, 3);
+            this.listEntityContent.Name = "listEntityContent";
+            this.listEntityContent.PageSize = 13;
+            this.listEntityContent.ShowAddButton = false;
+            this.listEntityContent.ShowDeleteButton = true;
+            this.listEntityContent.ShowEditButton = false;
+            this.listEntityContent.ShowExcelButton = false;
+            this.listEntityContent.ShowHistoryButton = false;
+            this.listEntityContent.ShowTotalCount = true;
+            this.listEntityContent.Size = new System.Drawing.Size(548, 364);
+            this.listEntityContent.TabIndex = 26;
+            this.listEntityContent.Title = "Bu RSS\'den indirilen haberler";
             // 
             // EditContentDefinition
             // 
@@ -418,9 +413,11 @@ namespace Cinar.WinApp.MediaSearch.Controls
             this.Controls.Add(this.btnAddContentDefinition);
             this.Controls.Add(this.btnSaveContentDefinition);
             this.Name = "EditContentDefinition";
-            this.Size = new System.Drawing.Size(581, 574);
+            this.Size = new System.Drawing.Size(581, 425);
             ((System.ComponentModel.ISupportInitialize)(this.layoutEntity)).EndInit();
             this.layoutEntity.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.editContentType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editLinkSelector.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editImageSelector.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editDateSelector.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editAuthorSelector.Properties)).EndInit();
@@ -433,17 +430,15 @@ namespace Cinar.WinApp.MediaSearch.Controls
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItemName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelDetail)).EndInit();
             this.panelDetail.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.editLinkSelector.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editContentType.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
             this.ResumeLayout(false);
 
         }
