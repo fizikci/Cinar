@@ -184,8 +184,17 @@ namespace Cinar.CMS.Library.Entities
         [XmlIgnore]
         public string PageLink
         {
-            get {
+            get
+            {
                 return Provider.GetTemplate(this, "");
+            }
+        }
+        [XmlIgnore]
+        public string PageLinkWithTitle
+        {
+            get
+            {
+                return Provider.GetPageUrl(Provider.GetTemplate(this, ""), this.Id, this.Title);
             }
         }
 
