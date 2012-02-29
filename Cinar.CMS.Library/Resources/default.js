@@ -204,6 +204,33 @@ document.observe('dom:loaded', function(){
 			}
 		}
 	}
+	// mansetAktuel
+	$$('.mansetAktuel').each(function(manset){
+		manset.insert('<div class="links" style="float:right"></div>');
+		var links = manset.down('.links');
+		var currItem = null;
+		manset.select('.clItem').each(function(elm, i){
+			var src = elm.down('img').readAttribute('src');
+			elm.down('img').up().remove();
+			elm.setStyle({background:'url('+src.replace("'","\\'")+') no-repeat left top',width:'650px',height:'250px'});
+			elm.insert('<div class="summary"></div>');
+
+			var summary = elm.down('.summary');
+			summary.insert(elm.down('div.clCategory').remove());
+			summary.insert(elm.down('div.clPubDate').remove());
+			summary.insert(elm.down('div.clSTitle').remove());
+			summary.insert(elm.down('div.clDesc').remove());
+
+			var elmTitle = elm.down('div.clTitle');
+			links.insert(elmTitle.remove());
+			elmTitle.on('mouseover', function(){currItem.hide(); elm.show(); currItem = elm;});
+
+			if(i>0)
+				elm.hide();
+			else
+				currItem = elm;
+		});
+	});
 });
 function slideShowSlide(elm, dir){
 	if(elm.alreadySliding) return;

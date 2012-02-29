@@ -165,3 +165,55 @@ i {font-style:italic}
 	padding:5px;
 	cursor:pointer;
 }
+
+.mansetAktuel {
+	height:250px;
+	background-image:url(/UserFiles/Images/_design/manset.jpg);
+}
+.mansetAktuel .summary {
+	float:right;
+	background-color:rgba(0,0,0,0.8);
+	color:white;
+	width:200px;
+	height:250px;
+	padding:10px;
+}
+.mansetAktuel div.clItem {
+	float:left;
+	width:650px;
+}
+.mansetAktuel div.clSTitle {
+	font-weight:bold;
+	font-size:14px;
+	padding-top:10px;
+}
+.mansetAktuel div.clCategory {
+	font-weight:bold;
+}
+.mansetAktuel div.clPubDate {
+	padding-top:10px;
+}
+.mansetAktuel div.clDesc {
+	font-size: 12px;
+	font-style: italic;
+	padding-top: 10px;
+}
+.mansetAktuel .links {
+	float:right;
+	width:324px;
+	padding-top:10px;
+	font-weight:bold;
+}
+.mansetAktuel .links a {
+    background: url("/UserFiles/Images/_design/ok.png") no-repeat scroll 16px 9px transparent;
+    color: #FFFFFF;
+    display: block;
+    height: 22px;
+    margin: 0;
+    padding: 5px 0 0 35px;
+}
+.mansetAktuel .links a:hover {
+    background-color: #FDB812;
+    color: #000000;
+    text-decoration: none;
+}
