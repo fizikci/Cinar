@@ -90,6 +90,7 @@
     <Compile Include="Modules\Commerce\BasketSummary.cs" />
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
+    <Compile Include="Modules\Membership\LoginForm2.cs" />
     <Compile Include="Modules\Misc\Chart.cs" />
     <Compile Include="Modules\Newspaper\AuthorBox.cs" />
     <Compile Include="Modules\Newspaper\AuthorList.cs" />
