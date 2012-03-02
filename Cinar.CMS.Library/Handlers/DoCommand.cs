@@ -588,6 +588,7 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarıSIZ, login formunun olduğu sayfaya geri gönderelim
                 context.Session["loginError"] = "Email veya şifre geçersiz.";
                 context.Response.Redirect(context.Request.Form["RedirectURL"]);
+                Provider.SetHttpContextUser();
             }
         }
 
