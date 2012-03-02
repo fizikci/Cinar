@@ -99,14 +99,12 @@ i {font-style:italic}
 	position:absolute;
 	z-index:3;
 	left:0px;
-	top:180px;
 	cursor:pointer;
 }
 .fadeWithArrows #lbNext {
 	position:absolute;
 	z-index:3;
 	right:0px;
-	top:180px;
 	cursor:pointer;
 }
 .fadeWithArrows .clItem {
