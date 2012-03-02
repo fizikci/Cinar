@@ -741,7 +741,15 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
 			currEditor = null;
             return;
         }
-        new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '"><textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/><center><span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center></div>');
+        new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">'+
+												'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/>'+
+												'<center>'+
+													'<span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> '+
+													'<span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> '+
+													'<span id="' + this.editorId + 'btnPicture" class="btn picture">' + lang('Add picture') + '</span> '+
+													'<span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span>'+
+												'</center>'+
+											'</div>');
 
         var list = $(this.editorId);
         if (this.input.disabled) return;
@@ -750,6 +758,9 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
         var btnCancel = $(this.editorId + 'btnCancel');
         btnOK.observe('click', this.setValueByEditor.bind(this));
         btnCancel.observe('click', this.showEditor.bind(this));
+		
+		var ths = this;
+		$(this.editorId + 'btnPicture').observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', path, ''); Windows.getFocusedWindow().close();});});
 
         if (this.afterShowEditor) this.afterShowEditor();
 
