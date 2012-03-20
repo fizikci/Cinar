@@ -360,7 +360,7 @@ namespace Cinar.CMS.Library.Modules
         {
             if (!this.ShowTitle) return ""; //**
 
-            string title = Utility.StrCrop(content.Title, this.titleLength);
+            string title = content.Title.StrCrop(this.titleLength);
             string link = getLinkAndIconHTML(title, isFirstItem, template, content);
 
             return String.Format("<div class=\"{0}\">{1}</div>",
@@ -372,7 +372,7 @@ namespace Cinar.CMS.Library.Modules
         {
             if (!this.ShowSpotTitle) return ""; //**
 
-            string title = Utility.StrCrop(content.SpotTitle, this.titleLength);
+            string title = content.SpotTitle.StrCrop(this.titleLength);
             string link = getLinkAndIconHTML(title, isFirstItem, template, content);
 
             return String.Format("<div class=\"{0}\">{1}</div>",
@@ -408,7 +408,7 @@ namespace Cinar.CMS.Library.Modules
 
         protected virtual string getDescriptionHTML(bool isFirstItem, string template, Content content, int row, int col)
         {
-            string desc = Utility.StrCrop(content.Description, this.descriptionLength);
+            string desc = content.Description.StrCrop(this.descriptionLength);
             if (this.showDescriptionAsLink)
                 desc = getLinkAndIconHTML(desc, isFirstItem, template, content);
 
@@ -420,7 +420,7 @@ namespace Cinar.CMS.Library.Modules
 
         protected virtual string getCatDescriptionHTML(bool isFirstItem, string template, Content content, int row, int col)
         {
-            string desc = Utility.StrCrop(content.Category.Description, this.descriptionLength);
+            string desc = content.Category.Description.StrCrop(this.descriptionLength);
             if (this.showDescriptionAsLink)
                 desc = getLinkAndIconHTML(desc, isFirstItem, template, content); // bu önemli content'in linki olmalı
 

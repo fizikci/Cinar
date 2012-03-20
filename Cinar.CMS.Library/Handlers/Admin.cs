@@ -120,7 +120,7 @@ namespace Cinar.CMS.Library.Handlers
             int i = 0;
 
             foreach (DataRow drCat in dtCats.Rows)
-                items[i++] = "{id:" + drCat["Id"] + ", text:" + Utility.ToJS(drCat["Title"]) + "}";
+                items[i++] = "{id:" + drCat["Id"] + ", text:" + drCat["Title"].ToJS() + "}";
 
             context.Response.Write("[" + String.Join(",", items) + "]");
         }
@@ -381,7 +381,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 bool isHidden = ((File.GetAttributes(items[i]) & FileAttributes.Hidden) == FileAttributes.Hidden);
                 if (!isHidden)
-                    resList.Add("{id:" + Utility.ToJS(folderName + "/" + Path.GetFileName(items[i])) + ", text:" + Utility.ToJS(Path.GetFileName(items[i])) + "}");
+                    resList.Add("{id:" + (folderName + "/" + Path.GetFileName(items[i])).ToJS() + ", text:" + Path.GetFileName(items[i]).ToJS() + "}");
             }
 
             context.Response.Write("[" + String.Join(",", resList.ToArray()) + "]");
@@ -431,7 +431,7 @@ namespace Cinar.CMS.Library.Handlers
                 context.Request.Files["upload"].SaveAs(Path.Combine(path, fileName));
                 context.Response.Write(@"{success: true, error: 'Yüklendi'}");
             }
-            catch (Exception ex)
+            catch
             {
                 context.Response.Write(@"{success: false, error: 'Yükleme başarısız'}");
             }

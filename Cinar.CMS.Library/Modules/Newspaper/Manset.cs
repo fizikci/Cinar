@@ -75,15 +75,15 @@ namespace Cinar.CMS.Library.Modules
                 return "";
 
             Hashtable fields = new Hashtable();
-            fields["title"] = String.Format("<tr><td colspan=\"2\" id=\"{0}_{1}_title\" class=\"mansetTitle\">{2}</td></tr>\n", this.Name, this.Id, Utility.StrCrop(firstContent.Title, this.titleLength));
-            fields["spot"] = String.Format("<tr><td colspan=\"2\" id=\"{0}_{1}_sTitle\" class=\"mansetSTitle\">{2}</td></tr>\n", this.Name, this.Id, Utility.StrCrop(firstContent.SpotTitle, this.titleLength));
+            fields["title"] = String.Format("<tr><td colspan=\"2\" id=\"{0}_{1}_title\" class=\"mansetTitle\">{2}</td></tr>\n", this.Name, this.Id, firstContent.Title.StrCrop(this.titleLength));
+            fields["spot"] = String.Format("<tr><td colspan=\"2\" id=\"{0}_{1}_sTitle\" class=\"mansetSTitle\">{2}</td></tr>\n", this.Name, this.Id, firstContent.SpotTitle.StrCrop(this.titleLength));
             fields["image"] =
                 "<tr>\n\t<td align=\"center\" valign=\"middle\" width=\"1%\">"
                 + Provider.GetThumbImgHTML(firstContent.Picture, pictureWidthM, pictureHeightM, null, "mansetImage", "id=\"" + this.Name + "_" + this.Id + "_pic\"", CropPictureM)
                 + "</td>\n" + (this.showLinksBelowPicture ? "</tr><tr>" : "") + "\t<td width=\"99%\">"
                 + base.show() + "\n"
                 + "</td></tr>\n";
-            fields["description"] = String.Format("<tr><td colspan=\"2\"><div id=\"{0}_{1}_desc\" class=\"mansetDesc\">{2}</div></td></tr>\n", this.Name, this.Id, Utility.StrCrop(firstContent.Description, this.descriptionLength));
+            fields["description"] = String.Format("<tr><td colspan=\"2\"><div id=\"{0}_{1}_desc\" class=\"mansetDesc\">{2}</div></td></tr>\n", this.Name, this.Id, firstContent.Description.StrCrop(this.descriptionLength));
 
             sb.AppendFormat("<table{0} width=\"100%\" border=\"0\">\n", this.withAnimation ? " onmouseover=\"showManset(event, "+this.Id+")\"" : "");
             foreach (string fieldName in this.MansetFieldOrder.Split(','))
@@ -96,14 +96,14 @@ namespace Cinar.CMS.Library.Modules
         protected override string getTitleHTML(bool isFirstItem, string template, Content content, int row, int col)
         {
             if (this.mansetFieldOrder.Contains("title") && !this.ShowTitle)
-                return String.Format("<div class=\"clTitle\" style=\"display:none\">{0}</div>", Utility.StrCrop(content.Title, this.titleLength));
+                return String.Format("<div class=\"clTitle\" style=\"display:none\">{0}</div>", content.Title.StrCrop(this.titleLength));
             else
                 return base.getTitleHTML(isFirstItem, template, content, row, col);
         }
         protected override string getSpotTitleHTML(bool isFirstItem, string template, Content content, int row, int col)
         {
             if (this.mansetFieldOrder.Contains("spot") && !this.ShowSpotTitle)
-                return String.Format("<div class=\"clSTitle\" style=\"display:none\">{0}</div>", Utility.StrCrop(content.SpotTitle, this.titleLength));
+                return String.Format("<div class=\"clSTitle\" style=\"display:none\">{0}</div>", content.SpotTitle.StrCrop(this.titleLength));
             else
                 return base.getSpotTitleHTML(isFirstItem, template, content, row, col);
         }
@@ -114,7 +114,7 @@ namespace Cinar.CMS.Library.Modules
         }
         protected override string getDescriptionHTML(bool isFirstItem, string template, Content content, int row, int col)
         {
-            string desc = Utility.StrCrop(content.Description, this.descriptionLength);
+            string desc = content.Description.StrCrop(this.descriptionLength);
             if (this.mansetFieldOrder.Contains("description") && !this.ShowDescription)
                 return String.Format("<div class=\"clDesc\" style=\"display:none\">{0}</div>", desc);
             else

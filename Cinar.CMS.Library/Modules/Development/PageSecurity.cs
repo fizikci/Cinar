@@ -14,9 +14,6 @@ namespace Cinar.CMS.Library.Modules
         }
 
         [EditFormFieldProps(Options = "noHTML:true")]
-        public string RoleToRead { get; set; }
-
-        [EditFormFieldProps(Options = "noHTML:true")]
         public string RoleToChange { get; set; }
 
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates, addBlankItem:true")]

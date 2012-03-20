@@ -66,6 +66,7 @@ namespace Cinar.Database.Providers
                         cmd.CommandText = "create database " + dbName + ";";
                         cmd.ExecuteNonQuery();
                         connection.ChangeDatabase(dbName);
+                        CreatedNow = true;
                         connection.Close();
                     }
                     catch { }

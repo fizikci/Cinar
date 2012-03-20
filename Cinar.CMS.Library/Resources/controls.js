@@ -907,6 +907,10 @@ var __yearCombo = null;
 var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     dateValue: null,
     initialize: function(id, value, options){
+		if(value instanceof Date){
+			this.dateValue = value;
+			value = this.getValue();
+		}
         Object.extend(this, new Control(id, value, options));
         this.setText(value);
         this.button.observe('click', this.showEditor.bind(this));
@@ -1004,7 +1008,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     },
     getValue: function(){
         var d = this.dateValue;
-        return d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        return this.addZero(d.getDate())+'-'+this.addZero(d.getMonth()+1)+'-'+d.getFullYear()+' '+this.addZero(d.getHours())+':'+this.addZero(d.getMinutes())+':'+this.addZero(d.getSeconds());
     },
     setValue: function(d){
         if(!d) return;
@@ -1013,8 +1017,13 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
             d = this.dateValue;
         }
         else 
-            this.input.value = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-    }
+            this.input.value = this.addZero(d.getDate())+'-'+this.addZero(d.getMonth()+1)+'-'+d.getFullYear()+' '+this.addZero(d.getHours())+':'+this.addZero(d.getMinutes())+':'+this.addZero(d.getSeconds());
+    },
+	addZero: function(num){
+		if(num.toString().length<2)
+			return '0' + num;
+		return num.toString();
+	}
 }
 
 //#########################

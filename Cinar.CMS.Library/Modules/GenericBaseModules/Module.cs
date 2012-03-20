@@ -272,7 +272,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Cinar.CMS.Serialization\n");
-            foreach (PropertyInfo pi in Utility.GetProperties(this))
+            foreach (PropertyInfo pi in this.GetProperties())
             {
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;

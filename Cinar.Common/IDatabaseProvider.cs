@@ -67,6 +67,8 @@ namespace Cinar.Database
         string GetSQLIndexAdd(Index index);
         string GetSQLIndexRemove(Index index);
         string GetSQLViewCreate(Table view);
+
+        bool CreatedNow { get; set; }
     }
     public interface IMetadata
     { 

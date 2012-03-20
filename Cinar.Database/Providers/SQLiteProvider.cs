@@ -55,6 +55,7 @@ namespace Cinar.Database.Providers
                     try
                     {
                         connection.Open();
+                        CreatedNow = true;
                         connection.Close();
                     }
                     catch { }

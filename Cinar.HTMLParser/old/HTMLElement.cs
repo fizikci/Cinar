@@ -53,7 +53,7 @@ namespace Cinar.HTMLParser
             }
             set
             {
-                if (this is InnerText)
+                if (this is InnerTextElement)
                     this.InnerText = value;
                 else
                 {
@@ -155,7 +155,7 @@ namespace Cinar.HTMLParser
             }
         }
 
-        internal float AvailableWidth;
+        internal float AvailableWidth = 0f;
         internal PointF CursorPos;
         internal List<Line> Lines = new List<Line>();
 

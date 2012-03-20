@@ -175,7 +175,6 @@ namespace Cinar.CMS.Library.Modules
                 case ControlType.FilterEdit:
                 default:
                     throw new Exception(Provider.GetResource("This kind of form field is not supported: {0}", ct));
-                    break;
             }
             return sb.ToString();
         }

@@ -201,7 +201,7 @@ namespace Cinar.CMS.Library.Handlers
         private void exportTemplates()
         {
             string templates = context.Request["templates"];
-            if (String.IsNullOrEmpty(templates) || Utility.SplitWithTrim(templates, ',').Length == 0)
+            if (String.IsNullOrEmpty(templates) || templates.SplitWithTrim(',').Length == 0)
                 sendErrorMessage("Dışarı verilecek sayfaları seçiniz.");
             else
             {
@@ -209,7 +209,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 sb.AppendFormat("<export date=\"{0}\">\n", DateTime.Now);
 
-                foreach (string template in Utility.SplitWithTrim(templates, ','))
+                foreach (string template in templates.SplitWithTrim(','))
                     sb.Append(exportTemplate(template));
 
                 sb.Append("</export>\n");
@@ -332,7 +332,7 @@ namespace Cinar.CMS.Library.Handlers
                 context.Request.Files["upload"].SaveAs(Path.Combine(path, fileName));
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
             }
-            catch (Exception ex)
+            catch
             {
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
             }
@@ -413,7 +413,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Klasör oluşturuldu.');</script>");
             }
-            catch (Exception ex)
+            catch
             {
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Hata');</script>");
             }
