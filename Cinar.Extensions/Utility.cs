@@ -18,23 +18,23 @@ namespace System
     public static class Utility
     {
         #region Drawing
-        public static Bitmap ScaleImage(this Bitmap orjImg, int width, int height)
+        public static Bitmap ScaleImage(Bitmap orjImg, int width, int height)
         {
-            if (height == 0) height = Convert.ToInt32(width * (float)orjImg.Height / orjImg.Width);
-            if (width == 0) width = Convert.ToInt32(height * (float)orjImg.Width / orjImg.Height);
+            if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
+            if (width == 0) width = Convert.ToInt32(height * (double)orjImg.Width / (double)orjImg.Height);
 
             Bitmap imgDest = new Bitmap(width, height);
-            imgDest.SetResolution(orjImg.HorizontalResolution, orjImg.VerticalResolution);
-            using(Graphics grDest = Graphics.FromImage(imgDest))
+            imgDest.SetResolution(72, 72);
+            using (Graphics grDest = Graphics.FromImage(imgDest))
             {
                 grDest.SmoothingMode = SmoothingMode.AntiAlias;
                 grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                grDest.DrawImage(orjImg, 0f, 0f, width, height);
+                grDest.DrawImage(orjImg, 0f, 0f, (float)width, (float)height);
             }
             return imgDest;
         }
-        public static void SaveJpeg(this Image img, string path, long quality)
+        public static void SaveJpeg(string path, Image img, long quality)
         {
             // Encoder parameter for image quality
             EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)quality);
@@ -46,7 +46,7 @@ namespace System
 
             img.Save(path, jpegCodec, encoderParams);
         }
-        public static Bitmap CropImage(this Bitmap orjImg, int x, int y, int width, int height)
+        public static Bitmap CropImage(Bitmap orjImg, int x, int y, int width, int height)
         {
             Bitmap bmPhoto = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             bmPhoto.SetResolution(72, 72);
@@ -54,10 +54,46 @@ namespace System
             grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
             grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            grPhoto.FillRectangle(Brushes.White, new Rectangle(0, 0, width, height));
             grPhoto.DrawImage(orjImg, new Rectangle(0, 0, width, height), x, y, width, height, GraphicsUnit.Pixel);
             grPhoto.Dispose();
             return bmPhoto;
         }
+        public static void SavePng(string path, Image img)
+        {
+            img.Save(path, ImageFormat.Png);
+        }
+        public static void SaveGif(string path, Image img)
+        {
+            img.Save(path, ImageFormat.Gif);
+        }
+        public static void SaveImage(string path, Image img, long quality)
+        {
+            string lowerPath = path.ToLowerInvariant();
+
+            if (lowerPath.EndsWith(".png"))
+                SavePng(path, img);
+            else if (lowerPath.EndsWith(".gif"))
+                SaveGif(path, img);
+            else
+                SaveJpeg(path, img, quality);
+
+        }
+        public static bool IsGifAnimated(string path)
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            byte[] netscape = bytes.Skip(0x310).Take(11).ToArray();
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var item in netscape)
+            {
+                sb.Append((char)item);
+            }
+
+            return sb.ToString() == "NETSCAPE2.0";
+        }
+
 
         private static ImageCodecInfo _jpegCodec;
         private static ImageCodecInfo jpegCodec

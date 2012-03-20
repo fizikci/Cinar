@@ -46,7 +46,9 @@ namespace Cinar.CMS.Library
                 try
                 {
                     if (pi.PropertyType.IsEnum)
-                        val = Enum.Parse(pi.PropertyType, strVal); 
+                        val = Enum.Parse(pi.PropertyType, strVal);
+                    else if (pi.PropertyType == typeof(DateTime) && string.IsNullOrWhiteSpace(strVal))
+                        val = new DateTime(1980, 1, 1);
                     else
                         val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
                 }

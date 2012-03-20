@@ -453,7 +453,7 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
-                context.Response.Redirect(Provider.Configuration.MembershipFormPage);
+                context.Response.Redirect(Provider.Configuration.MembershipProfilePage);
             }
             else
             {
