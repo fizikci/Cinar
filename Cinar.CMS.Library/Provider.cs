@@ -1905,12 +1905,13 @@ namespace Cinar.CMS.Library
 
             Bitmap imgDest = new Bitmap(width, height);
             imgDest.SetResolution(72, 72);
-            Graphics grDest = Graphics.FromImage(imgDest);
-            grDest.SmoothingMode = SmoothingMode.AntiAlias;
-            grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            grDest.DrawImage(orjImg, 0f, 0f, (float)width, (float)height);
-            grDest.Dispose();
+            using(Graphics grDest = Graphics.FromImage(imgDest))
+            {
+                grDest.SmoothingMode = SmoothingMode.AntiAlias;
+                grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                grDest.DrawImage(orjImg, 0f, 0f, (float) width, (float) height);
+            }
             return imgDest;
         }
         public static void SaveJpeg(string path, Image img, long quality)
