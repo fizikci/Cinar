@@ -321,7 +321,7 @@ namespace Cinar.CMS.Library.Modules
             {
                 DataTable dt = new DataTable();
                 dt.Columns.Add("value", typeof(double));
-                foreach (string dataValue in Utility.SplitWithTrim(this.values.Replace('|', ','), ','))
+                foreach (string dataValue in this.values.Replace('|', ',').SplitWithTrim(','))
                 {
                     DataRow dr = dt.NewRow();
                     double val = Convert.ToDouble(dataValue);

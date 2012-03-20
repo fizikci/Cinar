@@ -160,7 +160,7 @@ namespace Cinar.CMS.Library
             sb.Append("[\n");
             ArrayList res = new ArrayList();
             int ctrlOrderNo = 0;
-            foreach (PropertyInfo pi in Utility.GetProperties(obj))
+            foreach (PropertyInfo pi in obj.GetProperties())
             {
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
@@ -235,13 +235,13 @@ namespace Cinar.CMS.Library
                     options = ", options:{" + options.Substring(1) + "}";
 
                 res.Add("\t{" + String.Format("label:'{0}', description:'{1}', type:'{2}', id:'{3}', category:{4}, orderNo:{5}, value:{6}{7}",
-                    Utility.ToHTMLString(caption),
-                    Utility.ToHTMLString(description),
+                    caption.ToHTMLString(),
+                    description.ToHTMLString(),
                     editProps.ControlType,
                     pi.Name,
                     editProps.Category.ToJS(),
                     editProps.OrderNo.ToJS(),
-                    Utility.ToJS(pi.GetValue(obj, null)),
+                    pi.GetValue(obj, null).ToJS(),
                     options) + "}\n,");
             }
 
@@ -271,8 +271,8 @@ namespace Cinar.CMS.Library
                         {
                             sb.Append("\t{");
                             sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'",
-                                Utility.ToHTMLString(Provider.GetResource(entityType.Name)),
-                                Utility.ToHTMLString(Provider.GetResource(entityType.Name + "Desc")),
+                                Provider.GetResource(entityType.Name).ToHTMLString(),
+                                Provider.GetResource(entityType.Name + "Desc").ToHTMLString(),
                                 entityType.Name,
                                 pi.Name);
                             sb.Append("}\n,");
@@ -333,7 +333,7 @@ namespace Cinar.CMS.Library
             else
             {
                 if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
-                    foreach (string customAssembly in Utility.SplitWithTrim(Provider.AppSettings["customAssemblies"], ','))
+                    foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
                     {
                         Assembly assembly = GetAssembly(customAssembly);
                         if (assembly == null)
@@ -394,7 +394,7 @@ namespace Cinar.CMS.Library
                 if (type.IsSubclassOf(baseType) && type.IsAbstract == abstractTypes)
                     types.Add(type);
             if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
-                foreach (string customAssembly in Utility.SplitWithTrim(Provider.AppSettings["customAssemblies"], ','))
+                foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
                 {
                     Assembly assembly = GetAssembly(customAssembly);
                     if (assembly == null)
@@ -438,7 +438,7 @@ namespace Cinar.CMS.Library
             for (int i = 0; i < entities.Length; i++)
             {
                 IDatabaseEntity entity = entities[i];
-                sb.Append(",[" + Utility.ToJS(entity.Id) + "," + Utility.ToJS(entity.GetNameValue()) + "]");
+                sb.Append(",[" + entity.Id.ToJS() + "," + entity.GetNameValue().ToJS() + "]");
 
             }
             sb.Append("]");
@@ -675,7 +675,7 @@ namespace Cinar.CMS.Library
                             {
                                 try
                                 {
-                                    string imgFileName = Provider.AppSettings["authorDir"] + "/" + Utility.MakeFileName(author.Name) + "_" + (DateTime.Now.Millisecond % 1000) + authorPicture.Substring(authorPicture.LastIndexOf('.'));
+                                    string imgFileName = Provider.AppSettings["authorDir"] + "/" + author.Name.MakeFileName() + "_" + (DateTime.Now.Millisecond % 1000) + authorPicture.Substring(authorPicture.LastIndexOf('.'));
                                     WebClient wc = new WebClient();
                                     wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
                                     wc.DownloadFile(authorPicture, Provider.MapPath(imgFileName));
@@ -1127,7 +1127,7 @@ namespace Cinar.CMS.Library
             }
             else
             {
-                PropertyInfo stringProperty = Utility.GetProperty(entityType, typeof(string));
+                PropertyInfo stringProperty = entityType.GetProperty(typeof(string));
                 string propertyName = stringProperty == null ? "" : ", " + entityType.Name + "." + stringProperty.Name;
                 sql = "select Id" + propertyName + "  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
             }
@@ -1209,7 +1209,7 @@ namespace Cinar.CMS.Library
 
             if (!System.IO.File.Exists(thumbPath))
             {
-                if (path.EndsWith(".gif") && Utility.IsGifAnimated(path))
+                if (path.EndsWith(".gif") && System.Utility.IsGifAnimated(path))
                 {
                     File.Copy(path, thumbPath);
                 }
@@ -1221,29 +1221,29 @@ namespace Cinar.CMS.Library
                         // burada resize ediyoruz
                         orjImg = (Bitmap)Bitmap.FromFile(path);
                         if (prefWidth == 0)
-                            imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
+                            imgDest = orjImg.ScaleImage(0, prefHeight);
                         else if (prefHeight == 0)
-                            imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
+                            imgDest = orjImg.ScaleImage(prefWidth, 0);
                         else
                         {
                             double picRatio = (double)orjImg.Width / (double)orjImg.Height;
                             double prefRatio = (double)prefWidth / (double)prefHeight;
                             if (picRatio >= prefRatio)
                             {
-                                imgDest = Utility.ScaleImage(orjImg, prefWidth, 0);
+                                imgDest = orjImg.ScaleImage(prefWidth, 0);
                                 int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
                                 if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                    imgDest = Utility.CropImage(imgDest, 0, y, prefWidth, prefHeight);
+                                    imgDest = imgDest.CropImage(0, y, prefWidth, prefHeight);
                             }
                             else
                             {
-                                imgDest = Utility.ScaleImage(orjImg, 0, prefHeight);
+                                imgDest = orjImg.ScaleImage(0, prefHeight);
                                 int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
                                 if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                    imgDest = Utility.CropImage(imgDest, x, 0, prefWidth, prefHeight);
+                                    imgDest = imgDest.CropImage(x, 0, prefWidth, prefHeight);
                             }
                         }
-                        Utility.SaveImage(thumbPath, imgDest, Provider.Configuration.ThumbQuality * 1L);
+                        imgDest.SaveImage(thumbPath, Provider.Configuration.ThumbQuality * 1L);
                     }
                     catch (Exception ex)
                     {
@@ -1418,7 +1418,7 @@ namespace Cinar.CMS.Library
                     string contentImgUrl = match.Groups["contentpic"].Value.Trim();
                     WebClient wc = new WebClient();
                     wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                    string imgFileName = Provider.AppSettings["uploadDir"] + "/" + Utility.MakeFileName(content.Title) + contentImgUrl.Substring(contentImgUrl.LastIndexOf('.'));
+                    string imgFileName = Provider.AppSettings["uploadDir"] + "/" + content.Title.MakeFileName() + contentImgUrl.Substring(contentImgUrl.LastIndexOf('.'));
                     wc.DownloadFile(contentImgUrl, MapPath(imgFileName));
                     content.Picture = imgFileName;
                 }
@@ -1454,7 +1454,7 @@ namespace Cinar.CMS.Library
             if (!String.IsNullOrEmpty(contentSource.Encoding))
             {
                 string orjResponse = new System.IO.StreamReader(webResponse.GetResponseStream(), Encoding.GetEncoding(contentSource.Encoding)).ReadToEnd();
-                response = Utility.ConvertEncoding(orjResponse, contentSource.Encoding, "iso-8859-9");
+                response = orjResponse.ConvertEncoding(contentSource.Encoding, "iso-8859-9");
             }
             else
                 response = new System.IO.StreamReader(webResponse.GetResponseStream(), Encoding.GetEncoding("iso-8859-9")).ReadToEnd();
@@ -1478,10 +1478,10 @@ namespace Cinar.CMS.Library
                         author.Name = authorName;
                         if (match.Groups["authorpic"].Value != "")
                         {
-                            string authorImgUrl = Utility.ConvertRelativeUrlToAbsolute(match.Groups["authorpic"].Value.Trim(), url);
+                            string authorImgUrl = match.Groups["authorpic"].Value.Trim().ConvertToAbsoluteURL(url);
                             WebClient wc = new WebClient();
                             wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                            string imgFileName = Provider.AppSettings["authorDir"] + "/" + Utility.MakeFileName(authorName) + authorImgUrl.Substring(authorImgUrl.LastIndexOf('.'));
+                            string imgFileName = Provider.AppSettings["authorDir"] + "/" + authorName.MakeFileName() + authorImgUrl.Substring(authorImgUrl.LastIndexOf('.'));
                             wc.DownloadFile(authorImgUrl, MapPath(imgFileName));
                             author.Picture = imgFileName;
                         }
@@ -1628,7 +1628,7 @@ namespace Cinar.CMS.Library
             Interpreter engine = new Interpreter(template, new List<string>() {"Cinar.CMS.Library"});
             engine.AddAssembly(typeof(Provider).Assembly);
             if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
-                foreach (string customAssembly in Utility.SplitWithTrim(Provider.AppSettings["customAssemblies"], ','))
+                foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
                 {
                     Assembly assembly = GetAssembly(customAssembly);
                     if (assembly == null)
@@ -1653,86 +1653,6 @@ namespace Cinar.CMS.Library
 
     public class Utility
     {
-        public static string ToHTMLString(string str)
-        {
-            if (str == null) return String.Empty;
-            return str.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
-        }
-        public static string ToJS(object val)
-        {
-            if (val == null) return "null";
-
-            if (val.GetType().IsEnum)
-                return "'" + val + "'";
-
-            switch (val.GetType().Name)
-            {
-                case "String":
-                    return "'" + Utility.ToHTMLString(val.ToString()) + "'";
-                case "Int16":
-                case "Int32":
-                case "Int64":
-                case "Decimal":
-                case "Single":
-                    return val.ToString();
-                case "DateTime":
-                    if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
-                    DateTime d = (DateTime)val;
-                    //return String.Format("new Date({0},{1},{2},{3},{4},{5},{6})", d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond);
-                    return String.Format("'{0}-{1}-{2} {3}:{4}'", d.Day, d.Month, d.Year, d.Hour, d.Minute);
-                case "Boolean":
-                    return val.ToString().ToLower();
-                default:
-                    throw new Exception(Provider.GetResource("Field value cannot be converted to JS syntax"));
-            }
-        }
-        public static string ToJSON(object obj)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{\n");
-            ArrayList res = new ArrayList();
-            foreach (PropertyInfo pi in obj.GetType().GetProperties())
-            {
-                if (pi.Name == "Item") continue;
-                if (pi.GetSetMethod() == null) continue;
-
-                res.Add("\t" + String.Format("{0}:{1}", pi.Name, Utility.ToJS(pi.GetValue(obj, null))));
-            }
-            res.Sort();
-            sb.Append(String.Join(",\n", (string[])res.ToArray(typeof(string))));
-
-            sb.Append("}");
-
-            return sb.ToString();
-        }
-        public static string ToJSON(DataTable dt)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{\n");
-            sb.AppendFormat("tableName:{0},", Utility.ToJS(dt.TableName));
-            sb.Append("rows:[");
-
-            foreach (DataRow dr in dt.Rows)
-                sb.Append(Utility.ToJSON(dr) + ",");
-            sb.Remove(sb.Length - 1, 1);
-
-            sb.Append("]");
-            sb.Append("}");
-
-            return sb.ToString();
-        }
-        public static string ToJSON(DataRow dr)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{\n");
-
-            foreach (DataColumn dc in dr.Table.Columns)
-                sb.AppendFormat("{0}:{1},", Utility.ToJS(dc.ColumnName), Utility.ToJS(dr[dc]));
-            sb.Remove(sb.Length - 1, 1);
-
-            sb.Append("}");
-            return sb.ToString();
-        }
         public static string ToJSON(Type type)
         {
             string typeClass = type.IsSubclassOf(typeof(BaseEntity)) ? "Entity" : "Module";
@@ -1744,16 +1664,16 @@ namespace Cinar.CMS.Library
             StringBuilder sb = new StringBuilder();
             sb.Append("{\n");
 
-            sb.AppendFormat("    typeClass: {0},\n", ToJS(typeClass));
-            sb.AppendFormat("    typeName: {0},\n", ToJS(typeName));
-            sb.AppendFormat("    namespace: {0},\n\n", ToJS(_namespace));
+            sb.AppendFormat("    typeClass: {0},\n", typeClass.ToJS());
+            sb.AppendFormat("    typeName: {0},\n", typeName.ToJS());
+            sb.AppendFormat("    namespace: {0},\n\n", _namespace.ToJS());
 
-            sb.AppendFormat("    displayName: {0},\n", ToJS(displayName));
-            sb.AppendFormat("    description: {0},\n\n", ToJS(description));
+            sb.AppendFormat("    displayName: {0},\n", displayName.ToJS());
+            sb.AppendFormat("    description: {0},\n\n", description.ToJS());
 
             sb.Append("    fields: [\n");
 
-            foreach (PropertyInfo pi in Utility.GetProperties(type))
+            foreach (PropertyInfo pi in type.GetProperties())
             {
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
@@ -1829,15 +1749,15 @@ namespace Cinar.CMS.Library
             displayName:{6},
             description:{7},
             defaultControlType:{8}{9}}}," + "\n",
-                    Utility.ToJS(fieldName),
-                    Utility.ToJS(fieldType),
-                    Utility.ToJS(isNotNull),
-                    Utility.ToJS(isPrimaryKey),
-                    Utility.ToJS(referenceTypeName),
-                    Utility.ToJS(maxLength),
-                    Utility.ToJS(displayName2),
-                    Utility.ToJS(description2),
-                    Utility.ToJS(defaultControlType),
+                    fieldName.ToJS(),
+                    fieldType.ToJS(),
+                    isNotNull.ToJS(),
+                    isPrimaryKey.ToJS(),
+                    referenceTypeName.ToJS(),
+                    maxLength.ToJS(),
+                    displayName2.ToJS(),
+                    description2.ToJS(),
+                    defaultControlType.ToJS(),
                     options);
             }
             sb.Remove(sb.Length - 2, 1);
@@ -1859,12 +1779,12 @@ namespace Cinar.CMS.Library
             typeName:{3},
             fieldName:{4},
             relationType:{5}}}," + "\n",
-                            Utility.ToJS(Provider.GetResource(entityType.Name)),
-                            Utility.ToJS(Provider.GetResource(entityType.Name + "Desc")),
-                            Utility.ToJS(_namespace2),
-                            Utility.ToJS(entityType.Name),
-                            Utility.ToJS(pi.Name),
-                            Utility.ToJS(fda.ReferenceType.ToString()));
+                            Provider.GetResource(entityType.Name).ToJS(),
+                            Provider.GetResource(entityType.Name + "Desc").ToJS(),
+                            _namespace2.ToJS(),
+                            entityType.Name.ToJS(),
+                            pi.Name.ToJS(),
+                            fda.ReferenceType.ToString().ToJS());
                     }
                 }
 
@@ -1898,105 +1818,6 @@ namespace Cinar.CMS.Library
             return System.IO.Path.GetFileName(Provider.Request.PhysicalPath);
         }
 
-        public static Bitmap ScaleImage(Bitmap orjImg, int width, int height)
-        {
-            if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
-            if (width == 0) width = Convert.ToInt32(height * (double)orjImg.Width / (double)orjImg.Height);
-
-            Bitmap imgDest = new Bitmap(width, height);
-            imgDest.SetResolution(72, 72);
-            using(Graphics grDest = Graphics.FromImage(imgDest))
-            {
-                grDest.SmoothingMode = SmoothingMode.AntiAlias;
-                grDest.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                grDest.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                grDest.DrawImage(orjImg, 0f, 0f, (float) width, (float) height);
-            }
-            return imgDest;
-        }
-        public static void SaveJpeg(string path, Image img, long quality)
-        {
-            // Encoder parameter for image quality
-            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)quality);
-
-            if (Utility.jpegCodec == null) return;
-
-            EncoderParameters encoderParams = new EncoderParameters(1);
-            encoderParams.Param[0] = qualityParam;
-
-            img.Save(path, jpegCodec, encoderParams);
-        }
-        public static Bitmap CropImage(Bitmap orjImg, int x, int y, int width, int height)
-        {
-            Bitmap bmPhoto = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(72, 72);
-            Graphics grPhoto = Graphics.FromImage(bmPhoto);
-            grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
-            grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            grPhoto.FillRectangle(Brushes.White, new Rectangle(0, 0, width, height));
-            grPhoto.DrawImage(orjImg, new Rectangle(0, 0, width, height), x, y, width, height, GraphicsUnit.Pixel);
-            grPhoto.Dispose();
-            return bmPhoto;
-        }
-        public static void SavePng(string path, Image img)
-        {
-            img.Save(path, ImageFormat.Png);
-        }
-        public static void SaveGif(string path, Image img)
-        {
-            img.Save(path, ImageFormat.Gif);
-        }
-        public static void SaveImage(string path, Image img, long quality)
-        {
-            string lowerPath = path.ToLowerInvariant();
-
-            if (lowerPath.EndsWith(".png"))
-                SavePng(path, img);
-            else if (lowerPath.EndsWith(".gif"))
-                SaveGif(path, img);
-            else
-                SaveJpeg(path, img, quality);
-
-        }
-        public static bool IsGifAnimated(string path)
-        {
-            byte[] bytes = File.ReadAllBytes(path);
-            byte[] netscape = bytes.Skip(0x310).Take(11).ToArray();
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var item in netscape)
-            {
-                sb.Append((char)item);
-            }
-
-            return sb.ToString() == "NETSCAPE2.0";
-        }
-
-
-        private static ImageCodecInfo _jpegCodec;
-        private static ImageCodecInfo jpegCodec
-        {
-            get
-            {
-                if (_jpegCodec == null)
-                {
-                    // Get image codecs for all image formats
-                    ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-
-                    // Find the correct image codec
-                    for (int i = 0; i < codecs.Length; i++)
-                        if (codecs[i].MimeType == "image/jpeg")
-                        {
-                            _jpegCodec = codecs[i];
-                            break;
-                        }
-                }
-                return _jpegCodec;
-            }
-        }
-
         #region StringUtility
         public static string HtmlEncode(object html)
         {
@@ -2010,94 +1831,14 @@ namespace Cinar.CMS.Library
                 return "";
             return Provider.Server.HtmlDecode(html.ToString());
         }
-        public static NameValueCollection ParseQueryString(string queryString)
-        {
-            NameValueCollection nvc = new NameValueCollection();
-            int length = (queryString != null) ? queryString.Length : 0;
-            for (int i = 0; i < length; i++)
-            {
-                int startIndex = i;
-                int equalSignIndex = -1;
-                while (i < length)
-                {
-                    char ch = queryString[i];
-                    if (ch == '=')
-                    {
-                        if (equalSignIndex < 0)
-                        {
-                            equalSignIndex = i;
-                        }
-                    }
-                    else if (ch == '&')
-                    {
-                        break;
-                    }
-                    i++;
-                }
-                string key = null;
-                string val = null;
-                if (equalSignIndex >= 0)
-                {
-                    key = queryString.Substring(startIndex, equalSignIndex - startIndex);
-                    val = queryString.Substring(equalSignIndex + 1, (i - equalSignIndex) - 1);
-                }
-                else
-                {
-                    val = queryString.Substring(startIndex, i - startIndex);
-                }
 
-                nvc.Add(key, val);
-
-                if ((i == (length - 1)) && (queryString[i] == '&'))
-                    nvc.Add(null, string.Empty);
-            }
-            return nvc;
-        }
         public static string MD5(string str)
         {
             //System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
             //return Encoding.UTF8.GetString(md5.ComputeHash(Encoding.UTF8.GetBytes(str)), 0, 16);
             return FormsAuthentication.HashPasswordForStoringInConfigFile(str, "MD5").Substring(0, 16);
         }
-        public static string StripHtmlTags(string str)
-        {
-            return Regex.Replace(str, @"<(.|\n)*?>", string.Empty);
-        }
-        public static string StrCrop(string str, int length)
-        {
-            if (str == null) return "";
 
-            string res = str;//Utility.StripHtmlTags(str); // bunu yapamadık çünkü description'da HTML kodu olabilmesi gerekiyor.
-            if (res.Length > length && length >= 0)
-            {
-                res = res.Substring(0, length);
-                if (res.LastIndexOf(' ') > 0)
-                    res = res.Substring(0, res.LastIndexOf(' '));
-                res += "...";
-            }
-            return res;
-        }
-        public static string[] SplitWithTrim(string str, char seperator)
-        {
-            string[] res = str.Split(new char[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < res.Length; i++)
-                res[i] = res[i].Trim();
-            return res;
-        }
-        public static string MakeFileName(string str)
-        {
-            return str.MakeFileName();
-        }
-        public static string ConvertEncoding(string str, string srcEncodingName, string destEncodingName)
-        {
-            Encoding srcEncoding = Encoding.GetEncoding(srcEncodingName);
-            Encoding destEncoding = Encoding.GetEncoding(destEncodingName);
-            return destEncoding.GetString(Encoding.Convert(srcEncoding, destEncoding, srcEncoding.GetBytes(str)));
-        }
-        public static string ConvertRelativeUrlToAbsolute(string relativeUrl, string baseUrl)
-        {
-            return (new Uri(new Uri(baseUrl), relativeUrl)).ToString();
-        }
         public static string ClearTextFromWeb(string str)
         {
             if (str == null) return null;
@@ -2109,55 +1850,6 @@ namespace Cinar.CMS.Library
             str = str.Replace("[#b#]", "<b>").Replace("[#/b#]", "</b>"); // bold kalsın
             str = Regex.Replace(str, "\n", "</p>\n<p>"); // nl2br
             return HtmlDecode(str.Trim());
-        }
-        public static string ToStringTable(DataTable dt)
-        {
-            if (dt == null)
-                return "No results.\n";
-
-            StringBuilder sb = new StringBuilder();
-
-            Hashtable alColMaxLength = new Hashtable();
-            foreach (DataColumn dc in dt.Columns)
-                alColMaxLength[dc] = dc.ColumnName.Length + 1;
-
-            foreach (DataRow dr in dt.Rows)
-                foreach (DataColumn dc in dt.Columns)
-                    if (!dr.IsNull(dc))
-                    {
-                        int length = (int)alColMaxLength[dc];
-                        int newLength = dr[dc].ToString().Length + 1;
-                        if (newLength > 100)
-                            alColMaxLength[dc] = 100;
-                        else if (length < newLength)
-                            alColMaxLength[dc] = newLength;
-                    }
-
-            foreach (DataColumn dc in dt.Columns)
-                sb.AppendFormat("+-{0}", "".PadRight((int)alColMaxLength[dc], '-'));
-            sb.Append("+\n");
-            foreach (DataColumn dc in dt.Columns)
-                sb.AppendFormat("| {0}", dc.ColumnName.PadRight((int)alColMaxLength[dc]));
-            sb.Append("|\n");
-            foreach (DataColumn dc in dt.Columns)
-                sb.AppendFormat("+-{0}", "".PadRight((int)alColMaxLength[dc], '-'));
-            sb.Append("+\n");
-            foreach (DataRow dr in dt.Rows)
-            {
-                foreach (DataColumn dc in dt.Columns)
-                {
-                    string val = dr.IsNull(dc) ? "" : dr[dc].ToString();
-                    if (val.Length > (int)alColMaxLength[dc])
-                        val = val.Substring(0, (int)alColMaxLength[dc] - 1);
-                    sb.AppendFormat("| {0}", val.PadRight((int)alColMaxLength[dc]));
-                }
-                sb.Append("|\n");
-            }
-            foreach (DataColumn dc in dt.Columns)
-                sb.AppendFormat("+-{0}", "".PadRight((int)alColMaxLength[dc], '-'));
-            sb.Append("+\n");
-
-            return sb.ToString();
         }
         #endregion
 
@@ -2194,234 +1886,7 @@ namespace Cinar.CMS.Library
 
             return res;
         }
-        /// <summary>
-        /// Returns all get & set properties
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static PropertyInfo[] GetProperties(Type type)
-        {
-            ArrayList al = new ArrayList();
-
-            foreach (PropertyInfo pi in type.GetProperties())
-                if (pi.GetSetMethod() != null)
-                    al.Add(pi);
-
-            return (PropertyInfo[])al.ToArray(typeof(PropertyInfo));
-        }
-        public static PropertyInfo[] GetProperties(object obj)
-        {
-            Type type = obj.GetType();
-            return Utility.GetProperties(type);
-        }
-        public static PropertyInfo GetProperty(Type objectType, Type propertyType)
-        {
-            foreach (PropertyInfo pi in objectType.GetProperties())
-                if (pi.PropertyType == propertyType)
-                    return pi;
-            return null;
-        }
-
-
-        private PropertyInfo getStringIndexer(MemberInfo[] indexers)
-        {
-            foreach (PropertyInfo pi in indexers)
-            {
-                ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                if (indexerParams.Length == 1 && indexerParams[0].ParameterType.Name.EndsWith("String"))
-                    return pi;
-            }
-            return null;
-        }
-        private PropertyInfo getNonStringIndexer(MemberInfo[] indexers)
-        {
-            foreach (PropertyInfo pi in indexers)
-            {
-                ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                if (indexerParams.Length == 1 && !indexerParams[0].ParameterType.Name.EndsWith("String"))
-                    return pi;
-            }
-            return null;
-        }
-
-        public object GetMemberValue(object obj, string memberName)
-        {
-            object member = obj;
-            string remaining = null;
-            string indexer = null; bool stringIndexer = false;
-            // comboBox1.Items[5].Text'i gibi bir ifadeyi
-            // memberName=comboBox1, remaining=Items[5].Text olarak inceliyoruz.
-            // bir sonraki aşamada
-            // membername=Items[5], remaining=Text olacak.
-            if (memberName.Contains("."))
-            {
-                remaining = memberName.Substring(memberName.IndexOf('.') + 1);
-                memberName = memberName.Substring(0, memberName.IndexOf('.'));
-            }
-            // membername indexer ise indexer kısmını ayıralım
-            // membername = Items, indexer=5 olacak şekilde
-            if (memberName.Contains("["))
-            {
-                stringIndexer = memberName.Contains("\"");
-                indexer = memberName.Substring(memberName.IndexOf('[')).Trim('[', ']', '"');
-                memberName = memberName.Substring(0, memberName.IndexOf('['));
-            }
-            MemberInfo[] mis = member.GetType().GetMember(memberName, MemberTypes.Field | MemberTypes.Property, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (mis.Length != 1)
-                throw new Exception(memberName + " isimli member bulunamadı ya da birden çok defa bulundu.");
-
-            MemberInfo mi = mis[0];
-            object result;
-            if (mi is PropertyInfo)
-            {
-                PropertyInfo pi = mi as PropertyInfo;
-                if (indexer != null)
-                {
-                    object collectionObject = pi.GetValue(member, null);
-                    MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                    pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                    if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-                    ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                    object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-                    result = pi.GetValue(collectionObject, new object[] { indexerParam });
-                }
-                else
-                    result = pi.GetValue(member, null);
-            }
-            else if (mi is FieldInfo)
-            {
-                result = (mi as FieldInfo).GetValue(member);
-            }
-            else
-                throw new Exception(memberName + " property ya da field olmalıdır.");
-
-            if (remaining != null)
-            {
-                if (result == null)
-                    return null;
-                else
-                    result = GetMemberValue(result, remaining);
-            }
-
-            return result;
-        }
-
-        public object SetMemberValue(object obj, string memberName, object val)
-        {
-            object member = obj;
-            string remaining = null;
-            string indexer = null; bool stringIndexer = false;
-            // comboBox1.Items[5].Text'i gibi bir ifadeyi
-            // memberName=comboBox1, remaining=Items[5].Text olarak inceliyoruz.
-            // bir sonraki aşamada
-            // membername=Items[5], remaining=Text olacak.
-            if (memberName.Contains("."))
-            {
-                remaining = memberName.Substring(memberName.IndexOf('.') + 1);
-                memberName = memberName.Substring(0, memberName.IndexOf('.'));
-            }
-            // membername indexer ise indexer kısmını ayıralım
-            // membername = Items, indexer=5 olacak şekilde
-            if (memberName.Contains("["))
-            {
-                stringIndexer = memberName.Contains("\"");
-                indexer = memberName.Substring(memberName.IndexOf('[')).Trim('[', ']', '"');
-                memberName = memberName.Substring(0, memberName.IndexOf('['));
-            }
-            MemberInfo[] mis = member.GetType().GetMember(memberName, MemberTypes.Field | MemberTypes.Property, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (mis.Length != 1)
-                throw new Exception(memberName + " isimli member bulunamadı ya da birden çok defa bulundu.");
-
-            MemberInfo mi = mis[0];
-            object result;
-            if (mi is PropertyInfo)
-            {
-                PropertyInfo pi = mi as PropertyInfo;
-                if (indexer != null)
-                {
-                    object collectionObject = pi.GetValue(member, null);
-                    MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                    pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                    if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-                    ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                    object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-                    result = pi.GetValue(collectionObject, new object[] { indexerParam });
-                }
-                else
-                {
-                    result = pi.GetValue(member, null);
-                }
-            }
-            else if (mi is FieldInfo)
-            {
-                result = (mi as FieldInfo).GetValue(member);
-            }
-            else
-                throw new Exception(memberName + " property ya da field olmalıdır.");
-
-            if (remaining != null)
-            {
-                return SetMemberValue(result, remaining, val);
-            }
-            else
-            {
-                if (mi is PropertyInfo)
-                {
-                    PropertyInfo pi = mi as PropertyInfo;
-                    if (indexer != null)
-                    {
-                        object collectionObject = pi.GetValue(member, null);
-                        MemberInfo[] indexers = collectionObject.GetType().GetMember("Item");
-                        pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-                        if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-                        ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                        object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-                        pi.SetValue(collectionObject, val, new object[] { indexerParam });
-                    }
-                    else
-                    {
-                        pi.SetValue(member, val, null);
-                    }
-                }
-                else if (mi is FieldInfo)
-                {
-                    (mi as FieldInfo).SetValue(member, val);
-                }
-
-                return val;
-            }
-        }
         #endregion
-
-        public static void CopyDirectory(string src, string dst)
-        {
-            String[] files;
-
-            if (dst[dst.Length - 1] != Path.DirectorySeparatorChar)
-                dst += Path.DirectorySeparatorChar;
-            if (!Directory.Exists(dst))
-                Directory.CreateDirectory(dst);
-
-            files = Directory.GetFileSystemEntries(src);
-
-            foreach (string element in files)
-            {
-
-                if (Directory.Exists(element))
-                {
-                    // Sub directories
-                    if (element + Path.DirectorySeparatorChar != dst)
-                    {
-                        CopyDirectory(element, dst + Path.GetFileName(element));
-                    }
-                }
-                else
-                {
-                    // Files in directory
-                    File.Copy(element, dst + Path.GetFileName(element), true);
-                }
-            }
-        }
     }
 
 

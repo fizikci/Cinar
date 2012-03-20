@@ -118,9 +118,9 @@ namespace Cinar.CMS.Library.Entities
                     Bitmap bmp = (Bitmap)Bitmap.FromStream(Provider.Request.Files["PictureFile"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
-                        Bitmap bmp2 = Utility.ScaleImage(bmp, Provider.Configuration.ImageUploadMaxWidth, 0);
+                        Bitmap bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
                         imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        Utility.SaveJpeg(Provider.MapPath(imgUrl), bmp2, Provider.Configuration.ThumbQuality);
+                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
                     else
                         Provider.Request.Files["PictureFile"].SaveAs(Provider.MapPath(imgUrl));

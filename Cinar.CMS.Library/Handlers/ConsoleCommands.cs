@@ -68,7 +68,7 @@ namespace Cinar.CMS.Library.Handlers
                 dr2["Description"] = "exits this window";
                 dt.Rows.Add(dr2);
 
-                sb.Append(Utility.ToStringTable(dt));
+                sb.Append(dt.ToStringTable());
             }
             return sb.ToString();
         }
@@ -100,7 +100,7 @@ namespace Cinar.CMS.Library.Handlers
                             }
                             dt.Rows.Add(dr);
                         }
-                        sb.Append(Utility.ToStringTable(dt));
+                        sb.Append(dt.ToStringTable());
                         break;
                     }
                 case "pages":
@@ -136,7 +136,7 @@ namespace Cinar.CMS.Library.Handlers
                                 dt.Rows.Add(dr);
                             }
                         }
-                        sb.Append(Utility.ToStringTable(dt));
+                        sb.Append(dt.ToStringTable());
                         break;
                     }
                 case "tags":
@@ -168,7 +168,7 @@ namespace Cinar.CMS.Library.Handlers
                             dr["Size"] = di.IsReady ? di.TotalSize.ToString() : "";
                             dt.Rows.Add(dr);
                         }
-                        sb.Append(Utility.ToStringTable(dt));
+                        sb.Append(dt.ToStringTable());
                     }
                     break;
                 default:
@@ -312,7 +312,7 @@ namespace Cinar.CMS.Library.Handlers
             }
             else
             {
-                string[] arrTables = Utility.SplitWithTrim(tables, ',');
+                string[] arrTables = tables.SplitWithTrim(',');
                 foreach (string tableName in arrTables)
                 {
                     Table tbl = Provider.Database.Tables[tableName];
@@ -382,7 +382,7 @@ namespace Cinar.CMS.Library.Handlers
             // 3. copy image folder into the backup folder
             if (backup_what == "images" || backup_what == "both")
             {
-                Utility.CopyDirectory(userFilesPath + "\\Image", newBackupFolder + "\\");
+                System.Utility.CopyDirectory(userFilesPath + "\\Image", newBackupFolder + "\\");
             }
             // 4. zip the backup folder
             ICSharpCode.SharpZipLib.Zip.FastZip zip = new ICSharpCode.SharpZipLib.Zip.FastZip();
@@ -651,7 +651,7 @@ namespace Cinar.CMS.Library.Handlers
                 DataTable dt = Provider.Database.GetDataTable(query);
                 if (dt != null && dt.Rows.Count > 100)
                     throw new Exception("Too much results returned. Please use \"top\" or \"limit\" to limit your query result set.");
-                return Utility.ToStringTable(dt);
+                return dt.ToStringTable();
             }
         }
 

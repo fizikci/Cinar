@@ -49,7 +49,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 ListFormPropsAttribute attr = (ListFormPropsAttribute)Utility.GetAttribute(type, typeof(ListFormPropsAttribute));
                 //if (attr.VisibleAtMainMenu) 
-                al.Add(String.Format("['{0}','{1}',{2}]", type.Name, Provider.GetResource(type.Name), Utility.ToJS(attr.VisibleAtMainMenu)));
+                al.Add(String.Format("['{0}','{1}',{2}]", type.Name, Provider.GetResource(type.Name), attr.VisibleAtMainMenu.ToJS()));
             }
             //al.Sort();
             return "[" + String.Join(",", (string[])al.ToArray(typeof(string))) + "]";

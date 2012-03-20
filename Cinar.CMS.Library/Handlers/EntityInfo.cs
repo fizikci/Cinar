@@ -138,9 +138,9 @@ namespace Cinar.CMS.Library.Handlers
             int i = 0;
 
             foreach (DataRow drCat in dtCats.Rows)
-                items[i++] = "{data:" + drCat["Id"] + ", text:" + Utility.ToJS(drCat["Title"]) + ", type:'category'}";
+                items[i++] = "{data:" + drCat["Id"] + ", text:" + drCat["Title"].ToJS() + ", type:'category'}";
             foreach (DataRow drCon in dtCons.Rows)
-                items[i++] = "{data:" + drCon["Id"] + ", text:" + Utility.ToJS(drCon["Title"]) + ", type:'content'}";
+                items[i++] = "{data:" + drCon["Id"] + ", text:" + drCon["Title"].ToJS() + ", type:'content'}";
 
             context.Response.Write("[" + String.Join(",", items) + "]");
         }
@@ -198,7 +198,7 @@ namespace Cinar.CMS.Library.Handlers
                             {
                                 string str = Regex.Replace(valObj.ToString(), "<.*?>", string.Empty);
                                 if (str.Length > 50)
-                                    dispVal = Utility.HtmlEncode(Utility.StrCrop(str, 50)); // str.Substring(0, 50) + "..."
+                                    dispVal = Utility.HtmlEncode(str.StrCrop(50)); // str.Substring(0, 50) + "..."
                                 else
                                     dispVal = str;
                             }
@@ -370,7 +370,7 @@ namespace Cinar.CMS.Library.Handlers
             for (int i = 0; i < entities.Length; i++)
             {
                 IDatabaseEntity entity = entities[i];
-                context.Response.Write(",[" + Utility.ToJS(entity.Id) + "," + Utility.ToJS(entity.GetNameValue()) + "]");
+                context.Response.Write(",[" + entity.Id.ToJS() + "," + entity.GetNameValue().ToJS() + "]");
                 //if (i < entities.Length - 1) context.Response.Write(",");
 
             }
@@ -400,7 +400,7 @@ namespace Cinar.CMS.Library.Handlers
 
             BaseEntity[] entities = (BaseEntity[])Provider.GetIdNameList(entityName, filter, "");
             if (entities != null && entities.Length>0)
-                context.Response.Write(String.Format("{{id:{0},name:{1}}}", entities[0].Id, Utility.ToJS(entities[0].GetNameValue())));
+                context.Response.Write(String.Format("{{id:{0},name:{1}}}", entities[0].Id, entities[0].GetNameValue().ToJS()));
             else
                 context.Response.Write("{id:0,name:''}");
         }

@@ -75,13 +75,6 @@ namespace Cinar.Entities.IssueTracking
                 return new User();
             }
         }
-
-        public string CreatedOn
-        {
-            get {
-                return InsertDate.ToString("dd MMMM yyyy");
-            }
-        }
     }
 
     public enum TicketType

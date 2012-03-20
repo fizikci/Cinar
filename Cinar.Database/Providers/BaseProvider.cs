@@ -15,6 +15,8 @@ namespace Cinar.Database.Providers
 
         protected IDatabase db = null;
 
+        public bool CreatedNow { get; set; }
+
         /// <summary>
         /// Veritabanından string olarak gelen column tip bilgisini DbType enum'una dönüştürür.
         /// </summary>

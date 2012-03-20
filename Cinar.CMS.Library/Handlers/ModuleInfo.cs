@@ -281,7 +281,7 @@ namespace Cinar.CMS.Library.Handlers
             int i = 0;
 
             foreach (DataRow drModule in dtModules.Rows)
-                items[i++] = "{data:" + drModule["Id"] + ", text:" + Utility.ToJS(Provider.GetResource(drModule["Name"].ToString()) + " - " + drModule["Region"]) + ", type:" + Utility.ToJS(drModule["Name"]) + "}";
+                items[i++] = "{data:" + drModule["Id"] + ", text:" + (Provider.GetResource(drModule["Name"].ToString()) + " - " + drModule["Region"]).ToJS() + ", type:" + drModule["Name"].ToJS() + "}";
 
             context.Response.Write("[" + String.Join(",", items) + "]");
         }

@@ -77,11 +77,11 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("var currImg{0} = 0;\n", this.Id);
             sb.AppendFormat("var imgGal{0} = [\n", this.Id);
             foreach (Entities.ContentPicture pic in pics)
-                sb.AppendFormat("\t{{fileName:{0}, title:{1}, desc:{2}}},\n", Utility.ToJS(pic.FileName), Utility.ToJS(pic.Title), Utility.ToJS(pic.Description));
+                sb.AppendFormat("\t{{fileName:{0}, title:{1}, desc:{2}}},\n", pic.FileName.ToJS(), pic.Title.ToJS(), pic.Description.ToJS());
             sb.Remove(sb.Length - 2, 2);
             sb.Append("\n];\n");
-            sb.AppendFormat("var defTitle{0} = {1};\n", this.Id, Utility.ToJS(content.Title));
-            sb.AppendFormat("var defDesc{0} = {1};\n", this.Id, Utility.ToJS(content.Description));
+            sb.AppendFormat("var defTitle{0} = {1};\n", this.Id, content.Title.ToJS());
+            sb.AppendFormat("var defDesc{0} = {1};\n", this.Id, content.Description.ToJS());
             sb.AppendFormat("function showImage{0}(i){{\n", this.Id);
             sb.AppendFormat("\tif(i==imgGal{0}.length) i = 0;\n", this.Id);
             sb.AppendFormat("\t$('pg{0}_'+i).addClassName('sel');\n", this.Id);

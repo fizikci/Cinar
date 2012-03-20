@@ -83,7 +83,6 @@
     <Compile Include="Providers\BaseProvider.cs" />
     <Compile Include="Providers\CinarProvider.cs" />
     <Compile Include="Providers\SQLiteProvider.cs" />
-    <Compile Include="Providers\OracleProvider.cs" />
     <Compile Include="Providers\PostgreSQLProvider.cs" />
     <Compile Include="Providers\MySqlProvider.cs" />
     <Compile Include="Providers\SQLServerProvider.cs" />

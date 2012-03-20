@@ -18,7 +18,7 @@ namespace System
     public static class Utility
     {
         #region Drawing
-        public static Bitmap ScaleImage(Bitmap orjImg, int width, int height)
+        public static Bitmap ScaleImage(this Bitmap orjImg, int width, int height)
         {
             if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
             if (width == 0) width = Convert.ToInt32(height * (double)orjImg.Width / (double)orjImg.Height);
@@ -34,7 +34,7 @@ namespace System
             }
             return imgDest;
         }
-        public static void SaveJpeg(string path, Image img, long quality)
+        public static void SaveJpeg(this Image img, string path, long quality)
         {
             // Encoder parameter for image quality
             EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, (long)quality);
@@ -46,7 +46,7 @@ namespace System
 
             img.Save(path, jpegCodec, encoderParams);
         }
-        public static Bitmap CropImage(Bitmap orjImg, int x, int y, int width, int height)
+        public static Bitmap CropImage(this Bitmap orjImg, int x, int y, int width, int height)
         {
             Bitmap bmPhoto = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             bmPhoto.SetResolution(72, 72);
@@ -59,24 +59,24 @@ namespace System
             grPhoto.Dispose();
             return bmPhoto;
         }
-        public static void SavePng(string path, Image img)
+        public static void SavePng(this Image img, string path)
         {
             img.Save(path, ImageFormat.Png);
         }
-        public static void SaveGif(string path, Image img)
+        public static void SaveGif(this Image img, string path)
         {
             img.Save(path, ImageFormat.Gif);
         }
-        public static void SaveImage(string path, Image img, long quality)
+        public static void SaveImage(this Image img, string path, long quality)
         {
             string lowerPath = path.ToLowerInvariant();
 
             if (lowerPath.EndsWith(".png"))
-                SavePng(path, img);
+                SavePng(img, path);
             else if (lowerPath.EndsWith(".gif"))
-                SaveGif(path, img);
+                SaveGif(img, path);
             else
-                SaveJpeg(path, img, quality);
+                SaveJpeg(img, path, quality);
 
         }
         public static bool IsGifAnimated(string path)
@@ -464,6 +464,12 @@ namespace System
                 return char.ToUpperInvariant(str[0]).ToString();
 
             return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+        }
+        public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
+        {
+            Encoding srcEncoding = Encoding.GetEncoding(srcEncodingName);
+            Encoding destEncoding = Encoding.GetEncoding(destEncodingName);
+            return destEncoding.GetString(Encoding.Convert(srcEncoding, destEncoding, srcEncoding.GetBytes(str)));
         }
 
         public static float ToFloat(this string s)

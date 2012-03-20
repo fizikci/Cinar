@@ -162,10 +162,12 @@ namespace Cinar.Database
             }
         }
 
+        private string serializedMetadataFilePath;
         private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath, bool createDatabaseIfNotExist)
         {
             this.connectionString = connectionString;
             this.provider = provider;
+            this.serializedMetadataFilePath = serializedMetadataFilePath;
 
             CreateDbProvider(createDatabaseIfNotExist);
 
@@ -199,6 +201,12 @@ namespace Cinar.Database
 
         private void readMetadataFromFile(string serializedMetadataFilePath)
         {
+            if (dbProvider.CreatedNow && File.Exists(serializedMetadataFilePath))
+            {
+                File.Delete(serializedMetadataFilePath);
+                dbProvider.CreatedNow = false;
+            }
+
             if (File.Exists(serializedMetadataFilePath))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(TableCollection));
@@ -426,6 +434,9 @@ namespace Cinar.Database
                 Cache.Remove("databaseMetadata");
                 Cache["databaseMetadata"] = this.tables;
             }
+
+            if (!string.IsNullOrWhiteSpace(serializedMetadataFilePath))
+                File.Delete(serializedMetadataFilePath);
         }
 
         //private string name;

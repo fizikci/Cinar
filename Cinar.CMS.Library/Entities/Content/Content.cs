@@ -302,9 +302,9 @@ namespace Cinar.CMS.Library.Entities
                     Bitmap bmp = (Bitmap)Bitmap.FromStream(Provider.Request.Files["PictureFile"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
-                        Bitmap bmp2 = Utility.ScaleImage(bmp, Provider.Configuration.ImageUploadMaxWidth, 0);
+                        Bitmap bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
                         imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        Utility.SaveJpeg(Provider.MapPath(imgUrl), bmp2, Provider.Configuration.ThumbQuality);
+                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
                     else
                         Provider.Request.Files["PictureFile"].SaveAs(Provider.MapPath(imgUrl));
@@ -327,9 +327,9 @@ namespace Cinar.CMS.Library.Entities
         private void updateTags(bool isUpdate)
         {
             string oldTags = this.GetOriginalValues()["Tags"] == null ? "" : this.GetOriginalValues()["Tags"].ToString().ToLower();
-            string[] arrOldTags = Utility.SplitWithTrim(oldTags, ',');
-            string[] arrNewTags = Utility.SplitWithTrim(this.Tags.ToLower(), ',');
-            string[] arrNewTagRanks = Utility.SplitWithTrim(this.TagRanks, ',');
+            string[] arrOldTags = oldTags.SplitWithTrim(',');
+            string[] arrNewTags = this.Tags.ToLower().SplitWithTrim(',');
+            string[] arrNewTagRanks = this.TagRanks.SplitWithTrim(',');
 
             ArrayList alToDelete = new ArrayList(), alToAdd = new ArrayList();
             for (int i = 0; i < arrOldTags.Length; i++)
@@ -425,7 +425,7 @@ namespace Cinar.CMS.Library.Entities
             if (this.Tags.Trim() != "")
             {
                 Provider.Database.ExecuteNonQuery("delete from ContentTag where ContentId={0}", this.Id);
-                foreach (string tagToDelete in Utility.SplitWithTrim(this.Tags, ','))
+                foreach (string tagToDelete in this.Tags.SplitWithTrim(','))
                 {
                     Tag t = (Tag)Provider.Database.Read(typeof(Tag), "Name={0}", tagToDelete);
                     if (t == null) continue;
