@@ -231,6 +231,27 @@ document.observe('dom:loaded', function(){
 				currItem = elm;
 		});
 	});
+	// slideAll
+	$$('.slideAll').each(function(slideAll){
+		var dim = slideAll.getDimensions();
+		slideAll.setStyle({position:'relative'});
+		slideAll.select('.clTitle').each(function(elm){elm.hide();});
+		slideAll.select('.clDesc').each(function(elm){elm.hide();});
+		var items = slideAll.select('.clItem');
+		items.each(function(elm, index){
+			elm.setStyle({position:'absolute', left:(dim.width/items.length*index)+'px'});
+			var w = elm.getWidth();
+			var space = (dim.width-w)/(items.length-1);
+			elm.on('mouseover', function(){
+				for(var i=0; i<items.length; i++){
+					var l = i<=index ? i * space : ((i-1)*space+w);
+					new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
+					items[i].down('.clTitle').hide();
+				}
+				elm.down('.clTitle').show();
+			});
+		});
+	});
 });
 function slideShowSlide(elm, dir){
 	if(elm.alreadySliding) return;
@@ -452,10 +473,12 @@ function gogPop(event){
 	
 	var img = $(Event.element(event));
 	
-	if(img.mostLiked)
-		$('mostLikedIcon').setStyle({zIndex:10});
-	else
-		$('mostLikedIcon').setStyle({zIndex:'auto'});
+	if($('mostLikedIcon')){
+		if(img.mostLiked)
+			$('mostLikedIcon').setStyle({zIndex:10});
+		else
+			$('mostLikedIcon').setStyle({zIndex:'auto'});
+	}
 	$(document.body).insert('<div id="gogPopDiv" class="hideOnOut"><img src="'+img.src+'"/></div>');
 	pop = $('gogPopDiv');
 	if(img.up('.lightBox'))
@@ -519,7 +542,9 @@ function lightBox(img){
 			var desc = img.readAttribute('desc') || '';
 			var title = img.readAttribute('title') || ''; 
 			if(img.readAttribute('tag')!='video')
-				lightBoxDiv.down('#lbLeft').innerHTML = desc; 
+				lightBoxDiv.down('#lbLeft').innerHTML = desc;
+			else
+				desc = '';
 			lightBoxDiv.down('#lbCenter').innerHTML = title; 
 			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
 			lightBoxDiv.down('#lbLeft').setStyle({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
@@ -553,6 +578,10 @@ function lightBox(img){
 	lightBoxDiv.on('mouseover', function(){
 		if(img.previous('img')) $('lbPrev').show(); else $('lbPrev').hide();
 		if(img.next('img')) lightBoxDiv.down('#lbNext').show(); else lightBoxDiv.down('#lbNext').hide();
+		if(img.readAttribute('tag')=='video'){
+			$('lbPrev').hide();
+			lightBoxDiv.down('#lbNext').hide();
+		}
 	});
 	lbImg.on('mousemove', function(event){
 		var scrollOffset = document.viewport.getScrollOffsets();
