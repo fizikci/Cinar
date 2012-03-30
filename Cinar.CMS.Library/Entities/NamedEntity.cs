@@ -40,10 +40,10 @@ namespace Cinar.CMS.Library.Entities
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings[this.GetType().Name.ToLower() + "Dir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Bitmap bmp = (Bitmap)Image.FromStream(Provider.Request.Files["PictureFile"].InputStream);
+                    Image bmp = Image.FromStream(Provider.Request.Files["PictureFile"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
-                        Bitmap bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                        Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
                         imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
                         bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
