@@ -3,7 +3,8 @@ using Cinar.Database;
 
 namespace Cinar.CMS.Library
 {
-    [DefaultData(ColumnList = "FileName, HTMLCode", ValueList = @"'Default.aspx','<html>
+    [DefaultData(ColumnList = "FileName, HTMLCode", ValueList = @"'Default.aspx','<!DOCTYPE html>
+<html>
 <head>
 $=this.HeadSection$
 </head>
@@ -17,7 +18,8 @@ $=this.HeadSection$
 </html>'")]
     public class Template : BaseEntity
     {
-        public static string defaultTemplate = @"<html>
+        public static string defaultTemplate = @"<!DOCTYPE html>
+<html>
 <head>
 $=this.HeadSection$
 </head>

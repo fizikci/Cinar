@@ -1215,11 +1215,11 @@ namespace Cinar.CMS.Library
                 }
                 else
                 {
-                    Bitmap orjImg = null, imgDest = null;
+                    Image orjImg = null, imgDest = null;
                     try
                     {
                         // burada resize ediyoruz
-                        orjImg = (Bitmap)Bitmap.FromFile(path);
+                        orjImg = Image.FromFile(path);
                         if (prefWidth == 0)
                             imgDest = orjImg.ScaleImage(0, prefHeight);
                         else if (prefHeight == 0)
@@ -1644,7 +1644,7 @@ namespace Cinar.CMS.Library
 
         public static string GetPageUrl(string template, int id, string title)
         {
-            if (Provider.DesignMode)
+            if (Provider.DesignMode || Provider.AppSettings["niceUrl"] != "True")
                 return string.Format("/{0}?item={1}", template, id);
             else
                 return string.Format("/sm/{0}/{1}/{2}.aspx", template.Replace(".aspx",""), id, title.MakeFileName().Replace(".", "").ToLowerInvariant());

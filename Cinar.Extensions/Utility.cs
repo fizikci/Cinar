@@ -18,7 +18,7 @@ namespace System
     public static class Utility
     {
         #region Drawing
-        public static Bitmap ScaleImage(this Bitmap orjImg, int width, int height)
+        public static Image ScaleImage(this Image orjImg, int width, int height)
         {
             if (height == 0) height = Convert.ToInt32(width * (double)orjImg.Height / (double)orjImg.Width);
             if (width == 0) width = Convert.ToInt32(height * (double)orjImg.Width / (double)orjImg.Height);
@@ -46,7 +46,7 @@ namespace System
 
             img.Save(path, jpegCodec, encoderParams);
         }
-        public static Bitmap CropImage(this Bitmap orjImg, int x, int y, int width, int height)
+        public static Image CropImage(this Image orjImg, int x, int y, int width, int height)
         {
             Bitmap bmPhoto = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             bmPhoto.SetResolution(72, 72);
