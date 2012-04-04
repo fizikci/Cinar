@@ -482,6 +482,8 @@ namespace System
         }
         public static int ToInt(this string s, int baseNumber)
         {
+            s = s.ToUpperInvariant();
+
             if (baseNumber == 16)
             {
                 if (s.Length == 1)
