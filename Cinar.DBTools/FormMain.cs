@@ -18,6 +18,7 @@ using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using Constraint = Cinar.Database.Constraint;
 using Cinar.DBTools.CodeGen;
+using Cinar.WebServer;
 
 namespace Cinar.DBTools
 {
@@ -1529,6 +1530,7 @@ $"},
             string tableName = treeView.SelectedNode.Name;
             executeSQL("select count(*) AS number_of_rows from [" + tableName + "]");
         }
+        CinarWebServer server = null;
         private void cmdAnalyzeTable(string arg)
         {
             if (!checkConnection()) return;
@@ -1546,11 +1548,16 @@ $"},
                 dtMaxMin = Provider.Database.GetDataTable(sql);
             }
 
-            //Cinar.WebServer.WebServer server = new Cinar.WebServer.WebServer(3000);
-            //server.ProcessRequest = (string req) => {
-            //    MessageBox.Show(req);
-            //};
-            //server.Start();
+            if (server == null)
+            {
+                server = new CinarWebServer(3000);
+                server.Start();
+                server.ProcessRequest = (Request req, Response resp) =>
+                {
+                    resp.WriteLine("Method: {0}<br/>Url: {1}<br/>Protocol: {2}", req.Method, req.Url, req.ProtocolVersion);
+                    resp.WriteLine("<hr/><pre>{0}</pre>", req.Headers.ToJSON());
+                };
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat(@"
