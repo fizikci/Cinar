@@ -93,7 +93,6 @@ namespace Cinar.CMS.Library
 
         private string defaultStyleSheet = "";
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
-        //[ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string DefaultStyleSheet
         {
             get { return defaultStyleSheet; }
@@ -102,11 +101,18 @@ namespace Cinar.CMS.Library
 
         private string defaultJavascript = "";
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
-        //[ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string DefaultJavascript
         {
             get { return defaultJavascript; }
             set { defaultJavascript = value; }
+        }
+
+        private string defaultPageLoadScript = "";
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
+        public string DefaultPageLoadScript
+        {
+            get { return defaultPageLoadScript; }
+            set { defaultPageLoadScript = value; }
         }
 
         protected bool countTags = true;

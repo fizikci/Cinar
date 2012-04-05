@@ -294,14 +294,13 @@ namespace Cinar.CMS.Library.Handlers
             catch { }
 
             #region Cinar Script and attributes
-            string pageContent = template.HTMLCode;//.Replace("!#","$=").Replace("#!","$");
+            string pageContent = Provider.Configuration.DefaultPageLoadScript;
+            pageContent += template.HTMLCode;//.Replace("!#","$=").Replace("#!","$");
             Interpreter engine = Provider.GetInterpreter(pageContent, this);
             engine.Parse();
             engine.Execute(Provider.Response.Output);
-            //pageContent = engine.Output;
             #endregion
 
-            //Provider.Response.Write(pageContent);
 
             Provider.Response.Write("<!-- Page output finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 

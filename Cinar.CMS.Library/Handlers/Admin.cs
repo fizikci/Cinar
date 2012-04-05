@@ -474,5 +474,17 @@ namespace Cinar.CMS.Library.Handlers
             Provider.Configuration.Save();
             context.Response.Write("{success:true}");
         }
+
+        private void getPageLoadScript()
+        {
+            context.Response.Write(@"{ success: true, data: {text:" + Provider.Configuration.DefaultPageLoadScript.ToJS() + "}}");
+        }
+
+        private void savePageLoadScript()
+        {
+            Provider.Configuration.DefaultPageLoadScript = context.Request["text"];
+            Provider.Configuration.Save();
+            context.Response.Write("{success:true}");
+        }
     }
 }

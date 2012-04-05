@@ -72,6 +72,16 @@ namespace Cinar.CMS.Library.Handlers
                         saveDefaultJavascript();
                         break;
                     }
+                case "getDefaultPageLoadScript":
+                    {
+                        getDefaultPageLoadScript();
+                        break;
+                    }
+                case "saveDefaultPageLoadScript":
+                    {
+                        saveDefaultPageLoadScript();
+                        break;
+                    }
                 case "getTemplateSource":
                     {
                         getTemplateSource();
@@ -247,6 +257,19 @@ namespace Cinar.CMS.Library.Handlers
         {
             Configuration conf = Configuration.Read();
             conf.DefaultJavascript = context.Request["code"];
+            conf.Save();
+            context.Response.Write("ok.");
+        }
+
+        private void getDefaultPageLoadScript()
+        {
+            context.Response.Write(Configuration.Read().DefaultPageLoadScript);
+        }
+
+        private void saveDefaultPageLoadScript()
+        {
+            Configuration conf = Configuration.Read();
+            conf.DefaultPageLoadScript = context.Request["code"];
             conf.Save();
             context.Response.Write("ok.");
         }

@@ -215,3 +215,27 @@ i {font-style:italic}
     color: #000000;
     text-decoration: none;
 }
+
+.slideAll {
+	height:375px;
+	overflow:hidden;
+	border-right:10px solid #FFF;
+}
+.slideAll div.clItem {
+	border-left:10px solid #FFF;
+	border-top:10px solid #FFF;
+	border-bottom:10px solid #FFF;
+	box-shadow: 0 0 30px #000000;
+}
+.slideAll div.clTitle {
+    background:url(/external/icons/yari_seffaf.png);
+    bottom: 10px;
+    left: 10px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+}
+.slideAll div.clTitle a {
+	color:white;
+	font-size:20px;
+}

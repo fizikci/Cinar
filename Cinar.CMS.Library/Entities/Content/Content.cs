@@ -138,7 +138,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private int sourceId = 1;
-        [ColumnDetail(References = typeof(Source)), EditFormFieldProps(ControlType = ControlType.LookUp)]
+        [ColumnDetail(References = typeof(Source)), EditFormFieldProps(ControlType = ControlType.LookUp, Category = "Temel Bilgiler")]
         public int SourceId
         {
             get { return sourceId; }
@@ -189,13 +189,10 @@ namespace Cinar.CMS.Library.Entities
                 return Provider.GetTemplate(this, "");
             }
         }
-        [XmlIgnore]
-        public string PageLinkWithTitle
+
+        public string GetPageLinkWithTitle(string page)
         {
-            get
-            {
-                return Provider.GetPageUrl(Provider.GetTemplate(this, ""), this.Id, this.Title);
-            }
+            return Provider.GetPageUrl(string.IsNullOrWhiteSpace(page) ? Provider.GetTemplate(this, "") : page, this.Id, this.Title);
         }
 
         private string showContentsInPage = "";
