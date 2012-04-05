@@ -1644,7 +1644,7 @@ namespace Cinar.CMS.Library
 
         public static string GetPageUrl(string template, int id, string title)
         {
-            if (Provider.DesignMode || Provider.AppSettings["niceUrl"] != "True")
+            if (Provider.DesignMode)
                 return string.Format("/{0}?item={1}", template, id);
             else
                 return string.Format("/sm/{0}/{1}/{2}.aspx", template.Replace(".aspx",""), id, title.MakeFileName().Replace(".", "").ToLowerInvariant());

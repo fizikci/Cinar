@@ -242,7 +242,7 @@ document.observe('dom:loaded', function(){
 			elm.setStyle({position:'absolute', left:(dim.width/items.length*index)+'px'});
 			var w = elm.getWidth();
 			var space = (dim.width-w)/(items.length-1);
-			elm.on('mouseover', function(){
+			elm.on('mouseenter', function(){
 				for(var i=0; i<items.length; i++){
 					var l = i<=index ? i * space : ((i-1)*space+w);
 					new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
@@ -250,6 +250,13 @@ document.observe('dom:loaded', function(){
 				}
 				elm.down('.clTitle').show();
 			});
+		});
+		slideAll.on('mouseleave', function(){
+			for(var i=0; i<items.length; i++){
+				var l = dim.width/items.length*i;
+				new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
+				items[i].down('.clTitle').hide();
+			}
 		});
 	});
 });
