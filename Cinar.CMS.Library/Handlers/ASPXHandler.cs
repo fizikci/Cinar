@@ -27,7 +27,7 @@ namespace Cinar.CMS.Library.Handlers
             SortedDictionary<string, ArrayList> grups = new SortedDictionary<string, ArrayList>();
             foreach (Type type in Provider.GetModuleTypes())
             {
-                ModuleInfoAttribute mInfo = (ModuleInfoAttribute)Utility.GetAttribute(type, typeof(ModuleInfoAttribute));
+                ModuleInfoAttribute mInfo = (ModuleInfoAttribute)CMSUtility.GetAttribute(type, typeof(ModuleInfoAttribute));
                 string grup = Provider.GetResource(mInfo.Grup);
                 if (!mInfo.Visible) continue; //***
                 if (!grups.ContainsKey(grup)) grups.Add(grup, new ArrayList());
@@ -47,7 +47,7 @@ namespace Cinar.CMS.Library.Handlers
             ArrayList al = new ArrayList();
             foreach (Type type in Provider.GetEntityTypes())
             {
-                ListFormPropsAttribute attr = (ListFormPropsAttribute)Utility.GetAttribute(type, typeof(ListFormPropsAttribute));
+                ListFormPropsAttribute attr = (ListFormPropsAttribute)CMSUtility.GetAttribute(type, typeof(ListFormPropsAttribute));
                 //if (attr.VisibleAtMainMenu) 
                 al.Add(String.Format("['{0}','{1}',{2}]", type.Name, Provider.GetResource(type.Name), attr.VisibleAtMainMenu.ToJS()));
             }
@@ -98,8 +98,8 @@ namespace Cinar.CMS.Library.Handlers
             get
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? Utility.HtmlEncode(Provider.Content.Description) + " " : "") + Utility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
-                sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? Utility.HtmlEncode(Provider.Content.Keywords) + " " + Utility.HtmlEncode(Provider.Content.Tags) + "," : "") + Utility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
+                sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Description) + " " : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
+                sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 if (Provider.Configuration.SiteIcon.Trim() != "")

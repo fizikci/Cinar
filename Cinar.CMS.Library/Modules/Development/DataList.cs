@@ -249,7 +249,7 @@ namespace Cinar.CMS.Library.Modules
         {
             get
             {
-                return Utility.GetRequestFileName() + "?delete=" + dr["Id"] + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl);
+                return CMSUtility.GetRequestFileName() + "?delete=" + dr["Id"] + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request.RawUrl);
             }
         }
 

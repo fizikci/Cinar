@@ -133,7 +133,7 @@ namespace Cinar.CMS.Library.Entities
             if (String.IsNullOrWhiteSpace(this.Password)) // eğer formdan gelen şifre boşsa eski şifreyi koruyalım 
                 this.Password = oldPasswordHash;
             else
-                this.Password = Utility.MD5(this.Password);
+                this.Password = CMSUtility.MD5(this.Password);
 
             this["Password2"] = postData["Password2"];
             HttpPostedFile postedFile = Provider.Request.Files["Avatar"];
@@ -154,7 +154,7 @@ namespace Cinar.CMS.Library.Entities
         {
             List<string> errorList = base.Validate();
             object password2 = this["Password2"];
-            if (password2 == null || !Utility.MD5(password2.ToString()).Equals(this.Password))
+            if (password2 == null || !CMSUtility.MD5(password2.ToString()).Equals(this.Password))
                 errorList.Add("Şifreler boş bırakılmamalı ve aynı olmalıdır.");
             return errorList;
         }
@@ -167,7 +167,7 @@ namespace Cinar.CMS.Library.Entities
             {
                 //this.Password = Provider.MD5(this.Password); // password işi SetFieldsByPostData'da hallediliyor
                 this.Visible = false;
-                this.Keyword = Utility.MD5(DateTime.Now.Ticks.ToString());
+                this.Keyword = CMSUtility.MD5(DateTime.Now.Ticks.ToString());
             }
         }
 

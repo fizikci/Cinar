@@ -41,7 +41,7 @@ namespace Cinar.CMS.Library.Handlers
                 StringBuilder sb2 = new StringBuilder();
                 foreach (ParameterInfo pi in mi.GetParameters())
                 {
-                    string desc = (Utility.GetAttribute(pi, typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
+                    string desc = (CMSUtility.GetAttribute(pi, typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
                     sb.Append(" <" + pi.Name.ToLower() + ">");
                     sb2.Append("      " + pi.Name.PadRight(15) + " : " + desc + "\n");
                 }
@@ -54,7 +54,7 @@ namespace Cinar.CMS.Library.Handlers
                 dt.Columns.Add("Description");
                 foreach (MethodInfo mi in typeof(ConsoleCommands).GetMethods(BindingFlags.Static | BindingFlags.Public))
                 {
-                    string desc = (Utility.GetAttribute(mi, typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
+                    string desc = (CMSUtility.GetAttribute(mi, typeof(DescriptionAttribute)) as DescriptionAttribute).Description;
                     if (!String.IsNullOrEmpty(desc))
                     {
                         DataRow dr = dt.NewRow();

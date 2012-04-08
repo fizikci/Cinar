@@ -106,8 +106,8 @@ namespace Cinar.CMS.Library.Modules
             {
                 string field = showFieldsArr[i];
                 PropertyInfo pi = testEntity.GetType().GetProperty(field);
-                EditFormFieldPropsAttribute attrib = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
-                ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                EditFormFieldPropsAttribute attrib = (EditFormFieldPropsAttribute)CMSUtility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
+                ColumnDetailAttribute fieldProps = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
 

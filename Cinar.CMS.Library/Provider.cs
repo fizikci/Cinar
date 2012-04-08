@@ -165,14 +165,14 @@ namespace Cinar.CMS.Library
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
 
-                EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
+                EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)CMSUtility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
                 if (!addInvisibles && !editProps.Visible)
                     continue; //***
 
                 editProps.Category = editProps.Category ?? Provider.GetResource((pi.DeclaringType == typeof(NamedEntity) ? obj.GetType() : pi.DeclaringType).Name);
                 editProps.OrderNo = ctrlOrderNo++;
 
-                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 if (editProps.ControlType == ControlType.Undefined)
                     editProps.ControlType = Provider.GetDefaultControlType(columnProps.ColumnType, pi, columnProps);
@@ -253,9 +253,9 @@ namespace Cinar.CMS.Library
             //object[] attrDetails = obj.GetType().GetCustomAttributes(typeof(EditFormDetailsAttribute), false);
             //foreach (EditFormDetailsAttribute detail in attrDetails)
             //{
-            //    ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)Utility.GetAttribute(detail.DetailType, typeof(ListFormPropsAttribute));
+            //    ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)CMSUtility.GetAttribute(detail.DetailType, typeof(ListFormPropsAttribute));
             //    sb.Append("\t{");
-            //    sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'", Utility.ToHTMLString(Provider.GetResource(detail.DetailType.Name)), Utility.ToHTMLString(Provider.GetResource(detail.DetailType.Name + "Desc")), detail.DetailType.Name, detail.RelatedFieldName);
+            //    sb.AppendFormat("label:'{0}', description:'{1}', type:'ListForm', entityName:'{2}', relatedFieldName:'{3}'", CMSUtility.ToHTMLString(Provider.GetResource(detail.DetailType.Name)), CMSUtility.ToHTMLString(Provider.GetResource(detail.DetailType.Name + "Desc")), detail.DetailType.Name, detail.RelatedFieldName);
             //    sb.Append("}\n,");
             //}
 
@@ -266,7 +266,7 @@ namespace Cinar.CMS.Library
                     {
                         if (pi.DeclaringType == typeof(BaseEntity)) continue; //*** BaseEntity'deki UpdateUserId ve InsertUserId bütün entitilerde var, gereksiz bir ilişki kalabalığı oluşturuyor
 
-                        ColumnDetailAttribute fda = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                        ColumnDetailAttribute fda = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
                         if (fda.References == obj.GetType())
                         {
                             sb.Append("\t{");
@@ -878,6 +878,56 @@ namespace Cinar.CMS.Library
                 throw ex;
             }
         }
+        public static bool CopyTemplate(string template, string newName)
+        {
+            try
+            {
+                Provider.Database.Begin();
+                Modules.Module[] modules = Modules.Module.Read(template);
+                for (int i = 0; i < modules.Length; i++)
+                {
+                    modules[i].SaveACopyFor(newName);
+                }
+
+                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
+                templateRec.Id = 0;
+                templateRec.FileName = newName;
+                templateRec.Save();
+                Provider.Database.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                throw ex;
+            }
+
+            return false;
+        }
+        public static bool RenameTemplate(string template, string newName)
+        {
+            try
+            {
+                Provider.Database.Begin();
+                Provider.Database.ExecuteNonQuery("update Module set Template={0} where Template={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowCategoriesInPage={0} where ShowCategoriesInPage={1}", newName, template);
+
+                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
+                templateRec.FileName = newName;
+                templateRec.Save();
+
+                Provider.Database.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                throw ex;
+            }
+            return false;
+        }
 
 
         public static string GetHierarchyLike(int parentCatId)
@@ -1119,7 +1169,7 @@ namespace Cinar.CMS.Library
             string sql = "";
             string orderByDefault = "Id desc";
 
-            ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)Utility.GetAttribute(entityType, typeof(ListFormPropsAttribute));
+            ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)CMSUtility.GetAttribute(entityType, typeof(ListFormPropsAttribute));
             if (!String.IsNullOrEmpty(listFormProps.QuerySelect))
             {
                 sql = listFormProps.QuerySelect + " where 1=1 " + (String.IsNullOrEmpty(where) ? "" : ("and " + where));
@@ -1166,7 +1216,7 @@ namespace Cinar.CMS.Library
 
             return String.Format("<img src=\"{0}\" border=\"0\"{1}{2}{3}{4}{5}/>",
                 path,
-                String.IsNullOrEmpty(title) ? "" : (" alt=\"" + Utility.HtmlEncode(title) + "\""),
+                String.IsNullOrEmpty(title) ? "" : (" alt=\"" + CMSUtility.HtmlEncode(title) + "\""),
                 prefWidth > 0 ? " width=\"" + prefWidth + "\"" : "",
                 prefHeight > 0 ? " height=\"" + prefHeight + "\"" : "",
                 String.IsNullOrEmpty(className) ? "" : (" class=\"" + className + "\""),
@@ -1401,13 +1451,13 @@ namespace Cinar.CMS.Library
                 if (match.Groups["metin"].Value == "")
                     content.Metin = "RegExp matched, but named group 'metin' is empty.";
                 else
-                    content.Metin = "<p>" + Utility.ClearTextFromWeb(match.Groups["metin"].Value) + "</p>";
+                    content.Metin = "<p>" + CMSUtility.ClearTextFromWeb(match.Groups["metin"].Value) + "</p>";
 
                 if (match.Groups["title"].Value != "")
-                    content.Title = Utility.ClearTextFromWeb(match.Groups["title"].Value);
+                    content.Title = CMSUtility.ClearTextFromWeb(match.Groups["title"].Value);
 
                 if (match.Groups["desc"].Value != "")
-                    content.Description = "<p>" + Utility.ClearTextFromWeb(match.Groups["desc"].Value) + "</p>";
+                    content.Description = "<p>" + CMSUtility.ClearTextFromWeb(match.Groups["desc"].Value) + "</p>";
 
                 if (match.Groups["date"].Value != "")
                     try { content.PublishDate = DateTime.Parse(match.Groups["desc"].Value.Trim()); }
@@ -1468,7 +1518,7 @@ namespace Cinar.CMS.Library
 
                 if (match.Groups["author"].Value != "")
                 {
-                    string authorName = Utility.ClearTextFromWeb(match.Groups["author"].Value);
+                    string authorName = CMSUtility.ClearTextFromWeb(match.Groups["author"].Value);
                     Author author = (Author)Provider.Database.Read(typeof(Author), "Name={0}", authorName);
                     //object authorId = Provider.Database.GetValue("select Id from Author where Name={0}", authorName);
                     if (author == null)
@@ -1501,8 +1551,8 @@ namespace Cinar.CMS.Library
 
                 try { content.PublishDate = DateTime.Parse(match.Groups["date"].Value.Trim()); }
                 catch { }
-                content.Title = Utility.ClearTextFromWeb(match.Groups["title"].Value);
-                content.Description = "<p>" + Utility.ClearTextFromWeb(match.Groups["desc"].Value) + "</p>";
+                content.Title = CMSUtility.ClearTextFromWeb(match.Groups["title"].Value);
+                content.Description = "<p>" + CMSUtility.ClearTextFromWeb(match.Groups["desc"].Value) + "</p>";
                 content.Metin = ""; // burada metin kaydedilemez (liste çünkü) (metin ve picture daha sonra kaydediliyor - detaya bakıldığında)
                 content.CategoryId = contentSource.CategoryId;
                 content.ClassName = contentSource.ClassName;
@@ -1627,6 +1677,7 @@ namespace Cinar.CMS.Library
         {
             Interpreter engine = new Interpreter(template, new List<string>() {"Cinar.CMS.Library"});
             engine.AddAssembly(typeof(Provider).Assembly);
+            engine.AddAssembly(typeof(Utility).Assembly);
             if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
                 foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
                 {
@@ -1651,7 +1702,7 @@ namespace Cinar.CMS.Library
         }
     }
 
-    public class Utility
+    public class CMSUtility
     {
         public static string ToJSON(Type type)
         {
@@ -1678,8 +1729,8 @@ namespace Cinar.CMS.Library
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
 
-                EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
-                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                EditFormFieldPropsAttribute editProps = (EditFormFieldPropsAttribute)CMSUtility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
+                ColumnDetailAttribute columnProps = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
                 if (editProps.ControlType == ControlType.Undefined)
                     editProps.ControlType = Provider.GetDefaultControlType(columnProps.ColumnType, pi, columnProps);
@@ -1768,7 +1819,7 @@ namespace Cinar.CMS.Library
             foreach (Type entityType in Provider.GetEntityTypes())
                 foreach (PropertyInfo pi in entityType.GetProperties())
                 {
-                    ColumnDetailAttribute fda = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                    ColumnDetailAttribute fda = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
                     if (fda.References == type)
                     {
                         string _namespace2 = entityType.Namespace.IndexOf('.')>-1 ? entityType.Namespace.Substring(0,entityType.Namespace.IndexOf('.')) : entityType.Namespace;

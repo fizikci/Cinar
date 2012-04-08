@@ -48,9 +48,9 @@ namespace Cinar.CMS.Library.Modules
                 sb.AppendFormat("<div class=\"error\">{0}</div>", errorMessage);
 
             sb.AppendFormat("{0}<br/>", Provider.GetModuleResource("Your Name"));
-            sb.AppendFormat("<input class=\"name\" type=\"text\" name=\"name\" value=\"{0}\"/><br/>", Utility.HtmlEncode(Provider.Request["name"]));
+            sb.AppendFormat("<input class=\"name\" type=\"text\" name=\"name\" value=\"{0}\"/><br/>", CMSUtility.HtmlEncode(Provider.Request["name"]));
             sb.AppendFormat("{0}<br/>", Provider.GetModuleResource("Your Email Address"));
-            sb.AppendFormat("<input class=\"email\" type=\"text\" name=\"email\" value=\"{0}\"/><br/><br/>", Utility.HtmlEncode(Provider.Request["email"]));
+            sb.AppendFormat("<input class=\"email\" type=\"text\" name=\"email\" value=\"{0}\"/><br/><br/>", CMSUtility.HtmlEncode(Provider.Request["email"]));
 
             sb.AppendFormat("{0}<br/>", Provider.GetModuleResource("Subject"));
             sb.AppendFormat(@"<select class=""subject"" name=""subject"" value=""{0}"">
@@ -58,14 +58,14 @@ namespace Cinar.CMS.Library.Modules
                 <option value=""{2}"">{2}</option>
                 <option value=""{3}"">{3}</option>
                 <option value=""{4}"">{4}</option>
-                <option value=""{5}"">{5}</option></select><br/>", Utility.HtmlEncode(Provider.Request["subject"]),
+                <option value=""{5}"">{5}</option></select><br/>", CMSUtility.HtmlEncode(Provider.Request["subject"]),
                                                                 Provider.GetResource("Select"),
                                                                 Provider.GetModuleResource("Thank"),
                                                                 Provider.GetModuleResource("Complaint"),
                                                                 Provider.GetModuleResource("Request"),
                                                                 Provider.GetModuleResource("Recommendation"));
             sb.AppendFormat("{0}<br/>", Provider.GetModuleResource("Your Message"));
-            sb.AppendFormat("<textarea class=\"message\" name=\"message\">{0}</textarea><br/><br/>", Utility.HtmlEncode(Provider.Request["message"]));
+            sb.AppendFormat("<textarea class=\"message\" name=\"message\">{0}</textarea><br/><br/>", CMSUtility.HtmlEncode(Provider.Request["message"]));
 
             sb.AppendFormat("<input class=\"send\" type=\"submit\" value=\"{0}\"/>", Provider.GetResource("Send"));
 

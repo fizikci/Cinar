@@ -105,7 +105,7 @@ namespace Cinar.CMS.Library.Modules
 
             Hashtable tools = new Hashtable();
             tools["comment"] = (commentsModuleExist || Provider.DesignMode) ? String.Format("<a class=\"comment\" href=\"javascript:{0}\">{1}</a>", mdlComments == null ? "void(0)" : mdlComments.getWriteCommentJS(), getToolHtml(commentIcon, commentLink)) : "";
-            tools["email"] = String.Format("<a class=\"email\" href=\"mailto:{0}?subject={1}\">{2}</a>", Provider.Configuration.AuthEmail, content == null ? "" : Utility.HtmlEncode(content.Title), getToolHtml(emailIcon, emailLink));
+            tools["email"] = String.Format("<a class=\"email\" href=\"mailto:{0}?subject={1}\">{2}</a>", Provider.Configuration.AuthEmail, content == null ? "" : CMSUtility.HtmlEncode(content.Title), getToolHtml(emailIcon, emailLink));
             tools["print"] = content != null ? String.Format("<a class=\"print\" href=\"{0}?item={1}\" target=\"_blank\">{2}</a>", printPage, content.Id, getToolHtml(printIcon, printLink)) : "";
             tools["recommendation"] = String.Format("<a class=\"recommend\" href=\"javascript:recommend({0})\">{1}</a>", this.Id, getToolHtml(recommendIcon, recommendLink));
 
