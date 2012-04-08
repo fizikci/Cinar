@@ -198,7 +198,7 @@ namespace Cinar.CMS.Library.Handlers
                             {
                                 string str = Regex.Replace(valObj.ToString(), "<.*?>", string.Empty);
                                 if (str.Length > 50)
-                                    dispVal = Utility.HtmlEncode(str.StrCrop(50)); // str.Substring(0, 50) + "..."
+                                    dispVal = CMSUtility.HtmlEncode(str.StrCrop(50)); // str.Substring(0, 50) + "..."
                                 else
                                     dispVal = str;
                             }
@@ -208,7 +208,7 @@ namespace Cinar.CMS.Library.Handlers
                             }
                             else
                                 dispVal = valObj.ToString();
-                            context.Response.Write("\t\t<td value=\"" + Utility.HtmlEncode(valObj) + "\">" + dispVal + "</td>\n");
+                            context.Response.Write("\t\t<td value=\"" + CMSUtility.HtmlEncode(valObj) + "\">" + dispVal + "</td>\n");
                         }
                         context.Response.Write("\t</tr>\n");
                     }

@@ -132,6 +132,7 @@ i {font-style:italic}
 	position:absolute;
 	left:0px;
 	top:0px;
+	white-space: nowrap;
 }
 .slideShow .playBtn {
 	position:absolute;

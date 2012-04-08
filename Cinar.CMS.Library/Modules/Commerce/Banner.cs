@@ -64,7 +64,7 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
 
             // botlara bannerlarımızı tüketmeyelim, günah.
-            if (Utility.RequestByBot)
+            if (CMSUtility.RequestByBot)
                 return String.Empty;
             
             // Application değişkeninde bugün için tarihe göre visible ayarları yapılmış mı kontrolü yap

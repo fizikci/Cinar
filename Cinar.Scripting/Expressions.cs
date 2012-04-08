@@ -289,9 +289,13 @@ namespace Cinar.Scripting
         public override object Calculate(Context context, ParserNode parentNode)
         {
             object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            bool bLeft = ParseBool(left);
 
-            return ParseBool(left) && ParseBool(right);
+            if (!bLeft)
+                return false;
+
+            object right = RightChildExpression.Calculate(context, this);
+            return  ParseBool(right);
         }
         public override string ToString()
         {
@@ -326,9 +330,13 @@ namespace Cinar.Scripting
         public override object Calculate(Context context, ParserNode parentNode)
         {
             object left = LeftChildExpression.Calculate(context, this);
-            object right = RightChildExpression.Calculate(context, this);
+            bool bLeft = AndExpression.ParseBool(left);
 
-            return AndExpression.ParseBool(left) || AndExpression.ParseBool(right);
+            if (bLeft)
+                return true;
+
+            object right = RightChildExpression.Calculate(context, this);
+            return AndExpression.ParseBool(right);
         }
         public override string ToString()
         {

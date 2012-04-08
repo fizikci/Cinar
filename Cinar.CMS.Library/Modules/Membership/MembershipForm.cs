@@ -306,7 +306,7 @@ namespace Cinar.CMS.Library.Modules
                 if (pi.Name.Contains("Password") || pi.DeclaringType != typeof(User) || pi.GetSetMethod() == null) 
                     continue; //***
                 object val = pi.GetValue(user, null);
-                sbUserData.AppendLine("                            user_data[\"" + pi.Name + "\"] = \"" + Utility.HtmlEncode(isPostBack ? Provider.Request[pi.Name] : (val == null ? "" : val.ToString())) + "\";");
+                sbUserData.AppendLine("                            user_data[\"" + pi.Name + "\"] = \"" + CMSUtility.HtmlEncode(isPostBack ? Provider.Request[pi.Name] : (val == null ? "" : val.ToString())) + "\";");
             }
 
             sb.AppendFormat("</form>");

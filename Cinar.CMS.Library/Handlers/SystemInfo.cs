@@ -143,30 +143,10 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("Kopyalanacak dosya adı veya yeni isim belirtilmemiş.");
             else
             {
-                try
-                {
-                    Provider.Database.Begin();
-                    Module[] modules = Module.Read(template);
-                    for (int i = 0; i < modules.Length; i++)
-                    {
-                        modules[i].SaveACopyFor(newName);
-                    }
-
-                    Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
-                    templateRec.Id = 0;
-                    templateRec.FileName = newName;
-                    templateRec.Save();
+                if(Provider.CopyTemplate(template, newName))
                     context.Response.Write("Template copied.");
-                    Provider.Database.Commit();
-                }
-                catch (Exception ex)
-                {
-                    Provider.Database.Rollback();
-                    throw ex;
-                }
             }
         }
-
         private void renameTemplate()
         {
             string template = context.Request["template"];
@@ -175,30 +155,10 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("Adı değiştirilecek dosya adı veya yeni isim belirtilmemiş.");
             else
             {
-                try
-                {
-                    Provider.Database.Begin();
-                    Provider.Database.ExecuteNonQuery("update Module set Template={0} where Template={1}", newName, template);
-                    Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", newName, template);
-                    Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", newName, template);
-                    Provider.Database.ExecuteNonQuery("update Content set ShowCategoriesInPage={0} where ShowCategoriesInPage={1}", newName, template);
-
-                    Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
-                    templateRec.FileName = newName;
-                    templateRec.Save();
-
+                if(Provider.RenameTemplate(template, newName))
                     context.Response.Write("Template renamed.");
-
-                    Provider.Database.Commit();
-                }
-                catch (Exception ex)
-                {
-                    Provider.Database.Rollback();
-                    throw ex;
-                }
             }
         }
-
         private void deleteTemplate()
         {
             string template = context.Request["template"];
@@ -227,7 +187,6 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write(sb.ToString());
             }
         }
-
         private void importTemplates()
         {
             string templateData = context.Request["templateData"];
@@ -239,7 +198,6 @@ namespace Cinar.CMS.Library.Handlers
         {
             context.Response.Write(Configuration.Read().DefaultStyleSheet);
         }
-
         private void saveDefaultStyles()
         {
             Configuration conf = Configuration.Read();
@@ -252,7 +210,6 @@ namespace Cinar.CMS.Library.Handlers
         {
             context.Response.Write(Configuration.Read().DefaultJavascript);
         }
-
         private void saveDefaultJavascript()
         {
             Configuration conf = Configuration.Read();
@@ -265,7 +222,6 @@ namespace Cinar.CMS.Library.Handlers
         {
             context.Response.Write(Configuration.Read().DefaultPageLoadScript);
         }
-
         private void saveDefaultPageLoadScript()
         {
             Configuration conf = Configuration.Read();
@@ -281,7 +237,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write(template.HTMLCode);
         }
-
         private void saveTemplateSource()
         {
             string fileName = context.Request["template"];
@@ -301,7 +256,7 @@ namespace Cinar.CMS.Library.Handlers
         private void getMetadata()
         {
             string entityName = context.Request["entityName"];
-            context.Response.Write(Utility.ToJSON(Provider.GetEntityType(entityName)));
+            context.Response.Write(CMSUtility.ToJSON(Provider.GetEntityType(entityName)));
         }
 
         private void getFileList()
@@ -338,7 +293,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write("{success:true, root:[" + String.Join(",", resList.ToArray()) + "]}");
         }
-
         private void uploadFile()
         {
             try
@@ -360,7 +314,6 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
             }
         }
-
         private void deleteFile()
         {
             string folderName = context.Request["folder"] ?? "";
@@ -388,7 +341,6 @@ namespace Cinar.CMS.Library.Handlers
             }
             context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya silindi');</script>");
         }
-
         private void renameFile()
         {
             string folderName = context.Request["folder"] ?? "";
@@ -416,7 +368,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya adı değiştirildi');</script>");
         }
-
         private void createFolder()
         {
             try
@@ -461,7 +412,7 @@ namespace Cinar.CMS.Library.Handlers
                 XmlNode codeNode = templateNode.SelectSingleNode("code");
                 string code = "";
                 if (codeNode != null && !String.IsNullOrEmpty(codeNode.InnerText))
-                    code = Utility.HtmlDecode(codeNode.InnerText.Trim());
+                    code = CMSUtility.HtmlDecode(codeNode.InnerText.Trim());
                 else
                     throw new Exception(Provider.GetResource("The node /template/code not found or not valid"));
 
@@ -499,7 +450,7 @@ namespace Cinar.CMS.Library.Handlers
             StringBuilder sb = new StringBuilder();
 
             sb.AppendFormat("<template name=\"{0}\">\n", template);
-            sb.AppendFormat("\t<code>\n{0}\n\t</code>\n", Utility.HtmlEncode(Provider.Database.GetValue("select HTMLCode from Template where FileName={0}", template).ToString()));
+            sb.AppendFormat("\t<code>\n{0}\n\t</code>\n", CMSUtility.HtmlEncode(Provider.Database.GetValue("select HTMLCode from Template where FileName={0}", template).ToString()));
             Module[] modules = Module.Read(template);
             getSerializedModule(sb, modules, "\t");
             sb.Append("</template>\n");
@@ -510,7 +461,7 @@ namespace Cinar.CMS.Library.Handlers
             sb.AppendFormat("{0}<modules>\n", tab);
             foreach (Module mdl in modules)
             {
-                sb.AppendFormat("{0}\t<module name=\"{1}\">\n{0}\t\t<serializedData>\n{2}\n{0}\t\t</serializedData>\n", tab, mdl.Name, Utility.HtmlEncode(mdl.Serialize()));
+                sb.AppendFormat("{0}\t<module name=\"{1}\">\n{0}\t\t<serializedData>\n{2}\n{0}\t\t</serializedData>\n", tab, mdl.Name, CMSUtility.HtmlEncode(mdl.Serialize()));
                 if (mdl is IRegionContainer)
                 {
                     List<Module> childModules = (mdl as ModuleContainer).ChildModules;

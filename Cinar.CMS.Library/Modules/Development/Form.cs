@@ -38,10 +38,10 @@ namespace Cinar.CMS.Library.Modules
                             Provider.Response.Redirect(Provider.Request.RawUrl, true);
                             return;
                         case "NewRecord":
-                            Provider.Response.Redirect(Utility.GetRequestFileName() + "?returnUrl=" + Provider.Server.UrlEncode(Provider.Request["returnUrl"]), true);
+                            Provider.Response.Redirect(CMSUtility.GetRequestFileName() + "?returnUrl=" + Provider.Server.UrlEncode(Provider.Request["returnUrl"]), true);
                             return;
                         case "ShowSaved":
-                            Provider.Response.Redirect(Utility.GetRequestFileName() + "?item=" + id + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request["returnUrl"]), true);
+                            Provider.Response.Redirect(CMSUtility.GetRequestFileName() + "?item=" + id + "&returnUrl=" + Provider.Server.UrlEncode(Provider.Request["returnUrl"]), true);
                             return;
                         case "BackToList":
                             Provider.Response.Redirect(Provider.Server.UrlDecode(Provider.Request["returnUrl"]), true);
@@ -130,8 +130,8 @@ namespace Cinar.CMS.Library.Modules
                     foreach (Column field in Provider.Database.Tables[EntityName].Columns)
                     {
                         Type fieldType = Provider.GetEntityType(EntityName).GetProperty(field.Name).PropertyType;
-                        ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(ColumnDetailAttribute));
-                        EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(EditFormFieldPropsAttribute));
+                        ColumnDetailAttribute attrField = (ColumnDetailAttribute)CMSUtility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(ColumnDetailAttribute));
+                        EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)CMSUtility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof(EditFormFieldPropsAttribute));
 
                         if (field.IsPrimaryKey || !attrEdit.Visible)
                             continue; //***

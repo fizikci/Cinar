@@ -29,7 +29,7 @@ namespace Cinar.CMS.Library.Modules
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("<form id=\"fSearch_{0}\" method=\"get\" action=\"{1}\">", this.Id, this.resultsPage);
-            sb.AppendFormat("<input class=\"searchText\" type=\"text\" name=\"q\" value=\"{0}\"/>", Utility.HtmlEncode(q));
+            sb.AppendFormat("<input class=\"searchText\" type=\"text\" name=\"q\" value=\"{0}\"/>", CMSUtility.HtmlEncode(q));
             sb.AppendFormat("<span class=\"searchButton\" onClick=\"$('fSearch_{0}').submit();return false;\">&nbsp;</span>", this.Id);
             sb.AppendFormat("</form>");
             return sb.ToString();

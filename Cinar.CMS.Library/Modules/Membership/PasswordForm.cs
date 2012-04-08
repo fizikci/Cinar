@@ -43,7 +43,7 @@ namespace Cinar.CMS.Library.Modules
         [ExecutableByClient(true)]
         public string SendPassword(string email) 
         {
-            Provider.Database.ExecuteNonQuery("update User set Keyword={0} where Email={1}", Utility.MD5(DateTime.Now.Ticks.ToString()), email);
+            Provider.Database.ExecuteNonQuery("update User set Keyword={0} where Email={1}", CMSUtility.MD5(DateTime.Now.Ticks.ToString()), email);
 
             User user = (User)Provider.Database.Read(typeof(User), "Email={0}", email);
             if (user == null)

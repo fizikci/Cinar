@@ -53,8 +53,8 @@ namespace Cinar.CMS.Library.Modules
             Type entityType = Provider.GetEntityType(EntityName);
             Type fieldType = entityType.GetProperty(FieldName).PropertyType;
             PropertyInfo pi = entityType.GetProperty(FieldName);
-            ColumnDetailAttribute attrField = (ColumnDetailAttribute)Utility.GetAttribute(pi, typeof(ColumnDetailAttribute));
-            EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)Utility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
+            ColumnDetailAttribute attrField = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+            EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute)CMSUtility.GetAttribute(pi, typeof(EditFormFieldPropsAttribute));
             ControlType ct = attrEdit.ControlType;
             if (ct == ControlType.Undefined)
                 ct = Provider.GetDefaultControlType(attrField.ColumnType, pi, attrField);
@@ -79,7 +79,7 @@ namespace Cinar.CMS.Library.Modules
                 }
                 else 
                 {
-                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                 }
             }
             else
@@ -107,17 +107,17 @@ namespace Cinar.CMS.Library.Modules
             {
                 case ControlType.StringEdit:
                     if (UIControlType == "Textarea")
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.IntegerEdit:
                 case ControlType.DecimalEdit:
                 case ControlType.DateTimeEdit:
-                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.PictureEdit:
-                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", FieldName, Utility.HtmlEncode(value));
+                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.ComboBox:
                 case ControlType.LookUp:
@@ -132,7 +132,7 @@ namespace Cinar.CMS.Library.Modules
                         sb.AppendFormat("<select name=\"{0}\">", FieldName);
                         sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
                         foreach (BaseEntity entity in entities)
-                            sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", Utility.HtmlEncode(entity.GetNameValue()));
+                            sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
                         sb.AppendFormat("</select>");
                     }
                     else
@@ -167,9 +167,9 @@ namespace Cinar.CMS.Library.Modules
                 case ControlType.CSSEdit:
                 case ControlType.MemoEdit:
                     if(UIControlType == "Input")
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, Utility.HtmlEncode(value));
+                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.Undefined:
                 case ControlType.FilterEdit:

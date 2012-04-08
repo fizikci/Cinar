@@ -81,7 +81,7 @@ namespace Cinar.CMS.Library
                 if (pi.GetSetMethod() == null)
                     continue; //***
 
-                PictureFieldPropsAttribute sp = (PictureFieldPropsAttribute)Utility.GetAttribute(pi, typeof(PictureFieldPropsAttribute));
+                PictureFieldPropsAttribute sp = (PictureFieldPropsAttribute)CMSUtility.GetAttribute(pi, typeof(PictureFieldPropsAttribute));
                 if (sp==null || string.IsNullOrEmpty(sp.SpecialFolder) || string.IsNullOrEmpty(sp.SpecialNameField))
                     continue; //***
 

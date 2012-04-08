@@ -293,7 +293,7 @@ namespace Cinar.CMS.Library.Handlers
             StringBuilder html = new StringBuilder();
 
             html.Append("<html>\n<head>\n");
-            html.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? " - " + Utility.HtmlEncode(Provider.Content.Description) : "") + Provider.Configuration.SiteDescription + "\"/>\n");
+            html.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? " - " + CMSUtility.HtmlEncode(Provider.Content.Description) : "") + Provider.Configuration.SiteDescription + "\"/>\n");
             html.Append("<meta name=\"keywords\" content=\"" + Provider.Configuration.SiteKeywords + "\"/>\n");
             html.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\n");
             html.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\">\n");
@@ -400,21 +400,21 @@ namespace Cinar.CMS.Library.Handlers
             foreach (Content content in contents)
             {
                 if (category == "")
-                    category = Utility.HtmlEncode(content[kategoryName].ToString());
+                    category = CMSUtility.HtmlEncode(content[kategoryName].ToString());
                 string item = rssItemTemplate
-                    .Replace("{title}", Utility.HtmlEncode(content.Title))
-                    .Replace("{link}", Utility.HtmlEncode(Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Title)))
-                    .Replace("{SiteAddress}", Utility.HtmlEncode(Provider.Configuration.SiteAddress))
-                    .Replace("{description}", Utility.HtmlEncode(content.Description))
+                    .Replace("{title}", CMSUtility.HtmlEncode(content.Title))
+                    .Replace("{link}", CMSUtility.HtmlEncode(Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Title)))
+                    .Replace("{SiteAddress}", CMSUtility.HtmlEncode(Provider.Configuration.SiteAddress))
+                    .Replace("{description}", CMSUtility.HtmlEncode(content.Description))
                     .Replace("{category}", category)
-                    .Replace("{image}", Utility.HtmlEncode(content[kategoryName + "Picture"].ToString()))
-                    .Replace("{date}", Utility.HtmlEncode(content.PublishDate.ToString()));
+                    .Replace("{image}", CMSUtility.HtmlEncode(content[kategoryName + "Picture"].ToString()))
+                    .Replace("{date}", CMSUtility.HtmlEncode(content.PublishDate.ToString()));
                 sbItems.Append(item);
             }
             string rss = rssTemplate
-                    .Replace("{SiteName}", Utility.HtmlEncode(Provider.Configuration.SiteName))
-                    .Replace("{SiteAddress}", Utility.HtmlEncode(Provider.Configuration.SiteAddress))
-                    .Replace("{SiteLogo}", Utility.HtmlEncode(Provider.Configuration.SiteLogo))
+                    .Replace("{SiteName}", CMSUtility.HtmlEncode(Provider.Configuration.SiteName))
+                    .Replace("{SiteAddress}", CMSUtility.HtmlEncode(Provider.Configuration.SiteAddress))
+                    .Replace("{SiteLogo}", CMSUtility.HtmlEncode(Provider.Configuration.SiteLogo))
                     .Replace("{category}", category)
                     .Replace("{items}", sbItems.ToString());
 
@@ -474,7 +474,7 @@ namespace Cinar.CMS.Library.Handlers
             if (mi == null) throw new Exception(Provider.GetResource("The method {0} not found!", methodName)); //***
 
             // the methods to be executed by client must be declared with the ExecutableByClient attribute.
-            ExecutableByClientAttribute attrExecutable = (ExecutableByClientAttribute)Utility.GetAttribute(mi, typeof(ExecutableByClientAttribute));
+            ExecutableByClientAttribute attrExecutable = (ExecutableByClientAttribute)CMSUtility.GetAttribute(mi, typeof(ExecutableByClientAttribute));
             if (!attrExecutable.Executable)
                 throw new Exception(Provider.GetResource("The method {0} cannot be executed by client!", methodName));
 
@@ -546,7 +546,7 @@ namespace Cinar.CMS.Library.Handlers
 
             //do login and set session(user and roles)
             if (user == null)
-                user = (User)Provider.Database.Read(typeof(User), "Email={0} and Password={1} and Visible=1", context.Request["Email"], Utility.MD5(context.Request["Passwd"]));
+                user = (User)Provider.Database.Read(typeof(User), "Email={0} and Password={1} and Visible=1", context.Request["Email"], CMSUtility.MD5(context.Request["Passwd"]));
 
 
             // is this domain registered?
