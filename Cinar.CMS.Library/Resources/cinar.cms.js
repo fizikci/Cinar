@@ -106,14 +106,17 @@ function refreshModuleHighlighter(){
 	
     var pos = Position.cumulativeOffset(selMod);
     var dim = selMod.getDimensions();
-    mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
-	//todo: aşağıdaki setStyle'ları eğer gerekli değilse yapmamak lazım, browserı yoruyor.
-    mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
-    mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
-    mdlSel3.setStyle({left:pos[0]+'px', top:(pos[1]+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
-    mdlSel4.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
+	var mdlSelPos = Position.cumulativeOffset(mdlSel), mdlSel2Pos = Position.cumulativeOffset(mdlSel2), mdlSel3Pos = Position.cumulativeOffset(mdlSel3);
+	
+	if(pos[0]!=mdlSelPos[0] || pos[1]!=mdlSelPos[1] || pos[0]+dim.width-2!=mdlSel2Pos[0] || pos[1]+dim.height-2!=mdlSel3Pos[1])	{
+		mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
+		mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
+		mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
+		mdlSel3.setStyle({left:pos[0]+'px', top:(pos[1]+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
+		mdlSel4.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
+		mdlSel.show();mdlSel2.show();mdlSel3.show();mdlSel4.show();
+	}
     //new Effect.Appear(mdlSel, { duration: 0.1, from: 0.0, to: 0.7 });
-    mdlSel.show();mdlSel2.show();mdlSel3.show();mdlSel4.show();
 }
 function findNextModule(mdl){
     var modules = $$('div.Module');
