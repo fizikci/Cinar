@@ -793,13 +793,13 @@ namespace Cinar.Scripting
             {
                 FunctionCall fc = (FunctionCall)RightChildExpression;
 
-                object[] paramValues = new object[fc.Arguments.Length];
-                Type[] paramTypes = new Type[fc.Arguments.Length];
+                List<object> paramValues = new List<object>();
+                List<Type> paramTypes = new List<Type>();
                 int i = 0;
                 foreach (Expression exp in fc.Arguments)
                 {
-                    paramValues[i] = exp.Calculate(context, this);
-                    paramTypes[i] = paramValues[i].GetType(); //TODO: paramValues[i] null ise ne olacak?
+                    paramValues.Add(exp.Calculate(context, this));
+                    paramTypes.Add(paramValues[i].GetType()); //TODO: paramValues[i] null ise ne olacak?
                     i++;
                 }
 
@@ -814,13 +814,18 @@ namespace Cinar.Scripting
                 //MethodInfo mi = res.GetType().GetMethod(fc.Name, paramTypes);
                 MethodInfo mi = null;
                 ParameterInfo[] pinfo = null;
-                FindMethod(res.GetType(), fc.Name, paramTypes, out mi, out pinfo);
+                FindMethod(res.GetType(), fc.Name, paramTypes.ToArray(), out mi, out pinfo);
 
                 if (mi == null)
                     throw new Exception("Undefined method: " + this);
                 else
                 {
-                    for (int j = 0; j < paramTypes.Length; j++)
+                    if (mi.GetParameters().Length > paramTypes.Count)
+                    {
+                        paramTypes.Add(typeof(object[]));
+                        paramValues.Add(new object[0]);
+                    }
+                    for (int j = 0; j < paramTypes.Count; j++)
                     {
                         try
                         {
@@ -832,7 +837,7 @@ namespace Cinar.Scripting
                             throw new Exception("Cannot convert from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
                         }
                     }
-                    res = mi.Invoke(res, paramValues);
+                    res = mi.Invoke(res, paramValues.ToArray());
                 }
             }
             else if (RightChildExpression is Variable)
@@ -914,10 +919,10 @@ namespace Cinar.Scripting
                     parameters = method.GetParameters();
 
                     // compare the method parameters
-                    if (parameters.Length == parameterTypes.Length)
+                    if (parameters.Length == parameterTypes.Length || (parameters.Length-1 == parameterTypes.Length && parameters[parameters.Length - 1].GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0))
                     {
                         bool birebir = true;
-                        for (int i = 0; i < parameters.Length; i++)
+                        for (int i = 0; i < parameters.Length && i<parameterTypes.Length; i++)
                         {
                             if (!(parameters[i].ParameterType == parameterTypes[i] || parameterTypes[i].IsSubclassOf(parameters[i].ParameterType)))
                             {
