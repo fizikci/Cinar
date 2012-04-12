@@ -30,7 +30,12 @@ namespace Cinar.CMS.Library
         {
             for (int i = 0; i < postData.Count; i++)
             {
-                PropertyInfo pi = this.GetType().GetProperty(postData.GetKey(i));
+                string key = postData.GetKey(i);
+
+                if (this.tags.ContainsKey(key))
+                    this.tags[key] = postData[i];
+
+                PropertyInfo pi = this.GetType().GetProperty(key);
                 if (pi == null || pi.GetSetMethod() == null) continue;
 
                 string strVal = postData[i];
@@ -58,12 +63,6 @@ namespace Cinar.CMS.Library
                 }
 
                 pi.SetValue(this, val, null);
-            }
-            for (int i = 0; i < postData.Count; i++)
-            {
-                string key = postData.GetKey(i);
-                if (!this.tags.ContainsKey(key)) continue;
-                this.tags[key] = postData[i];
             }
 
             processFieldValues();
