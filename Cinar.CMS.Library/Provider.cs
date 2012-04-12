@@ -806,28 +806,28 @@ namespace Cinar.CMS.Library
 
             string template = null;
 
-            DataTable dtCats = (DataTable)Provider.Items["dtTemplate: " + content.Hierarchy];
+            List<Content> dtCats = (List<Content>)Provider.Items["dtTemplate: " + content.Hierarchy];
             if (dtCats == null)
             {
-                dtCats = Provider.Database.ReadTable(typeof(Content), "select ShowContentsInPage, ShowCategoriesInPage from Content where Id in (" + content.Hierarchy + ")");
+                dtCats = Provider.Database.ReadList<Content>("select ShowContentsInPage, ShowCategoriesInPage from Content where Id in (" + content.Hierarchy + ")");
                 Provider.Items["dtTemplate: " + content.Hierarchy] = dtCats;
             }
-            for (int i = dtCats.Rows.Count - 1; i >= 0; i--)
+            for (int i = dtCats.Count - 1; i >= 0; i--)
             {
-                DataRow drCat = dtCats.Rows[i];
+                Content drCat = dtCats[i];
                 if (content.ClassName == "Category")
                 {
-                    if (!drCat["ShowCategoriesInPage"].Equals(""))
+                    if (!String.IsNullOrWhiteSpace(drCat.ShowCategoriesInPage))
                     {
-                        template = drCat["ShowCategoriesInPage"].ToString();
+                        template = drCat.ShowCategoriesInPage;
                         break;
                     }
                 }
                 else
                 {
-                    if (!drCat["ShowContentsInPage"].Equals(""))
+                    if (!String.IsNullOrWhiteSpace(drCat.ShowContentsInPage))
                     {
-                        template = drCat["ShowContentsInPage"].ToString();
+                        template = drCat.ShowContentsInPage;
                         break;
                     }
                 }
