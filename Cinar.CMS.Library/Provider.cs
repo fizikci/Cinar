@@ -1675,7 +1675,7 @@ namespace Cinar.CMS.Library
 
         public static Interpreter GetInterpreter(string template, object forThis)
         {
-            Interpreter engine = new Interpreter(template, new List<string>() {"Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules"});
+            Interpreter engine = new Interpreter(template, new List<string>() { "Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules", "Cinar.CMS.Library.Handlers" });
             engine.AddAssembly(typeof(Provider).Assembly);
             engine.AddAssembly(typeof(Utility).Assembly);
             if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
