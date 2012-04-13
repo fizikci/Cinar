@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cinar.Database;
 using System.Drawing;
 using System.Collections;
@@ -459,6 +460,19 @@ namespace Cinar.CMS.Library.Entities
         public bool IsOver(string hierarchy)
         {
             return this.Hierarchy != hierarchy && hierarchy.StartsWith(this.Hierarchy);
+        }
+
+        public void RecursiveDelete()
+        {
+            Provider.Database.Execute(innerRecursiveDelete);
+        }
+
+        private void innerRecursiveDelete()
+        {
+            List<Content> children = Provider.Database.ReadList<Content>(FilterExpression.Where("CategoryId", CriteriaTypes.Eq, this.Id));
+            foreach (var content in children)
+                content.RecursiveDelete();
+            this.Delete();
         }
     }
 
