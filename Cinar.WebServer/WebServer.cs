@@ -15,6 +15,8 @@ namespace Cinar.WebServer
         private TcpListener tcpListener;
         private Thread listenThread;
 
+        public bool ProcessRequestsInSeperateThreads = true;
+
         public CinarWebServer(int port)
         {
             tcpListener = new TcpListener(IPAddress.Any, port);
@@ -43,8 +45,15 @@ namespace Cinar.WebServer
 
                 //create a thread to handle communication
                 //with connected client
-                Thread clientThread = new Thread(handleClientComm);
-                clientThread.Start(client);
+                if (ProcessRequestsInSeperateThreads)
+                {
+                    Thread clientThread = new Thread(handleClientComm);
+                    clientThread.Start(client);
+                }
+                else
+                {
+                    handleClientComm(client);
+                }
             }
         }
 
