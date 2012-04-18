@@ -474,6 +474,12 @@ namespace Cinar.CMS.Library.Entities
                 content.RecursiveDelete();
             this.Delete();
         }
+
+
+        public string GetThumbPicture(int width, int height, bool cropPicture)
+        {
+            return Provider.GetThumbPath(this.Picture, width, height, cropPicture);
+        }
     }
 
 }
