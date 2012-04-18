@@ -53,5 +53,16 @@ namespace Cinar.CMS.Library.Entities
                 }
             }
         }
+
+
+        public string GetThumbPicture(int width, int height, bool cropPicture)
+        {
+            return Provider.GetThumbPath(this.Picture, width, height, cropPicture);
+        }
+        public string GetThumbPicture2(int width, int height, bool cropPicture)
+        {
+            return Provider.GetThumbPath(this.Picture2, width, height, cropPicture);
+        }
+
     }
 }

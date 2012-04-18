@@ -103,6 +103,13 @@ namespace Cinar.CMS.Library.Entities
                 }
             }
         }
+
+
+        public string GetThumbPicture(int width, int height, bool cropPicture)
+        {
+            return Provider.GetThumbPath(this.FileName, width, height, cropPicture);
+        }
+
     }
 
 }

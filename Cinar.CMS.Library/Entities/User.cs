@@ -221,5 +221,11 @@ namespace Cinar.CMS.Library.Entities
 
             this.Password = "";
         }
+
+        public string GetThumbPicture(int width, int height, bool cropPicture)
+        {
+             return Provider.GetThumbPath(this.Avatar, width, height, cropPicture);
+        }
+
     }
 }
