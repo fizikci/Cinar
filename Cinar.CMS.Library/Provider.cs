@@ -1693,12 +1693,20 @@ namespace Cinar.CMS.Library
             return engine;
         }
 
-        public static string GetPageUrl(string template, int id, string title)
+        public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
         {
             if (Provider.DesignMode)
-                return string.Format("/{0}?item={1}", template, id);
-            else
-                return string.Format("/sm/{0}/{1}/{2}.aspx", template.Replace(".aspx",""), id, title.MakeFileName().Replace(".", "").ToLowerInvariant());
+                return string.Format(
+                    "/{0}?item={1}", 
+                    template, 
+                    id);
+
+            return string.Format(
+                    "/{0}/{1}/{2}_{3}.aspx",
+                    template.Replace(".aspx", ""),
+                    categoryTitle.MakeFileName().Replace(".", "").ToLowerInvariant(),
+                    contentTitle.MakeFileName().Replace(".", "").ToLowerInvariant(),
+                    id);
         }
     }
 

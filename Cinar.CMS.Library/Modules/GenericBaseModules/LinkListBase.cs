@@ -56,7 +56,7 @@ namespace Cinar.CMS.Library.Modules
 
             return String.Format("{0}<a href=\"{1}\"{2}{3}>{4}</a>",
                 icon,
-                Provider.GetPageUrl(template, content.Id, content.Title),
+                Provider.GetPageUrl(template, content.Id, content.Category.Title, content.Title),
                 linkTargetAttribute,
                 content.Id == Provider.Content.Id ? " class=\"sel\"" : "",
                 content.Title);

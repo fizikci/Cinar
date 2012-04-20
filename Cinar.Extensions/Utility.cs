@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -326,15 +327,20 @@ namespace System
         }
         public static string MakeFileName(this string str)
         {
-            string replace = "öoçcşsıiğgüuÖOÇCŞSİIĞGÜU _\t_&_";
-            for (int i = 0; i < replace.Length; i += 2)
-                str = str.Replace(replace[i], replace[i + 1]);
+            if (str == null)
+                return "_";
+            str = str.RemoveDiacritics();
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidReStr = string.Format(@"[{0}]", invalidChars);
             string res = Regex.Replace(str, invalidReStr, "_");
             while (res.Contains("__")) res = res.Replace("__", "_");
             return res;
         }
+        public static string RemoveDiacritics(this string str)
+        {
+            return string.Concat(str.Normalize(NormalizationForm.FormD).Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)).Normalize(NormalizationForm.FormC);
+        }
+
         public static string ConvertToAbsoluteURL(this string relativeUrl, string baseUrl)
         {
             return (new Uri(new Uri(baseUrl), relativeUrl)).ToString();
