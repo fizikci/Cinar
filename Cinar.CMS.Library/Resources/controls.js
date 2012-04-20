@@ -1352,7 +1352,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                     break;
                 case 'ListForm':
                     if(this.entityId==0) continue; //***
-					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name'}).value;
+					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name' || c.id=='Question'}).value;
 					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.replace("'", "\\'").replace('"','\\"') + ')';
                     details.insert('<span class="btn '+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                     continue;
