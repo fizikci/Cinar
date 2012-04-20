@@ -80,7 +80,7 @@ namespace Cinar.CMS.Library.Modules
             Entities.Content selectedCat = (Entities.Content)Provider.Database.Read(typeof(Entities.Content), selectedCatId);
 
             if (this.showHomeLink)
-                addLink(sb, Provider.Configuration.MainPage, "nav", selectedCatId == 1, 1, Provider.GetModuleResource("Home Page"));
+                addLink(sb, Provider.Configuration.MainPage, "nav", selectedCatId == 1, 1, "", Provider.GetModuleResource("Home Page"));
 
             IDatabaseEntity[] cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + (this.Dynamic ? selectedCatId : this.ParentCategoryId) + " and Visible=1 order by OrderNo");
             if (cats.Length == 0 && this.Dynamic)
@@ -94,7 +94,7 @@ namespace Cinar.CMS.Library.Modules
 
                 bool selected = selectedCat.IsUnder(dr.Id) || dr.Id == selectedCatId;
 
-                addLink(sb, template, "nav", selected, dr.Id, dr.Title);
+                addLink(sb, template, "nav", selected, dr.Id, dr.Category.Title, dr.Title);
                 if (this.showChildCategories && (selectedCat.Id==dr.Id || selectedCat.Hierarchy.IndexOf(dr.Id.ToString().PadLeft(5, '0')) > -1))
                 {
                     IDatabaseEntity[] subCats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + dr.Id + " and Visible=1 order by OrderNo");
@@ -105,7 +105,7 @@ namespace Cinar.CMS.Library.Modules
                         //template = Provider.GetTemplate(drSub, useTemplate);
                         template = this.forceToUseTemplate ? this.useTemplate : Provider.GetTemplate(drSub, useTemplate);
                         selected = selectedCat.IsUnder(drSub.Id) || drSub.Id == selectedCatId;
-                        addLink(sb, template, "subNav", selected, drSub.Id, drSub.Title);
+                        addLink(sb, template, "subNav", selected, drSub.Id, drSub.Category.Title, drSub.Title);
                     }
                 }
             }
@@ -118,7 +118,7 @@ namespace Cinar.CMS.Library.Modules
                 foreach (Entities.Content childContent in childItems)
                 {
                     string template = this.forceToUseTemplate ? this.useTemplate : Provider.GetTemplate(childContent, useTemplate);
-                    addPopupLink(sb, template, "popupMenuItem", childContent.Id, childContent.Title, childContent.CategoryId);
+                    addPopupLink(sb, template, "popupMenuItem", childContent.Id, childContent.Title, childContent.CategoryId, childContent.Category.Title);
                 }
                 sb.Append("</div>\n");
                 sb.AppendFormat("<script type=\"text/javascript\">navigationPopupInit('Navigation_{0}',{1});</script>\n", this.Id, this.Horizontal?"true":"false");
@@ -128,7 +128,7 @@ namespace Cinar.CMS.Library.Modules
 
             return sb.ToString();
         }
-        private void addLink(StringBuilder sb, string template, string aClass, bool selected, int id, string title)
+        private void addLink(StringBuilder sb, string template, string aClass, bool selected, int id, string categoryTitle, string title)
         {
             string icon = "";
             if (this.bulletIcon != "")
@@ -142,17 +142,17 @@ namespace Cinar.CMS.Library.Modules
                 icon = "<img src=\"" + icon + "\" align=\"absmiddle\" border=\"0\"/> ";
             sb.AppendFormat("<div class=\"" + aClass + (selected ? "Sel" : "") + "\"" + (popupDepth > 0 ? " conId=\"{2}\"" : "") + " style=\"{0}\"><a href=\"{1}\">{3}{4}</a></div>\n",
                 this.horizontal ? "float:left" : "display:block",
-                Provider.GetPageUrl(template, id, title),
+                Provider.GetPageUrl(template, id, categoryTitle, title),
                 id,
                 icon,
                 title);
         }
 
-        private void addPopupLink(StringBuilder sb, string template, string aClass, int id, string title, int categoryId)
+        private void addPopupLink(StringBuilder sb, string template, string aClass, int id, string title, int categoryId, string categoryTitle)
         {
             sb.AppendFormat("<div class=\"" + aClass + "\" catId=\"{0}\"><a href=\"{1}\" style=\"width:100%\">{2}</a></div>\n", 
                 categoryId,
-                Provider.GetPageUrl(template, id, title),
+                Provider.GetPageUrl(template, id, categoryTitle, title),
                 title);
         }
 

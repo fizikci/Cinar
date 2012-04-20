@@ -295,7 +295,7 @@ namespace Cinar.CMS.Library.Handlers
 
             #region Cinar Script and attributes
             //todo: bu pek şık olmadı. bastığımız boşluk karakteri sorun olabilir.
-            string pageContent = " $ try{ $ " + Provider.Configuration.DefaultPageLoadScript+"\r\n $ } catch(ex) {echo(ex);} $ ";
+            string pageContent = string.IsNullOrWhiteSpace(Provider.Configuration.DefaultPageLoadScript) ? "" : (" $ try{ $ " + Provider.Configuration.DefaultPageLoadScript + "\r\n $ } catch(ex) {echo(ex);} $ ");
             pageContent += template.HTMLCode;//.Replace("!#","$=").Replace("#!","$");
             Interpreter engine = Provider.GetInterpreter(pageContent, this);
             engine.Parse();

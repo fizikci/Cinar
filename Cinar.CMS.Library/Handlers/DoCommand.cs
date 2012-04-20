@@ -403,7 +403,7 @@ namespace Cinar.CMS.Library.Handlers
                     category = CMSUtility.HtmlEncode(content[kategoryName].ToString());
                 string item = rssItemTemplate
                     .Replace("{title}", CMSUtility.HtmlEncode(content.Title))
-                    .Replace("{link}", CMSUtility.HtmlEncode(Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Title)))
+                    .Replace("{link}", CMSUtility.HtmlEncode(Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Category.Title, content.Title)))
                     .Replace("{SiteAddress}", CMSUtility.HtmlEncode(Provider.Configuration.SiteAddress))
                     .Replace("{description}", CMSUtility.HtmlEncode(content.Description))
                     .Replace("{category}", category)

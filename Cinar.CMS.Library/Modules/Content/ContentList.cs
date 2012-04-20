@@ -321,7 +321,7 @@ namespace Cinar.CMS.Library.Modules
         private string getLinkHTML(string linkText, string template, Content content)
         {
             string linkTargetAttribute = linkTarget != "" ? " target=\"" + Provider.Server.HtmlEncode(linkTarget) + "\"" : "";
-            return string.Format("<a href=\"{0}\"{1}>{2}</a>", Provider.GetPageUrl(template, content.Id, content.Title), linkTargetAttribute, linkText);
+            return string.Format("<a href=\"{0}\"{1}>{2}</a>", Provider.GetPageUrl(template, content.Id, content.Category.Title, content.Title), linkTargetAttribute, linkText);
         }
 
         protected virtual string getImgHTML(string template, Content content, int row, int col)
@@ -332,7 +332,7 @@ namespace Cinar.CMS.Library.Modules
                 string imgHtml = Provider.GetThumbImgHTML(content.Picture, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle, CropPicture);
 
                 if (this.createLink)
-                    return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Title), imgHtml);
+                    return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Category.Title, content.Title), imgHtml);
                 else
                     return String.Format("{0}", imgHtml);
 
@@ -348,7 +348,7 @@ namespace Cinar.CMS.Library.Modules
                 string imgHtml = Provider.GetThumbImgHTML(content.Picture2, this.pictureWidth, this.pictureHeight, content.Title, "pic", imgStyle, CropPicture);
 
                 if (this.createLink)
-                    return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Title), imgHtml);
+                    return String.Format("<a href=\"{0}\">{1}</a>", Provider.GetPageUrl(template, content.Id, content.Category.Title, content.Title), imgHtml);
                 else
                     return String.Format("{0}", imgHtml);
 

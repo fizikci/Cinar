@@ -80,7 +80,7 @@ namespace Cinar.CMS.Library.Modules
                 d.AddDays(6).ToString("ddd").Substring(0, howManyChars),
                 d.AddDays(7).ToString("ddd").Substring(0, howManyChars)
             )));
-            for (int i = 0; i < Math.Ceiling((double)(lastDayOfMonth.Day+dayIndex)/7); i++)
+            for (int i = 0; i < Math.Ceiling((lastDayOfMonth.Day+dayIndex)/7d); i++)
             {
                 string rowStr = "";
                 for (int j = 0; j < 7; j++)
@@ -96,7 +96,7 @@ namespace Cinar.CMS.Library.Modules
                         {
                             //?
                             attr += WriteClass("eventDays");
-                            cellValue = WriteLink(Provider.GetPageUrl(template, calenderEvent.Id, calenderEvent.Title), cellDate.Day.ToString(), calenderEvent.Title);
+                            cellValue = WriteLink(Provider.GetPageUrl(template, calenderEvent.Id, calenderEvent.Category.Title, calenderEvent.Title), cellDate.Day.ToString(), calenderEvent.Title);
                             break;
                         }
                     }

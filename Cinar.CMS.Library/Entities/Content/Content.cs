@@ -193,7 +193,7 @@ namespace Cinar.CMS.Library.Entities
 
         public string GetPageLinkWithTitle(string page)
         {
-            return Provider.GetPageUrl(string.IsNullOrWhiteSpace(page) ? Provider.GetTemplate(this, "") : page, this.Id, this.Title);
+            return Provider.GetPageUrl(string.IsNullOrWhiteSpace(page) ? Provider.GetTemplate(this, "") : page, this.Id, this.Category.Title, this.Title);
         }
 
         private string showContentsInPage = "";
