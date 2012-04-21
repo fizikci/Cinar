@@ -69,9 +69,25 @@ namespace Cinar.WebServer
                 StreamWriter outputStream = new StreamWriter(new BufferedStream(tcpClient.GetStream()));
                 Response response = new Response(outputStream);
 
+                /*
+Cache-Control	private
+Content-Encoding	gzip
+Content-Length	3512
+Content-Type	text/html; charset=utf-8
+Date	Sat, 21 Apr 2012 11:42:26 GMT
+Server	Microsoft-IIS/7.0
+Set-Cookie	ASP.NET_SessionId=zekrz2hgvt5rrkfy04pxq1dx; path=/; HttpOnly
+Vary	Accept-Encoding
+X-AspNet-Version	4.0.30319
+X-Powered-By	ASP.NET
+                 */
+
                 response.WriteLine("HTTP/1.0 200 OK");
-                response.WriteLine("Content-Type: text/html");
+                response.WriteLine("Cache-Control: private, max-age=0");
+                response.WriteLine("Content-Type: text/html; charset=utf-8");//Content-Type	text/html; charset=utf-8
+                response.WriteLine("Date: " + DateTime.UtcNow.ToString("ddd, dd MMM yyyy HH:mm:ss G\\MT", System.Globalization.CultureInfo.InvariantCulture));
                 response.WriteLine("Connection: close");
+                response.WriteLine("X-Powered-By: Cinar");
                 response.WriteLine("");
 
 
