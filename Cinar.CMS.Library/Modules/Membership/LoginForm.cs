@@ -90,7 +90,7 @@ namespace Cinar.CMS.Library.Modules
                     sb.AppendFormat("<a href=\"{0}\">{1}</a>", Provider.Configuration.MembershipProfilePage, membershipInfoLink);
                 if (Provider.ContextUser.IsInRole("Designer"))
                 {
-                    UriParser uriParser = Provider.Request.Url.ToString().Contains(".ashx") ? new UriParser(Provider.Configuration.MainPage) : new UriParser(Provider.Request.Url.ToString());
+                    UriParser uriParser = Provider.Request.RawUrl.Contains(".ashx") ? new UriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + "/" + Provider.Configuration.MainPage) : new UriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
                     if (Provider.DesignMode)
                     {
                         uriParser.QueryPart["DesignMode"] = "Off";

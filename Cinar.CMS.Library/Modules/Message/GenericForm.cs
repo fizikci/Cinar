@@ -55,7 +55,7 @@ namespace Cinar.CMS.Library.Modules
                 }
             }
 
-            sb.Append("<form action=\""+Provider.Request.Url+"\" method=\"post\">");
+            sb.Append("<form action=\"" + Provider.Request.RawUrl + "\" method=\"post\">");
             sb.AppendFormat("<input type=\"hidden\" name=\"genericFormForm\" value=\"{0}\"/>", this.Id);
 
             if (errorMessage != "")

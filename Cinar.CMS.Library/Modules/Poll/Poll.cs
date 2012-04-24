@@ -70,7 +70,7 @@ namespace Cinar.CMS.Library.Modules
                     sb.Append(Provider.GetResource("Select poll"));
                     return sb.ToString();//***
                 }
-                sb.AppendFormat("<form name={0} action=\"{1}\" method=post>", cookieName, Provider.Request.Url);
+                sb.AppendFormat("<form name={0} action=\"{1}\" method=post>", cookieName, Provider.Request.RawUrl);
 
                 PollQuestion soru = (PollQuestion)Provider.Database.Read(typeof(PollQuestion), pollId);
                 Provider.Translate(new IDatabaseEntity[] { soru });

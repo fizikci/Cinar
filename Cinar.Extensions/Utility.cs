@@ -331,8 +331,10 @@ namespace System
                 return "_";
             str = str.RemoveDiacritics();
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
+            invalidChars += " \\&é\\!\\'\\^\\+\\%\\(\\)\\=\\-\\#\\$\\{\\]\\}\\¨\\~\\´\\`\\,\\;\\.";
             string invalidReStr = string.Format(@"[{0}]", invalidChars);
             string res = Regex.Replace(str, invalidReStr, "_");
+            res = res.Replace("ı","i");
             while (res.Contains("__")) res = res.Replace("__", "_");
             return res;
         }

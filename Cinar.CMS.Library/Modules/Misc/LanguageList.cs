@@ -19,7 +19,7 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             IDatabaseEntity[] langs = Provider.Database.ReadList(typeof(Lang), "select * from Lang order by OrderNo");
 
-            UriParser uriParser = new UriParser(Provider.Request.Url.ToString());
+            UriParser uriParser = new UriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
             //uriParser.QueryPart["currentCulture"] = Provider.Configuration.DefaultLang;
             //sb.AppendFormat("<div><a href=\"{0}\">{1}</a></div>", uriParser.ToString(), Provider.GetResource("Turkish"));
 

@@ -81,7 +81,7 @@ namespace Cinar.CMS.Library.Modules
             if(tbl==null)
                 return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]", EntityName);
 
-            string pageUrl = Provider.Request.Url.ToString();
+            string pageUrl = Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl;
             UriParser uriParser = new UriParser(pageUrl);
 
             if (!String.IsNullOrEmpty(Provider.Request["delete"]))
