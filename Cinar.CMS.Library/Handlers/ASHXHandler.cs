@@ -27,6 +27,12 @@ namespace Cinar.CMS.Library.Handlers
                 else if (fileName.EndsWith(".js"))
                     context.Response.ContentType = "text/javascript";
 
+                /*
+                HttpCachePolicy c = context.Response.Cache;
+                c.SetCacheability(HttpCacheability.Public);
+                c.SetMaxAge(new TimeSpan(1, 0, 0));
+                 */
+
                 if (context.Request.Url.IsLoopback)
                 {
                     string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);

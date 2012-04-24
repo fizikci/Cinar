@@ -1248,7 +1248,11 @@ namespace Cinar.CMS.Library
             {
                 path = Provider.MapPath(imageUrl);
                 if (!File.Exists(path))
-                    path = Provider.MapPath(Provider.Configuration.SiteLogo);
+                {
+                    path = Provider.MapPath(Provider.Configuration.NoPicture);
+                    if (!File.Exists(path))
+                        return imageUrl;
+                }
             }
             catch (Exception ex) {
                 return "ERR: " + ex.Message;
@@ -1257,7 +1261,7 @@ namespace Cinar.CMS.Library
             string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_");
             string thumbPath = Provider.MapPath(thumbUrl);
 
-            if (!System.IO.File.Exists(thumbPath))
+            if (!File.Exists(thumbPath) || File.GetLastWriteTime(path) > File.GetLastWriteTime(thumbPath))
             {
                 if (path.EndsWith(".gif") && System.Utility.IsGifAnimated(path))
                 {
