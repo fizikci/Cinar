@@ -17,7 +17,7 @@ public class BasePage : Page
 
     public override void ProcessRequest(HttpContext context)
     {
-        if (CinarContext.ClientUser.Id == 0 && !context.Request.Url.PathAndQuery.Contains("Login.aspx"))
+        if (CinarContext.ClientUser.Id == 0 && !context.Request.RawUrl.Contains("Login.aspx"))
         {
             context.Response.Redirect("/Login.aspx", true);
             return;

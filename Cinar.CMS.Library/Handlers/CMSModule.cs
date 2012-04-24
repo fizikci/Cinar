@@ -18,7 +18,7 @@ namespace Cinar.CMS.Library.Handlers
 
         void context_BeginRequest(object sender, EventArgs e)
         {
-            string fullOrigionalPath = HttpContext.Current.Request.Url.ToString().Replace("http://","");
+            string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://","");
             // sm.Main.Hakkımızda.1.aspx
             if (fullOrigionalPath.Contains(".aspx") && fullOrigionalPath.Split('/').Length == 4)
             {
@@ -27,7 +27,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 if(parts[3].Contains(".aspx"))
                 {
-                    int item = int.Parse(parts[3].Replace(".aspx","").SplitAndGetLast('_'));
+                    int item = int.Parse(parts[3].Substring(0, parts[3].IndexOf(".aspx")).SplitAndGetLast('_'));
                     string restOfQueryString = fullOrigionalPath.Contains("aspx?") ? fullOrigionalPath.Split(new[] { "aspx?" }, StringSplitOptions.None)[1] : "";
                     string rewritePath = pageName + ".aspx?item=" + item + (restOfQueryString != "" ? "&" + restOfQueryString : "");
                     HttpContext.Current.RewritePath(rewritePath);

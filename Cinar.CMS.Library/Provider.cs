@@ -1707,9 +1707,9 @@ namespace Cinar.CMS.Library
 
             return string.Format(
                     "/{0}/{1}/{2}_{3}.aspx",
-                    template.Replace(".aspx", ""),
-                    categoryTitle.MakeFileName().Replace(".", "").ToLowerInvariant(),
-                    contentTitle.MakeFileName().Replace(".", "").ToLowerInvariant(),
+                    template.Replace(".aspx", "").ToLowerInvariant(),
+                    categoryTitle.MakeFileName().ToLowerInvariant(),
+                    contentTitle.MakeFileName().ToLowerInvariant(),
                     id);
         }
     }

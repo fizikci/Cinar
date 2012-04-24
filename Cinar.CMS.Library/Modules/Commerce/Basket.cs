@@ -48,7 +48,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("<form name='basket{0}' action='{1}' method='post'>", this.Id, Provider.DesignMode ? "#" : Provider.Request.Url.ToString());
+            sb.AppendFormat("<form name='basket{0}' action='{1}' method='post'>", this.Id, Provider.DesignMode ? "#" : Provider.Request.RawUrl);
 
             // sepeti göstürtelim
             sb.Append("<table cellpadding='0' cellspacing='0' border='0'>");

@@ -73,7 +73,7 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                if (this.Id == 0) this.url = Provider.Request.Url == null ? "" : Provider.Request.Url.ToString();
+                if (this.Id == 0) this.url = Provider.Request.RawUrl;
                 return url;
             }
             set {
