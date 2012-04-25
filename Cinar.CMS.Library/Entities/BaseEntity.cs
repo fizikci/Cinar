@@ -148,19 +148,22 @@ namespace Cinar.CMS.Library.Entities
             {
                 Provider.Database.Begin();
 
-                this.beforeDelete();
+                if (this.beforeDelete())
+                {
 
-                // dil tablolarında data varsa silelim
-                if(Provider.Database.Tables[this.GetType().Name+"Lang"]!=null)
-                    Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "Lang] where " + this.GetType().Name + "Id=" + this.Id);
+                    // dil tablolarında data varsa silelim
+                    if (Provider.Database.Tables[this.GetType().Name + "Lang"] != null)
+                        Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "Lang] where " +
+                                                          this.GetType().Name + "Id=" + this.Id);
 
-                // entitinin kendisini silelim
-                Provider.Database.ExecuteNonQuery("delete from ["+this.GetType().Name+"] where Id=" + this.Id);
-                
-                this.afterDelete();
+                    // entitinin kendisini silelim
+                    Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "] where Id=" + this.Id);
 
-                if (this is ICriticalEntity)
-                    Provider.Log("History_" + this.GetType().Name, "Delete", this.SerializeToString());
+                    this.afterDelete();
+
+                    if (this is ICriticalEntity)
+                        Provider.Log("History_" + this.GetType().Name, "Delete", this.SerializeToString());
+                }
 
                 Provider.Database.Commit();
             }
@@ -170,7 +173,7 @@ namespace Cinar.CMS.Library.Entities
                 throw ex;
             }
         }
-        protected virtual void beforeDelete() { }
+        protected virtual bool beforeDelete() { return true; }
         protected virtual void afterDelete() { }
     }
 }

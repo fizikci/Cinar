@@ -286,10 +286,6 @@ namespace Cinar.CMS.Library.Entities
             if (String.IsNullOrEmpty(this.Title))
                 throw new Exception(Provider.GetResource("You should enter title"));
 
-            //if (this.Tags.Length > 0)
-            //    if (Regex.Match(this.Tags, "[^\\w,\\,\\-\\s]").Success)
-            //        throw new Exception(Provider.GetResource("You may use only letters, space and comma for the field Tags"));
-
             // resim gelmişse kaydedelim
             if (Provider.Request.Files["PictureFile"] != null && Provider.Request.Files["PictureFile"].ContentLength > 0)
             {
@@ -407,7 +403,7 @@ namespace Cinar.CMS.Library.Entities
             updateTags(isUpdate);
         }
 
-        protected override void beforeDelete()
+        protected override bool beforeDelete()
         {
             base.beforeDelete();
 
@@ -434,6 +430,8 @@ namespace Cinar.CMS.Library.Entities
                         t.Save();
                 }
             }
+
+            return true;
         }
 
         public int FindMainCategoryId()
