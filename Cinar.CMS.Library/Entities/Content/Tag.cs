@@ -39,11 +39,13 @@ namespace Cinar.CMS.Library.Entities
             set { noise = value; }
         }
 
-        protected override void beforeDelete()
+        protected override bool beforeDelete()
         {
             base.beforeDelete();
 
             Provider.Database.ExecuteNonQuery("delete from ContentTag where TagId={0}", this.Id);
+
+            return true;
         }
     }
 }

@@ -24,12 +24,14 @@ namespace Cinar.CMS.Library.Entities
             return "Question";
         }
 
-        protected override void beforeDelete()
+        protected override bool beforeDelete()
         {
             base.beforeDelete();
 
             foreach (PollAnswer pa in Provider.Database.ReadList(typeof(PollAnswer), "select * from [PollAnswer] where PollQuestionId={0}", this.Id))
                 pa.Delete();
+
+            return true;
         }
     }
 }

@@ -111,8 +111,11 @@ document.observe('dom:loaded', function(){
 			elm.insert('<img src="/external/icons/lbPrev.png" id="lbPrev" style="display:none"/><img src="/external/icons/lbNext.png" id="lbNext" style="display:none"/>');
 			elm.down('#lbPrev').on('click', function(){fadeWithArrowsShow(elm, 'prev');});
 			elm.down('#lbNext').on('click', function(){fadeWithArrowsShow(elm, 'next');});
-			if(elm.select('.clItem').length > 1)
+			if(elm.select('.clItem').length > 1){
+				elm.down('#lbPrev').show();
 				elm.down('#lbNext').show();
+				setInterval(function(){fadeWithArrowsShow(elm, 'next');}, 5000);
+			}
 		});
 	}
 	$$('.fadeWithArrows .clItem').each(function(elm, i){
@@ -312,13 +315,13 @@ function fadeShowShowImg(fadeShow, indexElm){
 }
 function fadeWithArrowsShow(elm, which){
 	var nextImg = which=='next' ? elm.currentImg.next('.clItem') : elm.currentImg.previous('.clItem');
-	if(nextImg){
+	if(!nextImg)
+		nextImg = which=='next' ? elm.down('.clItem') : elm.select('.clItem').last();
+	if(nextImg && nextImg!=elm.currentImg){
 		elm.currentImg.fade({ duration: 0.5, from: 1, to: 0.01 });
 		nextImg.fade({ duration: 0.5, from: 0, to: 1 });
 		elm.currentImg = nextImg;
 	}
-	if(elm.currentImg.next('.clItem')) elm.down('#lbNext').show(); else elm.down('#lbNext').hide();
-	if(elm.currentImg.previous('.clItem')) elm.down('#lbPrev').show(); else elm.down('#lbPrev').hide();
 }
 
 // params: {}
