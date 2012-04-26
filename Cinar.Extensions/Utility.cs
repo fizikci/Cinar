@@ -1110,6 +1110,32 @@ namespace System
             if (str == null) return String.Empty;
             return str.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
         }
+
+        public static string RemoveInvisibleCharacters(this string str)
+        {
+            if (str == null)
+                return str;
+
+            StringBuilder buffer = new StringBuilder(str.Length);
+
+            foreach (char c in str)
+                if (isInvisible(c.ToString()))
+                    buffer.Append(c);
+
+            return buffer.ToString();
+        }
+        private static bool isInvisible(string character)
+        {
+            return
+            (
+                 character == " " ||
+                 character == "\t" ||
+                 character == "\n" ||
+                 character == "\r" ||
+                 character.Trim() != ""
+            );
+        }
+
         public static string ToJS(this object val)
         {
             if (val == null) return "null";
