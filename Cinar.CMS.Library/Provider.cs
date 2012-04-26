@@ -1008,6 +1008,7 @@ namespace Cinar.CMS.Library
         }
 
         #region Resource
+        /*
         private static Hashtable _resources = new Hashtable();
         public static Hashtable StaticResources(string lang)
         {
@@ -1016,29 +1017,29 @@ namespace Cinar.CMS.Library
 
             Hashtable ht = new Hashtable();
 
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(Provider.MapPath("/external/lang/" + lang + ".xml"));
+            //try
+            //{
+            //    XmlDocument doc = new XmlDocument();
+            //    doc.Load(Provider.MapPath("/external/lang/" + lang + ".xml"));
 
-                foreach (XmlNode node in doc.SelectNodes("/resources/entry"))
-                    ht[node.Attributes["key"].Value] = node.Attributes["value"].Value;
-            }
-            catch 
-            {
+            //    foreach (XmlNode node in doc.SelectNodes("/resources/entry"))
+            //        ht[node.Attributes["key"].Value] = node.Attributes["value"].Value;
+            //}
+            //catch 
+            //{
  
-            }
+            //}
 
             _resources[lang] = ht;
 
             return ht;
         }
+        */
         public static string GetResource(string code, params object[] args)
         {
             string lang = CurrentCulture.Split('-')[0];
 
-            Hashtable ht = StaticResources(lang);
-            string str = (string)ht[code];
+            string str = lang == "tr" ? (StaticResources.tr.ContainsKey(code) ? StaticResources.tr[code] : null) : (StaticResources.en.ContainsKey(code) ? StaticResources.en[code] : null);
 
             return str == null ? "? " + String.Format(code, args) : String.Format(str, args);
         }

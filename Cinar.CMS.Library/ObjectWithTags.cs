@@ -39,6 +39,7 @@ namespace Cinar.CMS.Library
                 if (pi == null || pi.GetSetMethod() == null) continue;
 
                 string strVal = postData[i];
+                strVal = strVal.RemoveInvisibleCharacters();
 
                 if (pi.PropertyType == typeof(bool))
                 {
