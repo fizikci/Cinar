@@ -94,7 +94,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string keywords;
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text), EditFormFieldProps(Category = "Temel Bilgiler")]
         public string Keywords
         {
             get { return keywords; }
@@ -221,7 +221,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string spotTitle;
-        [ColumnDetail(Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Temel Bilgiler")]
         public string SpotTitle
         {
             get { return spotTitle; }
