@@ -1229,7 +1229,7 @@ namespace Cinar.CMS.Library
             {
                 imageUrl = Provider.Configuration.NoPicture;
                 if (String.IsNullOrEmpty(imageUrl))
-                    return "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.");
+                    return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
             }
 
             if (!imageUrl.StartsWith("/")) imageUrl = "/" + imageUrl;
