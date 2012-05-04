@@ -52,7 +52,7 @@ document.observe('dom:loaded', function(){
 			elmDesc.hide();
 			Event.observe(elmImg, 'mouseenter', function(event){
 				var dimImg = elmImg.getDimensions();
-				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width, height:dimImg.height, margin:'0px 10px 10px 0px'});
+				elmDesc.setStyle({left:elmImg.style.left, top:elmImg.style.top, width:dimImg.width+'px', height:dimImg.height+'px', margin:'0px 10px 10px 0px'});
 				elmDesc.show();
 			});
 			Event.observe(elmDesc, 'mouseleave', function(event){
@@ -73,12 +73,12 @@ document.observe('dom:loaded', function(){
 				var left = i * (cols[0][0].getWidth() + 10);
 				var top = 0;
 				for(var j = 0; j<cols[i].length; j++){
-					cols[i][j].setStyle({left:left, top:top});
+					cols[i][j].setStyle({left:left+'px', top:top+'px'});
 					top += cols[i][j].getHeight() + 10;
 				}
 				if(top>maxHeight) maxHeight = top;
 			}
-			elm.setStyle({height:maxHeight});
+			elm.setStyle({height:maxHeight+'px'});
 		});
 	});
 	// fadeShow (yani fadeIn'li slide show)
