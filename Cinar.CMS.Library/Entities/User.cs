@@ -126,7 +126,7 @@ namespace Cinar.CMS.Library.Entities
 
         public override void SetFieldsByPostData(NameValueCollection postData)
         {
-            string oldPasswordHash = this.Id > 0 ? Provider.Database.GetString("select Password from user where Id={0}", this.Id) : this.Password; // eski şifre
+            string oldPasswordHash = this.Id > 0 ? Provider.Database.GetString("select Password from User where Id={0}", this.Id) : this.Password; // eski şifre
 
             base.SetFieldsByPostData(postData); // formdan gelen verileri kaydedelim
 
