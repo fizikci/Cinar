@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentPicture.Id, ContentPicture.FileName as [ContentPicture.FileName], ContentPicture.Tag as [ContentPicture.Tag], ContentPicture.Visible as [BaseEntity.Visible] from [ContentPicture] left join [Content] as TContentId ON TContentId.Id = [ContentPicture].ContentId", QueryOrderBy = "[ContentPicture].[OrderNo]")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentPicture.Id, ContentPicture.Title as [ContentPicture.Title], ContentPicture.FileName as [ContentPicture.FileName], ContentPicture.Tag as [ContentPicture.Tag], ContentPicture.Visible as [BaseEntity.Visible] from [ContentPicture] left join [Content] as TContentId ON TContentId.Id = [ContentPicture].ContentId", QueryOrderBy = "[ContentPicture].[OrderNo]")]
     [EditFormDetails(DetailType = typeof(ContentPictureLang), RelatedFieldName = "ContentPictureId")]
     public class ContentPicture : BaseEntity
     {
