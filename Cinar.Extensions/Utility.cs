@@ -95,6 +95,48 @@ namespace System
             return sb.ToString() == "NETSCAPE2.0";
         }
 
+        public static void ConcatIconsIntoOnePngFile(string iconsFolder, string outFolder, int iconWidth = 16)
+        {
+            List<string> files = new List<string>();
+
+            foreach (string file in Directory.GetFiles(iconsFolder).OrderBy(f => Path.GetFileName(f)))
+            {
+                using (Image img = Image.FromFile(file))
+                {
+                    if (img.Width == iconWidth && img.Height == iconWidth)
+                        files.Add(file);
+                }
+            }
+
+            using (Bitmap bmp = new Bitmap(iconWidth, files.Count * iconWidth))
+            {
+                string cssFileContent = ".cbtn {background-image:url('all_icons.png'); background-repeat:no-repeat; height:" + iconWidth + "px; width:" + iconWidth + "px; display:inline-block;}\r\n";
+                string sampleHtmlFile = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"all_icons.css\" /></head><body>\r\n";
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        string file = files[i];
+                        using (Image img = Image.FromFile(file))
+                            g.DrawImage(img, 0, i * iconWidth);
+
+                        cssFileContent += string.Format(".c{0} {{background-position:0px {1}px;}}\r\n", Path.GetFileNameWithoutExtension(file), i * -iconWidth);
+                        sampleHtmlFile += string.Format("<span class=\"cbtn c{0}\"></span> {0}\r\n", Path.GetFileNameWithoutExtension(file));
+                    }
+                }
+
+                sampleHtmlFile += "</body></html>";
+
+                File.WriteAllText(outFolder + @"\all_icons.css", cssFileContent, Encoding.UTF8);
+                File.WriteAllText(outFolder + @"\all_icons.html", sampleHtmlFile, Encoding.UTF8);
+
+                bmp.MakeTransparent();
+                bmp.Save(outFolder + @"\all_icons.png", ImageFormat.Png);
+            }
+
+        }
+
 
         private static ImageCodecInfo _jpegCodec;
         private static ImageCodecInfo jpegCodec
@@ -723,6 +765,11 @@ namespace System
         public static T GetAttribute<T>(this ICustomAttributeProvider mi)
         {
             return (T)GetAttribute(mi, typeof(T));
+        }
+        public static List<T> GetAttributes<T>(this ICustomAttributeProvider mi)
+        {
+            object[] attribs = mi.GetCustomAttributes(typeof(T), true);
+            return attribs.Select(t => (T)t).ToList();
         }
         /// <summary>
         /// Returns all get & set properties

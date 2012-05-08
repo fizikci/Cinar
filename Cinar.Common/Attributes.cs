@@ -92,6 +92,16 @@ namespace Cinar.Database
             set { isAutoIncrement = value; }
         }
 
+        private bool isUnique = false;
+        /// <summary>
+        /// Tek alan üzerinden Unique olma durumu. Bir alan PrimaryKey olsa bile Unique olmayabilir.
+        /// </summary>
+        public bool IsUnique
+        {
+            get { return isUnique; }
+            set { isUnique = value; }
+        }
+
         private Type references;
         /// <summary>
         /// Bu alan başka bir tablo ismi olmalıdır.

@@ -1591,9 +1591,7 @@ namespace Cinar.Database
 
         public Table CreateTableMetadataForType(Type type)
         {
-            object[] attribs = type.GetCustomAttributes(typeof(TableDetailAttribute), false);
-            TableDetailAttribute tableProps = new TableDetailAttribute();
-            if (attribs.Length > 0) tableProps = (TableDetailAttribute)attribs[0];
+            TableDetailAttribute tableProps = type.GetAttribute<TableDetailAttribute>();
 
             Table tbl = new Table();
             tbl.IsView = false;
@@ -1605,6 +1603,18 @@ namespace Cinar.Database
                     tbl.Columns.Add(f);
                     setColumnPropsFromPropertyInfo(f, pi, tbl);
                 }
+
+            foreach (var index in type.GetAttributes<Index>())
+                tbl.Indices.Add(index);
+            foreach (var unq in type.GetAttributes<UniqueConstraint>())
+                tbl.Constraints.Add(unq);
+            foreach (var fk in type.GetAttributes<ForeignKeyConstraint>())
+                tbl.Constraints.Add(fk);
+            foreach (var pk in type.GetAttributes<PrimaryKeyConstraint>())
+                tbl.Constraints.Add(pk);
+            foreach (var cc in type.GetAttributes<CheckConstraint>())
+                tbl.Constraints.Add(cc);
+
             this.Tables.Add(tbl);
             return tbl;
         }
@@ -1630,6 +1640,14 @@ namespace Cinar.Database
                 f.Table.Constraints.Add(pk);
             }
             f.Length = columnProps.Length;
+
+            if (!columnProps.IsPrimaryKey && columnProps.IsUnique)
+            {
+                UniqueConstraint uc = new UniqueConstraint();
+                uc.ColumnNames = new List<string> { f.Name };
+                uc.Name = string.Format("UNQ_{0}_{1}", f.Table.Name, f.Name);
+                f.Table.Constraints.Add(uc);
+            }
 
             //TODO: burada column'ın refer ettiği tablo create ediliyordu ama stack overflow'a neden olduğu için kaldırıldı.
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
@@ -21,7 +22,7 @@ namespace Cinar.Database
         }
     }
 
-    public abstract class BaseIndexConstraint : IMetadata
+    public abstract class BaseIndexConstraint : Attribute, IMetadata
     {
         public abstract Table Table { get; }
 
@@ -52,6 +53,12 @@ namespace Cinar.Database
         /// </summary>
         [Category("Base"), ReadOnly(true)]
         public List<string> ColumnNames { get; set; }
+
+        public string ConstraintColumnNames 
+        {
+            get { return string.Join(",", this.ColumnNames); }
+            set { this.ColumnNames = value.Split(',').Select(s=>s.Trim()).ToList(); }
+        }
 
         public override string ToString()
         {
