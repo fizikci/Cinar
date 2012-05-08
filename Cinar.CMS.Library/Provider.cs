@@ -1702,8 +1702,8 @@ namespace Cinar.CMS.Library
         {
             if (Provider.DesignMode)
                 return string.Format(
-                    "/{0}?item={1}", 
-                    template, 
+                    "/{0}?item={1}",
+                    template,
                     id);
 
             return string.Format(
@@ -1712,6 +1712,15 @@ namespace Cinar.CMS.Library
                     categoryTitle.MakeFileName().ToLowerInvariant(),
                     contentTitle.MakeFileName().ToLowerInvariant(),
                     id);
+        }
+
+        public static string GetPageUrl(string template, int contentId)
+        {
+            Content content = Provider.Database.Read<Entities.Content>(contentId);
+            if (content != null)
+                return Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Category.Title, content.Title);
+            else
+                return "javascript:alert('No such content'); return false;";
         }
     }
 
