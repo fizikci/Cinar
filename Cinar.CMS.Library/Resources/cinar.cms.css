@@ -53,8 +53,8 @@ div.ComboBox {text-align:left;overflow-y:auto;overflow-x:hidden;padding:0px;}
     background: none repeat scroll 0 0 #316AC5;
     border-radius: 0 0 0 9px;
     float: right;
-    height: 26px;
-    padding: 6px;
+    height: 23px;
+    padding: 1px 7px;
     width: auto;
 }
 #mdlSel div img
@@ -66,23 +66,13 @@ div.ComboBox {text-align:left;overflow-y:auto;overflow-x:hidden;padding:0px;}
 span.btn 
 {
 	color: #316AC5;
-	padding: 4px 20px 2px 20px;
+	padding: 0px 20px;
 	cursor: pointer;
+	background-image:url('/external/icons/all_icons.png');
 	background-repeat: no-repeat;
-	background-position: left center;
 	display:inline-block;
 	margin:4px 0px 0px 4px;
 }
-span.OK {background-image:url(icons/ok.png);}
-span.cancel {background-image:url(icons/cancel.png);}
-span.save {background-image:url(icons/save.png);}
-span.filter {background-image:url(icons/filter.png);}
-span.load {background-image:url(icons/load.png);}
-span.thunder {background-image:url(icons/DataConverter.png)}
-span.cog {background-image:url(icons/cog.png)}
-span.tag {background-image:url(icons/Tag.png)}
-span.sort {background-image:url(icons/sort.png)}
-span.delete {background-image:url(icons/delete.png)}
 
 div.smMenu 
 {
@@ -175,7 +165,7 @@ div.lf-dataArea
 	text-align:left}
 div.lf-listFormFooter {text-align:right}
 div.lf-listFormFooter  .pager {margin-left:8px}
-div.lf-listFormFooter img {cursor:pointer;margin-left:8px}
+div.lf-listFormFooter span.cbtn {margin-left:8px}
 div.lf-listFormFooter input {width:70px}
 
 /* ListGrid classes */
@@ -276,39 +266,3 @@ div.fileNameBox img {max-width:80px; max-height:80px}
 .ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
 .ui-widget-content a { color: #333333; }
 .ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
-
-span.AuthorLang {background-image: url("icons/AuthorLang.png");}
-/*
-span.Hit {background-image: url("icons/Hit.png");}
-span.ModuleCache {background-image: url("icons/ModuleCache.png");}
-span.NamedEntityLang {background-image: url("icons/NamedEntityLang.png");}
-*/
-span.SourceLang {background-image: url("icons/SourceLang.png");}
-span.Template {background-image: url("icons/Template.png");}
-span.PollQuestion {background-image: url("icons/PollQuestion.png");}
-span.PollQuestionLang {background-image: url("icons/PollQuestionLang.png");}
-span.PollAnswer {background-image: url("icons/PollAnswer.png");}
-span.PollAnswerLang {background-image: url("icons/PollAnswerLang.png");}
-span.BannerAd {background-image: url("icons/BannerAd.png");}
-span.Configuration {background-image: url("icons/Configuration.png");}
-span.Lang {background-image: url("icons/Lang.png");}
-span.Tag {background-image: url("icons/Tag.png");}
-span.TagLang {background-image: url("icons/TagLang.png");}
-span.Content {background-image: url("icons/Content.png");}
-span.ContentLang {background-image: url("icons/ContentLang.png");}
-span.ContentTag {background-image: url("icons/ContentTag.png");}
-span.ContentSource {background-image: url("icons/ContentSource.png");}
-span.Source {background-image: url("icons/Source.png");}
-span.User {background-image: url("icons/User.png");}
-span.Log {background-image: url("icons/Log.png");}
-span.ContentPictureLang {background-image: url("icons/ContentPictureLang.png");}
-span.ContentPicture {background-image: url("icons/ContentPicture.png");}
-span.Recommendation {background-image: url("icons/Recommendation.png");}
-/*
-span.UserPrefferedAuthor {background-image: url("icons/UserPrefferedAuthor.png");}
-*/
-span.Circulation {background-image: url("icons/Circulation.png");}
-span.Product {background-image: url("icons/Product.png");}
-span.Author {background-image: url("icons/Author.png");}
-span.UserComment {background-image: url("icons/UserComment.png");}
-span.ContactUs {background-image: url("icons/ContactUs.png");}

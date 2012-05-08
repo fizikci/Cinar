@@ -35,11 +35,11 @@ document.observe('dom:loaded', function(){
 		
 		var mdlSelHTML = '<div id="mdlSel">';
 		mdlSelHTML += '<div><nobr>';
-		mdlSelHTML += '<img src="external/icons/module_edit.png" onclick="editModule()" title="'+lang('Edit')+'">';
-		mdlSelHTML += '<img src="external/icons/module_delete.png" onclick="deleteModule()" title="'+lang('Delete')+'">';
-		mdlSelHTML += '<img src="external/icons/arrow_up.png" onclick="upModule()" title="'+lang('Move Up')+'">';
-		mdlSelHTML += '<img src="external/icons/arrow_down.png" onclick="downModule()" title="'+lang('Move Down')+'">';
-		mdlSelHTML += '<img src="external/icons/module_add.png" onclick="addModule()" title="'+lang('Add Module')+'">';
+		mdlSelHTML += '<span class="cbtn cmodule_edit" onclick="editModule()" title="'+lang('Edit')+'"></span>';
+		mdlSelHTML += '<span class="cbtn cmodule_delete" onclick="deleteModule()" title="' + lang('Delete') + '"></span>';
+		mdlSelHTML += '<span class="cbtn carrow_up" onclick="upModule()" title="' + lang('Move Up') + '"></span>';
+		mdlSelHTML += '<span class="cbtn carrow_down" onclick="downModule()" title="' + lang('Move Down') + '"></span>';
+		mdlSelHTML += '<span class="cbtn cmodule_add" onclick="addModule()" title="' + lang('Add Module') + '"></span>';
 		mdlSelHTML += '</nobr></div>';
 		mdlSelHTML += '</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>';
 		$(document.body).insert(mdlSelHTML);
@@ -67,7 +67,7 @@ document.observe('dom:loaded', function(){
 
 function clearFlashes(){
     $$('object').each(function(elm){
-        new Insertion.Before(elm, '<img src="external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
+        new Insertion.Before(elm, '<img src="/external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
         elm.remove();
     });
 } 
@@ -218,59 +218,59 @@ function contentLinkSelected() { return rightClickLinkElement != null && rightCl
 function tagLinkSelected() { return rightClickLinkElement != null && rightClickLinkElement.href.indexOf('tagId=') > -1; }
 
 popupMenu.menuItems = [
-    {text:lang('Copy Module'), icon:'external/icons/copy.gif', isEnabled:moduleSelected, callback:copyModule},
-    {text:lang('Paste Module'), icon:'external/icons/paste.gif', isEnabled:moduleCanBePasted, callback:pasteModule},
+    {text:lang('Copy Module'), icon:'copy', isEnabled:moduleSelected, callback:copyModule},
+    {text:lang('Paste Module'), icon:'paste', isEnabled:moduleCanBePasted, callback:pasteModule},
     {text:'-', isEnabled:showFirstHR},
-    {text:lang('For This Module'), icon:'external/icons/module.png', isEnabled:moduleSelected, items:[
-            {text:lang('Edit')+' (Ent)', icon:'external/icons/module_edit.png', isEnabled:moduleSelected, callback:function(){editModule();}},
-            {text:lang('Delete')+' (Del)', icon:'external/icons/module_delete.png', isEnabled:moduleSelected, callback:deleteModule},
-            {text:lang('Move Up'), icon:'external/icons/arrow_up.png', isEnabled:moduleSelected, callback:upModule},
-            {text:lang('Move Down'), icon:'external/icons/arrow_down.png', isEnabled:moduleSelected, callback:downModule},
-            {text:lang('Convert To'), icon:'external/icons/module.png', isEnabled:moduleSelected, callback:convertModule}
+    {text:lang('For This Module'), icon:'module', isEnabled:moduleSelected, items:[
+            {text:lang('Edit')+' (Ent)', icon:'module_edit', isEnabled:moduleSelected, callback:function(){editModule();}},
+            {text:lang('Delete')+' (Del)', icon:'module_delete', isEnabled:moduleSelected, callback:deleteModule},
+            {text:lang('Move Up'), icon:'arrow_up', isEnabled:moduleSelected, callback:upModule},
+            {text:lang('Move Down'), icon:'arrow_down', isEnabled:moduleSelected, callback:downModule},
+            {text:lang('Convert To'), icon:'module', isEnabled:moduleSelected, callback:convertModule}
         ]},
-    {text:lang('Add Module')+' (Ins)', icon:'external/icons/module_add.png', isEnabled:regionSelected, items:[]},
+    {text:lang('Add Module')+' (Ins)', icon:'module_add', isEnabled:regionSelected, items:[]},
     {text:'-', isEnabled:showSecondHR},
-    {text:lang('For This Page'), icon:'external/icons/general.png', items:[
-            {text:lang('Edit')+'...', icon:'external/icons/page_rename.png', callback:editTemplate},
-            {text:lang('Copy')+'...', icon:'external/icons/page_copy.png', callback:copyTemplate},
-            {text:lang('Delete'), icon:'external/icons/page_delete.png', callback:deleteTemplate},
-            {text:lang('Rename')+'...', icon:'external/icons/page_rename.png', callback:renameTemplate}
+    {text:lang('For This Page'), icon:'general', items:[
+            {text:lang('Edit')+'...', icon:'page_rename', callback:editTemplate},
+            {text:lang('Copy')+'...', icon:'page_copy', callback:copyTemplate},
+            {text:lang('Delete'), icon:'page_delete', callback:deleteTemplate},
+            {text:lang('Rename')+'...', icon:'page_rename', callback:renameTemplate}
         ]},
-    {text:lang('Other Pages'), icon:'external/icons/pages.png', items:[]},
-    {text:lang('Export')+'...', icon:'external/icons/exportTemplate.png', callback:exportTemplate},
-    {text:lang('Import')+'...', icon:'external/icons/importTemplate.png', callback:importTemplate},
+    {text:lang('Other Pages'), icon:'pages', items:[]},
+    {text:lang('Export')+'...', icon:'exportTemplate', callback:exportTemplate},
+    {text:lang('Import')+'...', icon:'importTemplate', callback:importTemplate},
     {text:'-'},
-    {text:lang('Data'), icon:'external/icons/data.png', items:[]},
-    {text:lang('Category-Content Tree'), icon:'external/icons/tree.png', callback:openTree},
-    {text:lang('Page-Module Tree'), icon:'external/icons/tree.png', callback:openPageModuleTree},
+    {text:lang('Data'), icon:'data', items:[]},
+    {text:lang('Category-Content Tree'), icon:'tree', callback:openTree},
+    {text:lang('Page-Module Tree'), icon:'tree', callback:openPageModuleTree},
     {text:'-'},
-    {text:lang('Configuration'), icon:'external/icons/Configuration.png', callback:configure},
-    {text:lang('File Manager'), icon:'external/icons/folder_module.png', callback:openFileManager},
-    {text:lang('Edit General CSS'), icon:'external/icons/css.png', callback:editStyle},
-    {text:lang('Edit General Javascript'), icon:'external/icons/script.png', callback:editJavascript},
-    {text:lang('Edit Page Load Script'), icon:'external/icons/script.png', callback:editPageLoadScript},
-    {text:lang('Clear Cache'), icon:'external/icons/cache.gif', callback:clearCache},
-    {text:lang('Edit Content'), icon: 'external/icons/edit.png', isEnabled: contentLinkSelected, callback: editContent },
-    {text:lang('Edit Tag'), icon: 'external/icons/edit.png', isEnabled: tagLinkSelected, callback: editTag },
-    {text:lang('Console'), icon: 'external/icons/console.png', callback: openConsole },
-    {text:lang('Switch to View Mode'), icon:'external/icons/view_mode.png', callback:endDesignMode}
+    {text:lang('Configuration'), icon:'Configuration', callback:configure},
+    {text:lang('File Manager'), icon:'folder_module', callback:openFileManager},
+    {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
+    {text:lang('Edit General Javascript'), icon:'script', callback:editJavascript},
+    {text:lang('Edit Page Load Script'), icon:'script', callback:editPageLoadScript},
+    {text:lang('Clear Cache'), icon:'cache', callback:clearCache},
+    {text:lang('Edit Content'), icon: 'edit', isEnabled: contentLinkSelected, callback: editContent },
+    {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
+    {text:lang('Console'), icon: 'console', callback: openConsole },
+    {text:lang('Switch to View Mode'), icon:'view_mode', callback:endDesignMode}
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
-    items[i] = {text:mdlGrup.grup, icon:'external/icons/folder_module.png', items:[]};
+    items[i] = {text:mdlGrup.grup, icon:'folder_module', items:[]};
     mdlGrup.items.each(function(mdlTp, j){
-        items[i].items[j] = {text:mdlTp.name, icon:'external/icons/'+mdlTp.id+'.png', data:mdlTp.id, callback:addModule};
+        items[i].items[j] = {text:mdlTp.name, icon:mdlTp.id, data:mdlTp.id, callback:addModule};
     });
 });
 var _cntr = 0;
 templates.each(function(template, i){
     if(template!=currTemplate)
-        popupMenu.menuItems[7].items[_cntr++] = {text:template, icon:'external/icons/page.png', callback:function(){location.href=this.text;}};
+        popupMenu.menuItems[7].items[_cntr++] = {text:template, icon:'page', callback:function(){location.href=this.text;}};
 });
 _cntr = 0;
 entityTypes.each(function(entTp,i){
     if(entTp[2])
-        popupMenu.menuItems[11].items[_cntr++] = {text:entTp[1], icon:'external/icons/'+entTp[0]+'.png', data:entTp[0], callback:openEntityListForm};
+        popupMenu.menuItems[11].items[_cntr++] = {text:entTp[1], icon:entTp[0], data:entTp[0], callback:openEntityListForm};
 });
 popupMenu.onShow = function(){
 	navigationEnabled = false;
@@ -302,7 +302,7 @@ function showPopupMenu(event){
 
 function addModule(elmId){
     if(!elmId){ // if the module to be added is not defined ask it hesaaabı
-        var win = new Window({className: 'alphacube', title: '<img src="external/icons/module_add.png" style="vertical-align:middle"> ' + lang('Select Module'), maximizable:false, minimizable:false, width:220, height:210, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
         var str = '<p align="center"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -311,7 +311,7 @@ function addModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="btn OK" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
+        str += '</select><br/></br><span class="btn cok" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
         new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
@@ -350,7 +350,7 @@ function editModule(name, id){
             var title = '';
             for(var i=0; i<moduleTypes.length; i++){
                 var mdlType = moduleTypes[i].items.find(function(mdl){return mdl.id==name;});
-                if(mdlType){title = '<img src="external/icons/'+name+'.png" style="vertical-align:middle"> ' + mdlType.name; break;}
+                if (mdlType) { title = '<span class="cbtn c' + name + '"></span> ' + mdlType.name; break; }
             }
             var dim = $(document.body).getDimensions();
             var left=dim.width-390, top=10, width=350, height=dim.height-60;
@@ -482,7 +482,7 @@ function saveModule(pe){
 }
 function convertModule(elmId){
     if(!elmId){ // if the module to be converted is not defined ask it hesaaabı
-        var win = new Window({className: 'alphacube', title: '<img src="external/icons/module_add.png" style="vertical-align:middle"> ' + lang('Select Module'), maximizable:false, minimizable:false, width:220, height:210, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
         var str = '<p align="center"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -491,7 +491,7 @@ function convertModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="btn OK" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
+        str += '</select><br/></br><span class="btn cok" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
         new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
@@ -514,7 +514,7 @@ function convertModule(elmId){
     });
 }
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory){
-    caption = '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + caption;
+    caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
 
@@ -530,7 +530,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 		editFormHideCategory: editFormHideCategory
     }
 	if(entityName=='ContentPicture'){
-		options.commands.push({id:'QuickLoad', icon:'thunder', name:'Quick Load', handler:quickLoadImages});
+		options.commands.push({id:'QuickLoad', icon:'DataConverter', name:'Quick Load', handler:quickLoadImages});
 		options.commands.push({id:'Tagify', icon:'tag', name:'Tag Picture', handler:function(){
 			var id = this.getSelectedEntityId();
 			if(!id || id<=0) return;
@@ -551,7 +551,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 function quickLoadImages(){
 	var fm = openFileManager();
 	var ths = this; // this is ListForm here
-	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="btn ok">' + lang('OK') + '</span></div>');
+	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="btn cok">' + lang('OK') + '</span></div>');
 	$('btnOK').observe('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
 		var params = {
@@ -580,7 +580,7 @@ function tagifySelectedPicture(id){
 		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 		var winContent = $(win.getContent());
 		winContent.insert(img.show().remove());
-		winContent.insert('<p align="right"><span class="btn OK" id="btnTagifyOK">'+lang('OK')+'</span><span class="btn cancel" id="btnTagifyCancel">'+lang('Cancel')+'</span></p>');
+		winContent.insert('<p align="right"><span class="btn cok" id="btnTagifyOK">'+lang('OK')+'</span><span class="btn ccancel" id="btnTagifyCancel">'+lang('Cancel')+'</span></p>');
 		
 		$('btnTagifyOK').observe('click', function(){
 			tagData = tagData.findAll(function(t){return t.remove!=true;});
@@ -629,7 +629,7 @@ function tagifySelectedPicture(id){
 function openTagForm(winPos, tag, tagData){
 	if($('tagify_edit')) $('tagify_edit').remove();
 	
-	$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="btn OK" id="btnTagifyEditOK">'+lang('OK')+'</span><span class="btn cancel" id="btnTagifyEditDelete">'+lang('Delete')+'</span></p></div>');
+	$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="btn cok" id="btnTagifyEditOK">'+lang('OK')+'</span><span class="btn ccancel" id="btnTagifyEditDelete">'+lang('Delete')+'</span></p></div>');
 	var formTag = $('tagify_edit');
 
 	$('btnTagifyEditOK').observe('click', function(){
@@ -667,12 +667,12 @@ function sortImages(){
 	var html = '<div id="sortableList">';
 	for(var i=0; i<rows.length; i++){
 		var row = rows[i];
-		var src = row.select('td')[1].readAttribute('value');
+		var src = row.select('td')[2].readAttribute('value');
 		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
 	}
-	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn delete" id="btnSortImagesDelete">'+lang('Delete')+'</span> <span class="btn OK" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn cancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
+	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn cdelete" id="btnSortImagesDelete">'+lang('Delete')+'</span> <span class="btn cok" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
 
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/sort.png" style="vertical-align:middle">Order Pictures', width:1100, height:600, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
 	winContent.insert(html);
     win.showCenter();
@@ -713,7 +713,7 @@ function selectPic(pic){
 
 // Category-Content Tree
 function openTree(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/tree.png" style="vertical-align:middle"> ' + lang('Category-Content Tree'), top:5, left:5, width:400, height:600, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 5, left: 5, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getNodes, nodeClicked);
@@ -732,7 +732,7 @@ function nodeClicked(node){
 
 // Page-Module Tree
 function openPageModuleTree(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/tree.png" style="vertical-align:middle"> ' + lang('Page-Module Tree'), top:5, left:5, width:400, height:600, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 5, left: 5, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getModuleNodes, nodeModuleClicked);
@@ -766,7 +766,7 @@ function editData(entityName, id, hideCategory, callback, filter){
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
             var dim = $(document.body).getDimensions();
             var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({className: 'alphacube', title: '<img src="external/icons/'+entityName+'.png" style="vertical-align:middle"> ' + (id<=0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName)), left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+            var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + entityName + '"></span> ' + (id <= 0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName)), left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
             var winContent = $(win.getContent());
@@ -874,10 +874,10 @@ function renameTemplate(){
 function editTemplate(templateName){
 	if(templateName=='1') return;
     if(!templateName) templateName = currTemplate;
-	
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/page.png" style="vertical-align:middle"> ' + templateName, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> ' + templateName, width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
     $('txtSource').value = ajax({url:'SystemInfo.ashx?method=getTemplateSource&template='+templateName,isJSON:false,noCache:true});
     $('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
     win.showCenter();
@@ -907,7 +907,7 @@ function saveTemplate(templateName){
 //##############################################
 
 function exportTemplate(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/exportTemplate.png" style="vertical-align:middle"> ' + lang('Export'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cexportTemplate"></span> ' + lang('Export'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     var str = '<table width="100%" height="350"><tr><td width="30%"><div id="selectedTemplatesToExport" style="width:100%;height:100%;overflow:auto">';
     templates.each(function(tmp){
@@ -915,7 +915,7 @@ function exportTemplate(){
     });
     str += '</div></td><td>';
     str += '<textarea wrap="off" id="txtExport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>';
-    str += '</td></tr></table><span class="btn OK" id="btnMakeExport">'+lang('Transfer')+' >></span>';
+    str += '</td></tr></table><span class="btn cok" id="btnMakeExport">'+lang('Transfer')+' >></span>';
     new Insertion.Bottom(winContent, str);
     $('btnMakeExport').observe('click', function(){
         var selTempsToExp = '';
@@ -928,9 +928,9 @@ function exportTemplate(){
     win.toFront();
 }
 function importTemplate(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/importTemplate.png" style="vertical-align:middle"> ' + lang('Import'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cimportTemplate"></span> ' + lang('Import'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtImport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveImport">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtImport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveImport">'+lang('Save')+'</span></p>');
     $('btnSaveImport').observe('click', saveImport);
     win.showCenter();
     win.toFront();
@@ -955,9 +955,9 @@ function saveImport(){
 //#####################################
 
 function editStyle(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/css.png" style="vertical-align:middle"> ' + lang('General CSS'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ccss"></span> ' + lang('General CSS'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn load" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn save" id="btnSaveStyles">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn cload" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn csave" id="btnSaveStyles">'+lang('Save')+'</span></p>');
     $('txtDefStyles').value = ajax({url:'SystemInfo.ashx?method=getDefaultStyles',isJSON:false,noCache:true});
     $('btnSaveStyles').observe('click', saveStyle);
     $('btnModuleDefaultStyles').observe('click', function(){$('txtDefStyles').value += ajax({url:'ModuleInfo.ashx?method=getAllDefaultCSS',isJSON:false,noCache:false});});
@@ -979,9 +979,9 @@ function saveStyle(){
 }
 
 function editJavascript(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/script.png" style="vertical-align:middle"> ' + lang('General Javascript'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cscript"></span> ' + lang('General Javascript'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefJavascript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSaveJavascript">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefJavascript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveJavascript">'+lang('Save')+'</span></p>');
     $('txtDefJavascript').value = ajax({url:'SystemInfo.ashx?method=getDefaultJavascript',isJSON:false,noCache:true});
     $('btnSaveJavascript').observe('click', saveJavascript);
     win.showCenter();
@@ -1003,9 +1003,9 @@ function saveJavascript(){
 
 
 function editPageLoadScript(){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/script.png" style="vertical-align:middle"> ' + lang('General Page Load Script'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cscript"></span> ' + lang('General Page Load Script'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefPageLoadScript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn save" id="btnSavePageLoadScript">'+lang('Save')+'</span></p>');
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefPageLoadScript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSavePageLoadScript">'+lang('Save')+'</span></p>');
     $('txtDefPageLoadScript').value = ajax({url:'SystemInfo.ashx?method=getDefaultPageLoadScript',isJSON:false,noCache:true});
     $('btnSavePageLoadScript').observe('click', savePageLoadScript);
     win.showCenter();
@@ -1036,7 +1036,7 @@ function configure(){
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
             var dim = $(document.body).getDimensions();
             var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({className: "alphacube", title: '<img src="external/icons/Configuration.png" style="vertical-align:middle"> ' + lang('Configuration'), left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+            var win = new Window({ className: "alphacube", title: '<span class="cbtn cConfiguration"></span> ' + lang('Configuration'), left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
             var winContent = $(win.getContent());
@@ -1057,7 +1057,7 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(selectedPath, onSelectFile){
-    var win = new Window({className: 'alphacube', title: '<img src="external/icons/folder_module.png" style="vertical-align:middle"> ' + lang('File Manager'), width:780, height:450, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), width: 780, height: 450, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     var fm = new FileManager({
 		container:winContent,

@@ -15,7 +15,7 @@ namespace Cinar.CMS.Library.Modules
         {
             Deletable = true;
             Editable = true;
-            NewRecordLink = "<img border=\"0\" src=\"external/icons/yonetim_yeni_kayit.gif\" />";
+            NewRecordLink = "<img border=\"0\" src=\"/external/icons/yonetim_yeni_kayit.gif\" />";
             HowManyItems = 30;
             EditPage = "";
             Filter = "";
@@ -197,10 +197,10 @@ namespace Cinar.CMS.Library.Modules
                 if (this.Deletable)
                 {
                     uriParser.QueryPart["delete"] = dr[0].ToString();
-                    sb.AppendFormat("<td><img src=\"external/icons/delete.png\" onclick=\"if(confirm('Kayýt silinecek!')) location.href='{0}'\"/></td>\n", uriParser.ToString());
+                    sb.AppendFormat("<td><span class=\"cbtn cdelete\" onclick=\"if(confirm('Kayýt silinecek!')) location.href='{0}'\"></span></td>\n", uriParser.ToString());
                 }
                 if (this.Editable)
-                    sb.AppendFormat("<td><img src=\"external/icons/edit.png\" onclick=\"location.href='{0}'\"/></td>\n", editUrl);
+                    sb.AppendFormat("<td><span class=\"cbtn cedit\" onclick=\"location.href='{0}'\"></span></td>\n", editUrl);
                 sb.Append("</tr>\n");
             }
 

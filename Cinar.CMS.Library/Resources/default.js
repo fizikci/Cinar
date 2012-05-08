@@ -318,8 +318,9 @@ function fadeWithArrowsShow(elm, which){
 	if(!nextImg)
 		nextImg = which=='next' ? elm.down('.clItem') : elm.select('.clItem').last();
 	if(nextImg && nextImg!=elm.currentImg){
-		elm.currentImg.fade({ duration: 0.5, from: 1, to: 0.01 });
-		nextImg.fade({ duration: 0.5, from: 0, to: 1 });
+		var curr = elm.currentImg;
+		curr.fade({ duration: 0.5, from: 1, to: 0.01, afterFinish: function(){curr.setStyle({ zIndex:1 });} });
+		nextImg.fade({ duration: 0.5, from: 0, to: 1, afterFinish: function(){nextImg.setStyle({ zIndex:2 });} });
 		elm.currentImg = nextImg;
 	}
 }
