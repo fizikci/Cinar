@@ -229,25 +229,25 @@ var StringEdit = Class.create();StringEdit.prototype = {
 
         new Insertion.Bottom(list, 
 								'<div>'+
-									'<img src="/external/icons/editor_bold.png" title="Bold"/>'+
-									'<img src="/external/icons/editor_italic.png" title="Italic"/>'+
-									'<img src="/external/icons/editor_underline.png" title="Underline"/>'+
-									'<img src="/external/icons/editor_font.png" title="Font Size & Color"/>'+
-									'<img src="/external/icons/picture.png" title="Add Picture"/>'+
-									'<img src="/external/icons/editor_anchor.png" title="Add Link"/>'+
-									'<img src="/external/icons/eye.png" style="margin-left:40px" title="Preview"/>'+
+									'<span class="cbtn ceditor_bold" title="Bold"></span>' +
+									'<span class="cbtn ceditor_italic" title="Italic"></span>' +
+									'<span class="cbtn ceditor_underline" title="Underline"></span>' +
+									'<span class="cbtn ceditor_font" title="Font Size & Color"></span>' +
+									'<span class="cbtn cpicture" title="Add Picture"></span>' +
+									'<span class="cbtn ceditor_anchor" title="Add Link"></span>' +
+									'<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
 									'<div style="float:right"><input type="checkbox" class="wrapCheck" '+(wrap=='1'?'checked':'')+'/> Wrap <input type="checkbox" class="nl2br" '+(nl2br=='1'?'checked':'')+'/> nl2br</div>'+
 								'</div>'+
 								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" '+(wrap=='1'?'':'wrap="off"')+'></textarea>'+
-								'<center><span class="btn OK">' + lang('OK') + '</span> <span class="btn cancel">' + lang('Cancel') + '</span></center>');
+								'<center><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
 								
         var ta = $(this.editorId + 'ta');
 		ta.value = this.input.value.gsub('#NL#', '\n');
 
         if (this.input.disabled) return;
 
-        var btnOK = list.down('.OK');
-        var btnCancel = list.down('.cancel');
+        var btnOK = list.down('.cok');
+        var btnCancel = list.down('.ccancel');
         Event.stopObserving(btnOK, 'click', __oldBtnOKClick);
         Event.stopObserving(btnCancel, 'click', __oldBtnCancelClick);
         __oldBtnOKClick = this.setHtml.bind(this);
@@ -278,20 +278,20 @@ var StringEdit = Class.create();StringEdit.prototype = {
 		
 		var ths = this;
 		
-		list.select('img').each(function(img){
-			if(img.src.indexOf('bold.png')>-1)
+		list.select('.cbtn').each(function(img){
+			if (img.className.indexOf('bold')>-1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<b>', '</b>');});
-			if(img.src.indexOf('italic.png')>-1)
+			if (img.className.indexOf('italic') > -1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<i>', '</i>');});
-			if(img.src.indexOf('underline.png')>-1)
+			if (img.className.indexOf('underline') > -1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<u>', '</u>');});
-			if(img.src.indexOf('font.png')>-1)
+			if (img.className.indexOf('font') > -1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<font size="5" color="black">', '</font>');});
-			if(img.src.indexOf('anchor.png')>-1)
+			if (img.className.indexOf('anchor') > -1)
 				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<a href="_prompt_" target="_blank">', '</a>', 'Enter link URL', 'http://');});
-			if(img.src.indexOf('picture.png')>-1)
+			if (img.className.indexOf('picture') > -1)
 				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
-			if(img.src.indexOf('eye.png')>-1)
+			if (img.className.indexOf('eye') > -1)
 				img.observe('click', function(){
 					if(!$(ths.editorId+'Preview')){
 						var dim = $(ths.editorId + 'ta').getDimensions();
@@ -359,7 +359,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
 								canDelete: true});
 		fileBrowserCurrInput = this.input;
 		
-		$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="'+this.editorId+'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></div>');
+		$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="'+this.editorId+'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span></div>');
 		
         var btnCancel = $(this.editorId+'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
@@ -595,7 +595,7 @@ var LookUp = Class.create(); LookUp.prototype = {
 		$('btnDelete' + lf.hndl).hide();
 		$('btnInfo' + lf.hndl).hide();
 		
-		new Insertion.Bottom(list, '<center><span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span></center>');
+		new Insertion.Bottom(list, '<center><span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span></center>');
 
         var btnCancel = $(this.editorId + 'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
@@ -744,10 +744,10 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
         new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">'+
 												'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/>'+
 												'<center>'+
-													'<span id="' + this.editorId + 'btnOK" class="btn OK">' + lang('OK') + '</span> '+
-													'<span id="' + this.editorId + 'btnDefault" class="btn load">' + lang('Load default') + '</span> '+
-													'<span id="' + this.editorId + 'btnPicture" class="btn picture">' + lang('Add picture') + '</span> '+
-													'<span id="' + this.editorId + 'btnCancel" class="btn cancel">' + lang('Cancel') + '</span>'+
+													'<span id="' + this.editorId + 'btnOK" class="btn cok">' + lang('OK') + '</span> '+
+													'<span id="' + this.editorId + 'btnDefault" class="btn cload">' + lang('Load default') + '</span> '+
+													'<span id="' + this.editorId + 'btnPicture" class="btn cpicture">' + lang('Add picture') + '</span> '+
+													'<span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span>'+
 												'</center>'+
 											'</div>');
 
@@ -841,7 +841,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     },
     showEditor: function(event){
         if(!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor FilterEdit" style="display:none" id="'+this.editorId+'"><div id="'+this.editorId+'div" style="overflow:auto;height:270px"></div><center><span id="'+this.editorId+'btnOK" class="btn OK">'+lang('OK')+'</span> <span id="'+this.editorId+'btnCancel" class="btn cancel">'+lang('Cancel')+'</span></center></div>');
+            new Insertion.Bottom(document.body, '<div class="editor FilterEdit" style="display:none" id="'+this.editorId+'"><div id="'+this.editorId+'div" style="overflow:auto;height:270px"></div><center><span id="'+this.editorId+'btnOK" class="btn cok">'+lang('OK')+'</span> <span id="'+this.editorId+'btnCancel" class="btn ccancel">'+lang('Cancel')+'</span></center></div>');
         else
             $(this.editorId).down().innerHTML = "";
         var entityNameToUse = this.options.entityName;
@@ -1300,7 +1300,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr><td colspan="2" id="details'+this.hndl+'"></td></tr>';
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td style="min-height:50px;padding:10px 0px;"><div id="desc'+this.hndl+'" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
-        str += '<tr><td style="height:16px;text-align:right"><span class="btn save" id="btnSave'+this.hndl+'">'+lang('Save')+'</span></td></tr>';
+        str += '<tr><td style="height:16px;text-align:right"><span class="btn csave" id="btnSave'+this.hndl+'">'+lang('Save')+'</span></td></tr>';
         str += '</table>';
 
         new Insertion.Bottom(container, str);
@@ -1354,7 +1354,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                     if(this.entityId==0) continue; //***
 					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name' || c.id=='Question'}).value;
 					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.replace("'", "\\'").replace('"','\\"') + ')';
-                    details.insert('<span class="btn '+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
+                    details.insert('<span class="btn c'+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                     continue;
                 default:
                     throw 'No control of this kind: '+control.type;
@@ -1441,7 +1441,7 @@ var ListForm = Class.create();ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        new Insertion.Top(this.container, '<table style="'+(this.options.hideFilterPanel ? 'display:none' : '')+'" width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn filter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        new Insertion.Top(this.container, '<table style="'+(this.options.hideFilterPanel ? 'display:none' : '')+'" width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
         $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
 
@@ -1451,16 +1451,16 @@ var ListForm = Class.create();ListForm.prototype = {
 		if(this.options.commands)
 			for(var i=0; i<this.options.commands.length; i++){
 				var cmd = this.options.commands[i];
-				str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="btn '+cmd.icon+'">' + lang(cmd.name) + '</span></div>';
+				str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="btn c'+cmd.icon+'">' + lang(cmd.name) + '</span></div>';
 			}
-        str += '<img src="external/icons/prev.gif" id="btnPrev' + this.hndl + '" alt="' + lang('Previous Page') + ' (PgUp)"/>';
+        str += '<span class="cbtn cprev" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="pager" id="pageNo' + this.hndl + '">1</span>';
-        str += '<img src="external/icons/next.gif" id="btnNext' + this.hndl + '" alt="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"/>';
-        str += '<img src="external/icons/add.png" id="btnAdd' + this.hndl + '" alt="' + lang('Add') + ' (Ins)"/>';
-        str += '<img src="external/icons/edit.png" id="btnEdit' + this.hndl + '" alt="' + lang('Edit') + ' (Ent)"/>';
-        str += '<img src="external/icons/delete.png" id="btnDelete' + this.hndl + '" alt="' + lang('Delete') + ' (Del)">';
-        str += '<img src="external/icons/refresh.png" id="btnRefresh' + this.hndl + '" alt="' + lang('Refresh') + '"/>';
-        str += '<img src="external/icons/info.png" id="btnInfo' + this.hndl + '" alt="' + lang('Info') + '">';
+        str += '<span class="cbtn cnext" id="btnNext' + this.hndl + '" title="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"></span>';
+        str += '<span class="cbtn cadd" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
+        str += '<span class="cbtn cedit" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
+        str += '<span class="cbtn cdelete" id="btnDelete' + this.hndl + '" title="' + lang('Delete') + ' (Del)"></span>';
+        str += '<span class="cbtn crefresh" id="btnRefresh' + this.hndl + '" title="' + lang('Refresh') + '"></span>';
+        str += '<span class="cbtn cinfo" id="btnInfo' + this.hndl + '" title="' + lang('Info') + '"></span>';
         str += '</div>';
         new Insertion.Bottom(this.container, str);
         $('btnPrev' + this.hndl).observe('click', this.cmdPrev.bind(this));
@@ -1532,7 +1532,7 @@ var ListForm = Class.create();ListForm.prototype = {
 
                 var dim = Position.getWindowSize();
                 var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
-                var caption = '<img src="external/icons/' + ths.options.entityName + '.png" style="vertical-align:middle"> ' + lang('New') + ' ' + ths.options.hrEntityName;
+                var caption = '<span class="cbtn c' + ths.options.entityName + '.png" style="vertical-align:middle"></span> ' + lang('New') + ' ' + ths.options.hrEntityName;
                 var win = new Window({ className: 'alphacube', title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
@@ -1573,7 +1573,7 @@ var ListForm = Class.create();ListForm.prototype = {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 var dim = Position.getWindowSize();
                 var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
-                var caption = '<img src="external/icons/' + ths.options.entityName + '.png" style="vertical-align:middle"> ' + lang('Edit') + " : " + ths.options.hrEntityName;
+                var caption = '<span class="cbtn c' + ths.options.entityName + '" style="vertical-align:middle"></span> ' + lang('Edit') + " : " + ths.options.hrEntityName;
                 var win = new Window({ className: "alphacube", title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
@@ -1899,11 +1899,11 @@ var TreeView = Class.create(); TreeView.prototype = {
         this.getNodesCallback = getNodesCallback;
         this.nodeClickCallback = nodeClickCallback;
 
-        new Insertion.Bottom(this.container, '<div id="nd_'+rootData+'"><img src="external/icons/plus.png" style="cursor:pointer"><img src="external/icons/category.png"> <span>'+rootText+'</span></div>');
+        new Insertion.Bottom(this.container, '<div id="nd_' + rootData + '"><span class="cbtn cplus"></span><span class="cbtn ccategory"></span> <span class="nodeName">' + rootText + '</span></div>');
         var node = $('nd_'+rootData);
         node['node'] = {data:rootData, text:rootText, type:'category', collapsed:true};
         node.down().observe('click', this.toggle.bind(this));
-        node.down('span').observe('click', this.nodeClick.bind(this));
+        node.down('span.nodeName').observe('click', this.nodeClick.bind(this));
     },
     toggle: function(event){
         var img = Event.element(event);
@@ -1919,21 +1919,22 @@ var TreeView = Class.create(); TreeView.prototype = {
             for(var i=0; i<nodes.length; i++){
                 var n = nodes[i];
                 n.collapsed = true;
-                new Insertion.Bottom(childrenDiv, '<div id="nd_'+n.data+'">'+(n.type=='category'?'<img src="external/icons/plus.png" style="cursor:pointer">':'')+'<img src="external/icons/'+n.type+'.png"> <span>'+n.text+'</span></div>');
+                new Insertion.Bottom(childrenDiv, '<div id="nd_' + n.data + '">' + (n.type == 'category' ? '<span class="cbtn cplus"></span>' : '') + '<span class="cbtn c' + n.type + '"></span> <span class="nodeName">' + n.text + '</span></div>');
                 var nDiv = $('nd_'+n.data);
                 nDiv['node'] = n;
                 nDiv.down().observe('click', this.toggle.bind(this));
-                nDiv.down('span').observe('click', this.nodeClick.bind(this));
+                nDiv.down('span.nodeName').observe('click', this.nodeClick.bind(this));
             }
         }
         if(node.collapsed){
             childrenDiv.show();
             node.collapsed = false;
-            img.src = 'external/icons/minus.png';
+            //TODO: çöz bunu:
+            //img.src = '/external/icons/minus.png';
         } else {
             childrenDiv.hide();
             node.collapsed = true;
-            img.src = 'external/icons/plus.png';
+            //img.src = '/external/icons/plus.png';
         }
     },
     nodeClick: function(event){
@@ -2028,9 +2029,9 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
             if(menu.text=='-')
                 s+=(tab+'\t<hr id="'+(subId+'_'+index)+'"/>\n');            
             else if(menu.items && menu.items.length>0)
-                s+=(tab+'\t<div class="menuFolder" onmouseover="showSubMenu(this,\''+(id+'_'+index)+'\')" id="'+(subId+'_'+index)+'" onmouseout="menuOut(this)"><img src="'+menu.icon+'"/> '+menu.text+'</div>\n');
+                s+=(tab+'\t<div class="menuFolder" onmouseover="showSubMenu(this,\''+(id+'_'+index)+'\')" id="'+(subId+'_'+index)+'" onmouseout="menuOut(this)"><span class="cbtn c'+menu.icon+'"></span> '+menu.text+'</div>\n');
             else
-                s+=(tab+'\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="'+(subId+'_'+index)+'" onmouseout="menuOut(this)"><img src="'+menu.icon+'"/> '+menu.text+'</div>\n');
+                s+=(tab+'\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="'+(subId+'_'+index)+'" onmouseout="menuOut(this)"><span class="cbtn c'+menu.icon+'"></span> '+menu.text+'</div>\n');
         });
         s+=(tab+'</div>\n');
         menus.each(function(menu, index){
@@ -2158,7 +2159,7 @@ var Console = Class.create(); Console.prototype = {
     cmdHist: [],
     cmdHistIndex:0,
     initialize: function(requestUrl){
-        var win = new Window({className: 'alphacube', title: '<img src="external/icons/console.png" style="vertical-align:middle"> ' + lang('Console'), width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cconsole" style="vertical-align:middle"></span> ' + lang('Console'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
         var container = win.getContent();
         
         container.insert('<textarea id="_cnsl"></textarea>');
@@ -2318,11 +2319,11 @@ var Fabtabs = Class.create(); Fabtabs.prototype = {
 //##########################
 
 function nicePrompt(prompt, validationCallback, okCallback){
-    var title = '<img src="external/icons/info.png" style="vertical-align:middle"> ' + lang('Information');
+    var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"><br/>';
-    str += '</br><span id="btnPromptOK" class="btn OK">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn cancel">'+lang('Cancel')+'</span></p>';
+    str += '</br><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn ccancel">'+lang('Cancel')+'</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -2339,20 +2340,20 @@ function nicePrompt(prompt, validationCallback, okCallback){
     $('btnPromptCancel').observe('click', function(){Windows.getFocusedWindow().close();});
 }
 function niceAlert(alert){
-    var title = '<img src="external/icons/error.png" style="vertical-align:middle"> ' + lang('Error');
+    var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p align="center"><span id="btnPromptOK" class="btn OK">'+lang('OK')+'</span></p>';
+    str += '</br><p align="center"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
     $('btnPromptOK').observe('click', function(){Windows.getFocusedWindow().close();});
 }
 function niceInfo(alert, okCallback){
-    var title = '<img src="external/icons/info.png" style="vertical-align:middle"> ' + lang('Information');
+    var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p align="center"><span id="btnPromptOK" class="btn OK">'+lang('OK')+'</span></p>';
+    str += '</br><p align="center"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -2362,10 +2363,10 @@ function niceInfo(alert, okCallback){
     });
 }
 function niceConfirm(confirm, okCallback){
-    var title = '<img src="external/icons/warning.png" style="vertical-align:middle"> ' + lang('Warning');
+    var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + confirm + '<br/>';
-    str += '</br><span id="btnPromptOK" class="btn OK">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn cancel">'+lang('Cancel')+'</span></p>';
+    str += '</br><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn ccancel">'+lang('Cancel')+'</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();

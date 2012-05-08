@@ -17,9 +17,6 @@ namespace Cinar.CMS.Library.Modules
         protected internal override void beforeShow()
         {
             base.beforeShow();
-
-            if (String.IsNullOrEmpty(this.CSS))
-                this.CSS = String.Format("#{0}_{1} span.searchButton {{background:url(external/icons/SearchResults.png);margin-left:10px;cursor:pointer;width:16px}}\n", this.Name, this.Id);
         }
 
         protected override string show()
@@ -30,7 +27,7 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("<form id=\"fSearch_{0}\" method=\"get\" action=\"{1}\">", this.Id, this.resultsPage);
             sb.AppendFormat("<input class=\"searchText\" type=\"text\" name=\"q\" value=\"{0}\"/>", CMSUtility.HtmlEncode(q));
-            sb.AppendFormat("<span class=\"searchButton\" onClick=\"$('fSearch_{0}').submit();return false;\">&nbsp;</span>", this.Id);
+            sb.AppendFormat("<span class=\"cbtn cSearchResults\" onClick=\"$('fSearch_{0}').submit();return false;\"></span>", this.Id);
             sb.AppendFormat("</form>");
             return sb.ToString();
         }
@@ -40,7 +37,6 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
             sb.AppendFormat("#{0}_{1} input.searchText {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.searchButton {{background:url(external/icons/SearchResults.png);margin-left:10px;cursor:pointer;width:16px}}\n", this.Name, this.Id);
             return sb.ToString();
         }
     }
