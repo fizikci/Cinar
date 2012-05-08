@@ -10,7 +10,7 @@ namespace Cinar.Test
         [STAThread]
         static void Main(string[] args)
         {
-            UnifiedIconsPngFileAndCss.Run();
+            Tutorial_3_CreateTableAtRuntime.Run();
 
             Console.ReadLine();
         }
