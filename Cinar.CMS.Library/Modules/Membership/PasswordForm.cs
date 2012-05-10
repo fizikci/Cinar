@@ -54,10 +54,12 @@ namespace Cinar.CMS.Library.Modules
             <br/>
             <a href=""http://{1}/LoginWithKeyword.ashx?keyword={2}"">http://{1}/LoginWithKeyword.ashx?keyword={2}</a>", Provider.GetModuleResource("Please change your password by using the address below"), Provider.Configuration.SiteAddress, user.Keyword);
 
-            Provider.SendMail(email, Provider.GetModuleResource("Your Password"), msg);
+            string res = Provider.SendMail(email, Provider.GetModuleResource("Your Password"), msg);
 
-
-            return Provider.GetModuleResource("A message sent to your email address. Please read it.");
+            if (res == "")
+                return Provider.GetModuleResource("A message sent to your email address. Please read it.");
+            else
+                return res;
         }
     }
 }

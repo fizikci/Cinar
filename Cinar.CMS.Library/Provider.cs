@@ -1408,7 +1408,7 @@ namespace Cinar.CMS.Library
             }
             catch(Exception ex)
             {
-                return ex.Message;
+                return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
             }
         }
         public static string SendMail(string from, string to, string subject, string message)
