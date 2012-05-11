@@ -413,6 +413,9 @@ namespace Cinar.CMS.Library.Entities
             foreach (ContentPicture cp in Provider.Database.ReadList(typeof(ContentPicture), "select * from ContentPicture where ContentId={0}", this.Id))
                 cp.Delete();
 
+            foreach (ContentUser cu in Provider.Database.ReadList(typeof(ContentUser), "select * from ContentUser where ContentId={0}", this.Id))
+                cu.Delete();
+
             foreach (UserComment uc in Provider.Database.ReadList(typeof(UserComment), "select * from UserComment where ContentId={0}", this.Id))
                 uc.Delete();
 
