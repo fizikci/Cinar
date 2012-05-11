@@ -517,7 +517,7 @@ function lightBox(img){
 					'<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>'+
 					'<div id="lbLeft"></div>'+
 					'<div id="lbCenter"></div>'+
-					(fbLikeExist ? '<div id="lbRight"><div id="lbCounter">1/20</div><img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span></div>':'')+
+					'<div id="lbRight"><div id="lbCounter">1/20</div>'+(fbLikeExist?'<img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span>':'') + '</div>'+
 					'</div>';
 	$(document.body).insert(html);
 	lightBoxDiv = $('lightBoxDiv');
@@ -539,7 +539,7 @@ function lightBox(img){
 	function showPic(){
 		lightBoxDiv.down('#lbLeft').hide();
 		lightBoxDiv.down('#lbCenter').hide();
-		if(fbLikeExist) lightBoxDiv.down('#lbRight').hide();
+		lightBoxDiv.down('#lbRight').hide();
 		lightBoxDiv.down('#lbPrev').hide();
 		lightBoxDiv.down('#lbNext').hide();
 		lightBoxDiv.hide();
@@ -550,7 +550,7 @@ function lightBox(img){
 	var lbImg = $('lbImg');
 	lbImg.on('load', function(){
 		var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
-		if(fbLikeExist) lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
+		lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + ' / ' + allImg.length;
 		centerToView(lightBoxDiv);
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true, 'white');
@@ -568,7 +568,7 @@ function lightBox(img){
 			if(fbLikeExist) lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
 			lightBoxDiv.down('#lbLeft').setStyle({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
 			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width*(desc?0.45:0)+10)+'px',width:(desc?45:90)+'%',top:(lbImgDim.height+15)+'px'}).show();
-			if(fbLikeExist) lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
 			
 			if(img.readAttribute('tag')=='video'){
 				var w = lbImgDim.width, h = lbImgDim.height;
