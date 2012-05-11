@@ -37,6 +37,11 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 50)]
         public string Surname { get; set; }
 
+        public string FullName
+        {
+            get { return string.IsNullOrWhiteSpace(Name + Surname) ? (string.IsNullOrWhiteSpace(Nick) ? Email : Nick) : (Name + " " + Surname); }
+        }
+
         [ColumnDetail(Length = 50)]
         public string Gender { get; set; }
 

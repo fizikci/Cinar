@@ -75,6 +75,7 @@
     <Compile Include="Entities\Commerce\BannerAd.cs" />
     <Compile Include="Entities\Commerce\Product.cs" />
     <Compile Include="Entities\Content\AuthorLang.cs" />
+    <Compile Include="Entities\Content\ContentUser.cs" />
     <Compile Include="Entities\Content\SourceLang.cs" />
     <Compile Include="Entities\Content\Hit.cs" />
     <Compile Include="Entities\ICriticalEntity.cs" />
