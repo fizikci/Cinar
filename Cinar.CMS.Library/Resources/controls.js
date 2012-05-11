@@ -37,11 +37,12 @@ var Control = Class.create(); Control.prototype = {
         this.options = (options==null ? new Object() : options);
         if(this.options.container==null) this.options.container = document.body;
         if(this.options.onChange==null) this.options.onChange = Prototype.emptyFunction;
+		var className = this.options.className ? ' class="'+this.options.className+'"' : '';
         
         var inpType = 'text';
         if(this.options.password) inpType='password';        
         
-        new Insertion.Bottom(this.options.container, '<div id="bk-ctrl'+idCounter+'"><input id="ctrlInp'+idCounter+'" type="'+inpType+'" name="'+this.id+'" style="width:100%"/><input id="ctrlBtn'+idCounter+'" type="button" style="position:absolute;display:none" value="..."/></div>');
+        new Insertion.Bottom(this.options.container, '<div id="bk-ctrl'+idCounter+'"><input'+className+' id="ctrlInp'+idCounter+'" type="'+inpType+'" name="'+this.id+'" style="width:100%"/><input id="ctrlBtn'+idCounter+'" type="button" style="position:absolute;display:none" value="..."/></div>');
         this.div = $('bk-ctrl'+idCounter);
         this.input = $('ctrlInp'+idCounter);
         if(this.options.readOnly) this.input.readOnly = true;
