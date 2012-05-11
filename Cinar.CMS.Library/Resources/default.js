@@ -188,24 +188,28 @@ document.observe('dom:loaded', function(){
 					break;
 			}
 		});
-		var imgs = $$('.lightBox img');
-		if(imgs.length){
-			imgs.each(function(img){
-				img.on('click', function(){lightBox(img);});
-			});
-			var mostLiked = imgs.sortBy(function(img){return parseInt(img.readAttribute('like'));})[imgs.length-1];
-			mostLiked.mostLiked=true;
-			if(parseInt(mostLiked.readAttribute('like'))>0){
-				var f = function(){
-					var pos = mostLiked.viewportOffset();
-					$(document.body).insert('<img id="mostLikedIcon" src="/external/icons/love.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-22)+'px;top:'+(pos.top+mostLiked.getHeight()-18)+'px;"/>');
-				};
-				if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
-					f();
-				else
-					mostLiked.on('load', f);
+		$$('.lightBox').each(function(elm){
+			var imgs = elm.select('img');
+			if(imgs.length){
+				imgs.each(function(img){
+					img.on('click', function(){lightBox(img);});
+				});
+				if(elm.hasClassName('fbLike')){
+					var mostLiked = imgs.sortBy(function(img){return parseInt(img.readAttribute('like'));})[imgs.length-1];
+					mostLiked.mostLiked=true;
+					if(parseInt(mostLiked.readAttribute('like'))>0){
+						var f = function(){
+							var pos = mostLiked.viewportOffset();
+							$(document.body).insert('<img id="mostLikedIcon" src="/external/icons/love.png" style="position:absolute;left:'+(pos.left+mostLiked.getWidth()-22)+'px;top:'+(pos.top+mostLiked.getHeight()-18)+'px;"/>');
+						};
+						if(mostLiked.readyState && mostLiked.readyState=='complete') // IE8 fix
+							f();
+						else
+							mostLiked.on('load', f);
+					}
+				}
 			}
-		}
+		});
 	}
 	// mansetAktuel
 	$$('.mansetAktuel').each(function(manset){
@@ -505,6 +509,7 @@ function gogPop(event){
 function lightBox(img){
 	var lightBoxDiv = $('lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
+	var fbLikeExist = img.up('.lightBox').hasClassName('fbLike');
 	var allImg = img.up().select('img');
 	var html = '<div id="lightBoxDiv">'+
 					'<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>'+
@@ -512,26 +517,29 @@ function lightBox(img){
 					'<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>'+
 					'<div id="lbLeft"></div>'+
 					'<div id="lbCenter"></div>'+
-					'<div id="lbRight"><div id="lbCounter">1/20</div><img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span></div>'+
+					(fbLikeExist ? '<div id="lbRight"><div id="lbCounter">1/20</div><img id="lbLove" src="'+img.readAttribute('likeSrc')+'"/> <span id="lbLoveCount">0</span></div>':'')+
 					'</div>';
 	$(document.body).insert(html);
 	lightBoxDiv = $('lightBoxDiv');
 	lightBoxDiv.down('#lbPrev').on('click',function(){if(img.previous('img')) {img = img.previous('img'); showPic();}});
 	lightBoxDiv.down('#lbNext').on('click',function(){if(img.next('img')) {img = img.next('img'); showPic();}});
 	
-	lightBoxDiv.down('#lbLove').on('click',function(){
-		var id = img.readAttribute('entityId');
-		if(!getCookie('like_' + id)){
-			var likerNumber = ajax({url:'LikeIt.ashx?id='+id, isJSON:false, noCache:true});
-			lightBoxDiv.down('#lbLoveCount').innerHTML = likerNumber;
-			img.writeAttribute('like', likerNumber);
-			setCookie('like_' + id, 1, 30);
-		}
-	});
+	if(fbLikeExist){
+		lightBoxDiv.down('#lbLove').on('click',function(){
+			var id = img.readAttribute('entityId');
+			if(!getCookie('like_' + id)){
+				var likerNumber = ajax({url:'LikeIt.ashx?id='+id, isJSON:false, noCache:true});
+				lightBoxDiv.down('#lbLoveCount').innerHTML = likerNumber;
+				img.writeAttribute('like', likerNumber);
+				setCookie('like_' + id, 1, 30);
+			}
+		});
+	}
+
 	function showPic(){
 		lightBoxDiv.down('#lbLeft').hide();
 		lightBoxDiv.down('#lbCenter').hide();
-		lightBoxDiv.down('#lbRight').hide();
+		if(fbLikeExist) lightBoxDiv.down('#lbRight').hide();
 		lightBoxDiv.down('#lbPrev').hide();
 		lightBoxDiv.down('#lbNext').hide();
 		lightBoxDiv.hide();
@@ -542,7 +550,7 @@ function lightBox(img){
 	var lbImg = $('lbImg');
 	lbImg.on('load', function(){
 		var tagData = img.readAttribute('tagData') ? eval('('+img.readAttribute('tagData')+')') : [];
-		lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
+		if(fbLikeExist) lightBoxDiv.down('#lbCounter').innerHTML = (allImg.indexOf(img) + 1) + '/' + allImg.length;
 		centerToView(lightBoxDiv);
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true, 'white');
@@ -557,10 +565,10 @@ function lightBox(img){
 			else
 				desc = '';
 			lightBoxDiv.down('#lbCenter').innerHTML = title; 
-			lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
+			if(fbLikeExist) lightBoxDiv.down('#lbRight #lbLoveCount').innerHTML = img.readAttribute('like'); 
 			lightBoxDiv.down('#lbLeft').setStyle({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
 			lightBoxDiv.down('#lbCenter').setStyle({left:(lbImgDim.width*(desc?0.45:0)+10)+'px',width:(desc?45:90)+'%',top:(lbImgDim.height+15)+'px'}).show();
-			lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			if(fbLikeExist) lightBoxDiv.down('#lbRight').setStyle({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
 			
 			if(img.readAttribute('tag')=='video'){
 				var w = lbImgDim.width, h = lbImgDim.height;
