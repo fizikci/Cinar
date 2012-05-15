@@ -98,13 +98,18 @@ namespace Cinar.CMS.Library.Handlers
             get
             {
                 StringBuilder sb = new StringBuilder();
+
+                string title = Provider.Configuration.SiteName;
+                if (Provider.Content != null && Provider.Content.Id != 1)
+                    title += " - " + Provider.Content.Title;
+                sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>\n");
                 sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Description) + " " : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 if (Provider.Configuration.SiteIcon.Trim() != "")
-                    sb.Append("<LINK href=\"http://" + Provider.Configuration.SiteAddress + "/" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\">\n");
-                sb.Append("<LINK href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
+                    sb.Append("<link href=\"http://" + Provider.Configuration.SiteAddress + "/" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
+                sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
                 sb.Append("<link href=\"/external/default.css.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 if (Provider.DesignMode)
@@ -115,7 +120,7 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
 
-                sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>", Provider.DesignMode.ToJS());
+                sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/default.js.ashx\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/message.js.ashx\"> </script>\n");
@@ -124,18 +129,17 @@ namespace Cinar.CMS.Library.Handlers
 
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
+                sb.Append("<link href=\"/external/cinar.cms.css.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {
-                    sb.Append("<link href=\"/external/cinar.cms.css.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-
                     sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"> </script>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
 
                     sb.Append("<script type=\"text/javascript\" src=\"/external/controls.js.ashx\"></script>\n");
                     sb.Append(@"
-<script type='text/javascript'>
+<script type=""text/javascript"">
     if(designMode){
         Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
         Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
@@ -152,13 +156,13 @@ namespace Cinar.CMS.Library.Handlers
 
                 if (Provider.DevelopmentMode)
                 {
-                    sb.Append(@"<script>document.observe('dom:loaded', function(){document.body.insert('<div style=""font-family:Lucida Console;font-size:12px;position:absolute;right:10px;top:10px;width:100px;padding:10px;color:white;background:orange;"">Development Mode</div>');});</script>");
+                    sb.Append(@"<script>document.observe('dom:loaded', function(){document.body.insert('<div style=""font-family:Lucida Console;font-size:12px;position:absolute;right:10px;top:10px;width:100px;padding:10px;color:white;background:orange;"">Development Mode</div>');});</script>\n");
                 }
 
                 if (!Provider.User.IsAnonim())
                 {
                     sb.Append(@"
-<script type='text/javascript'>
+<script type=""text/javascript"">
     var sessionInMinutes = 0;
     setInterval(function(){
         new Ajax.Request('KeepSession.ashx', {
@@ -171,14 +175,7 @@ namespace Cinar.CMS.Library.Handlers
 </script>
 ");
                 }
-
                 sb.Append("<script type=\"text/javascript\" src=\"/DefaultJavascript.ashx\"></script>\n");
-
-                string title = Provider.Configuration.SiteName;
-                if (Provider.Content != null && Provider.Content.Id != 1)
-                    title += " - " + Provider.Content.Title;
-
-                sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>");
 
                 return sb.ToString();
             }
