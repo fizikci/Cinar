@@ -1397,6 +1397,7 @@ namespace Cinar.CMS.Library
 
                 SmtpClient smtp = new SmtpClient();
                 smtp.Host = Provider.Configuration.MailHost;
+                smtp.Port = Provider.Configuration.MailPort;
                 if (!String.IsNullOrEmpty(Provider.Configuration.MailUsername) && !String.IsNullOrEmpty(Provider.Configuration.MailPassword))
                 {
                     smtp.UseDefaultCredentials = false;

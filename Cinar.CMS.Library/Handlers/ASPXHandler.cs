@@ -131,12 +131,12 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
                 sb.Append("<link href=\"/external/cinar.cms.css.ashx\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
+                sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
+
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {
-                    sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
-
                     sb.Append("<script type=\"text/javascript\" src=\"/external/controls.js.ashx\"></script>\n");
                     sb.Append(@"
 <script type=""text/javascript"">

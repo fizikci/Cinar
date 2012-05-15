@@ -15,6 +15,9 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Content.Id, Content.Title as [Content.Title], TCategoryId.Title as [Content.CategoryId], Content.PublishDate as [Content.PublishDate], Content.Visible as [BaseEntity.Visible] from [Content] left join [Content] as TCategoryId ON TCategoryId.Id = [Content].CategoryId", QueryOrderBy = "[Content.PublishDate] desc")]
     public class Content : BaseEntity
     {
+        [EditFormFieldProps(Visible=false)]
+        public string Keyword { get; set; }
+
         private string className = "Content";
         [ColumnDetail(IsNotNull = true, DefaultValue="Content"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_CLASSNAMELIST_", Category = "Temel Bilgiler")]
         public string ClassName
@@ -278,6 +281,9 @@ namespace Cinar.CMS.Library.Entities
         protected override void beforeSave(bool isUpdate)
         {
             base.beforeSave(isUpdate);
+
+            if (!isUpdate)
+                this.Keyword = Guid.NewGuid().ToString();
 
             if (this.Id == 1)
                 throw new Exception(Provider.GetResource("Root category cannot be updated!"));
