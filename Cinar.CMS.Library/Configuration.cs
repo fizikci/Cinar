@@ -171,6 +171,13 @@ namespace Cinar.CMS.Library
             set { mailHost = value; }
         }
 
+        private int mailPort = 25;
+        public int MailPort
+        {
+            get { return mailPort; }
+            set { mailPort = value; }
+        }
+
         private string mailUsername = "";
         [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string MailUsername
