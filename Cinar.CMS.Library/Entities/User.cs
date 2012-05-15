@@ -126,7 +126,7 @@ namespace Cinar.CMS.Library.Entities
 
         public bool IsInRole(string role)
         {
-            return this.Roles == role || this.Roles.Contains(role + ",") || this.Roles.Contains("," + role);
+            return string.IsNullOrWhiteSpace(role) || this.Roles == role || this.Roles.Contains(role + ",") || this.Roles.Contains("," + role);
         }
 
         public override void SetFieldsByPostData(NameValueCollection postData)
@@ -181,20 +181,18 @@ namespace Cinar.CMS.Library.Entities
             base.afterSave(isUpdate);
             
             
-            //todo:uncoment this
-
-//            if (!isUpdate && !Provider.Request.Url.IsLoopback)
-//            {
-//                string msg = String.Format(@"
-//                                Merhaba {0},<br/><br/>
-//                                Aşağıdaki linki kullanarak {1} üyeliğinizi aktif hale getirebilirsiniz:<br/><br/>
-//                                <a href=""http://{2}/LoginWithKeyword.ashx?keyword={3}"">http://{2}/LoginWithKeyword.ashx?keyword={3}</a>",
-//                                this.GetNameValue(),
-//                                Provider.Configuration.SiteName,
-//                                Provider.Configuration.SiteAddress,
-//                                this.Keyword);
-//                Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
-//            }
+            if (!isUpdate && !Provider.Request.Url.IsLoopback)
+            {
+                string msg = String.Format(@"
+                                Merhaba {0},<br/><br/>
+                                Aşağıdaki linki kullanarak {1} üyeliğinizi aktif hale getirebilirsiniz:<br/><br/>
+                                <a href=""http://{2}/LoginWithKeyword.ashx?keyword={3}"">http://{2}/LoginWithKeyword.ashx?keyword={3}</a>",
+                                this.GetNameValue(),
+                                Provider.Configuration.SiteName,
+                                Provider.Configuration.SiteAddress,
+                                this.Keyword);
+                Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
+            }
 
             if (this.Id == Provider.User.Id)
                 Provider.User = this;

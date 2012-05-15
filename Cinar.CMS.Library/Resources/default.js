@@ -359,7 +359,7 @@ function showElementWithOverlay(elm, autoHide, color){
 	showingElementWithOverlayZIndex = elm.style.zIndex;
     elm.hide();
 	
-	var dim = $$('html')[0].getDimensions();
+	var dim = Position.getWindowSize();//$$('html')[0].getDimensions();
 	if(Prototype.Browser.IE) {dim.height = $$('body')[0].scrollHeight; dim.width -= 20;}
     
     var perde = $('___perde');
