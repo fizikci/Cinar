@@ -10,6 +10,7 @@ using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
 using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
 using Module = System.Reflection.Module;
+using System.Drawing;
 
 //using System.IO;
 
@@ -127,6 +128,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "KeepSession":
                     {
                         keepSession();
+                        break;
+                    }
+                case "EditImageRotate":
+                    {
+                        editImageRotate();
                         break;
                     }
             }
@@ -623,6 +629,43 @@ namespace Cinar.CMS.Library.Handlers
         private void keepSession()
         {
             context.Response.Write("ok");
+        }
+
+        private void editImageRotate()
+        {
+            string path = Provider.Request["path"];
+            string dir = Provider.Request["dir"];
+            if (!(dir == "CW" || dir == "CCW"))
+            {
+                context.Response.Write("ERR: dir must be CW or CCW");
+                return;
+            }
+            string imgPath = Provider.MapPath(path);
+            if (File.Exists(imgPath))
+            {
+                try
+                {
+                    using (Image orjImg = Image.FromFile(imgPath))
+                    {
+                        if(dir=="CW")
+                            orjImg.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                        else
+                            orjImg.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                        orjImg.Save(imgPath);
+
+                        foreach (string thumb in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + path.Replace("/", "_")))
+                            File.Delete(thumb);
+
+                        context.Response.Write("OK");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    context.Response.Write("ERR: " + ex.ToStringBetter());
+                }
+            }
+            else
+                context.Response.Write("ERR: File not exist");
         }
 
         //private string vx34ftd24()

@@ -38,6 +38,11 @@ namespace Cinar.Database.Providers
             try
             {
                 connection = new MySqlConnection(db.ConnectionString);
+                //connection.Open();
+                //IDbCommand cmd = connection.CreateCommand();
+                //cmd.CommandText = "SET NAMES 'utf8';";
+                //cmd.ExecuteNonQuery();
+                //connection.Close();
                 if (createDatabaseIfNotExist)
                 {
                     connection.Open();

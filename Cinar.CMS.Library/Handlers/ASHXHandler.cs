@@ -82,6 +82,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "Subscribe":
                 case "GetModuleHtml":
                 case "KeepSession":
+                case "EditImageRotate":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "Console":
