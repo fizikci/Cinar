@@ -271,20 +271,61 @@ document.observe('dom:loaded', function(){
 		if(!$('cc_edit_img_btn'))
 			$(document.body).insert('<button id="cc_edit_img_btn" style="display:none">Edit</button>');
 		$('cc_edit_img_btn').on('click', function(){
-			if(!cc_edit_curr.hasAttribute('path')){
+			var path = cc_edit_curr.readAttribute('path') || cc_edit_curr.readAttribute('src');
+			if(!path || path.startsWith('/_thumbs')){
 				niceAlert(lang('Editable image path not defined'));
 				return;
 			}
-			var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-			var str = '<div><span id="cc_crop" class="btn ccrop">Crop</span><span id="cc_turncw" class="btn cturncw">Turn CW</span><span id="cc_turnccw" class="btn cturnccw">Turn CCW</span><span id="cc_resize" class="btn cresize">Resize</span></div>';
-			str += '<div class="cc_edit_canvas"><img src="'+cc_edit_curr.readAttribute('path')+'"/></div>';
+			var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+			var str = '<div><span id="cc_select" class="btn cselect">Select</span><span id="cc_crop" class="btn ccrop">Crop</span><span id="cc_turncw" class="btn cturncw">Turn CW</span><span id="cc_turnccw" class="btn cturnccw">Turn CCW</span><span id="cc_resize" class="btn cresize">Resize</span></div>';
+			str += '<div class="cc_edit_canvas"><img id="cc_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"><div id="cc_ei_ne"></div><div id="cc_ei_nw"></div><div id="cc_ei_se"></div><div id="cc_ei_sw"></div></div></div>';
 			new Insertion.Top(win.getContent(), str);
 			win.showCenter();
 			win.toFront();
+			
+			var imgPreview = $('cc_preview');
+			var sel = $('cc_ei_selection');
+
+			$('cc_select').on('click', function(){
+				//var dim = imgPreview.getDimensions();
+				//var pos = Position.cumulativeOffset(imgPreview);
+				sel.toggle();
+			});
+			new Draggable('cc_ei_selection');
+			new Draggable('cc_ei_nw');
+			new Draggable('cc_ei_ne');
+			new Draggable('cc_ei_sw');
+			new Draggable('cc_ei_se');
+			
+			imgPreview.on('load', function(){
+				var dim = imgPreview.getDimensions();
+				var dimCanvas = imgPreview.up().getDimensions();
+
+				imgPreview.setStyle({left:(dimCanvas.width-dim.width)/2+'px', top:(dimCanvas.height-dim.height)/2+'px'});
+			});
+			
 			$('cc_crop').observe('click', function(){alert('crop');});
-			$('cc_turncw').observe('click', function(){alert('crop');});
-			$('cc_turnccw').observe('click', function(){alert('crop');});
-			$('cc_resize').observe('click', function(){alert('crop');});
+			$('cc_turncw').observe('click', function(){
+				var res = ajax({url:'EditImageRotate.ashx?dir=CW&path='+path, isJSON:false, noCache:true});
+				if(res.startsWith('ERR:')){
+					niceAlert(res);
+					return;
+				}
+				else {
+					imgPreview.src = path + '?' + new Date().getMilliseconds();
+				}
+			});
+			$('cc_turnccw').observe('click', function(){
+				var res = ajax({url:'EditImageRotate.ashx?dir=CCW&path='+path, isJSON:false, noCache:true});
+				if(res.startsWith('ERR:')){
+					niceAlert(res);
+					return;
+				}
+				else {
+					imgPreview.src = path + '?' + new Date().getMilliseconds();
+				}
+			});
+			$('cc_resize').observe('click', function(){alert('resize');});
 		});
 		$$('.cc_edit_img').each(makeImageEditable);
 	}

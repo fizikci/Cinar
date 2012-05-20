@@ -1408,6 +1408,11 @@ namespace System
         {
             return source.StringJoin("");
         }
+
+        public static string ToStringBetter(this Exception ex)
+        {
+            return ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.ToStringBetter() : "");
+        }
     }
 
     public class Pair<T>

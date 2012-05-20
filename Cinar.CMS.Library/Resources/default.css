@@ -409,4 +409,46 @@ i {font-style:italic}
     margin-top: 4px;
     overflow: auto;
     width: 792px;
+	position:relative;
+}
+.cc_edit_canvas img {
+	position:absolute;
+}
+#cc_ei_selection {
+	position:absolute;
+	cursor: move;
+	left:100px;
+	top:100px;
+	width:100px;
+	height:100px;
+    background-color: #D8DFEA;
+    opacity: 0.5;
+}
+
+#cc_ei_se, #cc_ei_sw, #cc_ei_ne, #cc_ei_nw {
+	position:absolute;
+    background-color: #D8DFEA;
+    height: 10px;
+    opacity: 0.5;
+    width: 10px;
+}
+#cc_ei_ne {
+    cursor: ne-resize;
+    right: -5px;
+    top: -5px;
+}
+#cc_ei_nw {
+    cursor: nw-resize;
+    left: -5px;
+    top: -5px;
+}
+#cc_ei_sw {
+    bottom: -5px;
+    cursor: sw-resize;
+    left: -5px;
+}
+#cc_ei_se {
+    bottom: -5px;
+    cursor: se-resize;
+    right: -5px;
 }
