@@ -266,7 +266,47 @@ document.observe('dom:loaded', function(){
 			}
 		});
 	});
+	// image editor
+	if($$('.cc_edit_img').length){
+		if(!$('cc_edit_img_btn'))
+			$(document.body).insert('<button id="cc_edit_img_btn" style="display:none">Edit</button>');
+		$('cc_edit_img_btn').on('click', function(){
+			if(!cc_edit_curr.hasAttribute('path')){
+				niceAlert(lang('Editable image path not defined'));
+				return;
+			}
+			var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+			var str = '<div><span id="cc_crop" class="btn ccrop">Crop</span><span id="cc_turncw" class="btn cturncw">Turn CW</span><span id="cc_turnccw" class="btn cturnccw">Turn CCW</span><span id="cc_resize" class="btn cresize">Resize</span></div>';
+			str += '<div class="cc_edit_canvas"><img src="'+cc_edit_curr.readAttribute('path')+'"/></div>';
+			new Insertion.Top(win.getContent(), str);
+			win.showCenter();
+			win.toFront();
+			$('cc_crop').observe('click', function(){alert('crop');});
+			$('cc_turncw').observe('click', function(){alert('crop');});
+			$('cc_turnccw').observe('click', function(){alert('crop');});
+			$('cc_resize').observe('click', function(){alert('crop');});
+		});
+		$$('.cc_edit_img').each(makeImageEditable);
+	}
 });
+
+var cc_edit_curr = null;
+function makeImageEditable(img){
+		img.on('mouseenter', function(){
+			cc_edit_curr = img;
+			var dim = img.getDimensions();
+			var pos = Position.cumulativeOffset(img);
+			var btn = $('cc_edit_img_btn');
+			btn.setStyle({left:(pos[0] + dim.width-40)+'px', top:(pos[1] + dim.height-20)+'px'});
+			btn.show();
+		});
+		/*
+		img.on('mouseleave', function(){
+			$('cc_edit_img_btn').hide();
+		});
+		*/
+}
+
 function slideShowSlide(elm, dir){
 	if(elm.alreadySliding) return;
 	elm.alreadySliding = true;

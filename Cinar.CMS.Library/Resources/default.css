@@ -391,3 +391,22 @@ i {font-style:italic}
 	color:white;
 	font-size:20px;
 }
+
+#cc_edit_img_btn {
+	position:absolute;
+	border:2px solid orange;
+	background:black;
+	color:orange;
+	font-family:verdana;
+	font-size:10px;
+	cursor:pointer;
+}
+
+.cc_edit_canvas {
+    background: none repeat scroll 0 0 gray;
+    border: 1px inset gray;
+    height: 557px;
+    margin-top: 4px;
+    overflow: auto;
+    width: 792px;
+}
