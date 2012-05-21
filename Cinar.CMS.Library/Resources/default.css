@@ -392,7 +392,7 @@ i {font-style:italic}
 	font-size:20px;
 }
 
-#cc_edit_img_btn {
+#cc_ei_btn {
 	position:absolute;
 	border:2px solid orange;
 	background:black;
@@ -402,16 +402,22 @@ i {font-style:italic}
 	cursor:pointer;
 }
 
-.cc_edit_canvas {
+.cc_ei_canvas {
     background: none repeat scroll 0 0 gray;
     border: 1px inset gray;
-    height: 557px;
+    height: 554px;
     margin-top: 4px;
     overflow: auto;
     width: 792px;
 	position:relative;
 }
-.cc_edit_canvas img {
+.cc_ei_toolbar  input{
+    border: 1px solid #DDDDDD;
+    height: 16px;
+    text-align: right;
+    width: 37px;
+}
+.cc_ei_canvas img {
 	position:absolute;
 }
 #cc_ei_selection {
@@ -425,30 +431,20 @@ i {font-style:italic}
     opacity: 0.5;
 }
 
-#cc_ei_se, #cc_ei_sw, #cc_ei_ne, #cc_ei_nw {
+#cc_ei_se, #cc_ei_nw {
 	position:absolute;
     background-color: #D8DFEA;
     height: 10px;
     opacity: 0.5;
     width: 10px;
 }
-#cc_ei_ne {
-    cursor: ne-resize;
-    right: -5px;
-    top: -5px;
-}
 #cc_ei_nw {
     cursor: nw-resize;
-    left: -5px;
-    top: -5px;
-}
-#cc_ei_sw {
-    bottom: -5px;
-    cursor: sw-resize;
-    left: -5px;
+    left: 95px;
+    top: 95px;
 }
 #cc_ei_se {
-    bottom: -5px;
+    top: 195px;
     cursor: se-resize;
-    right: -5px;
+    left: 195px;
 }

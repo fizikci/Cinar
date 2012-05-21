@@ -130,9 +130,24 @@ namespace Cinar.CMS.Library.Handlers
                         keepSession();
                         break;
                     }
+                case "EditImageCrop":
+                    {
+                        editImageCrop();
+                        break;
+                    }
                 case "EditImageRotate":
                     {
                         editImageRotate();
+                        break;
+                    }
+                case "EditImageResize":
+                    {
+                        editImageResize();
+                        break;
+                    }
+                case "EditImageReset":
+                    {
+                        editImageReset();
                         break;
                     }
             }
@@ -631,6 +646,49 @@ namespace Cinar.CMS.Library.Handlers
             context.Response.Write("ok");
         }
 
+        private void editImageCrop()
+        {
+            string path = Provider.Request["path"];
+            int x = int.Parse(Provider.Request["x"]);
+            int y = int.Parse(Provider.Request["y"]);
+            int w = int.Parse(Provider.Request["w"]);
+            int h = int.Parse(Provider.Request["h"]);
+            if (w<16 || h<16)
+            {
+                context.Response.Write("ERR: Crop Width and Hight cannot be less than 16");
+                return;
+            }
+            string imgPath = Provider.MapPath(path);
+            if (File.Exists(imgPath))
+            {
+                try
+                {
+                    backupImageFile(imgPath);
+
+                    using (Image orjImg = Image.FromFile(imgPath))
+                    {
+                        using (Image img = orjImg.CropImage(x,y,w,h))
+                        {
+                            img.SaveImage(imgPath + "temp", Provider.Configuration.ThumbQuality);
+                        }
+
+                        foreach (string thumb in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + path.Replace("/", "_")))
+                            File.Delete(thumb);
+
+                        context.Response.Write("OK");
+                    }
+                    File.Delete(imgPath);
+                    File.Move(imgPath + "temp", imgPath);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.Write("ERR: " + ex.ToStringBetter());
+                }
+            }
+            else
+                context.Response.Write("ERR: File not exist");
+        }
+
         private void editImageRotate()
         {
             string path = Provider.Request["path"];
@@ -645,6 +703,8 @@ namespace Cinar.CMS.Library.Handlers
             {
                 try
                 {
+                    backupImageFile(imgPath);
+
                     using (Image orjImg = Image.FromFile(imgPath))
                     {
                         if(dir=="CW")
@@ -667,6 +727,79 @@ namespace Cinar.CMS.Library.Handlers
             else
                 context.Response.Write("ERR: File not exist");
         }
+
+        private void backupImageFile(string imgPath)
+        {
+            if(!File.Exists(imgPath + "backup"))
+                File.Copy(imgPath, imgPath + "backup");
+        }
+
+        private void editImageResize()
+        {
+            string path = Provider.Request["path"];
+            int width = int.Parse(Provider.Request["width"]);
+            int height = int.Parse(Provider.Request["height"]);
+            if (width <= 16 || height <= 16 || width > 2000 || height > 2000)
+            {
+                context.Response.Write("ERR: Width and Height must be greater than 16 and less than 2000");
+                return;
+            }
+            string imgPath = Provider.MapPath(path);
+            if (File.Exists(imgPath))
+            {
+                try
+                {
+                    backupImageFile(imgPath);
+
+                    using (Image orjImg = Image.FromFile(imgPath))
+                    {
+                        using (Image img = orjImg.ScaleImage(width, height))
+                        {
+                            img.SaveImage(imgPath + "temp", Provider.Configuration.ThumbQuality);
+                        }
+
+                        foreach (string thumb in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + path.Replace("/", "_")))
+                            File.Delete(thumb);
+
+                        context.Response.Write("OK");
+                    }
+                    File.Delete(imgPath);
+                    File.Move(imgPath + "temp", imgPath);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.Write("ERR: " + ex.ToStringBetter());
+                }
+            }
+            else
+                context.Response.Write("ERR: File not exist");
+        }
+
+        private void editImageReset()
+        {
+            string path = Provider.Request["path"];
+            string imgPath = Provider.MapPath(path);
+            if (File.Exists(imgPath))
+            {
+                if (File.Exists(imgPath + "backup"))
+                {
+                    try
+                    {
+                        File.Delete(imgPath);
+                        File.Move(imgPath + "backup", imgPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        context.Response.Write("ERR: " + ex.ToStringBetter());
+                    }
+                }
+                else
+                    context.Response.Write("ERR: Backup file not exist");
+            }
+            else
+                context.Response.Write("ERR: File not exist");
+        }
+
 
         //private string vx34ftd24()
         //{
