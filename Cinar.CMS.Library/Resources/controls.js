@@ -409,6 +409,9 @@ var FileManager = Class.create(); FileManager.prototype = {
 							'<input type="hidden" name="folder"/><input type="hidden" name="name"/>' +
 							'Adını: <input type="text" name="newName" style="width:80px"/><input type="submit" value="Değiştir"/>' +
 						'</form>' +
+						'<form class="ui-widget-content ui-corner-all delForm">' +
+							'<input type="button" value="Düzenle" id="fb_btnImgEdit"/>' +
+						'</form>' +
 						(this.canDelete ? ('<form action="SystemInfo.ashx?method=deleteFile" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
 							'<input type="hidden" name="folder"/>' +
 							'<input type="hidden" name="name"/><input type="submit" value="Sil"/>' +
@@ -426,6 +429,16 @@ var FileManager = Class.create(); FileManager.prototype = {
 		currFolder = this.folder;
 		currPicEdit = this;
 		this.getFileList();
+		
+		var ths = this;
+		
+		imageEditorInit();
+		$('fb_btnImgEdit').on('click', function(){
+			var arr = ths.getSelectedFiles();
+			if(arr.length>0)
+				editCurrImage(arr[0]);
+		});
+
 	},
     getFileList: function () {
 		var list = $('fileBrowserList');
