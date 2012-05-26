@@ -13,6 +13,8 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace System
 {
@@ -1304,6 +1306,51 @@ namespace System
             return sb.ToString();
         }
         #endregion
+
+        public static object Deserialize(this string xml, Type type)
+        {
+            if (xml == null)
+                return null;
+
+            object obj = null;
+            XmlSerializer ser = new XmlSerializer(type);
+            using (StringReader stringReader = new StringReader(xml))
+            {
+                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                {
+                    obj = ser.Deserialize(xmlReader);
+                }
+            }
+            return obj;
+        }
+
+        public static string Serialize(this object obj)
+        {
+            if (obj == null) return null;
+            /*
+            string xml;
+
+            XmlSerializer ser = new XmlSerializer(obj.GetType());
+            using (MemoryStream memStream = new MemoryStream(0))
+            {
+                using (XmlTextWriter xmlWriter = new XmlTextWriter(memStream, Encoding.UTF8))
+                {
+                    ser.Serialize(xmlWriter, obj);
+                }
+                xml = Encoding.UTF8.GetString(memStream.GetBuffer());
+            }
+            return xml;
+            */
+            var serializer = new XmlSerializer(obj.GetType());
+            var sb = new StringBuilder();
+
+            using (TextWriter writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, obj);
+            }
+
+            return sb.ToString();
+        }
 
         public static object Clone(this object obj)
         {

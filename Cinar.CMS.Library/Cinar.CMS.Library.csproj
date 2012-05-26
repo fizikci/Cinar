@@ -78,6 +78,7 @@
     <Compile Include="Entities\Content\ContentUser.cs" />
     <Compile Include="Entities\Content\SourceLang.cs" />
     <Compile Include="Entities\Content\Hit.cs" />
+    <Compile Include="Entities\SimpleBaseEntity.cs" />
     <Compile Include="Entities\ICriticalEntity.cs" />
     <Compile Include="Entities\ModuleCache.cs" />
     <Compile Include="Entities\Log.cs" />
