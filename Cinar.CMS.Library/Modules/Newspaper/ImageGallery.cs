@@ -54,7 +54,7 @@ namespace Cinar.CMS.Library.Modules
             }
 
             // resimleri alalım.
-            IDatabaseEntity[] pics = Provider.Database.ReadList(typeof(ContentPicture), "select * from ContentPicture where ContentId={0} order by OrderNo, Id", content.Id);
+            IDatabaseEntity[] pics = Provider.Database.ReadList(typeof(Entities.ContentPicture), "select * from ContentPicture where ContentId={0} order by OrderNo, Id", content.Id);
             Provider.Translate(pics);
 
             if (pics.Length == 0)
