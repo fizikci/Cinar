@@ -70,6 +70,10 @@ function clearFlashes(){
         new Insertion.Before(elm, '<img src="/external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
         elm.remove();
     });
+    $$('embed').each(function(elm){
+        new Insertion.Before(elm, '<img src="/external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
+        elm.remove();
+    });
 } 
 
 //######################################################################
@@ -336,6 +340,7 @@ function addModule(elmId){
             var newModule = selReg.immediateDescendants().last();
             Event.observe(newModule, 'mousedown', highlightModule);
             selectModule(newModule);
+			editModule();
         },
         onException: function(req, ex){throw ex;}
     });

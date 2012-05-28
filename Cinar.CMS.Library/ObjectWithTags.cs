@@ -95,6 +95,7 @@ namespace Cinar.CMS.Library
                 {
                     string specialName = this.GetType().GetProperty(sp.SpecialNameField).GetValue(this, null).ToString();
                     string fileName = specialName.MakeFileName() + (sp.AddRandomNumber ? "_" + (DateTime.Now.Millisecond % 1000) : "") + val.ToString().Substring(val.ToString().LastIndexOf('.'));
+                    if (fileName.Contains("?")) fileName = fileName.Substring(0, fileName.IndexOf('?'));
                     string imgFileName = Provider.BuildPath(fileName, sp.SpecialFolder, sp.UseYearMonthDayFolders);
 
                     WebClient wc = new WebClient();

@@ -133,8 +133,10 @@ document.observe('dom:loaded', function(){
 				elm.remove();
 				return;
 			}
-			elm.playing = false;
+			elm.playing = elm.hasClassName('autoPlay');
+			if(elm.playing) elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
 			elm.alreadySliding = false;
+			elm.mouseIsOver = false;
 			elm.innerHTML = '<div class="paging" style="background-image:url(/external/icons/slide_prev.png); background-position:right center;"></div>'+
 							'<div class="clipper">'+
 							'<div class="innerDiv">'+ 
@@ -154,6 +156,16 @@ document.observe('dom:loaded', function(){
 					clearTimeout(elm.timeout);
 					elm.down('.playBtn').src = '/external/icons/play.png';
 				}
+			});
+			
+			elm.on('mouseenter', function(){
+				elm.mouseIsOver = true;
+				clearTimeout(elm.timeout);
+			});
+			elm.on('mouseleave', function(){
+				elm.mouseIsOver = false; 
+				if(elm.playing)
+					elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
 			});
 
 			var imgs = elm.select('img');
@@ -458,7 +470,7 @@ function slideShowSlide(elm, dir){
 		new Effect.Move(elm.down('.innerDiv'), { x: -1*(elm.down('.clipper').getWidth()+20), y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
 		
 	clearTimeout(elm.timeout);
-	if(elm.playing){
+	if(elm.playing && !elm.mouseIsOver){
 		elm.timeout = setTimeout(function(){slideShowSlide(elm);}, 5000);
 	}
 }
