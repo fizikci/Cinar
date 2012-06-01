@@ -250,6 +250,8 @@ namespace Cinar.CMS.Library.Handlers
         private void clearCache()
         {
             Provider.Database.ExecuteNonQuery("delete from ModuleCache");
+            foreach (string file in Directory.GetFiles(Provider.MapPath("/_thumbs")))
+                File.Delete(file);
             context.Response.Write("Önbellek temizlendi.");
         }
 
