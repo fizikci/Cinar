@@ -184,6 +184,8 @@ namespace Cinar.CMS.Library
                     columnProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
+                if (caption.StartsWith("?") && !Provider.DesignMode)
+                    caption = pi.Name;
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
 
                 string options = "";
