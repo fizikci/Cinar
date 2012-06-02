@@ -231,15 +231,19 @@ document.observe('dom:loaded', function(){
 		manset.select('.clItem').each(function(elm, i){
 			var src = elm.down('img').readAttribute('src');
 			elm.down('img').up().remove();
-			elm.setStyle({background:'url('+src.replace("'","\\'")+') no-repeat left top',width:'650px',height:'250px'});
+			elm.setStyle({background:'url('+src.replace("'","\\'")+') no-repeat left top'});
 			elm.insert('<div class="summary"></div>');
+			
+			if(elm.down('div.clSTitle') && !elm.down('div.clSTitle').innerHTML) 
+				elm.down('div.clSTitle').innerHTML = elm.down('div.clTitle').down('a').innerHTML;
+
 
 			var summary = elm.down('.summary');
-			summary.insert(elm.down('div.clCategory').remove());
-			summary.insert(elm.down('div.clPubDate').remove());
-			summary.insert(elm.down('div.clSTitle').remove());
-			summary.insert(elm.down('div.clDesc').remove());
-
+			if(elm.down('div.clCategory')) summary.insert(elm.down('div.clCategory').remove());
+			if(elm.down('div.clPubDate')) summary.insert(elm.down('div.clPubDate').remove());
+			if(elm.down('div.clSTitle')) summary.insert(elm.down('div.clSTitle').remove());
+			if(elm.down('div.clDesc')) summary.insert(elm.down('div.clDesc').remove());
+			
 			var elmTitle = elm.down('div.clTitle');
 			links.insert(elmTitle.remove());
 			elmTitle.on('mouseover', function(){currItem.hide(); elm.show(); currItem = elm;});
