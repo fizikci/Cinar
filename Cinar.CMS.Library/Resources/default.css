@@ -331,6 +331,7 @@ i {font-style:italic}
 .mansetAktuel div.clItem {
 	float:left;
 	width:650px;
+	height:250px;
 }
 .mansetAktuel div.clSTitle {
 	font-weight:bold;
