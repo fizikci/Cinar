@@ -45,6 +45,17 @@ namespace Cinar.CMS.Library.Entities
                 return _user;
             }
         }
+
+
+        [ColumnDetail(Length = 300)]
+        public string Category
+        {
+            get;
+            set;
+        }
+
+        public bool IsOwner { get; set; }
+
     }
 
 }

@@ -168,11 +168,14 @@ namespace Cinar.CMS.Library.Entities
         {
             base.beforeSave(isUpdate);
 
-            if(!isUpdate)
+            if (!isUpdate)
             {
                 //this.Password = Provider.MD5(this.Password); // password işi SetFieldsByPostData'da hallediliyor
                 this.Visible = false;
                 this.Keyword = CMSUtility.MD5(DateTime.Now.Ticks.ToString());
+            }
+            else {
+                this.Visible = true;
             }
         }
 
@@ -181,7 +184,7 @@ namespace Cinar.CMS.Library.Entities
             base.afterSave(isUpdate);
             
             
-            if (!isUpdate && !Provider.Request.Url.IsLoopback)
+            if (!isUpdate && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
             {
                 string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>
