@@ -1102,11 +1102,12 @@ namespace Cinar.CMS.Library
                 ht["Send activation code"] = "Aktivasyon kodunu gönder";
                 ht["Enter"] = "Giriş";
                 // PasswordForm
-                ht["Enter your email address and click send button. You will receive your special adress where you can change your password."] = "E-Posta adresinizi girip tamama basınız. Şifrenizi değiştirebileceğiniz size özel adres e-posta adresinize gönderilecektir.";
+                ht["Enter your email address and click send button. You will receive your special adress where you can change your password."] = "Şifrenizi sıfırlamak için üye olurken kullandığınız email adresinizi yazınız.";
                 ht["There isn't any user with the email address you entered. Please check."] = "Bu email adresine sahip bir kullanıcı yok. Lütfen adresinizi doğru yazdığınızdan emin olunuz.";
                 ht["Please change your password by using the address below"] = "Aşağıdaki linki kullanarak şifrenizi yenileyebilirsiniz.";
                 ht["Your Password"] = "Şifre hatırlatma";
                 ht["A message sent to your email address. Please read it."] = "Email adresinize mesaj gönderildi. Lütfen bu mesajda yazılanları uygulayınız.";
+                ht["Send"] = "Gönder";
                 // UserActivationForm
                 ht["Enter your email address and click send button. You will receive your activation code."] = "E-Posta adresinizi girip tamama basınız. Aktivasyon kodunuz e-posta adresinize gönderilecektir.";
                 ht["Please activate your membership by using the address below"] = "Aşağıdaki linki kullanarak üyeliğinizi aktifleştirebilirsiniz.";
@@ -1136,7 +1137,7 @@ namespace Cinar.CMS.Library
                 ht["reply"] = "cevap";
 
                 if(ht[code]==null)
-                    ht[code] = "?!! " + code;
+                    ht[code] = (Provider.DesignMode ? "?!! " :"") + code;
             }
             else if (lang == "en")
             {
