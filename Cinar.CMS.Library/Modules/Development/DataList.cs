@@ -124,7 +124,7 @@ namespace Cinar.CMS.Library.Modules
                 engine.Execute();
                 SQL = engine.Output;
 
-                sql = String.Format(SQL + @" limit {0} offset {1}",
+                sql = String.Format(SQL + (SQL.ToLowerInvariant().Contains("limit ")?"":@" limit {0} offset {1}"),
                                     HowManyItems,
                                     pageNo*HowManyItems);
             }

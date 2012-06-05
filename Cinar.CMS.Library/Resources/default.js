@@ -225,7 +225,7 @@ document.observe('dom:loaded', function(){
 	}
 	// mansetAktuel
 	$$('.mansetAktuel').each(function(manset){
-		manset.insert('<div class="links" style="float:right"></div>');
+		manset.insert('<div class="links" style="float:right"></div><div style="clear:both"></div>');
 		var links = manset.down('.links');
 		var currItem = null;
 		manset.select('.clItem').each(function(elm, i){
@@ -270,8 +270,10 @@ document.observe('dom:loaded', function(){
 					var l = i<=index ? i * space : ((i-1)*space+w);
 					new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
 					items[i].down('.clTitle').hide();
+					items[i].down('.clDesc').hide();
 				}
 				elm.down('.clTitle').show();
+				elm.down('.clDesc').show();
 			});
 		});
 		slideAll.on('mouseleave', function(){
@@ -279,6 +281,7 @@ document.observe('dom:loaded', function(){
 				var l = dim.width/items.length*i;
 				new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
 				items[i].down('.clTitle').hide();
+				items[i].down('.clDesc').hide();
 			}
 		});
 	});
