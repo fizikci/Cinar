@@ -216,7 +216,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private bool isManset;
-        [ColumnDetail(IsNotNull = true, DefaultValue = "0")]
+        [ColumnDetail(IsNotNull = true, DefaultValue = "0"), EditFormFieldProps(Category = "Temel Bilgiler")]
         public bool IsManset
         {
             get { return isManset; }

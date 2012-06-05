@@ -1704,6 +1704,9 @@ namespace Cinar.CMS.Library
 
         public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
         {
+            if (id == 1)
+                return "/" + Provider.Configuration.MainPage;
+
             if (Provider.DesignMode)
                 return string.Format(
                     "/{0}?item={1}",
