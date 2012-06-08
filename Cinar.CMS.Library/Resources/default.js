@@ -261,29 +261,19 @@ document.observe('dom:loaded', function(){
 		slideAll.select('.clTitle').each(function(elm){elm.hide();});
 		slideAll.select('.clDesc').each(function(elm){elm.hide();});
 		var items = slideAll.select('.clItem');
+		
+		var slideAllIntFunc = function(){
+			slideAllCurrIndex = ++slideAllCurrIndex % items.length; 
+			slideAllShow(items,slideAllCurrIndex,dim);
+			setTimeout(function(){slideAllCollapse(items, dim);}, 4000);
+		}
+		var slideAllTimer = setInterval(slideAllIntFunc, 5000);
+
 		items.each(function(elm, index){
 			elm.setStyle({position:'absolute', left:(dim.width/items.length*index)+'px'});
-			var w = elm.getWidth();
-			var space = (dim.width-w)/(items.length-1);
-			elm.on('mouseenter', function(){
-				for(var i=0; i<items.length; i++){
-					var l = i<=index ? i * space : ((i-1)*space+w);
-					new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
-					items[i].down('.clTitle').hide();
-					items[i].down('.clDesc').hide();
-				}
-				elm.down('.clTitle').show();
-				elm.down('.clDesc').show();
-			});
+			elm.on('mouseenter', function(){clearInterval(slideAllTimer); slideAllShow(items, index, dim);});
 		});
-		slideAll.on('mouseleave', function(){
-			for(var i=0; i<items.length; i++){
-				var l = dim.width/items.length*i;
-				new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
-				items[i].down('.clTitle').hide();
-				items[i].down('.clDesc').hide();
-			}
-		});
+		slideAll.on('mouseleave', function(){slideAllCollapse(items, dim); slideAllTimer = setInterval(slideAllIntFunc, 5000);});
 	});
 	// image editor
 	if($$('.cc_edit_img').length){
@@ -291,6 +281,31 @@ document.observe('dom:loaded', function(){
 		$$('.cc_edit_img').each(makeImageEditable);
 	}
 });
+
+var slideAllCurrIndex = -1;
+
+function slideAllShow(items, index, dim){
+	var elm = items[index];
+	var w = elm.getWidth();
+	var space = (dim.width-w)/(items.length-1);
+	for(var i=0; i<items.length; i++){
+		var l = i<=index ? i * space : ((i-1)*space+w);
+		new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
+		items[i].down('.clTitle').hide();
+		items[i].down('.clDesc').hide();
+	}
+	elm.down('.clTitle').show();
+	elm.down('.clDesc').show();
+}
+
+function slideAllCollapse(items, dim){
+	for(var i=0; i<items.length; i++){
+		var l = dim.width/items.length*i;
+		new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
+		items[i].down('.clTitle').hide();
+		items[i].down('.clDesc').hide();
+	}
+}
 
 var cc_edit_curr = null;
 function imageEditorInit(){
