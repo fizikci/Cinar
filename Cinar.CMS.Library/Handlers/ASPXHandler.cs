@@ -163,12 +163,14 @@ namespace Cinar.CMS.Library.Handlers
                 {
                     sb.Append(@"
 <script type=""text/javascript"">
-    var sessionInMinutes = 0;
-    setInterval(function(){
+    var cc_sk = 0;
+    var cc_sk_i = setInterval(function(){
         new Ajax.Request('KeepSession.ashx', {
             method: 'post',
             onComplete: function(req) {
-                sessionInMinutes++;
+                cc_sk++;
+                if(cc_sk>50)
+                    clearInterval(cc_sk_i);
             }
         });
     }, 60 * 1000);

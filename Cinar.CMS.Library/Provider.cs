@@ -184,7 +184,7 @@ namespace Cinar.CMS.Library
                     columnProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
-                if (caption.StartsWith("?") && !Provider.DesignMode)
+                if (caption.StartsWith(pi.DeclaringType.Name+".") && !Provider.DesignMode)
                     caption = pi.Name;
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
 
@@ -1043,7 +1043,10 @@ namespace Cinar.CMS.Library
 
             string str = lang == "tr" ? (StaticResources.tr.ContainsKey(code) ? StaticResources.tr[code] : null) : (StaticResources.en.ContainsKey(code) ? StaticResources.en[code] : null);
 
-            return str == null ? "? " + String.Format(code, args) : String.Format(str, args);
+            if(Provider.DesignMode)
+                return str == null ? "? " + String.Format(code, args) : String.Format(str, args);
+            else
+                return str == null ? String.Format(code, args) : String.Format(str, args);
         }
 
         //TODO: Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
