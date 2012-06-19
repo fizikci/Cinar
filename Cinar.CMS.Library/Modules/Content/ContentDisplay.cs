@@ -10,7 +10,7 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Content")]
     public class ContentDisplay : ModuleContainer, IRegionContainer
     {
-        public ContentDisplay() 
+        public ContentDisplay()
         {
             this.DateFormat = Provider.Configuration.DefaultDateFormat;
         }
@@ -67,7 +67,7 @@ namespace Cinar.CMS.Library.Modules
             IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams());
             Provider.Translate(contents);
 
-            return contents.Length>0 ? (Entities.Content)contents[0] : null;
+            return contents.Length > 0 ? (Entities.Content)contents[0] : null;
         }
 
         protected override string show()
@@ -75,8 +75,9 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             Entities.Content content = this.getContent();
 
-            if (content == null) {
-                if(Provider.DesignMode)
+            if (content == null)
+            {
+                if (Provider.DesignMode)
                     sb.Append(Provider.GetResource("There is no content to display. Either define filter or click a content link to access this page."));
                 return sb.ToString(); //***
             }
@@ -150,6 +151,13 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("#{0}_{1} div.tags {{}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} div.sourceLink {{}}\n", this.Name, this.Id);
             return sb.ToString();
+        }
+
+        protected internal override void afterShow()
+        {
+            Content content = getContent();
+            if (content != null && content.Id > 0 && !Provider.DesignMode)
+                Provider.Database.ExecuteNonQuery("update Content set ViewCount=ViewCount+1 where Id={0}", content.Id);
         }
     }
 
