@@ -42,7 +42,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         protected int maxContentCount = Int32.MaxValue;
-        [ColumnDetail(IsNotNull = true),]
+        [ColumnDetail(IsNotNull = true)]
         public int MaxContentCount
         {
             get { return maxContentCount; }
