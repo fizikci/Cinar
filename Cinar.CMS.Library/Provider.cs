@@ -24,6 +24,7 @@ using Cinar.Scripting;
 using Module = System.Reflection.Module;
 using System.Linq;
 using DbType = Cinar.Database.DbType;
+using System.Globalization;
 
 
 namespace Cinar.CMS.Library
@@ -152,7 +153,6 @@ namespace Cinar.CMS.Library
 
             return ct;
         }
-
 
         public static string GetPropertyEditorJSON(object obj, bool addInvisibles)
         {
@@ -1384,7 +1384,6 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
-
         #region SendMail
         public static string SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message)
         {
@@ -1732,6 +1731,34 @@ namespace Cinar.CMS.Library
             else
                 return "javascript:alert('No such content'); return false;";
         }
+
+        public static ExchangeRate GetExchangeRates()
+        {
+            ExchangeRate res = Provider.Database.Read<ExchangeRate>("InsertDate >= {0}", DateTime.Now.Date);
+            if (res == null)
+            {
+                res = new ExchangeRate();
+
+                WebClient wc = new WebClient();
+                wc.Encoding = Encoding.UTF8;
+                string xml = wc.DownloadString("http://www.tcmb.gov.tr/kurlar/today.xml");
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xml);
+
+                foreach (XmlNode node in doc.SelectNodes("//Currency[ForexSelling>0]"))
+                {
+                    string name = node.Attributes["Kod"].Value;
+                    int fiyat = (int)(decimal.Parse(node.SelectSingleNode("ForexSelling").InnerText, CultureInfo.InvariantCulture.NumberFormat) * 1000);
+                    try
+                    {
+                        res.SetMemberValue(name, fiyat);
+                    }catch{}
+                }
+
+                res.Save();
+            }
+            return res;
+        }
     }
 
     public class CMSUtility
@@ -1971,7 +1998,6 @@ namespace Cinar.CMS.Library
         }
         #endregion
     }
-
 
     public class ProviderWrapper
     {
