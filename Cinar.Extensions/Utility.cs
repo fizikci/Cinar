@@ -1344,6 +1344,10 @@ namespace System
             }
             return obj;
         }
+        public static T Deserialize<T>(this string xml)
+        {
+            return (T)Deserialize(xml, typeof(T));
+        }
 
         public static string Serialize(this object obj)
         {
