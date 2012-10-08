@@ -45,6 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentExtractor.cs" />
+    <Compile Include="ColorToAlphaTrim.cs" />
+    <Compile Include="FileRenamer.cs" />
+    <Compile Include="Downloader.cs" />
     <Compile Include="ImlaKlavuzu.cs" />
     <Compile Include="Tutorial_3_CreateTableAtRuntime.cs" />
     <Compile Include="Program.cs" />

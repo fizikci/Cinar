@@ -13,32 +13,44 @@ namespace Cinar.Test
     {
         public static void Run()
         {
-            string path = @"K:\Work\CSharp\Cinar\_library\imla_klavuzu_basit.txt";
+            string path = @"imla_klavuzu_basit.txt";
             string[] lines = File.ReadAllLines(path, Encoding.Default);
 
             for(int i=0; i<lines.Length; i++)
                 if(!Square.Dict.ContainsKey(lines[i]))
                     Square.Dict.Add(lines[i], i);
 
-            string letters = "DSÜGMNRİNİAMLİKI";
-            for (int i = 0; i < 16; i++)
-                Square.AllSquares[i % 4, i / 4] = new Square(i % 4, i / 4, letters[i]);
+            string letters;
+            Console.Write("HARFLER: ");
+            while ((letters = Console.ReadLine().ToUpper()) != "")
+            {
+                Square.AllSquares = new Square[4, 4];
+                Square.FoundWords = new List<string>();
 
-            for(int i=0; i<4; i++)
-                for(int j = 0; j<4; j++)
-                    Square.AllSquares[i,j].StartSearch();
+                for (int i = 0; i < 16; i++)
+                    Square.AllSquares[i % 4, i / 4] = new Square(i % 4, i / 4, letters[i]);
 
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 4; j++)
+                        Square.AllSquares[i, j].StartSearch();
+
+                Console.ReadLine();
+                Console.Clear();
+                Console.Write("HARFLER: ");
+            }
         }
     }
 
     public class Square
     {
-        public Point Position;
+        public int X;
+        public int Y;
         public char Content;
 
         public Square(int x, int y, char content)
         {
-            Position = new Point(x,y);
+            X = x;
+            Y = y;
             Content = content;
         }
 
@@ -51,72 +63,72 @@ namespace Cinar.Test
         {
             get
             {
-                if (Position.Y == 0)
+                if (Y == 0)
                     return null;
-                return AllSquares[Position.X, Position.Y - 1];
+                return AllSquares[X,Y - 1];
             }
         }
         public Square NE
         {
             get
             {
-                if (Position.Y == 0 || Position.X == 3)
+                if (Y == 0 || X == 3)
                     return null;
-                return AllSquares[Position.X + 1, Position.Y - 1];
+                return AllSquares[X + 1, Y - 1];
             }
         }
         public Square E
         {
             get
             {
-                if (Position.X == 3)
+                if (X == 3)
                     return null;
-                return AllSquares[Position.X + 1, Position.Y];
+                return AllSquares[X + 1, Y];
             }
         }
         public Square SE
         {
             get
             {
-                if (Position.Y == 3 || Position.X == 3)
+                if (Y == 3 || X == 3)
                     return null;
-                return AllSquares[Position.X + 1, Position.Y + 1];
+                return AllSquares[X + 1, Y + 1];
             }
         }
         public Square S
         {
             get
             {
-                if (Position.Y == 3)
+                if (Y == 3)
                     return null;
-                return AllSquares[Position.X, Position.Y + 1];
+                return AllSquares[X, Y + 1];
             }
         }
         public Square SW
         {
             get
             {
-                if (Position.Y == 3 || Position.X == 0)
+                if (Y == 3 || X == 0)
                     return null;
-                return AllSquares[Position.X - 1, Position.Y + 1];
+                return AllSquares[X - 1, Y + 1];
             }
         }
         public Square W
         {
             get
             {
-                if (Position.X == 0)
+                if (X == 0)
                     return null;
-                return AllSquares[Position.X - 1, Position.Y];
+                return AllSquares[X - 1, Y];
             }
         }
         public Square NW
         {
             get
             {
-                if (Position.Y == 0 || Position.X == 0)
+                if (Y == 0 || X == 0)
                     return null;
-                return AllSquares[Position.X - 1, Position.Y - 1];
+                return AllSquares[X - 1, Y - 1];
             }
         }
 
@@ -136,9 +148,8 @@ namespace Cinar.Test
         {
             VisitedSquares.Add(this);
 
-            if (VisitedSquares.Count > 4)
-                if(!checkWord())
-                    return;
+            if(!checkWord())
+                return;
 
             foreach (var square in new []{E, N, NE, SE, S, SW, W, NW})
                 if (square != null && !VisitedSquares.Contains(square))
@@ -150,10 +161,10 @@ namespace Cinar.Test
 
         private bool checkWord()
         {
-            string word = VisitedSquares.Select(s => s.Content.ToString()).StringJoin();
-            if (Dict.Keys.Any(s => s == word))
+            string word = VisitedSquares.ToString();
+            if (Dict.ContainsKey(word))
             {
-                if (!FoundWords.Contains(word))
+                if (!FoundWords.Contains(word) && word.Length>3)
                 {
                     FoundWords.Add(word);
                     Console.WriteLine(word);
