@@ -1997,6 +1997,8 @@ namespace Cinar.CMS.Library
             return res;
         }
         #endregion
+
+
     }
 
     public class ProviderWrapper

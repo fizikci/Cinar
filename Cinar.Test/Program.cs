@@ -10,8 +10,9 @@ namespace Cinar.Test
         [STAThread]
         static void Main(string[] args)
         {
-            ImlaKlavuzu.Run();
+            ColorToAlphaTrim.Run();
 
+            Console.WriteLine("\r\n\r\n\r\nBİTTİ");
             Console.ReadLine();
         }
     }

@@ -1070,6 +1070,22 @@ Object.extend(String.prototype, {
         return enc;
     }
 });
+
+Object.extend(Array.prototype, {
+	binarySearch: function(find, comparator) {
+	  var low = 0, high = this.length - 1,
+		  i, comparison;
+	  while (low <= high) {
+		i = Math.floor((low + high) / 2);
+		comparison = comparator(this[i], find);
+		if (comparison < 0) { low = i + 1; continue; };
+		if (comparison > 0) { high = i - 1; continue; };
+		return i;
+	  }
+	  return null;
+	}
+});
+
 Position.getWindowSize = function(w) {
 	var width, height;
 	w = w ? w : window;
