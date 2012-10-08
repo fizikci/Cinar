@@ -1178,7 +1178,7 @@ namespace System
         public static string ToHTMLString(this string str)
         {
             if (str == null) return String.Empty;
-            return str.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\n", "\\n").Replace("\r", "\\r");
+            return str.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
         }
 
         public static string RemoveInvisibleCharacters(this string str)
@@ -1214,7 +1214,7 @@ namespace System
             switch (val.GetType().Name)
             {
                 case "String":
-                    return "'" + Utility.ToHTMLString(val.ToString()) + "'";
+                    return "\"" + Utility.ToHTMLString(val.ToString()) + "\"";
                 case "Int16":
                 case "Int32":
                 case "Int64":
@@ -1233,8 +1233,11 @@ namespace System
         }
         public static string ToJSON(this object obj)
         {
+            if (obj == null)
+                return "null";
+
             StringBuilder sb = new StringBuilder();
-            if (obj is IEnumerable)
+            if (obj is IEnumerable && obj.GetType()!=typeof(string))
             {
                 sb.Append("[\n");
                 foreach (var item in (IEnumerable)obj)
@@ -1261,7 +1264,7 @@ namespace System
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
 
-                res.Add("\t" + String.Format("{0}:{1}", pi.Name, Utility.ToJS(pi.GetValue(obj, null))));
+                res.Add("\t" + String.Format("\"{0}\": {1}", pi.Name, Utility.ToJS(pi.GetValue(obj, null))));
             }
             foreach (MethodInfo mi in obj.GetType().GetMethods())
             {
@@ -1282,7 +1285,7 @@ namespace System
             res.Sort();
             sb.Append(String.Join(",\n", (string[])res.ToArray(typeof(string))));
 
-            sb.Append("}");
+            sb.Append("\n}");
 
             return sb.ToString();
         }
@@ -1474,6 +1477,8 @@ namespace System
 
         public static string StringJoin<T>(this IEnumerable<T> source, string seperator)
         {
+            if (source == null)
+                return "";
             return string.Join(seperator, source.Select(t => t == null ? "" : t.ToString()).ToArray());
         }
         public static string StringJoin<T>(this IEnumerable<T> source)
