@@ -9,6 +9,8 @@ namespace Cinar.DBTools
 {
     public class ConnectionSettings
     {
+        public const int TIMEOUT = 200;
+
         [ReadOnly(true), Description("Database vendor of the current connection")]
         public DatabaseProvider Provider { get; set; }
         [ReadOnly(true), Description("Host of the current connection")]
@@ -29,11 +31,11 @@ namespace Cinar.DBTools
         {
             if (Database == null)
             {
-                Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
+                Database = new Database.Database(Provider, Host, DbName, UserName, Password, TIMEOUT, null, CreateDatabaseIfNotExist);
             }
             else
             {
-                Database.SetConnectionString(Provider, Host, DbName, UserName, Password, 30);
+                Database.SetConnectionString(Provider, Host, DbName, UserName, Password, TIMEOUT);
                 Database.SetCollectionParents();
                 Database.CreateDbProvider(false);
             }
@@ -59,7 +61,7 @@ namespace Cinar.DBTools
 
         public void RefreshDatabaseSchema()
         {
-            Database = new Database.Database(Provider, Host, DbName, UserName, Password, 30, null, CreateDatabaseIfNotExist);
+            Database = new Database.Database(Provider, Host, DbName, UserName, Password, TIMEOUT, null, CreateDatabaseIfNotExist);
             Cinar.DBTools.Provider.ConnectionsModified = true;
         }
     }
