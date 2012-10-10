@@ -639,7 +639,7 @@ $"},
         private TreeNode createConnectionNode(ConnectionSettings cs)
         {
             TreeNode node = rootNode.Nodes.Add(cs.ToString(), cs.ToString(), cs.Provider.ToString(), cs.Provider.ToString());
-            node.NodeFont = new System.Drawing.Font(treeView.Font, FontStyle.Underline);
+            node.NodeFont = new Font(treeView.Font, FontStyle.Underline);
             node.Tag = cs;
 
             cbActiveConnection.Items.Add(cs);
