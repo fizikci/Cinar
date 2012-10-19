@@ -252,10 +252,6 @@
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cinar.RSSReader\Cinar.RSSReader.csproj">
-      <Project>{6A041EA4-3C99-4D22-8E34-30F22392726E}</Project>
-      <Name>Cinar.RSSReader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>

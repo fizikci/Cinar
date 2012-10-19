@@ -510,12 +510,37 @@ namespace System
         }
         public static string CapitalizeInvariant(this string str)
         {
-            if (str == null)
+            if (string.IsNullOrWhiteSpace(str))
                 return "";
             if (str.Length == 1)
                 return char.ToUpperInvariant(str[0]).ToString();
 
-            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+            str = str.Trim();
+            if (!str.Contains(" "))
+                return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+
+            var parts = str.Split(' ');
+            for (int i = 0; i < parts.Length; i++)
+                parts[i] = parts[i].CapitalizeInvariant();
+
+            return parts.StringJoin(" ");
+        }
+        public static string Capitalize(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return "";
+            if (str.Length == 1)
+                return char.ToUpper(str[0]).ToString();
+
+            str = str.Trim();
+            if(!str.Contains(" "))
+                return char.ToUpper(str[0]) + str.Substring(1).ToLower();
+
+            var parts = str.Split(' ');
+            for (int i = 0; i < parts.Length; i++)
+                parts[i] = parts[i].Capitalize();
+
+            return parts.StringJoin(" ");
         }
         public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
         {
