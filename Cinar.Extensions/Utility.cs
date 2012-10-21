@@ -49,15 +49,16 @@ namespace System
 
             img.Save(path, jpegCodec, encoderParams);
         }
-        public static Image CropImage(this Image orjImg, int x, int y, int width, int height)
+        public static Image CropImage(this Image orjImg, int x, int y, int width, int height, bool whiteBackground = true)
         {
-            Bitmap bmPhoto = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            Bitmap bmPhoto = new Bitmap(width, height, whiteBackground ? PixelFormat.Format24bppRgb : PixelFormat.Format32bppArgb);
             bmPhoto.SetResolution(72, 72);
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
             grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
             grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            grPhoto.FillRectangle(Brushes.White, new Rectangle(0, 0, width, height));
+            if(whiteBackground)
+                grPhoto.FillRectangle(Brushes.White, new Rectangle(0, 0, width, height));
             grPhoto.DrawImage(orjImg, new Rectangle(0, 0, width, height), x, y, width, height, GraphicsUnit.Pixel);
             grPhoto.Dispose();
             return bmPhoto;
