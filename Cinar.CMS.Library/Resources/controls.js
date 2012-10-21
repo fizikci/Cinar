@@ -1367,7 +1367,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 case 'ListForm':
                     if(this.entityId==0) continue; //***
 					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name' || c.id=='Question'}).value;
-					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.replace("'", "\\'").replace('"','\\"') + ')';
+					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
                     details.insert('<span class="btn c'+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                     continue;
                 default:

@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="ContentExtractor.cs" />
     <Compile Include="ColorToAlphaTrim.cs" />
+    <Compile Include="Kuran.cs" />
+    <Compile Include="TextOverImage.cs" />
     <Compile Include="FileRenamer.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="ImlaKlavuzu.cs" />
