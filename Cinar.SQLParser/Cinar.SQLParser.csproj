@@ -94,12 +94,6 @@
   <ItemGroup>
     <Content Include="ToDo.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
-      <Project>{E9B26A78-06FF-4D79-9C37-D4198DF126EB}</Project>
-      <Name>Cinar.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

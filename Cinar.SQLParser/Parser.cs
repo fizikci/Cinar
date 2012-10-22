@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
-using Cinar.Database;
 
 namespace Cinar.SQLParser
 {
