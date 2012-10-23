@@ -16,14 +16,15 @@ namespace Cinar.Test
     {
         public static void Run()
         {
-            float fontSize = 54.0f;
+            float fontSize = 72.0f;
             //Font font = new Font("Arabic Typesetting", fontSize);
-            string basePath = @"C:\Users\KESKIN\Desktop\txt2img\ACS_Almass\";
-            Font font = new Font("ACS Almass", fontSize);
+            string basePath = @"C:\Users\android\Desktop\txt2img\";
+            Font font = new Font("Scheherazade", fontSize);
             var brush1 = new SolidBrush(Color.FromArgb(85, 0, 0));
             var brush2 = new SolidBrush(Color.FromArgb(0, 85, 0));
             var cuz = 0;
 
+            /*
             foreach (var item in Kuran.kuran)
             {
                 var cuzIndex = Kuran.cuzler.IndexOf(s => s == item.Key);
@@ -48,6 +49,23 @@ namespace Cinar.Test
                 }
                 Console.WriteLine(item.Key);
                 //if(ayetNo==10) break;
+            }
+             */
+
+            using (Bitmap a = new Bitmap(5000, (int)(fontSize + fontSize)))
+            {
+                using (Graphics g = Graphics.FromImage(a))
+                {
+                    for (int i = 0; i < Kuran.isimler.Length; i++)
+                    {
+                        SizeF size = g.MeasureString(Kuran.isimler[i], font);
+                        g.TextRenderingHint = TextRenderingHint.AntiAlias;
+                        g.Clear(Color.Transparent);
+                        g.DrawString(Kuran.isimler[i], font, i % 2 == 0 ? brush1 : brush2, new PointF(0, fontSize / 7f)); // requires font, brush etc
+                        Bitmap b = (Bitmap)a.CropImage(0, 0, (int)size.Width, (int)size.Height, false);
+                        b.SavePng(basePath + i + ".png");
+                    }
+                }
             }
         }
 
