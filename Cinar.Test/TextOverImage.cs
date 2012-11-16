@@ -16,9 +16,9 @@ namespace Cinar.Test
     {
         public static void Run()
         {
-            float fontSize = 72.0f;
+            float fontSize = 36.0f;
             //Font font = new Font("Arabic Typesetting", fontSize);
-            string basePath = @"C:\Users\android\Desktop\txt2img\";
+            string basePath = @"C:\Users\android\Desktop\txt2img\tesbihat\";
             Font font = new Font("Scheherazade", fontSize);
             var brush1 = new SolidBrush(Color.FromArgb(85, 0, 0));
             var brush2 = new SolidBrush(Color.FromArgb(0, 85, 0));
@@ -56,14 +56,15 @@ namespace Cinar.Test
             {
                 using (Graphics g = Graphics.FromImage(a))
                 {
-                    for (int i = 0; i < Kuran.isimler.Length; i++)
+                    foreach(var item in Kuran.tesbihat)
+                    for (int i = 0; i < item.Value.Length; i++)
                     {
-                        SizeF size = g.MeasureString(Kuran.isimler[i], font);
+                        SizeF size = g.MeasureString(item.Value[i], font);
                         g.TextRenderingHint = TextRenderingHint.AntiAlias;
                         g.Clear(Color.Transparent);
-                        g.DrawString(Kuran.isimler[i], font, i % 2 == 0 ? brush1 : brush2, new PointF(0, fontSize / 7f)); // requires font, brush etc
+                        g.DrawString(item.Value[i], font, i % 2 == 0 ? brush1 : brush2, new PointF(0, fontSize / 7f)); // requires font, brush etc
                         Bitmap b = (Bitmap)a.CropImage(0, 0, (int)size.Width, (int)size.Height, false);
-                        b.SavePng(basePath + i + ".png");
+                        b.SavePng(basePath + item.Key + "_" + i + ".png");
                     }
                 }
             }

@@ -18,11 +18,11 @@ namespace Cinar.Test
             {
                 string fileName2 = i.ToString().PadLeft(2, '0');
                 string fileName3 = i.ToString().PadLeft(3, '0');
-                string url = "http://dua-ufku.com/blog/audio/" + fileName2 + ".MP3";
+                //string url = "http://dua-ufku.com/blog/audio/" + fileName2 + ".MP3";
                 string url2 = "http://www.dua-ufku.com/cevsen_resim/" + fileName3 + ".jpg";
 
                 WebClient wc = new WebClient();
-                wc.DownloadFile(url, @"C:\Users\android\Desktop\dua-ufku.com\" + i + ".mp3");
+                //wc.DownloadFile(url, @"C:\Users\android\Desktop\dua-ufku.com\" + i + ".mp3");
                 wc.DownloadFile(url2, @"C:\Users\android\Desktop\dua-ufku.com\" + i + ".jpg");
 
                 Console.WriteLine(i);
