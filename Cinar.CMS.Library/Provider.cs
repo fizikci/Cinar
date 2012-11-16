@@ -1700,6 +1700,7 @@ namespace Cinar.CMS.Library
 
             engine.SetAttribute("Context", new ProviderWrapper());
             engine.SetAttribute("this", forThis);
+            engine.SetAttribute("db", Provider.Database);
 
             return engine;
         }
