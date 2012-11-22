@@ -487,6 +487,12 @@ namespace Cinar.CMS.Library
                 Provider.Session["DesignMode"] = value;
             }
         }
+        public static bool ShowExecutionTime
+        {
+            get {
+                return !string.IsNullOrWhiteSpace(Provider.Request["ShowExecutionTime"]);
+            }
+        }
         public static bool DevelopmentMode
         {
             get {
