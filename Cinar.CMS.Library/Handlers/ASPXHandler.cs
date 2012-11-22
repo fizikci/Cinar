@@ -199,8 +199,8 @@ namespace Cinar.CMS.Library.Handlers
                         //sb.Append(module.Show());
                         Provider.Response.Write(module.Show());
                         stopWatch.Stop();
-                        Provider.Response.Write(String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds,
-                                                              module.CacheHint));
+                        if(Provider.ShowExecutionTime)
+                            Provider.Response.Write(String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds, module.CacheHint));
                         moduleCount++;
                     }
                 }
@@ -238,7 +238,8 @@ namespace Cinar.CMS.Library.Handlers
             Provider.Response.BufferOutput = Provider.Configuration.BufferOutput;
 
             string strExecutionTimes = "";
-            strExecutionTimes = "<!-- Page read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
+            if (Provider.ShowExecutionTime)
+                strExecutionTimes = "<!-- Page read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
 
 
             if (Provider.Request["currentCulture"] != null)
@@ -284,7 +285,8 @@ namespace Cinar.CMS.Library.Handlers
             }
             #endregion
 
-            strExecutionTimes += "<!-- All modules read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
+            if (Provider.ShowExecutionTime)
+                strExecutionTimes += "<!-- All modules read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
 
             try
             {
@@ -302,7 +304,8 @@ namespace Cinar.CMS.Library.Handlers
             #endregion
 
 
-            Provider.Response.Write("<!-- Page output finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+            if (Provider.ShowExecutionTime)
+                Provider.Response.Write("<!-- Page output finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             try
             {
@@ -310,17 +313,20 @@ namespace Cinar.CMS.Library.Handlers
             }
             catch { }
 
-            Provider.Response.Write("<!-- All modules afterShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+            if (Provider.ShowExecutionTime)
+                Provider.Response.Write("<!-- All modules afterShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             // bu hiti kaydedelim
             //if (Provider.Request.Browser!=null && !Provider.Request.Browser.Crawler)
             //    new Hit().Save();
 
             stopWatch.Stop();
-            
-            Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
-            Provider.Response.Write("<!-- TOTAL: " + stopWatch.ElapsedMilliseconds + " ms -->");
+            if (Provider.ShowExecutionTime)
+                Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+
+            if (Provider.ShowExecutionTime)
+                Provider.Response.Write("<!-- TOTAL: " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             Provider.Database.Connection.Close();
         }
