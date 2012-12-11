@@ -445,7 +445,7 @@ namespace Cinar.CMS.Library.Handlers
 
         private void userActivation()
         {
-            Entities.User user = (Entities.User)Provider.Database.Read(typeof(Entities.User), "Keyword={0}", context.Request["keyword"]);
+            User user = (User)Provider.Database.Read(typeof(User), "Keyword={0}", context.Request["keyword"]);
 
             if (user != null)
             {
@@ -467,14 +467,14 @@ namespace Cinar.CMS.Library.Handlers
             Entities.User user = null;
             
             if(!String.IsNullOrEmpty(context.Request["keyword"]))
-                user = (Entities.User)Provider.Database.Read(typeof(Entities.User), "Keyword={0}", context.Request["keyword"]);
+                user = (User)Provider.Database.Read(typeof(User), "Keyword={0}", context.Request["keyword"]);
 
             if (user != null)
             {
                 // login başarılı, üyelik sayfasına gönderelim.
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
-                context.Response.Redirect(Provider.Configuration.MembershipProfilePage);
+                context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.MembershipFormPage : Provider.Configuration.MembershipProfilePage);
             }
             else
             {

@@ -27,6 +27,11 @@ namespace Cinar.CMS.Library.Handlers
         {
             switch (context.Request["method"])
             {
+                case "getLastTemplateContent":
+                    {
+                        getLastTemplateContent();
+                        break;
+                    }
                 case "copyTemplate":
                     {
                         copyTemplate();
@@ -135,6 +140,10 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        private void getLastTemplateContent()
+        {
+            context.Response.Write(Provider.Database.Read<Template>("1=1 order by Id desc limit 1").HTMLCode);
+        }
         private void copyTemplate()
         {
             string template = context.Request["template"];
@@ -143,7 +152,7 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("Kopyalanacak dosya adı veya yeni isim belirtilmemiş.");
             else
             {
-                if(Provider.CopyTemplate(template, newName))
+                if (Provider.CopyTemplate(template, newName))
                     context.Response.Write("Template copied.");
             }
         }
@@ -240,11 +249,17 @@ namespace Cinar.CMS.Library.Handlers
         private void saveTemplateSource()
         {
             string fileName = context.Request["template"];
-            Template template = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", fileName);
-            template.HTMLCode = context.Request["source"];
-            template.Save();
+            if (String.IsNullOrEmpty(fileName))
+                sendErrorMessage("Dosya adı belirtilmemiş.");
+            else
+            {
+                Template template = (Template) Provider.Database.Read(typeof (Template), "FileName={0}", fileName);
+                if (template == null) template = new Template() {FileName = fileName};
+                template.HTMLCode = context.Request["source"];
+                template.Save();
 
-            context.Response.Write("ok.");
+                context.Response.Write("ok.");
+            }
         }
 
         private void clearCache()
