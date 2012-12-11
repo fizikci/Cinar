@@ -240,6 +240,7 @@ popupMenu.menuItems = [
             {text:lang('Delete'), icon:'page_delete', callback:deleteTemplate},
             {text:lang('Rename')+'...', icon:'page_rename', callback:renameTemplate}
         ]},
+    {text:lang('Add Page')+'...', icon:'page_copy', callback:addTemplate},
     {text:lang('Other Pages'), icon:'pages', items:[]},
     {text:lang('Export')+'...', icon:'exportTemplate', callback:exportTemplate},
     {text:lang('Import')+'...', icon:'importTemplate', callback:importTemplate},
@@ -269,12 +270,12 @@ moduleTypes.each(function(mdlGrup, i){
 var _cntr = 0;
 templates.each(function(template, i){
     if(template!=currTemplate)
-        popupMenu.menuItems[7].items[_cntr++] = {text:template, icon:'page', callback:function(){location.href=this.text;}};
+        popupMenu.menuItems[8].items[_cntr++] = {text:template, icon:'page', callback:function(){location.href=this.text;}};
 });
 _cntr = 0;
 entityTypes.each(function(entTp,i){
     if(entTp[2])
-        popupMenu.menuItems[11].items[_cntr++] = {text:entTp[1], icon:entTp[0], data:entTp[0], callback:openEntityListForm};
+        popupMenu.menuItems[12].items[_cntr++] = {text:entTp[1], icon:entTp[0], data:entTp[0], callback:openEntityListForm};
 });
 popupMenu.onShow = function(){
 	navigationEnabled = false;
@@ -832,6 +833,26 @@ function insertEditForm(pe, callback){
 //################################################################
 //#        TEMPLATE (EDIT, COPY, DELETE, RENAME) FUNCTIONS       #
 //################################################################
+
+function addTemplate(){
+    nicePrompt(lang('Enter page name'), function(name){
+            if(!name || name.search(/\w+\.aspx/i)!=0){
+                niceAlert(lang('Page name should be a valid file name and end with .aspx.'));
+                return false;
+            }
+            return true;
+        },
+        function(templateName){
+			var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> ' + templateName, width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+			var winContent = $(win.getContent());
+			new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
+			$('txtSource').value = ajax({url:'SystemInfo.ashx?method=getLastTemplateContent',isJSON:false,noCache:true});
+			$('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
+			win.showCenter();
+			win.toFront();
+        }
+    );
+}
 
 function copyTemplate(){
     nicePrompt(lang('Enter page name'), function(name){

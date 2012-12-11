@@ -1378,8 +1378,8 @@ function nicePrompt(prompt, validationCallback, okCallback){
     $('btnPromptOK').observe('click', function(){
         var val = selCtrl.value;
         if(validationCallback(val)){
-            if(okCallback) okCallback(val);
             Windows.getFocusedWindow().close();
+            if(okCallback) okCallback(val);
         }
     });
     $('btnPromptCancel').observe('click', function(){Windows.getFocusedWindow().close();});
@@ -1403,8 +1403,8 @@ function niceInfo(alert, okCallback){
     win.showCenter();
     win.toFront();
     $('btnPromptOK').observe('click', function(){
-        if(okCallback) okCallback();
         Windows.getFocusedWindow().close();
+        if(okCallback) okCallback();
     });
 }
 function niceConfirm(confirm, okCallback){
@@ -1418,8 +1418,8 @@ function niceConfirm(confirm, okCallback){
     var selCtrl = $('btnPromptCancel');
     selCtrl.focus();
     $('btnPromptOK').observe('click', function(){
-        if(okCallback) okCallback();
         Windows.getFocusedWindow().close();
+        if(okCallback) okCallback();
     });
     $('btnPromptCancel').observe('click', function(){Windows.getFocusedWindow().close();});
 }

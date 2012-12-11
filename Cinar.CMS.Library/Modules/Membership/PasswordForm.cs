@@ -52,7 +52,7 @@ namespace Cinar.CMS.Library.Modules
             string msg = String.Format(@"
             {0}
             <br/>
-            <a href=""http://{1}/LoginWithKeyword.ashx?keyword={2}"">http://{1}/LoginWithKeyword.ashx?keyword={2}</a>", Provider.GetModuleResource("Please change your password by using the address below"), Provider.Configuration.SiteAddress, user.Keyword);
+            <a href=""http://{1}/LoginWithKeyword.ashx?keyword={2}&rempass=1"">http://{1}/LoginWithKeyword.ashx?keyword={2}</a>", Provider.GetModuleResource("Please change your password by using the address below"), Provider.Configuration.SiteAddress, user.Keyword);
 
             string res = Provider.SendMail(email, Provider.GetModuleResource("Your Password"), msg);
 
