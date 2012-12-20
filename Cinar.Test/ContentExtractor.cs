@@ -49,7 +49,7 @@ namespace Cinar.Test
                 Console.WriteLine(i);
             }
 
-            File.WriteAllText(@"C:\Users\android\Desktop\tefsir.js", sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(@"C:\tefsir.js", sb.ToString(), Encoding.UTF8);
 
             #endregion
 
