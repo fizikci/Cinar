@@ -56,7 +56,7 @@ namespace Cinar.Test
             {
                 using (Graphics g = Graphics.FromImage(a))
                 {
-                    foreach(var item in Kuran.tesbihat)
+                    foreach (var item in new Dictionary<string, string[]> { { "subhan_hamd_0", new String[] { "سُبْحاَنَ", "اللَّهِ", "وَ", "الْحَمْدُ", "لِلَّهِ", "وَ", "لَا", "اِلَهَ", "اِلَّا", "اللَّهُ", "وَاللَّهُ", "اَكْبَرُ", "وَ", "لَا", "حَوْلَ", "وَ", "لَا", "قُوَّةَ", "اِلَّا", "بِاللَّهِ", "الْعَلِىِّ", "الْعَظِيمِ", } } })
                     for (int i = 0; i < item.Value.Length; i++)
                     {
                         SizeF size = g.MeasureString(item.Value[i], font);
