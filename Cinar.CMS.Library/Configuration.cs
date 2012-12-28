@@ -8,7 +8,7 @@ namespace Cinar.CMS.Library
     {
         #region visual props
         private string siteName = "isimsiz.com";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo=1, Category = "Genel Ayarlar")]
         public string SiteName
         {
             get { return siteName; }
@@ -16,7 +16,7 @@ namespace Cinar.CMS.Library
         }
 
         private string siteAddress = "www.isimsiz.com";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 2, Category = "Genel Ayarlar")]
         public string SiteAddress
         {
             get { return siteAddress; }
@@ -24,7 +24,7 @@ namespace Cinar.CMS.Library
         }
 
         private string siteDescription = "Sitenin tanımı, bu site ne hakkındadır?";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 3, Category = "SEO Ayarları")]
         public string SiteDescription
         {
             get { return siteDescription; }
@@ -32,7 +32,7 @@ namespace Cinar.CMS.Library
         }
 
         private string siteKeywords = "sitenizle,ilgili,anahtar,kelimleri,böyle,yazınız";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 4, Category = "SEO Ayarları")]
         public string SiteKeywords
         {
             get { return siteKeywords; }
@@ -40,7 +40,7 @@ namespace Cinar.CMS.Library
         }
 
         protected string siteLogo = "";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit, OrderNo = 5, Category = "Genel Ayarlar")]
         public string SiteLogo
         {
             get { return siteLogo; }
@@ -48,7 +48,7 @@ namespace Cinar.CMS.Library
         }
 
         protected string siteIcon = "";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit, OrderNo = 6, Category = "Genel Ayarlar")]
         public string SiteIcon
         {
             get { return siteIcon; }
@@ -58,6 +58,7 @@ namespace Cinar.CMS.Library
 
         #region runtime props
         protected int sessionTimeout = 120;
+        [EditFormFieldProps(OrderNo = 7, Category = "Uygulama Ayarları")]
         public int SessionTimeout
         {
             get { return sessionTimeout; }
@@ -69,6 +70,7 @@ namespace Cinar.CMS.Library
         }
 
         protected bool bufferOutput = true;
+        [EditFormFieldProps(OrderNo = 8, Category = "Uygulama Ayarları")]
         public bool BufferOutput
         {
             get { return bufferOutput; }
@@ -76,6 +78,7 @@ namespace Cinar.CMS.Library
         }
 
         protected bool multiLang = false;
+        [EditFormFieldProps(OrderNo = 9, Category = "Uygulama Ayarları")]
         public bool MultiLang
         {
             get { return multiLang; }
@@ -84,7 +87,7 @@ namespace Cinar.CMS.Library
 
         private int defaultLang = 1;
         [ColumnDetail(IsNotNull = true, References = typeof(Lang))]
-        [EditFormFieldProps(ControlType = ControlType.LookUp)]
+        [EditFormFieldProps(ControlType = ControlType.LookUp, OrderNo = 10, Category = "Uygulama Ayarları")]
         public int DefaultLang
         {
             get { return defaultLang; }
@@ -116,6 +119,7 @@ namespace Cinar.CMS.Library
         }
 
         protected bool countTags = true;
+        [EditFormFieldProps(OrderNo = 11, Category = "Uygulama Ayarları")]
         public bool CountTags
         {
             get { return countTags; }
@@ -123,7 +127,7 @@ namespace Cinar.CMS.Library
         }
 
         private string defaultDateFormat = "dd MMMM yyyy";
-        [ColumnDetail(Length = 100), EditFormFieldProps(Options = "noHTML:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Options = "noHTML:true", OrderNo = 12, Category = "Uygulama Ayarları")]
         public string DefaultDateFormat
         {
             get { return defaultDateFormat; }
@@ -131,7 +135,7 @@ namespace Cinar.CMS.Library
         }
 
         protected string noPicture = "";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit, OrderNo = 13, Category = "Uygulama Ayarları")]
         public string NoPicture
         {
             get { return noPicture; }
@@ -139,6 +143,7 @@ namespace Cinar.CMS.Library
         }
 
         protected int thumbQuality = 55;
+        [EditFormFieldProps(OrderNo = 14, Category = "Uygulama Ayarları")]
         public int ThumbQuality
         {
             get { return thumbQuality; }
@@ -146,6 +151,7 @@ namespace Cinar.CMS.Library
         }
 
         protected int imageUploadMaxWidth = 640;
+        [EditFormFieldProps(OrderNo = 15, Category = "Uygulama Ayarları")]
         public int ImageUploadMaxWidth
         {
             get { return imageUploadMaxWidth; }
@@ -156,7 +162,7 @@ namespace Cinar.CMS.Library
 
         #region mail props
         private string authEmail = "info@isimsiz.com";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 16, Category = "Mail Ayarları")]
         public string AuthEmail
         {
             get { return authEmail; }
@@ -164,7 +170,7 @@ namespace Cinar.CMS.Library
         }
 
         private string mailHost = "mail.isimsiz.com";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 17, Category = "Mail Ayarları")]
         public string MailHost
         {
             get { return mailHost; }
@@ -172,6 +178,7 @@ namespace Cinar.CMS.Library
         }
 
         private int mailPort = 25;
+        [EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 18, Category = "Mail Ayarları")]
         public int MailPort
         {
             get { return mailPort; }
@@ -179,7 +186,7 @@ namespace Cinar.CMS.Library
         }
 
         private string mailUsername = "";
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 19, Category = "Mail Ayarları")]
         public string MailUsername
         {
             get { return mailUsername; }
@@ -187,7 +194,7 @@ namespace Cinar.CMS.Library
         }
 
         private string mailPassword = "";
-        [ColumnDetail(Length = 100), EditFormFieldProps(Options = "noHTML:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Options = "noHTML:true", OrderNo = 20, Category = "Mail Ayarları")]
         public string MailPassword
         {
             get { return mailPassword; }
@@ -197,7 +204,7 @@ namespace Cinar.CMS.Library
 
         #region cache props
         protected string useCache = "False";
-        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "False"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_USECACHEFORCONF_")]
+        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "False"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_USECACHEFORCONF_", OrderNo = 21, Category = "Önbellek Ayarları")]
         public string UseCache
         {
             get { return useCache; }
@@ -205,6 +212,7 @@ namespace Cinar.CMS.Library
         }
 
         protected int cacheLifeTime = 15;
+        [EditFormFieldProps(OrderNo = 22, Category = "Önbellek Ayarları")]
         public int CacheLifeTime
         {
             get { return cacheLifeTime; }
@@ -214,7 +222,7 @@ namespace Cinar.CMS.Library
 
         #region special pages
         private string mainPage = "Default.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 23, Category = "Özel Sayfalar")]
         public string MainPage
         {
             get { return mainPage; }
@@ -222,7 +230,7 @@ namespace Cinar.CMS.Library
         }
 
         private string categoryPage = "Category.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 24, Category = "Özel Sayfalar")]
         public string CategoryPage
         {
             get { return categoryPage; }
@@ -230,7 +238,7 @@ namespace Cinar.CMS.Library
         }
 
         private string contentPage = "Content.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 25, Category = "Özel Sayfalar")]
         public string ContentPage
         {
             get { return contentPage; }
@@ -238,7 +246,7 @@ namespace Cinar.CMS.Library
         }
 
         private string loginPage = "Login.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 26, Category = "Özel Sayfalar")]
         public string LoginPage
         {
             get { return loginPage; }
@@ -246,7 +254,7 @@ namespace Cinar.CMS.Library
         }
 
         private string membershipFormPage = "Membership.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 27, Category = "Özel Sayfalar")]
         public string MembershipFormPage
         {
             get { return membershipFormPage; }
@@ -254,7 +262,7 @@ namespace Cinar.CMS.Library
         }
 
         private string membershipProfilePage = "Profile.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 28, Category = "Özel Sayfalar")]
         public string MembershipProfilePage
         {
             get { return membershipProfilePage; }
@@ -262,7 +270,7 @@ namespace Cinar.CMS.Library
         }
 
         private string rememberPasswordFormPage = "RememberPassword.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 29, Category = "Özel Sayfalar")]
         public string RememberPasswordFormPage
         {
             get { return rememberPasswordFormPage; }
@@ -270,7 +278,7 @@ namespace Cinar.CMS.Library
         }
 
         private string userActivationPage = "Activation.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 30, Category = "Özel Sayfalar")]
         public string UserActivationPage
         {
             get { return userActivationPage; }
@@ -278,7 +286,7 @@ namespace Cinar.CMS.Library
         }
 
         private string adminPage = "Admin.aspx";
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates")]
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 31, Category = "Özel Sayfalar")]
         public string AdminPage
         {
             get { return adminPage; }

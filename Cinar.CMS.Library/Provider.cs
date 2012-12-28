@@ -170,7 +170,7 @@ namespace Cinar.CMS.Library
                     continue; //***
 
                 editProps.Category = editProps.Category ?? Provider.GetResource((pi.DeclaringType == typeof(NamedEntity) ? obj.GetType() : pi.DeclaringType).Name);
-                editProps.OrderNo = ctrlOrderNo++;
+                editProps.OrderNo = editProps.OrderNo>0 ? editProps.OrderNo : ctrlOrderNo++;
 
                 ColumnDetailAttribute columnProps = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
