@@ -1,8 +1,5 @@
 ﻿/*
- UI controls and EditForm for prototype people.
- I don't like licence, micence..
- Use it for your any need or print it and read it if you like.
- Contains small parts, keep away from childrens of 3 age.
+ Javascript Controls developed for Cinar.CMS
  - bulentkeskin@gmail.com or fizikci @ http://www.bilisim-kulubu.com, 8 March 2007
 */
 
@@ -1432,6 +1429,22 @@ var EditForm = Class.create(); EditForm.prototype = {
     }
 }
 
+function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory){
+	var dim = $(document.body).getDimensions();
+	var left=dim.width-390, top=10, width=350, height=dim.height-60;
+	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+	var winContent = $(win.getContent());
+	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory);
+	pe.onSave = onSave;
+	win['form'] = pe;
+	win.show();
+	win.toFront();
+	var dimWin = winContent.down('.editForm').getDimensions();
+	win.setSize(350,dimWin.height);
+    pe.controls[0].input.select();
+}
+
+
 //##########################
 //#        ListForm        #
 //##########################
@@ -1543,21 +1556,15 @@ var ListForm = Class.create();ListForm.prototype = {
             method: 'get',
             onComplete: function (req) {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-
-                var dim = Position.getWindowSize();
-                var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
-                var caption = '<span class="cbtn c' + ths.options.entityName + '.png" style="vertical-align:middle"></span> ' + lang('New') + ' ' + ths.options.hrEntityName;
-                var win = new Window({ className: 'alphacube', title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
-                var winContent = $(win.getContent());
-                var pe = new EditForm(winContent, res, ths.options.entityName, 0, ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
-                pe.onSave = ths.insertEntity.bind(ths);
-                win.show();
-                win.toFront();
-				
-				var dimWin = winContent.down('.editForm').getDimensions();
-				win.setSize(350,dimWin.height);
+				openEditForm(
+					ths.options.entityName, 
+					0,
+					lang('New') + ' ' + ths.options.hrEntityName, 
+					res, 
+					ths.insertEntity.bind(ths), 
+					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
             },
             onException: function (req, ex) { throw ex; }
         });
@@ -1585,20 +1592,15 @@ var ListForm = Class.create();ListForm.prototype = {
             method: 'get',
             onComplete: function (req) {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-                var dim = Position.getWindowSize();
-                var left = dim.width - 390, top = 10, width = 350, height = dim.height - 60;
-                var caption = '<span class="cbtn c' + ths.options.entityName + '" style="vertical-align:middle"></span> ' + lang('Edit') + " : " + ths.options.hrEntityName;
-                var win = new Window({ className: "alphacube", title: caption, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
                 var res = null;
                 try { res = eval('(' + req.responseText + ')'); } catch (e) { niceAlert(e.message); }
-                var winContent = $(win.getContent());
-				var pe = new EditForm(winContent, res, ths.options.entityName, id, ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
-                pe.onSave = ths.saveEntity.bind(ths);
-                win.show();
-                win.toFront();
-				
-				var dimWin = winContent.down('.editForm').getDimensions();
-				win.setSize(350,dimWin.height);
+				openEditForm(
+					ths.options.entityName, 
+					id,
+					lang('Edit') + ' ' + ths.options.hrEntityName, 
+					res, 
+					ths.saveEntity.bind(ths), 
+					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
             },
             onException: function (req, ex) { throw ex; }
         });

@@ -353,27 +353,14 @@ function editModule(name, id){
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            var res = null;
+            try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
             var title = '';
             for(var i=0; i<moduleTypes.length; i++){
                 var mdlType = moduleTypes[i].items.find(function(mdl){return mdl.id==name;});
-                if (mdlType) { title = '<span class="cbtn c' + name + '"></span> ' + mdlType.name; break; }
+                if (mdlType) { title = mdlType.name; break; }
             }
-            var dim = $(document.body).getDimensions();
-            var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({className: "alphacube", title: title, left:left, top:top, width:width, height:height, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
-            var res = null;
-            try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
-            var winContent = $(win.getContent());
-            var pe = new EditForm(winContent, res, name, id);
-            pe.onSave = saveModule;
-            win['form'] = pe;
-            win.show();
-            win.toFront();
-			
-			var dimWin = winContent.down('.editForm').getDimensions();
-			win.setSize(350,dimWin.height);
-            
-            pe.controls[0].input.select();
+			openEditForm(name, id, title, res, saveModule);
         },
         onException: function(req, ex){throw ex;}
     });
@@ -727,7 +714,7 @@ function openTree(){
     win.toFront();
 }
 function getNodes(catId){
-    return ajax({url:'EntityInfo.ashx?method=getTreeList&catId='+catId,isJSON:true,noCache:false});
+    return ajax({url:'EntityInfo.ashx?method=getTreeList&catId='+catId,isJSON:true,noCache:true});
 }
 function nodeClicked(node){
     if(node.type=='category')
@@ -752,7 +739,7 @@ function getModuleNodes(catId){
         return nodes;
     }
     else
-        return ajax({url:'ModuleInfo.ashx?method=getModuleList&page='+catId,isJSON:true,noCache:false});
+        return ajax({url:'ModuleInfo.ashx?method=getModuleList&page='+catId,isJSON:true,noCache:true});
 }
 function nodeModuleClicked(node){
     if(node.type=='category')
@@ -770,19 +757,15 @@ function editData(entityName, id, hideCategory, callback, filter){
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            var dim = $(document.body).getDimensions();
-            var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + entityName + '"></span> ' + (id <= 0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName)), left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
-            var winContent = $(win.getContent());
-            var pe = new EditForm(winContent, res, entityName, id, filter, hideCategory);
-            pe.onSave = function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }
-            win['form'] = pe;
-            win.show();
-            win.toFront();
-			var dimWin = winContent.down('.editForm').getDimensions();
-			win.setSize(350,dimWin.height);
+			openEditForm(
+				entityName, 
+				id,
+				id <= 0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName), 
+				res, 
+				function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }, 
+				filter, hideCategory);
         },
         onException: function(req, ex){throw ex;}
     });
@@ -1060,24 +1043,13 @@ function configure(){
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            var dim = $(document.body).getDimensions();
-            var left=dim.width-390, top=10, width=350, height=dim.height-60;
-            var win = new Window({ className: "alphacube", title: '<span class="cbtn cConfiguration"></span> ' + lang('Configuration'), left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
-            var winContent = $(win.getContent());
-            var pe = new EditForm(winContent, res, 'Configuration', 1);
-            pe.onSave = saveEditForm;
-            win['form'] = pe;
-            win.show();
-            win.toFront();
-			var dimWin = winContent.down('.editForm').getDimensions();
-			win.setSize(350,dimWin.height);
+			openEditForm('Configuration', 1, lang('Configuration'), res, saveEditForm);
         },
         onException: function(req, ex){throw ex;}
     });
 }
-
 //###########################################################################################
 //#        OTHER UTILITY (clear cache, end design mode, edit right clicked content)         #
 //###########################################################################################

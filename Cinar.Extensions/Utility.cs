@@ -1519,7 +1519,7 @@ namespace System
 
         public static string ToStringBetter(this Exception ex)
         {
-            return ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.ToStringBetter() : "");
+            return ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.ToStringBetter() + ")" : "");
         }
 
 
