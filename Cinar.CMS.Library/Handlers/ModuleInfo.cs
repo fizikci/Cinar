@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Cinar.CMS.Library.Modules;
 using Cinar.CMS.Library.Entities;
@@ -85,6 +86,16 @@ namespace Cinar.CMS.Library.Handlers
                 case "insertBatch":
                     {
                         insertBatch();
+                        break;
+                    }
+                case "exportModule":
+                    {
+                        exportModule();
+                        break;
+                    }
+                case "importModule":
+                    {
+                        importModule();
                         break;
                     }
                 default:
@@ -340,5 +351,63 @@ namespace Cinar.CMS.Library.Handlers
                 throw ex;
             }
         }
+
+        private void exportModule()
+        {
+            string id = context.Request["id"];
+            string moduleName = context.Request["name"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+
+            try
+            {
+                Module module = Module.Read(moduleName, mid);
+                context.Response.Write(CinarSerialization.Serialize(module));
+            }
+            catch (Exception ex)
+            {
+                sendErrorMessage("Modül export edilemedi. Sebep: " + ex.Message);
+            }
+        }
+        private void importModule()
+        {
+            string region = context.Request["region"];
+            string template = context.Request["template"];
+            int parentModuleId = Int32.Parse(context.Request["parentModuleId"]);
+
+            try
+            {
+                Dictionary<string, string> dict = CinarSerialization.Deserialize(context.Request["data"]);
+
+                Module module = Provider.CreateModule(dict["Name"]);
+                CinarSerialization.Deserialize(module, context.Request["data"]);
+
+                string moduleName = module.Name;
+                int id = module.Id;
+
+                module.Id = 0;
+                module.Region = region;
+                module.Template = template;
+                module.ParentModuleId = parentModuleId;
+
+                Provider.Database.Begin();
+                module.Save();
+                module.CSS = module.CSS.Replace(moduleName + "_" + id, moduleName + "_" + module.Id);
+                module.Save();
+                Provider.Database.Commit();
+
+                context.Response.Write(module.Show());
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                sendErrorMessage("Modül import edilemedi. Sebep: " + ex.Message);
+            }
+        }
+
     }
 }

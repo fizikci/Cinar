@@ -1489,6 +1489,17 @@ namespace System
                 }
             }
         }
+
+        public static long GetDirSize(DirectoryInfo dir)
+        {
+            return dir.GetFiles().Sum(fi => fi.Length) +
+                   dir.GetDirectories().Sum(di => GetDirSize(di));
+        }
+        public static long GetDirSize(string dirPath)
+        {
+            return GetDirSize(new DirectoryInfo(dirPath));
+        }
+
         public static int IndexOf<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             if (source == null)
