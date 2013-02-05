@@ -230,9 +230,12 @@ popupMenu.menuItems = [
             {text:lang('Delete')+' (Del)', icon:'module_delete', isEnabled:moduleSelected, callback:deleteModule},
             {text:lang('Move Up'), icon:'arrow_up', isEnabled:moduleSelected, callback:upModule},
             {text:lang('Move Down'), icon:'arrow_down', isEnabled:moduleSelected, callback:downModule},
-            {text:lang('Convert To'), icon:'module', isEnabled:moduleSelected, callback:convertModule}
+            {text:lang('Convert To'), icon:'module', isEnabled:moduleSelected, callback:convertModule},
+			{text:lang('Export')+'...', icon:'exportTemplate', callback:exportModule}
         ]},
-    {text:lang('Add Module')+' (Ins)', icon:'module_add', isEnabled:regionSelected, items:[]},
+    {text:lang('Add Module')+' (Ins)', icon:'module_add', isEnabled:regionSelected, items:[
+			{text:lang('Import')+'...', icon:'importTemplate', callback:importModule}
+		]},
     {text:'-', isEnabled:showSecondHR},
     {text:lang('For This Page'), icon:'general', items:[
             {text:lang('Edit')+'...', icon:'page_rename', callback:editTemplate},
@@ -262,9 +265,9 @@ popupMenu.menuItems = [
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
-    items[i] = {text:mdlGrup.grup, icon:'folder_module', items:[]};
+    items[i+1] = {text:mdlGrup.grup, icon:'folder_module', items:[]};
     mdlGrup.items.each(function(mdlTp, j){
-        items[i].items[j] = {text:mdlTp.name, icon:mdlTp.id, data:mdlTp.id, callback:addModule};
+        items[i+1].items[j] = {text:mdlTp.name, icon:mdlTp.id, data:mdlTp.id, callback:addModule};
     });
 });
 var _cntr = 0;
@@ -506,7 +509,51 @@ function convertModule(elmId){
         onException: function(req, ex){throw ex;}
     });
 }
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory){
+function exportModule(){
+    var name = selMod.id.split('_')[0];
+    var id = selMod.id.split('_')[1];
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> Export Module', width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+    var winContent = $(win.getContent());
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>');
+    $('txtSource').value = ajax({url:'ModuleInfo.ashx?method=exportModule&name='+name+'&id='+id,isJSON:false,noCache:true});
+    win.showCenter();
+    win.toFront();
+}
+function importModule(){
+    var parentMdl = selReg.up('.Module');
+    var parentMdlId = '0';
+    if(parentMdl) parentMdlId = parentMdl.id.split('_')[1];
+
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> Import Module', width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+    var winContent = $(win.getContent());
+    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnImportModule">'+lang('Save')+'</span></p>');
+    $('btnImportModule').observe('click', function(){
+		var params = {data: $('txtSource').value};
+
+		new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
+			method: 'post',
+			parameters: params,
+			onComplete: function(req) {
+				if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+				location.reload();
+				/*
+				if(!selReg.down('.Module')) //selReg.innerHTML.startsWith('Empty region')
+					selReg.innerHTML = '';
+				Windows.getFocusedWindow().close();
+				new Insertion.Bottom(selReg, req.responseText);
+				var newModule = selReg.immediateDescendants().last();
+				Event.observe(newModule, 'mousedown', highlightModule);
+				selectModule(newModule);
+				*/
+			},
+			onException: function(req, ex){throw ex;}
+		});
+	});
+    win.showCenter();
+    win.toFront();
+}
+
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands){
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var winContent = $(win.getContent());
@@ -532,7 +579,14 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:sortImages});
 		options.limit = 200;
 	}
-
+	
+	if(extraCommands){
+		if(extraCommands.length)
+			for(var i=0; i<extraCommands.length; i++) options.commands.push(extraCommands[i]);
+		else
+			options.commands.push(extraCommands);
+	}
+			
     if(extraFilter) options.extraFilter = extraFilter;
     win['form'] = new ListForm(winContent, options);
 

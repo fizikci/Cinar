@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Handlers;
@@ -270,53 +271,18 @@ namespace Cinar.CMS.Library.Modules
 
         public string Serialize()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Cinar.CMS.Serialization\n");
-            foreach (PropertyInfo pi in this.GetProperties())
-            {
-                if (pi.Name == "Item") continue;
-                if (pi.GetSetMethod() == null) continue;
-
-                object val = pi.GetValue(this, null);
-                if (val != null)
-                {
-                    string valStr = val.ToString();
-                    sb.AppendFormat("{0},{1},{2}", pi.Name, valStr.Length, valStr);
-                }
-            }
-            return sb.ToString();
+            return CinarSerialization.Serialize(this);
         }
         public static Module Deserialize(string moduleName, string moduleData)
         {
-            XmlSerializer ser = null;
             moduleData = moduleData.Trim();
             Module module = null;
             try
             {
-                if(!moduleData.StartsWith("Cinar.CMS.Serialization"))
-                    ser = new XmlSerializer(Provider.GetModuleType(moduleName));
                 module = Provider.CreateModule(moduleName);
                 try
                 {
-                    if (!moduleData.StartsWith("Cinar.CMS.Serialization"))
-                        module = (Module)ser.Deserialize(new System.IO.StringReader(moduleData));
-                    else
-                    {
-                        moduleData = moduleData.Substring("Cinar.CMS.Serialization\n".Length);
-                        while (moduleData.Length > 0) 
-                        {
-                            string propName = moduleData.Substring(0, moduleData.IndexOf(','));
-                            moduleData = moduleData.Substring(propName.Length+1);
-                            string valLengthStr = moduleData.Substring(0, moduleData.IndexOf(','));
-                            moduleData = moduleData.Substring(valLengthStr.Length + 1);
-                            int length = Int32.Parse(valLengthStr);
-                            string valStr = moduleData.Substring(0, length);
-                            moduleData = moduleData.Substring(length);
-
-                            PropertyInfo pi = module.GetType().GetProperty(propName);
-                            pi.SetValue(module, Convert.ChangeType(valStr, pi.PropertyType), null);
-                        }
-                    }
+                    CinarSerialization.Deserialize(module, moduleData);
                 }
                 catch
                 {
@@ -327,9 +293,12 @@ namespace Cinar.CMS.Library.Modules
             {
                 module = new StaticHtml();
                 ((StaticHtml)module).InnerHtml = "<font color=red>Hata</font><br/><br/>";
-                ((StaticHtml)module).BottomHtml = moduleName + " isimli bu modül bulunamadı, bu modül türü silinmiş olabilir. Bu modülü siliniz.";
-                if(Provider.DevelopmentMode)
-                    ((StaticHtml)module).BottomHtml += "<br/><br/><b>Developer'a not:</b> Bu hata modül deserialize edilemediği zaman oluşur.";
+                module.BottomHtml = moduleName + " isimli bu modül bulunamadı, bu modül türü silinmiş olabilir. Bu modülü siliniz.";
+                if (Provider.DevelopmentMode) 
+                {
+                    module.BottomHtml += "<br/><br/><b>Developer'a not:</b> Serialization geçersiz:";
+                    module.BottomHtml += "<br/><br/>" + WebUtility.HtmlEncode(moduleData);
+                }
             }
             return module;
         }
