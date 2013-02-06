@@ -1172,6 +1172,13 @@ var Windows = {
     this.focusedWindow = this.windows.length >=2 ? this.windows[this.windows.length-2] : null;    
   },
   
+  getLastWindowByCTagName: function(cTagName){
+	for(var i=this.windows.length-1; i>=0; i--)
+		if(this.windows[i].cTagName && this.windows[i].cTagName==cTagName)
+			return this.windows[i];
+	return null;
+  },
+  
   // Registers a new window (called by Windows constructor)
   register: function(win) {
     this.windows.push(win);

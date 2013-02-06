@@ -554,8 +554,11 @@ function importModule(){
 }
 
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands){
+	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
+
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+	win.cTagName = 'listform';
     var winContent = $(win.getContent());
 
     var options = {
@@ -590,7 +593,13 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
     if(extraFilter) options.extraFilter = extraFilter;
     win['form'] = new ListForm(winContent, options);
 
-    win.showCenter();
+	if(lastOpenedEntityListForm!=null){
+		var loc = lastOpenedEntityListForm.getLocation();
+		win.setLocation(parseInt(loc.left)+80, parseInt(loc.top)+80);
+		win.show();
+	} 
+	else
+		win.showCenter();
     win.toFront();
     
     return win;
