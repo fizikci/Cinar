@@ -14,7 +14,42 @@ namespace Cinar.Test
     {
         public static void Run()
         {
-            #region Tefsir
+
+            #region English Tafsir
+            StringBuilder sb = new StringBuilder(1000000);
+
+            string startText = "<font class='TextResultEnglish'><font color='black'>";
+            string endText = "</font></font>";
+            int i = 0;
+
+            foreach (string key in Kuran.kuran.Keys)
+            {
+                string sureNo = key.Split('_')[0];
+                string ayetNo = key.Split('_')[1];
+                string url = "http://www.altafsir.com/Tafasir.asp?tMadhNo=2&tTafsirNo=73&tSoraNo=" + sureNo + "&tAyahNo=" + ayetNo + "&tDisplay=yes&UserProfile=0&LanguageId=2";
+
+                WebClient wc = new WebClient();
+                wc.Encoding = Encoding.UTF8;
+                string content = wc.DownloadString(url);
+
+                int pos = content.IndexOf(startText);
+                if (pos < 0)
+                    break;
+
+                content = content.Substring(pos + startText.Length);
+                string tefsir = content.Substring(0, content.IndexOf(endText));
+                sb.AppendLine("\"" + sureNo + "-" + ayetNo + "\": \"" + WebUtility.HtmlDecode(tefsir).Replace("\"", "\\\"") + "\",");
+
+                Console.WriteLine(++i);
+            }
+
+            File.WriteAllText(@"C:\tefsir_en.js", sb.ToString(), Encoding.UTF8);
+
+            #endregion
+
+
+            #region Türkçe Tefsir
+            /*
             StringBuilder sb = new StringBuilder(1000000);
             int lastAyetNo = 0;
 
@@ -50,6 +85,7 @@ namespace Cinar.Test
             }
 
             File.WriteAllText(@"C:\tefsir.js", sb.ToString(), Encoding.UTF8);
+            */
 
             #endregion
 
