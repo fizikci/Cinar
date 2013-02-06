@@ -6,7 +6,7 @@
 }
 
 .alphacube_nw {
-	background: transparent url(alphacube/left-top.gif) no-repeat 0 0;			
+  background: transparent url(alphacube/top-middle.gif) repeat-x 0 0;	
   width:10px;
   height:25px;
 }
@@ -17,23 +17,23 @@
 }
 
 .alphacube_ne {
-  background: transparent url(alphacube/right-top.gif) no-repeat 0 0;			
+  background: transparent url(alphacube/top-middle.gif) repeat-x 0 0;		
   width:10px;	  
   height:25px;
 }
 
 .alphacube_w {
-  background: transparent url(alphacube/frame-left.gif) repeat-y top left;			
+  background:#FDFDFD;
   width:7px;
 }
 
 .alphacube_e {
-  background: transparent url(alphacube/frame-right.gif) repeat-y top right;			
+  background:#FDFDFD;
   width:7px;	  
 }
 
 .alphacube_sw {
-  background: transparent url(alphacube/bottom-left-c.gif) no-repeat 0 0;			
+  background: transparent url(alphacube/bottom-middle.gif) repeat-x 0 0;			
   width:7px;
   height:7px;
 }
@@ -44,7 +44,7 @@
 }
 
 .alphacube_se, .alphacube_sizer  {
-  background: transparent url(alphacube/bottom-right-c.gif) no-repeat 0 0;			
+  background: transparent url(alphacube/bottom-middle.gif) repeat-x 0 0;			
   width:7px;
   height:7px;
 }

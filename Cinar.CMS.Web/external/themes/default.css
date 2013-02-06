@@ -135,14 +135,15 @@
 .dialog {
 	display: block;
 	position: absolute;
+	border-left: 1px solid;
 
-	-moz-box-shadow: 3px 3px 4px #c1c3c2;
-	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
-	box-shadow: 3px 3px 4px #c1c3c2;
+	-moz-box-shadow: 3px 3px 4px black;
+	-webkit-box-shadow: 3px 3px 4px black;
+	box-shadow: 3px 3px 4px black;
 	/* For IE 8 */
-	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='black')";
 	/* For IE 5.5 - 7 */
-	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='black');
 }
 
 .dialog table.table_window  { 
