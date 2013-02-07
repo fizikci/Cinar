@@ -253,7 +253,7 @@ popupMenu.menuItems = [
     {text:lang('Page-Module Tree'), icon:'tree', callback:openPageModuleTree},
     {text:'-'},
     {text:lang('Configuration'), icon:'Configuration', callback:configure},
-    {text:lang('File Manager'), icon:'folder_module', callback:openFileManager},
+    { text: lang('File Manager'), icon: 'folder_module', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
     {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
     {text:lang('Edit General Javascript'), icon:'script', callback:editJavascript},
     {text:lang('Edit Page Load Script'), icon:'script', callback:editPageLoadScript},
