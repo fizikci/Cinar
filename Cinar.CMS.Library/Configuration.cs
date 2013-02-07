@@ -178,7 +178,7 @@ namespace Cinar.CMS.Library
         }
 
         private int mailPort = 25;
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit, OrderNo = 18, Category = "Mail Ayarları")]
+        [EditFormFieldProps(OrderNo = 18, Category = "Mail Ayarları")]
         public int MailPort
         {
             get { return mailPort; }
