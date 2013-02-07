@@ -1611,6 +1611,12 @@ var ListForm = Class.create();ListForm.prototype = {
         var id = parseInt(this.selRows[0].id.split('_')[1]);
 		return id;
 	},
+	getSelectedEntities: function(){
+		return this.listGrid.getSelectedEntities();
+	},
+	getSelectedEntity: function(){
+		return this.listGrid.getSelectedEntity();
+	},	
     saveEntity: function (pe) {
         var params = pe.serialize();
         var ths = this;
@@ -1892,6 +1898,28 @@ var ListGrid = Class.create(); ListGrid.prototype = {
     getSelectedRows: function(){
         return this.table.select('.selected');
     },
+	getSelectedEntities: function(){
+        var selRows = this.getSelectedRows() || [];
+        if (selRows.length == 0) return [];
+		var res = [];
+		var headers = this.table.select('TH');
+        for(var i=0; i<selRows.length; i++){
+			var r = {};
+			for(var k=0; k<headers.length; k++){
+				var fieldName = headers[k].readAttribute("id").split('_')[1];
+				var key = fieldName.indexOf('.')>-1 ? fieldName.split('.')[1] : fieldName;
+				r[key] = selRows[i].select('TD')[k].readAttribute("value");
+			}
+			res.push(r);
+		}
+		return res;
+	},
+	getSelectedEntity: function(){
+		var selArr = this.getSelectedEntities();
+		if(selArr.length>0)
+			return selArr[0];
+		return null;
+	},
     colClick: function(event){
         var col = Event.findElement(event, 'TH');
         if(this.sortCallback) this.sortCallback(col.id);
