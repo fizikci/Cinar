@@ -1268,7 +1268,7 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
-    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory){
+    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels){
         container = $(container);
         if(container==null) container = $(document.body);
         
@@ -1300,7 +1300,8 @@ var EditForm = Class.create(); EditForm.prototype = {
 			for(var i=0; i<controls.length; i++){
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
-				if(hideCategory==cat) hideFieldValue[control.id] = control.value;
+				if (hideCategory == cat) hideFieldValue[control.id] = control.value;
+				if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
 				str += '<tr>';
 				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
@@ -1429,12 +1430,12 @@ var EditForm = Class.create(); EditForm.prototype = {
     }
 }
 
-function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory){
+function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels){
 	var dim = $(document.body).getDimensions();
 	var left=dim.width-390, top=10, width=350, height=dim.height-60;
 	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
 	var winContent = $(win.getContent());
-	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory);
+	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels);
 	pe.onSave = onSave;
 	win['form'] = pe;
 	win.show();
@@ -1517,6 +1518,17 @@ var ListForm = Class.create();ListForm.prototype = {
                 if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                 var dataArea = $('lf-dataArea' + ths.hndl);
                 dataArea.innerHTML = req.responseText;
+
+                if (ths.options['renameLabels']) {
+                    var headers = dataArea.select('TH');
+                    for (var i = 0; i < headers.length; i++) {
+                        var fieldName = headers[i].readAttribute("id").split('_')[1];
+                        var key = fieldName.indexOf('.') > -1 ? fieldName.split('.')[1] : fieldName;
+                        if (ths.options.renameLabels[key])
+                            headers[i].innerHTML = ths.options.renameLabels[key];
+                    }
+                }
+
                 ths.listGrid = new ListGrid(dataArea.down(), ths.options.selectCallback, ths.sortCallback.bind(ths));
 				
 				$('btnPrev' + ths.hndl).setOpacity(ths.pageIndex<=0 ? 0.3 : 1.0);
@@ -1564,7 +1576,8 @@ var ListForm = Class.create();ListForm.prototype = {
 					lang('New') + ' ' + ths.options.hrEntityName, 
 					res, 
 					ths.insertEntity.bind(ths), 
-					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
+					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory,
+                    ths.options.renameLabels);
             },
             onException: function (req, ex) { throw ex; }
         });
@@ -1600,7 +1613,8 @@ var ListForm = Class.create();ListForm.prototype = {
 					lang('Edit') + ' ' + ths.options.hrEntityName, 
 					res, 
 					ths.saveEntity.bind(ths), 
-					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory);
+					ths.filter ? ths.filter.getValue() : null, ths.options.editFormHideCategory,
+                    ths.options.renameLabels);
             },
             onException: function (req, ex) { throw ex; }
         });

@@ -553,7 +553,7 @@ function importModule(){
     win.toFront();
 }
 
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands){
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels){
 	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
 
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
@@ -570,7 +570,8 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         selectCallback: selectCallback,
 		commands: [],
 		hideFilterPanel: hideFilterPanel,
-		editFormHideCategory: editFormHideCategory
+		editFormHideCategory: editFormHideCategory,
+        renameLabels: renameLabels
     }
 	if(entityName=='ContentPicture'){
 		options.commands.push({id:'QuickLoad', icon:'DataConverter', name:'Quick Load', handler:quickLoadImages});
