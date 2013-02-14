@@ -233,11 +233,11 @@ namespace Cinar.CMS.Library
                 if (!String.IsNullOrEmpty(options))
                     options = ", options:{" + options.Substring(1) + "}";
 
-                res.Add("\t{" + String.Format("label:'{0}', description:'{1}', type:'{2}', id:'{3}', category:{4}, orderNo:{5}, value:{6}{7}",
-                    caption.ToHTMLString(),
-                    description.ToHTMLString(),
+                res.Add("\t{" + String.Format("label:{0}, description:{1}, type:'{2}', id:{3}, category:{4}, orderNo:{5}, value:{6}{7}",
+                    caption.ToJS(),
+                    description.ToJS(),
                     editProps.ControlType,
-                    pi.Name,
+                    pi.Name.ToJS(),
                     editProps.Category.ToJS(),
                     editProps.OrderNo.ToJS(),
                     pi.GetValue(obj, null).ToJS(),
