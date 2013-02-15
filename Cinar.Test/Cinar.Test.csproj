@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CevsenFromFileToCode.cs" />
     <Compile Include="ContentExtractor.cs" />
     <Compile Include="ColorToAlphaTrim.cs" />
     <Compile Include="Kuran.cs" />

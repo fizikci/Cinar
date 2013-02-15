@@ -7,6 +7,7 @@ using Cinar.Database;
 using System.Reflection;
 using System.Data;
 using System.Xml.Serialization;
+using Cinar.Scripting;
 
 namespace Cinar.CMS.Library.Modules
 {
@@ -148,10 +149,29 @@ namespace Cinar.CMS.Library.Modules
         private string toHtml() 
         {
             string strShow = this.show();
+
+            string resTopHtml = this.topHtml;
+            if (resTopHtml.Contains("$"))
+            {
+                Interpreter engine = Provider.GetInterpreter(resTopHtml, this);
+                engine.Parse();
+                engine.Execute();
+                resTopHtml = engine.Output;
+            }
+
+            string resBottomHtml = this.bottomHtml;
+            if (resBottomHtml.Contains("$"))
+            {
+                Interpreter engine = Provider.GetInterpreter(resBottomHtml, this);
+                engine.Parse();
+                engine.Execute();
+                resBottomHtml = engine.Output;
+            }
+
             if (String.IsNullOrEmpty(strShow))
                 return String.Empty;
             else
-                return this.topHtml + strShow + this.bottomHtml;
+                return resTopHtml + strShow + resBottomHtml;
         }
 
         public string Show()
