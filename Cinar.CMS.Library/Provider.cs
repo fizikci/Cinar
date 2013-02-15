@@ -906,8 +906,6 @@ namespace Cinar.CMS.Library
                 Provider.Database.Rollback();
                 throw ex;
             }
-
-            return false;
         }
         public static bool RenameTemplate(string template, string newName)
         {
@@ -931,7 +929,6 @@ namespace Cinar.CMS.Library
                 Provider.Database.Rollback();
                 throw ex;
             }
-            return false;
         }
 
 
