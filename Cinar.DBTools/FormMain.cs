@@ -776,10 +776,10 @@ $"},
             TreeNode viewsNode = parentNode.Nodes.Add("Views", "Views", "Folder", "Folder");
             viewsNode.Tag = cs.Database.Tables;
 
-            foreach (Table tbl in cs.Database.Tables)
+            foreach (Table tbl in cs.Database.Tables.OrderBy(t=>t.Name))
                 populateTreeNodesFor(tbl.IsView ? viewsNode : tablesNode, tbl);
 
-            foreach (Diagram schema in cs.Schemas)
+            foreach (Diagram schema in cs.Schemas.OrderBy(s => s.Name))
                 populateTreeNodesFor(schemasNode, schema);
         }
         internal void populateTreeNodesFor(TreeNode parentNode, Diagram schema)
@@ -797,19 +797,19 @@ $"},
 
             TreeNode columnsNode = tnTable.Nodes.Add("Columns", "Columns", "Folder", "Folder");
             columnsNode.Tag = tbl.Columns;
-            foreach (Column column in tbl.Columns)
+            foreach (Column column in tbl.Columns.OrderBy(c => c.Name))
                 populateTreeNodesFor(columnsNode, column);
 
             TreeNode keysNode = tnTable.Nodes.Add("Constraints", "Constraints", "Folder", "Folder");
             keysNode.Tag = tbl.Constraints;
             if (tbl.Constraints != null)
-                foreach (Constraint constraint in tbl.Constraints)
+                foreach (Constraint constraint in tbl.Constraints.OrderBy(t => t.Name))
                     populateTreeNodesFor(keysNode, constraint);
 
             TreeNode indexesNode = tnTable.Nodes.Add("Indexes", "Indexes", "Folder", "Folder");
             keysNode.Tag = tbl.Indices;
             if (tbl.Indices != null)
-                foreach (Index index in tbl.Indices)
+                foreach (Index index in tbl.Indices.OrderBy(t => t.Name))
                     populateTreeNodesFor(indexesNode, index);
         }
         internal void populateTreeNodesFor(TreeNode parentNode, BaseIndexConstraint index)
