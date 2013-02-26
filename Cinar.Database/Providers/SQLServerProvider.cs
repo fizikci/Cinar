@@ -67,6 +67,7 @@ namespace Cinar.Database.Providers
                         connection.ChangeDatabase(dbName);
                         CreatedNow = true;
                         connection.Close();
+                        connection = new SqlConnection(db.ConnectionString);
                     }
                     catch { }
                 }

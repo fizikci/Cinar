@@ -73,6 +73,7 @@ namespace Cinar.Database.Providers
                         connection.ChangeDatabase(dbName);
                         CreatedNow = true;
                         connection.Close();
+                        connection = new MySqlConnection(db.ConnectionString);
                     }
                     catch { }
                 }
