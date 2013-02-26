@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.Xml.Serialization;
+using System.Diagnostics;
 
 namespace Cinar.Database
 {
@@ -83,6 +84,9 @@ namespace Cinar.Database
         public new int Add(Index index)
         {
             index.parent = this;
+            foreach (string colName in index.ColumnNames)
+                if (index.parent.Table.Columns[colName] == null)
+                    Debug.WriteLine(string.Format("Index için kullanılan {0} alanı {1} tablosuna ait değil.", colName, index.parent.Table));
             base.Add(index);
             return base.Count;
         }

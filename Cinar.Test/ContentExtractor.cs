@@ -14,7 +14,6 @@ namespace Cinar.Test
     {
         public static void Run()
         {
-
             #region English Tafsir
             StringBuilder sb = new StringBuilder(1000000);
 
@@ -46,7 +45,6 @@ namespace Cinar.Test
             File.WriteAllText(@"C:\tefsir_en.js", sb.ToString(), Encoding.UTF8);
 
             #endregion
-
 
             #region Türkçe Tefsir
             /*
@@ -88,7 +86,6 @@ namespace Cinar.Test
             */
 
             #endregion
-
 
             #region Cevşen
 

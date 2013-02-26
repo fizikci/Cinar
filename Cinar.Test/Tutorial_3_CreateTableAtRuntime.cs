@@ -14,7 +14,9 @@ namespace Cinar.Test
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
             Database.Database db = new Database.Database(DatabaseProvider.MySQL, "localhost", "deneme", "root", "bk", 30, null, true);
 
-            Console.WriteLine(db.CreateTableMetadataForType(typeof(Ogrenci)).ToDDL());
+            Table table = db.CreateTableMetadataForType(typeof(Ogrenci));
+
+            Console.WriteLine(db.GetTableDDL(table));
 
             Ogrenci ogr = new Ogrenci();
             ogr.Ad = "Mehmet";
@@ -29,10 +31,11 @@ namespace Cinar.Test
     }
 
     [PrimaryKeyConstraint(Name = "PK_Ogrenci", ConstraintColumnNames = "Id")]
-    [Index(Name = "IND_Ad_DogumYili", ConstraintColumnNames = "Ad,DogumYili")]
+    [Index(Name = "IND_Ad_DogumYili", ConstraintColumnNames = "Ad,dogum_yili")]
     //[CheckConstraint(Name = "CHK_DogumYili", Expression = "DogumYili > 1900")]
     [UniqueConstraint(Name = "UNQ_TcKimlikNo", ConstraintColumnNames = "TcKimlikNo")]
     [DefaultData(ColumnList = "TcKimlikNo, Ad", ValueList = "'12345678901', 'Ahmet'")]
+    [TableDetail(Name="student")]
     public class Ogrenci : IDatabaseEntity
     {
         [ColumnDetail(IsAutoIncrement = true, IsNotNull = true)]
@@ -44,7 +47,7 @@ namespace Cinar.Test
         [ColumnDetail(Length = 20)]
         public string Ad { get; set; }
 
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1980")]
+        [ColumnDetail(IsNotNull = true, DefaultValue = "1980", Name="dogum_yili")]
         public int DogumYili { get; set; }
 
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 7)]

@@ -1557,6 +1557,7 @@ namespace Cinar.Database
             }
 
             Table tbl = this.CreateTableMetadataForType(type);
+            this.Tables.Add(tbl);
 
             this.CreateTable(tbl, defaultDataArr, refreshMetadata);
 
@@ -1615,7 +1616,6 @@ namespace Cinar.Database
             foreach (var cc in type.GetAttributes<CheckConstraint>())
                 tbl.Constraints.Add(cc);
 
-            this.Tables.Add(tbl);
             return tbl;
         }
         private void setColumnPropsFromPropertyInfo(Column f, PropertyInfo pi, Table forTable)
@@ -1823,7 +1823,6 @@ namespace Cinar.Database
             return dbProvider.GetColumnDDL(column);
         }
         #endregion
-
 
         #region vendor spesific SQL syntax
 
