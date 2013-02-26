@@ -1402,7 +1402,10 @@ $"},
         }
         private void cmdExecuteSQLFromFile(string arg)
         {
-            throw new NotImplementedException();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Query Files|*.sql";
+            if (ofd.ShowDialog() == DialogResult.OK)
+                executeSQL(File.ReadAllText(ofd.FileName));
         }
 
         private void cmdExecuteSQL(string arg)
