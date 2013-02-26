@@ -39,7 +39,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string description = "";
-        [ColumnDetail(Length = 300)]
+        [ColumnDetail(ColumnType=DbType.Text)]
         public string Description
         {
             get { return description; }
