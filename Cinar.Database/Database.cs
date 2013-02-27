@@ -658,7 +658,7 @@ namespace Cinar.Database
                         if (DBNull.Value.Equals(data[column.Name]) || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                             continue; //***
 
-                    IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name]);
+                    IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name] ?? System.DBNull.Value);
                     if (column.ColumnType == DbType.Image)
                         param.DbType = System.Data.DbType.Binary;
                     cmd.Parameters.Add(param);
@@ -724,7 +724,10 @@ namespace Cinar.Database
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                     if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
                         if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                        {
+
                             continue; //***
+                        }
 
                     tmpList.Add("@_" + fld.Name);
                 }
