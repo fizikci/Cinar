@@ -503,7 +503,7 @@ namespace Cinar.Database
         }
         public IDbDataParameter CreateParameter(string parameterName, object value)
         {
-            return dbProvider.CreateParameter(parameterName, value);
+            return dbProvider.CreateParameter(parameterName, value ?? DBNull.Value);
         }
         #endregion
 
