@@ -1662,6 +1662,32 @@ namespace System
                 output.Write(buffer, 0, len);
             }
         }
+
+        public static void EncDecFile(string srcPath, string dstPath)
+        {
+            int start = 10;
+            if (srcPath.ToLowerInvariant().EndsWith("jpg"))
+                start = 10;
+            if (srcPath.ToLowerInvariant().EndsWith("png"))
+                start = 9;
+            if (srcPath.ToLowerInvariant().EndsWith("swf"))
+                start = 84;
+            if (srcPath.ToLowerInvariant().EndsWith("etf"))
+                start = 84;
+            if (srcPath.ToLowerInvariant().EndsWith("flv"))
+                start = 24;
+            if (srcPath.ToLowerInvariant().EndsWith("f4v"))
+                start = 24;
+
+            byte[] bytes = File.ReadAllBytes(srcPath);
+
+            for (int i = start; i < bytes.Length; i++)
+                bytes[i] = Convert.ToByte((int)(bytes[i] ^ 143));
+
+            File.WriteAllBytes(dstPath + "tmp", bytes);
+            File.Move(dstPath + "tmp", dstPath);
+        }
+
     }
 
     public class Pair<T>
