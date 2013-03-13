@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -1688,6 +1689,24 @@ namespace System
             File.Move(dstPath + "tmp", dstPath);
         }
 
+        public static string GetProcessorId()
+        {
+            try
+            {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    if (queryObj["ProcessorId"] != null)
+                        return queryObj["ProcessorId"].ToString();
+                }
+            }
+            catch (ManagementException e)
+            {
+            }
+
+            return "unknown";
+        }
     }
 
     public class Pair<T>
