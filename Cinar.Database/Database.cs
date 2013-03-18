@@ -294,31 +294,31 @@ namespace Cinar.Database
 
         public Database CreateNewInstance()
         {
-            Database db = new Database();
-            db.host = this.host;
-            db.connectionString = this.connectionString;
-            db.provider = this.provider;
-            db.tables = this.tables;
+            Database database = new Database();
+            database.host = this.host;
+            database.connectionString = this.connectionString;
+            database.provider = this.provider;
+            database.tables = this.tables;
 
             switch (provider)
             {
                 case DatabaseProvider.PostgreSQL:
-                    db.dbProvider = new Providers.PostgreSQLProvider(this, true);
+                    database.dbProvider = new Providers.PostgreSQLProvider(this, true);
                     break;
                 case DatabaseProvider.MySQL:
-                    db.dbProvider = new Providers.MySqlProvider(this, true);
+                    database.dbProvider = new Providers.MySqlProvider(this, true);
                     break;
                 case DatabaseProvider.SQLServer:
-                    db.dbProvider = new Providers.SQLServerProvider(this, true);
+                    database.dbProvider = new Providers.SQLServerProvider(this, true);
                     break;
                 case DatabaseProvider.SQLite:
-                    db.dbProvider = new Providers.SQLiteProvider(this, true);
+                    database.dbProvider = new Providers.SQLiteProvider(this, true);
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
             }
 
-            return db;
+            return database;
         }
 
         private string getReservedWordToken(bool left) {
@@ -1238,6 +1238,7 @@ namespace Cinar.Database
                                     SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @",
                                     ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
                                     FROM [" + table.Name + @"] 
+                                    WHERE " + where + @"
                                 ) 
                                 SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @" 
                                 FROM _CinarResult 
@@ -1569,7 +1570,7 @@ namespace Cinar.Database
 
         public void CreateTable(Table tbl, DefaultDataAttribute[] defaultDataArr, bool refreshMetadata)
         {
-            Database originalDb = (Database)tbl.parent.db;
+            Database originalDatabase = (Database)tbl.parent.db;
             tbl.parent.db = this;
 
             IDbCommand cmd = this.CreateCommand(tbl.ToDDL());
@@ -1587,7 +1588,7 @@ namespace Cinar.Database
                     this.ExecuteNonQuery("SET IDENTITY_INSERT [" + tbl.Name + "] OFF");
             }
 
-            tbl.parent.db = originalDb;
+            tbl.parent.db = originalDatabase;
             
             if(refreshMetadata)
                 this.Refresh();
