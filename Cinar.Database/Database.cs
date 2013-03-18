@@ -1238,7 +1238,7 @@ namespace Cinar.Database
                                     SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @",
                                     ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
                                     FROM [" + table.Name + @"] 
-                                    WHERE " + where + @"
+                                    " + where + @"
                                 ) 
                                 SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @" 
                                 FROM _CinarResult 
