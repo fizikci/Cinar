@@ -80,45 +80,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\EditUser.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Controls\EditUser.cs" />
     <Compile Include="Controls\EditUser.Designer.cs">
       <DependentUpon>EditUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditRole.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Controls\EditRole.cs" />
     <Compile Include="Controls\EditRole.Designer.cs">
       <DependentUpon>EditRole.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EditTemplate.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Controls\EditTemplate.cs" />
     <Compile Include="Controls\EditTemplate.Designer.cs">
       <DependentUpon>EditTemplate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormExecuteTemplate.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormExecuteTemplate.cs" />
     <Compile Include="Forms\FormExecuteTemplate.Designer.cs">
       <DependentUpon>FormExecuteTemplate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormRoleRight.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormRoleRight.cs" />
     <Compile Include="Forms\FormRoleRight.Designer.cs">
       <DependentUpon>FormRoleRight.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormRoleUser.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormRoleUser.cs" />
     <Compile Include="Forms\FormRoleUser.Designer.cs">
       <DependentUpon>FormRoleUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTemplateParam.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\FormTemplateParam.cs" />
     <Compile Include="Forms\FormTemplateParam.Designer.cs">
       <DependentUpon>FormTemplateParam.cs</DependentUpon>
     </Compile>
