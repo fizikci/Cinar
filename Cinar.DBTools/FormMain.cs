@@ -951,7 +951,7 @@ $"},
             //tp.ImageKey = "File";
             tp.ImageIndex = 2;
 
-            TemplateEditor ed = new TemplateEditor(filePath);
+            TemplateEditor ed = new TemplateEditor(filePath, content);
             ed.Dock = DockStyle.Fill;
             tp.Controls.Add(ed);
             tp.ToolTipText = filePath;
@@ -1831,7 +1831,8 @@ $"},
             }
 
             MyDataGrid grid = CurrSQLEditor.Grid;
-            grid.DoubleClick += delegate {
+            grid.DoubleClick += delegate
+            {
                 if (grid.SelectedRows.Count <= 0)
                     return;
                 DataRow dr = (grid.SelectedRows[0].DataBoundItem as DataRowView).Row;
@@ -1840,14 +1841,14 @@ $"},
                 executeSQL(@"
                     select top 1000 
                         * 
-                    from [{1}] 
+                    from {1} 
                     where [{3}].[{0}] = '{2}'",
                                               column.Name,
                                               from,
-                                              keyVal,
+                                              keyVal == null ? "" : keyVal.ToString().Replace("\\", "\\\\").Replace("'", "\\'"),
                                               column.Table.Name);
             };
-            
+
         }
 
         private void cmdCreateIndex(string arg)
@@ -2036,25 +2037,26 @@ $"},
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 var keyWords = Provider.Database.Tables.Select(t => t.Name).ToArray();
-                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.*", SearchOption.AllDirectories);
+                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.cs", SearchOption.AllDirectories);
                 var allMatches = from fn in allFiles
                                  from line in File.ReadLines(fn)
                                  from kw in keyWords
-                                 where line.Contains(kw)
+                                 where line.ToUpper().Contains(kw.ToUpper()) && (line.ToUpper().Contains("SELECT ") || line.ToUpper().Contains("INSERT ") || line.ToUpper().Contains("UPDATE ") || line.ToUpper().Contains("DELETE "))
                                  select new
                                             {
-                                                File = fn,
-                                                Line = line,
-                                                Keyword = kw
+                                                Keyword = kw,
+                                                File = fn.Replace(fbd.SelectedPath + "\\", ""),
+                                                Line = line.Trim(),
                                             };
                 StringBuilder sb = new StringBuilder();
+                sb.AppendLine("create table table_usage (table_name varchar(255), file_name varchar(255), content text);");
                 foreach (var matchInfo in allMatches)
-                    sb.AppendFormat("File => {0} Line => {1} Keyword => {2}\r\n"
-                                    , matchInfo.File, matchInfo.Line, matchInfo.Keyword);
+                    sb.AppendFormat("insert into table_usage values('{0}', '{1}', '{2}');\r\n"
+                                    , matchInfo.Keyword, matchInfo.File.Replace("\\","\\\\").Replace("'", "\\'"), matchInfo.Line.Replace("'", "\\'"));
 
                 addFileEditor("", sb.ToString());
             }
-            
+
         }
 
         private void cmdQuickScript(string arg)

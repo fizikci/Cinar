@@ -264,7 +264,7 @@ namespace Cinar.Database
                     else if (dt.Columns[i].DataType == typeof(DateTime))
                         values[i] = dr.IsNull(columnName) ? "null" : "'" + ((DateTime)dr[this.Columns[i].Name]).ToString("yyyy-MM-dd HH:mm") + "'";
                     else
-                        values[i] = dr.IsNull(columnName) ? "null" : "'" + dr[this.Columns[i].Name].ToString().Replace("'", "''").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
+                        values[i] = dr.IsNull(columnName) ? "null" : "'" + dr[this.Columns[i].Name].ToString().Replace("'", "''").Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\r", "\\r") + "'";
                 }
                 sb.AppendFormat(sql, String.Join(", ", values));
                 sb.AppendLine();

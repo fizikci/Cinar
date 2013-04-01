@@ -19,7 +19,7 @@ namespace Cinar.DBTools.Controls
         public bool Modified { get { return txt.Text != InitialText; } }
         public string InitialText;
 
-        public TemplateEditor(string filePath)
+        public TemplateEditor(string filePath, string content = "")
         {
             InitializeComponent();
 
@@ -28,6 +28,10 @@ namespace Cinar.DBTools.Controls
             {
                 txt.LoadFile(filePath);
                 InitialText = txt.Text;
+            }
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                InitialText = txt.Text = content;
             }
         }
 
