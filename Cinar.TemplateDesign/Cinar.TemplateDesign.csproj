@@ -78,9 +78,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="FormTemplateDesigner.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="FormTemplateDesigner.cs" />
     <Compile Include="FormTemplateDesigner.Designer.cs">
       <DependentUpon>FormTemplateDesigner.cs</DependentUpon>
     </Compile>
@@ -91,15 +89,11 @@
     <Compile Include="PageDesigner.Designer.cs">
       <DependentUpon>PageDesigner.cs</DependentUpon>
     </Compile>
-    <Compile Include="TemplateDesigner.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="TemplateDesigner.cs" />
     <Compile Include="TemplateDesigner.Designer.cs">
       <DependentUpon>TemplateDesigner.cs</DependentUpon>
     </Compile>
-    <Compile Include="TemplateDesignerStudio.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="TemplateDesignerStudio.cs" />
     <Compile Include="TemplateDesignerStudio.Designer.cs">
       <DependentUpon>TemplateDesignerStudio.cs</DependentUpon>
     </Compile>

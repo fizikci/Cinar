@@ -93,6 +93,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.menuIndexDropIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
+            this.tabControlEditors = new Cinar.DBTools.Controls.MyTabControl();
             this.menuStripEditorTabs = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuTabSave = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
@@ -204,7 +205,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.tabControlEditors = new Cinar.DBTools.Controls.MyTabControl();
+            this.menuToolsSearchTableNamesInFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -362,8 +363,8 @@ namespace Cinar.DBTools
             // 
             // panelConnections
             // 
-            this.panelConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelConnections.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelConnections.BackgroundImage")));
             this.panelConnections.Controls.Add(this.labelConnections);
             this.panelConnections.Location = new System.Drawing.Point(0, 0);
@@ -373,8 +374,8 @@ namespace Cinar.DBTools
             // 
             // labelConnections
             // 
-            this.labelConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelConnections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelConnections.BackColor = System.Drawing.Color.Transparent;
             this.labelConnections.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.labelConnections.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -389,9 +390,9 @@ namespace Cinar.DBTools
             // 
             // treeView
             // 
-            this.treeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeView.ContextMenuStrip = this.menuStripTree;
             this.treeView.HideSelection = false;
@@ -780,6 +781,23 @@ namespace Cinar.DBTools
             this.imageListTree.ImageSize = new System.Drawing.Size(16, 16);
             this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // tabControlEditors
+            // 
+            this.tabControlEditors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlEditors.ContextMenuStrip = this.menuStripEditorTabs;
+            this.tabControlEditors.Cursor = System.Windows.Forms.Cursors.Default;
+            this.tabControlEditors.ImageList = this.imageListTabs;
+            this.tabControlEditors.ItemSize = new System.Drawing.Size(100, 22);
+            this.tabControlEditors.Location = new System.Drawing.Point(0, 0);
+            this.tabControlEditors.Name = "tabControlEditors";
+            this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
+            this.tabControlEditors.SelectedIndex = 0;
+            this.tabControlEditors.ShowToolTips = true;
+            this.tabControlEditors.Size = new System.Drawing.Size(612, 598);
+            this.tabControlEditors.TabIndex = 1;
+            // 
             // menuStripEditorTabs
             // 
             this.menuStripEditorTabs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -799,100 +817,100 @@ namespace Cinar.DBTools
             this.menuTabCopyFullPath,
             this.menuTabOpenContainingFolder});
             this.menuStripEditorTabs.Name = "menuStripEditorTabs";
-            this.menuStripEditorTabs.Size = new System.Drawing.Size(200, 270);
+            this.menuStripEditorTabs.Size = new System.Drawing.Size(211, 270);
             // 
             // menuTabSave
             // 
             this.menuTabSave.Image = ((System.Drawing.Image)(resources.GetObject("menuTabSave.Image")));
             this.menuTabSave.Name = "menuTabSave";
             this.menuTabSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuTabSave.Size = new System.Drawing.Size(199, 22);
+            this.menuTabSave.Size = new System.Drawing.Size(210, 22);
             this.menuTabSave.Text = "Save";
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(196, 6);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(207, 6);
             // 
             // menuTabClose
             // 
             this.menuTabClose.Name = "menuTabClose";
             this.menuTabClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
-            this.menuTabClose.Size = new System.Drawing.Size(199, 22);
+            this.menuTabClose.Size = new System.Drawing.Size(210, 22);
             this.menuTabClose.Text = "Close";
             // 
             // menuTabCloseAll
             // 
             this.menuTabCloseAll.Name = "menuTabCloseAll";
-            this.menuTabCloseAll.Size = new System.Drawing.Size(199, 22);
+            this.menuTabCloseAll.Size = new System.Drawing.Size(210, 22);
             this.menuTabCloseAll.Text = "Close All";
             // 
             // menuTabCloseAllButThis
             // 
             this.menuTabCloseAllButThis.Name = "menuTabCloseAllButThis";
-            this.menuTabCloseAllButThis.Size = new System.Drawing.Size(199, 22);
+            this.menuTabCloseAllButThis.Size = new System.Drawing.Size(210, 22);
             this.menuTabCloseAllButThis.Text = "Close All But This";
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(196, 6);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(207, 6);
             // 
             // menuCut2
             // 
             this.menuCut2.Name = "menuCut2";
             this.menuCut2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.menuCut2.Size = new System.Drawing.Size(199, 22);
+            this.menuCut2.Size = new System.Drawing.Size(210, 22);
             this.menuCut2.Text = "Cut";
             // 
             // menuCopy2
             // 
             this.menuCopy2.Name = "menuCopy2";
             this.menuCopy2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.menuCopy2.Size = new System.Drawing.Size(199, 22);
+            this.menuCopy2.Size = new System.Drawing.Size(210, 22);
             this.menuCopy2.Text = "Copy";
             // 
             // menuPaste2
             // 
             this.menuPaste2.Name = "menuPaste2";
             this.menuPaste2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.menuPaste2.Size = new System.Drawing.Size(199, 22);
+            this.menuPaste2.Size = new System.Drawing.Size(210, 22);
             this.menuPaste2.Text = "Paste";
             // 
             // menuSelectAll2
             // 
             this.menuSelectAll2.Name = "menuSelectAll2";
             this.menuSelectAll2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.menuSelectAll2.Size = new System.Drawing.Size(199, 22);
+            this.menuSelectAll2.Size = new System.Drawing.Size(210, 22);
             this.menuSelectAll2.Text = "Select All";
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(196, 6);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(207, 6);
             // 
             // menuTabCompareWithOriginal
             // 
             this.menuTabCompareWithOriginal.Image = ((System.Drawing.Image)(resources.GetObject("menuTabCompareWithOriginal.Image")));
             this.menuTabCompareWithOriginal.Name = "menuTabCompareWithOriginal";
-            this.menuTabCompareWithOriginal.Size = new System.Drawing.Size(199, 22);
+            this.menuTabCompareWithOriginal.Size = new System.Drawing.Size(210, 22);
             this.menuTabCompareWithOriginal.Text = "Compare With Original...";
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(196, 6);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(207, 6);
             // 
             // menuTabCopyFullPath
             // 
             this.menuTabCopyFullPath.Name = "menuTabCopyFullPath";
-            this.menuTabCopyFullPath.Size = new System.Drawing.Size(199, 22);
+            this.menuTabCopyFullPath.Size = new System.Drawing.Size(210, 22);
             this.menuTabCopyFullPath.Text = "Copy Full Path";
             // 
             // menuTabOpenContainingFolder
             // 
             this.menuTabOpenContainingFolder.Name = "menuTabOpenContainingFolder";
-            this.menuTabOpenContainingFolder.Size = new System.Drawing.Size(199, 22);
+            this.menuTabOpenContainingFolder.Size = new System.Drawing.Size(210, 22);
             this.menuTabOpenContainingFolder.Text = "Open Containing Folder...";
             // 
             // imageListTabs
@@ -923,9 +941,9 @@ namespace Cinar.DBTools
             // 
             // propertyGrid
             // 
-            this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid.Location = new System.Drawing.Point(0, 21);
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.Size = new System.Drawing.Size(202, 228);
@@ -936,8 +954,8 @@ namespace Cinar.DBTools
             // 
             // panelProperties
             // 
-            this.panelProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelProperties.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelProperties.BackgroundImage")));
             this.panelProperties.Controls.Add(this.labelProperties);
             this.panelProperties.Location = new System.Drawing.Point(0, 2);
@@ -947,8 +965,8 @@ namespace Cinar.DBTools
             // 
             // labelProperties
             // 
-            this.labelProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelProperties.BackColor = System.Drawing.Color.Transparent;
             this.labelProperties.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.labelProperties.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -964,9 +982,9 @@ namespace Cinar.DBTools
             // 
             // treeCodeGen
             // 
-            this.treeCodeGen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeCodeGen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.treeCodeGen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeCodeGen.ContextMenuStrip = this.menuStripCodeGen;
             this.treeCodeGen.HideSelection = false;
@@ -993,61 +1011,61 @@ namespace Cinar.DBTools
             this.menuGenerateCode,
             this.menuShowGeneratedCode});
             this.menuStripCodeGen.Name = "menuStripCodeGen";
-            this.menuStripCodeGen.Size = new System.Drawing.Size(195, 180);
+            this.menuStripCodeGen.Size = new System.Drawing.Size(201, 180);
             // 
             // menuAddNewItem
             // 
             this.menuAddNewItem.Name = "menuAddNewItem";
-            this.menuAddNewItem.Size = new System.Drawing.Size(194, 22);
+            this.menuAddNewItem.Size = new System.Drawing.Size(200, 22);
             this.menuAddNewItem.Text = "Add New Item...";
             // 
             // menuAddExistingItems
             // 
             this.menuAddExistingItems.Name = "menuAddExistingItems";
-            this.menuAddExistingItems.Size = new System.Drawing.Size(194, 22);
+            this.menuAddExistingItems.Size = new System.Drawing.Size(200, 22);
             this.menuAddExistingItems.Text = "Add Existing Item(s)...";
             // 
             // menuAddNewFolder
             // 
             this.menuAddNewFolder.Name = "menuAddNewFolder";
-            this.menuAddNewFolder.Size = new System.Drawing.Size(194, 22);
+            this.menuAddNewFolder.Size = new System.Drawing.Size(200, 22);
             this.menuAddNewFolder.Text = "Add New Folder";
             // 
             // menuAddExistingFolder
             // 
             this.menuAddExistingFolder.Name = "menuAddExistingFolder";
-            this.menuAddExistingFolder.Size = new System.Drawing.Size(194, 22);
+            this.menuAddExistingFolder.Size = new System.Drawing.Size(200, 22);
             this.menuAddExistingFolder.Text = "Add Existing Folder...";
             // 
             // menuOpenItem
             // 
             this.menuOpenItem.Name = "menuOpenItem";
-            this.menuOpenItem.Size = new System.Drawing.Size(194, 22);
+            this.menuOpenItem.Size = new System.Drawing.Size(200, 22);
             this.menuOpenItem.Text = "Open";
             // 
             // menuDeleteItem
             // 
             this.menuDeleteItem.Name = "menuDeleteItem";
-            this.menuDeleteItem.Size = new System.Drawing.Size(194, 22);
+            this.menuDeleteItem.Size = new System.Drawing.Size(200, 22);
             this.menuDeleteItem.Text = "Delete";
             // 
             // menuGenerateCode
             // 
             this.menuGenerateCode.Image = ((System.Drawing.Image)(resources.GetObject("menuGenerateCode.Image")));
             this.menuGenerateCode.Name = "menuGenerateCode";
-            this.menuGenerateCode.Size = new System.Drawing.Size(194, 22);
+            this.menuGenerateCode.Size = new System.Drawing.Size(200, 22);
             this.menuGenerateCode.Text = "Generate Code...";
             // 
             // menuShowGeneratedCode
             // 
             this.menuShowGeneratedCode.Name = "menuShowGeneratedCode";
-            this.menuShowGeneratedCode.Size = new System.Drawing.Size(194, 22);
+            this.menuShowGeneratedCode.Size = new System.Drawing.Size(200, 22);
             this.menuShowGeneratedCode.Text = "Show Generated Code...";
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.Controls.Add(this.labelCodeGeneratorExplorer);
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -1057,8 +1075,8 @@ namespace Cinar.DBTools
             // 
             // labelCodeGeneratorExplorer
             // 
-            this.labelCodeGeneratorExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCodeGeneratorExplorer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCodeGeneratorExplorer.BackColor = System.Drawing.Color.Transparent;
             this.labelCodeGeneratorExplorer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.labelCodeGeneratorExplorer.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1342,6 +1360,7 @@ namespace Cinar.DBTools
             this.menuToolsCopyTreeData,
             this.menuToolsCompareDatabases,
             this.menuToolsCompareDirectories,
+            this.menuToolsSearchTableNamesInFiles,
             this.toolStripMenuItem2,
             this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -1705,22 +1724,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // tabControlEditors
+            // menuToolsSearchTableNamesInFiles
             // 
-            this.tabControlEditors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlEditors.ContextMenuStrip = this.menuStripEditorTabs;
-            this.tabControlEditors.Cursor = System.Windows.Forms.Cursors.Default;
-            this.tabControlEditors.ImageList = this.imageListTabs;
-            this.tabControlEditors.ItemSize = new System.Drawing.Size(100, 22);
-            this.tabControlEditors.Location = new System.Drawing.Point(0, 0);
-            this.tabControlEditors.Name = "tabControlEditors";
-            this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
-            this.tabControlEditors.SelectedIndex = 0;
-            this.tabControlEditors.ShowToolTips = true;
-            this.tabControlEditors.Size = new System.Drawing.Size(612, 598);
-            this.tabControlEditors.TabIndex = 1;
+            this.menuToolsSearchTableNamesInFiles.Name = "menuToolsSearchTableNamesInFiles";
+            this.menuToolsSearchTableNamesInFiles.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsSearchTableNamesInFiles.Text = "Search table names in files...";
             // 
             // FormMain
             // 
@@ -1945,6 +1953,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuCopy2;
         private System.Windows.Forms.ToolStripMenuItem menuPaste2;
         private System.Windows.Forms.ToolStripMenuItem menuSelectAll2;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsSearchTableNamesInFiles;
 
     }
 }

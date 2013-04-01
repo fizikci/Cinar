@@ -261,6 +261,12 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdSearchTableNamesInFiles,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuToolsSearchTableNamesInFiles},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdQuickScript,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuToolsQScriptDeleteFromTables, Argument=@"$
@@ -930,7 +936,7 @@ $"},
 
             SetFont(tp, Font);
         }
-        internal void addFileEditor(string filePath)
+        internal void addFileEditor(string filePath, string content="")
         {
             foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
                 if (!string.IsNullOrEmpty(filePath) && myTabPage.ToolTipText == filePath)
@@ -938,8 +944,8 @@ $"},
                     tabControlEditors.SelectedTab = myTabPage;
                     return;
                 }
-            if (!File.Exists(filePath)) 
-                throw new Exception("File not found");
+            //if (!File.Exists(filePath))
+            //    throw new Exception("File not found");
 
             MyTabPage tp = new MyTabPage();
             //tp.ImageKey = "File";
@@ -949,7 +955,8 @@ $"},
             ed.Dock = DockStyle.Fill;
             tp.Controls.Add(ed);
             tp.ToolTipText = filePath;
-            tp.Text = Path.GetFileName(filePath);
+            if (File.Exists(filePath))
+                tp.Text = Path.GetFileName(filePath);
             tabControlEditors.TabPages.Add(tp);
             tabControlEditors.SelectTab(tp);
 
@@ -2019,6 +2026,35 @@ $"},
             {
                 MessageBox.Show(ex.Message, "Cinar");
             }
+        }
+
+
+
+        private void cmdSearchTableNamesInFiles(string arg)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                var keyWords = Provider.Database.Tables.Select(t => t.Name).ToArray();
+                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.*", SearchOption.AllDirectories);
+                var allMatches = from fn in allFiles
+                                 from line in File.ReadLines(fn)
+                                 from kw in keyWords
+                                 where line.Contains(kw)
+                                 select new
+                                            {
+                                                File = fn,
+                                                Line = line,
+                                                Keyword = kw
+                                            };
+                StringBuilder sb = new StringBuilder();
+                foreach (var matchInfo in allMatches)
+                    sb.AppendFormat("File => {0} Line => {1} Keyword => {2}\r\n"
+                                    , matchInfo.File, matchInfo.Line, matchInfo.Keyword);
+
+                addFileEditor("", sb.ToString());
+            }
+            
         }
 
         private void cmdQuickScript(string arg)
