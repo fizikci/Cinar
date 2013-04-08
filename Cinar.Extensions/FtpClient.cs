@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace Cinar.Extensions
 {
@@ -16,6 +17,7 @@ namespace Cinar.Extensions
 
         public FtpClient(string url, string userName, string password)
         {
+            if (!url.StartsWith("ftp://", StringComparison.InvariantCultureIgnoreCase)) url = "ftp://" + url;
             this.url = url;
             this.userName = userName;
             this.password = password;
@@ -26,6 +28,88 @@ namespace Cinar.Extensions
         }
 
         public FileItem Root;
+
+        public bool DeleteFile(string path)
+        {
+            try
+            {
+                // Get the object used to communicate with the server.
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url + "/" +path);
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+
+                // This example assumes the FTP site uses anonymous logon.
+                request.Credentials = new NetworkCredential(this.userName, this.password);
+
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                response.Close();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public bool FileExists(string path)
+        {
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url + "/" + path);
+            request.Credentials = new NetworkCredential(this.userName, this.password);
+            request.Method = WebRequestMethods.Ftp.GetFileSize;
+
+            try
+            {
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            }
+            catch (WebException ex)
+            {
+                FtpWebResponse response = (FtpWebResponse)ex.Response;
+                if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                {
+                    return false;
+                }
+                throw ex;
+            }
+            return true;
+        }
+
+        public bool UploadFile(string folder, string localFilePath, string uploadFileNameAs=null)
+        {
+            try
+            {
+                string fileNameAs = uploadFileNameAs ?? Path.GetFileName(localFilePath);
+                // Get the object used to communicate with the server.
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(this.url + folder + fileNameAs);
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+
+                // This example assumes the FTP site uses anonymous logon.
+                request.Credentials = new NetworkCredential(userName, password);
+
+                // Copy the contents of the file to the request stream.
+                request.ContentLength = new FileInfo(localFilePath).Length;
+
+                using (Stream sourceStream = File.OpenRead(localFilePath))
+                {
+                    using (Stream output = request.GetRequestStream())
+                    {
+                        sourceStream.CopyTo(output, 100*1024*1024);
+                    }
+                }
+
+
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                //Console.WriteLine("Upload File Complete, status {0}", response.StatusDescription);
+
+                response.Close();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 
     public class FileItem
@@ -42,7 +126,14 @@ namespace Cinar.Extensions
         public string FileName;
 
         internal FtpClient ftp;
-        internal string ParentFolder = "";
+        public string ParentFolder = "";
+
+        public string FullPath
+        {
+            get {
+                return ftp.url + ParentFolder + "/" + FileName;
+            }
+        }
 
         public bool IsDirectory
         {
@@ -104,24 +195,26 @@ namespace Cinar.Extensions
 
 
             // Get the object used to communicate with the server.
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftp.url + "/" + this.ParentFolder + "/" + FileName);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftp.url + this.ParentFolder + "/" + FileName);
             request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
             // This example assumes the FTP site uses anonymous logon.
             request.Credentials = new NetworkCredential(ftp.userName, ftp.password);
 
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+            {
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    using (StreamReader reader = new StreamReader(responseStream))
+                    {
+                        string res = reader.ReadToEnd();
 
-            Stream responseStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(responseStream);
-            string res = reader.ReadToEnd();
+                        //Console.WriteLine("Directory List Complete, status {0}", response.StatusDescription);
+                        return res.Replace("\r", "").Split('\n').Where(l => !String.IsNullOrWhiteSpace(l)).Select(l => FileItem.Parse(ftp, this.ParentFolder + "/" + this.FileName, l)).ToList();
+                    }
+                }
+            }
 
-            //Console.WriteLine("Directory List Complete, status {0}", response.StatusDescription);
-
-            reader.Close();
-            response.Close();
-
-            return res.Replace("\r", "").Split('\n').Where(l => !String.IsNullOrWhiteSpace(l)).Select(l => FileItem.Parse(ftp, this.ParentFolder + "/" + this.FileName, l)).ToList();
         }
         public bool DeleteFile()
         {
@@ -147,42 +240,6 @@ namespace Cinar.Extensions
                 return false;
             }
         }
-        public bool UploadFile(string localFilePath, string ftpFileName)
-        {
-            if (!this.IsDirectory)
-                return false;
-            try
-            {
-                // Get the object used to communicate with the server.
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftp.url + "/" + this.ParentFolder + "/" + FileName + "/" + ftpFileName);
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-
-                // This example assumes the FTP site uses anonymous logon.
-                request.Credentials = new NetworkCredential(ftp.userName, ftp.password);
-
-                // Copy the contents of the file to the request stream.
-                StreamReader sourceStream = new StreamReader(localFilePath);
-                byte[] fileContents = Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-                sourceStream.Close();
-                request.ContentLength = fileContents.Length;
-
-                Stream requestStream = request.GetRequestStream();
-                requestStream.Write(fileContents, 0, fileContents.Length);
-                requestStream.Close();
-
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-
-                //Console.WriteLine("Upload File Complete, status {0}", response.StatusDescription);
-
-                response.Close();
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
         public bool DownloadFile(string localFilePath)
         {
             try
@@ -197,6 +254,8 @@ namespace Cinar.Extensions
                 FtpWebResponse response = (FtpWebResponse)request.GetResponse();
 
                 Stream responseStream = response.GetResponseStream();
+
+                Directory.CreateDirectory(Path.GetDirectoryName(localFilePath));
 
                 using (Stream file = File.OpenWrite(localFilePath))
                 {

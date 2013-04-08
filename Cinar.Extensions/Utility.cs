@@ -102,6 +102,46 @@ namespace System
             return sb.ToString() == "NETSCAPE2.0";
         }
 
+        public static void DrawImage(this Image orjImg, Image imgToDraw, Alignment align) 
+        {
+            using (Graphics g = Graphics.FromImage(orjImg)) {
+                int W = orjImg.Width, H = orjImg.Height, w = imgToDraw.Width, h = imgToDraw.Height;
+
+                switch (align)
+                {
+                    case Alignment.TopCenter:
+                        g.DrawImage(imgToDraw, new Rectangle((W - w) / 2, 0, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.TopRight:
+                        g.DrawImage(imgToDraw, new Rectangle(W - w, 0, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.MiddleRight:
+                        g.DrawImage(imgToDraw, new Rectangle(W - w, (H - h) / 2, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.BottomRight:
+                        g.DrawImage(imgToDraw, new Rectangle(W - w, H - h, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.BottomCenter:
+                        g.DrawImage(imgToDraw, new Rectangle((W - w) / 2, H - h, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.BottomLeft:
+                        g.DrawImage(imgToDraw, new Rectangle(0, H - h, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.MiddleLeft:
+                        g.DrawImage(imgToDraw, new Rectangle(0, (H - h) / 2, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.TopLeft:
+                        g.DrawImage(imgToDraw, new Rectangle(0, 0, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    case Alignment.MiddleCenter:
+                        g.DrawImage(imgToDraw, new Rectangle((W - w) / 2, (H - h) / 2, imgToDraw.Width, imgToDraw.Height));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         public static void ConcatIconsIntoOnePngFile(string iconsFolder, string outFolder, int iconWidth = 16)
         {
             List<string> files = new List<string>();
@@ -1739,5 +1779,17 @@ namespace System
         Near,
         Center,
         Far
+    }
+    public enum Alignment
+    {
+        TopCenter,
+        TopRight,
+        MiddleRight,
+        BottomRight,
+        BottomCenter,
+        BottomLeft,
+        MiddleLeft,
+        TopLeft,
+        MiddleCenter
     }
 }

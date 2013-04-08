@@ -297,7 +297,7 @@ namespace Cinar.Database.Providers
                 cmd = new SqlCommand(cmdText, (SqlConnection)this.Connection);
 
             for (int i = 0; i < parameters.Length; i++)
-                cmd.Parameters.AddWithValue("@_param" + i, parameters[i]);
+                cmd.Parameters.AddWithValue("@_param" + i, parameters[i] ?? DBNull.Value);
 
             return cmd;
         }
