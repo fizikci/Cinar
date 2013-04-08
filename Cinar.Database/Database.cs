@@ -799,7 +799,13 @@ namespace Cinar.Database
             {
                 Column fld = columns[i];
                 if (fld.IsAutoIncrement) continue;
-                if (data.ContainsKey(fld.Name) && data[fld.Name]!=null)
+                
+                // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
+                if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
+                    if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                        continue;//***
+
+                if (data.ContainsKey(fld.Name) && data[fld.Name] != null)
                 {
                     sb.AppendFormat("[{0}] = @_{0}", fld.Name);
                     sb.Append(", ");
@@ -840,6 +846,12 @@ namespace Cinar.Database
                         int refId = (int)data[fld.Name];
                         if (refId == 0) data[fld.Name]=DBNull.Value; //***
                     }
+
+                    // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
+                    if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
+                        if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                            continue;//***
+                    
                     IDbDataParameter param = this.CreateParameter("@_" + fld.Name, data[fld.Name]);
                     cmd.Parameters.Add(param);
                 }
@@ -1217,6 +1229,7 @@ namespace Cinar.Database
             Table table = Tables[tableName];
 
             if (fExp == null) fExp = new FilterExpression();
+            if (fExp.PageSize == 0) fExp.PageSize = 10000;
             string where = fExp.Criterias.ToParamString();
             string orderBy = fExp.Orders.ToString();
             if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns.First(f=>!(f.SimpleColumnType==SimpleDbType.Text || f.SimpleColumnType==SimpleDbType.ByteArray)).Name) + "]";
