@@ -8,7 +8,7 @@ using Cinar.Entities.Standart;
 
 namespace Cinar.Entities.IssueTracking
 {
-    [DefaultData(ColumnList = "ShowFields, Name", ValueList = "'Name, Status, Priority, Project, Component, AssignedTo, CreatedOn', 'All Tickets'")]
+    [DefaultData(ColumnList = "ShowFields, Name", ValueList = "'Name, Status, Priority, Project, Component, AssignedTo, CreatedOn, RealMinutes', 'All Tickets'")]
     public class TicketQuery : NamedEntity
     {
         public string ValType { get; set; } // Bug, Task

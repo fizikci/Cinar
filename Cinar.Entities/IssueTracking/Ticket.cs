@@ -29,6 +29,9 @@ namespace Cinar.Entities.IssueTracking
         [ColumnDetail(ColumnType = DbType.Text)]
         public string Description { get; set; }
 
+        public int EstimatedMinutes { get; set; }
+        public int RealMinutes { get; set; }
+
         public Ticket()
         {
             Type = TicketType.Bug;

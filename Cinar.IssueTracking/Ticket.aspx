@@ -174,9 +174,17 @@
                 <%=Enum.GetNames(typeof(TicketPriority)).Select(s => "<option value=\"" + s + "\"" + (ticket.Priority.ToString() == s ? " selected" : "") + ">" + s + "</option>").ToArray().StringJoin()%>
             </select>
         </div>
+        <div class="controlWithLabel halfWidth">
+            <span>Estimated Minutes</span>
+            <input type="text" name="EstimatedMinutes" value="<%=ticket.EstimatedMinutes %>"/>
+        </div>
+        <div class="controlWithLabel halfWidth">
+            <span>Real Minutes</span>
+            <input type="text" name="RealMinutes" value="<%=ticket.RealMinutes %>"/>
+        </div>
         <div class="controlWithLabel fullWidth">
             <span>Description</span>
-            <textarea name="Description" cols="114" rows="10"><%=Server.HtmlEncode(ticket.Description) %></textarea>
+            <textarea name="Description" style="width:90%" rows="10"><%=Server.HtmlEncode(ticket.Description) %></textarea>
         </div>
         <input type="hidden" name="command" id="command" />
         <p style="margin: 20px">
