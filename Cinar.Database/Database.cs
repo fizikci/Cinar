@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Xml.Serialization;
 using System.Text.RegularExpressions;
+using MySql.Data.MySqlClient;
 
 namespace Cinar.Database
 {
@@ -997,7 +998,7 @@ namespace Cinar.Database
             catch (Exception ex)
             {
                 this.Rollback();
-                throw ex;
+                throw new CinarException(ex);
             }
         }
 

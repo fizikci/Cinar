@@ -124,7 +124,7 @@ namespace Cinar.Database
             this.Criterias.Add(new Criteria { 
                 ColumnName = columnName,
                 CriteriaType = criteriaType,
-                ColumnValue = columnValue.ToString()
+                ColumnValue = columnValue//.ToString()
             });
             return this;
         }

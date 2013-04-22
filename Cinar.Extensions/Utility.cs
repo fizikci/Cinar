@@ -359,6 +359,8 @@ namespace System
             }
             return nvc;
         }
+
+
         public static string StripHtmlTags(this string str)
         {
             if (str == null) return null;
@@ -1334,7 +1336,7 @@ namespace System
             foreach (PropertyInfo pi in obj.GetType().GetProperties())
             {
                 if (pi.Name == "Item") continue;
-                if (pi.GetSetMethod() == null) continue;
+                //if (pi.GetSetMethod() == null) continue; //SetMethod niye?
 
                 res.Add("\t" + String.Format("\"{0}\": {1}", pi.Name, Utility.ToJS(pi.GetValue(obj, null))));
             }
