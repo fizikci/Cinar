@@ -905,7 +905,7 @@ namespace Cinar.Database
             {
                 sb.AppendFormat(" WHERE [{0}] = @_{0}", tbl.PrimaryColumn.Name);
                 cmd = this.CreateCommand(sb.ToString());
-                cmd.Parameters.Add(this.CreateParameter(" @_" + tbl.PrimaryColumn.Name, data[tbl.PrimaryColumn.Name]));
+                cmd.Parameters.Add(this.CreateParameter("@_" + tbl.PrimaryColumn.Name, data[tbl.PrimaryColumn.Name]));
             }
             else
             {

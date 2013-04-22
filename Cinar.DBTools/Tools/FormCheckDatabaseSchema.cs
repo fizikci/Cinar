@@ -88,6 +88,13 @@ namespace Cinar.DBTools.Tools
         {
             Close();
         }
+
+        private void btnApplyToMetadata_Click(object sender, EventArgs e)
+        {
+            foreach (Panel pnl in flowPanel.Controls)
+                (pnl.Tag as Problem).ApplyToMetadata(pnl);
+            Close();
+        }
     }
 
     public abstract class Problem
@@ -97,6 +104,7 @@ namespace Cinar.DBTools.Tools
 
         public abstract string Fix(Panel p);
         public abstract Panel GetUI();
+        public abstract void ApplyToMetadata(Panel p);
     }
 
     public class PrimaryKeyDoesntExist : Problem
@@ -125,6 +133,16 @@ namespace Cinar.DBTools.Tools
             }
             return "";
         }
+        public override void ApplyToMetadata(Panel p)
+        {
+            ComboBox cb = p.Controls[1] as ComboBox;
+            if (cb.SelectedItem is Column)
+            {
+                Column f = (Column)cb.SelectedItem;
+                var pk = new PrimaryKeyConstraint() { ColumnNames = new List<string>() { f.Name }, Name = "PK_" + Table.Name };
+                f.Table.Constraints.Add(pk);
+            }
+        }
     }
 
     public class PrimaryKeyIsNotAutoIncrement : Problem
@@ -145,6 +163,12 @@ namespace Cinar.DBTools.Tools
             if (cb.Checked)
                 return Provider.Database.GetSQLColumnSetAutoIncrement(Column);
             return "";
+        }
+        public override void ApplyToMetadata(Panel p)
+        {
+            CheckBox cb = p.Controls[1] as CheckBox;
+            if (cb.Checked)
+                Column.IsAutoIncrement = true;
         }
     }
 
@@ -183,6 +207,22 @@ namespace Cinar.DBTools.Tools
                 return sql;
             }
             return "";
+        }
+        public override void ApplyToMetadata(Panel p)
+        {
+            ComboBox cb = p.Controls[1] as ComboBox;
+            if (cb.SelectedItem is Table)
+            {
+                Table = cb.SelectedItem as Table;
+                ForeignKeyConstraint fk = new ForeignKeyConstraint()
+                {
+                    ColumnNames = new List<string>() { Column.Name },
+                    Name = string.Format("FK_{0}_{1}_{2}", Column.Table.Name, Column.Name, Table.Name),
+                    RefConstraintName = Table.Constraints.Find(c => c is PrimaryKeyConstraint).Name,
+                    RefTableName = Table.Name
+                };
+                Column.Table.Constraints.Add(fk);
+            }
         }
     }
 }
