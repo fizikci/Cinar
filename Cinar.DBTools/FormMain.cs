@@ -1542,7 +1542,13 @@ $"},
         private void cmdTableCount(string arg)
         {
             if (!checkConnection()) return;
-            string tableName = treeView.SelectedNode.Name;
+            Table table = SelectedObject as Table;
+            if(table==null)
+            {
+                MessageBox.Show("Please select table first", "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string tableName = table.Name;
             executeSQL("select count(*) AS number_of_rows from [" + tableName + "]");
         }
         CinarWebServer server = null;
@@ -2149,11 +2155,18 @@ $"},
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 var keyWords = Provider.Database.Tables.Select(t => t.Name).ToArray();
-                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.cs", SearchOption.AllDirectories);
+
+                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.cs", SearchOption.AllDirectories).ToList();
+                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.aspx", SearchOption.AllDirectories));
+                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.master", SearchOption.AllDirectories));
+                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.asax", SearchOption.AllDirectories));
+                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.ascx", SearchOption.AllDirectories));
+                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.ashx", SearchOption.AllDirectories));
+                
                 var allMatches = from fn in allFiles
                                  from line in File.ReadLines(fn)
-                                 from kw in keyWords
-                                 where line.ToUpper().Contains(kw.ToUpper()) && (line.ToUpper().Contains("SELECT ") || line.ToUpper().Contains("INSERT ") || line.ToUpper().Contains("UPDATE ") || line.ToUpper().Contains("DELETE "))
+                                 from kw in keyWords                             //   
+                                 where line.ToUpper().Contains(kw.ToUpper()) && (line.ToUpper().Contains("CREATEOBJECTSET") || line.ToUpper().Contains("ENTİTY") || line.ToUpper().Contains("CLASS") || line.ToUpper().Contains("OBJDB") || line.ToUpper().Contains("SELECT ") || line.ToUpper().Contains("İNSERT ") || line.ToUpper().Contains("UPDATE ") || line.ToUpper().Contains("DELETE "))
                                  select new
                                             {
                                                 Keyword = kw,
