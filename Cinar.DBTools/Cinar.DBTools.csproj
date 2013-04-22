@@ -493,6 +493,7 @@
     <None Include="Resources\Method.PNG" />
     <None Include="Resources\Property.PNG" />
     <None Include="Resources\Struct.PNG" />
+    <None Include="Resources\table_edit.png" />
     <Content Include="ToDo.txt" />
     <Content Include="yaprak.ico" />
     <Content Include="_library\ICSharpCode.TextEditor.dll" />

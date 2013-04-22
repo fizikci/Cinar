@@ -23,6 +23,7 @@ using System.Collections;
 using System.Data;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Cinar.Database
 {
@@ -124,9 +125,34 @@ namespace Cinar.Database
         [Description("Another column on a different table which is referenced by this column as tableName.columnName"), Category("Extra Info")]
         public string ReferenceColumnName
         {
-            get { 
+            get
+            {
                 Column referenceColumn = ReferenceColumn;
-                return referenceColumn != null ? referenceColumn.Table.Name + "." + referenceColumn.Name : ""; 
+                return referenceColumn != null ? referenceColumn.Table.Name + "." + referenceColumn.Name : "";
+            }
+            set
+            {
+                if (this.parent == null)
+                    return;
+
+                if (!string.IsNullOrWhiteSpace(value) && value.Contains("."))
+                {
+                    string[] parts = value.Split('.');
+                    if (this.Table.Database.Tables[parts[0]] == null)
+                        throw new Exception("There is no such table as " + parts[0]);
+                    if (this.Table.Database.Tables[parts[0]].Columns[parts[1]] == null)
+                        throw new Exception("There is no such column as " + parts[1]);
+                    Column forCol = this.Table.Database.Tables[parts[0]].Columns[parts[1]];
+
+                    ForeignKeyConstraint fkc = new ForeignKeyConstraint()
+                    {
+                        Name = "fk_" + this.Table.Name + "_" + this.Name + "___" + forCol.Table.Name + "_" + forCol.Name,
+                        RefConstraintName = this.Table.Database.Tables[forCol.Table.Name].Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint).Name,
+                        RefTableName = forCol.Table.Name
+                    };
+                    fkc.ColumnNames.Add(this.Name);
+                    this.Table.Constraints.Add(fkc);
+                }
             }
         }
 

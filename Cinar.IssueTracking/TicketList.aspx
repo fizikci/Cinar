@@ -117,7 +117,7 @@
     </div>
     <h1 style="float:left"><%=query.Name %></h1>
     <div style="float:right">Select Query: <select id="selQuery" onchange="location.href='TicketList.aspx?queryId='+$(this).val();">
-                        <%=CinarContext.Db.ReadList<TicketQuery>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from TicketQuery", query.Id).Select(u => "<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
+                        <%=CinarContext.Db.ReadList<TicketQuery>("select Id, Name, case when Id={0} then 'selected' else '' end as Selected from TicketQuery where InsertUserId={1} or InsertUserId=0;", query.Id, CinarContext.ClientUser.Id).Select(u => "<option value=\"#{Id}\" #{[\"Selected\"]}>#{Name}</option>".EvaluateAsTemplate(u)).StringJoin()%>
                     </select> <a href="#" onclick="filterTickets()">edit</a></div>
     <div style="clear:both"></div>
     <div id="ticketList">

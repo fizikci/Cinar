@@ -71,6 +71,7 @@ namespace Cinar.DBTools
             this.menuDiagramDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTablesShowTableCounts = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableCreate = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableAlter = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableDrop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableCount = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,6 +171,7 @@ namespace Cinar.DBTools
             this.menuToolsCopyTreeData = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCompareDatabases = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsCompareDirectories = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsSearchTableNamesInFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.quickScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptDeleteFromTables = new System.Windows.Forms.ToolStripMenuItem();
@@ -205,7 +207,6 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsSearchTableNamesInFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -428,6 +429,7 @@ namespace Cinar.DBTools
             this.menuDiagramDelete,
             this.menuTablesShowTableCounts,
             this.menuTableCreate,
+            this.menuTableAlter,
             this.menuTableDrop,
             this.menuTableCount,
             this.menuTableOpen,
@@ -444,7 +446,7 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 664);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 708);
             // 
             // menuConShowHiddenConnections
             // 
@@ -630,6 +632,13 @@ namespace Cinar.DBTools
             this.menuTableCreate.Name = "menuTableCreate";
             this.menuTableCreate.Size = new System.Drawing.Size(265, 22);
             this.menuTableCreate.Text = "Create Table...";
+            // 
+            // menuTableAlter
+            // 
+            this.menuTableAlter.Image = global::Cinar.DBTools.SQLResources.table_edit;
+            this.menuTableAlter.Name = "menuTableAlter";
+            this.menuTableAlter.Size = new System.Drawing.Size(265, 22);
+            this.menuTableAlter.Text = "Alter Table...";
             // 
             // menuTableDrop
             // 
@@ -1433,6 +1442,12 @@ namespace Cinar.DBTools
             this.menuToolsCompareDirectories.Size = new System.Drawing.Size(332, 22);
             this.menuToolsCompareDirectories.Text = "Compare Directories...";
             // 
+            // menuToolsSearchTableNamesInFiles
+            // 
+            this.menuToolsSearchTableNamesInFiles.Name = "menuToolsSearchTableNamesInFiles";
+            this.menuToolsSearchTableNamesInFiles.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsSearchTableNamesInFiles.Text = "Search table names in files...";
+            // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
@@ -1724,12 +1739,6 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsSearchTableNamesInFiles
-            // 
-            this.menuToolsSearchTableNamesInFiles.Name = "menuToolsSearchTableNamesInFiles";
-            this.menuToolsSearchTableNamesInFiles.Size = new System.Drawing.Size(332, 22);
-            this.menuToolsSearchTableNamesInFiles.Text = "Search table names in files...";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1954,6 +1963,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuPaste2;
         private System.Windows.Forms.ToolStripMenuItem menuSelectAll2;
         private System.Windows.Forms.ToolStripMenuItem menuToolsSearchTableNamesInFiles;
+        private System.Windows.Forms.ToolStripMenuItem menuTableAlter;
 
     }
 }

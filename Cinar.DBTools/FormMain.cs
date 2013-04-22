@@ -467,7 +467,12 @@ $"},
                      new Command {
                                      Execute = cmdCreateTable,
                                      Trigger = new CommandTrigger{ Control = menuTableCreate},
-                                     IsVisible = ()=> SelectedObject is TableCollection || SelectedObject is Table
+                                     IsVisible = ()=> SelectedObject is TableCollection
+                                 },
+                     new Command {
+                                     Execute = cmdAlterTable,
+                                     Trigger = new CommandTrigger{ Control = menuTableAlter},
+                                     IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
                                      Execute = cmdTableDrop,
@@ -1607,21 +1612,21 @@ $"},
                     tbl = fct.GetCreatedTable();
                     try
                     {
-                        Provider.Database.Tables.Add(tbl);
-
                         if (string.IsNullOrEmpty(tbl.Name))
                             throw new Exception("Enter a valid name for the table.");
                         if (tbl.Columns == null || tbl.Columns.Count == 0)
                             throw new Exception("Add minimum one column to the table.");
+                        if (Provider.Database.Tables[tbl.Name] != null)
+                            throw new Exception("There is already a table named " + tbl.Name);
 
-                        if(!CreateTable(Provider.Database, tbl))
+                        Provider.Database.Tables.Add(tbl);
+                        if (!CreateTable(Provider.Database, tbl))
                             Provider.Database.Tables.Remove(tbl);
                         break;
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Cinar Database Tools");
-                        Provider.Database.Tables.Remove(tbl);
                         fct.DialogResult = DialogResult.None;
                     }
                 }
@@ -1647,6 +1652,113 @@ $"},
                 return true;
             }
             return false;
+        }
+        
+        private void cmdAlterTable(string arg)
+        {
+            FormCreateTable fct = new FormCreateTable();
+            Table tbl = SelectedObject as Table;
+            if (tbl == null) {
+                MessageBox.Show("Select table first", "Cinar Database Tools");
+                return;
+            }
+            fct.SetTable(tbl);
+            while (true)
+            {
+                if (fct.ShowDialog() == DialogResult.OK)
+                {
+                    TableDef tblNew = fct.GetAlteredTable();
+                    try
+                    {
+                        StringBuilder sb = new StringBuilder();
+
+                        foreach (ColumnDef colNew in tblNew.Columns)
+                        {
+                            if (colNew.OriginalColumn == null) {
+                                Column f = new Column()
+                                {
+                                    Name = colNew.Name,
+                                    ColumnTypeOriginal = colNew.ColumnType,
+                                    ColumnType = Provider.Database.StringToDbType(colNew.ColumnType),
+                                    Length = colNew.Length,
+                                    DefaultValue = colNew.DefaultValue,
+                                    IsNullable = colNew.IsNullable,
+                                    IsAutoIncrement = colNew.IsAutoIncrement
+                                };
+                                tbl.Columns.Add(f);
+                                if (colNew.IsPrimaryKey)
+                                {
+                                    PrimaryKeyConstraint k = new PrimaryKeyConstraint();
+                                    tbl.Constraints.Add(k);
+                                    k.ColumnNames.Add(f.Name);
+                                    k.Name = "PK_" + tbl.Name;
+                                }
+                                sb.AppendLine(Provider.Database.GetSQLColumnAdd(tbl.Name, f) + ";");
+                                continue;
+                            }
+                            if (colNew.OriginalColumn.Name != colNew.Name)
+                            {
+                                string oldName = colNew.OriginalColumn.Name;
+                                colNew.OriginalColumn.Name = colNew.Name;
+                                sb.AppendLine(Provider.Database.GetSQLColumnRename(oldName, colNew.OriginalColumn) + ";");
+                            }
+                            if (colNew.OriginalColumn.DefaultValue != colNew.DefaultValue)
+                            {
+                                colNew.OriginalColumn.DefaultValue = colNew.DefaultValue;
+                                sb.AppendLine(Provider.Database.GetSQLColumnChangeDefault(colNew.OriginalColumn) + ";");
+                            }
+                            if (colNew.OriginalColumn.ColumnTypeOriginal != colNew.ColumnType)
+                            {
+                                colNew.OriginalColumn.ColumnTypeOriginal = colNew.ColumnType;
+                                colNew.OriginalColumn.ColumnType = Provider.Database.StringToDbType(colNew.ColumnType);
+                                sb.AppendLine(Provider.Database.GetSQLColumnChangeDataType(colNew.OriginalColumn) + ";");
+                            }
+                        }
+                        List<Column> deletedColumns = new List<Column>();
+                        foreach (Column c in tbl.Columns)
+                            if (!tblNew.Columns.Any(nc => nc.Name == c.Name))
+                                deletedColumns.Add(c);
+                        foreach (Column c in deletedColumns)
+                            sb.AppendLine(Provider.Database.GetSQLColumnRemove(c) + ";");
+
+                        if (tbl.Name != tblNew.Name)
+                        {
+                            sb.AppendLine(Provider.Database.GetSQLTableRename(tbl.Name, tblNew.Name) + ";");
+                            tbl.Name = tblNew.Name;
+                        }
+
+
+                        string sql = sb.ToString();
+                        SQLInputDialog sid = new SQLInputDialog(sql, false);
+                        if (sid.ShowDialog() == DialogResult.OK)
+                        {
+                            Provider.Database.ExecuteNonQuery(sid.SQL);
+                            try
+                            {
+                                findNode(tbl).Remove();
+                                populateTreeNodesFor(null, tbl);
+                                if (ObjectChanged != null)
+                                    ObjectChanged(this, new DbObjectChangedArgs { Object = tbl });
+                            }
+                            catch { }
+                        }
+                        else 
+                        {
+                            tblNew.UndoChanges();
+                        }
+
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        tblNew.UndoChanges();
+                        MessageBox.Show(ex.Message, "Cinar Database Tools");
+                        fct.DialogResult = DialogResult.None;
+                    }
+                }
+                else
+                    break;
+            }
         }
 
         private void cmdGenerateSQL(string arg)

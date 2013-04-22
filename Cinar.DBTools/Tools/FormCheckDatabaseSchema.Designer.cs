@@ -31,6 +31,7 @@
             this.btnFix = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.flowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnApplyToMetadata = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnFix
@@ -61,9 +62,9 @@
             // 
             // flowPanel
             // 
-            this.flowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flowPanel.AutoScroll = true;
             this.flowPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowPanel.Location = new System.Drawing.Point(12, 12);
@@ -71,11 +72,26 @@
             this.flowPanel.Size = new System.Drawing.Size(596, 422);
             this.flowPanel.TabIndex = 5;
             // 
+            // btnApplyToMetadata
+            // 
+            this.btnApplyToMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApplyToMetadata.Location = new System.Drawing.Point(203, 446);
+            this.btnApplyToMetadata.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnApplyToMetadata.Name = "btnApplyToMetadata";
+            this.btnApplyToMetadata.Size = new System.Drawing.Size(145, 26);
+            this.btnApplyToMetadata.TabIndex = 6;
+            this.btnApplyToMetadata.Text = "Apply to Metadata";
+            this.btnApplyToMetadata.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnApplyToMetadata.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnApplyToMetadata.UseVisualStyleBackColor = true;
+            this.btnApplyToMetadata.Click += new System.EventHandler(this.btnApplyToMetadata_Click);
+            // 
             // FormCheckDatabaseSchema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(620, 483);
+            this.Controls.Add(this.btnApplyToMetadata);
             this.Controls.Add(this.flowPanel);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnFix);
@@ -92,5 +108,6 @@
         private System.Windows.Forms.Button btnFix;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.FlowLayoutPanel flowPanel;
+        private System.Windows.Forms.Button btnApplyToMetadata;
     }
 }

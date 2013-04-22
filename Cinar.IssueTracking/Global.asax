@@ -40,6 +40,6 @@
     protected void Application_BeginRequest(object sender, EventArgs e)
     {
         if (CinarContext.Db == null)
-            CinarContext.Db = new Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]), HttpContext.Current.Server.MapPath("images/db.xml"));
+            CinarContext.Db = new Database(ConfigurationManager.AppSettings["sqlConnection"], (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), ConfigurationManager.AppSettings["sqlProvider"]), HttpContext.Current.Server.MapPath("/images/db.xml"));
     }
 </script>

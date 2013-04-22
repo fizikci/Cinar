@@ -117,21 +117,53 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Class" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Class.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SQLCreateFunctionPostgreSQL" xml:space="preserve">
+    <value>CREATE FUNCTION function_name
+  (input_parameter_name datatype, ...)
+RETURNS datatype
+AS $$
+DECLARE
+  variable_name datatype;
+BEGIN
+  /* SQL code */
+END;
+$$ LANGUAGE plpgsql;</value>
   </data>
-  <data name="Interface" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Interface.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SQLCreateViewMySQL" xml:space="preserve">
+    <value>CREATE VIEW &lt;view_name&gt; 
+    AS
+(SELECT * FROM ...);</value>
   </data>
-  <data name="LocalVariable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\LocalVariable.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SQLCreateFunctionMySQL" xml:space="preserve">
+    <value>DELIMITER $$
+
+CREATE FUNCTION &lt;function_name&gt;()
+    RETURNS TYPE
+    BEGIN
+
+    END$$
+
+DELIMITER ;</value>
   </data>
-  <data name="Method" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Method.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Property.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SQLCalculateOptimalDataLength" xml:space="preserve">
+    <value>/*
+This "query by script" calculates optimal data lengths for the (var)char columns.
+To achive this, it finds the max length of the data and compare it to the defined length.
+This is useful to decrease both memory &amp; disk consumption.
+*/
+$
+bool firstUnionSkipped = false;
+foreach(var t in db.Tables)
+	foreach(var f in t.Columns){
+		if(f.IsStringType()==false) continue;
+		if(firstUnionSkipped) echo("UNION");
+		firstUnionSkipped = true;
+		$
+		select '$=t.Name$' as table_name, '$=f.Name$' as column_name, $=f.Length$ as defined_length, max(length($=f.Name$)) as max_length, count(*) as row_count from $=t.Name$
+		$
+	}
+$
+order by table_name, column_name</value>
   </data>
   <data name="SQL" xml:space="preserve">
     <value>&lt;?xml version="1.0"?&gt;
@@ -643,58 +675,34 @@
 	
 &lt;/SyntaxDefinition&gt;</value>
   </data>
-  <data name="SQLCalculateOptimalDataLength" xml:space="preserve">
-    <value>/*
-This "query by script" calculates optimal data lengths for the (var)char columns.
-To achive this, it finds the max length of the data and compare it to the defined length.
-This is useful to decrease both memory &amp; disk consumption.
-*/
-$
-bool firstUnionSkipped = false;
-foreach(var t in db.Tables)
-	foreach(var f in t.Columns){
-		if(f.IsStringType()==false) continue;
-		if(firstUnionSkipped) echo("UNION");
-		firstUnionSkipped = true;
-		$
-		select '$=t.Name$' as table_name, '$=f.Name$' as column_name, $=f.Length$ as defined_length, max(length($=f.Name$)) as max_length, count(*) as row_count from $=t.Name$
-		$
-	}
-$
-order by table_name, column_name</value>
-  </data>
-  <data name="SQLCreateFunctionMySQL" xml:space="preserve">
+  <data name="SQLCreateTriggerMySQL" xml:space="preserve">
     <value>DELIMITER $$
 
-CREATE FUNCTION &lt;function_name&gt;()
-    RETURNS TYPE
-    BEGIN
+CREATE
+    TRIGGER &lt;trigger_name&gt; BEFORE/AFTER INSERT/UPDATE/DELETE
+    ON &lt;table_name&gt;
+    FOR EACH ROW BEGIN
 
     END$$
 
 DELIMITER ;</value>
   </data>
-  <data name="SQLCreateFunctionPostgreSQL" xml:space="preserve">
-    <value>CREATE FUNCTION function_name
-  (input_parameter_name datatype, ...)
-RETURNS datatype
-AS $$
-DECLARE
-  variable_name datatype;
-BEGIN
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Interface" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Interface.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Method" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Method.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LocalVariable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\LocalVariable.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SQLCreateSProcSQLServer" xml:space="preserve">
+    <value>CREATE PROCEDURE nameprocedure
+  (input_parameter_name datatype, ... )
+AS
   /* SQL code */
-END;
-$$ LANGUAGE plpgsql;</value>
-  </data>
-  <data name="SQLCreateSProcMySQL" xml:space="preserve">
-    <value>DELIMITER $$
-
-CREATE PROCEDURE &lt;procedure_name&gt;()
-    BEGIN
-
-    END$$
-
-DELIMITER ;</value>
+GO</value>
   </data>
   <data name="SQLCreateSProcPostgreSQL" xml:space="preserve">
     <value>CREATE FUNCTION function_name
@@ -708,31 +716,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;</value>
   </data>
-  <data name="SQLCreateSProcSQLServer" xml:space="preserve">
-    <value>CREATE PROCEDURE nameprocedure
-  (input_parameter_name datatype, ... )
-AS
-  /* SQL code */
-GO</value>
+  <data name="Class" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Class.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SQLCreateTriggerMySQL" xml:space="preserve">
+  <data name="Struct" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Struct.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SQLCreateSProcMySQL" xml:space="preserve">
     <value>DELIMITER $$
 
-CREATE
-    TRIGGER &lt;trigger_name&gt; BEFORE/AFTER INSERT/UPDATE/DELETE
-    ON &lt;table_name&gt;
-    FOR EACH ROW BEGIN
+CREATE PROCEDURE &lt;procedure_name&gt;()
+    BEGIN
 
     END$$
 
 DELIMITER ;</value>
   </data>
-  <data name="SQLCreateViewMySQL" xml:space="preserve">
-    <value>CREATE VIEW &lt;view_name&gt; 
-    AS
-(SELECT * FROM ...);</value>
+  <data name="Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Property.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Struct" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\Struct.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="table_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\table_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

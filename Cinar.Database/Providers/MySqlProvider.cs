@@ -460,7 +460,7 @@ namespace Cinar.Database.Providers
 
         public string GetSQLColumnRename(string oldColumnName, Column column)
         {
-            return string.Format("ALTER TABLE `{0}` CHANGE `{1}` `{2}` {3}", column.Table.Name, oldColumnName, column.Name, getSimpleColumnDDL(column));
+            return string.Format("ALTER TABLE `{0}` CHANGE `{1}` {2}", column.Table.Name, oldColumnName, getSimpleColumnDDL(column));
         }
 
         public string GetSQLColumnChangeDataType(Column column)
