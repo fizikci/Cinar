@@ -129,7 +129,7 @@ div.bigInput input {
 
 #ticket {
     border:1px solid #D4DCE8;
-    width:50%;
+    width:60%;
     min-width:700px;
     margin-bottom:30px;
     float:left;
@@ -154,7 +154,7 @@ div.controlWithLabel span {
 }
 
 
-#ticketHistory {float:left; width:45%; margin-left:20px;}
+#ticketHistory {float:left; width:35%; margin-left:20px;}
 #ticketHistory .thumb-col {
     background: url("/images/arrow-tickets-changeset.gif") no-repeat scroll right -6px transparent;
     float: left;
