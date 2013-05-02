@@ -363,7 +363,7 @@ namespace Cinar.CMS.Library.Handlers
             string rssItemTemplate = @"
 		                            <item>
 			                            <title>{title}</title>
-			                            <link>http://{SiteAddress}/{link}</link>
+			                            <link>http://{SiteAddress}{link}</link>
 			                            <description>{description}</description>
 			                            <category>{category}</category>
 			                            <logo>http://{SiteAddress}/{image}</logo>

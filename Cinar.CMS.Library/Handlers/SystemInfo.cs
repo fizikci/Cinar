@@ -212,6 +212,9 @@ namespace Cinar.CMS.Library.Handlers
             Configuration conf = Configuration.Read();
             conf.DefaultStyleSheet = context.Request["style"];
             conf.Save();
+
+            File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultStyleSheet.css"), conf.DefaultStyleSheet, Encoding.UTF8);
+
             context.Response.Write("ok.");
         }
 
@@ -224,6 +227,9 @@ namespace Cinar.CMS.Library.Handlers
             Configuration conf = Configuration.Read();
             conf.DefaultJavascript = context.Request["code"];
             conf.Save();
+
+            File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultJavascript.js"), conf.DefaultJavascript, Encoding.UTF8);
+
             context.Response.Write("ok.");
         }
 
