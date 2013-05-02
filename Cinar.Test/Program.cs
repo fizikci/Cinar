@@ -10,7 +10,7 @@ namespace Cinar.Test
         [STAThread]
         static void Main(string[] args)
         {
-            Tutorial_3_CreateTableAtRuntime.Run();
+            //FacebookPostToEglencelik.Run();
 
             Console.WriteLine("\r\n\r\n\r\nBİTTİ");
             Console.ReadLine();
