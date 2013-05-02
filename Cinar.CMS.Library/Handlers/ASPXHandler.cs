@@ -99,9 +99,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 StringBuilder sb = new StringBuilder();
 
-                string title = Provider.Configuration.SiteName;
-                if (Provider.Content != null && Provider.Content.Id != 1)
-                    title += " - " + Provider.Content.Title;
+                string title = ((Provider.Content != null && Provider.Content.Id != 1) ? Provider.Content.Title + " - " : "") + Provider.Configuration.SiteName;
                 sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>\n");
                 sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Description) + " " : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
