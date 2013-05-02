@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Reflection;
+using System.IO;
+using System.Text;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -10,9 +12,33 @@ namespace Cinar.CMS.Library.Handlers
         {
             
         }
+        
+        private static bool HasAppStarted = false;
+        private readonly static object _syncObject = new object();
 
         public void Init(HttpApplication context)
         {
+            if (!HasAppStarted)
+            {
+                lock (_syncObject)
+                {
+                    if (!HasAppStarted)
+                    {
+                        HasAppStarted = true;
+
+                        foreach (string scriptName in new[] { "cinar_cms_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js"})
+                        {
+                            string s = Properties.Resources.ResourceManager.GetString(scriptName);
+                            File.WriteAllText(Provider.Server.MapPath("/_thumbs/"+scriptName.Replace("_",".")), s, Encoding.UTF8);
+                        }
+
+                        File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultJavascript.js"), Provider.Configuration.DefaultJavascript, Encoding.UTF8);
+                        File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultStyleSheet.css"), Provider.Configuration.DefaultStyleSheet, Encoding.UTF8);
+                    }
+                }
+            }
+
+
             context.BeginRequest += new EventHandler(context_BeginRequest);
         }
 

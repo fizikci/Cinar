@@ -635,7 +635,6 @@ namespace Cinar.DBTools
             // 
             // menuTableAlter
             // 
-            this.menuTableAlter.Image = global::Cinar.DBTools.SQLResources.table_edit;
             this.menuTableAlter.Name = "menuTableAlter";
             this.menuTableAlter.Size = new System.Drawing.Size(265, 22);
             this.menuTableAlter.Text = "Alter Table...";

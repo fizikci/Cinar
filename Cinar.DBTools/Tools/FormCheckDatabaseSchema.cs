@@ -50,7 +50,14 @@ namespace Cinar.DBTools.Tools
                         if (f.ReferenceColumn == null)
                         {
                             string tblName = f.Name.Substring(0, f.Name.Length - 2).Trim('_');
-                            p = new PossibleForeignKey() { Column = f, Table = Provider.Database.Tables[tblName] };
+                            if (tblName == "") continue;
+
+                            Table fTbl = Provider.Database.Tables[tblName];
+                            if (fTbl == null && tblName.Length > 1) fTbl = Provider.Database.Tables[tblName.Substring(0, tblName.Length - 1)];
+                            if (fTbl == null && tblName.Length > 2) fTbl = Provider.Database.Tables[tblName.Substring(0, tblName.Length - 2)];
+                            if (fTbl == null) fTbl = Provider.Database.Tables[tblName + "s"];
+                            if (fTbl == null) fTbl = Provider.Database.Tables[tblName + "es"];
+                            p = new PossibleForeignKey() { Column = f, Table = fTbl };
                             Panel pnl = p.GetUI(); pnl.Tag = p;
                             flowPanel.Controls.Add(pnl);
                             p = null;
