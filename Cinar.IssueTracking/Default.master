@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="header">
-<div id="logo">Cinar Issue Tracking</div>
+<div id="logo"><a href="/">Cinar Issue Tracking</a></div>
 <b>to bring you a full tracking pleasure :)</b>
 <%if (CinarContext.ClientUser.Id > 0){ %>
 <div id="userPanel">
