@@ -32,6 +32,9 @@ namespace Cinar.Database
         string ConnectionString { get; }
 
         [XmlIgnore]
+        int DefaultCommandTimeout { get; set; }
+
+        [XmlIgnore]
         DatabaseProvider Provider { get; }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Cinar.Database
         void SetCollectionParents();
         void GenerateUIMetadata();
         void CreateDbProvider(bool createDatabaseIfNotExist);
-        void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout);
+        void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password);
 
         /// <summary>
         /// Veritabanýnda deðiþiklik yapýldýysa (alter table gibi) metadatayý tekrar baþtan okumak için kullanýlan metod.

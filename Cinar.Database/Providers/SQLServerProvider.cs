@@ -271,6 +271,7 @@ namespace Cinar.Database.Providers
 
         public DbDataAdapter CreateDataAdapter(IDbCommand selectCommand)
         {
+            selectCommand.CommandTimeout = db.DefaultCommandTimeout;
             return new SqlDataAdapter((SqlCommand)selectCommand);
         }
 
@@ -295,6 +296,8 @@ namespace Cinar.Database.Providers
                 cmd = new SqlCommand(cmdText, (SqlConnection)this.Connection, (SqlTransaction)transaction);
             else
                 cmd = new SqlCommand(cmdText, (SqlConnection)this.Connection);
+
+            cmd.CommandTimeout = db.DefaultCommandTimeout;
 
             for (int i = 0; i < parameters.Length; i++)
                 cmd.Parameters.AddWithValue("@_param" + i, parameters[i] ?? DBNull.Value);

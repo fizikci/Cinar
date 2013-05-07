@@ -184,6 +184,13 @@ namespace System
 
         }
 
+        public static long CalculateDirectorySize(string path)
+        {
+            long folderSize = 0;
+            FileInfo[] files = new DirectoryInfo(path).GetFiles("*", SearchOption.AllDirectories);
+            foreach (FileInfo file in files) folderSize += file.Length;
+            return folderSize;
+        }
 
         private static ImageCodecInfo _jpegCodec;
         private static ImageCodecInfo jpegCodec
@@ -1695,6 +1702,19 @@ namespace System
             return (strResult);
         }
 
+        public static string MD5(this string str)
+        {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+
+            byte[] btr = Encoding.UTF8.GetBytes(str);
+            btr = md5.ComputeHash(btr);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (byte ba in btr)
+                sb.Append(ba.ToString("x2").ToLower());
+
+            return sb.ToString();
+        }
 
         public static void CopyTo(this Stream input, Stream output)
         {

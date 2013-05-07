@@ -91,7 +91,7 @@ namespace Cinar.Extensions
                 {
                     using (Stream output = request.GetRequestStream())
                     {
-                        sourceStream.CopyTo(output, 100*1024*1024);
+                        sourceStream.CopyTo(output, 1*1024*1024);
                     }
                 }
 
