@@ -256,13 +256,16 @@ namespace Cinar.Database
             }
         }
 
+        public int DefaultCommandTimeout { get; set; }
+
         public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = false)
         {
-            SetConnectionString(provider, host, dbName, userName, password, defaultCommandTimeout);
+            this.DefaultCommandTimeout = defaultCommandTimeout == 0 ? 100 : defaultCommandTimeout;
+            SetConnectionString(provider, host, dbName, userName, password);
             createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist);
         }
 
-        public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout)
+        public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password)
         {
             this.host = host;
             this.provider = provider;
@@ -273,9 +276,8 @@ namespace Cinar.Database
                                                           host, dbName, userName, password).Replace("Database=;", "");
                     break;
                 case DatabaseProvider.MySQL:
-                    if (defaultCommandTimeout == 0) defaultCommandTimeout = 20;
                     this.connectionString = String.Format("Server={0};Database={1};Uid={2};Pwd={3};old syntax=yes;charset=utf8;default command timeout={4};",
-                                                          host, dbName, userName, password, defaultCommandTimeout).Replace("Database=;", "");
+                                                          host, dbName, userName, password, DefaultCommandTimeout).Replace("Database=;", "");
                     break;
                 case DatabaseProvider.SQLServer:
                     this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",
@@ -286,7 +288,7 @@ namespace Cinar.Database
                     break;
                 case DatabaseProvider.SQLite:
                     this.connectionString = String.Format("Data Source={1};Version=3;{3}",
-                        host, dbName, userName, string.IsNullOrWhiteSpace(password) ? "" : ("Password=" + password + ";"), defaultCommandTimeout).Replace("Data Source=;", "");
+                        host, dbName, userName, string.IsNullOrWhiteSpace(password) ? "" : ("Password=" + password + ";"), DefaultCommandTimeout).Replace("Data Source=;", "");
                     break;
                 default:
                     throw new ApplicationException("It is not that much provided.");
