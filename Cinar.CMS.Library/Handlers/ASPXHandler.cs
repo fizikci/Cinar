@@ -8,6 +8,7 @@ using System.Web.SessionState;
 using System.Diagnostics;
 using Cinar.CMS.Library.Modules;
 using Cinar.Scripting;
+using Cinar.CMS.Library.Entities;
 
 
 namespace Cinar.CMS.Library.Handlers
@@ -322,8 +323,8 @@ namespace Cinar.CMS.Library.Handlers
                 Provider.Response.Write("<!-- All modules afterShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             // bu hiti kaydedelim
-            //if (Provider.Request.Browser!=null && !Provider.Request.Browser.Crawler)
-            //    new Hit().Save();
+            if (Provider.Configuration.LogHit && Provider.Request.Browser!=null && !Provider.Request.Browser.Crawler)
+                new Hit().Save();
 
             stopWatch.Stop();
 
