@@ -1,8 +1,10 @@
-﻿using Cinar.Database;
+﻿using System;
+using System.Web;
+using Cinar.Database;
 
 namespace Cinar.CMS.Library.Entities
 {
-    public class Hit : BaseEntity
+    public class Hit : SimpleBaseEntity
     {
         private int contentId = 0;
         //[ColumnDetail(IsNotNull = true, References = typeof(Content))]
@@ -15,6 +17,27 @@ namespace Cinar.CMS.Library.Entities
                 return contentId;
             }
             set { contentId = value; }
+        }
+
+        private long clientId;
+        public long ClientId
+        {
+            get
+            {
+                if (this.Id == 0)
+                {
+                    if (Provider.Request.Cookies["clientId"] == null) {
+                        this.clientId = DateTime.Now.Ticks - 635038044000000000; // başlangıç tarihi 10 Mayıs 2013 olsun, fazla haneye gerek yok.
+                        HttpCookie cookie = new HttpCookie("clientId", this.clientId.ToString());
+                        cookie.Expires = DateTime.Now.AddYears(10);
+                        Provider.Response.Cookies.Add(cookie);
+                        return clientId;
+                    }
+                    this.clientId = long.Parse(Provider.Request.Cookies["clientId"].Value);
+                }
+                return clientId;
+            }
+            set { clientId = value; }
         }
 
         private string browser;
@@ -66,23 +89,5 @@ namespace Cinar.CMS.Library.Entities
                     urlReferrer = value; 
             }
         }
-
-        private string url;
-        [ColumnDetail(Length = 200)]
-        public string Url
-        {
-            get
-            {
-                if (this.Id == 0) this.url = Provider.Request.RawUrl;
-                return url;
-            }
-            set {
-                if (value != null && value.Length > 200)
-                    url = value.Substring(0, 200);
-                else
-                    url = value;
-            }
-        }
-
     }
 }
