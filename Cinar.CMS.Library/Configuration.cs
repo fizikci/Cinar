@@ -94,6 +94,9 @@ namespace Cinar.CMS.Library
             set { defaultLang = value; }
         }
 
+        [EditFormFieldProps(OrderNo = 11, Category = "Uygulama Ayarları")]
+        public bool LogHit { get; set; }
+
         private string defaultStyleSheet = "";
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
         public string DefaultStyleSheet
