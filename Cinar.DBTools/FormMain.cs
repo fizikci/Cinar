@@ -290,6 +290,14 @@ foreach(column in db.Tables[""TABLE_NAME""].Columns)
     echo(column.Name + ""\r\n"");
 $"},
                                          new CommandTrigger{ Control = menuToolsQScriptCalculateOptDataLen, Argument=SQLResources.SQLCalculateOptimalDataLength},
+                                         new CommandTrigger{ Control = menuToolsQScriptSPHelpText, Argument=@"$
+foreach(var t in db.Tables)
+	if(t.IsView){
+		foreach(var dr in db.GetDataTable(""sp_helptext '""+t.Name+""'"").Rows)
+			echo(dr[0]);
+		echo(""GO\r\n\r\n\r\n"");
+	}
+$"}
                                      }
                                  },
                     #endregion

@@ -35,7 +35,8 @@ namespace Cinar.DBTools
             }
             else
             {
-                Database.SetConnectionString(Provider, Host, DbName, UserName, Password, TIMEOUT);
+                Database.DefaultCommandTimeout = TIMEOUT;
+                Database.SetConnectionString(Provider, Host, DbName, UserName, Password);
                 Database.SetCollectionParents();
                 Database.CreateDbProvider(false);
             }
