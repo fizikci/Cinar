@@ -143,6 +143,7 @@
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lbTables.Size = new System.Drawing.Size(312, 349);
+            this.lbTables.Sorted = true;
             this.lbTables.TabIndex = 7;
             // 
             // cbTransferData

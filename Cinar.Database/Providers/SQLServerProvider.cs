@@ -87,7 +87,7 @@ namespace Cinar.Database.Providers
             DataTable dtTables = db.GetDataTable(GetSQLTableList());
             foreach (DataRow drTable in dtTables.Rows)
             {
-                if (drTable["TABLE_TYPE"].ToString() == "VIEW") continue;
+                //if (drTable["TABLE_TYPE"].ToString() == "VIEW") continue;
 
                 Table tbl = new Table();
                 tbl.Name = drTable["TABLE_NAME"].ToString();

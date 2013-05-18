@@ -32,7 +32,7 @@ namespace Cinar.DBTools
             else
             {
                 Database.Database db = new Database.Database();
-                db.SetConnectionString(provider, txtHost.Text, null, txtUserName.Text, txtPassword.Text, 30);
+                db.SetConnectionString(provider, txtHost.Text, null, txtUserName.Text, txtPassword.Text);
                 db.CreateDbProvider(false);
 
                 ListBoxDialog lbd = new ListBoxDialog();
