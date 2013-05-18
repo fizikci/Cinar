@@ -506,6 +506,20 @@ $"}
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
+                                     Execute = (string arg)=>{
+                                         Table tbl = SelectedObject as Table;
+                                         string res = "";
+                                         foreach (Table t in tbl.ReferencedByTables)
+                                             res += t.Name + ", ";
+                                         res = res.Trim().Trim(',');
+                                         if (res.Trim() == "")
+                                             res = "No reference.";
+                                         MessageBox.Show(res);
+                                     },
+                                     Trigger = new CommandTrigger{ Control = menuTableFindReferences},
+                                     IsVisible = ()=> SelectedObject is Table
+                                 },
+                     new Command {
                                      Execute = cmdGenerateSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuTableGenerateSQL, Argument="-"},

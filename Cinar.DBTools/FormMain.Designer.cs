@@ -179,6 +179,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptForEachTable = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptForEachColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptCalculateOptDataLen = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptSPHelpText = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -207,7 +208,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsQScriptSPHelpText = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableFindReferences = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -247,11 +248,11 @@ namespace Cinar.DBTools
             this.toolStripContainer1.ContentPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("toolStripContainer1.ContentPanel.BackgroundImage")));
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainerProperties);
             this.toolStripContainer1.ContentPanel.Padding = new System.Windows.Forms.Padding(4);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1030, 604);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1030, 758);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1030, 676);
+            this.toolStripContainer1.Size = new System.Drawing.Size(1030, 830);
             this.toolStripContainer1.TabIndex = 2;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -337,7 +338,7 @@ namespace Cinar.DBTools
             this.splitContainerProperties.Panel2.BackColor = System.Drawing.Color.Transparent;
             this.splitContainerProperties.Panel2.Controls.Add(this.splitContainer1);
             this.splitContainerProperties.Panel2MinSize = 22;
-            this.splitContainerProperties.Size = new System.Drawing.Size(1022, 596);
+            this.splitContainerProperties.Size = new System.Drawing.Size(1022, 750);
             this.splitContainerProperties.SplitterDistance = 813;
             this.splitContainerProperties.TabIndex = 1;
             // 
@@ -359,7 +360,7 @@ namespace Cinar.DBTools
             // 
             this.splitContainerMain.Panel2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("splitContainerMain.Panel2.BackgroundImage")));
             this.splitContainerMain.Panel2.Controls.Add(this.tabControlEditors);
-            this.splitContainerMain.Size = new System.Drawing.Size(813, 596);
+            this.splitContainerMain.Size = new System.Drawing.Size(813, 750);
             this.splitContainerMain.SplitterDistance = 199;
             this.splitContainerMain.TabIndex = 0;
             // 
@@ -405,7 +406,7 @@ namespace Cinar.DBTools
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
             this.treeView.ShowLines = false;
-            this.treeView.Size = new System.Drawing.Size(199, 579);
+            this.treeView.Size = new System.Drawing.Size(199, 733);
             this.treeView.TabIndex = 0;
             this.treeView.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_ItemDrag);
             this.treeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseDoubleClick);
@@ -445,9 +446,10 @@ namespace Cinar.DBTools
             this.menuShowUIMetadata,
             this.menuIndexCreateIndex,
             this.menuIndexEditIndex,
-            this.menuIndexDropIndex});
+            this.menuIndexDropIndex,
+            this.menuTableFindReferences});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 686);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 730);
             // 
             // menuConShowHiddenConnections
             // 
@@ -804,7 +806,7 @@ namespace Cinar.DBTools
             this.tabControlEditors.Padding = new System.Drawing.Point(0, 0);
             this.tabControlEditors.SelectedIndex = 0;
             this.tabControlEditors.ShowToolTips = true;
-            this.tabControlEditors.Size = new System.Drawing.Size(612, 598);
+            this.tabControlEditors.Size = new System.Drawing.Size(612, 752);
             this.tabControlEditors.TabIndex = 1;
             // 
             // menuStripEditorTabs
@@ -944,8 +946,8 @@ namespace Cinar.DBTools
             // 
             this.splitContainer1.Panel2.Controls.Add(this.treeCodeGen);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(205, 596);
-            this.splitContainer1.SplitterDistance = 249;
+            this.splitContainer1.Size = new System.Drawing.Size(205, 750);
+            this.splitContainer1.SplitterDistance = 313;
             this.splitContainer1.TabIndex = 5;
             // 
             // propertyGrid
@@ -955,7 +957,7 @@ namespace Cinar.DBTools
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid.Location = new System.Drawing.Point(0, 21);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(202, 228);
+            this.propertyGrid.Size = new System.Drawing.Size(202, 292);
             this.propertyGrid.TabIndex = 3;
             this.propertyGrid.ToolbarVisible = false;
             this.propertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid_PropertyValueChanged);
@@ -1004,7 +1006,7 @@ namespace Cinar.DBTools
             this.treeCodeGen.Name = "treeCodeGen";
             this.treeCodeGen.SelectedImageIndex = 0;
             this.treeCodeGen.ShowLines = false;
-            this.treeCodeGen.Size = new System.Drawing.Size(202, 323);
+            this.treeCodeGen.Size = new System.Drawing.Size(202, 413);
             this.treeCodeGen.TabIndex = 7;
             this.treeCodeGen.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeCodeGen_MouseDown);
             // 
@@ -1497,6 +1499,12 @@ namespace Cinar.DBTools
             this.menuToolsQScriptCalculateOptDataLen.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptCalculateOptDataLen.Text = "Calculate Optimal Data Lengths";
             // 
+            // menuToolsQScriptSPHelpText
+            // 
+            this.menuToolsQScriptSPHelpText.Name = "menuToolsQScriptSPHelpText";
+            this.menuToolsQScriptSPHelpText.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSPHelpText.Text = "sp_help_text";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1739,17 +1747,17 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsQScriptSPHelpText
+            // menuTableFindReferences
             // 
-            this.menuToolsQScriptSPHelpText.Name = "menuToolsQScriptSPHelpText";
-            this.menuToolsQScriptSPHelpText.Size = new System.Drawing.Size(258, 22);
-            this.menuToolsQScriptSPHelpText.Text = "sp_help_text";
+            this.menuTableFindReferences.Name = "menuTableFindReferences";
+            this.menuTableFindReferences.Size = new System.Drawing.Size(265, 22);
+            this.menuTableFindReferences.Text = "Find References...";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1030, 676);
+            this.ClientSize = new System.Drawing.Size(1030, 830);
             this.Controls.Add(this.toolStripContainer1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1971,6 +1979,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuToolsSearchTableNamesInFiles;
         private System.Windows.Forms.ToolStripMenuItem menuTableAlter;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSPHelpText;
+        private System.Windows.Forms.ToolStripMenuItem menuTableFindReferences;
 
     }
 }
