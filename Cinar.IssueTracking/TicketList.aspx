@@ -53,6 +53,7 @@
         if (projectId > 0)
             query.ValProjectId = projectId;
     }
+    
     bool rowEven = false;
 
     private string getTd(Ticket ticket, string fieldName)
@@ -131,7 +132,7 @@
             distinctGroupBy = list.Select(t => t.GetMemberValue(query.GroupByField) ?? "").Select(t=>t.ToString()).Distinct().ToList();
             showFields = showFields.Replace("," + query.GroupByField, "").Replace(query.GroupByField + ",", "");
         }
-
+        
         foreach(var groupByValue in distinctGroupBy.OrderBy(x=>x))
     {
         List<Ticket> groupList = list;
@@ -154,6 +155,7 @@
             <%} %>
         </table>
     <% } %>
+        <p align="right"><br />Total Hours: <%=(decimal)list.Sum(t=>t.RealMinutes)/60 %></p>
     </div>
     <div id="editTicketQuery" style="display:none" title="Filter Tickets">
         <form id="f1" action="TicketList.aspx" method="post">
