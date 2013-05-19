@@ -144,10 +144,21 @@ namespace Cinar.Database
                         throw new Exception("There is no such column as " + parts[1]);
                     Column forCol = this.Table.Database.Tables[parts[0]].Columns[parts[1]];
 
+                    var refCons = this.Table.Database.Tables[forCol.Table.Name].Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint);
+                    if (refCons == null) {
+                        var index = this.Table.Database.Tables[forCol.Table.Name].Indices.FirstOrDefault(i => i.Name == "PRIMARY");
+                        PrimaryKeyConstraint pkc = new PrimaryKeyConstraint { 
+                            Name = index.Name,
+                            ColumnNames = index.ColumnNames
+                        };
+                        this.Table.Database.Tables[forCol.Table.Name].Constraints.Add(pkc);
+                        refCons = pkc;
+                    }
+
                     ForeignKeyConstraint fkc = new ForeignKeyConstraint()
                     {
                         Name = "fk_" + this.Table.Name + "_" + this.Name + "___" + forCol.Table.Name + "_" + forCol.Name,
-                        RefConstraintName = this.Table.Database.Tables[forCol.Table.Name].Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint).Name,
+                        RefConstraintName = refCons.Name,
                         RefTableName = forCol.Table.Name
                     };
                     fkc.ColumnNames.Add(this.Name);
