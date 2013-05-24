@@ -273,7 +273,8 @@ namespace Cinar.DBTools.Controls
             try
             {
                 gridShowTable.RowNumberOffset = pageNo * pageSize;
-                gridShowTable.DataSource = Provider.Database.GetDataTableFor(ShowTable.Name, fExp);
+                DataTable dt = Provider.Database.GetDataTableFor(ShowTable.Name, fExp);
+                gridShowTable.DataSource = dt;
 
                 for (int i = 0; i < gridShowTable.Columns.Count; i++)
                     gridShowTable.Columns[i].SortMode = DataGridViewColumnSortMode.Programmatic;

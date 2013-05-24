@@ -10,6 +10,7 @@ namespace Cinar.DBTools.Controls
     {
         public MyDataGrid()
         {
+            DoubleBuffered = true;
             CausesValidation = false;
             RowTemplate.Height = 18;
         }
@@ -31,5 +32,6 @@ namespace Cinar.DBTools.Controls
 
             base.OnRowPostPaint(e);
         }
+
     }
 }
