@@ -10,6 +10,8 @@ namespace Cinar.DBTools.Controls
     {
         public MyDataGrid()
         {
+            CausesValidation = false;
+            RowTemplate.Height = 18;
         }
 
         public int RowNumberOffset { get; set; }
