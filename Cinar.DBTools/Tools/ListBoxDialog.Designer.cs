@@ -32,23 +32,28 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.cbSelectionOptions = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lbTables
             // 
+            this.lbTables.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbTables.FormattingEnabled = true;
             this.lbTables.ItemHeight = 15;
-            this.lbTables.Location = new System.Drawing.Point(15, 30);
+            this.lbTables.Location = new System.Drawing.Point(15, 46);
             this.lbTables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbTables.Name = "lbTables";
             this.lbTables.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbTables.Size = new System.Drawing.Size(311, 229);
+            this.lbTables.Size = new System.Drawing.Size(546, 334);
             this.lbTables.TabIndex = 1;
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(147, 266);
+            this.btnOK.Location = new System.Drawing.Point(382, 387);
             this.btnOK.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(87, 26);
@@ -58,8 +63,9 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(241, 266);
+            this.button1.Location = new System.Drawing.Point(476, 387);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(87, 26);
@@ -70,17 +76,29 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 8);
+            this.label1.Location = new System.Drawing.Point(15, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(141, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select one or more items:";
             // 
+            // cbSelectionOptions
+            // 
+            this.cbSelectionOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbSelectionOptions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSelectionOptions.FormattingEnabled = true;
+            this.cbSelectionOptions.Location = new System.Drawing.Point(315, 18);
+            this.cbSelectionOptions.Name = "cbSelectionOptions";
+            this.cbSelectionOptions.Size = new System.Drawing.Size(245, 23);
+            this.cbSelectionOptions.TabIndex = 4;
+            this.cbSelectionOptions.SelectedIndexChanged += new System.EventHandler(this.cbSelectionOptions_SelectedIndexChanged);
+            // 
             // ListBoxDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(341, 304);
+            this.ClientSize = new System.Drawing.Size(576, 426);
+            this.Controls.Add(this.cbSelectionOptions);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnOK);
@@ -101,5 +119,6 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbSelectionOptions;
     }
 }
