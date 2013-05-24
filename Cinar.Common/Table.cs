@@ -137,7 +137,7 @@ namespace Cinar.Database
             }
         }
 
-        private TableCollection referenceTables;
+        //private TableCollection referenceTables;
         /// <summary>
         /// Bu tablonun columnlarının bağımlı olduğu tabloların listesi.
         /// Dolayısıyla bu tabloya ait bir kayıt, bu özellik tarafından listelenen tablolardaki ilişkili kayıtların child'ı olmuş olur.
@@ -147,17 +147,17 @@ namespace Cinar.Database
         {
             get
             {
-                if (referenceTables == null)
-                {
-                    referenceTables = new TableCollection(this.parent.db);
+                //if (referenceTables == null)
+                //{
+                    TableCollection referenceTables = new TableCollection(this.parent.db);
                     foreach (ForeignKeyConstraint fk in this.Constraints.Where(c=>c is ForeignKeyConstraint))
                         referenceTables.Add(fk.Table);
-                }
+                //}
                 return referenceTables;
             }
         }
 
-        private TableCollection referencedByTables;
+        //private TableCollection referencedByTables;
         /// <summary>
         /// Bu tabloya bağımlı başka tablolardaki columnlar.
         /// </summary>
@@ -166,14 +166,14 @@ namespace Cinar.Database
         {
             get
             {
-                if (referencedByTables == null)
-                {
-                    referencedByTables = new TableCollection(this.Database);
+                //if (referencedByTables == null)
+                //{
+                    TableCollection referencedByTables = new TableCollection(this.Database);
                     foreach (Table tbl in this.Database.Tables)
                         foreach (ForeignKeyConstraint fk in tbl.Constraints.Where(c => c is ForeignKeyConstraint))
                             if (fk.RefTableName == this.Name)
                                 referencedByTables.Add(fk.Table);
-                }
+                //}
                 return referencedByTables;
             }
         }

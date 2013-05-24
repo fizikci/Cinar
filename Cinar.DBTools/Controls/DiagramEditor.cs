@@ -132,6 +132,10 @@ namespace Cinar.DBTools.Controls
         {
             ListBoxDialog std = new ListBoxDialog();
             std.StartPosition = FormStartPosition.CenterScreen;
+            std.AutoSelectOptions.Add("Only referenced tables", (object tbl) => { 
+                    Table table = tbl as Table;
+                    return table.ReferencedByTables.Count>0 || table.ReferenceTables.Count>0;
+            });
             foreach (var item in conn.Database.Tables.OrderBy(t=>t.Name))
                 std.ListBox.Items.Add(item);
             if (std.ShowDialog() == DialogResult.OK)
@@ -351,6 +355,11 @@ namespace Cinar.DBTools.Controls
         private void cmdAddTables(string arg)
         {
             ListBoxDialog std = new ListBoxDialog();
+            std.AutoSelectOptions.Add("Only referenced tables", (object tbl) =>
+            {
+                Table table = tbl as Table;
+                return table.ReferencedByTables.Count > 0 || table.ReferenceTables.Count > 0;
+            });
             foreach (var item in conn.Database.Tables.Except(CurrentSchema.Tables.Select<TableView, Table>(tv => conn.Database.Tables[tv.TableName])).OrderBy(t => t.Name))
                 std.ListBox.Items.Add(item);
             if (std.ShowDialog() == DialogResult.OK)
