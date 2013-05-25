@@ -124,6 +124,9 @@ namespace Cinar.Database
         {
             get
             {
+                if(this.Columns["Name"]!=null)
+                    return this.Columns["Name"];
+
                 if (String.IsNullOrEmpty(stringColumnName))
                 {
                     Column res = this.Columns.Find(DbType.VarChar);
