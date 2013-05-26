@@ -225,7 +225,7 @@ namespace Cinar.DBTools.Tools
                 {
                     ColumnNames = new List<string>() { Column.Name },
                     Name = string.Format("FK_{0}_{1}_{2}", Column.Table.Name, Column.Name, Table.Name),
-                    RefConstraintName = Table.Constraints.Find(c => c is PrimaryKeyConstraint).Name,
+                    RefConstraintName = Table.GetPrimaryKeyConstraint().Name,
                     RefTableName = Table.Name
                 };
                 Column.Table.Constraints.Add(fk);

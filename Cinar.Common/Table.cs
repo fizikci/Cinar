@@ -361,6 +361,23 @@ namespace Cinar.Database
 
         [Description("The definitions for this table to be used generating of UI code"), Category("Extra Info")]
         public TableUIMetadata UIMetadata { get; set; }
+
+        public Constraint GetPrimaryKeyConstraint()
+        {
+            var refCons = this.Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint);
+            if (refCons == null)
+            {
+                var index = this.Indices.FirstOrDefault(i => i.Name == "PRIMARY");
+                PrimaryKeyConstraint pkc = new PrimaryKeyConstraint
+                {
+                    Name = index.Name,
+                    ColumnNames = index.ColumnNames
+                };
+                this.Constraints.Add(pkc);
+                refCons = pkc;
+            }
+            return refCons;
+        }
     }
 
     [Serializable]
