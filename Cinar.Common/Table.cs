@@ -154,7 +154,7 @@ namespace Cinar.Database
                 //{
                     TableCollection referenceTables = new TableCollection(this.parent.db);
                     foreach (ForeignKeyConstraint fk in this.Constraints.Where(c=>c is ForeignKeyConstraint))
-                        referenceTables.Add(fk.Table);
+                        referenceTables.Add(this.Database.Tables[fk.RefTableName]);
                 //}
                 return referenceTables;
             }

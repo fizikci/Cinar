@@ -512,6 +512,11 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
             return db.GetString("sp_helptext '" + view.Name + "';");
         }
 
+        public string GetSQLDateYearMonthPart(string columnName)
+        {
+            return string.Format("CONVERT(VARCHAR(7), [{0}], 102)", columnName);
+        }
+
         #endregion
     }
 }

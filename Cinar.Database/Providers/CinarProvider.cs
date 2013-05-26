@@ -470,6 +470,10 @@ namespace Cinar.Database.Providers
         {
             throw new NotImplementedException();
         }
+        public string GetSQLDateYearMonthPart(string columnName)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

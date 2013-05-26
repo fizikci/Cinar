@@ -30,7 +30,7 @@ namespace Cinar.DBTools.Controls
             {
                 CurrentSchema = new Diagram();
                 CurrentSchema.conn = conn;
-                CurrentSchema.Name = "";
+                CurrentSchema.Name = "New diagram";
             }
 
             cmdMan.Commands = new CommandCollection(){
@@ -97,7 +97,16 @@ namespace Cinar.DBTools.Controls
 
         protected override void OnDoubleClick(EventArgs e)
         {
-            cmdAddTables(null);
+            TableView tv = CurrentSchema.HitTestTable(downPos);
+            if (tv != null)
+            {
+                tv.ShowFull = !tv.ShowFull;
+            }
+            else
+            {
+                cmdAddTables(null);
+            }
+            this.Invalidate();
         }
 
         void MainForm_ObjectChanged(object sender, DbObjectChangedArgs e)
@@ -159,11 +168,11 @@ namespace Cinar.DBTools.Controls
 
         private void createNewSchema(List<Table> tables)
         {
-            addTablesToSchema(tables, true);
+            AddTablesToSchema(tables, true);
             arrangeTables(true);
-            correctConnectionLinesPositions(CurrentSchema.Tables);
+            CurrentSchema.correctConnectionLinesPositions(CurrentSchema.Tables);
         }
-        private void addTablesToSchema(List<Table> tables, bool circularLayout, int left = 10, int top = 10)
+        public void AddTablesToSchema(List<Table> tables, bool circularLayout, int left = 10, int top = 10)
         {
             for (int i = 0; i < tables.Count; i++)
             {
@@ -232,25 +241,6 @@ namespace Cinar.DBTools.Controls
                 if (size.Height > this.MinimumSize.Height)
                     this.Size = new Size(this.Size.Width, size.Height);
             }
-        }
-        private void correctConnectionLinesPositions(List<TableView> tables)
-        {
-            tables
-                .ForEach(tv =>
-                        CurrentSchema.ConnectionLines
-                            .FindAll(cl => cl.FromTable == tv.TableName || cl.ToTable == tv.TableName)
-                                .ForEach(correctConnectionLinePosition));
-        }
-        private void correctConnectionLinePosition(ConnectionLine cl)
-        {
-            TableView tv1 = CurrentSchema.GetTableView(cl.FromTable);
-            TableView tv2 = CurrentSchema.GetTableView(cl.ToTable);
-            if (tv1 == null || tv2 == null)
-                return;
-
-            Pair<Point> pair = tv1.Rectangle.FindClosestSideCenters(tv2.Rectangle);
-            cl.StartPoint = pair.First;
-            cl.EndPoint = pair.Second;
         }
 
         private void panelPaint(bool cls)
@@ -321,7 +311,7 @@ namespace Cinar.DBTools.Controls
                 {
                     TableView tv = CurrentSchema.SelectedObject as TableView;
                     tv.Position = e.Location - dragDelta;
-                    correctConnectionLinesPositions(new List<TableView> { tv });
+                    CurrentSchema.correctConnectionLinesPositions(new List<TableView> { tv });
                     correctPanelSize();
                     panelPaint(false);
                     modified = true;
@@ -346,7 +336,7 @@ namespace Cinar.DBTools.Controls
             {
                 TableView tv = CurrentSchema.SelectedObject as TableView;
                 tv.ShowFull = !tv.ShowFull;
-                correctConnectionLinesPositions(new List<TableView> { tv });
+                CurrentSchema.correctConnectionLinesPositions(new List<TableView> { tv });
                 correctPanelSize();
                 panelPaint(false);
                 modified = true;
@@ -364,7 +354,7 @@ namespace Cinar.DBTools.Controls
                 std.ListBox.Items.Add(item);
             if (std.ShowDialog() == DialogResult.OK)
             {
-                addTablesToSchema(std.GetSelectedItems<Table>(), false);
+                AddTablesToSchema(std.GetSelectedItems<Table>(), false);
                 modified = true;
                 refreshAll();
             }
@@ -422,7 +412,7 @@ namespace Cinar.DBTools.Controls
                     CurrentSchema.ConnectionLines.RemoveAll(cl => cl.FromTable == tv.TableName || cl.ToTable == tv.TableName);
 
                     CurrentSchema.SelectedObject = null;
-                    correctConnectionLinesPositions(new List<TableView> { tv });
+                    CurrentSchema.correctConnectionLinesPositions(new List<TableView> { tv });
                 }
             }
 
@@ -457,7 +447,7 @@ namespace Cinar.DBTools.Controls
         private void refreshAll()
         {
             correctPanelSize();
-            correctConnectionLinesPositions(CurrentSchema.Tables);
+            CurrentSchema.correctConnectionLinesPositions(CurrentSchema.Tables);
             panelPaint(true);
         }
 
@@ -524,7 +514,7 @@ namespace Cinar.DBTools.Controls
             {
                 Point pos = this.PointToClient(new Point(e.X, e.Y));
                 if (table.Database == conn.Database)
-                    addTablesToSchema(new List<Table>() { table }, false, pos.X, pos.Y);
+                    AddTablesToSchema(new List<Table>() { table }, false, pos.X, pos.Y);
                 else
                 {
                     Table newTable = null;
@@ -537,7 +527,7 @@ namespace Cinar.DBTools.Controls
                         newTable.Constraints.RemoveAll(c => c is ForeignKeyConstraint);
 
                         if(MainForm.CreateTable(conn.Database, newTable))
-                            addTablesToSchema(new List<Table>() { newTable }, false, pos.X, pos.Y);
+                            AddTablesToSchema(new List<Table>() { newTable }, false, pos.X, pos.Y);
                         else
                             conn.Database.Tables.Remove(newTable);
                     }
