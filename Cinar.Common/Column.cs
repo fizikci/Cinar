@@ -143,17 +143,9 @@ namespace Cinar.Database
                     if (this.Table.Database.Tables[parts[0]].Columns[parts[1]] == null)
                         throw new Exception("There is no such column as " + parts[1]);
                     Column forCol = this.Table.Database.Tables[parts[0]].Columns[parts[1]];
+                    Table tbl = this.Table.Database.Tables[forCol.Table.Name];
 
-                    var refCons = this.Table.Database.Tables[forCol.Table.Name].Constraints.FirstOrDefault(c => c is PrimaryKeyConstraint);
-                    if (refCons == null) {
-                        var index = this.Table.Database.Tables[forCol.Table.Name].Indices.FirstOrDefault(i => i.Name == "PRIMARY");
-                        PrimaryKeyConstraint pkc = new PrimaryKeyConstraint { 
-                            Name = index.Name,
-                            ColumnNames = index.ColumnNames
-                        };
-                        this.Table.Database.Tables[forCol.Table.Name].Constraints.Add(pkc);
-                        refCons = pkc;
-                    }
+                    var refCons = getPrimaryKeyConstraintFor(tbl);
 
                     ForeignKeyConstraint fkc = new ForeignKeyConstraint()
                     {
@@ -165,6 +157,11 @@ namespace Cinar.Database
                     this.Table.Constraints.Add(fkc);
                 }
             }
+        }
+
+        private Constraint getPrimaryKeyConstraintFor(Table tbl)
+        {
+            return tbl.GetPrimaryKeyConstraint();
         }
 
 
