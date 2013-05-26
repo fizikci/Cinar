@@ -67,6 +67,7 @@ namespace Cinar.Database
         string GetSQLIndexAdd(Index index);
         string GetSQLIndexRemove(Index index);
         string GetSQLViewCreate(Table view);
+        string GetSQLDateYearMonthPart(string columnName);
 
         bool CreatedNow { get; set; }
     }

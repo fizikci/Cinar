@@ -560,6 +560,11 @@ END;", column.Table.Name, column.Name);
             return "CREATE VIEW \"" + view.Name + "\" AS " + db.GetString("select definition from pg_catalog.pg_views where viewname = '"+view.Name+"'");
         }
 
+        public string GetSQLDateYearMonthPart(string columnName)
+        {
+            return string.Format("to_char([{0}], 'YYYY.MM')", columnName);
+        }
+
         #endregion
     }
 }

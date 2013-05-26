@@ -80,6 +80,8 @@ namespace Cinar.DBTools.Tools
             }
             else
             {
+                //CorrectConnectionLinesPositions();
+
                 foreach (ConnectionLine cl in this.ConnectionLines)
                     cl.Draw(offScreenDC);
                 foreach (TableView tv in this.Tables)
@@ -123,6 +125,32 @@ namespace Cinar.DBTools.Tools
             }
             return null;
         }
+
+
+        public void CorrectConnectionLinesPositions()
+        {
+            correctConnectionLinesPositions(this.Tables.ToList());
+        }
+        internal void correctConnectionLinesPositions(List<TableView> tables)
+        {
+            tables
+                .ForEach(tv =>
+                        ConnectionLines
+                            .FindAll(cl => cl.FromTable == tv.TableName || cl.ToTable == tv.TableName)
+                                .ForEach(correctConnectionLinePosition));
+        }
+        internal void correctConnectionLinePosition(ConnectionLine cl)
+        {
+            TableView tv1 = GetTableView(cl.FromTable);
+            TableView tv2 = GetTableView(cl.ToTable);
+            if (tv1 == null || tv2 == null)
+                return;
+
+            Pair<Point> pair = tv1.Rectangle.FindClosestSideCenters(tv2.Rectangle);
+            cl.StartPoint = pair.First;
+            cl.EndPoint = pair.Second;
+        }
+
     }
 
     public class ListTableView : List<TableView>

@@ -42,6 +42,7 @@ namespace Cinar.DBTools.CodeGen
         public GeneratedCode GenerateCode(string basePath, Table table)
         {
             Interpreter engineForCode = new Interpreter(File.ReadAllText(this.Path), null);
+            engineForCode.SetAttribute("this", this);
             engineForCode.SetAttribute("db", Provider.Database);
             engineForCode.SetAttribute("table", table);
             engineForCode.SetAttribute("util", new Util());
@@ -52,6 +53,7 @@ namespace Cinar.DBTools.CodeGen
             if (!string.IsNullOrEmpty(this.FileNameTemplate))
             {
                 Interpreter engineForPath = new Interpreter(this.FileNameTemplate, null);
+                engineForPath.SetAttribute("this", this);
                 engineForPath.SetAttribute("db", Provider.Database);
                 engineForPath.SetAttribute("table", table);
                 engineForPath.SetAttribute("util", new Util());

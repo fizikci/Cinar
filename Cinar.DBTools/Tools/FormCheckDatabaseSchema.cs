@@ -100,6 +100,7 @@ namespace Cinar.DBTools.Tools
         {
             foreach (Panel pnl in flowPanel.Controls)
                 (pnl.Tag as Problem).ApplyToMetadata(pnl);
+            Provider.ConnectionsModified = true;
             Close();
         }
     }

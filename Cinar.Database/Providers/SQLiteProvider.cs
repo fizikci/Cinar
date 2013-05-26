@@ -519,6 +519,11 @@ order by Con.Name, Con.Type, Con.TableName, Col.ColumnName, Col.Position", db.Na
             return (string)db.GetDataRow("show create table `" + db.Name + "`.`" + view.Name + "`;")[1];
         }
 
+        public string GetSQLDateYearMonthPart(string columnName)
+        {
+            return string.Format("strftime('%Y.%m', [{0}])", columnName);
+        }
+
         #endregion
 
     }

@@ -33,6 +33,7 @@ namespace Cinar.DBTools.CodeGen
                 if (!File.Exists(item.Path) || MessageBox.Show("There is a file with the same name. Overwrite?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     File.Copy(filePathToCopy, item.Path, true);
+                    File.WriteAllText(item.Path, File.ReadAllText(item.Path, Encoding.UTF8).Replace("$", "\\$"), Encoding.UTF8);
                     Solution.Modified = true;
                 }
                 else
@@ -110,6 +111,7 @@ namespace Cinar.DBTools.CodeGen
             if (!string.IsNullOrEmpty(this.FileNameTemplate))
             {
                 Interpreter engineForPath = new Interpreter(this.FileNameTemplate, null);
+                engineForPath.SetAttribute("this", this);
                 engineForPath.SetAttribute("db", Provider.Database);
                 engineForPath.SetAttribute("table", table);
                 engineForPath.SetAttribute("util", new Util());

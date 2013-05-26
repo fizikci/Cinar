@@ -303,57 +303,15 @@ $"}
                     #endregion
                     #region tree menus
                      new Command {
-                                     Execute = (arg)=>{
-                                         this.SuspendLayout();
-                                         if(treeView.Visible)
-                                         {
-                                             splitterMainLast = splitContainerMain.SplitterDistance;
-                                             splitContainerMain.SplitterDistance = 22;
-                                             splitContainerMain.Panel1.BackgroundImage = null;
-                                             treeView.Visible = false;
-                                         }
-                                         else
-                                         {
-                                             splitContainerMain.Panel1.BackgroundImage = imgYellowBg;
-                                             splitContainerMain.SplitterDistance = splitterMainLast;
-                                             treeView.Visible = true;
-                                         }
-                                         this.PerformLayout();
-                                     },
+                                     Execute = cmdToggleConnectionsPanel,
                                      Trigger = new CommandTrigger{ Control = labelConnections}
                                  },
                      new Command {
-                                     Execute = (arg)=>{
-                                         this.SuspendLayout();
-                                         if(propertyGrid.Visible)
-                                         {
-                                             splitterPropLast = splitContainerProperties.SplitterDistance;
-                                             splitContainerProperties.SplitterDistance = splitContainerProperties.Width - 30;
-                                             splitContainerProperties.Panel2.BackgroundImage = null;
-                                             propertyGrid.Visible = false;
-                                         }
-                                         else
-                                         {
-                                             splitContainerProperties.SplitterDistance = splitterPropLast;
-                                             splitContainerProperties.Panel2.BackgroundImage = imgYellowBg;
-                                             propertyGrid.Visible = true;
-                                         }
-                                         this.PerformLayout();
-                                     },
+                                     Execute = cmdTogglePropertiesPanel,
                                      Trigger = new CommandTrigger{ Control = labelProperties}
                                  },
                      new Command {
-                                     Execute = (arg)=>{
-                                         if(SelectedObject is ConnectionSettings)
-                                             cmdDeleteConnection("");
-                                         else if(SelectedObject is Table)
-                                             cmdTableDrop("");
-                                         else if(SelectedObject is Column)
-                                             cmdColumnDrop("");
-                                         else if(SelectedObject is BaseIndexConstraint)
-                                             cmdDropIndex("");
-                                         
-                                     },
+                                     Execute = cmdDeleteSelectedObject,
                                      Trigger = new CommandTrigger{ Control = treeView, Event = "KeyUp", Predicate = (e)=>{return (e as KeyEventArgs).KeyCode == Keys.Delete;}}
                                  },
                      new Command {
@@ -506,17 +464,8 @@ $"}
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
-                                     Execute = (string arg)=>{
-                                         Table tbl = SelectedObject as Table;
-                                         string res = "";
-                                         foreach (Table t in tbl.ReferencedByTables)
-                                             res += t.Name + ", ";
-                                         res = res.Trim().Trim(',');
-                                         if (res.Trim() == "")
-                                             res = "No reference.";
-                                         MessageBox.Show(res);
-                                     },
-                                     Trigger = new CommandTrigger{ Control = menuTableFindReferences},
+                                     Execute = cmdShowTableInDiagram,
+                                     Trigger = new CommandTrigger{ Control = menuTableShowInDiagram},
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
@@ -989,13 +938,13 @@ $"}
 
             SetFont(tp, Font);
         }
-        private void addDiagram(Diagram schema)
+        private DiagramEditor addDiagram(Diagram schema)
         {
             foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
                 if (myTabPage.Controls[0] is DiagramEditor && (myTabPage.Controls[0] as DiagramEditor).CurrentSchema==schema)
                 {
                     tabControlEditors.SelectedTab = myTabPage;
-                    return;
+                    return myTabPage.Controls[0] as DiagramEditor;
                 }
 
             MyTabPage tp = new MyTabPage();
@@ -1018,6 +967,8 @@ $"}
 
             d.Size = d.MinimumSize = tp.Size - new Size(tp.Padding.Left + tp.Padding.Right, tp.Padding.Top + tp.Padding.Bottom);
             SetFont(tp, Font);
+
+            return d;
         }
         #endregion
 
@@ -1350,6 +1301,91 @@ $"}
 
                 SetStatusText("Connection deleted.");
             }
+        }
+
+        private void cmdShowTableInDiagram(string arg)
+        {
+            Table tbl = SelectedObject as Table;
+
+            Diagram d = new Diagram();
+            d.Name = tbl.Name + " diagram";
+            d.conn = Provider.ActiveConnection;
+
+            List<Table> list = new List<Table>();
+
+            TableCollection parents = tbl.ReferenceTables;
+            TableCollection children = tbl.ReferencedByTables;
+
+            foreach (Table t in parents)
+                list.Add(t);
+
+            list.Add(tbl);
+            
+            foreach (Table t in children)
+                list.Add(t);
+
+            DiagramEditor de = addDiagram(d);
+            de.AddTablesToSchema(list, true);
+
+            for (int i = 0; i < parents.Count; i++)
+                d.GetTableView(parents[i].Name).Position = new Point(de.Width / 4 - Diagram.Def_TableWidth/2, de.Height / (parents.Count + 1) * (i + 1));
+            TableView tv = d.GetTableView(tbl.Name);
+            tv.Position = new Point(de.Width / 2 - Diagram.Def_TableWidth / 2, (de.Height - tv.Size.Height) / 2);
+            tv.ShowFull = true;
+            for (int i = 0; i < children.Count; i++)
+                d.GetTableView(children[i].Name).Position = new Point(de.Width / 4 * 3 - Diagram.Def_TableWidth / 2, de.Height / (children.Count + 1) * (i + 1));
+
+            d.CorrectConnectionLinesPositions();
+            de.Invalidate();
+        }
+
+        private void cmdDeleteSelectedObject(string arg)
+        {
+            if (SelectedObject is ConnectionSettings)
+                cmdDeleteConnection("");
+            else if (SelectedObject is Table)
+                cmdTableDrop("");
+            else if (SelectedObject is Column)
+                cmdColumnDrop("");
+            else if (SelectedObject is BaseIndexConstraint)
+                cmdDropIndex("");
+        }
+
+        private void cmdTogglePropertiesPanel(string arg)
+        {
+            this.SuspendLayout();
+            if (propertyGrid.Visible)
+            {
+                splitterPropLast = splitContainerProperties.SplitterDistance;
+                splitContainerProperties.SplitterDistance = splitContainerProperties.Width - 30;
+                splitContainerProperties.Panel2.BackgroundImage = null;
+                propertyGrid.Visible = false;
+            }
+            else
+            {
+                splitContainerProperties.SplitterDistance = splitterPropLast;
+                splitContainerProperties.Panel2.BackgroundImage = imgYellowBg;
+                propertyGrid.Visible = true;
+            }
+            this.PerformLayout();
+        }
+        private void cmdToggleConnectionsPanel(string arg)
+        {
+            this.SuspendLayout();
+            if (treeView.Visible)
+            {
+                splitterMainLast = splitContainerMain.SplitterDistance;
+                splitContainerMain.SplitterDistance = 22;
+                splitContainerMain.Panel1.BackgroundImage = null;
+                treeView.Visible = false;
+            }
+            else
+            {
+                splitContainerMain.Panel1.BackgroundImage = imgYellowBg;
+                splitContainerMain.SplitterDistance = splitterMainLast;
+                treeView.Visible = true;
+            }
+            this.PerformLayout();
         }
 
         private void cmdShowTableCounts(string arg)
@@ -1938,17 +1974,33 @@ $"}
         {
             if (!checkConnection()) return;
             Column column = (Column)SelectedObject;
+            showGroupedCounts(column);
+
+        }
+
+        private void showGroupedCounts(Column column)
+        {
+            string columnName = "[" + column.Name + "]";
+            string columnNameAs = column.Name;
+
+            if (column.SimpleColumnType == SimpleDbType.DateTime)
+            {
+                columnName = Provider.Database.GetSQLDateYearMonthPart(column.Name);
+                columnNameAs = column.Name + "YearMonth";
+            }
+
             if (column.ReferenceColumn == null || column.ReferenceColumn.Table.StringColumn == null)
             {
                 executeSQL(@"
                     select top 1000 
-                        [{0}], 
-                        count(*) as RecordCount 
+                        {0} as [{1}], 
+                        count(*) as [# of {2} records] 
                     from 
-                        [{1}] 
-                    group by [{0}] 
-                    order by RecordCount desc",
-                                              column.Name,
+                        [{2}] 
+                    group by {0} 
+                    order by count(*) desc",
+                                              columnName,
+                                              columnNameAs,
                                               column.Table.Name);
             }
             else
@@ -1957,12 +2009,12 @@ $"}
                     select top 1000 
                         t.[{0}], 
                         tRef.[{4}],
-                        count(*) as RecordCount 
+                        count(*) as [# of {1} records]
                     from 
                         [{1}] t
                         left join [{3}] tRef on t.[{0}] = tRef.[{2}]
                     group by t.[{0}], tRef.[{4}]
-                    order by RecordCount desc",
+                    order by count(*) desc",
                                               column.Name,
                                               column.Table.Name,
                                               column.ReferenceColumn.Name,
@@ -1975,20 +2027,23 @@ $"}
             {
                 if (grid.SelectedRows.Count <= 0)
                     return;
+                if (columnNameAs.EndsWith("YearMonth"))
+                    return;
+
                 DataRow dr = (grid.SelectedRows[0].DataBoundItem as DataRowView).Row;
                 object keyVal = dr[column.Name];
                 string from = Provider.Database.GetFromWithJoin(column.Table);
                 executeSQL(@"
                     select top 1000 
-                        * 
+                        {4} 
                     from {1} 
                     where [{3}].[{0}] = '{2}'",
                                               column.Name,
                                               from,
                                               keyVal == null ? "" : keyVal.ToString().Replace("\\", "\\\\").Replace("'", "\\'"),
-                                              column.Table.Name);
+                                              column.Table.Name,
+                                              Provider.Database.GetFieldNamesWithJoin(column.Table));
             };
-
         }
 
         private void cmdCreateIndex(string arg)
@@ -2452,6 +2507,28 @@ $"}
                 if (tn != null)
                     CurrSQLEditor.ShowTableDataIfTableTabActive(tn, new FilterExpression());
             }
+        }
+
+        private void menuTableShowChildrenRecords_DropDownOpening(object sender, EventArgs e)
+        {
+            Table tbl = SelectedObject as Table;
+            if (tbl == null) return;
+
+            menuTableShowChildrenRecords.DropDownItems.Clear();
+            foreach (Table t in tbl.Database.Tables)
+                foreach (Cinar.Database.ForeignKeyConstraint fk in t.Constraints.Where(c => c is Cinar.Database.ForeignKeyConstraint))
+                    if (fk.RefTableName == tbl.Name)
+                    {
+                        ToolStripMenuItem item = new ToolStripMenuItem(t.Name, FamFamFam.table);
+                        item.Click += (sndr, args) => { showGroupedCounts(fk.Columns[0]); };
+                        menuTableShowChildrenRecords.DropDownItems.Add(item);
+                    }
+        }
+
+        private void menuTableShowChildrenRecords_DropDownClosed(object sender, EventArgs e)
+        {
+            menuTableShowChildrenRecords.DropDownItems.Clear();
+            menuTableShowChildrenRecords.DropDownItems.Add("empty");
         }
     }
 

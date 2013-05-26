@@ -1235,7 +1235,7 @@ namespace Cinar.Database
             if (fExp.PageSize == 0) fExp.PageSize = 10000;
             string where = fExp.Criterias.ToParamString();
             string orderBy = fExp.Orders.ToString();
-            if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns.First(f=>!(f.SimpleColumnType==SimpleDbType.Text || f.SimpleColumnType==SimpleDbType.ByteArray)).Name) + "]";
+            if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns[0].Name) + "]";
             string sql = "";
             switch (Provider)
             {
@@ -1548,8 +1548,20 @@ namespace Cinar.Database
             sb.AppendFormat("[{0}]\n", tbl.Name);
             foreach (Column column in tbl.Columns)
                 if (column.ReferenceColumn != null)
-                    sb.AppendFormat("\tleft join [{0}] as {1} ON {1}.{2} = [{3}].{4}\n", column.ReferenceColumn.Table.Name, "T" + column.Name, column.ReferenceColumn.Name, tbl.Name, column.Name);
+                    sb.AppendFormat("\tleft join [{0}] as [{1}] ON [{1}].[{2}] = [{3}].[{4}]\n", column.ReferenceColumn.Table.Name, "T" + column.Name, column.ReferenceColumn.Name, tbl.Name, column.Name);
 
+            return sb.ToString();
+        }
+        public string GetFieldNamesWithJoin(Table tbl)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Column column in tbl.Columns)
+            {
+                sb.AppendFormat("[{0}].[{1}] as [{1}],\n", column.Table.Name, column.Name);
+                if (column.ReferenceColumn != null)
+                    sb.AppendFormat("[{0}].[{1}] as [{0}.{1}],\n", "T" + column.Name, column.ReferenceColumn.Table.StringColumn.Name);
+            }
+            sb.Remove(sb.Length - 2, 1);
             return sb.ToString();
         }
         #endregion
@@ -1980,6 +1992,11 @@ namespace Cinar.Database
         public string GetSQLViewCreate(Table view)
         {
             return dbProvider.GetSQLViewCreate(view);
+        }
+
+        public string GetSQLDateYearMonthPart(string columnName)
+        {
+            return dbProvider.GetSQLDateYearMonthPart(columnName);
         }
 
         // http://troels.arvin.dk/db/rdbms/
