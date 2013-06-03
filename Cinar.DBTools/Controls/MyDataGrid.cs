@@ -33,5 +33,9 @@ namespace Cinar.DBTools.Controls
             base.OnRowPostPaint(e);
         }
 
+        protected override void OnDataError(bool displayErrorDialogIfNoHandler, DataGridViewDataErrorEventArgs e)
+        {
+            base.OnDataError(false, e);
+        }
     }
 }
