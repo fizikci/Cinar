@@ -779,7 +779,8 @@ namespace Cinar.Database
         {
             Hashtable ht = new Hashtable();
             foreach (PropertyInfo pi in record.GetType().GetProperties())
-                ht[pi.Name] = pi.GetValue(record, null);
+                if(pi.GetIndexParameters().Length==0)
+                    ht[pi.Name] = pi.GetValue(record, null);
             return Insert(tableName, ht);
         }
 
@@ -1169,6 +1170,17 @@ namespace Cinar.Database
                         dr[f.Name] = pi.GetValue(entity, null);
                 }
         }
+
+        public void Delete(IDatabaseEntity entity)
+        {
+            if(entity==null)
+                throw new ArgumentNullException("entity");
+
+            string tableName = GetTableForEntityType(entity.GetType()).Name;
+            string primaryColumnName = GetIdColumnName(entity.GetType());
+            ExecuteNonQuery("delete from [" + tableName + "] where [" + primaryColumnName + "] = {0}", entity.Id);
+        }
+
         #endregion
 
         #region read data

@@ -41,4 +41,6 @@ namespace Cinar.Database
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
         string Details { get; set; }
     }
+
+
 }

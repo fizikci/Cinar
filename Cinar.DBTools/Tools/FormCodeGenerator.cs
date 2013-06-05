@@ -38,8 +38,20 @@ namespace Cinar.DBTools.Tools
 
             showCategories(null);
 
+            showTablesAndViews();
+        }
+
+        private void showTablesAndViews()
+        {
+            lbEntities.Items.Clear();
             foreach (Table tbl in Provider.Database.Tables)
-                lbEntities.Items.Add(tbl);
+                if ((cbTables.Checked && !tbl.IsView) || (cbViews.Checked && tbl.IsView))
+                    lbEntities.Items.Add(tbl);
+        }
+
+        private void cbTables_CheckedChanged(object sender, EventArgs e)
+        {
+            showTablesAndViews();
         }
 
         private void showCategories(string selectedCat)

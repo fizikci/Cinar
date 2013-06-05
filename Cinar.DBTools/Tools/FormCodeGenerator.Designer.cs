@@ -40,26 +40,30 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cbAll = new System.Windows.Forms.CheckBox();
             this.lbCategories = new System.Windows.Forms.ListBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cbTables = new System.Windows.Forms.CheckBox();
+            this.cbViews = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbTemplates
             // 
-            this.lbTemplates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbTemplates.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.lbTemplates.FormattingEnabled = true;
             this.lbTemplates.ItemHeight = 15;
             this.lbTemplates.Location = new System.Drawing.Point(14, 129);
             this.lbTemplates.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbTemplates.Name = "lbTemplates";
             this.lbTemplates.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lbTemplates.Size = new System.Drawing.Size(278, 349);
+            this.lbTemplates.Size = new System.Drawing.Size(278, 484);
             this.lbTemplates.Sorted = true;
             this.lbTemplates.TabIndex = 1;
             // 
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDelete.Location = new System.Drawing.Point(189, 496);
+            this.btnDelete.Location = new System.Drawing.Point(189, 641);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(65, 26);
@@ -71,7 +75,7 @@
             // btnEdit
             // 
             this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEdit.Location = new System.Drawing.Point(121, 496);
+            this.btnEdit.Location = new System.Drawing.Point(121, 641);
             this.btnEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(61, 26);
@@ -83,7 +87,7 @@
             // btnNew
             // 
             this.btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNew.Location = new System.Drawing.Point(49, 496);
+            this.btnNew.Location = new System.Drawing.Point(49, 641);
             this.btnNew.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(65, 26);
@@ -95,7 +99,7 @@
             // btnGenerateCode
             // 
             this.btnGenerateCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerateCode.Location = new System.Drawing.Point(427, 496);
+            this.btnGenerateCode.Location = new System.Drawing.Point(697, 641);
             this.btnGenerateCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnGenerateCode.Name = "btnGenerateCode";
             this.btnGenerateCode.Size = new System.Drawing.Size(168, 26);
@@ -107,7 +111,7 @@
             // btnGenerateAll
             // 
             this.btnGenerateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerateAll.Location = new System.Drawing.Point(602, 496);
+            this.btnGenerateAll.Location = new System.Drawing.Point(872, 641);
             this.btnGenerateAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnGenerateAll.Name = "btnGenerateAll";
             this.btnGenerateAll.Size = new System.Drawing.Size(171, 26);
@@ -127,16 +131,17 @@
             // 
             // lbEntities
             // 
-            this.lbEntities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbEntities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbEntities.CheckOnClick = true;
+            this.lbEntities.ColumnWidth = 200;
             this.lbEntities.FormattingEnabled = true;
             this.lbEntities.Location = new System.Drawing.Point(311, 26);
             this.lbEntities.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.lbEntities.MultiColumn = true;
             this.lbEntities.Name = "lbEntities";
-            this.lbEntities.Size = new System.Drawing.Size(461, 454);
+            this.lbEntities.Size = new System.Drawing.Size(731, 598);
             this.lbEntities.Sorted = true;
             this.lbEntities.TabIndex = 6;
             // 
@@ -153,7 +158,7 @@
             // 
             this.cbAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbAll.AutoSize = true;
-            this.cbAll.Location = new System.Drawing.Point(734, 4);
+            this.cbAll.Location = new System.Drawing.Point(1002, 6);
             this.cbAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbAll.Name = "cbAll";
             this.cbAll.Size = new System.Drawing.Size(40, 19);
@@ -174,11 +179,65 @@
             this.lbCategories.TabIndex = 0;
             this.lbCategories.SelectedIndexChanged += new System.EventHandler(this.lbCategories_SelectedIndexChanged);
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label3.Location = new System.Drawing.Point(690, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 15);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Show :";
+            // 
+            // cbTables
+            // 
+            this.cbTables.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbTables.AutoSize = true;
+            this.cbTables.Checked = true;
+            this.cbTables.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTables.Location = new System.Drawing.Point(742, 6);
+            this.cbTables.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbTables.Name = "cbTables";
+            this.cbTables.Size = new System.Drawing.Size(60, 19);
+            this.cbTables.TabIndex = 12;
+            this.cbTables.Text = "Tables";
+            this.cbTables.UseVisualStyleBackColor = true;
+            this.cbTables.CheckedChanged += new System.EventHandler(this.cbTables_CheckedChanged);
+            // 
+            // cbViews
+            // 
+            this.cbViews.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbViews.AutoSize = true;
+            this.cbViews.Location = new System.Drawing.Point(808, 6);
+            this.cbViews.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbViews.Name = "cbViews";
+            this.cbViews.Size = new System.Drawing.Size(56, 19);
+            this.cbViews.TabIndex = 13;
+            this.cbViews.Text = "Views";
+            this.cbViews.UseVisualStyleBackColor = true;
+            this.cbViews.CheckedChanged += new System.EventHandler(this.cbTables_CheckedChanged);
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label4.Location = new System.Drawing.Point(951, 7);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(47, 15);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "Check :";
+            // 
             // FormCodeGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 536);
+            this.ClientSize = new System.Drawing.Size(1057, 681);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.cbViews);
+            this.Controls.Add(this.cbTables);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.lbCategories);
             this.Controls.Add(this.cbAll);
             this.Controls.Add(this.label2);
@@ -191,7 +250,6 @@
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.lbTemplates);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FormCodeGenerator";
@@ -214,6 +272,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox cbAll;
         private System.Windows.Forms.ListBox lbCategories;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox cbTables;
+        private System.Windows.Forms.CheckBox cbViews;
+        private System.Windows.Forms.Label label4;
 
 
     }
