@@ -12,8 +12,8 @@ namespace Cinar.Test
         public static void Run()
         {
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
-            Database.Database db = new Database.Database(DatabaseProvider.MySQL, "localhost", "deneme", "root", "bk", 30, null, true);
-
+            Database.Database db = new Database.Database(DatabaseProvider.MySQL, "localhost", "itdnm", "root", "bk", 30, null, true);
+            /*
             Table table = db.CreateTableMetadataForType(typeof(Ogrenci));
 
             Console.WriteLine(db.GetTableDDL(table));
@@ -27,6 +27,8 @@ namespace Cinar.Test
             v.Ad = "Bülent";
             v.TcKimlikNo = "756867";
             db.Save(v);
+            */
+            List<Ogrenci> list = db.ReadList<Ogrenci>("select *, '2. Dönem' as Donem, 2012 as Yil from student");
         }
     }
 
@@ -71,13 +73,13 @@ namespace Cinar.Test
 
         public object this[string key]
         {
-            get { return ""; }
-            set { }
+            get { return ht[key]; }
+            set { ht[key] = value; }
         }
-
+        Hashtable ht = new Hashtable();
         public Hashtable GetOriginalValues()
         {
-            return new Hashtable();
+            return ht;
         }
         #endregion
     }
@@ -85,5 +87,4 @@ namespace Cinar.Test
     public class Veli : Ogrenci { }
 
     public enum OgrenciTipi { Sabahci, Oglenci }
-
 }

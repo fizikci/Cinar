@@ -114,7 +114,7 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 if (Provider.Configuration.SiteIcon.Trim() != "")
-                    sb.Append("<link href=\"http://" + Provider.Configuration.SiteAddress + "/" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
+                    sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
                 sb.Append("<link href=\"/_thumbs/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
