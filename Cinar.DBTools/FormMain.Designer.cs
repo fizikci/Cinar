@@ -95,6 +95,7 @@ namespace Cinar.DBTools
             this.menuIndexDropIndex = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableShowInDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableShowChildrenRecords = new System.Windows.Forms.ToolStripMenuItem();
+            this.emptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.tabControlEditors = new Cinar.DBTools.Controls.MyTabControl();
             this.menuStripEditorTabs = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -210,7 +211,6 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.emptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -452,7 +452,7 @@ namespace Cinar.DBTools
             this.menuTableShowInDiagram,
             this.menuTableShowChildrenRecords});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 730);
             // 
             // menuConShowHiddenConnections
             // 
@@ -804,6 +804,12 @@ namespace Cinar.DBTools
             this.menuTableShowChildrenRecords.Text = "Show children records";
             this.menuTableShowChildrenRecords.DropDownClosed += new System.EventHandler(this.menuTableShowChildrenRecords_DropDownClosed);
             this.menuTableShowChildrenRecords.DropDownOpening += new System.EventHandler(this.menuTableShowChildrenRecords_DropDownOpening);
+            // 
+            // emptyToolStripMenuItem
+            // 
+            this.emptyToolStripMenuItem.Name = "emptyToolStripMenuItem";
+            this.emptyToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.emptyToolStripMenuItem.Text = "empty";
             // 
             // imageListTree
             // 
@@ -1401,78 +1407,78 @@ namespace Cinar.DBTools
             // 
             this.menuToolsCodeGenerator.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsCodeGenerator.Image")));
             this.menuToolsCodeGenerator.Name = "menuToolsCodeGenerator";
-            this.menuToolsCodeGenerator.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsCodeGenerator.Size = new System.Drawing.Size(339, 22);
             this.menuToolsCodeGenerator.Text = "Code Generator...";
             // 
             // menuToolsGenerateTablesFromReflectedMetadata
             // 
             this.menuToolsGenerateTablesFromReflectedMetadata.Name = "menuToolsGenerateTablesFromReflectedMetadata";
-            this.menuToolsGenerateTablesFromReflectedMetadata.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsGenerateTablesFromReflectedMetadata.Size = new System.Drawing.Size(339, 22);
             this.menuToolsGenerateTablesFromReflectedMetadata.Text = "Generate Tables From Reflected Metadata...";
             // 
             // menuToolsCheckDatabaseSchema
             // 
             this.menuToolsCheckDatabaseSchema.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsCheckDatabaseSchema.Image")));
             this.menuToolsCheckDatabaseSchema.Name = "menuToolsCheckDatabaseSchema";
-            this.menuToolsCheckDatabaseSchema.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsCheckDatabaseSchema.Size = new System.Drawing.Size(339, 22);
             this.menuToolsCheckDatabaseSchema.Text = "Check Database Schema...";
             // 
             // menuToolsDBTransfer
             // 
             this.menuToolsDBTransfer.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsDBTransfer.Image")));
             this.menuToolsDBTransfer.Name = "menuToolsDBTransfer";
-            this.menuToolsDBTransfer.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsDBTransfer.Size = new System.Drawing.Size(339, 22);
             this.menuToolsDBTransfer.Text = "Database Transfer...";
             // 
             // menuToolsViewERDiagram
             // 
             this.menuToolsViewERDiagram.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsViewERDiagram.Image")));
             this.menuToolsViewERDiagram.Name = "menuToolsViewERDiagram";
-            this.menuToolsViewERDiagram.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsViewERDiagram.Size = new System.Drawing.Size(339, 22);
             this.menuToolsViewERDiagram.Text = "View ER Diagram...";
             // 
             // menuToolsSQLDump
             // 
             this.menuToolsSQLDump.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsSQLDump.Image")));
             this.menuToolsSQLDump.Name = "menuToolsSQLDump";
-            this.menuToolsSQLDump.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsSQLDump.Size = new System.Drawing.Size(339, 22);
             this.menuToolsSQLDump.Text = "SQL Dump...";
             // 
             // menuToolsSimpleIntegrationService
             // 
             this.menuToolsSimpleIntegrationService.Image = ((System.Drawing.Image)(resources.GetObject("menuToolsSimpleIntegrationService.Image")));
             this.menuToolsSimpleIntegrationService.Name = "menuToolsSimpleIntegrationService";
-            this.menuToolsSimpleIntegrationService.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsSimpleIntegrationService.Size = new System.Drawing.Size(339, 22);
             this.menuToolsSimpleIntegrationService.Text = "Simple Integration Service...";
             // 
             // menuToolsCopyTreeData
             // 
             this.menuToolsCopyTreeData.Name = "menuToolsCopyTreeData";
-            this.menuToolsCopyTreeData.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsCopyTreeData.Size = new System.Drawing.Size(339, 22);
             this.menuToolsCopyTreeData.Text = "Copy Tree Data...";
             // 
             // menuToolsCompareDatabases
             // 
             this.menuToolsCompareDatabases.Name = "menuToolsCompareDatabases";
-            this.menuToolsCompareDatabases.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsCompareDatabases.Size = new System.Drawing.Size(339, 22);
             this.menuToolsCompareDatabases.Text = "Compare Databases...";
             // 
             // menuToolsCompareDirectories
             // 
             this.menuToolsCompareDirectories.Name = "menuToolsCompareDirectories";
-            this.menuToolsCompareDirectories.Size = new System.Drawing.Size(332, 22);
+            this.menuToolsCompareDirectories.Size = new System.Drawing.Size(339, 22);
             this.menuToolsCompareDirectories.Text = "Compare Directories...";
             // 
             // menuToolsSearchTableNamesInFiles
             // 
             this.menuToolsSearchTableNamesInFiles.Name = "menuToolsSearchTableNamesInFiles";
-            this.menuToolsSearchTableNamesInFiles.Size = new System.Drawing.Size(332, 22);
-            this.menuToolsSearchTableNamesInFiles.Text = "Search table names in files...";
+            this.menuToolsSearchTableNamesInFiles.Size = new System.Drawing.Size(339, 22);
+            this.menuToolsSearchTableNamesInFiles.Text = "Search table names or image names in files...";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(329, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(336, 6);
             // 
             // quickScriptToolStripMenuItem
             // 
@@ -1485,7 +1491,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSPHelpText});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
-            this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(332, 22);
+            this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.quickScriptToolStripMenuItem.Text = "Quick Script";
             // 
             // menuToolsQScriptDeleteFromTables
@@ -1765,12 +1771,6 @@ namespace Cinar.DBTools
             // 
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // emptyToolStripMenuItem
-            // 
-            this.emptyToolStripMenuItem.Name = "emptyToolStripMenuItem";
-            this.emptyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.emptyToolStripMenuItem.Text = "empty";
             // 
             // FormMain
             // 

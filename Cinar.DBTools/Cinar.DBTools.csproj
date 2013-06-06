@@ -205,6 +205,9 @@
     <EmbeddedResource Include="Tools\FormGenerateTablesFromClasses.resx">
       <DependentUpon>FormGenerateTablesFromClasses.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormSearchProjectFolder.resx">
+      <DependentUpon>FormSearchProjectFolder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormSQLDump.resx">
       <DependentUpon>FormSQLDump.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -305,6 +308,12 @@
     </Compile>
     <Compile Include="Tools\FormGenerateTablesFromClasses.Designer.cs">
       <DependentUpon>FormGenerateTablesFromClasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormSearchProjectFolder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormSearchProjectFolder.Designer.cs">
+      <DependentUpon>FormSearchProjectFolder.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\FormSQLDump.cs">
       <SubType>Form</SubType>

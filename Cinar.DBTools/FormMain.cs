@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Cinar.SQLParser;
 using Cinar.UICommands;
 using Cinar.Database;
 using Cinar.DBTools.Tools;
@@ -19,6 +20,7 @@ using ICSharpCode.TextEditor.Document;
 using Constraint = Cinar.Database.Constraint;
 using Cinar.DBTools.CodeGen;
 using Cinar.WebServer;
+using ColumnDef = Cinar.DBTools.Tools.ColumnDef;
 
 namespace Cinar.DBTools
 {
@@ -679,7 +681,7 @@ $"}
                                 queriesWithError.AppendLine(sqlList[i]);
                             }
 
-                            int newPercent = Convert.ToInt32(((float)i / (float)sqlListLength) * 100);
+                            int newPercent = Convert.ToInt32((i / (float)sqlListLength) * 100);
                             if (percent != newPercent)
                             {
                                 percent = newPercent;
@@ -2228,38 +2230,105 @@ $"}
 
         private void cmdSearchTableNamesInFiles(string arg)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() == DialogResult.OK)
+            FormSearchProjectFolder f = new FormSearchProjectFolder();
+
+            if (f.ShowDialog() == DialogResult.OK)
             {
-                var keyWords = Provider.Database.Tables.Select(t => t.Name).ToArray();
+                var allFiles = new List<string>();
+                foreach (string ext in f.SearchExtensions)
+                    allFiles.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*" + ext, SearchOption.AllDirectories));
 
-                var allFiles = Directory.EnumerateFiles(fbd.SelectedPath, "*.cs", SearchOption.AllDirectories).ToList();
-                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.aspx", SearchOption.AllDirectories));
-                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.master", SearchOption.AllDirectories));
-                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.asax", SearchOption.AllDirectories));
-                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.ascx", SearchOption.AllDirectories));
-                allFiles.AddRange(Directory.EnumerateFiles(fbd.SelectedPath, "*.ashx", SearchOption.AllDirectories));
-                
-                var allMatches = from fn in allFiles
-                                 from line in File.ReadLines(fn)
-                                 from kw in keyWords                             //   
-                                 where line.ToUpper().Contains(kw.ToUpper()) && (line.ToUpper().Contains("CREATEOBJECTSET") || line.ToUpper().Contains("ENTİTY") || line.ToUpper().Contains("CLASS") || line.ToUpper().Contains("OBJDB") || line.ToUpper().Contains("SELECT ") || line.ToUpper().Contains("İNSERT ") || line.ToUpper().Contains("UPDATE ") || line.ToUpper().Contains("DELETE "))
-                                 select new
-                                            {
-                                                Keyword = kw,
-                                                File = fn.Replace(fbd.SelectedPath + "\\", ""),
-                                                Line = line.Trim(),
-                                            };
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("create table table_usage (table_name varchar(255), file_name varchar(255), content text);");
-                foreach (var matchInfo in allMatches)
-                    sb.AppendFormat("insert into table_usage values('{0}', '{1}', '{2}');\r\n"
-                                    , matchInfo.Keyword, matchInfo.File.Replace("\\","\\\\").Replace("'", "\\'"), matchInfo.Line.Replace("'", "\\'"));
+                MessageBox.Show(f.WhatToSearch);
 
-                addFileEditor("", sb.ToString());
+                string[] keyWords;
+
+                if (f.WhatToSearch == "Image names in project folder")
+                {
+                    var imageNames = new List<string>();
+                    foreach (string ext in new[] {".jpg", ".png", ".gif"})
+                        imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*" + ext,
+                                                                     SearchOption.AllDirectories));
+                    keyWords = imageNames.Select(Path.GetFileName).ToArray();
+                }
+                else
+                {
+                    if (f.WhatToSearch.StartsWith("Table"))
+                        keyWords = Provider.Database.Tables.Where(t => !t.IsView).Select(t => t.Name).ToArray();
+                    else
+                        keyWords = Provider.Database.Tables.Where(t => t.IsView).Select(t => t.Name).ToArray();
+                }
+
+                BackgroundWorkerDialog bwd = new BackgroundWorkerDialog();
+                bwd.Message = "Please wait while " + keyWords.Length + " keywords being searched.";
+                bwd.DoWork = (e) =>
+                    {
+                        int percent = 0;
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine("create table search_results (keyword varchar(255), object_name varchar(255), content text);");
+
+                        for (int i = 0; i < keyWords.Length; i++)
+                        {
+                            string kw = keyWords[i];
+
+                            if (f.WhatToSearch == "Image names in project folder")
+                            {
+                                var allMatches = from fn in allFiles
+                                             from line in File.ReadLines(fn)
+                                             where
+                                                 line.ToUpper().Contains(kw.ToUpper())
+                                             select new
+                                                 {
+                                                     Keyword = kw,
+                                                     File = fn.Replace(f.ProjectFolder + "\\", ""),
+                                                     Line = line.Trim(),
+                                                 };
+
+                                foreach (var matchInfo in allMatches)
+                                    sb.AppendFormat("insert into search_results values('{0}', '{1}', '{2}');\r\n",
+                                                    matchInfo.Keyword,
+                                                    matchInfo.File.Replace("\\", "\\\\").Replace("'", "\\'"),
+                                                    matchInfo.Line.Replace("'", "\\'"));
+                            }
+                            else
+                            {
+                                var allMatches = allFiles.SelectMany(fn => File.ReadLines(fn), (fn, line) => new {fn, line})
+                                                     .Where(@t => @t.line.ToUpper().Contains(kw.ToUpper()) &&
+                                                                  (@t.line.ToUpper().Contains("CREATEOBJECTSET") ||
+                                                                   @t.line.ToUpper().Contains("ENTİTY") ||
+                                                                   @t.line.ToUpper().Contains("CLASS") ||
+                                                                   @t.line.ToUpper().Contains("OBJDB") ||
+                                                                   @t.line.ToUpper().Contains("SELECT ") ||
+                                                                   @t.line.ToUpper().Contains("İNSERT ") ||
+                                                                   @t.line.ToUpper().Contains("UPDATE ") ||
+                                                                   @t.line.ToUpper().Contains("DELETE ")))
+                                                     .Select(@t => new
+                                                         {
+                                                             Keyword = kw,
+                                                             File = @t.fn.Replace(f.ProjectFolder + "\\", ""),
+                                                             Line = @t.line.Trim(),
+                                                         });
+
+                                foreach (var matchInfo in allMatches)
+                                    sb.AppendFormat("insert into search_results values('{0}', '{1}', '{2}');\r\n",
+                                                    matchInfo.Keyword,
+                                                    matchInfo.File.Replace("\\", "\\\\").Replace("'", "\\'"),
+                                                    matchInfo.Line.Replace("'", "\\'"));
+                            }
+
+                            int newPercent = Convert.ToInt32((i/(float) keyWords.Length)*100);
+                            if (percent != newPercent)
+                            {
+                                percent = newPercent;
+                                bwd.ReportProgress(percent);
+                            }
+                        }
+
+                        addFileEditor("", sb.ToString());
+                    };
+                bwd.Show();
             }
-
         }
+
 
         private void cmdQuickScript(string arg)
         {
