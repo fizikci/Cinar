@@ -115,7 +115,7 @@ namespace Cinar.Database
         }
 
         private bool isAutoIncrement;
-        [Description("Is this column auto_icrement or serial or identity? That is automatically increasing number.."), Category("Extra Info")]
+        [Description("Is this column auto_increment or serial or identity? That is automatically increasing number.."), Category("Extra Info")]
         public bool IsAutoIncrement
         {
             get { return isAutoIncrement; }
