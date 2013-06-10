@@ -99,7 +99,7 @@
             this.cbWhatToSearch.Items.AddRange(new object[] {
             "Table names in selected database",
             "View names in selected database",
-            "Image names in project folder"});
+            "Image names not used in project folder"});
             this.cbWhatToSearch.Location = new System.Drawing.Point(40, 340);
             this.cbWhatToSearch.Name = "cbWhatToSearch";
             this.cbWhatToSearch.Size = new System.Drawing.Size(417, 23);

@@ -28,8 +28,8 @@ namespace Cinar.DBTools.Tools
                 lbFileTypes.Items.Clear();
                 lbFileTypes.Items.AddRange(
                     Directory.EnumerateFiles(fbd.SelectedPath, "*.*", SearchOption.AllDirectories)
-                             .Select(path => (Path.GetExtension(path) ?? "").ToUpperInvariant())
-                             .Distinct()
+                             .GroupBy(path => (Path.GetExtension(path) ?? "").ToUpperInvariant())
+                             .Select(k => k.Key + " ("+ k.Count()+")")
                              .OrderBy(ext => ext)
                              .ToArray<object>()
                     );
@@ -43,7 +43,7 @@ namespace Cinar.DBTools.Tools
 
         public List<string> SearchExtensions
         {
-            get { return lbFileTypes.CheckedItems.Cast<string>().ToList(); }
+            get { return lbFileTypes.CheckedItems.Cast<string>().Select(ext=>ext.Split(' ')[0]).ToList(); }
         }
 
         public string WhatToSearch

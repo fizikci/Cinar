@@ -665,11 +665,10 @@ $"}
                     StringBuilder queriesWithError = new StringBuilder();
 
                     BackgroundWorkerDialog bwd = new BackgroundWorkerDialog();
-                    bwd.Message = "Please wait while " + sqlList.Count + " query executed.";
-                    bwd.DoWork = (e) => {
+                    bwd.MessageFormat = "Please wait while {0} query executed.";
+                    bwd.DoWork = () => {
                         int sqlListLength = sqlList.Count;
-                        int percent = 0;
-                        for (int i = 0; i < sqlListLength; i++)
+                        for (int i = 0; i < sqlListLength && !bwd.Canceled; i++)
                         {
                             try
                             {
@@ -681,13 +680,10 @@ $"}
                                 queriesWithError.AppendLine(sqlList[i]);
                             }
 
-                            int newPercent = Convert.ToInt32((i / (float)sqlListLength) * 100);
-                            if (percent != newPercent)
-                            {
-                                percent = newPercent;
-                                bwd.ReportProgress(percent);
-                            }
+                            int percent = Convert.ToInt32((i / (float)sqlListLength) * 100);
+                            bwd.ReportProgress(percent, sqlList.Count-i);
                         }
+                        return "";
                     };
                     bwd.ShowDialog();
 
@@ -2238,17 +2234,26 @@ $"}
                 foreach (string ext in f.SearchExtensions)
                     allFiles.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*" + ext, SearchOption.AllDirectories));
 
-                MessageBox.Show(f.WhatToSearch);
-
                 string[] keyWords;
+                
+                string strAllFileContent = null;
 
-                if (f.WhatToSearch == "Image names in project folder")
+                if (f.WhatToSearch == "Image names not used in project folder")
                 {
                     var imageNames = new List<string>();
                     foreach (string ext in new[] {".jpg", ".png", ".gif"})
                         imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*" + ext,
                                                                      SearchOption.AllDirectories));
-                    keyWords = imageNames.Select(Path.GetFileName).ToArray();
+                    keyWords = imageNames.ToArray();
+
+                    StringBuilder allFilesContent = new StringBuilder();
+                    foreach (var file in allFiles)
+                    {
+                        allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
+                    }
+                    strAllFileContent = allFilesContent.ToString();
+                    allFilesContent.Clear();
+                    allFilesContent = null;
                 }
                 else
                 {
@@ -2259,39 +2264,27 @@ $"}
                 }
 
                 BackgroundWorkerDialog bwd = new BackgroundWorkerDialog();
-                bwd.Message = "Please wait while " + keyWords.Length + " keywords being searched.";
-                bwd.DoWork = (e) =>
+                bwd.MessageFormat = "Please wait while " + keyWords.Length + " keywords being searched. ({0})";
+                bwd.DoWork = () =>
                     {
-                        int percent = 0;
                         StringBuilder sb = new StringBuilder();
-                        sb.AppendLine("create table search_results (keyword varchar(255), object_name varchar(255), content text);");
 
-                        for (int i = 0; i < keyWords.Length; i++)
+                        if (f.WhatToSearch != "Image names not used in project folder")
+                            sb.AppendLine("create table search_results (keyword varchar(255), object_name varchar(255), content text);");
+
+                        for (int i = 0; i < keyWords.Length && !bwd.Canceled; i++)
                         {
                             string kw = keyWords[i];
 
-                            if (f.WhatToSearch == "Image names in project folder")
+                            if (f.WhatToSearch == "Image names not used in project folder")
                             {
-                                var allMatches = from fn in allFiles
-                                             from line in File.ReadLines(fn)
-                                             where
-                                                 line.ToUpper().Contains(kw.ToUpper())
-                                             select new
-                                                 {
-                                                     Keyword = kw,
-                                                     File = fn.Replace(f.ProjectFolder + "\\", ""),
-                                                     Line = line.Trim(),
-                                                 };
-
-                                foreach (var matchInfo in allMatches)
-                                    sb.AppendFormat("insert into search_results values('{0}', '{1}', '{2}');\r\n",
-                                                    matchInfo.Keyword,
-                                                    matchInfo.File.Replace("\\", "\\\\").Replace("'", "\\'"),
-                                                    matchInfo.Line.Replace("'", "\\'"));
+                                if (strAllFileContent.IndexOf(Path.GetFileName(kw).ToUpper()) == -1)
+                                    sb.AppendLine(kw);
                             }
                             else
                             {
-                                var allMatches = allFiles.SelectMany(fn => File.ReadLines(fn), (fn, line) => new {fn, line})
+                                var allMatches = allFiles
+                                                     .SelectMany(fn => File.ReadLines(fn), (fn, line) => new {fn, line})
                                                      .Where(@t => @t.line.ToUpper().Contains(kw.ToUpper()) &&
                                                                   (@t.line.ToUpper().Contains("CREATEOBJECTSET") ||
                                                                    @t.line.ToUpper().Contains("ENTİTY") ||
@@ -2315,15 +2308,15 @@ $"}
                                                     matchInfo.Line.Replace("'", "\\'"));
                             }
 
-                            int newPercent = Convert.ToInt32((i/(float) keyWords.Length)*100);
-                            if (percent != newPercent)
-                            {
-                                percent = newPercent;
-                                bwd.ReportProgress(percent);
-                            }
+                            int percent = Convert.ToInt32((i/(float) keyWords.Length)*100);
+                            bwd.ReportProgress(percent, Path.GetFileName(kw));
                         }
 
-                        addFileEditor("", sb.ToString());
+                        return sb.ToString();
+                    };
+                bwd.Completed = () =>
+                    {
+                        addFileEditor("", bwd.Result);
                     };
                 bwd.Show();
             }
