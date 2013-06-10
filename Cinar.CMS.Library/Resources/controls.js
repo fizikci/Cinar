@@ -395,7 +395,7 @@ var FileManager = Class.create(); FileManager.prototype = {
 					'<div id="fileBrowserFooter">' +
 						'<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
 							'<input type="hidden" name="folder"/>' +
-							'Dosya: <input type="file" name="upload"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
+							'Dosya: <input type="file" name="upload" multiple="multiple"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
 							'<iframe name="fakeUplFrm"></iframe>' +
 						'</form>' +
 						'<form action="SystemInfo.ashx?method=createFolder" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +

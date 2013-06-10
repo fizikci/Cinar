@@ -329,9 +329,12 @@ namespace Cinar.CMS.Library.Handlers
                 if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
                     path = Path.GetDirectoryName(path);
 
-                string fileName = Path.GetFileName(context.Request.Files["upload"].FileName).MakeFileName();
-                context.Request.Files["upload"].SaveAs(Path.Combine(path, fileName));
-                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
+                for (int i = 0; i < context.Request.Files.Count; i++)
+                {
+                    string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
+                    context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+                    context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
+                }
             }
             catch
             {
