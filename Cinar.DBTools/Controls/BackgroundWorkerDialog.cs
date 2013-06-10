@@ -13,11 +13,15 @@ namespace Cinar.DBTools.Controls
         public BackgroundWorkerDialog()
         {
             InitializeComponent();
+
+            backgroundWorker.WorkerSupportsCancellation = true;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            label.Text = string.Format(MessageFormat, "");
 
             backgroundWorker.RunWorkerAsync();
         }
@@ -25,30 +29,39 @@ namespace Cinar.DBTools.Controls
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (DoWork != null)
-                DoWork(e);
+                Result = DoWork();
         }
 
-        public void ReportProgress(int percentProgress)
+        public string Result { get; set; }
+
+        public void ReportProgress(int percentProgress, object userState)
         {
-            backgroundWorker.ReportProgress(percentProgress);
+            backgroundWorker.ReportProgress(percentProgress, userState);
         }
 
-        public Action<DoWorkEventArgs> DoWork;
+        public Func<string> DoWork;
+        public Action Completed;
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
+            if(progressBar.Value != e.ProgressPercentage)
+                progressBar.Value = e.ProgressPercentage;
+            if (e.UserState != null)
+                label.Text = string.Format(MessageFormat, e.UserState);
         }
 
-        public string Message
-        {
-            get { return label.Text; }
-            set { label.Text = value; }
-        }
+        public string MessageFormat { get; set; }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Close();
+            if(Completed!=null)
+                Completed();
+        }
+
+        public bool Canceled
+        {
+            get { return backgroundWorker.CancellationPending; }
         }
 
         public int Maximum
@@ -61,6 +74,11 @@ namespace Cinar.DBTools.Controls
         {
             get { return progressBar.Minimum; }
             set { progressBar.Minimum = value; }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            backgroundWorker.CancelAsync();
         }
     }
 }
