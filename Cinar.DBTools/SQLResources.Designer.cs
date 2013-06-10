@@ -271,6 +271,95 @@ namespace Cinar.DBTools {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $
+        ///foreach(table in db.Tables)
+        ///    echo(&apos;truncate table [&apos; + table.Name + &apos;];\r\n&apos;);
+        ///$.
+        /// </summary>
+        internal static string SQLDeleteFromTables {
+            get {
+                return ResourceManager.GetString("SQLDeleteFromTables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
+        ///foreach(column in db.Tables[&apos;TABLE_NAME&apos;].Columns)
+        ///    echo(column.Name + &apos;\r\n&apos;);
+        ///$.
+        /// </summary>
+        internal static string SQLForEachColumn {
+            get {
+                return ResourceManager.GetString("SQLForEachColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
+        ///foreach(table in db.Tables)
+        ///    echo(table.Name + &apos;\r\n&apos;);
+        ///$.
+        /// </summary>
+        internal static string SQLForEachTable {
+            get {
+                return ResourceManager.GetString("SQLForEachTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
+        ///foreach(var t in db.Tables)
+        ///	foreach(var f in t.Columns){
+        ///		if(f.IsStringType()==false) continue;
+        ///$
+        ///select &apos;$=t.Name$&apos; as table_name, &apos;$=f.Name$&apos; as column_name, Id, $=f.Name$ as column_val from $=t.Name$ 
+        ///where ($=f.Name$ like &apos;%WRITE_SEARCH_KEYWORD_HERE%&apos;)
+        ///UNION
+        ///$
+        ///	}
+        ///$
+        ///order by table_name, column_name.
+        /// </summary>
+        internal static string SQLSearhAllStringFields {
+            get {
+                return ResourceManager.GetString("SQLSearhAllStringFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
+        ///for(int i=0; i&lt;db.Tables.Count; i++)
+        ///{
+        ///	var table = db.Tables[i];
+        ///    echo(&quot;select &apos;&quot; + table.Name + &quot;&apos;, count(*) from [&quot; + table.Name + &quot;]&quot;);
+        ///    if(i &lt; db.Tables.Count-1)
+        ///		echo(&quot;&quot; UNION \r\n&quot;&quot;);
+        ///}
+        ///$.
+        /// </summary>
+        internal static string SQLSelectCountsFromTables {
+            get {
+                return ResourceManager.GetString("SQLSelectCountsFromTables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
+        ///foreach(var t in db.Tables)
+        ///	if(t.IsView){
+        ///		foreach(var dr in db.GetDataTable(&quot;sp_helptext &apos;&quot;+t.Name+&quot;&apos;&quot;).Rows)
+        ///			echo(dr[0]);
+        ///		echo(&apos;GO\r\n\r\n\r\n&apos;);
+        ///	}
+        ///$.
+        /// </summary>
+        internal static string SQLSPHelpText {
+            get {
+                return ResourceManager.GetString("SQLSPHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Struct {

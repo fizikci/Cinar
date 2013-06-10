@@ -271,35 +271,13 @@ namespace Cinar.DBTools
                      new Command {
                                      Execute = cmdQuickScript,
                                      Triggers = new List<CommandTrigger>(){
-                                         new CommandTrigger{ Control = menuToolsQScriptDeleteFromTables, Argument=@"$
-foreach(table in db.Tables)
-    echo('truncate table [' + table.Name + '];\r\n');
-$"},
-                                         new CommandTrigger{ Control = menuToolsQScriptSelectCountsFromTables, Argument=@"$
-for(int i=0; i<db.Tables.Count; i++)
-{
-	var table = db.Tables[i];
-    echo(""select '"" + table.Name + ""', count(*) from ["" + table.Name + ""]"");
-    if(i<db.Tables.Count-1) echo("" UNION \r\n"");
-}
-$"},
-                                         new CommandTrigger{ Control = menuToolsQScriptForEachTable, Argument=@"$
-foreach(table in db.Tables)
-    echo(table.Name + ""\r\n"");
-$"},
-                                         new CommandTrigger{ Control = menuToolsQScriptForEachColumn, Argument=@"$
-foreach(column in db.Tables[""TABLE_NAME""].Columns)
-    echo(column.Name + ""\r\n"");
-$"},
+                                         new CommandTrigger{ Control = menuToolsQScriptDeleteFromTables, Argument=SQLResources.SQLDeleteFromTables},
+                                         new CommandTrigger{ Control = menuToolsQScriptSelectCountsFromTables, Argument=SQLResources.SQLSelectCountsFromTables},
+                                         new CommandTrigger{ Control = menuToolsQScriptForEachTable, Argument=SQLResources.SQLForEachTable},
+                                         new CommandTrigger{ Control = menuToolsQScriptForEachColumn, Argument=SQLResources.SQLForEachColumn},
                                          new CommandTrigger{ Control = menuToolsQScriptCalculateOptDataLen, Argument=SQLResources.SQLCalculateOptimalDataLength},
-                                         new CommandTrigger{ Control = menuToolsQScriptSPHelpText, Argument=@"$
-foreach(var t in db.Tables)
-	if(t.IsView){
-		foreach(var dr in db.GetDataTable(""sp_helptext '""+t.Name+""'"").Rows)
-			echo(dr[0]);
-		echo(""GO\r\n\r\n\r\n"");
-	}
-$"}
+                                         new CommandTrigger{ Control = menuToolsQScriptSPHelpText, Argument=SQLResources.SQLSPHelpText},
+                                         new CommandTrigger{ Control = menuToolsQScriptSearhAllStringFields, Argument=SQLResources.SQLSearhAllStringFields},
                                      }
                                  },
                     #endregion

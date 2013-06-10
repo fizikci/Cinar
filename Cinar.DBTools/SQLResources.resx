@@ -735,4 +735,57 @@ DELIMITER ;</value>
   <data name="Property" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Property.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SQLSearhAllStringFields" xml:space="preserve">
+    <value>$
+foreach(var t in db.Tables)
+	foreach(var f in t.Columns){
+		if(f.IsStringType()==false) continue;
+$
+select '$=t.Name$' as table_name, '$=f.Name$' as column_name, Id, $=f.Name$ as column_val from $=t.Name$ 
+where ($=f.Name$ like '%WRITE_SEARCH_KEYWORD_HERE%')
+UNION
+$
+	}
+$
+order by table_name, column_name</value>
+  </data>
+  <data name="SQLDeleteFromTables" xml:space="preserve">
+    <value>$
+foreach(table in db.Tables)
+    echo('truncate table [' + table.Name + '];\r\n');
+$</value>
+  </data>
+  <data name="SQLForEachColumn" xml:space="preserve">
+    <value>$
+foreach(column in db.Tables['TABLE_NAME'].Columns)
+    echo(column.Name + '\r\n');
+$</value>
+  </data>
+  <data name="SQLForEachTable" xml:space="preserve">
+    <value>$
+foreach(table in db.Tables)
+    echo(table.Name + '\r\n');
+$</value>
+  </data>
+  <data name="SQLSelectCountsFromTables" xml:space="preserve">
+    <value>$
+for(int i=0; i&lt;db.Tables.Count; i++)
+{
+	var table = db.Tables[i];
+    echo("select '" + table.Name + "', count(*) from [" + table.Name + "]");
+    if(i &lt; db.Tables.Count-1)
+		echo("" UNION \r\n"");
+}
+$</value>
+  </data>
+  <data name="SQLSPHelpText" xml:space="preserve">
+    <value>$
+foreach(var t in db.Tables)
+	if(t.IsView){
+		foreach(var dr in db.GetDataTable("sp_helptext '"+t.Name+"'").Rows)
+			echo(dr[0]);
+		echo('GO\r\n\r\n\r\n');
+	}
+$</value>
+  </data>
 </root>
