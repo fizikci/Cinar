@@ -58,6 +58,8 @@ namespace Cinar.DBTools.Tools
             File.WriteAllText(dbDump.FilePath, "", Encoding.UTF8);
             foreach (var tableName in dbDump.TableList)
             {
+                if (backgroundWorker.CancellationPending)
+                    break;
                 Table t = dbDump.Database.Tables[tableName];
                 backgroundWorker.ReportProgress(0, "dumping " + t.Name + "...\r\n");
                 File.AppendAllText(dbDump.FilePath, dbDump.Database.GetTableDDL(t, dbDump.Provider), Encoding.UTF8);

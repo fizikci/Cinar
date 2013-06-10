@@ -211,6 +211,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.menuToolsQScriptSearhAllStringFields = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1488,7 +1489,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptForEachTable,
             this.menuToolsQScriptForEachColumn,
             this.menuToolsQScriptCalculateOptDataLen,
-            this.menuToolsQScriptSPHelpText});
+            this.menuToolsQScriptSPHelpText,
+            this.menuToolsQScriptSearhAllStringFields});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1772,6 +1774,12 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // menuToolsQScriptSearhAllStringFields
+            // 
+            this.menuToolsQScriptSearhAllStringFields.Name = "menuToolsQScriptSearhAllStringFields";
+            this.menuToolsQScriptSearhAllStringFields.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSearhAllStringFields.Text = "Searh All String Fields";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2001,6 +2009,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuTableShowInDiagram;
         private System.Windows.Forms.ToolStripMenuItem menuTableShowChildrenRecords;
         private System.Windows.Forms.ToolStripMenuItem emptyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSearhAllStringFields;
 
     }
 }
