@@ -97,9 +97,11 @@
             this.cbWhatToSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbWhatToSearch.FormattingEnabled = true;
             this.cbWhatToSearch.Items.AddRange(new object[] {
-            "Table names in selected database",
-            "View names in selected database",
-            "Image names not used in project folder"});
+            "Table names used by Project Folder",
+            "View names used by Project Folder",
+            "Image names not used in Project Folder",
+            "Javascript files not used in Project Folder",
+            "CSS files not used in Project Folder"});
             this.cbWhatToSearch.Location = new System.Drawing.Point(40, 340);
             this.cbWhatToSearch.Name = "cbWhatToSearch";
             this.cbWhatToSearch.Size = new System.Drawing.Size(417, 23);

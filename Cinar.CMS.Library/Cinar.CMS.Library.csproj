@@ -199,7 +199,6 @@
     <Compile Include="Provider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Resources\default.css" />
     <None Include="Resources\conf_default.css" />
     <None Include="Resources\controls.js" />

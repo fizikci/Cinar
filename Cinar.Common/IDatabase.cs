@@ -26,7 +26,7 @@ namespace Cinar.Database
         List<string> SQLLog { get; }
 
         [XmlIgnore]
-        Hashtable Cache { get; }
+        CacheProvider Cache { get; }
 
         [XmlIgnore]
         string ConnectionString { get; }
