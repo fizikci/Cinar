@@ -2216,19 +2216,43 @@ namespace Cinar.DBTools
                 
                 string strAllFileContent = null;
 
-                if (f.WhatToSearch == "Image names not used in project folder")
+                if (f.WhatToSearch == "Image names not used in Project Folder")
                 {
                     var imageNames = new List<string>();
-                    foreach (string ext in new[] {".jpg", ".png", ".gif"})
+                    foreach (string ext in new[] { ".jpg", ".png", ".gif" })
                         imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*" + ext,
                                                                      SearchOption.AllDirectories));
                     keyWords = imageNames.ToArray();
 
                     StringBuilder allFilesContent = new StringBuilder();
                     foreach (var file in allFiles)
-                    {
                         allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
-                    }
+                    strAllFileContent = allFilesContent.ToString();
+                    allFilesContent.Clear();
+                    allFilesContent = null;
+                }
+                else if (f.WhatToSearch == "Javascript files not used in Project Folder")
+                {
+                    var imageNames = new List<string>();
+                    imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*.JS", SearchOption.AllDirectories));
+                    keyWords = imageNames.ToArray();
+
+                    StringBuilder allFilesContent = new StringBuilder();
+                    foreach (var file in allFiles)
+                        allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
+                    strAllFileContent = allFilesContent.ToString();
+                    allFilesContent.Clear();
+                    allFilesContent = null;
+                }
+                else if (f.WhatToSearch == "CSS files not used in Project Folder")
+                {
+                    var imageNames = new List<string>();
+                    imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*.CSS", SearchOption.AllDirectories));
+                    keyWords = imageNames.ToArray();
+
+                    StringBuilder allFilesContent = new StringBuilder();
+                    foreach (var file in allFiles)
+                        allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
                     strAllFileContent = allFilesContent.ToString();
                     allFilesContent.Clear();
                     allFilesContent = null;
@@ -2247,14 +2271,14 @@ namespace Cinar.DBTools
                     {
                         StringBuilder sb = new StringBuilder();
 
-                        if (f.WhatToSearch != "Image names not used in project folder")
+                        if (f.WhatToSearch != "Image names not used in project folder" && f.WhatToSearch != "Javascript files not used in Project Folder" && f.WhatToSearch != "CSS files not used in Project Folder")
                             sb.AppendLine("create table search_results (keyword varchar(255), object_name varchar(255), content text);");
 
                         for (int i = 0; i < keyWords.Length && !bwd.Canceled; i++)
                         {
                             string kw = keyWords[i];
 
-                            if (f.WhatToSearch == "Image names not used in project folder")
+                            if (f.WhatToSearch == "Image names not used in project folder" || f.WhatToSearch == "Javascript files not used in Project Folder" || f.WhatToSearch == "CSS files not used in Project Folder")
                             {
                                 if (strAllFileContent.IndexOf(Path.GetFileName(kw).ToUpper()) == -1)
                                     sb.AppendLine(kw);

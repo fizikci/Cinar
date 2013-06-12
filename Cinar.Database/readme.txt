@@ -96,7 +96,7 @@ else
 {
 	foreach( Column fld in musteriTable.Columns )
 	{
-		Console.WriteLine("Column adý                   : " + fld.Name);
+		Console.WriteLine("Column adý                  : " + fld.Name);
 		Console.WriteLine("Tipi                        : " + fld.ColumnType);
 		Console.WriteLine("Null olabilir mi?           : " + fld.IsNullable);
 		Console.WrileLine("Default deðeri              : " + fld.DefaultValue);

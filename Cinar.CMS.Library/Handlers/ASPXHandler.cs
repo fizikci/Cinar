@@ -118,14 +118,6 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
                 sb.Append("<link href=\"/_thumbs/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                if (Provider.DesignMode)
-                    sb.Append("<style title=\"moduleStyles\">\n" + Provider.Configuration.DefaultStyleSheet + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
-                else
-                {
-                    sb.Append("<link href=\"/_thumbs/DefaultStyleSheet.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                    sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
-                }
-
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
 
@@ -140,6 +132,14 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
+
+                if (Provider.DesignMode)
+                    sb.Append("<style title=\"moduleStyles\">\n" + Provider.Configuration.DefaultStyleSheet + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
+                else
+                {
+                    sb.Append("<link href=\"/_thumbs/DefaultStyleSheet.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
+                }
 
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {

@@ -110,14 +110,14 @@ namespace Cinar.Database
             }
         }
 
-        private Hashtable _cache;
+        private CacheProvider _cache;
         [XmlIgnore]
-        public Hashtable Cache
+        public CacheProvider Cache
         {
             get
             {
                 if (_cache == null)
-                    _cache = new Hashtable();
+                    _cache = new CacheProvider();
                 return _cache;
             }
         }
@@ -164,7 +164,13 @@ namespace Cinar.Database
         }
 
         private string serializedMetadataFilePath;
-        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath, bool createDatabaseIfNotExist)
+
+        private string uniqueDatabaseName {
+            get { return this.Host + this.Provider + this.Name; }
+        }
+
+        private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider,
+                                                   string serializedMetadataFilePath, bool createDatabaseIfNotExist)
         {
             this.connectionString = connectionString;
             this.provider = provider;
@@ -172,32 +178,17 @@ namespace Cinar.Database
 
             CreateDbProvider(createDatabaseIfNotExist);
 
-            if (HttpContext.Current != null)
+
+            if (!Cache.ContainsKey(uniqueDatabaseName))
             {
-                if (HttpContext.Current.Items["databaseMetadata"] == null)
-                {
-                    if (string.IsNullOrEmpty(serializedMetadataFilePath))
-                        dbProvider.ReadDatabaseMetadata();
-                    else
-                        readMetadataFromFile(serializedMetadataFilePath);
-                    HttpContext.Current.Items["databaseMetadata"] = this.tables;
-                }
+                if (string.IsNullOrEmpty(serializedMetadataFilePath))
+                    dbProvider.ReadDatabaseMetadata();
                 else
-                    this.tables = (TableCollection)HttpContext.Current.Items["databaseMetadata"];
+                    readMetadataFromFile(serializedMetadataFilePath);
+                Cache[uniqueDatabaseName] = this.tables;
             }
             else
-            {
-                if (!Cache.ContainsKey("databaseMetadata"))
-                {
-                    if (string.IsNullOrEmpty(serializedMetadataFilePath))
-                        dbProvider.ReadDatabaseMetadata();
-                    else
-                        readMetadataFromFile(serializedMetadataFilePath);
-                    Cache["databaseMetadata"] = this.tables;
-                }
-                else
-                    this.tables = (TableCollection)Cache["databaseMetadata"];
-            }
+                this.tables = (TableCollection)Cache[uniqueDatabaseName];
         }
 
         private void readMetadataFromFile(string serializedMetadataFilePath)
@@ -427,16 +418,9 @@ namespace Cinar.Database
             tableMappingInfo = new Dictionary<Type, Table>();
             columnMappingInfo = new Dictionary<PropertyInfo, Column>();
 
-            if (HttpContext.Current != null)
-            {
-                HttpContext.Current.Items.Remove("databaseMetadata");
-                HttpContext.Current.Items["databaseMetadata"] = this.tables;
-            }
-            else
-            {
-                Cache.Remove("databaseMetadata");
-                Cache["databaseMetadata"] = this.tables;
-            }
+
+            Cache.Remove(uniqueDatabaseName);
+            Cache[uniqueDatabaseName] = this.tables;
 
             if (!string.IsNullOrWhiteSpace(serializedMetadataFilePath))
                 File.Delete(serializedMetadataFilePath);
