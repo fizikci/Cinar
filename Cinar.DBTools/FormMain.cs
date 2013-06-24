@@ -2316,10 +2316,7 @@ namespace Cinar.DBTools
 
                         return sb.ToString();
                     };
-                bwd.Completed = () =>
-                    {
-                        addFileEditor("", bwd.Result);
-                    };
+                bwd.Completed = () => addFileEditor("", bwd.Result);
                 bwd.Show();
             }
         }
