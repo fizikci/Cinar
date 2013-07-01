@@ -943,8 +943,12 @@ namespace Cinar.Database
         public string GetIdColumnName(Type entityType)
         {
             PropertyInfo pi = entityType.GetProperty("Id");
-            if (columnMappingInfo.ContainsKey(pi))
-                return columnMappingInfo[pi].Name;
+            Column c = GetColumnForProperty(pi);
+            Table t = GetTableForEntityType(entityType);
+            if (c != null)
+                return c.Name;
+            else if (t.PrimaryColumn != null)
+                return t.PrimaryColumn.Name;
             else
                 return "Id";
         }
