@@ -240,6 +240,10 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("ID geçersiz!");
                 return;
             }
+
+            if (string.IsNullOrWhiteSpace(moduleName))
+                moduleName = Provider.Database.Read<Module>(id).Name;
+
             Module module = Module.Read(moduleName, mid);
             if (module == null)
             {

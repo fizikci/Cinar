@@ -6,45 +6,37 @@
 }
 
 .alphacube_nw {
-  background: transparent url(alphacube/top-middle.gif) repeat-x 0 0;	
   width:10px;
   height:25px;
 }
 
 .alphacube_n {
-  background: transparent url(alphacube/top-middle.gif) repeat-x 0 0;			
   height:25px;
 }
 
 .alphacube_ne {
-  background: transparent url(alphacube/top-middle.gif) repeat-x 0 0;		
   width:10px;	  
   height:25px;
 }
 
 .alphacube_w {
-  background:#FDFDFD;
   width:7px;
 }
 
 .alphacube_e {
-  background:#FDFDFD;
   width:7px;	  
 }
 
 .alphacube_sw {
-  background: transparent url(alphacube/bottom-middle.gif) repeat-x 0 0;			
   width:7px;
   height:7px;
 }
 
 .alphacube_s {
-  background: transparent url(alphacube/bottom-middle.gif) repeat-x 0 0;			
   height:7px;
 }
 
 .alphacube_se, .alphacube_sizer  {
-  background: transparent url(alphacube/bottom-middle.gif) repeat-x 0 0;			
   width:7px;
   height:7px;
 }
@@ -90,14 +82,13 @@
 	float:left;
 	height:23px;
 	font-family: Tahoma, Arial, sans-serif;
-	padding-top:5px;
+	padding-top:2px;
 	font-size:12px;
 	font-weight:bold;
-	color:#316AC5;
+	color:white !important;
 	text-align:left;
 	margin-top:2px;
 	width:100%;
-	color:#123456;
 }
 
 .alphacube_content {
@@ -106,7 +97,6 @@
 	font-family: Tahoma, Arial, sans-serif;
     font-size: 12px;
 	background:#FDFDFD;
-	padding:4px;
 	text-align:left;
 	position:relative;
 }

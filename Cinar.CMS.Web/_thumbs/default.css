@@ -50,7 +50,7 @@ b {font-weight:bold}
 i {font-style:italic}
 
 /* all icons*/
-.cbtn {background-image:url('/external/icons/all_icons.png'); background-repeat:no-repeat; height:16px; width:16px; display:inline-block; vertical-align:bottom; cursor:pointer;}
+.cbtn {background-image:url('/external/icons/all_icons.png'); background-repeat:no-repeat; height:16px; width:16px; display:inline-block; vertical-align:top; cursor:pointer;}
 .c_db_add {background-position:0px 0px;}
 .c_db_delete {background-position:0px -16px;}
 .c_db_edit {background-position:0px -32px;}

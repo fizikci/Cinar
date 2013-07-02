@@ -557,7 +557,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
 
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
-    var win = new Window({className: 'alphacube', title: caption, width:800, height:400, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: caption, width:800, height:500, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 	win.cTagName = 'listform';
     var winContent = $(win.getContent());
 
@@ -605,9 +605,13 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
     
     return win;
 }
-function quickLoadImages(){
+function quickLoadImages(contentId){
 	var fm = openFileManager();
 	var ths = this; // this is ListForm here
+
+	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
+	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
+
 	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="btn cok">' + lang('OK') + '</span></div>');
 	$('btnOK').observe('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
@@ -713,7 +717,7 @@ function openTagForm(winPos, tag, tagData){
 }
 function sortImages(){
 	var ths = this; // this is ListForm here
-	var table = ths.listGrid.table; // this is ListForm here
+	var table = ths.listGrid.table; 
 	if(!table)
 		return;
 	
@@ -727,7 +731,12 @@ function sortImages(){
 		var src = row.select('td')[2].readAttribute('value');
 		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
 	}
-	html += '</div><p align="right" style="position:absolute;bottom:0px;right:0px;"><span class="btn cdelete" id="btnSortImagesDelete">'+lang('Delete')+'</span> <span class="btn cok" id="btnSortImagesOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnSortImagesCancel">'+lang('Cancel')+'</span></p>';
+	html += '</div>';
+	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
+	html += '   <span class="btn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
+	html += '   <span class="btn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
+	html += '   <span class="btn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+	html += '</p>';
 
 	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
@@ -1119,7 +1128,7 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(selectedPath, onSelectFile){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), width: 780, height: 450, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), minWidth:913,  width: 965, minHeight:350, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     var fm = new FileManager({
 		container:winContent,

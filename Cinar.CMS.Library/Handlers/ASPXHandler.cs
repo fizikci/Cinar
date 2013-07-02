@@ -116,18 +116,18 @@ namespace Cinar.CMS.Library.Handlers
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
-                sb.Append("<link href=\"/_thumbs/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
 
-                sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/default.js\"></script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/message.js\"> </script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
-                sb.Append("<link href=\"/_thumbs/cinar.cms.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"" + (Provider.DesignMode ? "cinar.cms.css.ashx" : "/_thumbs/cinar.cms.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
@@ -137,13 +137,13 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.Configuration.DefaultStyleSheet + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 else
                 {
-                    sb.Append("<link href=\"/_thumbs/DefaultStyleSheet.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    sb.Append("<link href=\"" + (Provider.DesignMode ? "DefaultStyleSheet.css.ashx" : "/_thumbs/DefaultStyleSheet.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
 
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {
-                    sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/controls.js\"></script>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "controls.js.ashx" : "/_thumbs/controls.js") + "\"></script>\n");
                     sb.Append(@"
 <script type=""text/javascript"">
     if(designMode){
@@ -157,7 +157,7 @@ namespace Cinar.CMS.Library.Handlers
     var templates = " + getTemplatesJSON() + @";
 </script>
                 ");
-                    sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/cinar.cms.js\"></script>\n");
+                    sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "cinar.cms.js.ashx" : "/_thumbs/cinar.cms.js") + "\"></script>\n");
                 }
 
                 if (Provider.DevelopmentMode)
@@ -183,7 +183,7 @@ namespace Cinar.CMS.Library.Handlers
 </script>
 ");
                 }
-                sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/DefaultJavascript.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.js.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 
                 return sb.ToString();
             }
