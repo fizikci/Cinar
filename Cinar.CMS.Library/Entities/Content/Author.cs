@@ -7,6 +7,8 @@ namespace Cinar.CMS.Library.Entities
     [OverrideAttribute(AttributeType = typeof(PictureFieldPropsAttribute), FieldName = "Picture", AttribProps = "SpecialFolder|AddRandomNumber|UseYearMonthDayFolders", NewValues = "authorDir|false|false")]
     public class Author : UserRelatedEntity
     {
+        public string Title { get; set; }
+
         private bool disableAutoContent;
         [ColumnDetail(IsNotNull = true, DefaultValue = "0")]
         public bool DisableAutoContent

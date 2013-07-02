@@ -957,8 +957,9 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     },
     selectDay: function(event){
         var td = Event.element(event);
-        this.dateValue = new Date(__yearCombo.value, __monthCombo.value-1, td.innerHTML);
-        var str = this.dateValue.toLocaleString();
+        this.dateValue = new Date(__yearCombo.value, __monthCombo.value - 1, td.innerHTML);
+        
+        var str = this.getValue();
         str = str.substr(0, str.length-9);
         if(this.input.value!=str){
             this.input.value = str;
@@ -1002,20 +1003,20 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         $(this.editorId).select('.calDay').each(function(elm){elm.observe('click', ths.selectDay.bind(ths));});
     },
     parse: function(val){
-        var dmy = val.split(' ')[0];
-        var hm = val.split(' ')[1];
+        var dmy = val.split('T')[0];
+        var hm = val.split('T')[1];
         dmy = dmy.split('-');
         hm = hm.split(':');
         var dt = new Date();
-        dt.setDate(dmy[0]); dt.setMonth(dmy[1]-1); dt.setFullYear(dmy[2]);
-        dt.setHours(hm[0]); dt.setMinutes(hm[1]);
+        dt.setDate(parseInt(dmy[0])); dt.setMonth(parseInt(dmy[1])-1); dt.setFullYear(parseInt(dmy[2]));
+        dt.setHours(parseInt(hm[0])); dt.setMinutes(parseInt(hm[1]));
         
         return dt;
     },
     setText: function(value){
         this.dateValue = this.parse(value);
-        var str = this.dateValue.toLocaleString();
-        this.input.value = str.substr(0, str.length-9);
+        //var str = this.dateValue.toLocaleString();
+        this.input.value = value.substr(0, value.length - 9); //str.substr(0, str.length - 9);
     },
     getValue: function(){
         var d = this.dateValue;
@@ -1302,7 +1303,7 @@ var EditForm = Class.create(); EditForm.prototype = {
 				if(control.category!=cat || control.type=='ListForm') continue;
 				if (hideCategory == cat) hideFieldValue[control.id] = control.value;
 				if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
-				str += '<tr>';
+				str += '<tr ' + (hideCategory == cat?'style="display:none"':'') + '>';
 				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
 				str += '</tr>';
@@ -1469,7 +1470,7 @@ var ListForm = Class.create();ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        new Insertion.Top(this.container, '<table style="'+(this.options.hideFilterPanel ? 'display:none' : '')+'" width="100%"><tr><td width="1%">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        new Insertion.Top(this.container, '<table style="' + (this.options.hideFilterPanel ? 'display:none' : '') + '" class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
         $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
 

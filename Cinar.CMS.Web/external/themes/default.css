@@ -135,7 +135,7 @@
 .dialog {
 	display: block;
 	position: absolute;
-	border-left: 1px solid;
+    background: #316AC5;
 
 	-moz-box-shadow: 3px 3px 4px black;
 	-webkit-box-shadow: 3px 3px 4px black;
@@ -154,6 +154,8 @@
 	padding:0px;
 }
 
+.dialog table.top {
+}
 .dialog table.table_window td , .dialog table.table_window th { 
   padding: 0; 
 }
