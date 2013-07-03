@@ -215,6 +215,8 @@ var StringEdit = Class.create();StringEdit.prototype = {
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
+        var ths = this;
+
         if (!$(this.editorId))
             new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
 
@@ -236,11 +238,11 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
 									'<div style="float:right"><input type="checkbox" class="wrapCheck" '+(wrap=='1'?'checked':'')+'/> Wrap <input type="checkbox" class="nl2br" '+(nl2br=='1'?'checked':'')+'/> nl2br</div>'+
 								'</div>'+
-								'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" '+(wrap=='1'?'':'wrap="off"')+'></textarea>'+
+								'<div id="' + this.editorId + 'ta" style="height: 432px;width: 633px;"></div>'+
 								'<center><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
 								
         var ta = $(this.editorId + 'ta');
-		ta.value = this.input.value.gsub('#NL#', '\n');
+        ta.value = this.input.value.gsub('#NL#', '\n');
 
         if (this.input.disabled) return;
 
@@ -256,9 +258,9 @@ var StringEdit = Class.create();StringEdit.prototype = {
 		var wrapCheck = list.down('.wrapCheck');
 		wrapCheck.observe('click', function(){
 			if(wrapCheck.checked)
-				ta.writeAttribute('wrap');
+			    ths.aceEdit.getSession().setUseWrapMode(true);//ta.writeAttribute('wrap');
 			else
-				ta.writeAttribute('wrap', 'off');
+			    ths.aceEdit.getSession().setUseWrapMode(false); //ta.writeAttribute('wrap', 'off');
 			setCookie('wrap', wrapCheck.checked ? 1:0);
 		});
 		var nl2brCheck = list.down('.nl2br');
@@ -273,8 +275,6 @@ var StringEdit = Class.create();StringEdit.prototype = {
 					break;
 			}
 		});
-		
-		var ths = this;
 		
 		list.select('.cbtn').each(function(img){
 			if (img.className.indexOf('bold')>-1)
@@ -308,6 +308,12 @@ var StringEdit = Class.create();StringEdit.prototype = {
 
         list.show();
         Event.stop(event);
+
+        this.aceEdit = ace.edit(this.editorId + 'ta');
+        this.aceEdit.setTheme("ace/theme/eclipse");
+        this.aceEdit.getSession().setMode("ace/mode/html");
+        this.aceEdit.getSession().setUseWrapMode(wrap == '1');
+        this.aceEdit.setValue(this.input.value.gsub('#NL#', '\n'));
     },
     getValue: function() {
         return this.input.value.gsub('#NL#', '\n');
@@ -317,7 +323,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
     },
     setHtml: function(event) {
         var list = $(this.editorId);
-        this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
+        this.input.value = this.aceEdit.getValue().gsub('\n', '#NL#');//$(this.editorId + 'ta').value.gsub('\n', '#NL#');
         list.remove();
     }
 }
@@ -1271,7 +1277,8 @@ var EditForm = Class.create(); EditForm.prototype = {
     cntrlId: null,
     initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels){
         container = $(container);
-        if(container==null) container = $(document.body);
+        if (container == null) container = $(document.body);
+        if (!hideCategory) hideCategory = '';
         
         this.hndl = ++formHandle;
         this.cntrlId = 'cntrl' + this.hndl + '_';
@@ -1296,14 +1303,14 @@ var EditForm = Class.create(); EditForm.prototype = {
 		var categories = controls.collect(function(item){return item.category;}).uniq().compact();
 		for(var k=0; k<categories.length; k++){
 			var cat = categories[k];
-			if(hideCategory!=cat)
+			if (hideCategory.indexOf(cat) == -1)
 				str += '<tr class="category"><td colspan="2">'+cat+'</td></tr>';
 			for(var i=0; i<controls.length; i++){
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
-				if (hideCategory == cat) hideFieldValue[control.id] = control.value;
+				if (hideCategory.indexOf(cat)>-1) hideFieldValue[control.id] = control.value;
 				if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
-				str += '<tr ' + (hideCategory == cat?'style="display:none"':'') + '>';
+				str += '<tr ' + (hideCategory.indexOf(cat) > -1 ? 'style="display:none"' : '') + '>';
 				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
 				str += '</tr>';
@@ -2202,8 +2209,6 @@ function menuOut(link){
     $(link).setStyle({backgroundColor:'', color:''});
 }
 function wr(s){document.write(s);}
-//var totalS = '';
-//function wr(s){totalS += s;}
 
 //#############################
 //#          Console          #
@@ -2369,5 +2374,55 @@ var Fabtabs = Class.create(); Fabtabs.prototype = {
         } else {
             return this.menu.first();
         }
+    }
+}
+
+//#############################
+//#         AceEditor         #
+//#############################
+
+var AceEditor = Class.create(); AceEditor.prototype = {
+    initialize: function (options) {
+        var ths = this;
+        options = Object.extend({
+            titleIcon: 'page',
+            title: 'Çınar Ace Editor',
+            width: 950,
+            height:600,
+            buttons: [{ icon: 'ok', id: 'btnOk', text: lang('OK'), callback: function () { Windows.getFocusedWindow().close(); } }],
+            text: 'Sample AceEditor window',
+            lang: 'html',
+            wrap: false
+        }, options || {});
+
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
+        var winContent = $(win.getContent());
+        var html = '<div id="txtSource" style="position:absolute;top:4px;left:4px;right:4px;bottom:32px;border-bottom:1px solid #ccc"></div><div style="position:absolute;left:4px;right:4px;bottom:8px; height:20px;text-align:center">';
+        for(var i=0; i<options.buttons.length; i++)
+            html += '<span class="btn c' + options.buttons[i].icon + '" id="' + options.buttons[i].id + '">' + options.buttons[i].text + '</span>';
+        html += '</div>';
+        new Insertion.Bottom(winContent, html);
+
+        for (var i = 0; i < options.buttons.length; i++) {
+            var btn = options.buttons[i];
+            $(btn.id).observe('click', function () {
+                if(btn.callback)
+                    btn.callback(ths);
+            });
+        }
+
+        this.aceEdit = ace.edit('txtSource');
+        this.aceEdit.setTheme("ace/theme/eclipse");
+        this.aceEdit.getSession().setMode("ace/mode/"+options.lang);
+        this.aceEdit.getSession().setUseWrapMode(options.wrap);
+        this.aceEdit.setValue(options.text);
+        this.aceEdit.renderer.setShowPrintMargin(false);
+
+        win.showCenter();
+        win.toFront();
+    },
+
+    getValue: function () {
+        return this.aceEdit.getValue();
     }
 }

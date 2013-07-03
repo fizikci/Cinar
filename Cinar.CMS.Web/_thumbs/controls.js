@@ -308,6 +308,10 @@ var StringEdit = Class.create();StringEdit.prototype = {
 
         list.show();
         Event.stop(event);
+
+        var edi = ace.edit(this.editorId + 'ta');
+        edi.setTheme("ace/theme/monokai");
+        edi.getSession().setMode("ace/mode/html");
     },
     getValue: function() {
         return this.input.value.gsub('#NL#', '\n');
@@ -1271,7 +1275,8 @@ var EditForm = Class.create(); EditForm.prototype = {
     cntrlId: null,
     initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels){
         container = $(container);
-        if(container==null) container = $(document.body);
+        if (container == null) container = $(document.body);
+        if (!hideCategory) hideCategory = '';
         
         this.hndl = ++formHandle;
         this.cntrlId = 'cntrl' + this.hndl + '_';
@@ -1296,14 +1301,14 @@ var EditForm = Class.create(); EditForm.prototype = {
 		var categories = controls.collect(function(item){return item.category;}).uniq().compact();
 		for(var k=0; k<categories.length; k++){
 			var cat = categories[k];
-			if(hideCategory!=cat)
+			if (hideCategory.indexOf(cat) == -1)
 				str += '<tr class="category"><td colspan="2">'+cat+'</td></tr>';
 			for(var i=0; i<controls.length; i++){
 				var control = controls[i];
 				if(control.category!=cat || control.type=='ListForm') continue;
-				if (hideCategory == cat) hideFieldValue[control.id] = control.value;
+				if (hideCategory.indexOf(cat)>-1) hideFieldValue[control.id] = control.value;
 				if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
-				str += '<tr ' + (hideCategory == cat?'style="display:none"':'') + '>';
+				str += '<tr ' + (hideCategory.indexOf(cat) > -1 ? 'style="display:none"' : '') + '>';
 				str += '<td onclick="$(this).up().down(\'input\').focus()">'+(hideFieldValue[control.id]!=undefined?'':('&nbsp;'+control.label))+'</td>';
 				str += '<td id="'+this.cntrlId+i+'"></td>';
 				str += '</tr>';
@@ -1470,11 +1475,11 @@ var ListForm = Class.create();ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        new Insertion.Top(this.container, '<table style="' + (this.options.hideFilterPanel ? 'display:none' : '') + '" class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        new Insertion.Top(this.container, '<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly:true });
         $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
 
-        new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"></div>');
+        new Insertion.Bottom(this.container, '<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"' + (this.options.hideFilterPanel ? ' style="top:4px"' : '') + '></div>');
 
         var str = '<div class="lf-listFormFooter">';
 		if(this.options.commands)

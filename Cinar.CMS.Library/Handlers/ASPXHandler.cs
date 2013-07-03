@@ -158,6 +158,7 @@ namespace Cinar.CMS.Library.Handlers
 </script>
                 ");
                     sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "cinar.cms.js.ashx" : "/_thumbs/cinar.cms.js") + "\"></script>\n");
+                    sb.Append("<script src=\"/external/javascripts/ace/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n");
                 }
 
                 if (Provider.DevelopmentMode)
