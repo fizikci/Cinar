@@ -512,45 +512,39 @@ function convertModule(elmId){
 function exportModule(){
     var name = selMod.id.split('_')[0];
     var id = selMod.id.split('_')[1];
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> Export Module', width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>');
-    $('txtSource').value = ajax({url:'ModuleInfo.ashx?method=exportModule&name='+name+'&id='+id,isJSON:false,noCache:true});
-    win.showCenter();
-    win.toFront();
+
+    new AceEditor({
+        titleIcon: 'page',
+        title: lang('Export Module'),
+        text: ajax({ url: 'ModuleInfo.ashx?method=exportModule&name=' + name + '&id=' + id, isJSON: false, noCache: true }),
+        lang: 'txt'
+    });
 }
 function importModule(){
     var parentMdl = selReg.up('.Module');
     var parentMdlId = '0';
     if(parentMdl) parentMdlId = parentMdl.id.split('_')[1];
 
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> Import Module', width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnImportModule">'+lang('Save')+'</span></p>');
-    $('btnImportModule').observe('click', function(){
-		var params = {data: $('txtSource').value};
+    new AceEditor({
+        titleIcon: 'page',
+        title: lang('Import Module'),
+        text: 'Paste exported module code here',
+        lang: 'xml',
+        buttons: [{ icon: 'save', id: 'btnImportModule', text: lang('Save'), callback: function(editor){
+            var params = {data: editor.getValue()};
 
-		new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
-			method: 'post',
-			parameters: params,
-			onComplete: function(req) {
-				if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-				location.reload();
-				/*
-				if(!selReg.down('.Module')) //selReg.innerHTML.startsWith('Empty region')
-					selReg.innerHTML = '';
-				Windows.getFocusedWindow().close();
-				new Insertion.Bottom(selReg, req.responseText);
-				var newModule = selReg.immediateDescendants().last();
-				Event.observe(newModule, 'mousedown', highlightModule);
-				selectModule(newModule);
-				*/
-			},
-			onException: function(req, ex){throw ex;}
-		});
-	});
-    win.showCenter();
-    win.toFront();
+            new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
+                method: 'post',
+                parameters: params,
+                onComplete: function(req) {
+                    if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+                    location.reload();
+                },
+                onException: function(req, ex){throw ex;}
+            });
+        } }]
+    });
+
 }
 
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels){
@@ -898,14 +892,14 @@ function addTemplate(){
             }
             return true;
         },
-        function(templateName){
-			var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> ' + templateName, width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-			var winContent = $(win.getContent());
-			new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
-			$('txtSource').value = ajax({url:'SystemInfo.ashx?method=getLastTemplateContent',isJSON:false,noCache:true});
-			$('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
-			win.showCenter();
-			win.toFront();
+        function (templateName) {
+            new AceEditor({
+                titleIcon: 'page',
+                title: templateName,
+                buttons: [{ icon: 'save', id: 'btnSaveTemplate', text: lang('Save'), callback: function (editor) { saveTemplate(editor, templateName); } }],
+                text: ajax({ url: 'SystemInfo.ashx?method=getLastTemplateContent', isJSON: false, noCache: true }),
+                lang: 'html'
+            });
         }
     );
 }
@@ -957,17 +951,18 @@ function editTemplate(templateName){
 	if(templateName=='1') return;
     if(!templateName) templateName = currTemplate;
 
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cpage"></span> ' + templateName, width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtSource" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveTemplate">'+lang('Save')+'</span></p>');
-    $('txtSource').value = ajax({url:'SystemInfo.ashx?method=getTemplateSource&template='+templateName,isJSON:false,noCache:true});
-    $('btnSaveTemplate').observe('click', function(){saveTemplate(templateName);});
-    win.showCenter();
-    win.toFront();
+    new AceEditor({
+        titleIcon: 'page',
+        title: templateName,
+        buttons: [{ icon: 'save', id: 'btnSaveTemplate', text: lang('Save'), callback: function (editor) { saveTemplate(editor, templateName); } }],
+        text: ajax({ url: 'SystemInfo.ashx?method=getTemplateSource&template=' + templateName, isJSON: false, noCache: true }),
+        lang: 'html'
+    });
+
 }
-function saveTemplate(templateName){
+function saveTemplate(editor, templateName){
     var params = new Object();
-    params['source'] = $('txtSource').value;
+    params['source'] = editor.getValue();
     new Ajax.Request('SystemInfo.ashx?method=saveTemplateSource&template='+templateName, {
         method: 'post',
         parameters: params,
@@ -989,46 +984,35 @@ function saveTemplate(templateName){
 //##############################################
 
 function exportTemplate(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cexportTemplate"></span> ' + lang('Export'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    var str = '<table width="100%" height="350"><tr><td width="30%"><div id="selectedTemplatesToExport" style="width:100%;height:100%;overflow:auto">';
-    templates.each(function(tmp){
-        str += '<input type=checkbox value="'+tmp+'">'+tmp+'<br>';
+    new AceEditor({
+        titleIcon: 'exportTemplate',
+        title: lang('Export'),
+        text: ajax({ url: 'SystemInfo.ashx?method=exportTemplates&templates=' + currTemplate, isJSON: false, noCache: false }),
+        lang: 'xml'
     });
-    str += '</div></td><td>';
-    str += '<textarea wrap="off" id="txtExport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea>';
-    str += '</td></tr></table><span class="btn cok" id="btnMakeExport">'+lang('Transfer')+' >></span>';
-    new Insertion.Bottom(winContent, str);
-    $('btnMakeExport').observe('click', function(){
-        var selTempsToExp = '';
-        $('selectedTemplatesToExport').immediateDescendants().each(function(elm){
-            if(elm.checked) selTempsToExp += ','+elm.value;
-        });
-        $('txtExport').value = ajax({url:'SystemInfo.ashx?method=exportTemplates&templates='+selTempsToExp,isJSON:false,noCache:false});
-    });
-    win.showCenter();
-    win.toFront();
 }
 function importTemplate(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cimportTemplate"></span> ' + lang('Import'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtImport" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveImport">'+lang('Save')+'</span></p>');
-    $('btnSaveImport').observe('click', saveImport);
-    win.showCenter();
-    win.toFront();
-}
-function saveImport(){
-    var params = new Object();
-    params['templateData'] = $('txtImport').value;
-    new Ajax.Request('SystemInfo.ashx?method=importTemplates', {
-        method: 'post',
-        parameters: params,
-        onComplete: function(req) {
-            if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-            Windows.getFocusedWindow().close();
-            niceInfo(lang('Pages have been added.'));
-        },
-        onException: function(req, ex){throw ex;}
+    new AceEditor({
+        titleIcon: 'importTemplate',
+        title: lang('Import'),
+        text: 'Paste exported page xml here',
+        lang: 'xml',
+        buttons: [{
+            icon: 'save', id: 'btnSaveImport', text: lang('Save'), callback: function (editor) {
+                var params = new Object();
+                params['templateData'] = editor.getValue();
+                new Ajax.Request('SystemInfo.ashx?method=importTemplates', {
+                    method: 'post',
+                    parameters: params,
+                    onComplete: function (req) {
+                        if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                        Windows.getFocusedWindow().close();
+                        niceInfo(lang('Pages have been added.'));
+                    },
+                    onException: function (req, ex) { throw ex; }
+                });
+            }
+        }]
     });
 }
 
@@ -1036,74 +1020,86 @@ function saveImport(){
 //#    EDIT GENERAL CSS/Javascript    #
 //#####################################
 
-function editStyle(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ccss"></span> ' + lang('General CSS'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefStyles" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn cload" id="btnModuleDefaultStyles">'+lang('Add Default Module Styles')+'</span> <span class="btn csave" id="btnSaveStyles">'+lang('Save')+'</span></p>');
-    $('txtDefStyles').value = ajax({url:'SystemInfo.ashx?method=getDefaultStyles',isJSON:false,noCache:true});
-    $('btnSaveStyles').observe('click', saveStyle);
-    $('btnModuleDefaultStyles').observe('click', function(){$('txtDefStyles').value += ajax({url:'ModuleInfo.ashx?method=getAllDefaultCSS',isJSON:false,noCache:false});});
-    win.showCenter();
-    win.toFront();
-}
-function saveStyle(){
-    var params = new Object();
-    params['style'] = $('txtDefStyles').value;
-    new Ajax.Request('SystemInfo.ashx?method=saveDefaultStyles', {
-        method: 'post',
-        parameters: params,
-        onComplete: function(req) {
-            if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            location.reload();
-        },
-        onException: function(req, ex){throw ex;}
+function editStyle() {
+    new AceEditor({
+        titleIcon: 'css',
+        title: lang('General CSS'),
+        text: ajax({ url: 'SystemInfo.ashx?method=getDefaultStyles', isJSON: false, noCache: true }),
+        lang: 'css',
+        buttons: [
+            {
+                icon: 'load',
+                id: 'btnModuleDefaultStyles',
+                text: lang('Add Default Module Styles'),
+                callback: function (editor) {
+                    editor.setValue(editor.getValue() + ajax({ url: 'ModuleInfo.ashx?method=getAllDefaultCSS', isJSON: false, noCache: false }));
+                }
+            },
+            {
+                icon: 'save',
+                id: 'btnSaveStyles',
+                text: lang('Save'),
+                callback: function (editor) {
+                    var params = new Object();
+                    params['style'] = editor.getValue();
+                    new Ajax.Request('SystemInfo.ashx?method=saveDefaultStyles', {
+                        method: 'post',
+                        parameters: params,
+                        onComplete: function (req) {
+                            if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                            location.reload();
+                        },
+                        onException: function (req, ex) { throw ex; }
+                    });
+                }
+            }
+        ]
     });
 }
-
 function editJavascript(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cscript"></span> ' + lang('General Javascript'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefJavascript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSaveJavascript">'+lang('Save')+'</span></p>');
-    $('txtDefJavascript').value = ajax({url:'SystemInfo.ashx?method=getDefaultJavascript',isJSON:false,noCache:true});
-    $('btnSaveJavascript').observe('click', saveJavascript);
-    win.showCenter();
-    win.toFront();
-}
-function saveJavascript(){
-    var params = new Object();
-    params['code'] = $('txtDefJavascript').value;
-    new Ajax.Request('SystemInfo.ashx?method=saveDefaultJavascript', {
-        method: 'post',
-        parameters: params,
-        onComplete: function(req) {
-            if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            location.reload();
-        },
-        onException: function(req, ex){throw ex;}
+    new AceEditor({
+        titleIcon: 'script',
+        title: lang('General Javascript'),
+        text: ajax({ url: 'SystemInfo.ashx?method=getDefaultJavascript', isJSON: false, noCache: true }),
+        lang: 'javascript',
+        buttons: [{
+            icon: 'save', id: 'btnSaveJavascript', text: lang('Save'), callback: function (editor) {
+                var params = new Object();
+                params['code'] = editor.getValue();
+                new Ajax.Request('SystemInfo.ashx?method=saveDefaultJavascript', {
+                    method: 'post',
+                    parameters: params,
+                    onComplete: function (req) {
+                        if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                        location.reload();
+                    },
+                    onException: function (req, ex) { throw ex; }
+                });
+            }
+        }]
     });
 }
-
-
 function editPageLoadScript(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cscript"></span> ' + lang('General Page Load Script'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-    var winContent = $(win.getContent());
-    new Insertion.Bottom(winContent, '<textarea wrap="off" id="txtDefPageLoadScript" onkeydown="return insertTab(event,this);" onkeyup="return insertTab(event,this);" onkeypress="return insertTab(event,this);" style="height:350px;width:100%"></textarea><p align="right"><span class="btn csave" id="btnSavePageLoadScript">'+lang('Save')+'</span></p>');
-    $('txtDefPageLoadScript').value = ajax({url:'SystemInfo.ashx?method=getDefaultPageLoadScript',isJSON:false,noCache:true});
-    $('btnSavePageLoadScript').observe('click', savePageLoadScript);
-    win.showCenter();
-    win.toFront();
-}
-function savePageLoadScript(){
-    var params = new Object();
-    params['code'] = $('txtDefPageLoadScript').value;
-    new Ajax.Request('SystemInfo.ashx?method=saveDefaultPageLoadScript', {
-        method: 'post',
-        parameters: params,
-        onComplete: function(req) {
-            if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            location.reload();
-        },
-        onException: function(req, ex){throw ex;}
+    new AceEditor({
+        titleIcon: 'script',
+        title: lang('General Page Load Script'),
+        text: ajax({ url: 'SystemInfo.ashx?method=getDefaultPageLoadScript', isJSON: false, noCache: true }),
+        lang: 'javascript',
+        buttons: [{
+            icon: 'save', id: 'btnSavePageLoadScript', text: lang('Save'), callback: function (editor) {
+                var params = new Object();
+                params['code'] = editor.getValue();
+                new Ajax.Request('SystemInfo.ashx?method=saveDefaultPageLoadScript', {
+                    method: 'post',
+                    parameters: params,
+                    onComplete: function (req) {
+                        if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                        location.reload();
+                    },
+                    onException: function (req, ex) { throw ex; }
+                });
+            }
+        }]
     });
 }
 
@@ -1123,6 +1119,7 @@ function configure(){
         onException: function(req, ex){throw ex;}
     });
 }
+
 //###########################################################################################
 //#        OTHER UTILITY (clear cache, end design mode, edit right clicked content)         #
 //###########################################################################################
