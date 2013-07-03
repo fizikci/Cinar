@@ -72,10 +72,12 @@ namespace Cinar.Database.Providers
             // tables and views
             db.Tables = new TableCollection(db);
 
+            bool connectionAlreadyOpen = connection.State == ConnectionState.Open;
+
             // columns
-            connection.Open();
+            if(!connectionAlreadyOpen) connection.Open();
             DataTable dtTables = ((DbConnection)connection).GetSchema("Tables");
-            connection.Close();
+            if (!connectionAlreadyOpen) connection.Close();
             foreach (DataRow drTable in dtTables.Rows)
             {
                 Table tbl = new Table();
@@ -84,9 +86,9 @@ namespace Cinar.Database.Providers
                 db.Tables.Add(tbl);
             }
 
-            connection.Open();
+            if (!connectionAlreadyOpen) connection.Open();
             DataTable dtColumns = ((DbConnection)connection).GetSchema("Columns");
-            connection.Close();
+            if (!connectionAlreadyOpen) connection.Close();
             foreach (DataRow drColumn in dtColumns.Rows)
             {
                 Table tbl = db.Tables[drColumn["TABLE_NAME"].ToString()];
@@ -106,9 +108,9 @@ namespace Cinar.Database.Providers
                 tbl.Columns.Add(f);
             }
 
-            connection.Open();
+            if (!connectionAlreadyOpen) connection.Open();
             DataTable dtIndexes = ((DbConnection)connection).GetSchema("Indexes");
-            connection.Close();
+            if (!connectionAlreadyOpen) connection.Close();
             foreach (DataRow drIndex in dtIndexes.Rows)
             {
                 bool primary = (bool)drIndex["PRIMARY_KEY"];
@@ -134,9 +136,9 @@ namespace Cinar.Database.Providers
                 }
             }
 
-            connection.Open();
+            if (!connectionAlreadyOpen) connection.Open();
             DataTable dtIndexColumns = ((DbConnection)connection).GetSchema("IndexColumns");
-            connection.Close();
+            if (!connectionAlreadyOpen) connection.Close();
             foreach (DataRow drCol in dtIndexColumns.Rows)
             {
                 BaseIndexConstraint index = db.GetConstraint(drCol["CONSTRAINT_NAME"].ToString());

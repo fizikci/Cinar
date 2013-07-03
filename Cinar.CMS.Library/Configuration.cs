@@ -312,14 +312,15 @@ namespace Cinar.CMS.Library
 
         public static Configuration Read()
         {
-            if (Provider.Database.Tables["Configuration"] == null)
+            Configuration conf = Provider.Database.Read<Configuration>(1);
+            if (conf == null)
             {
-                Configuration conf = new Configuration();
+                conf = new Configuration();
                 conf.DefaultStyleSheet = Properties.Resources.conf_default_css;
                 conf.Save();
             }
 
-            return (Configuration)Provider.Database.Read(typeof(Configuration), 1);
+            return conf;
         }
     }
 }

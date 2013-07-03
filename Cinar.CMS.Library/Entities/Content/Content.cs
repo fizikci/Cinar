@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [DefaultData(ColumnList = "CategoryId,ClassName,Title,Hierarchy,PublishDate,InsertDate", ValueList = "0,'Category','Kök','','1980-1-1',now()")]
+    [DefaultData(ColumnList = "CategoryId,ClassName,Title,Hierarchy,PublishDate,InsertDate", ValueList = "0,'Category','Kök','','1990-01-01','1990-01-01'")]
     [EditFormDetails(DetailType = typeof(ContentLang), RelatedFieldName = "ContentId")]
     //[EditFormDetails(DetailType = typeof(Product), RelatedFieldName = "ContentId")]
     [EditFormDetails(DetailType = typeof(ContentPicture), RelatedFieldName = "ContentId")]

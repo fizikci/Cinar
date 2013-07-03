@@ -947,7 +947,7 @@ namespace Cinar.Database
             Table t = GetTableForEntityType(entityType);
             if (c != null)
                 return c.Name;
-            else if (t.PrimaryColumn != null)
+            else if (t!=null && t.PrimaryColumn != null)
                 return t.PrimaryColumn.Name;
             else
                 return "Id";
@@ -1426,7 +1426,8 @@ namespace Cinar.Database
                 Table table = GetTableForEntityType(entityType);
                 if (table == null)
                     table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
-
+                
+                where = where.Trim();
                 string sql = where.StartsWith("select", StringComparison.InvariantCultureIgnoreCase) ? where : ("select * from [" + table.Name + "] where " + where);
                 sql = editSQLAsForProvider(sql);
                 result = DataRowToEntity(entityType, this.GetDataRow(sql, parameters));
