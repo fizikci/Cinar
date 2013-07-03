@@ -1232,7 +1232,7 @@ function getSelText(){
 document.observe('keyup', function(e){
     if(e.keyCode==69){
 	    var txt = getSelText().toString();
-	    if(txt.length>0) {
+	    if(txt.length>3) {
             var params = location.href.toQueryParams();
             if(params && params.item){
 	            var resp = ajax({url:'EntityInfo.ashx?method=addTag&item='+params.item+'&tag='+txt,isJSON:false,noCache:true});
