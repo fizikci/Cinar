@@ -50,10 +50,12 @@ langRes['Paste Module'] = 'Paste Module';
 langRes['For This Module'] = 'For This Module';
 langRes['Move Up'] = 'Move Up';
 langRes['Move Down'] = 'Move Down';
+langRes['Convert To'] = 'Convert To';
 langRes['Add Module'] = 'Add Module';
 langRes['For This Page'] = 'For This Page';
 langRes['Copy'] = 'Copy';
 langRes['Rename'] = 'Rename';
+langRes['Add New Page'] = 'Add New Page';
 langRes['Other Pages'] = 'Other Pages';
 langRes['Export'] = 'Export';
 langRes['Import'] = 'Import';
@@ -89,6 +91,7 @@ langRes['Add Default Module Styles'] = 'Add Default Module Styles';
 langRes['Quick Load'] = 'Quick Load';
 langRes['Tag Picture'] = 'Tag Picture';
 langRes['Sort'] = 'Sort';
+langRes['Help'] = 'Help';
 
 // message.js
 langRes['Recommend to a friend'] = 'Recommend to a friend';

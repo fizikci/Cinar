@@ -1951,6 +1951,62 @@ var ListGrid = Class.create(); ListGrid.prototype = {
     }
 }
 
+//############################
+//       CinarWindow
+//############################
+
+var CinarWindow = Class.create(); CinarWindow.prototype = {
+    initialize: function(options) {
+        var ths = this;
+        options = Object.extend({
+            titleIcon: 'page',
+            title: 'Çınar Window',
+            width: 950,
+            height: 600,
+            html: '',
+            url: '',
+            position: 'center' // left, right
+        }, options || {});
+
+        var winOptions = {
+            className: 'alphacube',
+            title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title,
+            width: options.width,
+            height: options.height,
+            wiredDrag: true,
+            destroyOnClose: true,
+            showEffect: Element.show,
+            hideEffect: Element.hide
+        };
+
+        switch (options.position) {
+            case 'left':   
+                var dim = $(document.body).getDimensions();
+                winOptions.left = 20;
+                winOptions.top = 20;
+                break;
+            case 'right':
+                var dim = $(document.body).getDimensions();
+                winOptions.left = dim.width - options.width - 20;
+                winOptions.top = 20;
+                break;
+        }
+
+        var win = new Window(winOptions);
+        if(options.url)
+            new Insertion.Bottom($(win.getContent()), '<iframe src="' + options.url + '" style="width:100%;height:100%;"/>');
+        else if (options.html)
+            new Insertion.Bottom($(win.getContent()), options.html);
+        
+        if(options.position=='center')
+            win.showCenter();
+        else
+            win.show();
+        
+        win.toFront();
+    }
+}
+
 
 //############################
 //       TreeView (aNode = {data:1, text:'About Us', type:'category|content'})

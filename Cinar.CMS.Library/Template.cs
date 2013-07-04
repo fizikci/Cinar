@@ -10,9 +10,9 @@ $=this.HeadSection$
 </head>
 <body>
     <div id=""page"">
-        <div id=""Header"" class=""Region Header"">$=this.Header$</div>
-        <div id=""Content"" class=""Region Content"">$=this.Content$</div>
-        <div id=""Footer"" class=""Region Footer"">$=this.Footer$</div>
+        <div id=""Header"" class=""Region"">$=this.Header$</div>
+        <div id=""Content"" class=""Region"">$=this.Content$</div>
+        <div id=""Footer"" class=""Region"">$=this.Footer$</div>
     </div>
 </body>
 </html>'")]
@@ -25,9 +25,9 @@ $=this.HeadSection$
 </head>
 <body>
     <div id=""page"">
-        <div id=""Header"" class=""Region Header"">$=this.Header$</div>
-        <div id=""Content"" class=""Region Content"">$=this.Content$</div>
-        <div id=""Footer"" class=""Region Footer"">$=this.Footer$</div>
+        <div id=""Header"" class=""Region"">$=this.Header$</div>
+        <div id=""Content"" class=""Region"">$=this.Content$</div>
+        <div id=""Footer"" class=""Region"">$=this.Footer$</div>
     </div>
 </body>
 </html>";
