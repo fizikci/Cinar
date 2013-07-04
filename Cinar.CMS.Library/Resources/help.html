@@ -1,0 +1,144 @@
+﻿<html>
+    <head>
+        <style>
+            body {
+                font-family: Tahoma, Arial, sans-serif;
+	            font-size: 12px;
+	            letter-spacing: normal;
+	            line-height:normal;
+                color: rgb(80, 80, 80);
+            }
+            h1 {
+                font-size:18px;
+                border-bottom: 1px solid;
+            }
+            h2 {
+                font-size:15px;
+            }
+            h3 {
+	            font-weight:bold;
+                font-size:12px;
+            }
+            pre {
+                font-family: Lucida Console;
+                font-size: 10px;
+                border: 1px dashed rgb(218, 218, 218);
+                background: #fffff5;
+                padding: 8px;
+                margin-left: 32px;
+            }
+            .part {
+                margin-left:20px;
+            }
+            div.codeSample {
+                position:relative;
+            }
+            button {
+                right: 0px;
+                position: absolute;
+                bottom: 0px;
+            }
+        </style>
+        <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
+        <script>
+            function execute(btn) {
+                window.parent.eval($(btn).up().previous('pre.code').innerText);
+            }
+        </script>
+    </head>
+<body>
+    <ul>
+        <li>Çınar CMS Yapısı</li>
+        <li>Modüller</li>
+        <li>Entityler (Veri)</li>
+        <li>Çınar Script ile uygulama geliştirme</li>
+        <li>Server nesne ve metodları</li>
+        <li><a href="#client">Client nesne ve metodları</a></li>
+        <li>İpuçları</li>
+    </ul>
+
+    <a name="client"></a>
+    <h1>Client nesne ve metodları</h1>
+<div class="part">
+    <h2>Liste Formları</h2>
+    <div class="codeSample">
+    <h3>Open entity list form</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List'
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form with filter</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List',
+    extraFilter: 'CategoryId=1'
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form to select an entity</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List',
+    extraFilter: 'CategoryId=1',
+    selectCallback: function(entityId){
+        Windows.getFocusedWindow().close(); // first close list form
+        alert('You selected: ' + entityId);
+    }
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form and hide filter panel</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    hideFilterPanel: true
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form and put a command button below the list</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content list with sort facility',
+    extraCommands: [
+        { id: 'Sort', icon: 'sort', name: 'Sırala', handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} }
+    ]
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form and hide a category of edit form </h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    editFormHideCategory: 'Temel'
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+    
+    <div class="codeSample">
+    <h3>Open entity list form and rename edit form labels</h3>
+    <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    renameLabels: {
+        Name:'Ünvan',
+        Surname:'Ecdat Adı'
+    }
+});</pre>
+    <div align="right"><button onclick="execute(this)">Execute</button></div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -261,7 +261,15 @@ popupMenu.menuItems = [
     {text:lang('Edit Content'), icon: 'edit', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
     {text:lang('Console'), icon: 'console', callback: openConsole },
-    {text:lang('Switch to View Mode'), icon:'view_mode', callback:endDesignMode}
+    { text: lang('Switch to View Mode'), icon: 'view_mode', callback: endDesignMode },
+    {
+        text: lang('Help'), icon: 'help', callback: function () {
+            var win = new Window({ className: 'alphacube', title: '<span class="cbtn chelp"></span> Çınar CMS Documentation', width: 950, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
+            new Insertion.Bottom($(win.getContent()), '<iframe src="/help.html.ashx" style="width:100%;height:100%;"/>');
+            win.showCenter();
+            win.toFront();
+        }
+    }
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
@@ -547,7 +555,20 @@ function importModule(){
 
 }
 
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels){
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels) {
+
+    if (typeof (entityName) == "object") {
+        caption = entityName.caption;
+        extraFilter = entityName.extraFilter;
+        forSelect = entityName.selectCallback!=null;
+        selectCallback = entityName.selectCallback;
+        hideFilterPanel = entityName.hideFilterPanel;
+        editFormHideCategory = entityName.editFormHideCategory;
+        extraCommands = entityName.extraCommands;
+        renameLabels = entityName.renameLabels;
+        entityName = entityName.entityName;
+    }
+
 	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
 
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
@@ -819,7 +840,7 @@ function nodeModuleClicked(node){
 //#       EDIT & SAVE ANY DATA SUCH AS CONTENT, AUTHOR, etc..       #
 //###################################################################
 
-function editData(entityName, id, hideCategory, callback, filter){
+function editData(entityName, id, hideCategory, callback, filter, title, renameLabels){
     new Ajax.Request('EntityInfo.ashx?method='+(id>0 ? 'edit' : 'new')+'&entityName='+entityName+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -829,13 +850,19 @@ function editData(entityName, id, hideCategory, callback, filter){
 			openEditForm(
 				entityName, 
 				id,
-				id <= 0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName), 
+				title ? title : (id <= 0 ? lang('New') + ' ' + entityName : lang('Edit ' + entityName)), 
 				res, 
 				function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }, 
-				filter, hideCategory);
+				filter,
+                hideCategory,
+                renameLabels);
         },
         onException: function(req, ex){throw ex;}
     });
+}
+function openEntityEditForm(options) {
+    editData(options.entityName, options.id, options.hideCategory, options.callback, options.filter,
+        options.title, options.renameLabels);
 }
 function deleteData(entityName, id, callback){
 	niceConfirm(lang('The record will be deleted!'), function () {

@@ -208,6 +208,7 @@
     <None Include="Resources\cinar.cms.js" />
     <None Include="Resources\en.js" />
     <None Include="Resources\tr.js" />
+    <None Include="Resources\help.html" />
     <Content Include="_files\BasePage.js.txt" />
     <Content Include="_files\hndlr_EntityInfo_getFieldsList.txt" />
     <Content Include="_files\hndlr_EntityInfo_getGridList.txt" />
