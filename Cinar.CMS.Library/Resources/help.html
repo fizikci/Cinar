@@ -3,25 +3,28 @@
         <style>
             body {
                 font-family: Tahoma, Arial, sans-serif;
-	            font-size: 12px;
+	            font-size: 14px;
 	            letter-spacing: normal;
 	            line-height:normal;
                 color: rgb(80, 80, 80);
             }
             h1 {
-                font-size:18px;
-                border-bottom: 1px solid;
+                font-size: 18px;
+                border-bottom: 1px solid rgba(33, 74, 133, 0.22);
+                font-weight: normal;
+                color: #214A85;
             }
             h2 {
-                font-size:15px;
+                font-size:16px;
+                font-weight: normal;
             }
             h3 {
-	            font-weight:bold;
-                font-size:12px;
+                font-weight: normal;
+                font-size:14px;
             }
             pre {
                 font-family: Lucida Console;
-                font-size: 10px;
+                font-size: 11px;
                 border: 1px dashed rgb(218, 218, 218);
                 background: #fffff5;
                 padding: 8px;
@@ -38,107 +41,208 @@
                 position: absolute;
                 bottom: 0px;
             }
+            b {
+                font-weight: normal;
+                color: #316AC5;
+            }
+            b.btn {
+                cursor: pointer;
+            }
         </style>
         <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
         <script>
+            document.observe('dom:loaded', function () {
+                $$('.part').each(Element.hide);
+                $$('.part').first().show();
+
+                $$('h1').each(function (h1) { h1.observe('click', toggle); });
+            });
+
+            function toggle(event) {
+                $$('.part').each(Element.hide);
+                $(Event.element(event)).next().show();
+            }
+
             function execute(btn) {
                 window.parent.eval($(btn).up().previous('pre.code').innerText);
             }
         </script>
     </head>
 <body>
-    <ul>
-        <li>Çınar CMS Yapısı</li>
-        <li>Modüller</li>
-        <li>Entityler (Veri)</li>
-        <li>Çınar Script ile uygulama geliştirme</li>
-        <li>Server nesne ve metodları</li>
-        <li><a href="#client">Client nesne ve metodları</a></li>
-        <li>İpuçları</li>
-    </ul>
 
-    <a name="client"></a>
+    <h1>Çınar CMS Bileşenleri</h1>
+    <div class="part">
+        <ol>
+            <li>Bilginin gösterimi için <b>Sayfa</b>lar ve <b>Modül</b>ler</li>
+            <li>Bilginin saklanması için <b>Kategori</b>ler ve <b>İçerik</b>ler</li>
+            <li>Bilgiyi detaylandırmak için <b>Yazar</b>lar, <b>Kaynak</b>lar, <b>Etiket</b>ler</li>
+            <li>Etkileşim için <b>Kullanıcı</b>lar, <b>Yorum</b>lar, <b>Mesaj</b>lar</li>
+            <li>Kodlama için <b>Çınar Script</b></li>
+            <li>Genel <b>Javascript</b> ve <b>CSS</b> dosyaları</li>
+            <li>Javascript nesne ve fonksiyonları</li>
+            <li>Performans için <b>Önbellek</b> (cache) çözümü</li>
+        </ol>
+    </div>
+    <h1>Sayfalar ve Modüller</h1>
+    <div class="part">
+        <ul>
+            <li>Çınar CMS'de tüm bilgiler veritabanında tutulur, fiziksel sayfalar yoktur</li>
+            <li>Sitenize dilediğiniz kadar sayfa ekleyebilirsiniz. Bu sayfalar görünürde .aspx uzantılı dosya gibidirler.</li>
+            <li>Default.aspx isimli sayfa kurulumda otomatik oluşturulur.</li>
+            <li>Default.aspx'in kaynak kodunu görmek için <b class="btn" onclick="window.parent.editTemplate('Default.aspx')">tıklayınız</b>.</li>
+            <li>
+                Sayfa kodu aşağıdaki gibidir:
+                <pre class="code">&lt;html&gt;
+&lt;head&gt;
+$=this.HeadSection$
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="page"&gt;
+        &lt;div id="Header" class="Region"&gt;$=this.Header$&lt;/div&gt;
+        &lt;div id="Content" class="Region"&gt;$=this.Content$&lt;/div&gt;
+        &lt;div id="Footer" class="Region"&gt;$=this.Footer$&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+            </li>
+            <li>Bu sayfayı dilediğiniz gibi düzenleyebilirsiniz.</li>
+            <li>Çınar CMS'de sayfalar bölgelerden (region), bölgeler de modüllerden oluşur.</li>
+            <li>Sayfa kodunda görülen, class'ı Region olan divlerin içindeki $=this.Content$ gibi ifadeler Çınar Script kodudur.</li>
+            <li>$=this.Content$ ifadesi Content bölgesinin modüllerini yükleyip gösterir.</li>
+            <li>Sitenize yeni sayfa eklemek için;
+                <ul>
+                    <li>sayfanın herhangi bir yerine sağ tıklayın</li>
+                    <li>açılan menüden <b>Sayfa Ekle</b>'yi seçin</li>
+                    <li>Sayfanın adını soran bir pencere açılacak, oraya YeniSayfa.aspx ismini girin.</li>
+                    <li>Yeni sayfanızın kodunu gösteren pencere açılacak, Kaydet'e basın.</li>
+                    <li>Sayfanız oluşturuldu.</li>
+                    <li>Görmek için adresin sonuna YeniSayfa.aspx yazabilir ya da sağ tıklayıp, diğer sayfalar menüsünden YeniSayfa.aspx'i seçebilirsiniz.</li>
+                </ul></li>
+            <li>Modüller bölgenin üzerine sağ tıklayarak Modül Ekle menüsünden eklenir.</li>
+            <li>Örneğin Footer bölgesine yeni bir modül eklemek için;
+                <ul>
+                    <li>Footer bölgesine sağ tıklayın</li>
+                    <li>açılan menüden <b>Modül Ekle</b> > <b>Çeşitli</b> > <b>Statik HTML</b>'i seçin.</li>
+                    <li>modül derhal sayfaya eklenecek ve modülü düzenleme formu açılacaktır.</li>
+                    <li>Açılan pencerede HTML Kodu alanına yazı girebilirsiniz.</li>
+                    <li>Bu modülün görevi girdiğiniz html kodunu göstermektir.</li>
+                </ul>
+            </li>
+        </ul> 
+    </div>
+    <h1>Kategoriler ve İçerikler</h1>
+    <div class="part">
+        <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
+        <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerikler" şeklinde hiyerarşik yapıdadır.</li>
+        <li>En üst kategorinin adı "Kök"dür.</li>
+        <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openTree()">tıklayınız</b>.</li>
+        <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
+        <li>Bu ağaç görünümünde 
+            <ul>
+                <li>bir kategoriye tıklarsanız, o kategorinin altındaki içerikleri listeleyen pencere açılacaktır</li>
+                <li>bir içeriğe tıklarsanız, o içeriğin bilgilerini düzenlemek için form açılacaktır.</li>
+            </ul></li>
+        <li>Aslında içerik ve kategori birbiriyle tamamen aynı özelliklere sahiptir.</li>
+        <li>Bütün içeriklerin;
+            <ul>
+                <li>Başlığı (Title)</li>
+                <li>Yayınlanma Tarihi (PublishDate)</li>
+                <li>Açıklaması ya da özeti (Description)</li>
+                <li>İçerik metni (Metin)</li>
+                <li>Resmi (Picture)</li>
+                <li>Keywords'ü (arama motorları için)</li>
+                <li>Yazarı (Author)</li>
+                <li>Kaynağı (Source)</li>
+            </ul>
+            vardır.
+        </li>
+    </div>
+    <h1>Yazarlar, Kaynaklar ve Etiketler</h1>
+    <h1>Kullanıcılar ve Üyelik modülleri</h1>
+    <h1>Çınar Script ile geliştirme ve Provider nesnesi</h1>
+    <h1>Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
     <h1>Client nesne ve metodları</h1>
-<div class="part">
-    <h2>Liste Formları</h2>
-    <div class="codeSample">
-    <h3>Open entity list form</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'Content', 
-    caption: 'Content List'
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+    <div class="part">
+        <h2>Liste Formları</h2>
+        <div class="codeSample">
+        <h3>Open entity list form</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'Content', 
+        caption: 'Content List'
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form with filter</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'Content', 
-    caption: 'Content List',
-    extraFilter: 'CategoryId=1'
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+        <div class="codeSample">
+        <h3>Open entity list form with filter</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'Content', 
+        caption: 'Content List',
+        extraFilter: 'CategoryId=1'
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form to select an entity</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'Content', 
-    caption: 'Content List',
-    extraFilter: 'CategoryId=1',
-    selectCallback: function(entityId){
-        Windows.getFocusedWindow().close(); // first close list form
-        alert('You selected: ' + entityId);
-    }
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+        <div class="codeSample">
+        <h3>Open entity list form to select an entity</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'Content', 
+        caption: 'Content List',
+        extraFilter: 'CategoryId=1',
+        selectCallback: function(entityId){
+            Windows.getFocusedWindow().close(); // first close list form
+            alert('You selected: ' + entityId);
+        }
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form and hide filter panel</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'User', 
-    caption: 'Web Site Users',
-    hideFilterPanel: true
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+        <div class="codeSample">
+        <h3>Open entity list form and hide filter panel</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'User', 
+        caption: 'Web Site Users',
+        hideFilterPanel: true
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form and put a command button below the list</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'Content', 
-    caption: 'Content list with sort facility',
-    extraCommands: [
-        { id: 'Sort', icon: 'sort', name: 'Sırala', handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} }
-    ]
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+        <div class="codeSample">
+        <h3>Open entity list form and put a command button below the list</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'Content', 
+        caption: 'Content list with sort facility',
+        extraCommands: [
+            { id: 'Sort', icon: 'sort', name: 'Sırala', handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} }
+        ]
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form and hide a category of edit form </h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'User', 
-    caption: 'Web Site Users',
-    editFormHideCategory: 'Temel'
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
-    </div>
+        <div class="codeSample">
+        <h3>Open entity list form and hide a category of edit form </h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'User', 
+        caption: 'Web Site Users',
+        editFormHideCategory: 'Temel'
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     
-    <div class="codeSample">
-    <h3>Open entity list form and rename edit form labels</h3>
-    <pre class="code">openEntityListForm({
-    entityName: 'User', 
-    caption: 'Web Site Users',
-    renameLabels: {
-        Name:'Ünvan',
-        Surname:'Ecdat Adı'
-    }
-});</pre>
-    <div align="right"><button onclick="execute(this)">Execute</button></div>
+        <div class="codeSample">
+        <h3>Open entity list form and rename edit form labels</h3>
+        <pre class="code">openEntityListForm({
+        entityName: 'User', 
+        caption: 'Web Site Users',
+        renameLabels: {
+            Name:'Ünvan',
+            Surname:'Ecdat Adı'
+        }
+    });</pre>
+        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        </div>
     </div>
-</div>
+    <h1>Performans için önbellek (cache) çözümü</h1>
 
     </body>
 </html>

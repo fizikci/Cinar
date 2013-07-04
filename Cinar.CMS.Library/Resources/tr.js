@@ -50,10 +50,12 @@ langRes['Paste Module'] = 'Modülü Yapıştır';
 langRes['For This Module'] = 'Bu modülü';
 langRes['Move Up'] = 'Yukarı Taşı';
 langRes['Move Down'] = 'Aşağı Taşı';
+langRes['Convert To'] = 'Dönüştür';
 langRes['Add Module'] = 'Modül Ekle';
 langRes['For This Page'] = 'Bu sayfayı';
 langRes['Copy'] = 'Kopyala';
 langRes['Rename'] = 'Yeniden adlandır';
+langRes['Add New Page'] = 'Yeni Sayfa Ekle';
 langRes['Other Pages'] = 'Diğer Sayfalar';
 langRes['Export'] = 'Dışarı aktar';
 langRes['Import'] = 'İçeri al';
@@ -89,6 +91,7 @@ langRes['Add Default Module Styles'] = 'Varsayılan modül CSSlerini ekle';
 langRes['Quick Load'] = 'Hızlı Yükle';
 langRes['Tag Picture'] = 'Etiketle';
 langRes['Sort'] = 'Sırala';
+langRes['Help'] = 'Yardım';
 
 // message.js
 langRes['Recommend to a friend'] = 'Arkadaşınıza tavsiye edin';

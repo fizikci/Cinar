@@ -123,7 +123,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? (Provider.CurrentCulture.Split('-')[0] + ".js.ashx") : ("/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js")) + "\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
@@ -212,7 +212,7 @@ namespace Cinar.CMS.Library.Handlers
                 }
 
                 if (moduleCount == 0 && Provider.DesignMode)
-                    Provider.Response.Write(Provider.GetResource("Empty region") + ": " + regionName);
+                    Provider.Response.Write("<div class=\"cs_empty_reg\">" + Provider.GetResource("Empty region") + ": " + regionName + "<br/><span>" + Provider.GetResource("Right click and select \"Add Module\" to enrich this region.") + "</span></div>");
 
                 return "";
             }

@@ -7,8 +7,10 @@ namespace Cinar.CMS.Library
 {
     public class StaticResources
     {
+        #region en
         public static Dictionary<string, string> en = new Dictionary<string, string>
         {
+            {"Right click and select \"Add Module\" to enrich this region.","Right click and select \"Add Module\" to enrich this region."},
             {"&quot;image&quot; is essential for the Field Order of the Headline module.", "&quot;image&quot; is essential for the Field Order of the Headline module."},
             {"(Reply)", "(Reply)"},
             {"(Write comment)", "(Write comment)"},
@@ -504,6 +506,26 @@ namespace Cinar.CMS.Library
             {"Empty content", "Empty content"},
             {"Empty region", "Empty region"},
             {"Error", "Error"},
+            {"ExchangeRate", "Exchange Rate"},
+            {"ExchangeRate.USD", "USD"},
+            {"ExchangeRate.AUD", "AUD"},
+            {"ExchangeRate.DKK", "DKK"},
+            {"ExchangeRate.EUR", "EUR"},
+            {"ExchangeRate.GBP", "GBP"},
+            {"ExchangeRate.CHF", "CHF"},
+            {"ExchangeRate.SEK", "SEK"},
+            {"ExchangeRate.CAD", "CAD"},
+            {"ExchangeRate.KWD", "KWD"},
+            {"ExchangeRate.NOK", "NOK"},
+            {"ExchangeRate.SAR", "SAR"},
+            {"ExchangeRate.JPY", "JPY"},
+            {"ExchangeRate.BGN", "BGN"},
+            {"ExchangeRate.RON", "RON"},
+            {"ExchangeRate.RUB", "RUB"},
+            {"ExchangeRate.IRR", "IRR"},
+            {"ExchangeRate.CNY", "CNY"},
+            {"ExchangeRate.PKR", "PKR"},
+            {"ExchangeRates", "Exchange Rates"},
             {"Fetch Frequency cannot be less than 10 minutes!", "Fetch Frequency cannot be less than 10 minutes!"},
             {"Field value cannot be converted to JS syntax", "Field value cannot be converted to JS syntax"},
             {"FieldOrder is invalid. Please enter fields as {0}", "FieldOrder is invalid. Please enter fields as {0}"},
@@ -674,6 +696,8 @@ namespace Cinar.CMS.Library
             {"Module.TopHtmlDesc", "HTML code to be displayed before this module HTML"},
             {"Module.UseCache", "Use Cache"},
             {"Module.UseCacheDesc", "Cache the result of this module. Default means the setting in configuration."},
+            {"Module.Visible", "Visible"},
+            {"Module.VisibleDesc", "Invisible module can be seen in design mode, but visitors cannot see it."},
             {"ModuleContainer", "Module Container"},
             {"NamedEntity", "Named Entity"},
             {"NamedEntity.Description", "Description"},
@@ -1014,10 +1038,12 @@ namespace Cinar.CMS.Library
             {"You may use only letters, space and comma for the field Tags", "You may use only letters, space and comma for the field Tags"},
             {"You should enter title", "You should enter title"}        
         };
+        #endregion
 
-
+        #region tr
         public static Dictionary<string, string> tr = new Dictionary<string, string>
         {
+            {"Right click and select \"Add Module\" to enrich this region.","Bu bölgeyi şenlendirmek için sağ tıklayın ve Modüle Ekle'yi seçin.."},
             {"&quot;image&quot; is essential for the Field Order of the Headline module.", "Manşet alan sırası için &quot;image&quot; zorunludur"},
             {"(Reply)", "(Cevap yaz)"},
             {"(Write comment)", "(Yorum yaz)"},
@@ -1512,6 +1538,26 @@ namespace Cinar.CMS.Library
             {"DumpDatabase.DBProviderDesc", "Hangi veritabanına göre?"},
             {"Empty content", "Boş içerik"},
             {"Empty region", "Boş bölge"},
+            {"ExchangeRate", "Döviz Kuru"},
+            {"ExchangeRate.USD", "USD"},
+            {"ExchangeRate.AUD", "AUD"},
+            {"ExchangeRate.DKK", "DKK"},
+            {"ExchangeRate.EUR", "EUR"},
+            {"ExchangeRate.GBP", "GBP"},
+            {"ExchangeRate.CHF", "CHF"},
+            {"ExchangeRate.SEK", "SEK"},
+            {"ExchangeRate.CAD", "CAD"},
+            {"ExchangeRate.KWD", "KWD"},
+            {"ExchangeRate.NOK", "NOK"},
+            {"ExchangeRate.SAR", "SAR"},
+            {"ExchangeRate.JPY", "JPY"},
+            {"ExchangeRate.BGN", "BGN"},
+            {"ExchangeRate.RON", "RON"},
+            {"ExchangeRate.RUB", "RUB"},
+            {"ExchangeRate.IRR", "IRR"},
+            {"ExchangeRate.CNY", "CNY"},
+            {"ExchangeRate.PKR", "PKR"},
+            {"ExchangeRates", "Döviz Kurları"},
             {"Error", "Hata"},
             {"Fetch Frequency cannot be less than 10 minutes!", "Okunma sıklığı 10 dakikadan az olamaz!"},
             {"Field value cannot be converted to JS syntax", "Field değeri JS formuna dönüştürülemedi!"},
@@ -1684,6 +1730,8 @@ namespace Cinar.CMS.Library
             {"Module.TopHtmlDesc", "Bu modülün üstünde gösterilecek olan HTML"},
             {"Module.UseCache", "Önbellek olsun"},
             {"Module.UseCacheDesc", "Bu modülün ürettiği HTML kodu önbelleğe alınsın mı? Varsayılan konfigürasyondaki ayar anlamına gelir."},
+            {"Module.Visible", "Aktif"},
+            {"Module.VisibleDesc", "Aktif olmayan modül tasarım modunda görünür fakat ziyaretçiler göremez."},
             {"ModuleContainer", "İsimsiz Modül"},
             {"NamedEntity", "Ad/Açıklama"},
             {"NamedEntity.Description", "Açıklama"},
@@ -2024,5 +2072,6 @@ namespace Cinar.CMS.Library
             {"You may use only letters, space and comma for the field Tags", "Etiketler alanı için sadece harf, boşluk ve virgül kullanabilirsiniz"},
             {"You should enter title", "Başlık girmelisiniz"}
         };
+        #endregion
     }
 }

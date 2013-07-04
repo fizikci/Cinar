@@ -243,7 +243,7 @@ popupMenu.menuItems = [
             {text:lang('Delete'), icon:'page_delete', callback:deleteTemplate},
             {text:lang('Rename')+'...', icon:'page_rename', callback:renameTemplate}
         ]},
-    {text:lang('Add Page')+'...', icon:'page_copy', callback:addTemplate},
+    {text:lang('Add New Page')+'...', icon:'page_copy', callback:addTemplate},
     {text:lang('Other Pages'), icon:'pages', items:[]},
     {text:lang('Export')+'...', icon:'exportTemplate', callback:exportTemplate},
     {text:lang('Import')+'...', icon:'importTemplate', callback:importTemplate},
@@ -263,11 +263,13 @@ popupMenu.menuItems = [
     {text:lang('Console'), icon: 'console', callback: openConsole },
     { text: lang('Switch to View Mode'), icon: 'view_mode', callback: endDesignMode },
     {
-        text: lang('Help'), icon: 'help', callback: function () {
-            var win = new Window({ className: 'alphacube', title: '<span class="cbtn chelp"></span> Çınar CMS Documentation', width: 950, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
-            new Insertion.Bottom($(win.getContent()), '<iframe src="/help.html.ashx" style="width:100%;height:100%;"/>');
-            win.showCenter();
-            win.toFront();
+        text: lang('Help'), icon: 'ok', callback: function () {
+            new CinarWindow({
+                titleIcon: 'ok',
+                title: 'Çınar CMS Documentation',
+                url: '/help.html.ashx',
+                position:'left'
+            });
         }
     }
 ];
@@ -388,7 +390,7 @@ function deleteModule(event){
                     if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                     var region = $(name+'_'+id).up();
                     if(region.immediateDescendants().length==1)
-                        new Insertion.Top(region, lang('Empty region') + ': ' + region.id); 
+                        new Insertion.Top(region, "<div class=\"cs_empty_reg\">" + lang('Empty region') + ': ' + region.id + '</div>');
                     Element.remove(name+'_'+id);
                     selectModule(prevMdl);
                 },
