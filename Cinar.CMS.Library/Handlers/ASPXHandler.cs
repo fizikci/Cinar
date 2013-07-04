@@ -151,7 +151,6 @@ namespace Cinar.CMS.Library.Handlers
         Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
     }
     var currTemplate = '" + template.FileName + @"';
-    var virtualDir = '" + WebConfigurationManager.AppSettings["virtualDir"] + @"';
     var moduleTypes = " + getModuleTypesJSON() + @";
     var entityTypes = " + getEntityTypesJSON() + @";
     var templates = " + getTemplatesJSON() + @";

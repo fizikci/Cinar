@@ -2,7 +2,6 @@
     Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
     Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
     var currTemplate = 'Default.aspx';
-    var virtualDir = '.';
     var moduleTypes = [
 	{
 		grup:'Anket', 
