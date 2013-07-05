@@ -48,6 +48,9 @@
             b.btn {
                 cursor: pointer;
             }
+            ul {
+                margin: 0px;
+            }
         </style>
         <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
         <script>
@@ -132,14 +135,15 @@ $=this.HeadSection$
     </div>
     <h1>Kategoriler ve İçerikler</h1>
     <div class="part">
+        <ul>
         <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
-        <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerikler" şeklinde hiyerarşik yapıdadır.</li>
+        <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerik" şeklinde hiyerarşik yapıdadır.</li>
         <li>En üst kategorinin adı "Kök"dür.</li>
         <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openTree()">tıklayınız</b>.</li>
         <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
         <li>Bu ağaç görünümünde 
             <ul>
-                <li>bir kategoriye tıklarsanız, o kategorinin altındaki içerikleri listeleyen pencere açılacaktır</li>
+                <li>bir kategoriye tıklarsanız, o kategorinin altındaki içerik ve kategorileri listeleyen pencere açılacaktır</li>
                 <li>bir içeriğe tıklarsanız, o içeriğin bilgilerini düzenlemek için form açılacaktır.</li>
             </ul></li>
         <li>Aslında içerik ve kategori birbiriyle tamamen aynı özelliklere sahiptir.</li>
@@ -156,10 +160,107 @@ $=this.HeadSection$
             </ul>
             vardır.
         </li>
+        </ul>
     </div>
     <h1>Yazarlar, Kaynaklar ve Etiketler</h1>
+    <div class="part">
+        <ul>
+            <li>İçerik için yazar girilmesi bazen gerekli olur. (Özellikle haber sitelerinde, akademik sitelerde)</li>
+            <li>Yazarları eklemek ve düzenlemek için
+                <ul>
+                    <li>Sağ tık menüyü açın.</li>
+                    <li>Veri > Yazar menüsünü seçin</li>
+                    <li>Yazarların listelendiği bir pencere açılacak.</li>
+                    <li>Tüm veri türleri için bu şekilde liste pencerelerini açabilirsiniz.</li>
+                    <li>Listeden bir satıra (yazara) tıklayıp, sağ alt köşedeki butonlarla işleminizi gerçekleştirebilirsiniz.</li>
+                    <li>Yeni yazar eklemek için + butonuna tıklayın.</li>
+                    <li>Açılan pencerede yazarın ismini, ünvanını girin.</li>
+                    <li>Resim seçin. Dilerseniz bir resmin url adresini de yazabilirsiniz. Kaydetme işlemi sırasında resim webden indirilir ve UserFiles/Images/_author klasörüne kaydedilir.</li>
+                    <li>Kaydet'e tıklayın. Yeni yazarınız kaydedildi.</li>
+                    <li>Artık bu yazarı içerik girerken seçebilirsiniz.</li>
+                </ul>
+            </li>
+            <li>Kaynaklar da aynı yazarlar gibi eklenir.</li>
+            <li>Kaynak içeriğin ait olduğu kurumu, gazeteyi vb. belirtir.</li>
+        </ul>
+    </div>
     <h1>Kullanıcılar ve Üyelik modülleri</h1>
+    <div class="part">
+        <ul>
+            <li>
+                Çınar CMS ilk çalıştırıldığında 3 tane otomatik kullanıcı ekler
+                <ul>
+                    <li><b>Admin</b>: En yetkili kullanıcıdır (Roller: Designer, Editor, User)</li>
+                    <li><b>Editör</b>: Yönetim paneline girebilen kullanıcıdır (Roller: Editor, User)</li>
+                    <li><b>Anonim</b>: Henüz üye olmamış ziyaretçiler bu kullanıcı hesabında sayılır (Roller: yok)</li>
+                </ul>
+            </li>
+            <li>
+                Roller ile kullanıcıların yetkileri belirlenir:
+                <ul>
+                    <li><b>Designer</b>: Bu rol tasarım modunda çalışma imkanı sağlar.</li>
+                    <li><b>Editör</b>: Yönetim paneline erişebilmek için kullanıcının bu role sahip olması gerekir.</li>
+                    <li><b>User</b>: Siteye üye olan kullanıcılar otomatik olarak bu role sahip olur.</li>
+                    <li>Kullanıcılarınıza bunlar dışında, dilediğiniz isimde rol atayabilirsiniz.</li>
+                    <li>Bazı modülleri sadece belli role sahip kullanıcıların görmesini sağlayabilirsiniz.</li>
+                    <li>"Sayfa Güvenliği" isimli modülü ekleyerek bir sayfanın sadece belli role sahip kullanıcılara gösterilmesini sağlayabilirsiniz.</li>
+                </ul>
+            </li>
+            <li>
+                Kullanıcı listesini almak ve kullanıcı bilgilerini düzenlemek için Veri > Kullanıcı menüsünü seçiniz.
+                <ul>
+                    <li>Kullanıcılara rolleri virgüllerle ayrılmış kelimeler şeklinde ekleyebilirsiniz.</li>
+                    <li>Üye olan ziyaretçinin email adresine onay mesajı gönderilir.</li>
+                </ul> 
+            </li>
+            <li>
+                Kullanıcılarla ilgili modülleri eklemek için Modül Ekle > Üyelik > altındaki modüllerden birini seçiniz. Bunlar:
+                <ul>
+                    <li><b>Üyelik Formu</b>: Ziyaretçiler bu formu doldurarak siteye üye olur. Formda varsayılan olarak bütün alanlar vardır, dilerseniz tasarımını değiştirebilir, alanları azaltabilirsiniz.</li>
+                    <li><b>Login Formu</b>: Bu form ile ziyaretçiler sitede oturum açarlar.</li>
+                    <li><b>Şifre Hatırlat Formu</b>: Bu forma ziyaretçi email adresini girer, email adresine şifre hatırlatma yönergesi gönderilir.</li>
+                    <li>Login Formu modülünde "Şifremi hatırlat", "Üye olmak istiyorum" gibi linkler vardır.</li>
+                    <li>Login Formu, oturum açıldıktan sonra hoşgeldiniz mesajı görüntüler ve kullanıcının yetkisine göre uygun linkler gösterir. Örneğin Designer rolüne sahip kullanıcıya "Tasarım Modu" linki, Editor rolüne sahip kullanıcıya "Yönetim Paneli" linki gösterilir.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <h1>Çınar Script ile geliştirme ve Provider nesnesi</h1>
+    <div class="part">
+        <ul>
+            <li>Siteyi oluşturan sayfaların kaynak koduna, Statik HTML ve Data List modüllerine Çınar Script ile kod yazabilirsiniz.</li>
+            <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
+            <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
+                <pre>$ for(int i=0; i<100; i++) 
+    echo("&lt;b>" + i + "&lt;/b>"); $</pre></li>
+            <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
+            <li>Siteyle ilgili bağlama (context'e) Provider nesnesi üzerinden erişebilirsiniz. Provider veritabanına, Request, Response nesnelerine, ve bunun gibi pek çok bağlama erişmenizi sağlar:
+                <pre>&lt;b>Son içerik ve bazı bilgiler:&lt;/b>
+$ 
+    var lastContentId =  Provider.Database.GetInt("select max(Id) from Content");
+
+    var userName = Provider.User.Name;
+    var currentContentTitle = Provider.Content.Title;
+    var currentCategoryTitle = Provider.Content.Category.Title;
+
+    if(Provider.User.IsInRole("Editor"))
+        echo("Yönetim paneline gitmek için tıklayınız.");
+
+    string siteAdi = Provider.Configuration.SiteName;
+    int oncekiIcerikId = Provider.PreviousContentId;
+    int sonrakiIcerikId = Provider.NextContentId;
+
+    string thumbImageSrc = Provider.GetThumbPath("/UserFiles/Images/logo.png", 320, 0, false);
+
+    string aWebConfigSetting = Provider.AppSettings["aWebConfigSetting"];
+    object sessionData = Provider.Session["data"];
+
+    // gibi daha pek çok metod ve özellik (detaylı bilgi için referanslara bakınız)
+$</pre>
+            </li>
+            <li>Aşağıdaki örnekler </li>
+        </ul>
+    </div>
     <h1>Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
     <h1>Client nesne ve metodları</h1>
     <div class="part">
