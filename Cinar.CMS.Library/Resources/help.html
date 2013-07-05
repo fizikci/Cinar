@@ -231,8 +231,10 @@ $=this.HeadSection$
             <li>Siteyi oluşturan sayfaların kaynak koduna, Statik HTML ve Data List modüllerine Çınar Script ile kod yazabilirsiniz.</li>
             <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
             <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
-                <pre>$ for(int i=0; i<100; i++) 
-    echo("&lt;b>" + i + "&lt;/b>"); $</pre></li>
+                <pre>$
+for(int i=0; i<100; i++) 
+    echo("&lt;b>" + i + "&lt;/b>");
+$</pre></li>
             <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
             <li>Siteyle ilgili bağlama (context'e) Provider nesnesi üzerinden erişebilirsiniz. Provider veritabanına, Request, Response nesnelerine, ve bunun gibi pek çok bağlama erişmenizi sağlar:
                 <pre>&lt;b>Son içerik ve bazı bilgiler:&lt;/b>
@@ -258,10 +260,34 @@ $
     // gibi daha pek çok metod ve özellik (detaylı bilgi için referanslara bakınız)
 $</pre>
             </li>
-            <li>Aşağıdaki örnekler </li>
+            <li>Deneme yapmak için şu adımları izleyiniz:
+                <ul>
+                    <li>Herhagi bir bölgeye sağ tıklayın ve menüden Modül Ekle > Çeşitli > Statik HTML seçiniz.</li>
+                    <li>Statik HTML modülü o bölgenin sonuna eklenecek ve düzenleme penceresi açılacaktır.</li>
+                    <li>Bu pencerede HTML Kodu alanına şu kodu girin:
+                        <pre>$
+for(int i=0; i<100; i++) 
+    echo(i + ",");
+$
+&lt;br />
+&lt;br />
+Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
+
+</pre>
+                    </li>
+                    <li>Kaydet'e tıkladığınızda modülün içinde kod çıktısı gösterilecektir.</li>
+                </ul>
+            </li>
         </ul>
     </div>
     <h1>Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
+    <div class="part">
+        <ul>
+            <li>Sitenin SEO bilgileri, runtime ayarları, mail hesabı bilgileri gibi ayarlar Konfigürasyon penceresinden yapılır.</li>
+            <li>Sağ tık menüden Konfigürasyon menüsünü seçip bu ayarları yapabilirsiniz.</li>
+            <li><b>Genel Javascript Kodu</b> ve <b>Genel CSS Ayarları</b> menülerinden sitenin javascripti kodlarını ve CSS kodlarını düzenleyebilirsiniz.</li>
+        </ul>
+    </div>
     <h1>Client nesne ve metodları</h1>
     <div class="part">
         <h2>Liste Formları</h2>
@@ -344,6 +370,17 @@ $</pre>
         </div>
     </div>
     <h1>Performans için önbellek (cache) çözümü</h1>
+    <div class="part">
+        <ul>
+            <li>Çok ziyaretçisi olan sitelerin kaynak kullanımı çok olur.</li>
+            <li>Çınar CMS'in en çok kullandığı kaynak veritabanıdır.</li>
+            <li>Site ziyaret edildiğinde, her modül veritabanına sorgular gönderir ve çıktıyı oluşturur.</li>
+            <li>Önbellek mekanizması veritabanını sorgulama işinin 10 dakikada bir yapılmasını sağlar. Bu süre değiştirilebilir.</li>
+            <li>Örneğin saniyede 20 ziyaretçisi olan bir site veritabanına muhtemelen saniyede 200 sorgu gönderecektir. (10 dakikada toplam 120.000 sorgu)</li>
+            <li>Önbellek kullanılırsa 120.000 yerine sadece 200 sorgu çalıştırılır.</li>
+            <li>Önbellek mekanizması; kullanıcıya özel olmayan modüller için kullanılmalıdır.</li>
 
+        </ul>
+    </div>
     </body>
 </html>
