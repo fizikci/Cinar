@@ -280,7 +280,7 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
                         CSS, 
                         ParentModuleId,
                         UseCache);
-                    this.Id = (int)Provider.Database.GetValue("select max(Id) from Module");
+                    this.Id = Convert.ToInt32(Provider.Database.GetValue("select max(Id) from Module"));
                     Provider.Database.ExecuteNonQuery(
                         "update Module set Details = {0} where Id={1}", 
                         this.Serialize(), 
