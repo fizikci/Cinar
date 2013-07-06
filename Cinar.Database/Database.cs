@@ -1606,16 +1606,8 @@ namespace Cinar.Database
             this.ExecuteNonQuery(cmd);
 
             if (defaultDataArr != null)
-            {
-                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryColumn != null && tbl.PrimaryColumn.IsAutoIncrement)
-                    this.ExecuteNonQuery("SET IDENTITY_INSERT [" + tbl.Name + "] ON");
-
                 foreach (DefaultDataAttribute defaultData in defaultDataArr)
                     this.ExecuteNonQuery("insert into [" + tbl.Name + "](" + defaultData.ColumnList + ") values(" + defaultData.ValueList + ")");
-
-                if (this.provider == DatabaseProvider.SQLServer && tbl.PrimaryColumn != null && tbl.PrimaryColumn.IsAutoIncrement)
-                    this.ExecuteNonQuery("SET IDENTITY_INSERT [" + tbl.Name + "] OFF");
-            }
 
             tbl.parent.db = originalDatabase;
             

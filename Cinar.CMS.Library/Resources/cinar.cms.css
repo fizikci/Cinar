@@ -120,7 +120,7 @@ div.smMenu div:hover
 }
 div.treeChildren {padding-left:16px}
 div.treeChildren img {vertical-align:middle}
-div.treeChildren span {cursor:pointer}
+#nd_root span {cursor:pointer}
 
 td 
 {

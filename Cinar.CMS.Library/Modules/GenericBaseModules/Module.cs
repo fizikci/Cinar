@@ -11,7 +11,18 @@ using Cinar.Scripting;
 
 namespace Cinar.CMS.Library.Modules
 {
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = "'LoginForm','Default.aspx','Content','Cinar.CMS.Serialization\nRedirect,0Id,1,1Template,9,Main.aspxRegion,7,ContentOrderNo,1,0Name,9,LoginFormCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'LoginForm','Default.aspx','Content','Cinar.CMS.Serialization
+Redirect,0,ShowMembershipLink,7,Sign upShowMembershipInfoLink,10,My profileShowPasswordForgetLink,21,Forgot your password?ShowRememberMe,11,Remember meShowActivationLink,20,Send activation codeShowSiteManagementLink,15,Site ManagementShowHomePageLink,9,Home PageShowLogoutLink,6,LogoutCSS,153,#LoginForm_1 div.loginError {
+	color:red
+}
+#LoginForm_1 input.loginSubmitButton {
+	display:block
+}
+#LoginForm_1 a {
+	display:block;
+	padding-left:10px
+}
+TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0Id,1,1Template,12,Default.aspxRegion,7,ContentOrderNo,1,0Name,9,LoginFormParentModuleId,1,0'")]
     public abstract class Module : ObjectWithTags, IDatabaseEntity
     {
         #region fields

@@ -18,6 +18,12 @@ namespace Cinar.CMS.Library.Handlers
 
         public void Init(HttpApplication context)
         {
+            context.BeginRequest += new EventHandler(context_BeginRequest);
+            context.PreRequestHandlerExecute += context_PreRequestHandlerExecute; 
+        }
+
+        void context_PreRequestHandlerExecute(object sender, EventArgs e)
+        {
             if (!HasAppStarted)
             {
                 lock (_syncObject)
@@ -26,10 +32,10 @@ namespace Cinar.CMS.Library.Handlers
                     {
                         HasAppStarted = true;
 
-                        foreach (string scriptName in new[] { "cinar_cms_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js", "help_html"})
+                        foreach (string scriptName in new[] { "cinar_cms_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js", "help_html" })
                         {
                             string s = Properties.Resources.ResourceManager.GetString(scriptName);
-                            File.WriteAllText(Provider.Server.MapPath("/_thumbs/"+scriptName.Replace("_",".")), s, Encoding.UTF8);
+                            File.WriteAllText(Provider.Server.MapPath("/_thumbs/" + scriptName.Replace("_", ".")), s, Encoding.UTF8);
                         }
 
                         File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultJavascript.js"), Provider.Configuration.DefaultJavascript, Encoding.UTF8);
@@ -37,9 +43,6 @@ namespace Cinar.CMS.Library.Handlers
                     }
                 }
             }
-
-
-            context.BeginRequest += new EventHandler(context_BeginRequest);
         }
 
         void context_BeginRequest(object sender, EventArgs e)

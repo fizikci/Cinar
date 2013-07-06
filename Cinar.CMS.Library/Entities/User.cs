@@ -8,9 +8,9 @@ using System.Collections.Specialized;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [DefaultData(ColumnList = "Id, Email, Password, Roles, Nick, Keyword", ValueList = "1, 'root@local', '63A9F0EA7BB98050', 'User,Editor,Designer', 'Admin', 'jhrd74ghe63'")]
-    [DefaultData(ColumnList = "Id, Email, Password, Roles, Nick, Keyword", ValueList = "2, 'editor', '63A9F0EA7BB98050', 'User,Editor', 'Editör', 'ge548rhe46e'")]
-    [DefaultData(ColumnList = "Id, Email, Password, Roles, Nick, Keyword", ValueList = "3, 'anonim', '', '', 'Anonim', '63beyte674hge'")]
+    [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'root@local', '63A9F0EA7BB98050', 'User,Editor,Designer', 'Admin', 'jhrd74ghe63'")]
+    [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'editor', '63A9F0EA7BB98050', 'User,Editor', 'Editör', 'ge548rhe46e'")]
+    [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'anonim', '', '', 'Anonim', '63beyte674hge'")]
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email as [User.Email], Roles as [User.Roles], Visible as [BaseEntity.Visible] from [User]")]
     public class User : BaseEntity
     {

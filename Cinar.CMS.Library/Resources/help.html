@@ -1,100 +1,214 @@
 ﻿<html>
-    <head>
-        <style>
-            body {
-                font-family: Tahoma, Arial, sans-serif;
-	            font-size: 14px;
-	            letter-spacing: normal;
-	            line-height:normal;
-                color: rgb(80, 80, 80);
-            }
-            h1 {
-                font-size: 18px;
-                border-bottom: 1px solid rgba(33, 74, 133, 0.22);
-                font-weight: normal;
-                color: #214A85;
-            }
-            h2 {
-                font-size:16px;
-                font-weight: normal;
-            }
-            h3 {
-                font-weight: normal;
-                font-size:14px;
-            }
-            pre {
-                font-family: Lucida Console;
-                font-size: 11px;
-                border: 1px dashed rgb(218, 218, 218);
-                background: #fffff5;
-                padding: 8px;
-                margin-left: 32px;
-            }
-            .part {
-                margin-left:20px;
-            }
-            div.codeSample {
-                position:relative;
-            }
-            button {
-                right: 0px;
-                position: absolute;
-                bottom: 0px;
-            }
-            b {
-                font-weight: normal;
-                color: #316AC5;
-            }
+<head>
+    <!--link href="/_thumbs/default.css" rel="stylesheet" /-->
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 13px;
+            letter-spacing: normal;
+            line-height: normal;
+            color: rgb(80, 80, 80);
+        }
+
+        h1 {
+            font-size: 18px;
+            border-bottom: 1px solid rgba(33, 74, 133, 0.22);
+            font-weight: normal;
+            color: #214A85;
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        h3 {
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        pre {
+            font-family: Lucida Console;
+            font-size: 11px;
+            border: 1px dashed rgb(218, 218, 218);
+            background: #fffff5;
+            padding: 8px;
+            margin-left: 32px;
+        }
+
+        .part {
+            margin-left: 20px;
+        }
+
+        div.codeSample {
+            position: relative;
+        }
+
+        button {
+            right: 0px;
+            position: absolute;
+            bottom: 0px;
+        }
+
+        b {
+            font-weight: normal;
+            color: #316AC5;
+        }
+
             b.btn {
                 cursor: pointer;
             }
-            ul {
-                margin: 0px;
-            }
-        </style>
-        <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
-        <script>
-            document.observe('dom:loaded', function () {
-                $$('.part').each(Element.hide);
-                $$('.part').first().show();
 
-                $$('h1').each(function (h1) { h1.observe('click', toggle); });
-            });
+        ul {
+            margin: 0px;
+        }
+        #leftPanel {
+            position:absolute;
+            left:0px;
+            width:250px;
+            bottom:0px;
+            top:0px;
+            padding:4px;
+            overflow:auto;
+            background: #efefef;
+        }
+        #contentPanel {
+            position:absolute;
+            left:258px;
+            right:0px;
+            bottom:0px;
+            top:0px;
+            padding-left: 10px;
+        }
+        .cplus {
+            background-position: 0px -1728px;
+        }
 
-            function toggle(event) {
-                $$('.part').each(Element.hide);
-                $(Event.element(event)).next().show();
-            }
+        .cbtn {
+            background-image: url('/external/icons/all_icons.png');
+            background-repeat: no-repeat;
+            height: 16px;
+            width: 16px;
+            display: inline-block;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        span.nodeName {
+            font-size: 13px;
+        }
+        span.nodeName:hover {
+            color: #316AC5;
+        }
+        .ccategory {
+            background-position: 0px -400px;
+        }
+        .ccontent {
+            background-position: 0px -592px;
+        }
+        div.treeChildren {
+            padding-left: 16px;
+        }
+        div.treeChildren > div {
+            width: 400px;
+        }
+        #nd_root span {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
+    <script src="/_thumbs/default.js"></script>
+    <script src="/_thumbs/tr.js"></script>
+    <script src="/_thumbs/controls.js"></script>
+    <script>
+        document.observe('dom:loaded', function () {
+            $$('.part, h1').each(Element.hide);
+            $$('.part').first().show();
+            $$('h1').first().show();
 
-            function execute(btn) {
-                window.parent.eval($(btn).up().previous('pre.code').innerText);
+            showTree();
+        });
+
+        function toggle(event) {
+            $$('.part').each(Element.hide);
+            $(Event.element(event)).next().show();
+        }
+
+        function execute(btn) {
+            window.parent.eval($(btn).up().previous('pre.code').innerText);
+        }
+
+        function showTree() {
+            new TreeView($('leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
+        }
+        function getNodes(data) {
+            if (data == 'root') {
+                return [
+                    { data: 'overview', text: 'Genel Bakış', type: 'category' },
+                    { data: 'reference', text: 'Referans', type: 'category' }
+                ];
             }
-        </script>
-    </head>
+            else if (data == 'overview') {
+                return [
+                    { data: 'statik_p1', text: 'Çınar CMS Bileşenleri', type: 'content' },
+                    { data: 'statik_p2', text: 'Sayfalar ve Modüller', type: 'content' },
+                    { data: 'statik_p3', text: 'Kategoriler ve İçerikler', type: 'content' },
+                    { data: 'statik_p4', text: 'Yazarlar, Kaynaklar ve Etiketler', type: 'content' },
+                    { data: 'statik_p5', text: 'Kullanıcılar ve Üyelik modülleri', type: 'content' },
+                    { data: 'statik_p6', text: 'Çınar Script ile geliştirme ve Provider nesnesi', type: 'content' },
+                    { data: 'statik_p7', text: 'Genel ayarlar, genel Javascript ve CSS dosyaları', type: 'content' },
+                    { data: 'statik_p8', text: 'Client nesne ve metodları', type: 'content' }
+                ];
+            }
+            else if (data == 'reference') {
+                return [
+                    { data: 'ref_module', text: 'Modüller', type: 'category' },
+                    { data: 'ref_entity', text: 'Entitiler', type: 'category' },
+                    { data: 'ref_provider', text: 'Provider', type: 'content' },
+                    { data: 'ref_utility', text: 'Utility', type: 'content' },
+                ];
+            }
+        }
+        function nodeClicked(node) {
+            if (node.type == 'category')
+                return;
+            else {
+                $$('.part, h1').each(Element.hide);
+                if (node.data.indexOf('statik') == 0) {
+                    var id = node.data.split('_')[1];
+                    $(id).show();
+                    $(id).next().show();
+                }
+            }
+        }
+
+    </script>
+</head>
 <body>
-
-    <h1>Çınar CMS Bileşenleri</h1>
-    <div class="part">
-        <ol>
-            <li>Bilginin gösterimi için <b>Sayfa</b>lar ve <b>Modül</b>ler</li>
-            <li>Bilginin saklanması için <b>Kategori</b>ler ve <b>İçerik</b>ler</li>
-            <li>Bilgiyi detaylandırmak için <b>Yazar</b>lar, <b>Kaynak</b>lar, <b>Etiket</b>ler</li>
-            <li>Etkileşim için <b>Kullanıcı</b>lar, <b>Yorum</b>lar, <b>Mesaj</b>lar</li>
-            <li>Kodlama için <b>Çınar Script</b></li>
-            <li>Genel <b>Javascript</b> ve <b>CSS</b> dosyaları</li>
-            <li>Javascript nesne ve fonksiyonları</li>
-            <li>Performans için <b>Önbellek</b> (cache) çözümü</li>
-        </ol>
+    <div id="leftPanel">
     </div>
-    <h1>Sayfalar ve Modüller</h1>
-    <div class="part">
-        <ul>
-            <li>Çınar CMS'de tüm bilgiler veritabanında tutulur, fiziksel sayfalar yoktur</li>
-            <li>Sitenize dilediğiniz kadar sayfa ekleyebilirsiniz. Bu sayfalar görünürde .aspx uzantılı dosya gibidirler.</li>
-            <li>Default.aspx isimli sayfa kurulumda otomatik oluşturulur.</li>
-            <li>Default.aspx'in kaynak kodunu görmek için <b class="btn" onclick="window.parent.editTemplate('Default.aspx')">tıklayınız</b>.</li>
-            <li>
-                Sayfa kodu aşağıdaki gibidir:
+
+    <div id="contentPanel">
+        <h1 id="p1">Çınar CMS Bileşenleri</h1>
+        <div class="part">
+            <ol>
+                <li>Bilginin gösterimi için <b>Sayfa</b>lar ve <b>Modül</b>ler</li>
+                <li>Bilginin saklanması için <b>Kategori</b>ler ve <b>İçerik</b>ler</li>
+                <li>Bilgiyi detaylandırmak için <b>Yazar</b>lar, <b>Kaynak</b>lar, <b>Etiket</b>ler</li>
+                <li>Etkileşim için <b>Kullanıcı</b>lar, <b>Yorum</b>lar, <b>Mesaj</b>lar</li>
+                <li>Kodlama için <b>Çınar Script</b></li>
+                <li>Genel <b>Javascript</b> ve <b>CSS</b> dosyaları</li>
+                <li>Javascript nesne ve fonksiyonları</li>
+                <li>Performans için <b>Önbellek</b> (cache) çözümü</li>
+            </ol>
+        </div>
+        <h1 id="p2">Sayfalar ve Modüller</h1>
+        <div class="part">
+            <ul>
+                <li>Çınar CMS'de tüm bilgiler veritabanında tutulur, fiziksel sayfalar yoktur</li>
+                <li>Sitenize dilediğiniz kadar sayfa ekleyebilirsiniz. Bu sayfalar görünürde .aspx uzantılı dosya gibidirler.</li>
+                <li>Default.aspx isimli sayfa kurulumda otomatik oluşturulur.</li>
+                <li>Default.aspx'in kaynak kodunu görmek için <b class="btn" onclick="window.parent.editTemplate('Default.aspx')">tıklayınız</b>.</li>
+                <li>Sayfa kodu aşağıdaki gibidir:
                 <pre class="code">&lt;html&gt;
 &lt;head&gt;
 $=this.HeadSection$
@@ -107,12 +221,12 @@ $=this.HeadSection$
     &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
-            </li>
-            <li>Bu sayfayı dilediğiniz gibi düzenleyebilirsiniz.</li>
-            <li>Çınar CMS'de sayfalar bölgelerden (region), bölgeler de modüllerden oluşur.</li>
-            <li>Sayfa kodunda görülen, class'ı Region olan divlerin içindeki $=this.Content$ gibi ifadeler Çınar Script kodudur.</li>
-            <li>$=this.Content$ ifadesi Content bölgesinin modüllerini yükleyip gösterir.</li>
-            <li>Sitenize yeni sayfa eklemek için;
+                </li>
+                <li>Bu sayfayı dilediğiniz gibi düzenleyebilirsiniz.</li>
+                <li>Çınar CMS'de sayfalar bölgelerden (region), bölgeler de modüllerden oluşur.</li>
+                <li>Sayfa kodunda görülen, class'ı Region olan divlerin içindeki $=this.Content$ gibi ifadeler Çınar Script kodudur.</li>
+                <li>$=this.Content$ ifadesi Content bölgesinin modüllerini yükleyip gösterir.</li>
+                <li>Sitenize yeni sayfa eklemek için;
                 <ul>
                     <li>sayfanın herhangi bir yerine sağ tıklayın</li>
                     <li>açılan menüden <b>Sayfa Ekle</b>'yi seçin</li>
@@ -120,9 +234,10 @@ $=this.HeadSection$
                     <li>Yeni sayfanızın kodunu gösteren pencere açılacak, Kaydet'e basın.</li>
                     <li>Sayfanız oluşturuldu.</li>
                     <li>Görmek için adresin sonuna YeniSayfa.aspx yazabilir ya da sağ tıklayıp, diğer sayfalar menüsünden YeniSayfa.aspx'i seçebilirsiniz.</li>
-                </ul></li>
-            <li>Modüller bölgenin üzerine sağ tıklayarak Modül Ekle menüsünden eklenir.</li>
-            <li>Örneğin Footer bölgesine yeni bir modül eklemek için;
+                </ul>
+                </li>
+                <li>Modüller bölgenin üzerine sağ tıklayarak Modül Ekle menüsünden eklenir.</li>
+                <li>Örneğin Footer bölgesine yeni bir modül eklemek için;
                 <ul>
                     <li>Footer bölgesine sağ tıklayın</li>
                     <li>açılan menüden <b>Modül Ekle</b> > <b>Çeşitli</b> > <b>Statik HTML</b>'i seçin.</li>
@@ -130,43 +245,44 @@ $=this.HeadSection$
                     <li>Açılan pencerede HTML Kodu alanına yazı girebilirsiniz.</li>
                     <li>Bu modülün görevi girdiğiniz html kodunu göstermektir.</li>
                 </ul>
-            </li>
-        </ul> 
-    </div>
-    <h1>Kategoriler ve İçerikler</h1>
-    <div class="part">
-        <ul>
-        <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
-        <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerik" şeklinde hiyerarşik yapıdadır.</li>
-        <li>En üst kategorinin adı "Kök"dür.</li>
-        <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openTree()">tıklayınız</b>.</li>
-        <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
-        <li>Bu ağaç görünümünde 
+                </li>
+            </ul>
+        </div>
+        <h1 id="p3">Kategoriler ve İçerikler</h1>
+        <div class="part">
+            <ul>
+                <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
+                <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerik" şeklinde hiyerarşik yapıdadır.</li>
+                <li>En üst kategorinin adı "Kök"dür.</li>
+                <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openTree()">tıklayınız</b>.</li>
+                <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
+                <li>Bu ağaç görünümünde 
             <ul>
                 <li>bir kategoriye tıklarsanız, o kategorinin altındaki içerik ve kategorileri listeleyen pencere açılacaktır</li>
                 <li>bir içeriğe tıklarsanız, o içeriğin bilgilerini düzenlemek için form açılacaktır.</li>
-            </ul></li>
-        <li>Aslında içerik ve kategori birbiriyle tamamen aynı özelliklere sahiptir.</li>
-        <li>Bütün içeriklerin;
-            <ul>
-                <li>Başlığı (Title)</li>
-                <li>Yayınlanma Tarihi (PublishDate)</li>
-                <li>Açıklaması ya da özeti (Description)</li>
-                <li>İçerik metni (Metin)</li>
-                <li>Resmi (Picture)</li>
-                <li>Keywords'ü (arama motorları için)</li>
-                <li>Yazarı (Author)</li>
-                <li>Kaynağı (Source)</li>
             </ul>
-            vardır.
-        </li>
-        </ul>
-    </div>
-    <h1>Yazarlar, Kaynaklar ve Etiketler</h1>
-    <div class="part">
-        <ul>
-            <li>İçerik için yazar girilmesi bazen gerekli olur. (Özellikle haber sitelerinde, akademik sitelerde)</li>
-            <li>Yazarları eklemek ve düzenlemek için
+                </li>
+                <li>Aslında içerik ve kategori birbiriyle tamamen aynı özelliklere sahiptir.</li>
+                <li>Bütün içeriklerin;
+                    <ul>
+                        <li>Başlığı (Title)</li>
+                        <li>Yayınlanma Tarihi (PublishDate)</li>
+                        <li>Açıklaması ya da özeti (Description)</li>
+                        <li>İçerik metni (Metin)</li>
+                        <li>Resmi (Picture)</li>
+                        <li>Keywords'ü (arama motorları için)</li>
+                        <li>Yazarı (Author)</li>
+                        <li>Kaynağı (Source)</li>
+                    </ul>
+                    vardır.
+                </li>
+            </ul>
+        </div>
+        <h1 id="p4">Yazarlar, Kaynaklar ve Etiketler</h1>
+        <div class="part">
+            <ul>
+                <li>İçerik için yazar girilmesi bazen gerekli olur. (Özellikle haber sitelerinde, akademik sitelerde)</li>
+                <li>Yazarları eklemek ve düzenlemek için
                 <ul>
                     <li>Sağ tık menüyü açın.</li>
                     <li>Veri > Yazar menüsünü seçin</li>
@@ -179,24 +295,22 @@ $=this.HeadSection$
                     <li>Kaydet'e tıklayın. Yeni yazarınız kaydedildi.</li>
                     <li>Artık bu yazarı içerik girerken seçebilirsiniz.</li>
                 </ul>
-            </li>
-            <li>Kaynaklar da aynı yazarlar gibi eklenir.</li>
-            <li>Kaynak içeriğin ait olduğu kurumu, gazeteyi vb. belirtir.</li>
-        </ul>
-    </div>
-    <h1>Kullanıcılar ve Üyelik modülleri</h1>
-    <div class="part">
-        <ul>
-            <li>
-                Çınar CMS ilk çalıştırıldığında 3 tane otomatik kullanıcı ekler
+                </li>
+                <li>Kaynaklar da aynı yazarlar gibi eklenir.</li>
+                <li>Kaynak içeriğin ait olduğu kurumu, gazeteyi vb. belirtir.</li>
+            </ul>
+        </div>
+        <h1 id="p5">Kullanıcılar ve Üyelik modülleri</h1>
+        <div class="part">
+            <ul>
+                <li>Çınar CMS ilk çalıştırıldığında 3 tane otomatik kullanıcı ekler
                 <ul>
                     <li><b>Admin</b>: En yetkili kullanıcıdır (Roller: Designer, Editor, User)</li>
                     <li><b>Editör</b>: Yönetim paneline girebilen kullanıcıdır (Roller: Editor, User)</li>
                     <li><b>Anonim</b>: Henüz üye olmamış ziyaretçiler bu kullanıcı hesabında sayılır (Roller: yok)</li>
                 </ul>
-            </li>
-            <li>
-                Roller ile kullanıcıların yetkileri belirlenir:
+                </li>
+                <li>Roller ile kullanıcıların yetkileri belirlenir:
                 <ul>
                     <li><b>Designer</b>: Bu rol tasarım modunda çalışma imkanı sağlar.</li>
                     <li><b>Editör</b>: Yönetim paneline erişebilmek için kullanıcının bu role sahip olması gerekir.</li>
@@ -205,16 +319,14 @@ $=this.HeadSection$
                     <li>Bazı modülleri sadece belli role sahip kullanıcıların görmesini sağlayabilirsiniz.</li>
                     <li>"Sayfa Güvenliği" isimli modülü ekleyerek bir sayfanın sadece belli role sahip kullanıcılara gösterilmesini sağlayabilirsiniz.</li>
                 </ul>
-            </li>
-            <li>
-                Kullanıcı listesini almak ve kullanıcı bilgilerini düzenlemek için Veri > Kullanıcı menüsünü seçiniz.
+                </li>
+                <li>Kullanıcı listesini almak ve kullanıcı bilgilerini düzenlemek için Veri > Kullanıcı menüsünü seçiniz.
                 <ul>
                     <li>Kullanıcılara rolleri virgüllerle ayrılmış kelimeler şeklinde ekleyebilirsiniz.</li>
                     <li>Üye olan ziyaretçinin email adresine onay mesajı gönderilir.</li>
-                </ul> 
-            </li>
-            <li>
-                Kullanıcılarla ilgili modülleri eklemek için Modül Ekle > Üyelik > altındaki modüllerden birini seçiniz. Bunlar:
+                </ul>
+                </li>
+                <li>Kullanıcılarla ilgili modülleri eklemek için Modül Ekle > Üyelik > altındaki modüllerden birini seçiniz. Bunlar:
                 <ul>
                     <li><b>Üyelik Formu</b>: Ziyaretçiler bu formu doldurarak siteye üye olur. Formda varsayılan olarak bütün alanlar vardır, dilerseniz tasarımını değiştirebilir, alanları azaltabilirsiniz.</li>
                     <li><b>Login Formu</b>: Bu form ile ziyaretçiler sitede oturum açarlar.</li>
@@ -222,21 +334,22 @@ $=this.HeadSection$
                     <li>Login Formu modülünde "Şifremi hatırlat", "Üye olmak istiyorum" gibi linkler vardır.</li>
                     <li>Login Formu, oturum açıldıktan sonra hoşgeldiniz mesajı görüntüler ve kullanıcının yetkisine göre uygun linkler gösterir. Örneğin Designer rolüne sahip kullanıcıya "Tasarım Modu" linki, Editor rolüne sahip kullanıcıya "Yönetim Paneli" linki gösterilir.</li>
                 </ul>
-            </li>
-        </ul>
-    </div>
-    <h1>Çınar Script ile geliştirme ve Provider nesnesi</h1>
-    <div class="part">
-        <ul>
-            <li>Siteyi oluşturan sayfaların kaynak koduna, Statik HTML ve Data List modüllerine Çınar Script ile kod yazabilirsiniz.</li>
-            <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
-            <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
+                </li>
+            </ul>
+        </div>
+        <h1 id="p6">Çınar Script ile geliştirme ve Provider nesnesi</h1>
+        <div class="part">
+            <ul>
+                <li>Siteyi oluşturan sayfaların kaynak koduna, Statik HTML ve Data List modüllerine Çınar Script ile kod yazabilirsiniz.</li>
+                <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
+                <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
                 <pre>$
-for(int i=0; i<100; i++) 
-    echo("&lt;b>" + i + "&lt;/b>");
-$</pre></li>
-            <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
-            <li>Siteyle ilgili bağlama (context'e) Provider nesnesi üzerinden erişebilirsiniz. Provider veritabanına, Request, Response nesnelerine, ve bunun gibi pek çok bağlama erişmenizi sağlar:
+    for(int i=0; i<100; i++) 
+        echo("&lt;b>" + i + "&lt;/b>");
+$</pre>
+                </li>
+                <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
+                <li>Siteyle ilgili bağlama (context'e) Provider nesnesi üzerinden erişebilirsiniz. Provider veritabanına, Request, Response nesnelerine, ve bunun gibi pek çok bağlama erişmenizi sağlar:
                 <pre>&lt;b>Son içerik ve bazı bilgiler:&lt;/b>
 $ 
     var lastContentId =  Provider.Database.GetInt("select max(Id) from Content");
@@ -259,8 +372,8 @@ $
 
     // gibi daha pek çok metod ve özellik (detaylı bilgi için referanslara bakınız)
 $</pre>
-            </li>
-            <li>Deneme yapmak için şu adımları izleyiniz:
+                </li>
+                <li>Deneme yapmak için şu adımları izleyiniz:
                 <ul>
                     <li>Herhagi bir bölgeye sağ tıklayın ve menüden Modül Ekle > Çeşitli > Statik HTML seçiniz.</li>
                     <li>Statik HTML modülü o bölgenin sonuna eklenecek ve düzenleme penceresi açılacaktır.</li>
@@ -272,115 +385,127 @@ $
 &lt;br />
 &lt;br />
 Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
-
 </pre>
                     </li>
                     <li>Kaydet'e tıkladığınızda modülün içinde kod çıktısı gösterilecektir.</li>
                 </ul>
-            </li>
-        </ul>
-    </div>
-    <h1>Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
-    <div class="part">
-        <ul>
-            <li>Sitenin SEO bilgileri, runtime ayarları, mail hesabı bilgileri gibi ayarlar Konfigürasyon penceresinden yapılır.</li>
-            <li>Sağ tık menüden Konfigürasyon menüsünü seçip bu ayarları yapabilirsiniz.</li>
-            <li><b>Genel Javascript Kodu</b> ve <b>Genel CSS Ayarları</b> menülerinden sitenin javascripti kodlarını ve CSS kodlarını düzenleyebilirsiniz.</li>
-        </ul>
-    </div>
-    <h1>Client nesne ve metodları</h1>
-    <div class="part">
-        <h2>Liste Formları</h2>
-        <div class="codeSample">
-        <h3>Open entity list form</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'Content', 
-        caption: 'Content List'
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
+                </li>
+            </ul>
         </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form with filter</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'Content', 
-        caption: 'Content List',
-        extraFilter: 'CategoryId=1'
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
+        <h1 id="p7">Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
+        <div class="part">
+            <ul>
+                <li>Sitenin SEO bilgileri, runtime ayarları, mail hesabı bilgileri gibi ayarlar Konfigürasyon penceresinden yapılır.</li>
+                <li>Sağ tık menüden Konfigürasyon menüsünü seçip bu ayarları yapabilirsiniz.</li>
+                <li><b>Genel Javascript Kodu</b> ve <b>Genel CSS Ayarları</b> menülerinden sitenin javascript kodlarını ve CSS kodlarını düzenleyebilirsiniz.</li>
+                <li>Konfigürasyon penceresinde önemli bir ayar konusu Önbellek'tir. (Cache)
+                    <ul>
+                        <li>Çok ziyaretçisi olan sitelerin kaynak kullanımı çok olur.</li>
+                        <li>Çınar CMS'in en çok kullandığı kaynak veritabanıdır.</li>
+                        <li>Site ziyaret edildiğinde, her modül veritabanına sorgular gönderir ve çıktıyı oluşturur.</li>
+                        <li>Önbellek mekanizması veritabanını sorgulama işinin 10 dakikada bir yapılmasını sağlar. Bu süre değiştirilebilir.</li>
+                        <li>Örneğin saniyede 20 ziyaretçisi olan bir site veritabanına muhtemelen saniyede 200 sorgu gönderecektir. (10 dakikada toplam 120.000 sorgu)</li>
+                        <li>Önbellek kullanılırsa 120.000 yerine sadece 200 sorgu çalıştırılır.</li>
+                        <li>Önbellek mekanizması; kullanıcıya özel olmayan modüller için kullanılmalıdır.</li>
+                        <li>Konfigürasyon penceresinden yapılan önbellek ayarı bütün modüller için varsayılan ayarı belirler</li>
+                        <li>Herhangi bir modül için, modül düzenleme penceresinde bu ayarlar (o modüle özel olarak) değiştirilebilir.</li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form to select an entity</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'Content', 
-        caption: 'Content List',
-        extraFilter: 'CategoryId=1',
-        selectCallback: function(entityId){
-            Windows.getFocusedWindow().close(); // first close list form
-            alert('You selected: ' + entityId);
-        }
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
-        </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form and hide filter panel</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'User', 
-        caption: 'Web Site Users',
-        hideFilterPanel: true
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
-        </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form and put a command button below the list</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'Content', 
-        caption: 'Content list with sort facility',
-        extraCommands: [
-            { id: 'Sort', icon: 'sort', name: 'Sırala', handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} }
-        ]
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
-        </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form and hide a category of edit form </h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'User', 
-        caption: 'Web Site Users',
-        editFormHideCategory: 'Temel'
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
-        </div>
-    
-        <div class="codeSample">
-        <h3>Open entity list form and rename edit form labels</h3>
-        <pre class="code">openEntityListForm({
-        entityName: 'User', 
-        caption: 'Web Site Users',
-        renameLabels: {
-            Name:'Ünvan',
-            Surname:'Ecdat Adı'
-        }
-    });</pre>
-        <div align="right"><button onclick="execute(this)">Execute</button></div>
-        </div>
-    </div>
-    <h1>Performans için önbellek (cache) çözümü</h1>
-    <div class="part">
-        <ul>
-            <li>Çok ziyaretçisi olan sitelerin kaynak kullanımı çok olur.</li>
-            <li>Çınar CMS'in en çok kullandığı kaynak veritabanıdır.</li>
-            <li>Site ziyaret edildiğinde, her modül veritabanına sorgular gönderir ve çıktıyı oluşturur.</li>
-            <li>Önbellek mekanizması veritabanını sorgulama işinin 10 dakikada bir yapılmasını sağlar. Bu süre değiştirilebilir.</li>
-            <li>Örneğin saniyede 20 ziyaretçisi olan bir site veritabanına muhtemelen saniyede 200 sorgu gönderecektir. (10 dakikada toplam 120.000 sorgu)</li>
-            <li>Önbellek kullanılırsa 120.000 yerine sadece 200 sorgu çalıştırılır.</li>
-            <li>Önbellek mekanizması; kullanıcıya özel olmayan modüller için kullanılmalıdır.</li>
+        <h1 id="p8">Client nesne ve metodları</h1>
+        <div class="part">
+            <h2>Liste Formları</h2>
+            <div class="codeSample">
+                <h3>Open entity list form</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
 
-        </ul>
+            <div class="codeSample">
+                <h3>Open entity list form with filter</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List',
+    extraFilter: 'CategoryId=1'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Open entity list form to select an entity</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content List',
+    extraFilter: 'CategoryId=1',
+    selectCallback: function(entityId){
+        Windows.getFocusedWindow().close(); // first close list form
+        alert('You selected: ' + entityId);
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Open entity list form and hide filter panel</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    hideFilterPanel: true
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Open entity list form and put a command button below the list</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    caption: 'Content list with sort facility',
+    extraCommands: [
+        { 
+            id: 'Sort', 
+            icon: 'sort', 
+            name: 'Sırala', 
+            handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} 
+        }
+    ]
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Open entity list form and hide a category of edit form </h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    editFormHideCategory: 'Temel'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Open entity list form and rename edit form labels</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    caption: 'Web Site Users',
+    renameLabels: {
+        Name:'Ünvan',
+        Surname:'Ecdat Adı'
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+        </div>
     </div>
-    </body>
+</body>
 </html>

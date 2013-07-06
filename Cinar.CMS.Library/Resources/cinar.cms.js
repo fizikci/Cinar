@@ -267,6 +267,8 @@ popupMenu.menuItems = [
             new CinarWindow({
                 titleIcon: 'ok',
                 title: 'Çınar CMS Documentation',
+                width: 1100,
+                height: 700,
                 url: '/help.html.ashx',
                 position:'left'
             });
