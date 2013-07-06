@@ -545,7 +545,11 @@ namespace Cinar.CMS.Library
                 }
                 return lang;
             }
-            internal set { if (Provider.Session != null) Provider.Session["currentCulture"] = value; }
+            internal set
+            {
+                if (Provider.Session != null)
+                    Provider.Session["currentCulture"] = value;
+            }
         }
         public static Lang CurrentLanguage 
         {

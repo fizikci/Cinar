@@ -1365,7 +1365,7 @@ var TextAreaUtil = {
 
 function nicePrompt(prompt, validationCallback, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
-    var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
+    var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"><br/>';
     str += '</br><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn ccancel">'+lang('Cancel')+'</span></p>';

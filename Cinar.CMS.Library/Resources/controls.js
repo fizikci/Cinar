@@ -2059,8 +2059,11 @@ var TreeView = Class.create(); TreeView.prototype = {
             //img.src = '/external/icons/plus.png';
         }
     },
-    nodeClick: function(event){
-        var div = Event.element(event).up();
+    nodeClick: function (event) {
+        var span = Event.element(event);
+        this.container.select('.nodeName').each(function (elm) { elm.setStyle({ fontWeight: 'normal' }); });
+        span.setStyle({ fontWeight: 'bold' });
+        var div = span.up();
         if(this.nodeClickCallback)
             this.nodeClickCallback(div['node']);
     }
