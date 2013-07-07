@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentUser.Id as [BaseEntity.Id], Content.Title as [Content.Title], User.Email as [User], ContentUser.Visible as [BaseEntity.Visible] from [ContentUser] left join [Content] ON Content.Id = [ContentUser].ContentId left join [User] ON User.Id = [ContentUser].UserId", QueryOrderBy = "[BaseEntity.Id] desc")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentUser.Id as [ContentUser.Id], Content.Title as [Content.Title], User.Email as [User.Email], ContentUser.Visible as [BaseEntity.Visible] from [ContentUser] left join [Content] ON Content.Id = [ContentUser].ContentId left join [User] ON User.Id = [ContentUser].UserId", QueryOrderBy = "ContentUser.Id desc")]
     public class ContentUser : BaseEntity
     {
         private int contentId;

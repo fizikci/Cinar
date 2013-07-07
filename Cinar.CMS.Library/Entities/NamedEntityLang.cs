@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id, TagLang.Name as [TagLang.Name], TLangId.Name as [Lang], TagLang.Visible as [BaseEntity.Visible] from [TagLang] left join [Lang] as TLangId ON TLangId.Id = [TagLang].LangId")]
     public class NamedEntityLang : BaseEntity
     {
         [ColumnDetail(IsNotNull = true, References = typeof(Lang)), EditFormFieldProps(ControlType = ControlType.LookUp)]

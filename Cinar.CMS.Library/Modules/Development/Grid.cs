@@ -130,7 +130,7 @@ namespace Cinar.CMS.Library.Modules
             int pageNo = 0;
             Int32.TryParse(Provider.Request["pageNo"], out pageNo);
 
-            string sql = String.Format(@"
+            string sql = Provider.Database.AddPagingToSQL(String.Format(@"
                 select
                     {0}
                 from
@@ -139,15 +139,14 @@ namespace Cinar.CMS.Library.Modules
                     1=1 {2}
                 order by
                     {3} {4}
-                limit {5} offset {6}
             ", 
                                         ShowFields, 
                                         sbFrom.ToString(), 
                                         String.IsNullOrEmpty(where) ? "" : ("and " + where), 
                                         EntityName + "." + this.OrderBy, 
-                                        this.Ascending ? "asc" : "desc", 
+                                        this.Ascending ? "asc" : "desc"),
                                         HowManyItems, 
-                                        pageNo*HowManyItems);
+                                        pageNo);
 
             DataTable dt = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 

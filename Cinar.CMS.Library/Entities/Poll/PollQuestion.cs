@@ -4,7 +4,7 @@ namespace Cinar.CMS.Library.Entities
 {
     [EditFormDetails(DetailType = typeof(PollAnswer), RelatedFieldName = "PollQuestionId")]
     [EditFormDetails(DetailType = typeof(PollQuestionLang), RelatedFieldName = "PollQuestionId")]
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select PollQuestion.Id, PollQuestion.Question as [PollQuestion.Question], PollQuestion.Visible as [BaseEntity.Visible] from [PollQuestion]")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Question, Visible from [PollQuestion]")]
     public class PollQuestion : BaseEntity
     {
         private string question;

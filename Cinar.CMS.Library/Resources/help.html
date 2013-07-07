@@ -2,7 +2,7 @@
 <head>
     <!--link href="/_thumbs/default.css" rel="stylesheet" /-->
     <style>
-        body {
+        body, td {
             font-family: Tahoma, Arial, sans-serif;
             font-size: 13px;
             letter-spacing: normal;
@@ -83,7 +83,7 @@
         .cplus {
             background-position: 0px -1728px;
         }
-
+        .cminus {background-position:0px -1440px;}
         .cbtn {
             background-image: url('/external/icons/all_icons.png');
             background-repeat: no-repeat;
@@ -116,9 +116,9 @@
         }
     </style>
     <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
-    <script src="/_thumbs/default.js"></script>
-    <script src="/_thumbs/tr.js"></script>
-    <script src="/_thumbs/controls.js"></script>
+    <script src="default.js.ashx"></script>
+    <script src="tr.js.ashx"></script>
+    <script src="controls.js.ashx"></script>
     <script>
         document.observe('dom:loaded', function () {
             $$('.part, h1').each(Element.hide);
@@ -136,9 +136,12 @@
         function execute(btn) {
             window.parent.eval($(btn).up().previous('pre.code').innerText);
         }
-
+        var tree;
         function showTree() {
-            new TreeView($('leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
+            tree = new TreeView($('leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
+            tree.toggle(tree.rootElement);
+            tree.toggle(tree.rootElement.down('.treeChildren').down());
+            tree.toggle(tree.rootElement.down('.treeChildren').down().next());
         }
         function getNodes(data) {
             if (data == 'root') {
@@ -155,28 +158,82 @@
                     { data: 'statik_p4', text: 'Yazarlar, Kaynaklar ve Etiketler', type: 'content' },
                     { data: 'statik_p5', text: 'Kullanıcılar ve Üyelik modülleri', type: 'content' },
                     { data: 'statik_p6', text: 'Çınar Script ile geliştirme ve Provider nesnesi', type: 'content' },
-                    { data: 'statik_p7', text: 'Genel ayarlar, genel Javascript ve CSS dosyaları', type: 'content' },
-                    { data: 'statik_p8', text: 'Client nesne ve metodları', type: 'content' }
+                    { data: 'statik_p7', text: 'Genel ayarlar, genel Javascript ve CSS dosyaları', type: 'content' }
                 ];
             }
             else if (data == 'reference') {
                 return [
+                    { data: 'statik_p8', text: 'Javascript nesne ve metodları', type: 'category' },
                     { data: 'ref_module', text: 'Modüller', type: 'category' },
                     { data: 'ref_entity', text: 'Entitiler', type: 'category' },
                     { data: 'ref_provider', text: 'Provider', type: 'content' },
                     { data: 'ref_utility', text: 'Utility', type: 'content' },
                 ];
             }
+            else if (data == 'statik_p8') {
+                return [
+                    { data: 'statik_p9', text: 'openEntityListForm', type: 'content' },
+                    { data: 'statik_p10', text: 'openEntityEditForm', type: 'content' },
+                    { data: 'statik_p11', text: 'Ağaç görünümü (TreeView) fonksiyonları', type: 'content' },
+                ];
+            }
+            else if (data == 'ref_module') {
+                var res = [];
+                for (var i = 0; i < window.parent.moduleTypes.length; i++)
+                    res.push({ data: 'ref_module_grup$' + window.parent.moduleTypes[i].grup, text: window.parent.moduleTypes[i].grup, type: 'category' });
+                return res;
+            }
+            else if (data.indexOf('ref_module_grup$') == 0) {
+                var grupName = data.split('$')[1];
+                var res = [];
+                for (var i = 0; i < window.parent.moduleTypes.length; i++)
+                    if (window.parent.moduleTypes[i].grup==grupName)
+                        for (var j = 0; j < window.parent.moduleTypes[i].items.length; j++)
+                            res.push({ data: 'ref_module_module$' + window.parent.moduleTypes[i].items[j].id, text: window.parent.moduleTypes[i].items[j].name, type: 'content' });
+                return res;
+            }
+            else if (data == 'ref_entity') {
+                return [
+                    { data: 'ref_temel_entity', text: 'Temel Entitiler', type: 'category' },
+                    { data: 'ref_detay_entity', text: 'Detay ve İlişkisel Entitiler', type: 'category' }
+                ];
+            }
+            else if (data == 'ref_temel_entity') {
+                var res = [];
+                for (var i = 0; i < window.parent.entityTypes.length; i++)
+                    if (window.parent.entityTypes[i][2])
+                        res.push({ data: 'ref_entity$' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                return res;
+            }
+            else if (data == 'ref_detay_entity') {
+                var res = [];
+                for (var i = 0; i < window.parent.entityTypes.length; i++)
+                    if (!window.parent.entityTypes[i][2])
+                        res.push({ data: 'ref_entity$' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                return res;
+            }
+
         }
         function nodeClicked(node) {
-            if (node.type == 'category')
-                return;
-            else {
-                $$('.part, h1').each(Element.hide);
-                if (node.data.indexOf('statik') == 0) {
-                    var id = node.data.split('_')[1];
-                    $(id).show();
-                    $(id).next().show();
+            $$('.part, h1').each(Element.hide);
+            if (node.data.indexOf('statik') == 0) {
+                var id = node.data.split('_')[1];
+                $(id).show();
+                $(id).next().show();
+            }
+            else if (node.data.indexOf("ref_entity$")==0)
+            {
+                var parts = node.data.split('$');
+                var h1 = $(parts[0] + '_' + parts[1]);
+                if (h1) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else
+                {
+                    var html = '<h1 id="' + parts[0] + '_' + parts[1] + '">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getEntityDocs&entityName=' + parts[1] }) + "</div>";
+                    $('contentPanel').insert(html);
                 }
             }
         }
@@ -254,7 +311,7 @@ $=this.HeadSection$
                 <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
                 <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerik" şeklinde hiyerarşik yapıdadır.</li>
                 <li>En üst kategorinin adı "Kök"dür.</li>
-                <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openTree()">tıklayınız</b>.</li>
+                <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openCategoryContentTree()">tıklayınız</b>.</li>
                 <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
                 <li>Bu ağaç görünümünde 
             <ul>
@@ -413,24 +470,32 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                 </li>
             </ul>
         </div>
-        <h1 id="p8">Client nesne ve metodları</h1>
+        <h1 id="p8">Javascript nesne ve metodları</h1>
         <div class="part">
-            <h2>Liste Formları</h2>
+        </div>
+        <h1 id="p9">openEntityListForm</h1>
+        <div class="part">
+            <ul>
+                <li>Bir entitiye ait liste penceresini açmak için bu fonksiyonu kullanabilirsiniz. (Bu pencerelere ListForm diyoruz.)</li>
+                <li>Liste açıldıktan sonra yeni entity ekleme, silme, değiştirme gibi işlemler bu pencereden yapılabilir.</li>
+                <li>Ekleme ve değiştirme için düzenleme penceresi açılır. (Buna da EditForm diyoruz.)</li>
+                <li>ListForm'lar aşağıdaki seçeneklerle açılabilir</li>
+            </ul>
             <div class="codeSample">
-                <h3>Open entity list form</h3>
+                <h3>Standart ListForm açmak:</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'Content', 
-    caption: 'Content List'
+    title: 'Content List'
 });</pre>
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form with filter</h3>
+                <h3>Filtre belirterek:</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'Content', 
-    caption: 'Content List',
+    title: 'Content List',
     extraFilter: 'CategoryId=1'
 });</pre>
                 <div align="right">
@@ -438,10 +503,10 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form to select an entity</h3>
+                <h3>Bir entity seçtirmek için ListForm açmak:</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'Content', 
-    caption: 'Content List',
+    title: 'Content List',
     extraFilter: 'CategoryId=1',
     selectCallback: function(entityId){
         Windows.getFocusedWindow().close(); // first close list form
@@ -453,10 +518,10 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form and hide filter panel</h3>
+                <h3>Filtre panelini gizlemek:</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'User', 
-    caption: 'Web Site Users',
+    title: 'Web Site Users',
     hideFilterPanel: true
 });</pre>
                 <div align="right">
@@ -464,16 +529,16 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form and put a command button below the list</h3>
+                <h3>ListForm'un altına bir komut butonu eklemek</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'Content', 
-    caption: 'Content list with sort facility',
+    title: 'Content list with a custom button',
     extraCommands: [
         { 
-            id: 'Sort', 
-            icon: 'sort', 
-            name: 'Sırala', 
-            handler: function(arg){alert(JSON.stringify(arg,null,'\t'));} 
+            id: 'Command', 
+            icon: 'cog', 
+            name: 'Komut', 
+            handler: function(){alert(JSON.stringify(this.getSelectedEntity(), null, '\t'));} 
         }
     ]
 });</pre>
@@ -482,10 +547,10 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form and hide a category of edit form </h3>
+                <h3>ListForm'dan açılan EditForm'un bir kategorisini gizlemek</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'User', 
-    caption: 'Web Site Users',
+    title: 'Web Site Users',
     editFormHideCategory: 'Temel'
 });</pre>
                 <div align="right">
@@ -493,10 +558,10 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Open entity list form and rename edit form labels</h3>
+                <h3>ListForm'dan açılan EditForm'un alan başlıklarını değiştirmek</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'User', 
-    caption: 'Web Site Users',
+    title: 'Web Site Users',
     renameLabels: {
         Name:'Ünvan',
         Surname:'Ecdat Adı'
@@ -506,6 +571,113 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                     <button onclick="execute(this)">Execute</button></div>
             </div>
         </div>
+        <h1 id="p10">openEntityEditForm</h1>
+        <div class="part">
+            <ul>
+                <li>Bir entitiyi düzenleme penceresini açmak için bu fonksiyonu kullanabilirsiniz.</li>
+                <li>Kategorilere ayrılmış şekilde entitinin alanları listelenir.</li>
+                <li>Değişiklikler yapılıp Kaydet buutonuna tıklayınca entity sunucuya gönderilip kaydedilir.</li>
+                <li>Options:
+                    <ul>
+                        <li>entityName: User, Content gibi entity adı</li>
+                        <li>id: açılacak entitinin id'si (0 verirseniz yeni kayıt eklemiş olursunuz.)</li>
+                        <li>title: Pencere başlığı</li>
+                        <li>filter: Bazı alanların değerlerini filtre ile atayabilirsiniz. Bu alanlar EditForm'da görünmeyecektir.</li>
+                        <li>hideCategory: açılan EditForm'da gizlenecek olan kategorinin adı</li>
+                        <li>renameLabels: Bazı alanların isimlerini renameLabels ile değiştirebilirsiniz.</li>
+                        <li>callback: kayıt işlemi tamamlandıktan sonra çağrılacak olan fonksiyon</li>
+                        <li>showRelatedEntities: Formun altındaki ilişkili veri linklerinden hangileri görünsün? ['Content','ContentPicture'] şeklinde belirtilir. Belirtilmezse hepsi görünür.</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="codeSample">
+                <h3>Standart EditForm açmak:</h3>
+                <pre class="code">openEntityEditForm({
+    entityName:'Content',
+    id:1,
+    title: 'Kök içeriği düzenle'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Filtre belirterek:</h3>
+                Aşağıda ClassName belirtildiği için bu alan gizli olarak servere gönderilir, EditForm'da görünmez.
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 0,
+    title: 'Content tablosuna yeni kayıt',
+    <b>filter</b>: 'ClassName=Content'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Kategori(leri) gizlemek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Çok basit içerik girişi',
+    <b>hideCategory</b>: 'İçerik,Temel',
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>İlişkili verilerden sadece bazılarını göstermek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Basit içerik girişi',
+    hideCategory: 'İçerik,Temel',
+    <b>showRelatedEntities</b>: ['ContentPicture', 'ContentLang'],
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Alan başlıklarını değiştirmek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Çok basit içerik girişi',
+    hideCategory: 'İçerik,Temel',
+    showRelatedEntities: [],
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle=',
+    <b>renameLabels</b>: {
+        Title: 'BAŞLIK',
+        ClassName: 'TÜRÜ',
+        Description: 'ÖZET BİLGİ',
+        Metin: 'İÇERİK'
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+        </div>
+        <h1 id="p11">Ağaç görünümü (TreeView) fonksiyonları</h1>
+        <div class="part">
+            <div class="codeSample">
+                <h3>Kategori-İçerik ağacını açmak:</h3>
+                <pre class="code">openCategoryContentTree();</pre>
+                <div align="right">
+                    <button onclick="window.parent.openCategoryContentTree()">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Sayfa-Modül ağacını açmak:</h3>
+                <pre class="code">openPageModuleTree();</pre>
+                <div align="right">
+                    <button onclick="window.parent.openPageModuleTree()">Execute</button></div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
+
+

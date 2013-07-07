@@ -1275,7 +1275,7 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
-    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels){
+    initialize: function (container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels, showRelatedEntities) {
         container = $(container);
         if (container == null) container = $(document.body);
         if (!hideCategory) hideCategory = '';
@@ -1373,8 +1373,9 @@ var EditForm = Class.create(); EditForm.prototype = {
                 case 'ListForm':
                     if(this.entityId==0) continue; //***
 					var entityDisplayName = controls.find(function(c){return c.id=='Title' || c.id=='Name' || c.id=='Question'}).value;
-					if(entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
-                    details.insert('<span class="btn c'+control.entityName+'" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
+					if (entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
+					if(!showRelatedEntities || showRelatedEntities.indexOf(control.entityName)>-1)
+					    details.insert('<span class="btn c' + control.entityName + '" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                     continue;
                 default:
                     throw 'No control of this kind: '+control.type;
@@ -1438,18 +1439,18 @@ var EditForm = Class.create(); EditForm.prototype = {
     }
 }
 
-function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels){
+function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities) {
 	var dim = $(document.body).getDimensions();
 	var left=dim.width-390, top=10, width=350, height=dim.height-60;
 	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
 	var winContent = $(win.getContent());
-	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels);
+	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities);
 	pe.onSave = onSave;
 	win['form'] = pe;
 	win.show();
 	win.toFront();
 	var dimWin = winContent.down('.editForm').getDimensions();
-	win.setSize(350,dimWin.height);
+	win.setSize(350,dimWin.height+5);
     pe.controls[0].input.select();
 }
 
@@ -1929,8 +1930,11 @@ var ListGrid = Class.create(); ListGrid.prototype = {
 			var r = {};
 			for(var k=0; k<headers.length; k++){
 				var fieldName = headers[k].readAttribute("id").split('_')[1];
-				var key = fieldName.indexOf('.')>-1 ? fieldName.split('.')[1] : fieldName;
-				r[key] = selRows[i].select('TD')[k].readAttribute("value");
+				var key = fieldName.indexOf('.') > -1 ? fieldName.split('.')[1] : fieldName;
+				if (r[key])
+				    r[key + "2"] = selRows[i].select('TD')[k].readAttribute("value");
+                else
+				    r[key] = selRows[i].select('TD')[k].readAttribute("value");
 			}
 			res.push(r);
 		}
@@ -2014,6 +2018,7 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
 
 var TreeView = Class.create(); TreeView.prototype = {
     container: null,
+    rootElement: null,
     getNodesCallback: null,
     nodeClickCallback: null,
     initialize: function(container, rootData, rootText, getNodesCallback, nodeClickCallback){
@@ -2023,13 +2028,20 @@ var TreeView = Class.create(); TreeView.prototype = {
 
         new Insertion.Bottom(this.container, '<div id="nd_' + rootData + '"><span class="cbtn cplus"></span><span class="cbtn ccategory"></span> <span class="nodeName">' + rootText + '</span></div>');
         var node = $('nd_'+rootData);
-        node['node'] = {data:rootData, text:rootText, type:'category', collapsed:true};
+        node['node'] = { data: rootData, text: rootText, type: 'category', collapsed: true };
+        this.rootElement = node;
         node.down().observe('click', this.toggle.bind(this));
         node.down('span.nodeName').observe('click', this.nodeClick.bind(this));
     },
-    toggle: function(event){
-        var img = Event.element(event);
-        var div = img.up();
+    toggle: function (event) {
+        var img, div;
+        if (!event.target) {
+            div = $(event);
+            img = div.down();
+        } else {
+            img = Event.element(event);
+            div = img.up();
+        }
         var node = div['node'];
         
         var childrenDiv = $('nd_'+node.data+'_children');
@@ -2051,12 +2063,13 @@ var TreeView = Class.create(); TreeView.prototype = {
         if(node.collapsed){
             childrenDiv.show();
             node.collapsed = false;
-            //TODO: çöz bunu:
-            //img.src = '/external/icons/minus.png';
+            img.removeClassName('cplus');
+            img.addClassName('cminus');
         } else {
             childrenDiv.hide();
             node.collapsed = true;
-            //img.src = '/external/icons/plus.png';
+            img.removeClassName('cminus');
+            img.addClassName('cplus');
         }
     },
     nodeClick: function (event) {

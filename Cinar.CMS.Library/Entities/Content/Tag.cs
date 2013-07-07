@@ -2,7 +2,7 @@
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name as [NamedEntity.Name], DisplayName as [Tag.DisplayName], Headline as [Tag.Headline] from Tag", QueryOrderBy = "[NamedEntity.Name]")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name, DisplayName, Headline from Tag", QueryOrderBy = "Name")]
     [EditFormDetails(DetailType = typeof(TagLang), RelatedFieldName = "TagId")]
     //[OverrideAttribute(AttributeType = typeof(PictureFieldPropsAttribute), FieldName = "Picture", AttribProps = "SpecialFolder", NewValues = "sourceDir")]
     public class Tag : NamedEntity

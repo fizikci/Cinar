@@ -603,7 +603,7 @@ namespace Cinar.CMS.Library
                     string tagSQL = "";
                     if (Provider.Tag != null && Provider.Tag.Id>0)
                         tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = "+Provider.Tag.Id+")";
-                    Items["previousContentId"] = Provider.Database.GetInt("select Id from Content where Id<{0} AND CategoryId={1} " + tagSQL + " order by Id desc limit 1", Content.Id, Content.CategoryId);
+                    Items["previousContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id<{0} AND CategoryId={1} " + tagSQL + " order by Id desc", Content.Id, Content.CategoryId);
                 }
                 return (int)Items["previousContentId"];
             }
@@ -617,7 +617,7 @@ namespace Cinar.CMS.Library
                     string tagSQL = "";
                     if (Provider.Tag != null && Provider.Tag.Id > 0)
                         tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = " + Provider.Tag.Id + ")";
-                    Items["nextContentId"] = Provider.Database.GetInt("select Id from Content where Id>{0} AND CategoryId={1} " + tagSQL + " order by Id limit 1", Content.Id, Content.CategoryId);
+                    Items["nextContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id>{0} AND CategoryId={1} " + tagSQL + " order by Id", Content.Id, Content.CategoryId);
                 }
                 return (int)Items["nextContentId"];
             }
@@ -980,7 +980,6 @@ namespace Cinar.CMS.Library
                     }
             }
         }
-
         public static void Translate(string entityName, DataTable dt)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)
@@ -1012,6 +1011,33 @@ namespace Cinar.CMS.Library
                             relatedRow[dc.ColumnName] = drLang[dc];
                     }
             }
+        }
+
+        public static string TranslateColumnName(string entityName, string columnName)
+        {
+            string columnTitle = "";
+            if (columnName == "Id" || columnName.EndsWith(".Id"))
+                columnTitle = "Id";
+            else if (columnName == "Visible" || columnName.EndsWith(".Visible"))
+                columnTitle = Provider.GetResource("BaseEntity.Visible");
+            else if (columnName == "Name")
+                columnTitle = Provider.GetResource("NamedEntity.Name");
+            else if (columnName.EndsWith(".Name"))
+                columnTitle = Provider.GetResource(columnName.Split('.')[0]);
+            else
+            {
+                if (columnName.Contains("."))
+                    columnTitle = Provider.GetResource(columnName);
+                else
+                    columnTitle = Provider.GetResource(entityName + "." + columnName);
+                if (columnTitle.StartsWith("? ")) {
+                    if (columnName == "TCategoryId.Title")
+                        columnTitle = Provider.GetResource("Content.CategoryId");
+                    else
+                        columnTitle = columnName;
+                }
+            }
+            return columnTitle;
         }
 
         #region Resource
@@ -1197,16 +1223,18 @@ namespace Cinar.CMS.Library
             if (string.IsNullOrEmpty(orderBy) || orderBy.Trim()=="")
                 orderBy = orderByDefault;
 
-            if (orderBy.Contains(" "))
-            {
-                string[] parts = orderBy.Split(' ');
-                orderBy = "[" + parts[0].Trim('[', ']') + "] " + parts[1];
-            }
-            else
-                orderBy = "[" + orderBy.Trim().Trim('[', ']') + "]";
+            //if (orderBy.Contains(" "))
+            //{
+            //    string[] parts = orderBy.Split(' ');
+            //    orderBy = "[" + parts[0].Trim('[', ']') + "] " + parts[1];
+            //}
+            //else
+            //    orderBy = "[" + orderBy.Trim().Trim('[', ']') + "]";
 
             sql += " order by " + orderBy;
-            sql += " limit " + limit + " offset " + (limit * pageIndex);
+
+            sql = Provider.Database.AddPagingToSQL(sql, limit, pageIndex);
+            //sql += " limit " + limit + " offset " + (limit * pageIndex);
 
             dt = Provider.Database.ReadTable(entityType, sql, parameters);
             return dt;

@@ -3,7 +3,7 @@ using Cinar.Database;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select ContentSource.Id, ContentSource.Name as [ContentSource.Name], TCategoryId.Title as [Content.CategoryId], Source.Name as [Source], Author.Name as [Author], ContentSource.LastFetchTrial as [ContentSource.LastFetchTrial], ContentSource.Visible as [BaseEntity.Visible] from [ContentSource] left join [Content] as TCategoryId ON TCategoryId.Id = [ContentSource].CategoryId left join [Source] ON Source.Id = [ContentSource].SourceId left join [Author] ON Author.Id = [ContentSource].AuthorId", QueryOrderBy = "[ContentSource.Name] desc")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select ContentSource.Id as [ContentSource.Id], ContentSource.Name as [ContentSource.Name], Content.Title as [Content.Title], Source.Name as [Source.Name], Author.Name as [Author.Name], ContentSource.LastFetchTrial as [ContentSource.LastFetchTrial], ContentSource.Visible as [ContentSource.Visible] from [ContentSource] left join [Content] ON Content.Id = [ContentSource].CategoryId left join [Source] ON Source.Id = [ContentSource].SourceId left join [Author] ON Author.Id = [ContentSource].AuthorId", QueryOrderBy = "ContentSource.Name desc")]
     public class ContentSource : BaseEntity
     {
         private string name;

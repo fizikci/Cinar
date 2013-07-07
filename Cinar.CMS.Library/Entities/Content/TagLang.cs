@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id, TagLang.Name as [TagLang.Name], TLangId.Name as [Lang], TagLang.Visible as [BaseEntity.Visible] from [TagLang] left join [Lang] as TLangId ON TLangId.Id = [TagLang].LangId")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id as [TagLang.Id], TagLang.Name as [TagLang.Name], Lang.Name as [Lang.Name], TagLang.Visible as [TagLang.Visible] from [TagLang] left join [Lang] ON Lang.Id = [TagLang].LangId")]
     public class TagLang : NamedEntityLang
     {
         private int tagId = 1;

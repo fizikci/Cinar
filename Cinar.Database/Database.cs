@@ -1267,6 +1267,30 @@ namespace Cinar.Database
             return this.GetDataTable(sql, fExp.GetParamValues());
         }
 
+        public string AddPagingToSQL(string sql, int pageSize, int pageNo)
+        {
+            if (pageSize == 0)
+                return sql;
+
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                case DatabaseProvider.MySQL:
+                case DatabaseProvider.SQLite:
+                    return sql + " LIMIT " + pageSize + " OFFSET " + (pageSize * pageNo);
+                case DatabaseProvider.SQLServer:
+                    int indexOfFrom = sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase);
+                    int indexOfOrderBy = sql.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase);
+                    return "WITH _CinarResult AS (" +
+                            sql.Substring(0, indexOfFrom) +
+                            ", ROW_NUMBER() OVER (" + sql.Substring(indexOfOrderBy) + @") AS _CinarRowNumber " +
+                            sql.Substring(indexOfFrom, indexOfOrderBy - indexOfFrom) +
+                            ") select * from _CinarResult WHERE _CinarRowNumber BETWEEN " + (pageSize * pageNo + 1) + " AND " + (pageSize * pageNo + pageSize) + ";";
+            }
+
+            return sql;
+        }
+
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
             return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr => (T)(dr[0] == DBNull.Value ? default(T) : dr[0])).ToList();

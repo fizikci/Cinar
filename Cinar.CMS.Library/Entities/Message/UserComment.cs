@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select UserComment.Id as [BaseEntity.Id], Content.Title as [Content], UserComment.Nick as [UserComment.Nick], UserComment.Title as [UserComment.Title], UserComment.Visible as [BaseEntity.Visible] from UserComment left join Content on Content.Id = UserComment.ContentId", QueryOrderBy = "[BaseEntity.Id] desc")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select UserComment.Id as [UserComment.Id], Content.Title as [Content.Title], UserComment.Nick as [UserComment.Nick], UserComment.Title as [UserComment.Title], UserComment.Visible as [UserComment.Visible] from UserComment left join Content on Content.Id = UserComment.ContentId", QueryOrderBy = "UserComment.Id desc")]
     public class UserComment : BaseEntity
     {
         private int contentId;
