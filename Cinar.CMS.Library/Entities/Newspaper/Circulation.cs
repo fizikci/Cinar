@@ -2,7 +2,7 @@
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, WeekStartDate as [Circulation.WeekStartDate],  DailyName as [Circulation.DailyName],  AvgDailySale as [Circulation.AvgDailySale] from [Circulation]", QueryOrderBy = "Id")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, WeekStartDate,  DailyName,  AvgDailySale from [Circulation]", QueryOrderBy = "Id")]
     public class Circulation : BaseEntity
     {
         private DateTime weekStartDate;

@@ -11,7 +11,7 @@ namespace Cinar.CMS.Library.Entities
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'root@local', '63A9F0EA7BB98050', 'User,Editor,Designer', 'Admin', 'jhrd74ghe63'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'editor', '63A9F0EA7BB98050', 'User,Editor', 'Editör', 'ge548rhe46e'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'anonim', '', '', 'Anonim', '63beyte674hge'")]
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email as [User.Email], Roles as [User.Roles], Visible as [BaseEntity.Visible] from [User]")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email, Roles, Visible from [User]")]
     public class User : BaseEntity
     {
         [ColumnDetail(IsNotNull = true, Length = 100, IsUnique = true), EditFormFieldProps(Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]

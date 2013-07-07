@@ -3,7 +3,7 @@
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Log.Id, Log.LogType as [Log.LogType], Log.Category as [Log.Category], Log.Description as [Log.Description] from [Log]")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, LogType, Category, Description, InsertDate from [Log]")]
     public class Log : BaseEntity
     {
         /// <summary>

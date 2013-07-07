@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Recommendation.Id as [BaseEntity.Id], Content.Title as [Content], Recommendation.EmailFrom as [Recommendation.EmailFrom], Recommendation.EmailTo as [Recommendation.EmailTo], Recommendation.Visible as [BaseEntity.Visible] from Recommendation left join Content on Content.Id = Recommendation.ContentId", QueryOrderBy = "[BaseEntity.Id] desc")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Recommendation.Id as [Recommendation.Id], Content.Title as [Content.Title], Recommendation.EmailFrom as [Recommendation.EmailFrom], Recommendation.EmailTo as [Recommendation.EmailTo], Recommendation.Visible as [Recommendation.Visible] from Recommendation left join Content on Content.Id = Recommendation.ContentId", QueryOrderBy = "Recommendation.Id desc")]
     public class Recommendation : BaseEntity
     {
         private int contentId;

@@ -3,7 +3,7 @@
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Lang.Id, Lang.Name as [Lang.Name], Lang.Visible as [BaseEntity.Visible] from [Lang]", QueryOrderBy = "Lang.Name")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name, Visible from [Lang]", QueryOrderBy = "Name")]
     [DefaultData(ColumnList="Code, Name", ValueList="'tr-TR', 'Türkçe'")]
     public class Lang : BaseEntity
     {

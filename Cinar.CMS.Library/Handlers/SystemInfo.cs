@@ -142,7 +142,7 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getLastTemplateContent()
         {
-            context.Response.Write(Provider.Database.Read<Template>("1=1 order by Id desc limit 1").HTMLCode);
+            context.Response.Write(Provider.Database.GetString("select top 1 HTMLCode from Template order by Id desc"));
         }
         private void copyTemplate()
         {

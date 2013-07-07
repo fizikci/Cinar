@@ -249,7 +249,7 @@ popupMenu.menuItems = [
     {text:lang('Import')+'...', icon:'importTemplate', callback:importTemplate},
     {text:'-'},
     {text:lang('Data'), icon:'data', items:[]},
-    {text:lang('Category-Content Tree'), icon:'tree', callback:openTree},
+    {text:lang('Category-Content Tree'), icon:'tree', callback:openCategoryContentTree},
     {text:lang('Page-Module Tree'), icon:'tree', callback:openPageModuleTree},
     {text:'-'},
     {text:lang('Configuration'), icon:'Configuration', callback:configure},
@@ -562,7 +562,7 @@ function importModule(){
 function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels) {
 
     if (typeof (entityName) == "object") {
-        caption = entityName.caption;
+        caption = entityName.title;
         extraFilter = entityName.extraFilter;
         forSelect = entityName.selectCallback!=null;
         selectCallback = entityName.selectCallback;
@@ -797,7 +797,7 @@ function selectPic(pic){
 //#####################################
 
 // Category-Content Tree
-function openTree(){
+function openCategoryContentTree() {
     var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 5, left: 5, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     winContent.setStyle({overflow:'auto'});
@@ -844,7 +844,7 @@ function nodeModuleClicked(node){
 //#       EDIT & SAVE ANY DATA SUCH AS CONTENT, AUTHOR, etc..       #
 //###################################################################
 
-function editData(entityName, id, hideCategory, callback, filter, title, renameLabels){
+function editData(entityName, id, hideCategory, callback, filter, title, renameLabels, showRelatedEntities) {
     new Ajax.Request('EntityInfo.ashx?method='+(id>0 ? 'edit' : 'new')+'&entityName='+entityName+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -859,14 +859,15 @@ function editData(entityName, id, hideCategory, callback, filter, title, renameL
 				function(pe){ if(id>0) saveEditForm(pe, callback); else insertEditForm(pe, callback); }, 
 				filter,
                 hideCategory,
-                renameLabels);
+                renameLabels,
+                showRelatedEntities);
         },
         onException: function(req, ex){throw ex;}
     });
 }
 function openEntityEditForm(options) {
     editData(options.entityName, options.id, options.hideCategory, options.callback, options.filter,
-        options.title, options.renameLabels);
+        options.title, options.renameLabels, options.showRelatedEntities);
 }
 function deleteData(entityName, id, callback){
 	niceConfirm(lang('The record will be deleted!'), function () {

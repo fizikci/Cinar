@@ -12,7 +12,7 @@ namespace Cinar.CMS.Library.Entities
     [EditFormDetails(DetailType = typeof(ContentLang), RelatedFieldName = "ContentId")]
     //[EditFormDetails(DetailType = typeof(Product), RelatedFieldName = "ContentId")]
     [EditFormDetails(DetailType = typeof(ContentPicture), RelatedFieldName = "ContentId")]
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Content.Id, Content.Title as [Content.Title], TCategoryId.Title as [Content.CategoryId], Content.PublishDate as [Content.PublishDate], Content.Visible as [BaseEntity.Visible] from [Content] left join [Content] as TCategoryId ON TCategoryId.Id = [Content].CategoryId", QueryOrderBy = "[Content.PublishDate] desc")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Content.Id as [Content.Id], Content.Title as [Content.Title], TCategoryId.Title as [TCategoryId.Title], Content.PublishDate as [Content.PublishDate], Content.Visible as [Content.Visible] from [Content] left join [Content] as TCategoryId ON TCategoryId.Id = [Content].CategoryId", QueryOrderBy = "Content.PublishDate desc")]
     public class Content : BaseEntity
     {
         [EditFormFieldProps(Visible=false)]

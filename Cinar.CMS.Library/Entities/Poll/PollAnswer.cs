@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace Cinar.CMS.Library.Entities
 {
     [EditFormDetails(DetailType = typeof(PollAnswerLang), RelatedFieldName = "PollAnswerId")]
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select PollAnswer.Id as [BaseEntity.Id], PollAnswer.Answer as [PollAnswer.Answer], PollAnswer.Visible as [BaseEntity.Visible] from [PollAnswer] left join [PollQuestion] as TPollQuestionId ON TPollQuestionId.Id = [PollAnswer].PollQuestionId", QueryOrderBy = "[BaseEntity.Id]")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select PollAnswer.Id as [PollAnswer.Id], PollAnswer.Answer as [PollAnswer.Answer], PollAnswer.Visible as [PollAnswer.Visible] from [PollAnswer] left join [PollQuestion] ON PollQuestion.Id = [PollAnswer].PollQuestionId", QueryOrderBy = "PollAnswer.Id")]
     public class PollAnswer : BaseEntity
     {
         private string answer;

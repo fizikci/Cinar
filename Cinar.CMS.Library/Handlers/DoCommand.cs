@@ -159,7 +159,7 @@ namespace Cinar.CMS.Library.Handlers
             if (string.IsNullOrEmpty(tag) || tag.Trim().Length < 2)
                 return;
 
-            DataTable dt = Provider.Database.ReadTable(typeof(Tag), "select Name from Tag where Name like {0} order by Name limit 30", tag + "%");
+            DataTable dt = Provider.Database.ReadTable(typeof(Tag), Provider.Database.AddPagingToSQL("select Name from Tag where Name like {0} order by Name",30,0), tag + "%");
             if (dt == null)
                 context.Response.Write("");
             else

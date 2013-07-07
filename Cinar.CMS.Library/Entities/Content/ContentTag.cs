@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentTag.Id as [BaseEntity.Id], Content.Title as [Content.Title], Tag.Name as [Tag], ContentTag.Visible as [BaseEntity.Visible] from [ContentTag] left join [Content] ON Content.Id = [ContentTag].ContentId left join [Tag] ON Tag.Id = [ContentTag].TagId", QueryOrderBy = "[BaseEntity.Id] desc")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select ContentTag.Id as [ContentTag.Id], Content.Title as [Content.Title], Tag.Name as [Tag.Name], ContentTag.Visible as [ContentTag.Visible] from [ContentTag] left join [Content] ON Content.Id = [ContentTag].ContentId left join [Tag] ON Tag.Id = [ContentTag].TagId", QueryOrderBy = "ContentTag.Id desc")]
     public class ContentTag : BaseEntity
     {
         private int contentId;

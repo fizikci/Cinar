@@ -3,7 +3,7 @@ using Cinar.Database;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id as [BaseEntity.Id], Name as [ContactUs.Name], Email as [ContactUs.Email], Subject as [ContactUs.Subject] from ContactUs", QueryOrderBy = "[BaseEntity.Id] desc")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name, Email, Subject from ContactUs")]
     public class ContactUs : BaseEntity
     {
         private string name;

@@ -7,6 +7,7 @@ using Cinar.Database;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.ComponentModel;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -106,6 +107,11 @@ namespace Cinar.CMS.Library.Handlers
                         sortEntities();
                         break;
                     }
+                case "getEntityDocs":
+                    {
+                        getEntityDocs();
+                        break;
+                    }
                 default:
                     {
                         sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
@@ -173,8 +179,12 @@ namespace Cinar.CMS.Library.Handlers
             {
                 context.Response.Write("\t<tr>\n");
                 foreach (DataColumn dc in dt.Columns)
-                    //if (dc.ColumnName != "Id")
-                    context.Response.Write("\t\t<th id=\"h_" + dc.ColumnName + "\">" + Provider.GetResource(dc.ColumnName) + "</th>\n");
+                {
+                    if (dc.ColumnName == "_CinarRowNumber") continue; //***
+                    string columnName = dc.ColumnName;
+                    string columnTitle = Provider.TranslateColumnName(entityName, columnName);
+                    context.Response.Write("\t\t<th id=\"h_" + dc.ColumnName + "\">" + columnTitle + "</th>\n");
+                }
                 context.Response.Write("\t</tr>\n");
             }
             if (dt != null)
@@ -185,9 +195,11 @@ namespace Cinar.CMS.Library.Handlers
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow dr = dt.Rows[i];
-                        context.Response.Write("\t<tr id=\"r_" + (dt.Columns.Contains("Id") ? dr["Id"] : dr["BaseEntity.Id"]) + "\">\n");
+                        context.Response.Write("\t<tr id=\"r_" + dr[0] + "\">\n");
                         foreach (DataColumn dc in dt.Columns)
                         {
+                            if (dc.ColumnName == "_CinarRowNumber") continue; //***
+
                             object valObj = dr[dc.ColumnName];
                             string dispVal = "";
                             if (dr.IsNull(dc))
@@ -432,5 +444,117 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write("OK");
         }
+
+        private void getEntityDocs()
+        {
+            string entityName = context.Request["entityName"];
+            Type entityType = Provider.GetEntityType(entityName);
+            object obj = Provider.CreateEntity(entityType);
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<h2>Database Properties</h2>");
+            sb.Append("<table>\n");
+            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
+                "Type",
+                "Name",
+                "Declaring Type",
+                "Description",
+                "Default Value");
+
+            foreach (PropertyInfo pi in entityType.GetProperties())
+            {
+                if (!pi.CanWrite) continue;
+                if (pi.Name == "Item") continue;
+
+                string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
+                if (caption.StartsWith(pi.DeclaringType.Name + ".") && !Provider.DesignMode)
+                    caption = pi.Name;
+                string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
+
+                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
+                    pi.PropertyType.Name,
+                    pi.Name,
+                    pi.DeclaringType.Name,
+                    caption == description ? "" : (caption + ". ") + description,
+                    pi.GetValue(obj, null));
+            }
+            sb.Append("</table>\n");
+
+            sb.Append("<h2>Read Only Properties</h2>");
+            sb.Append("<table>\n");
+            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                "Type",
+                "Name",
+                "Declaring Type",
+                "Description");
+
+            foreach (PropertyInfo pi in entityType.GetProperties())
+            {
+                if (pi.CanWrite) continue;
+                if (pi.Name == "Item") continue;
+
+                DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
+
+                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                    pi.PropertyType.Name,
+                    pi.Name,
+                    pi.DeclaringType.Name,
+                    desc.Description);
+            }
+            sb.Append("</table>\n");
+
+            sb.Append("<h2>Methods</h2>");
+            sb.Append("<table>\n");
+            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                "Type",
+                "Name",
+                "Declaring Type",
+                "Description");
+
+            foreach (MethodInfo pi in entityType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (pi.IsPublic) continue;
+
+                DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
+
+                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                    pi.ReturnType.Name,
+                    pi.Name,
+                    pi.DeclaringType.Name,
+                    desc.Description);
+            }
+            sb.Append("</table>\n");
+
+            if (obj.GetType() != typeof(Lang))
+            {
+                sb.Append("<h2>Related Entities</h2>");
+                sb.Append("<table>\n");
+                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                    "Entity Name",
+                    "Related Field Name",
+                    "Label",
+                    "Description");
+                foreach (Type type in Provider.GetEntityTypes())
+                    foreach (PropertyInfo pi in type.GetProperties())
+                    {
+                        if (pi.DeclaringType == typeof(BaseEntity)) continue; //*** BaseEntity'deki UpdateUserId ve InsertUserId bütün entitilerde var, gereksiz bir ilişki kalabalığı oluşturuyor
+
+                        ColumnDetailAttribute fda = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
+                        if (fda.References == entityType)
+                        {
+                            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                                type.Name,
+                                pi.Name,
+                                Provider.GetResource(type.Name).ToHTMLString(),
+                                Provider.GetResource(type.Name + "Desc").ToHTMLString());
+                        }
+                    }
+                sb.Append("</table>\n");
+            }
+
+            Provider.Response.Write(sb.ToString());
+        }
+
     }
 }

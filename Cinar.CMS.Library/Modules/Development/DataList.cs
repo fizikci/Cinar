@@ -99,7 +99,7 @@ namespace Cinar.CMS.Library.Modules
 
             string sql = "";
             if (string.IsNullOrWhiteSpace(this.SQL))
-                sql = String.Format(@"
+                sql = Provider.Database.AddPagingToSQL(String.Format(@"
                     select
                         {0}
                     from
@@ -107,16 +107,15 @@ namespace Cinar.CMS.Library.Modules
                     where
                         {2} {3}
                     order by
-                        {4} {5}
-                    limit {6} offset {7}",
+                        {4} {5}",
                                      "*",
                                      this.EntityName,
                                      defaultWhere,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
-                                     this.Ascending ? "asc" : "desc",
+                                     this.Ascending ? "asc" : "desc"),
                                      HowManyItems,
-                                     pageNo * HowManyItems);
+                                     pageNo);
             else
             {
                 Interpreter engine = Provider.GetInterpreter(SQL, this);
@@ -124,9 +123,12 @@ namespace Cinar.CMS.Library.Modules
                 engine.Execute();
                 SQL = engine.Output;
 
-                sql = String.Format(SQL + (SQL.ToLowerInvariant().Contains("limit ")?"":@" limit {0} offset {1}"),
+                if (SQL.ToLowerInvariant().Contains("limit"))
+                    return "Do not use limit in SQL. DataList does it.";
+
+                sql = Provider.Database.AddPagingToSQL(String.Format(SQL),
                                     HowManyItems,
-                                    pageNo*HowManyItems);
+                                    pageNo);
             }
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
@@ -159,16 +161,11 @@ namespace Cinar.CMS.Library.Modules
                 }
                 if (data.Rows.Count == HowManyItems)
                 {
-                    // bakalým next page veritabanýnda var mý?
-                    DataTable lastPageData = Provider.Database.GetDataTable(sql.Replace(string.Format("limit {0} offset {1}", HowManyItems, pageNo * HowManyItems), string.Format("limit {0} offset {1}", HowManyItems, (pageNo + 1) * HowManyItems)), filterParser.GetParams());
-                    if (lastPageData != null && lastPageData.Rows.Count > 0)
-                    {
-                        uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
-                        nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
-                            AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                            AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
-                            LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
-                    }
+                    uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
+                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
+                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
+                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                        LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
                 if(!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
