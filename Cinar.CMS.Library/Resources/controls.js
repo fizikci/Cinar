@@ -271,24 +271,25 @@ var StringEdit = Class.create();StringEdit.prototype = {
 		ta.on('keydown', function(event){
 			switch(event.keyCode){
 				case Event.KEY_RETURN:
-					if(list.down('.nl2br').checked) TextAreaUtil.addTag(ta, '<br/>', '');
+				    if (list.down('.nl2br').checked)
+				        ths.aceEdit.insert('<br/>'); //TextAreaUtil.addTag(ta, '<br/>', '');
 					break;
 			}
 		});
 		
 		list.select('.cbtn').each(function(img){
 			if (img.className.indexOf('bold')>-1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<b>', '</b>');});
+			    img.observe('click', function () { ths.aceEdit.insert('<b>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</b>'); });
 			if (img.className.indexOf('italic') > -1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<i>', '</i>');});
+			    img.observe('click', function () { ths.aceEdit.insert('<i>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</i>'); });
 			if (img.className.indexOf('underline') > -1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<u>', '</u>');});
+			    img.observe('click', function () { ths.aceEdit.insert('<u>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</u>'); });
 			if (img.className.indexOf('font') > -1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<font size="5" color="black">', '</font>');});
+			    img.observe('click', function () { ths.aceEdit.insert('<font size="5" color="black">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</font>'); });
 			if (img.className.indexOf('anchor') > -1)
-				img.observe('click', function(){TextAreaUtil.addTag(ths.editorId + 'ta', '<a href="_prompt_" target="_blank">', '</a>', 'Enter link URL', 'http://');});
+			    img.observe('click', function () { ths.aceEdit.insert('<a href="http://www.address.com" target="_blank">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</a>'); });
 			if (img.className.indexOf('picture') > -1)
-				img.observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', '<img src="'+path+'"/>', ''); Windows.getFocusedWindow().close();});});
+			    img.observe('click', function () { openFileManager(null, function (path) { ths.aceEdit.insert('<img src="' + path + '"/>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange())); Windows.getFocusedWindow().close(); }); });
 			if (img.className.indexOf('eye') > -1)
 				img.observe('click', function(){
 					if(!$(ths.editorId+'Preview')){
@@ -299,7 +300,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
 						Windows.maxZIndex++;
 						$(document.body).insert('<div id="'+ths.editorId+'Preview" style="background:white;overflow:auto;text-align:left;left:'+pos.left+'px;top:'+pos.top+'px;z-index:'+Windows.maxZIndex+';width:'+dim.width+'px;height:'+dim.height+'px;position:absolute;"></div>');
 					}
-					$(ths.editorId+'Preview').innerHTML = $(ths.editorId + 'ta').value;
+					$(ths.editorId+'Preview').innerHTML = ths.aceEdit.getValue();
 					showElementWithOverlay(ths.editorId+'Preview', true, 'black');
 				});
 		});
