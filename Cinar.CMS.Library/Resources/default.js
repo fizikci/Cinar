@@ -1367,8 +1367,8 @@ function nicePrompt(prompt, validationCallback, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
-    str += '<input type="text" id="promptCtrl" style="width:400px"><br/>';
-    str += '</br><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn ccancel">'+lang('Cancel')+'</span></p>';
+    str += '<input type="text" id="promptCtrl" style="width:400px"></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="btn ccancel">' + lang('Cancel') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1388,7 +1388,7 @@ function niceAlert(alert){
     var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p align="center"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1398,7 +1398,7 @@ function niceInfo(alert, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p align="center"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1410,8 +1410,8 @@ function niceInfo(alert, okCallback){
 function niceConfirm(confirm, okCallback){
     var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
-    var str = '<p align="center"><br/>' + confirm + '<br/>';
-    str += '</br><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span> <span id="btnPromptCancel" class="btn ccancel">'+lang('Cancel')+'</span></p>';
+    var str = '<p align="center"><br/>' + confirm + '</p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="btn ccancel">' + lang('Cancel') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();

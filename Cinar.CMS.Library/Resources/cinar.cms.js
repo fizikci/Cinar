@@ -741,8 +741,8 @@ function sortImages(){
 		return;
 	
 	var rows = table.select('tr[id]');
-	if(!rows || rows.length==0)
-		return;
+	//if(!rows || rows.length==0)
+	//	return;
 	
 	var html = '<div id="sortableList">';
 	for(var i=0; i<rows.length; i++){
@@ -791,6 +791,59 @@ function selectPic(pic){
 		pic.toggleClassName('sel');
 	draggedPic = null;
 }
+
+function showImages(options) {
+    options = Object.extend({
+        titleIcon: 'sort',
+        title: 'Resim Galerisi',
+        width: 950,
+        height: 600,
+        filter: ''
+    }, options || {});
+
+    var list = ajax({ url: 'EntityInfo.ashx?method=getEntityList&entityName=ContentPicture&filter=' + options.filter, isJSON: true });
+
+    var html = '<div id="sortableList">';
+    for (var i = 0; i < list.length; i++) {
+        var row = list[i];
+        var src = row.FileName;
+        html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="selectPic(this)"><img src="' + src + '" width="60" height="60"/></div>';
+    }
+    html += '</div>';
+    html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
+    html += '   <span class="btn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
+    html += '   <span class="btn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
+    html += '   <span class="btn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+    html += '</p>';
+
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
+    var winContent = $(win.getContent());
+    winContent.insert(html);
+    win.showCenter();
+    win.toFront();
+    $('btnSortImagesOK').observe('click', function () {
+        var sortOrder = Sortable.sequence('sortableList');
+        ajax({ url: 'EntityInfo.ashx?method=sortEntities&sortOrder=' + sortOrder + '&entityName=ContentPicture', isJSON: false, noCache: true });
+        Windows.getFocusedWindow().close();
+    });
+    $('btnSortImagesCancel').observe('click', function () { Windows.getFocusedWindow().close(); });
+    $('btnSortImagesDelete').observe('click', function () {
+        niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
+            $$('#sortableList div.sel').each(function (elm) {
+                var id = elm.id.split('_')[1];
+                deleteDataWithoutWarning('ContentPicture', id, function () { elm.remove(); });
+            });
+        });
+    });
+
+    Position.includeScrollOffsets = true;
+    Sortable.create('sortableList', {
+        tag: 'div', overlap: 'horizontal', constraint: false, scroll: 'sortableList',
+        onChange: function (elm) { draggedPic = elm; },
+        onUpdate: function () { }
+    });
+}
+
 
 //#####################################
 //#          TREE FUNCTIONS           #
