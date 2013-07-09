@@ -2480,6 +2480,8 @@ var AceEditor = Class.create(); AceEditor.prototype = {
             wrap: false
         }, options || {});
 
+        ths.options = options;
+
         var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
         var winContent = $(win.getContent());
         var html = '<div id="txtSource" style="position:absolute;top:4px;left:4px;right:4px;bottom:32px;border-bottom:1px solid #ccc"></div><div style="position:absolute;left:4px;right:4px;bottom:8px; height:20px;text-align:center">';
@@ -2490,9 +2492,11 @@ var AceEditor = Class.create(); AceEditor.prototype = {
 
         for (var i = 0; i < options.buttons.length; i++) {
             var btn = options.buttons[i];
-            $(btn.id).observe('click', function () {
-                if(btn.callback)
-                    btn.callback(ths);
+            $(btn.id).observe('click', function (event) {
+                var elm = Event.element(event);
+                for (var k = 0; k < ths.options.buttons.length; k++)
+                    if (ths.options.buttons[k].id == elm.id)
+                        ths.options.buttons[k].callback(ths);
             });
         }
 
@@ -2510,5 +2514,9 @@ var AceEditor = Class.create(); AceEditor.prototype = {
 
     getValue: function () {
         return this.aceEdit.getValue();
+    },
+    
+    setValue: function(v) {
+        this.aceEdit.setValue(v);
     }
 }
