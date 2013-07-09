@@ -52,7 +52,7 @@ namespace Cinar.CMS.Library.Modules
         public string LabelPrevPage { get; set; }
         public string LabelNextPage { get; set; }
 
-        [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(IsNotNull = true, ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.StringEdit)]
         public string DataTemplate { get; set; }
 
         public int PictureWidth { get; set; }

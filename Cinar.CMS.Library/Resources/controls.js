@@ -238,11 +238,11 @@ var StringEdit = Class.create();StringEdit.prototype = {
 									'<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
 									'<div style="float:right"><input type="checkbox" class="wrapCheck" '+(wrap=='1'?'checked':'')+'/> Wrap <input type="checkbox" class="nl2br" '+(nl2br=='1'?'checked':'')+'/> nl2br</div>'+
 								'</div>'+
-								'<div id="' + this.editorId + 'ta" style="height: 432px;width: 633px;"></div>'+
+								'<div id="' + this.editorId + 'ta" style="height: 432px;width: 633px;border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;"></div>' +
 								'<center><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
 								
         var ta = $(this.editorId + 'ta');
-        ta.value = this.input.value.gsub('#NL#', '\n');
+        //ta.value = this.input.value.gsub('#NL#', '\n');
 
         if (this.input.disabled) return;
 
@@ -315,6 +315,7 @@ var StringEdit = Class.create();StringEdit.prototype = {
         this.aceEdit.getSession().setMode("ace/mode/html");
         this.aceEdit.getSession().setUseWrapMode(wrap == '1');
         this.aceEdit.setValue(this.input.value.gsub('#NL#', '\n'));
+        this.aceEdit.focus();
     },
     getValue: function() {
         return this.input.value.gsub('#NL#', '\n');
@@ -747,7 +748,7 @@ var LookUp = Class.create(); LookUp.prototype = {
 //#         MemoEdit         #
 //############################
 
-var MemoEdit = Class.create();MemoEdit.prototype = {
+var MemoEdit = Class.create(); MemoEdit.prototype = {
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
@@ -759,14 +760,17 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
 			currEditor = null;
             return;
         }
-        new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">'+
-												'<textarea id="' + this.editorId + 'ta" onkeydown="return insertTab(event,this);" wrap="off"></textarea><br/>'+
-												'<center>'+
-													'<span id="' + this.editorId + 'btnOK" class="btn cok">' + lang('OK') + '</span> '+
-													'<span id="' + this.editorId + 'btnDefault" class="btn cload">' + lang('Load default') + '</span> '+
-													'<span id="' + this.editorId + 'btnPicture" class="btn cpicture">' + lang('Add picture') + '</span> '+
-													'<span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span>'+
-												'</center>'+
+
+        var ths = this;
+
+        new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">' +
+												'<div id="' + this.editorId + 'ta" style="height: 429px;border-bottom: 1px solid #bbb;"></div><br/>' +
+												'<center>' +
+													'<span id="' + this.editorId + 'btnOK" class="btn cok">' + lang('OK') + '</span> ' +
+													(this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="btn cload">' + lang('Load default') + '</span> ' : '') +
+													'<span id="' + this.editorId + 'btnPicture" class="btn cpicture">' + lang('Add picture') + '</span> ' +
+													'<span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span>' +
+												'</center>' +
 											'</div>');
 
         var list = $(this.editorId);
@@ -778,16 +782,23 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
         btnCancel.observe('click', this.showEditor.bind(this));
 		
 		var ths = this;
-		$(this.editorId + 'btnPicture').observe('click', function(){openFileManager(null, function(path){TextAreaUtil.addTag(ths.editorId + 'ta', path, ''); Windows.getFocusedWindow().close();});});
+		$(this.editorId + 'btnPicture').observe('click', function () { openFileManager(null, function (path) { ths.aceEdit.insert(path); Windows.getFocusedWindow().close(); }); });
 
         if (this.afterShowEditor) this.afterShowEditor();
-
-        list.down().value = this.input.value.gsub('#NL#', '\n');
 
         this.setEditorPos(list);
 
         list.show();
         Event.stop(event);
+
+        if (this.id == 'SQL') this.docType = 'sql';
+
+        this.aceEdit = ace.edit(this.editorId + 'ta');
+        this.aceEdit.setTheme("ace/theme/eclipse");
+        this.aceEdit.getSession().setMode("ace/mode/" + (this.docType?this.docType : 'html'));
+        //this.aceEdit.getSession().setUseWrapMode(wrap == '1');
+        this.aceEdit.setValue(this.input.value.gsub('#NL#', '\n'));
+        this.aceEdit.focus();
     },
     afterShowEditor: null,
     getValue: function() {
@@ -798,7 +809,7 @@ var MemoEdit = Class.create();MemoEdit.prototype = {
     },
     setValueByEditor: function(event) {
         var list = $(this.editorId);
-        this.input.value = $(this.editorId + 'ta').value.gsub('\n', '#NL#');
+        this.input.value = this.aceEdit.getValue().gsub('\n', '#NL#'); //$(this.editorId + 'ta').value.gsub('\n', '#NL#');
         list.remove();
     }
 }
@@ -811,6 +822,7 @@ var __oldCSSBtnDefaultClick;
 var CSSEdit = Class.create(); CSSEdit.prototype = {
     initialize: function(id, value, options){
         var memo = new MemoEdit(id, value, options);
+        memo.docType = 'css';
         memo.afterShowEditor = this.afterShowEditor;
         memo.loadDefaultCSS = this.loadDefaultCSS.bind(memo);
         Object.extend(this, memo);
@@ -832,7 +844,7 @@ var CSSEdit = Class.create(); CSSEdit.prototype = {
                 if(req.responseText.startsWith('ERR:'))
                     niceAlert(req.responseText);
                 else
-                    $(ths.editorId+'ta').value = req.responseText;
+                    ths.aceEdit.setValue(req.responseText);
             }
         });
     },
@@ -2490,6 +2502,7 @@ var AceEditor = Class.create(); AceEditor.prototype = {
         this.aceEdit.getSession().setUseWrapMode(options.wrap);
         this.aceEdit.setValue(options.text);
         this.aceEdit.renderer.setShowPrintMargin(false);
+        this.aceEdit.focus();
 
         win.showCenter();
         win.toFront();

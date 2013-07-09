@@ -190,7 +190,7 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                return Provider.GetTemplate(this, "");
+                return GetPageLinkWithTitle("");
             }
         }
 
