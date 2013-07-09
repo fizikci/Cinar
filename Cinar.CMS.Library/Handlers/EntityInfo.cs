@@ -42,6 +42,11 @@ namespace Cinar.CMS.Library.Handlers
                         getEntity();
                         break;
                     }
+                case "getEntityList":
+                    {
+                        getEntityList();
+                        break;
+                    }
                 case "getEntityId":
                     {
                         getEntityId();
@@ -415,6 +420,21 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write(String.Format("{{id:{0},name:{1}}}", entities[0].Id, entities[0].GetNameValue().ToJS()));
             else
                 context.Response.Write("{id:0,name:''}");
+        }
+        private void getEntityList()
+        {
+            string entityName = context.Request["entityName"];
+            Type tip = Provider.GetEntityType(entityName);
+            string filter = context.Request.Form["filter"] ?? "";
+
+            FilterParser filterParser = new FilterParser(filter, entityName);
+            filter = filterParser.GetWhere();
+
+            string where = "where " + (String.IsNullOrEmpty(filter) ? "1=1" : "(" + filter + ")");
+
+            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select * from [" + entityName + "] " + where + " order by OrderNo", filterParser.GetParams());
+
+            context.Response.Write(entities.ToJSON());
         }
         private void getEntity()
         {

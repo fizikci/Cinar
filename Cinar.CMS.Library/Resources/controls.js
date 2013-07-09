@@ -2515,7 +2515,6 @@ var AceEditor = Class.create(); AceEditor.prototype = {
     getValue: function () {
         return this.aceEdit.getValue();
     },
-    
     setValue: function(v) {
         this.aceEdit.setValue(v);
     }
