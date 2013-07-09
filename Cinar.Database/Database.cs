@@ -642,7 +642,7 @@ namespace Cinar.Database
                     }
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                     if (provider == DatabaseProvider.SQLServer && column.IsDateType())
-                        if (DBNull.Value.Equals(data[column.Name]) || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                        if (DBNull.Value.Equals(data[column.Name]) || data[column.Name]==null || (DateTime)data[column.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                             continue; //***
 
                     IDbDataParameter param = this.CreateParameter("@_" + column.Name, data[column.Name] ?? System.DBNull.Value);
@@ -686,7 +686,7 @@ namespace Cinar.Database
                     }
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                     if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
-                        if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                        if (DBNull.Value.Equals(data[fld.Name]) || data[fld.Name]==null || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                             continue;//***
 
                     tmpList.Add("[" + fld.Name + "]");
@@ -710,11 +710,8 @@ namespace Cinar.Database
                     }
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                     if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
-                        if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
-                        {
-
+                        if (DBNull.Value.Equals(data[fld.Name]) || data[fld.Name]==null || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                             continue; //***
-                        }
 
                     tmpList.Add("@_" + fld.Name);
                 }
@@ -786,18 +783,15 @@ namespace Cinar.Database
             for (int i = 0; i < columns.Count; i++)
             {
                 Column fld = columns[i];
-                if (fld.IsAutoIncrement) continue;
-                
+                if (fld.IsAutoIncrement || !data.ContainsKey(fld.Name) || data[fld.Name] == null) continue;
+
                 // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                 if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
                     if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
                         continue;//***
 
-                if (data.ContainsKey(fld.Name) && data[fld.Name] != null)
-                {
-                    sb.AppendFormat("[{0}] = @_{0}", fld.Name);
-                    sb.Append(", ");
-                }
+                sb.AppendFormat("[{0}] = @_{0}", fld.Name);
+                sb.Append(", ");
             }
             sb.Remove(sb.Length-2,2);
 
