@@ -88,6 +88,7 @@ langRes['General CSS'] = 'General CSS';
 langRes['General Javascript'] = 'General Javascript';
 langRes['File Manager'] = 'File Manager';
 langRes['Add Default Module Styles'] = 'Add Default Module Styles';
+langRes['Add picture'] = 'Add Picture';
 langRes['Quick Load'] = 'Quick Load';
 langRes['Tag Picture'] = 'Tag Picture';
 langRes['Sort'] = 'Sort';

@@ -124,7 +124,6 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
             set { parentModuleId = value; }
         }
 
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string CSSClass
         {
             get { return this.cssClass; }
@@ -140,7 +139,7 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
             get { return this.visible; }
             set { this.visible = value; }
         }
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+
         public string RoleToRead
         {
             get { return this.roleToRead; }

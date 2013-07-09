@@ -10,7 +10,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("<div class=\"resultItem\">");
-            sb.Append("<div class=\"title\"><a href=\"$=entity.PageLink$?item=$=entity.Id$\">$=entity.Title$</a></div>");
+            sb.Append("<div class=\"title\"><a href=\"$=entity.PageLink$\">$=entity.Title$</a></div>");
             sb.Append("<div class=\"desc\">$=entity.Description$</div>");
             sb.Append("</div>");
 

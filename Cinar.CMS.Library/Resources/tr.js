@@ -88,6 +88,7 @@ langRes['General CSS'] = 'Genel CSS Ayarları';
 langRes['General Javascript'] = 'Genel Javascript';
 langRes['File Manager'] = 'Dosya Yöneticisi';
 langRes['Add Default Module Styles'] = 'Varsayılan modül CSSlerini ekle';
+langRes['Add picture'] = 'Resim Ekle';
 langRes['Quick Load'] = 'Hızlı Yükle';
 langRes['Tag Picture'] = 'Etiketle';
 langRes['Sort'] = 'Sırala';
