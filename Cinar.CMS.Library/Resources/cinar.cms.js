@@ -624,9 +624,12 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
     
     return win;
 }
-function quickLoadImages(contentId){
+function quickLoadImages(contentId, callback) {
 	var fm = openFileManager();
 	var ths = this; // this is ListForm here
+
+	if (!callback)
+	    callback = ths.fetchData;
 
 	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
 	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
@@ -644,7 +647,7 @@ function quickLoadImages(contentId){
 			onComplete: function(req) {
 				if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
 				Windows.getFocusedWindow().close();
-				ths.fetchData();
+				callback();
 			},
 			onException: function(req, ex){throw ex;}
 		});
@@ -792,25 +795,21 @@ function selectPic(pic){
 	draggedPic = null;
 }
 
-function showImages(options) {
+function showContentPictures(options) {
     options = Object.extend({
         titleIcon: 'sort',
         title: 'Resim Galerisi',
         width: 950,
         height: 600,
-        filter: ''
+        contentId: 1
     }, options || {});
 
-    var list = ajax({ url: 'EntityInfo.ashx?method=getEntityList&entityName=ContentPicture&filter=' + options.filter, isJSON: true });
-
     var html = '<div id="sortableList">';
-    for (var i = 0; i < list.length; i++) {
-        var row = list[i];
-        var src = row.FileName;
-        html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="selectPic(this)"><img src="' + src + '" width="60" height="60"/></div>';
-    }
     html += '</div>';
-    html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
+    html += '<p style="position:absolute;bottom:8px;left:8px;">';
+    html += '   <span class="btn cDataConverter" id="btnQuickLoad">' + lang('Quick Load') + '</span>';
+    html += '</p>';
+    html += '<p style="position:absolute;bottom:8px;right:8px;">';
     html += '   <span class="btn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
     html += '   <span class="btn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
     html += '   <span class="btn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
@@ -821,6 +820,11 @@ function showImages(options) {
     winContent.insert(html);
     win.showCenter();
     win.toFront();
+
+    $('btnQuickLoad').observe('click', function () {
+        quickLoadImages(options.contentId, showImages);
+    });
+
     $('btnSortImagesOK').observe('click', function () {
         var sortOrder = Sortable.sequence('sortableList');
         ajax({ url: 'EntityInfo.ashx?method=sortEntities&sortOrder=' + sortOrder + '&entityName=ContentPicture', isJSON: false, noCache: true });
@@ -836,12 +840,27 @@ function showImages(options) {
         });
     });
 
-    Position.includeScrollOffsets = true;
-    Sortable.create('sortableList', {
-        tag: 'div', overlap: 'horizontal', constraint: false, scroll: 'sortableList',
-        onChange: function (elm) { draggedPic = elm; },
-        onUpdate: function () { }
-    });
+    function showImages() {
+        var html = '';
+        var list = ajax({ url: 'EntityInfo.ashx?method=getEntityList&entityName=ContentPicture&filter=ContentId' + encodeURI('=') + options.contentId + '&orderBy=OrderNo', isJSON: true, noCache: true });
+        for (var i = 0; i < list.length; i++) {
+            var row = list[i];
+            var src = row.FileName;
+            html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="selectPic(this)"><img src="' + src + '" width="60" height="60"/></div>';
+        }
+
+        $('sortableList').innerHTML = '';
+        $('sortableList').insert(html);
+
+        Position.includeScrollOffsets = true;
+        Sortable.create('sortableList', {
+            tag: 'div', overlap: 'horizontal', constraint: false, scroll: 'sortableList',
+            onChange: function (elm) { draggedPic = elm; },
+            onUpdate: function () { }
+        });
+    }
+
+    showImages();
 }
 
 

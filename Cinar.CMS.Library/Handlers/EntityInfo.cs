@@ -425,7 +425,7 @@ namespace Cinar.CMS.Library.Handlers
         {
             string entityName = context.Request["entityName"];
             Type tip = Provider.GetEntityType(entityName);
-            string filter = context.Request.Form["filter"] ?? "";
+            string filter = context.Request["filter"] ?? "";
 
             FilterParser filterParser = new FilterParser(filter, entityName);
             filter = filterParser.GetWhere();
