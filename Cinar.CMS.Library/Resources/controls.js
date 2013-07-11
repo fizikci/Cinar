@@ -1357,7 +1357,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 if (control.category != cat || control.type == 'ListForm') continue;
                 if (hideCategory.indexOf(cat) > -1) hideFieldValue[control.id] = control.value;
                 if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
-                str += '<tr ' + (hideCategory.indexOf(cat) > -1 ? 'style="display:none"' : '') + '>';
+                str += '<tr ' + (hideFieldValue[control.id] != undefined ? 'style="display:none"' : '') + '>';
                 str += '<td onclick="$(this).up().down(\'input\').focus()">' + (hideFieldValue[control.id] != undefined ? '' : ('&nbsp;' + control.label)) + '</td>';
                 str += '<td id="' + this.cntrlId + i + '"></td>';
                 str += '</tr>';
