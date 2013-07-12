@@ -1322,10 +1322,11 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
-    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels, showRelatedEntities) {
+    initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
         container = $(container);
         if (container == null) container = $(document.body);
         if (!hideCategory) hideCategory = '';
+        if (!defaultValues) defaultValues = {};
 
         this.hndl = ++formHandle;
         this.cntrlId = 'cntrl' + this.hndl + '_';
@@ -1386,6 +1387,9 @@ var EditForm = Class.create(); EditForm.prototype = {
                 control.options.hidden = true;
                 control.value = hideFieldValue[control.id];
             }
+            if (defaultValues[control.id])
+                control.value = defaultValues[control.id];
+
             switch (control.type) {
             case 'StringEdit':
                 aControl = new StringEdit(control.id, control.value, control.options);
@@ -1486,12 +1490,12 @@ var EditForm = Class.create(); EditForm.prototype = {
     }
 };
 
-function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities) {
+function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
 	var dim = $(document.body).getDimensions();
 	var left=dim.width-390, top=10, width=350, height=dim.height-60;
 	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
 	var winContent = $(win.getContent());
-	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities);
+	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues);
 	pe.onSave = onSave;
 	win['form'] = pe;
 	win.show();
