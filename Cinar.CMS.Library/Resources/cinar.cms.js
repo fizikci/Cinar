@@ -916,7 +916,7 @@ function nodeModuleClicked(node){
 //#       EDIT & SAVE ANY DATA SUCH AS CONTENT, AUTHOR, etc..       #
 //###################################################################
 
-function editData(entityName, id, hideCategory, callback, filter, title, renameLabels, showRelatedEntities) {
+function editData(entityName, id, hideCategory, callback, filter, title, renameLabels, showRelatedEntities, defaultValues) {
     new Ajax.Request('EntityInfo.ashx?method='+(id>0 ? 'edit' : 'new')+'&entityName='+entityName+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -932,14 +932,15 @@ function editData(entityName, id, hideCategory, callback, filter, title, renameL
 				filter,
                 hideCategory,
                 renameLabels,
-                showRelatedEntities);
+                showRelatedEntities,
+                defaultValues);
         },
         onException: function(req, ex){throw ex;}
     });
 }
 function openEntityEditForm(options) {
     editData(options.entityName, options.id, options.hideCategory, options.callback, options.filter,
-        options.title, options.renameLabels, options.showRelatedEntities);
+        options.title, options.renameLabels, options.showRelatedEntities, options.defaultValues);
 }
 function deleteData(entityName, id, callback){
 	niceConfirm(lang('The record will be deleted!'), function () {

@@ -583,6 +583,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                         <li>id: açılacak entitinin id'si (0 verirseniz yeni kayıt eklemiş olursunuz.)</li>
                         <li>title: Pencere başlığı</li>
                         <li>filter: Bazı alanların değerlerini filtre ile atayabilirsiniz. Bu alanlar EditForm'da görünmeyecektir.</li>
+                        <li>defaultValues: Bazı alanlara değer atayabilirsiniz. EditForm'da bu alanlar görünür.</li>
                         <li>hideCategory: açılan EditForm'da gizlenecek olan kategorinin adı</li>
                         <li>renameLabels: Bazı alanların isimlerini renameLabels ile değiştirebilirsiniz.</li>
                         <li>callback: kayıt işlemi tamamlandıktan sonra çağrılacak olan fonksiyon</li>
@@ -609,6 +610,19 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
     id: 0,
     title: 'Content tablosuna yeni kayıt',
     <b>filter</b>: 'ClassName=Content'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Varsayılan değerler belirterek:</h3>
+                Aşağıda Title, Tages, Keywords defaul değerlerine set edilmiş, EditForm'da görünür.
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 0,
+    title: 'Content tablosuna yeni kayıt',
+    <b>defaultValues</b>: {Title:'Deneme içerik başlığı', Tags:'deneme, içerik', Keywords:'ve saire.'}
 });</pre>
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
