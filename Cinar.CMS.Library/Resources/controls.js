@@ -239,6 +239,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<span class="cbtn ceditor_font" title="Font Size & Color"></span>' +
                 '<span class="cbtn cpicture" title="Add Picture"></span>' +
                 '<span class="cbtn ceditor_anchor" title="Add Link"></span>' +
+                '<span class="cbtn cNavigationWithChildren" title="Break lines"></span>' +
                 '<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
@@ -291,7 +292,9 @@ var StringEdit = Class.create(); StringEdit.prototype = {
             if (img.className.indexOf('font') > -1)
                 img.observe('click', function() { ths.aceEdit.insert('<font size="5" color="black">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</font>'); });
             if (img.className.indexOf('anchor') > -1)
-                img.observe('click', function() { ths.aceEdit.insert('<a href="http://www.address.com" target="_blank">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</a>'); });
+                img.observe('click', function () { ths.aceEdit.insert('<a href="http://www.address.com" target="_blank">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</a>'); });
+            if (img.className.indexOf('cNavigationWithChildren') > -1)
+                img.observe('click', function () { alert("not implemented yet"); });
             if (img.className.indexOf('picture') > -1)
                 img.observe('click', function() {
                     openFileManager(null, function(path) {
@@ -1357,7 +1360,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 var control = controls[i];
                 if (control.category != cat || control.type == 'ListForm') continue;
                 if (hideCategory.indexOf(cat) > -1) hideFieldValue[control.id] = control.value;
-                if (renameLabels && renameLabels[control.id]) control.label = renameLabels[control.id];
+                if (renameLabels && renameLabels[control.id]) { control.label = renameLabels[control.id]; control.description = ''; }
                 str += '<tr ' + (hideFieldValue[control.id] != undefined ? 'style="display:none"' : '') + '>';
                 str += '<td onclick="$(this).up().down(\'input\').focus()">' + (hideFieldValue[control.id] != undefined ? '' : ('&nbsp;' + control.label)) + '</td>';
                 str += '<td id="' + this.cntrlId + i + '"></td>';
