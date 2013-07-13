@@ -1141,6 +1141,16 @@ function editStyle() {
                 }
             },
             {
+                icon: 'picture',
+                id: 'btnAddPictureToCSS',
+                text: lang('Add picture'),
+                callback: function (editor) {
+                    openFileManager(null, function (path) {
+                        editor.insert(path);
+                    });
+                }
+            },
+            {
                 icon: 'save',
                 id: 'btnSaveStyles',
                 text: lang('Save'),

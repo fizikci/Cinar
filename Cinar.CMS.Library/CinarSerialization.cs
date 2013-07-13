@@ -32,8 +32,11 @@ namespace Cinar.CMS.Library
         {
             foreach (KeyValuePair<string, string> keyValuePair in Deserialize(data))
             {
-                PropertyInfo pi = obj.GetType().GetProperty(keyValuePair.Key);
-                pi.SetValue(obj, Convert.ChangeType(keyValuePair.Value, pi.PropertyType), null);
+                try
+                {
+                    PropertyInfo pi = obj.GetType().GetProperty(keyValuePair.Key);
+                    pi.SetValue(obj, Convert.ChangeType(keyValuePair.Value, pi.PropertyType), null);
+                }catch{}
             }
         }
 
