@@ -1018,6 +1018,15 @@ var StyleEditor = Class.create({
     }
 });
 
+function showDataListPage(url, dataListId) {
+    var dataList = $('DataList_' + dataListId);
+    var html = ajax({ url: url, isJSON: false, noCache: true });
+    if (html) {
+        dataList.replace(html);
+        if (preparePaging)
+            preparePaging(dataList);
+    }
+}
 
 /*
 ###################################

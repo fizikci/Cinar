@@ -155,8 +155,9 @@ namespace Cinar.CMS.Library.Modules
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo - 1).ToString();
                     prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\"{1}>{2}</a>",
-                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                        AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
+                        //AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                        AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelPrevPage == "Previous Page" ? Provider.GetModuleResource("Previous Page") : LabelPrevPage);
                 }
                 if (data.Rows.Count == HowManyItems)
@@ -164,7 +165,8 @@ namespace Cinar.CMS.Library.Modules
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
                     nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
                         AjaxPaging ? "#" : uriParser.Uri.ToString(),
-                        AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                        //AjaxPaging ? " onclick=\"this.up('.Module').replace(ajax({url:'" + uriParser.Uri + "',isJSON:false,noCache:true})); if(preparePaging) preparePaging('DataList_" + this.Id + "'); return false;\"" : "",
+                        AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
