@@ -1147,6 +1147,7 @@ function editStyle() {
                 callback: function (editor) {
                     openFileManager(null, function (path) {
                         editor.insert(path);
+                        Windows.getFocusedWindow().close();
                     });
                 }
             },

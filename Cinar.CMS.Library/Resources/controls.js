@@ -2599,5 +2599,8 @@ var AceEditor = Class.create(); AceEditor.prototype = {
     },
     setValue: function(v) {
         this.aceEdit.setValue(v);
+    },
+    insert: function (str) {
+        this.aceEdit.insert(str);
     }
 };
