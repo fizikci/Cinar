@@ -37,7 +37,9 @@ namespace Cinar.CMS.Library.Handlers
                 {
                     //string resourceFilePath = Path.Combine(Provider.AppSettings["pathToLocalResources"], fileName);
                     string resourceFilePath = Provider.MapPath("/").Replace("Cinar.CMS.Web", "Cinar.CMS.Library") + "Resources\\" + fileName;
-                    if(File.Exists(resourceFilePath))
+                    if (!File.Exists(resourceFilePath))
+                        resourceFilePath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Provider.MapPath("/")))) + "\\Cinar\\Cinar.CMS.Library\\Resources\\" + fileName;
+                    if (File.Exists(resourceFilePath))
                         context.Response.Write(File.ReadAllText(resourceFilePath));
                 }
                 else
