@@ -58,7 +58,7 @@ namespace Cinar.DBTools.Tools
                 return;
 
             Table table = Provider.Database.CreateTableMetadataForType(type);
-            editor.Text = table.ToDDL();
+            editor.Text = Provider.Database.GetTableDDL(table);
             editor.Refresh();
         }
 
@@ -85,7 +85,7 @@ namespace Cinar.DBTools.Tools
         {
             StringBuilder sb = new StringBuilder();
             foreach (Type type in selectedTypes)
-                sb.AppendLine(Provider.Database.CreateTableMetadataForType(type).ToDDL());
+                sb.AppendLine(Provider.Database.GetTableDDL(Provider.Database.CreateTableMetadataForType(type)));
             if (sb.Length > 0)
             {
                 if (MainForm.CurrEditor is SQLEditorAndResults && string.IsNullOrEmpty(MainForm.CurrEditor.Content))

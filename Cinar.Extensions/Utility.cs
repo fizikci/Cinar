@@ -1304,7 +1304,7 @@ namespace System
                 case "DateTime":
                     if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
                     DateTime d = (DateTime)val;
-                    return '"' + d.ToString("dd-MM-yyyy\"T\"HH:mm:ss") + '"';
+                    return '"' + d.ToString("yyyy-MM-dd\"T\"HH:mm:ss") + '"';
                     //return String.Format("new Date({0},{1},{2},{3},{4},{5})", d.Year, d.Month-1, d.Day, d.Hour, d.Minute, d.Second);
                     //return String.Format("'{0}-{1}-{2} {3}:{4}'", d.Day, d.Month, d.Year, d.Hour, d.Minute);
                 case "Boolean":
