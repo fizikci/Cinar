@@ -153,13 +153,14 @@ namespace Cinar.CMS.Library.Entities
 
                     // dil tablolarında data varsa silelim
                     if (Provider.Database.Tables[this.GetType().Name + "Lang"] != null)
-                        Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "Lang] where " +
-                                                          this.GetType().Name + "Id=" + this.Id);
+                        Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "Lang] where " + this.GetType().Name + "Id=" + this.Id);
 
                     // entitinin kendisini silelim
                     Provider.Database.ExecuteNonQuery("delete from [" + this.GetType().Name + "] where Id=" + this.Id);
 
                     this.afterDelete();
+
+                    Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
 
                     if (this is ICriticalEntity)
                         Provider.Log("History_" + this.GetType().Name, "Delete", this.SerializeToString());
