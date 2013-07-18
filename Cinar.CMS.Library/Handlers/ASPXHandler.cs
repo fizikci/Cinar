@@ -183,7 +183,7 @@ namespace Cinar.CMS.Library.Handlers
 </script>
 ");
                 }
-                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.js.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 
                 return sb.ToString();
             }
