@@ -1638,7 +1638,8 @@ namespace Cinar.Database
             TableDetailAttribute tableProps = type.GetAttribute<TableDetailAttribute>();
 
             Table tbl = new Table();
-            tbl.IsView = false;
+            tbl.IsView = tableProps.IsView;
+            tbl.ViewSQL = tableProps.ViewSQL;
             tbl.Name = string.IsNullOrEmpty(tableProps.Name) ? type.Name : tableProps.Name;
             foreach (PropertyInfo pi in type.GetProperties())
                 if (canBeMappedToDBTable(pi))

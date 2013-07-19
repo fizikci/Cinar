@@ -342,9 +342,12 @@ namespace Cinar.Database.Providers
             foreach (Index i in table.Indices)
                 sbCons.Append(GetSQLIndexAdd(i) + ";" + Environment.NewLine);
 
+            if (table.IsView)
+                return String.Format("CREATE VIEW [{0}] AS {1}" + Environment.NewLine,
+                    table.Name,
+                    table.ViewSQL);
 
-            return String.Format("CREATE {0} [{1}](\r\n{2});\r\n{3}" + Environment.NewLine,
-                (table.IsView ? "VIEW" : "TABLE"),
+            return String.Format("CREATE TABLE [{0}](\r\n{1});\r\n{2}" + Environment.NewLine,
                 table.Name,
                 sbColumns,
                 sbCons);
