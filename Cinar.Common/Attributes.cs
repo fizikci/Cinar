@@ -136,6 +136,8 @@ namespace Cinar.Database
     {
         public string Name { get; set; }
         public TableTypes Type { get; set; }
+        public bool IsView { get; set; }
+        public string ViewSQL { get; set; }
     }
 
     public enum TableTypes
