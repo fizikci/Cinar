@@ -536,7 +536,7 @@ namespace Cinar.Database
             if (this.noTransactions)
                 return;
 
-            if (this.useTransaction != null)
+            if (this.useTransaction != null && this.useTransaction.Connection.State==ConnectionState.Open)
                 this.useTransaction.Rollback();
             this.useTransaction = null;
             beginCount = 0;
