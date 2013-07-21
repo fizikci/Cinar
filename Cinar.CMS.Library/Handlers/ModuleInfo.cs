@@ -116,7 +116,7 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("ID geçersiz!");
                 return;
             }
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             if (module == null)
             {
                 sendErrorMessage("Modül okunamadı.");
@@ -136,7 +136,7 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("ID geçersiz!");
                 return;
             }
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             if (module == null)
             {
                 sendErrorMessage("Modül okunamadı.");
@@ -178,7 +178,7 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("ID geçersiz!");
                 return;
             }
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             if (module == null)
             {
                 sendErrorMessage("Modül okunamadı.");
@@ -208,7 +208,7 @@ namespace Cinar.CMS.Library.Handlers
             string template = context.Request["template"];
             int parentModuleId = Int32.Parse(context.Request["parentModuleId"]);
 
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             module.Id = 0;
             module.Region = region;
             module.Template = template;
@@ -244,7 +244,7 @@ namespace Cinar.CMS.Library.Handlers
             if (string.IsNullOrWhiteSpace(moduleName))
                 moduleName = Provider.Database.Read<Module>(id).Name;
 
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             if (module == null)
             {
                 sendErrorMessage("Modül okunamadı.");
@@ -263,7 +263,7 @@ namespace Cinar.CMS.Library.Handlers
                 sendErrorMessage("ID geçersiz!");
                 return;
             }
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             if (module != null)
                 module.Delete();
             else
@@ -281,7 +281,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            Module module = Module.Read(moduleName, mid);
+            Module module = Module.Read(mid);
             module.SetFieldsByPostData(context.Request.Form);
             module.Save();
             context.Response.Write(module.Show());
@@ -369,7 +369,7 @@ namespace Cinar.CMS.Library.Handlers
 
             try
             {
-                Module module = Module.Read(moduleName, mid);
+                Module module = Module.Read(mid);
                 context.Response.Write(CinarSerialization.Serialize(module));
             }
             catch (Exception ex)

@@ -405,7 +405,7 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
             return module;
         }
 
-        public static Module Read(string moduleName, int id)
+        public static Module Read(int id)
         {
             DataRow drModule = Provider.Database.GetDataRow("select * from [Module] where Id=" + id);
             return fromDataRow(drModule);
