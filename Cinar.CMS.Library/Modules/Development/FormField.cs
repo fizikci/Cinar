@@ -185,7 +185,7 @@ namespace Cinar.CMS.Library.Modules
 
             if (String.IsNullOrEmpty(this.EntityName))
             {
-                Form parentForm = (Form)Module.Read("Form", this.ParentModuleId);
+                Form parentForm = (Form)Module.Read(this.ParentModuleId);
                 this.EntityName = parentForm.EntityName;
             }
         }

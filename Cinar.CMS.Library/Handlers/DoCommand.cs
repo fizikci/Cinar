@@ -490,7 +490,7 @@ namespace Cinar.CMS.Library.Handlers
             int moduleId = Convert.ToInt32(context.Request["id"]);
             string methodName = context.Request["methodName"];
 
-            Modules.Module module = Modules.Module.Read(moduleName, moduleId);
+            Modules.Module module = Modules.Module.Read(moduleId);
             MethodInfo mi = module.GetType().GetMethod(methodName);
             if (mi == null) throw new Exception(Provider.GetResource("The method {0} not found!", methodName)); //***
 
@@ -637,7 +637,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            Modules.Module module = Modules.Module.Read(moduleName, mid);
+            Modules.Module module = Modules.Module.Read(mid);
             context.Response.Write(module.Show());
         }
 

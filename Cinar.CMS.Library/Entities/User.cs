@@ -188,7 +188,7 @@ namespace Cinar.CMS.Library.Entities
             base.afterSave(isUpdate);
             
             
-            if (!isUpdate && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
+            if (!isUpdate)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
             {
                 string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>

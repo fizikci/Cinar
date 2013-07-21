@@ -1197,6 +1197,13 @@ namespace Cinar.CMS.Library
                 sb.Append(module.CSS.Replace("}", "}\n") + "\n");
                 if (module is ModuleContainer)
                     sb.Append(ReadStyles((module as ModuleContainer).ChildModules));
+                if (module is ModuleRepeater)
+                {
+                    Modules.Module m = Modules.Module.Read((module as ModuleRepeater).ModuleId);
+                    if(m!=null)
+                        sb.Append(m.CSS.Replace("}", "}\n") + "\n");
+                }
+                    
             });
             return sb.ToString();
         }
