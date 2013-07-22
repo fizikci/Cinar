@@ -1806,6 +1806,10 @@ namespace Cinar.CMS.Library
                     foreach (var line in lines)
                     {
                         string[] parts = line.SplitWithTrim("=>");
+                        if (!parts[0].StartsWith("^"))
+                            parts[0] = "^" + parts[0];
+                        if (!parts[0].EndsWith("$"))
+                            parts[0] = parts[0] + "$";
                         routes.Add(new Regex(parts[0]), parts[1]);
                     }
                 }

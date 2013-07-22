@@ -66,9 +66,14 @@ namespace Cinar.CMS.Library.Handlers
                     }
                 }
 
-                //string res = Provider.GetRewritePath(HttpContext.Current.Request.RawUrl);
-                //if(res!=HttpContext.Current.Request.RawUrl)
-                //    HttpContext.Current.RewritePath(res);
+                string[] pathParts = HttpContext.Current.Request.RawUrl.Split('?');
+                string res = Provider.GetRewritePath(pathParts[0]);
+                if (res != pathParts[0])
+                {
+                    if (pathParts.Length > 1)
+                        res = res + (res.Contains("?") ? "&" : "?") + pathParts[1];
+                    HttpContext.Current.RewritePath(res);
+                }
             } catch{}
         }
 
