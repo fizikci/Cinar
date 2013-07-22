@@ -13,7 +13,7 @@ namespace Cinar.CMS.Library.Modules
             set { sendMail = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

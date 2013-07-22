@@ -3,6 +3,7 @@ using System.Web;
 using System.Reflection;
 using System.IO;
 using System.Text;
+using System.Web.Routing;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -64,6 +65,10 @@ namespace Cinar.CMS.Library.Handlers
                         HttpContext.Current.RewritePath(rewritePath);
                     }
                 }
+
+                //string res = Provider.GetRewritePath(HttpContext.Current.Request.RawUrl);
+                //if(res!=HttpContext.Current.Request.RawUrl)
+                //    HttpContext.Current.RewritePath(res);
             } catch{}
         }
 

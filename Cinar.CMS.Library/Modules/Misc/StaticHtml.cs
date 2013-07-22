@@ -64,7 +64,7 @@ namespace Cinar.CMS.Library.Modules
             set { innerHtml3 = value; }
         }
         
-        protected override string show()
+        internal override string show()
         {
             string html = "";
 

@@ -84,7 +84,7 @@ namespace Cinar.CMS.Library.Modules
             return String.Format("commentsAdd({0},{1},{2},{3},{4},{5},{6})", this.active.ToString().ToLower(), this.Id, this.allowAnonymous.ToString().ToLower(), Provider.User.IsAnonim().ToString().ToLower(), this.withTitle.ToString().ToLower(), 0, this.withWeb.ToString().ToLower());
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             Entities.Content content = Provider.Content;

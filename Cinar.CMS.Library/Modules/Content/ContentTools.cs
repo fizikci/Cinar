@@ -80,7 +80,7 @@ namespace Cinar.CMS.Library.Modules
             return res;
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

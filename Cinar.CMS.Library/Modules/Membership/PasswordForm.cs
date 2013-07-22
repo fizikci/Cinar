@@ -7,7 +7,7 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Membership")]
     public class PasswordForm : Module
     {
-        protected override string show()
+        internal override string show()
         {
             string infoLabel = Provider.GetModuleResource("Enter your email address and click send button. You will receive your special adress where you can change your password.");
             string emailLabel = Provider.GetModuleResource("E-Mail");

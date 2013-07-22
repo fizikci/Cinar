@@ -19,7 +19,7 @@ namespace Cinar.CMS.Library.Modules
             base.beforeShow();
         }
 
-        protected override string show()
+        internal override string show()
         {
             string q = Provider.Request["q"];
             if (q == null) q = "";

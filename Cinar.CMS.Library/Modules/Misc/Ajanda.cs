@@ -32,7 +32,7 @@ namespace Cinar.CMS.Library.Modules
             set { if (value > 3) howManyChars = 3; else if (value < 1) howManyChars = 1; else howManyChars = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             Hashtable eventHash = new Hashtable();

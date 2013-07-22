@@ -44,7 +44,7 @@ namespace Cinar.CMS.Library.Modules
             Sepet.ReadNameAndPrice();
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

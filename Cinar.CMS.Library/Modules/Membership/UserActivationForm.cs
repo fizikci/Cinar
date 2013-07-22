@@ -6,7 +6,7 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Membership")]
     public class UserActivationForm : Module
     {
-        protected override string show()
+        internal override string show()
         {
             string infoLabel = Provider.GetModuleResource("Enter your email address and click send button. You will receive your activation code.");
             string emailLabel = Provider.GetModuleResource("E-Mail");

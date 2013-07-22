@@ -19,7 +19,7 @@ namespace Cinar.CMS.Library.Modules
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates, addBlankItem:true")]
         public string RedirectPage { get; set; }
 
-        protected override string show()
+        internal override string show()
         {
             if (Provider.DesignMode)
                 return "<div style=\"background:crimson;color:white;font-weight:bold;margin:4px;padding:4px\">" +

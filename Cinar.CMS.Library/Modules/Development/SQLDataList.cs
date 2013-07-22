@@ -32,7 +32,7 @@ namespace Cinar.CMS.Library.Modules
 
         DataTable data = null;
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

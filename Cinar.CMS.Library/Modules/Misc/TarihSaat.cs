@@ -14,7 +14,7 @@ namespace Cinar.CMS.Library.Modules
             set { format = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             return DateTime.Now.ToString(this.format);
         }

@@ -23,7 +23,7 @@ Redirect,0,ShowMembershipLink,7,Sign upShowMembershipInfoLink,10,My profileShowP
 	padding-left:10px
 }
 TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0Id,1,1Template,12,Default.aspxRegion,7,ContentOrderNo,1,0Name,9,LoginFormParentModuleId,1,0'")]
-    public abstract class Module : ObjectWithTags, IDatabaseEntity
+    public class Module : ObjectWithTags, IDatabaseEntity
     {
         #region fields
         private int id = -1;
@@ -226,7 +226,7 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
                 this.cssClass != "" ? " " + this.cssClass : "");
         }
 
-        protected abstract string show();
+        internal virtual string show() { return ""; }
         protected internal virtual void beforeShow() { }
         protected internal virtual void afterShow() { }
 
@@ -407,8 +407,12 @@ TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultC
 
         public static Module Read(int id)
         {
-            DataRow drModule = Provider.Database.GetDataRow("select * from [Module] where Id=" + id);
-            return fromDataRow(drModule);
+            Module m = Provider.Database.Read<Module>(id);
+            if (m == null)
+                return null;
+
+            Module module = Deserialize(m.Name, m.Details);
+            return module;
         }
 
         #region Cache olayı

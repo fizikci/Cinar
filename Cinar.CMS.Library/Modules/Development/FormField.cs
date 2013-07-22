@@ -43,7 +43,7 @@ namespace Cinar.CMS.Library.Modules
         internal string value = "";
         internal Form form;
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

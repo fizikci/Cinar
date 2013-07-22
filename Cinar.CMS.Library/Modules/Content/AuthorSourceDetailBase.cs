@@ -36,7 +36,7 @@ namespace Cinar.CMS.Library.Modules
         public abstract UserRelatedEntity Entity { get; }
 
 
-        protected override string show()
+        internal override string show()
         {
             User user = (User)Provider.Database.Read(typeof(User), Entity.UserId);
 

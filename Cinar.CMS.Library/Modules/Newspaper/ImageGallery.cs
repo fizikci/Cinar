@@ -41,7 +41,7 @@ namespace Cinar.CMS.Library.Modules
 
         public bool CropPicture { get; set; }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             Entities.Content content = Provider.Content;

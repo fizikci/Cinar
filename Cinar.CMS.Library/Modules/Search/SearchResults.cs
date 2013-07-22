@@ -19,7 +19,7 @@ namespace Cinar.CMS.Library.Modules
             //this.ShowFields = "Id,Title,ShowInPage,ClassName,Hierarchy,Description";
         }
 
-        protected override string show()
+        internal override string show()
         {
             string q = Provider.Request["q"];
 

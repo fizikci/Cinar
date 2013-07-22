@@ -418,6 +418,13 @@ namespace System
                 res[i] = res[i].Trim();
             return res;
         }
+        public static string[] SplitWithTrim(this string str, string seperator)
+        {
+            string[] res = str.Split(new string[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < res.Length; i++)
+                res[i] = res[i].Trim();
+            return res;
+        }
         public static string SplitAndGetLast(this string str, char seperator)
         {
             string[] res = str.SplitWithTrim(seperator);
