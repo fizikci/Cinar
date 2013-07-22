@@ -23,7 +23,7 @@ namespace Cinar.CMS.Library.Modules
             set { regionToRepeat = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             if (Provider.DesignMode && (String.IsNullOrEmpty(this.page) || String.IsNullOrEmpty(this.regionToRepeat)))
                 return Provider.GetResource("Select a page and a region");

@@ -75,7 +75,7 @@ namespace Cinar.CMS.Library.Modules
             return img == "" ? "" : ("<img src=\"" + img + "\"/>");
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

@@ -39,7 +39,7 @@ namespace Cinar.CMS.Library.Modules
 
         protected abstract string getCellHTML(int row, int col);
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

@@ -15,7 +15,7 @@ namespace Cinar.CMS.Library.Modules
             set { formHtml = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

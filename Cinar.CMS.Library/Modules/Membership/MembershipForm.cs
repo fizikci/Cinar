@@ -226,7 +226,7 @@ namespace Cinar.CMS.Library.Modules
             this.editFormHtml = String.Format(formHtml, String.Empty, String.Empty);
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             User user = Provider.User.IsAnonim() ? new User() : Provider.User;

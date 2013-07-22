@@ -89,7 +89,6 @@
     <Compile Include="Entities\NamedEntityLang.cs" />
     <Compile Include="Handlers\Admin.cs" />
     <Compile Include="Handlers\ASPXHandler.cs" />
-    <Compile Include="IRoute.cs" />
     <Compile Include="Modules\Commerce\Banner.cs" />
     <Compile Include="Modules\Commerce\Basket.cs" />
     <Compile Include="Modules\Commerce\BasketSummary.cs" />

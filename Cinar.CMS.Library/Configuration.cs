@@ -121,6 +121,9 @@ namespace Cinar.CMS.Library
             set { defaultPageLoadScript = value; }
         }
 
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = true)]
+        public string Routes { get; set; }
+
         protected bool countTags = true;
         [EditFormFieldProps(OrderNo = 11, Category = "Uygulama Ayarları")]
         public bool CountTags
@@ -303,6 +306,9 @@ namespace Cinar.CMS.Library
             Lang lang = Provider.Database.Read<Lang>(this.DefaultLang);
             if (lang != null)
                 Provider.CurrentCulture = lang.Code;
+
+            // routes'i sıfırla
+            Provider.routes = null;
 
             // kaydedelim gari..
             base.Save();

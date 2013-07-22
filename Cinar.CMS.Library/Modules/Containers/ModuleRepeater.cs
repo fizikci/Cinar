@@ -9,20 +9,53 @@ namespace Cinar.CMS.Library.Modules
     {
         public int ModuleId { get; set; }
 
-        protected override string show()
+        internal override string show()
         {
-            if (Provider.DesignMode && ModuleId==0)
-                return Provider.GetResource("Enter the module id to be copied");
+            if (ModuleId == 0)
+            {
+                if (Provider.DesignMode)
+                    return Provider.GetResource("Enter the module id to be repeated here");
+                else
+                    return "";
+            }
 
-            return Module.Read(ModuleId).Show();
+            return Module.Read(ModuleId).show();
         }
 
         protected override void beforeSave(bool isUpdate)
         {
             base.beforeSave(isUpdate);
 
-            if (ModuleId > 0 && Module.Read(ModuleId) == null)
-                throw new Exception(Provider.GetResource("There is no such module with the id " + ModuleId));
+            if (ModuleId > 0)
+            {
+                var m = Module.Read(ModuleId);
+                if (m == null)
+                    throw new Exception(Provider.GetResource("There is no such module with the id " + ModuleId));
+
+                if (!this.ModuleId.Equals(this.GetOriginalValues()["ModuleId"]))
+                {
+                    this.BottomHtml = m.BottomHtml;
+                    this.CSSClass = m.CSSClass;
+                    this.TopHtml = m.TopHtml;
+                }
+            }
+        }
+
+        public override string GetDefaultCSS()
+        {
+            var m = Module.Read(ModuleId);
+
+            if (ModuleId == 0)
+                return "";
+
+            string css = m.CSS;
+            if (string.IsNullOrWhiteSpace(css))
+                css = m.GetDefaultCSS();
+
+            string mId = String.Format("#{0}_{1}", m.Name, m.Id);
+            string thisId = String.Format("#{0}_{1}", this.Name, this.Id);
+
+            return css.Replace(mId, thisId);
         }
     }
 }

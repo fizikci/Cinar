@@ -10,7 +10,7 @@ namespace Cinar.CMS.Library.Modules
             // veri tabanından ürün adı ve fiyat bilgilerini alalım, toplamları hesaplayalım
             Basket.Sepet.ReadNameAndPrice();
         }
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

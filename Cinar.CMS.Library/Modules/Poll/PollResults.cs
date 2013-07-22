@@ -24,7 +24,7 @@ namespace Cinar.CMS.Library.Modules
             set { bulletIcon = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             int pollId = 0; Int32.TryParse(Provider.Request["pollId"], out pollId);
             if (pollId == 0)

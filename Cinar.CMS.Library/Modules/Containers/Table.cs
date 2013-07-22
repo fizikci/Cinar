@@ -37,7 +37,7 @@ namespace Cinar.CMS.Library.Modules
             return String.Format("<div id=\"{0}\" class=\"tblCell Region\">{1}</div>", regionId, Provider.GetRegionInnerHtml(this.getCellModules(regionId)));
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

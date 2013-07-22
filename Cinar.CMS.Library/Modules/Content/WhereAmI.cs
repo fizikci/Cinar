@@ -14,7 +14,7 @@ namespace Cinar.CMS.Library.Modules
             set { skipFirst = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             Entities.Content category = Provider.Content;
 

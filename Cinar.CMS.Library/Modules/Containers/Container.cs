@@ -6,7 +6,7 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Containers")]
     public class Container : ModuleContainer, IRegionContainer
     {
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

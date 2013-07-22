@@ -63,7 +63,7 @@ namespace Cinar.CMS.Library.Modules
         }
         public bool CropPictureM { get; set; }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

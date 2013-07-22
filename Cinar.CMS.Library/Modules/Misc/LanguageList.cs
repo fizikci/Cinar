@@ -14,7 +14,7 @@ namespace Cinar.CMS.Library.Modules
             set { showLangName = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             IDatabaseEntity[] langs = Provider.Database.ReadList(typeof(Lang), "select * from Lang order by OrderNo");

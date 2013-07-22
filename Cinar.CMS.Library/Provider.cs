@@ -1197,13 +1197,6 @@ namespace Cinar.CMS.Library
                 sb.Append(module.CSS.Replace("}", "}\n") + "\n");
                 if (module is ModuleContainer)
                     sb.Append(ReadStyles((module as ModuleContainer).ChildModules));
-                if (module is ModuleRepeater)
-                {
-                    Modules.Module m = Modules.Module.Read((module as ModuleRepeater).ModuleId);
-                    if(m!=null)
-                        sb.Append(m.CSS.Replace("}", "}\n") + "\n");
-                }
-                    
             });
             return sb.ToString();
         }
@@ -1799,6 +1792,36 @@ namespace Cinar.CMS.Library
                 res.Save();
             }
             return res;
+        }
+
+        internal static Dictionary<Regex, string> routes = null;
+        public static Dictionary<Regex, string> Routes
+        {
+            get
+            {
+                if (routes == null)
+                {
+                    routes = new Dictionary<Regex, string>();
+                    string[] lines = Provider.Configuration.Routes.Replace("\r", "").SplitWithTrim('\n');
+                    foreach (var line in lines)
+                    {
+                        string[] parts = line.SplitWithTrim("=>");
+                        routes.Add(new Regex(parts[0]), parts[1]);
+                    }
+                }
+                return routes;
+            }
+        }
+
+        public static string GetRewritePath(string url)
+        {
+            foreach (var item in Routes)
+            {
+                if (item.Key.IsMatch(url))
+                    return item.Key.Replace(url, item.Value);
+            }
+
+            return url;
         }
 
     }

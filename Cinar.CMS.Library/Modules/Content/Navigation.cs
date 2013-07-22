@@ -69,7 +69,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private int selectedCatId;
-        protected override string show()
+        internal override string show()
         {
             selectedCatId = this.ParentCategoryId;
             StringBuilder sb = new StringBuilder();

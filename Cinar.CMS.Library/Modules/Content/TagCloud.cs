@@ -49,7 +49,7 @@ namespace Cinar.CMS.Library.Modules
             set { maxContentCount = value; }
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
 

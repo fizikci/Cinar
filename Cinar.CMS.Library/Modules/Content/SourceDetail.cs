@@ -5,7 +5,7 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Content")]
     public class SourceDetail : AuthorSourceDetailBase
     {
-        protected override string show()
+        internal override string show()
         {
             Entities.Content content = Provider.Content;
             if (content == null)

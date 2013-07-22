@@ -70,7 +70,7 @@ namespace Cinar.CMS.Library.Modules
             return contents.Length > 0 ? (Entities.Content)contents[0] : null;
         }
 
-        protected override string show()
+        internal override string show()
         {
             StringBuilder sb = new StringBuilder();
             Entities.Content content = this.getContent();
