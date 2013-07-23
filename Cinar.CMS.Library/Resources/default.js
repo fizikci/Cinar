@@ -1070,6 +1070,7 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
         }
 
         var win = new Window(winOptions);
+        this.win = win;
         if (options.url)
             new Insertion.Bottom($(win.getContent()), '<iframe src="' + options.url + '" style="width:100%;height:100%;"/>');
         else if (options.html)
@@ -1081,6 +1082,9 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
             win.show();
 
         win.toFront();
+    },
+    getContent: function () {
+        return this.win.getContent();
     }
 };
 
