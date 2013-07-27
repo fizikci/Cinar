@@ -124,16 +124,40 @@ namespace Cinar.CMS.Library.Modules
                     if (fieldType == typeof(bool))
                     {
                         bool b = (value == "True" || value == "1");
-                        sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", FieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                        switch (UIControlType)
+                        {
+                            case "Check":
+                                sb.AppendFormat("<input type=\"checkbox\" name=\"{0}\" value=\"1\" {1}/> {2}", FieldName, b ? "checked" : "", Provider.GetResource("Yes"));
+                                break;
+                            case "Radio":
+                                sb.AppendFormat("<input type=\"radio\" name=\"{0}\" {1} value=\"1\"/>{3} <input type=\"radio\" name=\"{0}\" {2} value=\"0\">{4}", FieldName, b ? "checked" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                                break;
+                            default:
+                                sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", FieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                                break;
+                        }
                     }
                     else if (attrField.References != null)
                     {
                         IDatabaseEntity[] entities = Provider.GetIdNameList(attrField.References.Name, "", this.Where);
-                        sb.AppendFormat("<select name=\"{0}\">", FieldName);
-                        sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
-                        foreach (BaseEntity entity in entities)
-                            sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
-                        sb.AppendFormat("</select>");
+                        switch (UIControlType)
+                        {
+                            case "Check":
+                                foreach (BaseEntity entity in entities)
+                                    sb.AppendFormat("<input type=\"checkbox\" name=\"{0}\" value=\"{1}\">{2}", FieldName, entity.Id, CMSUtility.HtmlEncode(entity.GetNameValue()));
+                                break;
+                            case "Radio":
+                                foreach (BaseEntity entity in entities)
+                                    sb.AppendFormat("<input type=\"radio\" name=\"{0}\" value=\"{1}\" {2}>{3}", FieldName, entity.Id, entity.Id.ToString() == value ? "checked" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
+                                break;
+                            default:
+                                sb.AppendFormat("<select name=\"{0}\">", FieldName);
+                                sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
+                                foreach (BaseEntity entity in entities)
+                                    sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
+                                sb.AppendFormat("</select>");
+                                break;
+                        }
                     }
                     else
                     {
