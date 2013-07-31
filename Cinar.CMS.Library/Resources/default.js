@@ -1085,6 +1085,9 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
     },
     getContent: function () {
         return this.win.getContent();
+    },
+    close: function () {
+        this.win.destroy();
     }
 };
 

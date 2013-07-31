@@ -217,16 +217,20 @@ var StringEdit = Class.create(); StringEdit.prototype = {
     showEditor: function(event) {
         var ths = this;
 
-        if (!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
+        //if (!$(this.editorId))
+        //    new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
 
-        var list = $(this.editorId);
-        if (list.visible()) {
-            list.remove();
-            currEditor = null;
-            return;
-        }
-        list.innerHTML = '';
+        //var list = $(this.editorId);
+        //if (list.visible()) {
+        //    list.remove();
+        //    currEditor = null;
+        //    return;
+        //}
+        //list.innerHTML = '';
+
+
+        this.win = new CinarWindow({ title: ths.label });
+        var list = this.win.getContent();
 
         var wrap = getCookie('wrap');
         var nl2br = getCookie('nl2br');
@@ -243,8 +247,8 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
-                '<div id="' + this.editorId + 'ta" style="height: 432px;width: 633px;border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;"></div>' +
-                '<center><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
+                '<div id="' + this.editorId + 'ta" style="border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;position: absolute;left: 0px;right: 0px;bottom: 31px;top: 19px;"></div>' +
+                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
 
         var ta = $(this.editorId + 'ta');
         //ta.value = this.input.value.gsub('#NL#', '\n');
@@ -256,7 +260,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
         Event.stopObserving(btnOK, 'click', __oldBtnOKClick);
         Event.stopObserving(btnCancel, 'click', __oldBtnCancelClick);
         __oldBtnOKClick = this.setHtml.bind(this);
-        __oldBtnCancelClick = this.showEditor.bind(this);
+        __oldBtnCancelClick = function () { ths.win.close(); };
         btnOK.observe('click', __oldBtnOKClick);
         btnCancel.observe('click', __oldBtnCancelClick);
 
@@ -317,9 +321,9 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 });
         });
 
-        this.setEditorPos(list);
+        //this.setEditorPos(list);
 
-        list.show();
+        //list.show();
         Event.stop(event);
 
         this.aceEdit = ace.edit(this.editorId + 'ta');
@@ -329,6 +333,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
         this.aceEdit.setValue(this.input.value.gsub('#NL#', '\n'));
         this.aceEdit.focus();
     },
+    win:null,
     getValue: function() {
         return this.input.value.gsub('#NL#', '\n');
     },
@@ -338,7 +343,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
     setHtml: function(event) {
         var list = $(this.editorId);
         this.input.value = this.aceEdit.getValue().gsub('\n', '#NL#'); //$(this.editorId + 'ta').value.gsub('\n', '#NL#');
-        list.remove();
+        this.win.close();
     }
 };
 
