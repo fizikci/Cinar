@@ -28,7 +28,7 @@ document.observe('dom:loaded', function(){
 
         //$(document.body).style.height = '100%';
         
-        regionDivs = $$('div.Region');//$('Header','Left','Content','Right','Footer').compact();
+        regionDivs = $$('.Region');//$('Header','Left','Content','Right','Footer').compact();
         regionDivs.each(function(elm){
             regionNames.push(elm.id);
         });
@@ -311,7 +311,7 @@ function showPopupMenu(event){
     
     var elm = Event.element(event);
     if(elm.tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.up('a');
-    selReg = elm.className.indexOf('Region')>-1 ? elm : elm.up('div.Region');
+    selReg = elm.className.indexOf('Region')>-1 ? elm : elm.up('.Region');
 
     popupMenu.show(Event.pointerX(event), Event.pointerY(event));
 }

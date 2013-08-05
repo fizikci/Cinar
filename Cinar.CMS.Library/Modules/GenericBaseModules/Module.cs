@@ -11,18 +11,61 @@ using Cinar.Scripting;
 
 namespace Cinar.CMS.Library.Modules
 {
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'LoginForm','Default.aspx','Content','Cinar.CMS.Serialization
-Redirect,0,ShowMembershipLink,7,Sign upShowMembershipInfoLink,10,My profileShowPasswordForgetLink,21,Forgot your password?ShowRememberMe,11,Remember meShowActivationLink,20,Send activation codeShowSiteManagementLink,15,Site ManagementShowHomePageLink,9,Home PageShowLogoutLink,6,LogoutCSS,153,#LoginForm_1 div.loginError {
-	color:red
-}
-#LoginForm_1 input.loginSubmitButton {
-	display:block
-}
-#LoginForm_1 a {
-	display:block;
-	padding-left:10px
-}
-TopHtml,0,BottomHtml,0,CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0Id,1,1Template,12,Default.aspxRegion,7,ContentOrderNo,1,0Name,9,LoginFormParentModuleId,1,0'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
+InnerHtml,1514,        <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target="".nav-collapse"">
+          <span class=""icon-bar""></span>
+          <span class=""icon-bar""></span>
+          <span class=""icon-bar""></span>
+        </button>
+        <a class=""navbar-brand"" href=""#"">Project name</a>
+        <div class=""nav-collapse collapse"">
+          <ul class=""nav navbar-nav"">
+            <li class=""active""><a href=""#"">Home</a></li>
+            <li><a href=""#about"">About</a></li>
+            <li><a href=""#contact"">Contact</a></li>
+            <li class=""dropdown"">
+              <a href=""#"" class=""dropdown-toggle"" data-toggle=""dropdown"">Dropdown <b class=""caret""></b></a>
+              <ul class=""dropdown-menu"">
+                <li><a href=""#"">Action</a></li>
+                <li><a href=""#"">Another action</a></li>
+                <li><a href=""#"">Something else here</a></li>
+                <li class=""divider""></li>
+                <li class=""nav-header"">Nav header</li>
+                <li><a href=""#"">Separated link</a></li>
+                <li><a href=""#"">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form class=""navbar-form form-inline pull-right"">
+            <input type=""text"" placeholder=""Email"" class=""form-control"">
+            <input type=""password"" placeholder=""Password"" class=""form-control"">
+            <button type=""submit"" class=""btn btn-primary btn-small"">Sign in</button>
+          </form>
+        </div><!--/.nav-collapse -->LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,2,60Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
+InnerHtml,313,<h1>Hello, world!</h1>
+<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+<p><a class=""btn btn-primary btn-large"">Learn more &raquo;</a></p>LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,2,61Template,12,Default.aspxRegion,5,jumboOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,9,jumbotronVisible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','content','Cinar.CMS.Serialization
+InnerHtml,1123,  <div class=""col-lg-4"">
+    <h2>Heading</h2>
+    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+    <p><a class=""btn btn-default"" href=""#"">View details &raquo;</a></p>
+  </div>
+  <div class=""col-lg-4"">
+    <h2>Heading</h2>
+    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+    <p><a class=""btn btn-default"" href=""#"">View details &raquo;</a></p>
+ </div>
+  <div class=""col-lg-4"">
+    <h2>Heading</h2>
+    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+    <p><a class=""btn btn-default"" href=""#"">View details &raquo;</a></p>
+  </div>
+LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,2,62Template,12,Default.aspxRegion,7,contentOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,3,rowVisible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
+    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','footer','Cinar.CMS.Serialization
+InnerHtml,32,<hr/>
+<p>&copy; Company 2013</p>LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,2,63Template,12,Default.aspxRegion,6,footerOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
     public class Module : ObjectWithTags, IDatabaseEntity
     {
         #region fields

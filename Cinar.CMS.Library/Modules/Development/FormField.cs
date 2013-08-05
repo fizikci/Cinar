@@ -19,6 +19,7 @@ namespace Cinar.CMS.Library.Modules
             Label = "";
             UIControlType = "";
             FieldName = "";
+            CSSClass = "form-group";
         }
 
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
@@ -93,7 +94,7 @@ namespace Cinar.CMS.Library.Modules
                         form == null ? 0 : form.Id,
                         Provider.GetModuleResource("Delete"));
                 // label'ý gösterelim
-                sb.AppendFormat("<div class=\"label\">{0}</div>", Label);
+                sb.AppendFormat("<label for=\"{1}\">{0}</label>", Label, FieldName);
                 sb.Append(getControlHTML(fieldType, attrField, attrEdit, ct));
             }
 
@@ -107,17 +108,17 @@ namespace Cinar.CMS.Library.Modules
             {
                 case ControlType.StringEdit:
                     if (UIControlType == "Textarea")
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
+                        sb.AppendFormat("<textarea class=\"form-control\" name=\"{0}\" id=\"{0}\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
+                        sb.AppendFormat("<input class=\"form-control\" type=\"text\" name=\"{0}\" id=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.IntegerEdit:
                 case ControlType.DecimalEdit:
                 case ControlType.DateTimeEdit:
-                    sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
+                    sb.AppendFormat("<input class=\"form-control\" type=\"text\" name=\"{0}\" id=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.PictureEdit:
-                    sb.AppendFormat("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\"/>", FieldName, CMSUtility.HtmlEncode(value));
+                    sb.AppendFormat("<input class=\"form-control\" type=\"hidden\" name=\"{0}\" value=\"{1}\"/><input type=\"file\" name=\"{0}File\" id=\"{0}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.ComboBox:
                 case ControlType.LookUp:
@@ -127,13 +128,13 @@ namespace Cinar.CMS.Library.Modules
                         switch (UIControlType)
                         {
                             case "Check":
-                                sb.AppendFormat("<input type=\"checkbox\" name=\"{0}\" value=\"1\" {1}/> {2}", FieldName, b ? "checked" : "", Provider.GetResource("Yes"));
+                                sb.AppendFormat("<input class=\"form-control\" type=\"checkbox\" name=\"{0}\" id=\"{0}\" value=\"1\" {1}/> {2}", FieldName, b ? "checked" : "", Provider.GetResource("Yes"));
                                 break;
                             case "Radio":
-                                sb.AppendFormat("<input type=\"radio\" name=\"{0}\" {1} value=\"1\"/>{3} <input type=\"radio\" name=\"{0}\" {2} value=\"0\">{4}", FieldName, b ? "checked" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                                sb.AppendFormat("<input class=\"form-control\" type=\"radio\" name=\"{0}\" id=\"{0}\" {1} value=\"1\"/>{3} <input class=\"form-control\" type=\"radio\" name=\"{0}\" id=\"{0}\" {2} value=\"0\">{4}", FieldName, b ? "checked" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
                                 break;
                             default:
-                                sb.AppendFormat("<select name=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", FieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
+                                sb.AppendFormat("<select class=\"form-control\" name=\"{0}\" id=\"{0}\"><option {1} value=\"1\">{3}</option><option {2} value=\"0\">{4}</option></select>", FieldName, b ? "selected" : "", b ? "" : "selected", Provider.GetResource("Yes"), Provider.GetResource("No"));
                                 break;
                         }
                     }
@@ -144,14 +145,14 @@ namespace Cinar.CMS.Library.Modules
                         {
                             case "Check":
                                 foreach (BaseEntity entity in entities)
-                                    sb.AppendFormat("<input type=\"checkbox\" name=\"{0}\" value=\"{1}\">{2}", FieldName, entity.Id, CMSUtility.HtmlEncode(entity.GetNameValue()));
+                                    sb.AppendFormat("<input class=\"form-control\" type=\"checkbox\" name=\"{0}\" id=\"{0}\" value=\"{1}\">{2}", FieldName, entity.Id, CMSUtility.HtmlEncode(entity.GetNameValue()));
                                 break;
                             case "Radio":
                                 foreach (BaseEntity entity in entities)
-                                    sb.AppendFormat("<input type=\"radio\" name=\"{0}\" value=\"{1}\" {2}>{3}", FieldName, entity.Id, entity.Id.ToString() == value ? "checked" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
+                                    sb.AppendFormat("<input class=\"form-control\" type=\"radio\" name=\"{0}\" id=\"{0}\" value=\"{1}\" {2}>{3}", FieldName, entity.Id, entity.Id.ToString() == value ? "checked" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
                                 break;
                             default:
-                                sb.AppendFormat("<select name=\"{0}\">", FieldName);
+                                sb.AppendFormat("<select class=\"form-control\" name=\"{0}\" id=\"{0}\">", FieldName);
                                 sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", 0, "0" == value ? "selected" : "", Provider.GetResource("Select"));
                                 foreach (BaseEntity entity in entities)
                                     sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", entity.Id, entity.Id.ToString() == value ? "selected" : "", CMSUtility.HtmlEncode(entity.GetNameValue()));
@@ -174,7 +175,7 @@ namespace Cinar.CMS.Library.Modules
                                 optionsFound = true;
                                 string options = attrEdit.Options.Substring(startIndex, endIndex - startIndex);
                                 string[] optionsArr = options.Split(new string[] { "],[" }, StringSplitOptions.RemoveEmptyEntries);
-                                sb.AppendFormat("<select name=\"{0}\">", FieldName);
+                                sb.AppendFormat("<select class=\"form-control\" name=\"{0}\" id=\"{0}\">", FieldName);
                                 sb.AppendFormat("<option value=\"{0}\" {1}>{2}</value>", "", String.IsNullOrEmpty(value) ? "selected" : "", Provider.GetResource("Select"));
                                 for (int i = 0; i < optionsArr.Length; i++)
                                 {
@@ -185,15 +186,15 @@ namespace Cinar.CMS.Library.Modules
                             }
                         }
                         if(!optionsFound)
-                            sb.AppendFormat("<input type=\"text\" value=\"{0}\"/>", "Kombo olmasý gerekiyor ama henüz enum tarzý kombo problemi çözülmedi."); ;
+                            sb.AppendFormat("<input class=\"form-control\" type=\"text\" id=\"{0}\" value=\"{0}\"/>", "Kombo olmasý gerekiyor ama henüz enum tarzý kombo problemi çözülmedi."); ;
                     }
                     break;
                 case ControlType.CSSEdit:
                 case ControlType.MemoEdit:
                     if(UIControlType == "Input")
-                        sb.AppendFormat("<input type=\"text\" name=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
+                        sb.AppendFormat("<input class=\"form-control\" type=\"text\" name=\"{0}\" id=\"{0}\" value=\"{1}\"/>", FieldName, CMSUtility.HtmlEncode(value));
                     else
-                        sb.AppendFormat("<textarea name=\"{0}\" id=\"{0}\" class=\"editWithFCK\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
+                        sb.AppendFormat("<textarea class=\"form-control\" name=\"{0}\" id=\"{0}\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));
                     break;
                 case ControlType.Undefined:
                 case ControlType.FilterEdit:

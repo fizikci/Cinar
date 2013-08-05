@@ -87,9 +87,7 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("<input type=\"hidden\" name=\"Id\" value=\"{0}\"/>", (data == null ? 0 : (int)data["Id"]));
             sb.AppendFormat("{0}", base.show());
 
-            sb.Append("<div style=\"clear:both\"></div>");
-
-            sb.AppendFormat("<input type=\"submit\" name=\"cmdSave{0}\" value=\"{1}\"/>", this.Id, Provider.GetModuleResource("Save"));
+            sb.AppendFormat("<input type=\"submit\" name=\"cmdSave{0}\" value=\"{1}\" class=\"btn btn-primary\"/>", this.Id, Provider.GetModuleResource("Save"));
 
             sb.Append("</form>");
 

@@ -9,11 +9,21 @@ namespace Cinar.CMS.Library
 $=this.HeadSection$
 </head>
 <body>
-    <div id=""page"">
-        <div id=""Header"" class=""Region"">$=this.Header$</div>
-        <div id=""Content"" class=""Region"">$=this.Content$</div>
-        <div id=""Footer"" class=""Region"">$=this.Footer$</div>
+    <div class=""navbar navbar-inverse navbar-fixed-top"">
+      <div id=""topNav"" class=""Region container"">$=this.topNav$</div>
     </div>
+    
+    <div id=""jumbo"" class=""Region container"">
+        $=this.jumbo$
+    </div>
+    
+    <div id=""content"" class=""Region container"">
+        $=this.content$
+    </div>
+    
+    <footer id=""footer"" class=""Region container"">
+        $=this.footer$
+    </footer>
 </body>
 </html>'")]
     public class Template : BaseEntity
@@ -24,11 +34,21 @@ $=this.HeadSection$
 $=this.HeadSection$
 </head>
 <body>
-    <div id=""page"">
-        <div id=""Header"" class=""Region"">$=this.Header$</div>
-        <div id=""Content"" class=""Region"">$=this.Content$</div>
-        <div id=""Footer"" class=""Region"">$=this.Footer$</div>
+    <div class=""navbar navbar-inverse navbar-fixed-top"">
+      <div id=""topNav"" class=""Region container"">$=this.topNav$</div>
     </div>
+    
+    <div id=""jumbo"" class=""Region container"">
+        $=this.jumbo$
+    </div>
+    
+    <div id=""content"" class=""Region container"">
+        $=this.content$
+    </div>
+    
+    <footer id=""footer"" class=""Region container"">
+        $=this.footer$
+    </footer>
 </body>
 </html>";
 

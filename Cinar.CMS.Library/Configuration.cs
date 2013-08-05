@@ -57,6 +57,15 @@ namespace Cinar.CMS.Library
         #endregion
 
         #region runtime props
+
+        protected string useExternalLibrary = "Bootstrap + jQuery";
+        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "False"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:[['None',''],['Bootstrap + jQuery','Bootstrap + jQuery'],['jQuery','jQuery']]", OrderNo = 7, Category = "Uygulama Ayarları")]
+        public string UseExternalLibrary
+        {
+            get { return useExternalLibrary; }
+            set { useExternalLibrary = value; }
+        }
+
         protected int sessionTimeout = 120;
         [EditFormFieldProps(OrderNo = 7, Category = "Uygulama Ayarları")]
         public int SessionTimeout
@@ -121,7 +130,7 @@ namespace Cinar.CMS.Library
             set { defaultPageLoadScript = value; }
         }
 
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = true)]
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(OrderNo = 11, Category = "Uygulama Ayarları")]
         public string Routes { get; set; }
 
         protected bool countTags = true;
@@ -148,7 +157,7 @@ namespace Cinar.CMS.Library
             set { noPicture = value; }
         }
 
-        protected int thumbQuality = 55;
+        protected int thumbQuality = 90;
         [EditFormFieldProps(OrderNo = 14, Category = "Uygulama Ayarları")]
         public int ThumbQuality
         {
@@ -156,7 +165,7 @@ namespace Cinar.CMS.Library
             set { thumbQuality = value; }
         }
 
-        protected int imageUploadMaxWidth = 640;
+        protected int imageUploadMaxWidth = 960;
         [EditFormFieldProps(OrderNo = 15, Category = "Uygulama Ayarları")]
         public int ImageUploadMaxWidth
         {
