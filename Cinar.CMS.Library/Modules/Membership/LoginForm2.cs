@@ -18,37 +18,44 @@ if (Provider.User.IsAnonim() || Provider.DesignMode)
 {
 $
 	<form id=""fLogin"" method=""post"" action=""DoLogin.ashx"">
+    <fieldset>
+    <legend>Oturum Aç</legend>
 		<input type=""hidden"" name=""RedirectURL"" value=""$=Provider.Request.RawUrl$""/>
-	$
-	if (Provider.Session['loginError'])
-	{
-		echo('<div class=""loginError"">' + Provider.Session['loginError'] + '</div>');
-		Provider.Session['loginError'] = null;
-	}
-	$
-		<div class=""loginEmailLabel"">Email</div>
-		<input class=""loginEmailInput"" type=""text"" name=""Email""/>
-		<div class=""loginPassLabel"">Þifre</div>
-		<input class=""loginPassInput"" type=""password"" name=""Passwd""/>
-		<input class=""loginSubmitButton"" type=""submit"" value=""Giriþ""/>
-
-		<a href=""$= Provider.Configuration.MembershipFormPage $"">Üyelik</a>
-		<a href=""$= Provider.Configuration.RememberPasswordFormPage $"">Þifremi unuttum</a>
-		<a href=""$= Provider.Configuration.UserActivationPage $"">Aktivasyon kodu</a>
-	</form>
+	    $
+	    if (Provider.Session['loginError'])
+	    {
+		    echo('<p class=""text-danger"">' + Provider.Session['loginError'] + '</p>');
+		    Provider.Session['loginError'] = null;
+	    }
+	    $
+        <div class=""form-group"">
+		    <label for=""Email"">Email</label>
+		    <input class=""form-control"" type=""text"" name=""Email"" id=""Email""/>
+        </div>
+        <div class=""form-group"">
+    	    <label for=""Passwd"">Þifre</label>
+		    <input class=""form-control"" type=""password"" name=""Passwd""/>
+        </div>
+	    <a href=""$= Provider.Configuration.MembershipFormPage $"" class=""btn btn-link"">Üyelik</a>
+	    <a href=""$= Provider.Configuration.RememberPasswordFormPage $"" class=""btn btn-link"">Þifremi unuttum</a>
+	    <a href=""$= Provider.Configuration.UserActivationPage $"" class=""btn btn-link"">Aktivasyon kodu</a>
+	    <input class=""btn btn-primary"" type=""submit"" value=""Giriþ""/>
+    </fieldset>
+    </form>
 $
 }
-if (!Provider.User.IsAnonim())
+if (!Provider.User.IsAnonim() && !Provider.DesignMode)
 {
 $
-	<span class=""greeting"">Hoþgeldiniz $= Provider.User.Nick $</span>
-	<a href=""$= Provider.Configuration.MembershipProfilePage $"">Üyelik Bilgilerim</a>
+	<h1>Hoþgeldiniz $= Provider.User.FullName $</h1>
+	<a href=""$= Provider.Configuration.MembershipProfilePage $"" class=""btn btn-link"">Üyelik Bilgilerim</a>
 	$
-	if (Provider.ContextUser.IsInRole('Editor'))
-		echo('<a href=""' + Provider.Configuration.AdminPage + '"">Site Yönetimi</a>');
+    if (Provider.ContextUser.IsInRole('Editor'))
+		echo('<a href=""' + Provider.Configuration.AdminPage + '"" class=""btn btn-link"">Site Yönetimi</a>');
+    if (Provider.ContextUser.IsInRole('Designer'))
+		echo('<a href=""?DesignMode='+(Provider.DesignMode?'Off':'On')+'"" class=""btn btn-link"">'+(Provider.DesignMode?'Ýzleme Modu':'Tasarým Modu')+'</a>');
 	$
-	<a href=""/"">Ana Sayfa</a>
-	<a href=""DoLogin.ashx?logout=1"">Oturumu Kapat</a>
+	<a href=""DoLogin.ashx?logout=1"" class=""btn btn-link"">Oturumu Kapat</a>
 $
 }
 $";
@@ -76,14 +83,6 @@ $";
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.loginEmailLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginEmailInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.loginPassLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginPassInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.loginError {{color:red}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginSubmitButton {{display:block}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.greeting {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a {{display:block;padding-left:10px}}\n", this.Name, this.Id);
             return sb.ToString();
         }
     }

@@ -56,7 +56,7 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("#{0}_{1} a.tabBtnActive:hover {{}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} a.tabBtnPassive {{padding:4px;background:silver;border-top:2px solid silver;color:orange;display:block;float:left;width:auto;margin-right:4px;}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} a.tabBtnPassive:hover {{border-top:2px solid orange}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.Region {{padding:10px;border:2px solid orange;background:white}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} .Region {{padding:10px;border:2px solid orange;background:white}}\n", this.Name, this.Id);
             return sb.ToString();
         }
     }

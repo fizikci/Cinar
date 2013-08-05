@@ -1,38 +1,42 @@
-﻿body {
-	font-family:Verdana;
-	font-size:12px;
-	text-align:center;
-	background: black;
-}
-td {
-	font-size:12px;
-}
-a {
-	color: #9c9c9c;
-	text-decoration:none
-}
-a:hover{
-	color: #0687d5;
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
 }
 
-DIV {
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
-	margin:0;
-	padding:0;
+/* Set widths on the navbar form inputs since otherwise they're 100% wide */
+.navbar-form input[type="text"],
+.navbar-form input[type="password"] {
+  width: 93px;
 }
 
-#page {
-	width: 1000px; 
-	min-height: 700px; 
-	margin-top:10px; 
-	margin-right:auto;
-	margin-left:auto;
-	background: white;
+.navbar-form {
+    margin-top: 15px;
 }
-#Header {text-align:left}
-#Content {text-align:left; clear:both}
-#Footer {text-align:left; clear:both}
 
+.navbar-form .form-control {
+    height: 22px;
+}
 
+.navbar-form .btn-small {
+    padding: 1px 10px;
+}
 
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+#content {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Let the jumbotron breathe */
+  .jumbotron {
+    margin-top: 20px;
+  }
+  /* Remove padding from wrapping element since we kick in the grid classes here */
+  #content {
+    padding: 0;
+  }
+}

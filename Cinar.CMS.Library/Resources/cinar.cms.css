@@ -118,6 +118,11 @@ div.smMenu div:hover
 	background:#316AC5;
 	color:white
 }
+div.smMenu hr {
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
 div.treeChildren {padding-left:16px}
 div.treeChildren img {vertical-align:middle}
 #nd_root span {cursor:pointer}
