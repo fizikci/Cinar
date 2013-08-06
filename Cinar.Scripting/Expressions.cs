@@ -765,11 +765,13 @@ namespace Cinar.Scripting
                         foreach (Expression exp in fc.Arguments)
                         {
                             paramValues[i] = exp.Calculate(context, this);
-                            paramTypes[i] = paramValues[i].GetType(); //TODO: paramValues[i] null ise ne olacak?
+                            paramTypes[i] = paramValues[i]==null ? null : paramValues[i].GetType();
                             i++;
                         }
 
-                        MethodInfo mi = t.GetMethod(fc.Name, BindingFlags.Static | BindingFlags.Public, null, paramTypes, null);
+                        //MethodInfo mi = t.GetMethod(fc.Name, BindingFlags.Static | BindingFlags.Public, null, paramTypes, null);
+                        MethodInfo mi = null; ParameterInfo[] arrPi;
+                        FindMethod(t, fc.Name, paramTypes, out mi, out arrPi, BindingFlags.Static | BindingFlags.Public);
                         if (mi == null)
                             throw new Exception("Undefined param types for static method: " + this);
                         else
@@ -904,14 +906,14 @@ namespace Cinar.Scripting
             return toString(String.Format("{0}.{1}", LeftChildExpression.ToString(), RightChildExpression.ToString()));
         }
 
-        public static void FindMethod(Type type, string methodName, Type[] parameterTypes, out MethodInfo methodInfo, out ParameterInfo[] parameters)
+        public static void FindMethod(Type type, string methodName, Type[] parameterTypes, out MethodInfo methodInfo, out ParameterInfo[] parameters, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance)
         {
             MethodInfo exactMatch = null; 
             methodInfo = null;
             parameters = null;
             methodName = methodName.ToLowerInvariant();
 
-            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo[] methods = type.GetMethods(bindingFlags);
             foreach (MethodInfo method in methods)
             {
                 if (method.Name.ToLowerInvariant() == methodName)
@@ -924,7 +926,7 @@ namespace Cinar.Scripting
                         bool birebir = true;
                         for (int i = 0; i < parameters.Length && i<parameterTypes.Length; i++)
                         {
-                            if (!(parameters[i].ParameterType == parameterTypes[i] || parameterTypes[i].IsSubclassOf(parameters[i].ParameterType)))
+                            if (!(parameters[i].ParameterType == parameterTypes[i] || parameterTypes[i]==null || parameterTypes[i].IsSubclassOf(parameters[i].ParameterType)))
                             {
                                 birebir = false;
                                 continue; // this is not the method we're looking for

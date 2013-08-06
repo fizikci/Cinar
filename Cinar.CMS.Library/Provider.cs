@@ -1268,7 +1268,8 @@ namespace Cinar.CMS.Library
             {
                 imageUrl = Provider.Configuration.NoPicture;
                 if (String.IsNullOrEmpty(imageUrl))
-                    return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
+                    return "https://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/apps/sodipodi.png";
+                    //return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
             }
 
             if (!imageUrl.StartsWith("/")) imageUrl = "/" + imageUrl;

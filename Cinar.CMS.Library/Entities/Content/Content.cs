@@ -34,18 +34,6 @@ namespace Cinar.CMS.Library.Entities
             set { catId = value; }
         }
 
-        private Content _category;
-        [XmlIgnore]
-        public Content Category
-        {
-            get
-            {
-                if (_category == null)
-                    _category = (Content)Provider.Database.Read(typeof(Content), this.CategoryId);
-                return _category;
-            }
-        }
-
         private string title;
         [ColumnDetail(IsNotNull = true, Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Temel Bilgiler")]
         public string Title
@@ -487,6 +475,35 @@ namespace Cinar.CMS.Library.Entities
         {
             return Provider.GetThumbPath(this.Picture, width, height, cropPicture);
         }
+
+
+        [XmlIgnore]
+        public Content Category
+        {
+            get
+            {
+                if (this.Id == 1)
+                    return null;
+                return Provider.Database.Read<Content>(this.CategoryId);
+            }
+        }
+        [XmlIgnore]
+        public Content Root
+        {
+            get
+            {
+                return Provider.Database.Read<Content>(1);
+            }
+        }
+        [XmlIgnore]
+        public List<Content> Contents
+        {
+            get
+            {
+                return Provider.Database.ReadList<Content>("select * from Content where CategoryId={0}", this.Id);
+            }
+        }
+
     }
 
 }
