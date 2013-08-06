@@ -33,7 +33,7 @@ namespace Cinar.CMS.Library.Handlers
                     {
                         HasAppStarted = true;
 
-                        foreach (string scriptName in new[] { "cinar_cms_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js", "help_html" })
+                        foreach (string scriptName in new[] { "cinar_cms_css", "famfamfam_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js", "help_html" })
                         {
                             string s = Properties.Resources.ResourceManager.GetString(scriptName);
                             File.WriteAllText(Provider.Server.MapPath("/_thumbs/" + scriptName.Replace("_", ".")), s, Encoding.UTF8);

@@ -248,7 +248,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
                 '<div id="' + this.editorId + 'ta" style="border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;position: absolute;left: 0px;right: 0px;bottom: 31px;top: 19px;"></div>' +
-                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="btn cok">' + lang('OK') + '</span> <span class="btn ccancel">' + lang('Cancel') + '</span></center>');
+                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn cok">' + lang('OK') + '</span> <span class="ccBtn ccancel">' + lang('Cancel') + '</span></center>');
 
         var ta = $(this.editorId + 'ta');
         //ta.value = this.input.value.gsub('#NL#', '\n');
@@ -382,7 +382,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
         });
         fileBrowserCurrInput = this.input;
 
-        $('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span></div>');
+        $('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></div>');
 
         var btnCancel = $(this.editorId + 'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
@@ -420,7 +420,7 @@ var FileManager = Class.create(); FileManager.prototype = {
             '<div id="fileBrowserFooter">' +
             '<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
             '<input type="hidden" name="folder"/>' +
-            'Dosya: <input type="file" name="upload" multiple="multiple"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
+            'Dosya: <input type="file" name="upload" multiple="multiple" style="display:inline"/><input type="submit" value="Yükle"/><div id="fileBrowserLoading">&nbsp;</div>' +
             '<iframe name="fakeUplFrm"></iframe>' +
             '</form>' +
             '<form action="SystemInfo.ashx?method=createFolder" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
@@ -629,7 +629,7 @@ var LookUp = Class.create(); LookUp.prototype = {
         $('btnDelete' + lf.hndl).hide();
         $('btnInfo' + lf.hndl).hide();
 
-        new Insertion.Bottom(list, '<center><span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span></center>');
+        new Insertion.Bottom(list, '<center><span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></center>');
 
         var btnCancel = $(this.editorId + 'btnCancel');
         btnCancel.observe('click', this.showEditor.bind(this));
@@ -791,10 +791,10 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
         new Insertion.Bottom(document.body, '<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">' +
             '<div id="' + this.editorId + 'ta" style="height: 429px;border-bottom: 1px solid #bbb;"></div><br/>' +
             '<center>' +
-            '<span id="' + this.editorId + 'btnOK" class="btn cok">' + lang('OK') + '</span> ' +
-            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="btn cload">' + lang('Load default') + '</span> ' : '') +
-            '<span id="' + this.editorId + 'btnPicture" class="btn cpicture">' + lang('Add picture') + '</span> ' +
-            '<span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span>' +
+            '<span id="' + this.editorId + 'btnOK" class="ccBtn cok">' + lang('OK') + '</span> ' +
+            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="ccBtn cload">' + lang('Load default') + '</span> ' : '') +
+            '<span id="' + this.editorId + 'btnPicture" class="ccBtn cpicture">' + lang('Add picture') + '</span> ' +
+            '<span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span>' +
             '</center>' +
             '</div>');
 
@@ -902,7 +902,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     },
     showEditor: function(event) {
         if (!$(this.editorId))
-            new Insertion.Bottom(document.body, '<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="btn cok">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="btn ccancel">' + lang('Cancel') + '</span></center></div>');
+            new Insertion.Bottom(document.body, '<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></center></div>');
         else
             $(this.editorId).down().innerHTML = "";
         var entityNameToUse = this.options.entityName;
@@ -1376,7 +1376,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr><td colspan="2" id="details' + this.hndl + '"></td></tr>';
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
-        str += '<tr><td style="height:16px;text-align:right"><span class="btn csave" id="btnSave' + this.hndl + '">' + lang('Save') + '</span></td></tr>';
+        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn csave" id="btnSave' + this.hndl + '">' + lang('Save') + '</span></td></tr>';
         str += '</table>';
 
         new Insertion.Bottom(container, str);
@@ -1434,7 +1434,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 var entityDisplayName = controls.find(function(c) { return c.id == 'Title' || c.id == 'Name' || c.id == 'Question' }).value;
                 if (entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
                 if (!showRelatedEntities || showRelatedEntities.indexOf(control.entityName) > -1)
-                    details.insert('<span class="btn c' + control.entityName + '" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
+                    details.insert('<span class="ccBtn c' + control.entityName + '" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
                 continue;
             default:
                 throw 'No control of this kind: ' + control.type;
@@ -1537,7 +1537,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        new Insertion.Top(this.container, '<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="btn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        new Insertion.Top(this.container, '<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly: true });
         $('btnFilter' + this.hndl).observe('click', this.fetchData.bind(this));
 
@@ -1547,7 +1547,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         if (this.options.commands)
             for (var i = 0; i < this.options.commands.length; i++) {
                 var cmd = this.options.commands[i];
-                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="btn c' + cmd.icon + '">' + lang(cmd.name) + '</span></div>';
+                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn c' + cmd.icon + '">' + lang(cmd.name) + '</span></div>';
             }
         str += '<span class="cbtn cprev" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="pager" id="pageNo' + this.hndl + '">1</span>';
@@ -2504,7 +2504,7 @@ var AceEditor = Class.create(); AceEditor.prototype = {
             title: 'Çınar Ace Editor',
             width: 950,
             height: 600,
-            buttons: [{ icon: 'ok', id: 'btnOk', text: lang('OK'), callback: function() { Windows.getFocusedWindow().close(); } }],
+            buttons: [{ icon: 'accept', type:'default', size:'mini', id: 'btnOk', text: lang('OK'), callback: function() { Windows.getFocusedWindow().close(); } }],
             text: 'Sample AceEditor window',
             lang: 'html',
             wrap: false
@@ -2514,9 +2514,11 @@ var AceEditor = Class.create(); AceEditor.prototype = {
 
         var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
         var winContent = $(win.getContent());
-        var html = '<div id="txtSource" style="position:absolute;top:4px;left:4px;right:4px;bottom:32px;border-bottom:1px solid #ccc"></div><div style="position:absolute;left:4px;right:4px;bottom:8px; height:20px;text-align:center">';
-        for (var i = 0; i < options.buttons.length; i++)
-            html += '<span class="btn c' + options.buttons[i].icon + '" id="' + options.buttons[i].id + '">' + options.buttons[i].text + '</span>';
+        var html = '<div id="txtSource" style="position:absolute;top:4px;left:4px;right:4px;bottom:60px;border-bottom:1px solid #ccc"></div><div style="position:absolute;left:4px;right:4px;bottom:8px;height:36px;text-align:center">';
+        for (var i = 0; i < options.buttons.length; i++) {
+            var b = options.buttons[i];
+            html += getButtonHtml(b);
+        }
         html += '</div>';
         new Insertion.Bottom(winContent, html);
 
@@ -2552,3 +2554,15 @@ var AceEditor = Class.create(); AceEditor.prototype = {
         this.aceEdit.insert(str);
     }
 };
+
+
+function getButtonHtml(options) {
+    var b = Object.extend({
+        icon: 'accept', // see famfamfam icons
+        type: 'default', //default, primary, danger, warning, success, info
+        size: 'mini', // large, small, mini
+        id: 'btnId',
+        text: lang('OK')
+    }, options || {});
+    return '<button class="btn btn-' + (b.type || 'default') + ' btn-' + (b.size || 'mini') + '" id="' + b.id + '" style="margin-left:8px;"><div class="fff ' + b.icon + '"></div>' + b.text + '</button>';
+}
