@@ -132,6 +132,7 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "cinar.cms.css.ashx" : "/_thumbs/cinar.cms.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"" + (Provider.DesignMode ? "famfamfam.css.ashx" : "/_thumbs/famfamfam.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");

@@ -326,7 +326,7 @@ function editCurrImage(path){
 	}
 	
 	var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="btn cselect">Select</span><span id="cc_crop" class="btn ccrop">Crop</span><span id="cc_turncw" class="btn cturncw">Turn CW</span><span id="cc_turnccw" class="btn cturnccw">Turn CCW</span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="btn cresize">Resize</span><span id="cc_reset" class="btn creset">Reset</span></div>';
+	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn cselect">Select</span><span id="cc_crop" class="ccBtn ccrop">Crop</span><span id="cc_turncw" class="ccBtn cturncw">Turn CW</span><span id="cc_turnccw" class="ccBtn cturnccw">Turn CCW</span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn cresize">Resize</span><span id="cc_reset" class="ccBtn creset">Reset</span></div>';
 	str += '<div class="cc_ei_canvas"><img id="cc_ei_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"></div><div id="cc_ei_nw" style="display:none"></div><div id="cc_ei_se" style="display:none"></div></div>';
 	str += '<div id="cc_ei_status"></div>';
 	new Insertion.Top(win.getContent(), str);
@@ -1443,7 +1443,7 @@ function nicePrompt(prompt, validationCallback, okCallback){
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"></p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="btn ccancel">' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1463,7 +1463,7 @@ function niceAlert(alert){
     var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">'+lang('OK')+'</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1473,7 +1473,7 @@ function niceInfo(alert, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();
@@ -1486,7 +1486,7 @@ function niceConfirm(confirm, okCallback){
     var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
     var str = '<p align="center"><br/>' + confirm + '</p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="btn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="btn ccancel">' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></p>';
     new Insertion.Top(win.getContent(), str);
     win.showCenter();
     win.toFront();

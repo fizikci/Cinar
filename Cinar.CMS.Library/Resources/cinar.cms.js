@@ -331,7 +331,7 @@ function addModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="btn cok" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
+        str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
         new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
@@ -499,7 +499,7 @@ function convertModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="btn cok" id="btnAddModuleOK">'+lang('OK')+'</span> <span class="btn ccancel" id="btnAddModuleCancel">'+lang('Cancel')+'</span></p>';
+        str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
         new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
@@ -542,7 +542,8 @@ function importModule(){
         title: lang('Import Module'),
         text: 'Paste exported module code here',
         lang: 'xml',
-        buttons: [{ icon: 'save', id: 'btnImportModule', text: lang('Save'), callback: function(editor){
+        buttons: [{
+            icon: 'disc', type: 'primary', id: 'btnImportModule', text: lang('Save'), callback: function (editor) {
             var params = {data: editor.getValue()};
 
             new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
@@ -634,7 +635,7 @@ function quickLoadImages(contentId, callback) {
 	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
 	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
 
-	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="btn cok">' + lang('OK') + '</span></div>');
+	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn cok">' + lang('OK') + '</span></div>');
 	$('btnOK').observe('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
 		var params = {
@@ -663,7 +664,7 @@ function tagifySelectedPicture(id){
 		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 		var winContent = $(win.getContent());
 		winContent.insert(img.show().remove());
-		winContent.insert('<p align="right"><span class="btn cok" id="btnTagifyOK">'+lang('OK')+'</span><span class="btn ccancel" id="btnTagifyCancel">'+lang('Cancel')+'</span></p>');
+		winContent.insert('<p align="right"><span class="ccBtn cok" id="btnTagifyOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyCancel">' + lang('Cancel') + '</span></p>');
 		
 		$('btnTagifyOK').observe('click', function(){
 			tagData = tagData.findAll(function(t){return t.remove!=true;});
@@ -712,7 +713,7 @@ function tagifySelectedPicture(id){
 function openTagForm(winPos, tag, tagData){
 	if($('tagify_edit')) $('tagify_edit').remove();
 	
-	$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="btn cok" id="btnTagifyEditOK">'+lang('OK')+'</span><span class="btn ccancel" id="btnTagifyEditDelete">'+lang('Delete')+'</span></p></div>');
+	$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn cok" id="btnTagifyEditOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyEditDelete">' + lang('Delete') + '</span></p></div>');
 	var formTag = $('tagify_edit');
 
 	$('btnTagifyEditOK').observe('click', function(){
@@ -755,9 +756,9 @@ function sortImages(){
 	}
 	html += '</div>';
 	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
-	html += '   <span class="btn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
-	html += '   <span class="btn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
-	html += '   <span class="btn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+	html += '   <span class="ccBtn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
+	html += '   <span class="ccBtn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
+	html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
 	html += '</p>';
 
 	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
@@ -807,12 +808,12 @@ function showContentPictures(options) {
     var html = '<div id="sortableList">';
     html += '</div>';
     html += '<p style="position:absolute;bottom:8px;left:8px;">';
-    html += '   <span class="btn cDataConverter" id="btnQuickLoad">' + lang('Quick Load') + '</span>';
+    html += '   <span class="ccBtn cDataConverter" id="btnQuickLoad">' + lang('Quick Load') + '</span>';
     html += '</p>';
     html += '<p style="position:absolute;bottom:8px;right:8px;">';
-    html += '   <span class="btn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
-    html += '   <span class="btn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
-    html += '   <span class="btn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+    html += '   <span class="ccBtn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
+    html += '   <span class="ccBtn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
+    html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
     html += '</p>';
 
     var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
@@ -1001,7 +1002,7 @@ function addTemplate(){
             new AceEditor({
                 titleIcon: 'page',
                 title: templateName,
-                buttons: [{ icon: 'save', id: 'btnSaveTemplate', text: lang('Save'), callback: function (editor) { saveTemplate(editor, templateName); } }],
+                buttons: [{ icon: 'disc', type:'primary', id: 'btnSaveTemplate', text: lang('Save'), callback: function (editor) { saveTemplate(editor, templateName); } }],
                 text: ajax({ url: 'SystemInfo.ashx?method=getLastTemplateContent', isJSON: false, noCache: true }),
                 lang: 'html'
             });
@@ -1103,7 +1104,7 @@ function importTemplate(){
         text: 'Paste exported page xml here',
         lang: 'xml',
         buttons: [{
-            icon: 'save', id: 'btnSaveImport', text: lang('Save'), callback: function (editor) {
+            icon: 'disc', type: 'primary', id: 'btnSaveImport', text: lang('Save'), callback: function (editor) {
                 var params = new Object();
                 params['templateData'] = editor.getValue();
                 new Ajax.Request('SystemInfo.ashx?method=importTemplates', {
@@ -1133,7 +1134,7 @@ function editStyle() {
         lang: 'css',
         buttons: [
             {
-                icon: 'load',
+                icon: 'page_white_get',
                 id: 'btnModuleDefaultStyles',
                 text: lang('Add Default Module Styles'),
                 callback: function (editor) {
@@ -1152,7 +1153,8 @@ function editStyle() {
                 }
             },
             {
-                icon: 'save',
+                icon: 'disc',
+                type: 'primary',
                 id: 'btnSaveStyles',
                 text: lang('Save'),
                 callback: function (editor) {
@@ -1179,7 +1181,7 @@ function editJavascript(){
         text: ajax({ url: 'SystemInfo.ashx?method=getDefaultJavascript', isJSON: false, noCache: true }),
         lang: 'javascript',
         buttons: [{
-            icon: 'save', id: 'btnSaveJavascript', text: lang('Save'), callback: function (editor) {
+            icon: 'disc', type: 'primary', id: 'btnSaveJavascript', text: lang('Save'), callback: function (editor) {
                 var params = new Object();
                 params['code'] = editor.getValue();
                 new Ajax.Request('SystemInfo.ashx?method=saveDefaultJavascript', {
@@ -1202,7 +1204,7 @@ function editPageLoadScript(){
         text: ajax({ url: 'SystemInfo.ashx?method=getDefaultPageLoadScript', isJSON: false, noCache: true }),
         lang: 'javascript',
         buttons: [{
-            icon: 'save', id: 'btnSavePageLoadScript', text: lang('Save'), callback: function (editor) {
+            icon: 'disc', type: 'primary', id: 'btnSavePageLoadScript', text: lang('Save'), callback: function (editor) {
                 var params = new Object();
                 params['code'] = editor.getValue();
                 new Ajax.Request('SystemInfo.ashx?method=saveDefaultPageLoadScript', {

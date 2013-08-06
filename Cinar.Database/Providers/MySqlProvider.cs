@@ -350,7 +350,7 @@ namespace Cinar.Database.Providers
             //if (column.ColumnType == DbType.VarChar || column.ColumnType == DbType.Text)
             //    fieldDDL.Append(" CHARACTER SET utf8 COLLATE utf8_turkish_ci");
             columnDDL.Append(column.IsNullable ? " NULL" : " NOT NULL");
-            if (column.IsAutoIncrement)
+            if (column.IsAutoIncrement && column.IsPrimaryKey)
                 columnDDL.Append(" AUTO_INCREMENT");
             if (column.IsPrimaryKey)
                 columnDDL.Append(" PRIMARY KEY");
@@ -395,7 +395,11 @@ namespace Cinar.Database.Providers
                 sbCons.Append(GetSQLConstraintAdd(c) + ";" + Environment.NewLine);
             }
             foreach (Index i in table.Indices)
+            {
+                if (i.Name=="PRIMARY" && i.ColumnNames.Count == 1)
+                    continue;
                 sbCons.Append(GetSQLIndexAdd(i) + ";" + Environment.NewLine);
+            }
 
             if(table.IsView)
                 return String.Format("CREATE VIEW `{0}` AS {1}" + Environment.NewLine,
