@@ -1500,7 +1500,7 @@ var EditForm = Class.create(); EditForm.prototype = {
 
 function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
 	var dim = $(document.body).getDimensions();
-	var left=dim.width-390, top=10, width=350, height=dim.height-60;
+	var left=dim.width-390, top=60, width=350, height=dim.height-60;
 	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
 	var winContent = $(win.getContent());
 	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues);

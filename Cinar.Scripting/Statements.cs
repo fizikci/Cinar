@@ -103,9 +103,9 @@ namespace Cinar.Scripting
                         Context.debugRunToLine = 0;
                 }
 
-                if (Context.debugging && Context.debugRunToLine == 0 && HttpContext.Current == null) 
+                if (Context.debugging && Context.debugRunToLine == 0 && HttpContext.Current == null)
                 {
-                    if(Context.debuggerWindow != null)
+                    if (Context.debuggerWindow != null)
                         Context.debuggerWindow.SetMarker(fContext);
 
                     if (!statement.canBeDebugged())
@@ -131,7 +131,16 @@ namespace Cinar.Scripting
                     }
                 }
                 else
-                    statement.Execute(fContext, parentNode);
+                {
+                    try {
+                        statement.Execute(fContext, parentNode);
+                    }
+                    catch (Exception ex)
+                    {
+                        //context.Interpreter.ExecutionSuccessful = false;
+                        context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "") + " at line " + (Context.CurrentStatement.LineNumber + 1));
+                    }
+                }
             }
 
             //return fContext;
