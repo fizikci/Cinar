@@ -788,4 +788,24 @@ foreach(var t in db.Tables)
 	}
 $</value>
   </data>
+  <data name="SQLTransferTableSQLGenerator" xml:space="preserve">
+    <value>$
+var limit = 1000;
+var tableName = "synonym";
+var dt = db.GetDataTable("select Id, Word1, Word2 from "+tableName+" order by 1 limit "+limit+" offset 0");
+var bulk = 0;
+
+while(dt!=null &amp;&amp; dt.Rows.Count&gt;0){
+	echo("insert into "+tableName+" values ");
+	for(int i=0; i&lt;dt.Rows.Count; i++){
+		var dr = dt.Rows[i];
+		echo("("+dr.Id+", '"+dr.Word1+"', '"+dr.Word2+"')");
+		if(i&lt;dt.Rows.Count-1) echo(', ');
+	}
+	echo(";\r\n");
+	bulk++;
+	dt = db.GetDataTable("select Id, Word1, Word2 from "+tableName+" order by 1 limit 1000 offset " + (bulk*limit));
+}
+$</value>
+  </data>
 </root>

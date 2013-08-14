@@ -183,6 +183,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptForEachColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptCalculateOptDataLen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptSPHelpText = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptSearhAllStringFields = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -211,7 +212,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsQScriptSearhAllStringFields = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptSQLTransferTableSQLGenerator = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1490,7 +1491,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptForEachColumn,
             this.menuToolsQScriptCalculateOptDataLen,
             this.menuToolsQScriptSPHelpText,
-            this.menuToolsQScriptSearhAllStringFields});
+            this.menuToolsQScriptSearhAllStringFields,
+            this.menuToolsQScriptSQLTransferTableSQLGenerator});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1531,6 +1533,12 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSPHelpText.Name = "menuToolsQScriptSPHelpText";
             this.menuToolsQScriptSPHelpText.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptSPHelpText.Text = "sp_help_text";
+            // 
+            // menuToolsQScriptSearhAllStringFields
+            // 
+            this.menuToolsQScriptSearhAllStringFields.Name = "menuToolsQScriptSearhAllStringFields";
+            this.menuToolsQScriptSearhAllStringFields.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSearhAllStringFields.Text = "Searh All String Fields";
             // 
             // helpToolStripMenuItem
             // 
@@ -1774,11 +1782,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsQScriptSearhAllStringFields
+            // menuToolsQScriptSQLTransferTableSQLGenerator
             // 
-            this.menuToolsQScriptSearhAllStringFields.Name = "menuToolsQScriptSearhAllStringFields";
-            this.menuToolsQScriptSearhAllStringFields.Size = new System.Drawing.Size(258, 22);
-            this.menuToolsQScriptSearhAllStringFields.Text = "Searh All String Fields";
+            this.menuToolsQScriptSQLTransferTableSQLGenerator.Name = "menuToolsQScriptSQLTransferTableSQLGenerator";
+            this.menuToolsQScriptSQLTransferTableSQLGenerator.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSQLTransferTableSQLGenerator.Text = "Transfer Table SQL Generator";
             // 
             // FormMain
             // 
@@ -2010,6 +2018,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuTableShowChildrenRecords;
         private System.Windows.Forms.ToolStripMenuItem emptyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSearhAllStringFields;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSQLTransferTableSQLGenerator;
 
     }
 }
