@@ -349,7 +349,7 @@ InnerHtml,32,<hr/>
         }
         public static Module Deserialize(string moduleName, string moduleData)
         {
-            moduleData = moduleData.Trim();
+            moduleData = moduleData;//.Trim();
             Module module = null;
             try
             {
