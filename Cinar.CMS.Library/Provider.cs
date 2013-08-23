@@ -518,7 +518,7 @@ namespace Cinar.CMS.Library
             if (Provider.Session["User"] == null)
             {
                 Entities.User user = (Entities.User)Provider.Database.Read(typeof(Entities.User), "Email='anonim'");
-                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
+               Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
                 Provider.Session["User"] = user;
             }
             else

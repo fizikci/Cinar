@@ -43,19 +43,23 @@ namespace Cinar.CMS.Library
         public static Dictionary<string, string> Deserialize(string data)
         {
             Dictionary<string, string> res = new Dictionary<string, string>();
-            data = data.Substring("Cinar.CMS.Serialization\n".Length);
-            while (data.Length > 0)
+            try
             {
-                string propName = data.Substring(0, data.IndexOf(','));
-                data = data.Substring(propName.Length + 1);
-                string valLengthStr = data.Substring(0, data.IndexOf(','));
-                data = data.Substring(valLengthStr.Length + 1);
-                int length = Int32.Parse(valLengthStr);
-                string valStr = data.Substring(0, length);
-                data = data.Substring(length);
+                data = data.Substring("Cinar.CMS.Serialization\n".Length);
+                while (data.Length > 0)
+                {
+                    string propName = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(propName.Length + 1);
+                    string valLengthStr = data.Substring(0, data.IndexOf(','));
+                    data = data.Substring(valLengthStr.Length + 1);
+                    int length = Int32.Parse(valLengthStr);
+                    string valStr = data.Substring(0, length);
+                    data = data.Substring(length);
 
-                res.Add(propName, valStr);
+                    res.Add(propName, valStr);
+                }
             }
+            catch { }
             return res;
         }
     }
