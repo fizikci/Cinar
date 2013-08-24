@@ -59,7 +59,7 @@ namespace Cinar.CMS.Library
         #region runtime props
 
         protected string useExternalLibrary = "Bootstrap + jQuery";
-        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "False"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:[['None',''],['Bootstrap + jQuery','Bootstrap + jQuery'],['jQuery','jQuery']]", OrderNo = 7, Category = "Uygulama Ayarları")]
+        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "False"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:[['None','-'],['Bootstrap + jQuery','Bootstrap + jQuery'],['jQuery','jQuery']]", OrderNo = 7, Category = "Uygulama Ayarları")]
         public string UseExternalLibrary
         {
             get { return useExternalLibrary; }

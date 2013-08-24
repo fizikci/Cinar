@@ -11,7 +11,7 @@ using Cinar.Scripting;
 
 namespace Cinar.CMS.Library.Modules
 {
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
+    [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"0,'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
 InnerHtml,1514,        <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target="".nav-collapse"">
           <span class=""icon-bar""></span>
           <span class=""icon-bar""></span>
@@ -42,11 +42,11 @@ InnerHtml,1514,        <button type=""button"" class=""navbar-toggle"" data-togg
             <button type=""submit"" class=""btn btn-primary btn-small"">Sign in</button>
           </form>
         </div><!--/.nav-collapse -->LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,1,1Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
+    [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"1,'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
 InnerHtml,313,<h1>Hello, world!</h1>
 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
 <p><a class=""btn btn-primary btn-large"">Learn more &raquo;</a></p>LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,1,2Template,12,Default.aspxRegion,5,jumboOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,9,jumbotronVisible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','content','Cinar.CMS.Serialization
+    [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"2,'StaticHtml','Default.aspx','content','Cinar.CMS.Serialization
 InnerHtml,1123,  <div class=""col-lg-4"">
     <h2>Heading</h2>
     <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
@@ -63,7 +63,7 @@ InnerHtml,1123,  <div class=""col-lg-4"">
     <p><a class=""btn btn-default"" href=""#"">View details &raquo;</a></p>
   </div>
 LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,1,3Template,12,Default.aspxRegion,7,contentOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,3,rowVisible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
-    [DefaultData(ColumnList = "Name,Template,Region,Details", ValueList = @"'StaticHtml','Default.aspx','footer','Cinar.CMS.Serialization
+    [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"3,'StaticHtml','Default.aspx','footer','Cinar.CMS.Serialization
 InnerHtml,32,<hr/>
 <p>&copy; Company 2013</p>LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,1,4Template,12,Default.aspxRegion,6,footerOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
     public class Module : ObjectWithTags, IDatabaseEntity
@@ -349,7 +349,7 @@ InnerHtml,32,<hr/>
         }
         public static Module Deserialize(string moduleName, string moduleData)
         {
-            moduleData = moduleData;//.Trim();
+            //moduleData = moduleData;//.Trim();
             Module module = null;
             try
             {

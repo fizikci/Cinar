@@ -120,7 +120,7 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
-                    sb.Append("<link rel=\"stylesheet\" href=\"http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css\">\n");
+                    sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
@@ -192,7 +192,7 @@ namespace Cinar.CMS.Library.Handlers
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
                     sb.Append("<script src=\"http://code.jquery.com/jquery.js\"></script> <script>jQuery.noConflict();</script>\n");
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
-                    sb.Append("<script src=\"http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js\"></script>\n");
+                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 

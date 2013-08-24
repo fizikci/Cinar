@@ -1550,7 +1550,7 @@ var ListForm = Class.create(); ListForm.prototype = {
                 str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn c' + cmd.icon + '">' + lang(cmd.name) + '</span></div>';
             }
         str += '<span class="cbtn cprev" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
-        str += '<span class="pager" id="pageNo' + this.hndl + '">1</span>';
+        str += '<span class="cpager" id="pageNo' + this.hndl + '">1</span>';
         str += '<span class="cbtn cnext" id="btnNext' + this.hndl + '" title="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"></span>';
         str += '<span class="cbtn cadd" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
         str += '<span class="cbtn cedit" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
