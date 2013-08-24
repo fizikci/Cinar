@@ -490,8 +490,8 @@ function saveModule(pe){
 }
 function convertModule(elmId){
     if(!elmId){ // if the module to be converted is not defined ask it hesaaabı
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
-        var str = '<p align="center"><select size="10" id="selectModule">';
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 230, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+        var str = '<p align="center" style="padding-top:22px"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
             mdlGrup.items.each(function(mdlTp, j){
@@ -871,7 +871,7 @@ function showContentPictures(options) {
 
 // Category-Content Tree
 function openCategoryContentTree() {
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 5, left: 5, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getNodes, nodeClicked);
@@ -890,7 +890,7 @@ function nodeClicked(node){
 
 // Page-Module Tree
 function openPageModuleTree(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 5, left: 5, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getModuleNodes, nodeModuleClicked);
@@ -991,23 +991,31 @@ function insertEditForm(pe, callback){
 //################################################################
 
 function addTemplate(){
-    nicePrompt(lang('Enter page name'), function(name){
-            if(!name || name.search(/\w+\.aspx/i)!=0){
-                niceAlert(lang('Page name should be a valid file name and end with .aspx.'));
-                return false;
+    new AceEditor({
+        titleIcon: 'page',
+        title: lang("New Page"),
+        buttons: [{
+            icon: 'disc',
+            type: 'primary',
+            id: 'btnSaveTemplate',
+            text: lang('Save'),
+            callback: function (editor) {
+                nicePrompt(lang('Enter page name'), function(name){
+                    if(!name || name.search(/\w+\.aspx/i)!=0){
+                        niceAlert(lang('Page name should be a valid file name and end with .aspx.'));
+                        return false;
+                    }
+                    return true;
+                },
+                function (templateName) {
+                    saveTemplate(editor, templateName);
+                });
             }
-            return true;
-        },
-        function (templateName) {
-            new AceEditor({
-                titleIcon: 'page',
-                title: templateName,
-                buttons: [{ icon: 'disc', type:'primary', id: 'btnSaveTemplate', text: lang('Save'), callback: function (editor) { saveTemplate(editor, templateName); } }],
-                text: ajax({ url: 'SystemInfo.ashx?method=getLastTemplateContent', isJSON: false, noCache: true }),
-                lang: 'html'
-            });
-        }
-    );
+        }],
+        text: ajax({ url: 'SystemInfo.ashx?method=getLastTemplateContent', isJSON: false, noCache: true }),
+        lang: 'html'
+    });
+
 }
 
 function copyTemplate(){
