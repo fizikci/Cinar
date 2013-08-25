@@ -74,6 +74,17 @@ namespace Cinar.CMS.Library.Entities
             set { metin = value; }
         }
 
+        [EditFormFieldProps(Category = "Extra")]
+        public string ExtraField1 { get; set; }
+        [EditFormFieldProps(Category = "Extra")]
+        public string ExtraField2 { get; set; }
+        [EditFormFieldProps(Category = "Extra")]
+        public string ExtraField3 { get; set; }
+        [EditFormFieldProps(Category = "Extra")]
+        public string ExtraField4 { get; set; }
+        [EditFormFieldProps(Category = "Extra")]
+        public string ExtraField5 { get; set; }
+
         public override string GetNameValue()
         {
             return this.title;

@@ -594,7 +594,11 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         renameLabels: renameLabels
     }
 	if(entityName=='ContentPicture'){
-		options.commands.push({id:'QuickLoad', icon:'DataConverter', name:'Quick Load', handler:quickLoadImages});
+	    options.commands.push({id: 'QuickLoad', icon: 'DataConverter', name: 'Quick Load', handler: function () {
+	        var contentId = parseInt(this.filter.getValue().split('=')[1]);
+	        var ths = this;
+	        quickLoadImages(contentId, function () { ths.fetchData(); });
+        }});
 		options.commands.push({id:'Tagify', icon:'tag', name:'Tag Picture', handler:function(){
 			var id = this.getSelectedEntityId();
 			if(!id || id<=0) return;

@@ -217,18 +217,6 @@ var StringEdit = Class.create(); StringEdit.prototype = {
     showEditor: function(event) {
         var ths = this;
 
-        //if (!$(this.editorId))
-        //    new Insertion.Bottom(document.body, '<div class="editor StringEdit" style="display:none" id="' + this.editorId + '"></div>')
-
-        //var list = $(this.editorId);
-        //if (list.visible()) {
-        //    list.remove();
-        //    currEditor = null;
-        //    return;
-        //}
-        //list.innerHTML = '';
-
-
         this.win = new CinarWindow({ title: ths.label });
         var list = this.win.getContent();
 
@@ -251,7 +239,6 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn cok">' + lang('OK') + '</span> <span class="ccBtn ccancel">' + lang('Cancel') + '</span></center>');
 
         var ta = $(this.editorId + 'ta');
-        //ta.value = this.input.value.gsub('#NL#', '\n');
 
         if (this.input.disabled) return;
 
@@ -321,9 +308,6 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 });
         });
 
-        //this.setEditorPos(list);
-
-        //list.show();
         Event.stop(event);
 
         this.aceEdit = ace.edit(this.editorId + 'ta');
@@ -584,10 +568,9 @@ var LookUp = Class.create(); LookUp.prototype = {
     lastValue: 0,
     items: [],
     listHeight: 200,
-    initialize: function(id, value, options) {
+    initialize: function (id, value, options) {
         Object.extend(this, new Control(id, value, options));
         this.button.observe('click', this.showEditor.bind(this));
-        //this.input.observe('keyup', this.complete.bind(this));
         this.input.observe('focus', this.focus.bind(this));
         this.input.observe('blur', this.blur.bind(this));
         this.input['ctrl'] = this;
@@ -597,8 +580,7 @@ var LookUp = Class.create(); LookUp.prototype = {
             this.setText(txt);
         }
     },
-    showEditor: function(event) {
-        //openEntityListForm(this.options.entityName, this.label +' '+ lang('Select'), this.options.extraFilter, true, this.onSelect.bind(this));
+    showEditor: function (event) {
         if ($(this.editorId)) {
             $(this.editorId).remove();
             currEditor = null;
@@ -616,7 +598,7 @@ var LookUp = Class.create(); LookUp.prototype = {
 
         var options = {
             entityName: entityName,
-            hrEntityName: entityTypes.find(function(item) { return item[0] == entityName; })[1],
+            hrEntityName: entityTypes.find(function (item) { return item[0] == entityName; })[1],
             fields: ajax({ url: 'EntityInfo.ashx?method=getFieldsList&entityName=' + entityName, isJSON: true, noCache: false }),
             ajaxUri: 'EntityInfo.ashx',
             forSelect: true,
@@ -641,7 +623,7 @@ var LookUp = Class.create(); LookUp.prototype = {
         list.show();
         Event.stop(event);
     },
-    complete: function() {
+    complete: function () {
         if (this.input.value && this.input.value.length >= 1) {
             if (!this.editor) {
                 new Insertion.After(this.div, '<div class="editor hideOnOut" style="text-align:left;overflow:auto;position:absolute;border:1px solid black;display:none;background:white"></div>');
@@ -652,7 +634,7 @@ var LookUp = Class.create(); LookUp.prototype = {
             new Ajax.Request(ths.options.itemsUrl + '?method=getList&entityName=' + ths.options.entityName, {
                 method: 'post',
                 parameters: params,
-                onComplete: function(req) {
+                onComplete: function (req) {
                     if (req.responseText.startsWith('ERR:')) {
                         niceAlert(req.responseText);
                         ths.items = [];
@@ -693,20 +675,20 @@ var LookUp = Class.create(); LookUp.prototype = {
                         list.show();
                     }
                 },
-                onException: function(req, ex) { throw ex; }
+                onException: function (req, ex) { throw ex; }
             });
         }
     },
     listDimensionCalculated: false,
-    onItemMouseOver: function(e) {
+    onItemMouseOver: function (e) {
         var elm = Event.findElement(e, 'DIV');
         elm.addClassName('selItem');
     },
-    onItemMouseOut: function(e) {
+    onItemMouseOut: function (e) {
         var elm = Event.findElement(e, 'DIV');
         elm.removeClassName('selItem');
     },
-    onItemClick: function(e) {
+    onItemClick: function (e) {
         var elm = Event.findElement(e, 'DIV');
         var list = this.editor;
         var index = list.select('.item').indexOf(elm);
@@ -715,11 +697,11 @@ var LookUp = Class.create(); LookUp.prototype = {
         this.setText(val[1]);
         list.hide();
     },
-    focus: function() {
+    focus: function () {
         this.text = this.input.value;
         this.lastValue = this.value;
     },
-    blur: function() {
+    blur: function () {
         if (this.input.value == '') {
             this.setValue(0);
             this.setText('');
@@ -732,14 +714,14 @@ var LookUp = Class.create(); LookUp.prototype = {
             new Ajax.Request(ths.options.itemsUrl + '?method=getEntityId&entityName=' + ths.options.entityName, {
                 method: 'post',
                 parameters: params,
-                onComplete: function(req) {
+                onComplete: function (req) {
                     if (req.responseText.startsWith('ERR:')) {
                         niceAlert(req.responseText);
                         return;
                     }
                     try {
                         entObj = eval('(' + req.responseText + ')');
-                    } catch(e) {
+                    } catch (e) {
                         niceAlert(e.message);
                     }
                     if (entObj && entObj.id) {
@@ -749,22 +731,22 @@ var LookUp = Class.create(); LookUp.prototype = {
                         ths.setText(ths.text);
                     }
                 },
-                onException: function(req, ex) { throw ex; }
+                onException: function (req, ex) { throw ex; }
             });
         }
     },
-    onSelect: function(v, txt) {
+    onSelect: function (v, txt) {
         this.setValue(v);
         this.setText(txt);
         $(this.editorId).remove();
     },
-    getValue: function() {
+    getValue: function () {
         return this.value;
     },
-    setValue: function(v) {
+    setValue: function (v) {
         this.value = v;
     },
-    setText: function(txt) {
+    setText: function (txt) {
         this.input.value = txt;
     }
 };
@@ -1056,17 +1038,23 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         var ths = this;
         $(this.editorId).select('.calDay').each(function(elm) { elm.observe('click', ths.selectDay.bind(ths)); });
     },
-    parse: function(val) {
-        var dmy = val.split('T')[0];
-        var hm = val.split('T')[1];
+    parse: function (val) {
+        var parts = val.split('T');
+        var dmy = parts[0];
+        var hm;
+        if(parts.length>1)
+            hm = val.split('T')[1];
         dmy = dmy.split('-');
-        hm = hm.split(':');
+        if(hm)
+            hm = hm.split(':');
         var dt = new Date();
-        dt.setDate(parseInt(dmy[0]));
+        dt.setFullYear(parseInt(dmy[0]));
         dt.setMonth(parseInt(dmy[1]) - 1);
-        dt.setFullYear(parseInt(dmy[2]));
-        dt.setHours(parseInt(hm[0]));
-        dt.setMinutes(parseInt(hm[1]));
+        dt.setDate(parseInt(dmy[2]));
+        if (hm) {
+            dt.setHours(parseInt(hm[0]));
+            dt.setMinutes(parseInt(hm[1]));
+        }
 
         return dt;
     },
@@ -1077,7 +1065,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
     },
     getValue: function() {
         var d = this.dateValue;
-        return this.addZero(d.getDate()) + '-' + this.addZero(d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + this.addZero(d.getHours()) + ':' + this.addZero(d.getMinutes()) + ':' + this.addZero(d.getSeconds());
+        return d.getFullYear() + '-' + this.addZero(d.getMonth() + 1) + '-' + this.addZero(d.getDate()) + ' ' + this.addZero(d.getHours()) + ':' + this.addZero(d.getMinutes()) + ':' + this.addZero(d.getSeconds());
     },
     setValue: function(d) {
         if (!d) return;
@@ -1085,7 +1073,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
             this.setText(d);
             d = this.dateValue;
         } else
-            this.input.value = this.addZero(d.getDate()) + '-' + this.addZero(d.getMonth() + 1) + '-' + d.getFullYear() + ' ' + this.addZero(d.getHours()) + ':' + this.addZero(d.getMinutes()) + ':' + this.addZero(d.getSeconds());
+            this.input.value = d.getFullYear() + '-' + this.addZero(d.getMonth() + 1) + '-' + this.addZero(d.getDate()) + ' ' + this.addZero(d.getHours()) + ':' + this.addZero(d.getMinutes()) + ':' + this.addZero(d.getSeconds());
     },
     addZero: function(num) {
         if (num.toString().length < 2)
@@ -1108,6 +1096,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
             this.input.observe('click', this.openList.bind(this));
         } else
             this.options.hideBtn = true;
+
         this.input.readOnly = true;
 
         if (this.options.items && this.options.addBlankItem && this.options.items[0][0] != '')
