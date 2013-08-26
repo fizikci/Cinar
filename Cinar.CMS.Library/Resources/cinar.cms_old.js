@@ -9,7 +9,7 @@ var regionNames = [];
 var regionDivs = [];
 var navigationEnabled = true;
 
-$(function(){
+document.observe('dom:loaded', function(){
     try{
         trace = new Trace();
         trace.write({id:'Sistem'}, 'page load started');
@@ -26,8 +26,10 @@ $(function(){
 
         if (!designMode) return; //***
 
-        regionDivs = $('.Region');//$('Header','Left','Content','Right','Footer').compact();
-        regionDivs.each(function(eix,elm){
+        //$(document.body).style.height = '100%';
+        
+        regionDivs = $$('.Region');//$('Header','Left','Content','Right','Footer').compact();
+        regionDivs.each(function(elm){
             regionNames.push(elm.id);
         });
 		
@@ -40,15 +42,15 @@ $(function(){
 		mdlSelHTML += '<span class="cbtn cmodule_add" onclick="addModule()" title="' + lang('Add Module') + '"></span>';
 		mdlSelHTML += '</nobr></div>';
 		mdlSelHTML += '</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>';
-		$(document.body).append(mdlSelHTML);
+		$(document.body).insert(mdlSelHTML);
 
         clearFlashes();
         
-        $(document).on('keydown', selectNext);
+        Event.observe(document, 'keydown', selectNext);
         
-        mdlSel = $('#mdlSel'); mdlSel2 = $('#mdlSel2'); mdlSel3 = $('#mdlSel3'); mdlSel4 = $('#mdlSel4');
-        $('div.Module').each(function(eix,mdl){
-            $(mdl).mousedown(highlightModule);
+        mdlSel = $('mdlSel'); mdlSel2 = $('mdlSel2'); mdlSel3 = $('mdlSel3'); mdlSel4 = $('mdlSel4');
+        $$('div.Module').each(function(mdl){
+            Event.observe(mdl, 'mousedown', highlightModule);
         });
         selectFirstModule();
 		setInterval(refreshModuleHighlighter, 2000);
@@ -64,13 +66,13 @@ $(function(){
 });
 
 function clearFlashes(){
-    $('object').each(function(eix,elm){
-        $(elm).prepend('<img src="/external/icons/flash_spacer.jpg" width="'+$(elm).outerWidth()+'" height="'+$(elm).outerHeight()+'"/>');
-        $(elm).remove();
+    $$('object').each(function(elm){
+        new Insertion.Before(elm, '<img src="/external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
+        elm.remove();
     });
-    $('embed').each(function(eix,elm){
-        $(elm).prepend('<img src="/external/icons/flash_spacer.jpg" width="'+$(elm).outerWidth()+'" height="'+$(elm).outerHeight()+'"/>');
-        $(elm).remove();
+    $$('embed').each(function(elm){
+        new Insertion.Before(elm, '<img src="/external/icons/flash_spacer.jpg" width="'+elm.width+'" height="'+elm.height+'"/>');
+        elm.remove();
     });
 } 
 
@@ -82,63 +84,70 @@ var mdlSel = null, mdlSel2 = null, mdlSel3 = null, mdlSel4 = null;
 function highlightModule(event){
     if(!navigationEnabled) return;
     
-    var mdl = $(event.target).closest('.Module');
+    var mdl = $(Event.element(event));
+    while(mdl && mdl.className.indexOf('Module')==-1) {
+        mdl = mdl.up();
+    }
     selectModule(mdl);    
 }
 function selectFirstModule(){
-    var modules = $('div.Module');
+    var modules = $$('div.Module');
     if(modules.length>0){
-        selMod = $(modules[0]);
+        selMod = modules[0];
         selectModule(selMod);
     }
 }
 function selectModule(mdl){
-    if(mdl.length==0) return; //***
+    if(!mdl) return; //***
     
     selMod = mdl;
-    selReg = selMod.closest('.Region');
+    selReg = selMod.up('.Region');
 
 	refreshModuleHighlighter();
 }
 function refreshModuleHighlighter(){
-	if(selMod.length==0) return;
+	if(!selMod) return;
 	
-    var pos = selMod.offset();
-    var dim = {width:selMod.outerWidth(), height:selMod.outerHeight()};
-	var mdlSelPos = mdlSel.offset(), mdlSel2Pos = mdlSel2.offset(), mdlSel3Pos = mdlSel3.offset();
+    var pos = Position.cumulativeOffset(selMod);
+    var dim = selMod.getDimensions();
+	var mdlSelPos = Position.cumulativeOffset(mdlSel), mdlSel2Pos = Position.cumulativeOffset(mdlSel2), mdlSel3Pos = Position.cumulativeOffset(mdlSel3);
 	
-	if(pos.left!=mdlSelPos.left || pos.top!=mdlSelPos.top || pos.left+dim.width-2!=mdlSel2Pos.left || pos.top+dim.height-2!=mdlSel3Pos.top)	{
+	if(pos[0]!=mdlSelPos[0] || pos[1]!=mdlSelPos[1] || pos[0]+dim.width-2!=mdlSel2Pos[0] || pos[1]+dim.height-2!=mdlSel3Pos[1])	{
 		mdlSel.hide();mdlSel2.hide();mdlSel3.hide();mdlSel4.hide();
-		mdlSel.css({left:pos.left+'px', top:pos.top+'px', width:dim.width+'px', height:'0px'});
-		mdlSel2.css({left:(pos.left+dim.width-2)+'px', top:pos.top+'px', width:'0px', height:dim.height+'px'});
-		mdlSel3.css({left:pos.left+'px', top:(pos.top+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
-		mdlSel4.css({left:pos.left+'px', top:pos.top+'px', width:'0px', height:dim.height+'px'});
+		mdlSel.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:dim.width+'px', height:'0px'});
+		mdlSel2.setStyle({left:(pos[0]+dim.width-2)+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
+		mdlSel3.setStyle({left:pos[0]+'px', top:(pos[1]+dim.height-2)+'px', width:dim.width+'px', height:'0px'});
+		mdlSel4.setStyle({left:pos[0]+'px', top:pos[1]+'px', width:'0px', height:dim.height+'px'});
 		mdlSel.show();mdlSel2.show();mdlSel3.show();mdlSel4.show();
 	}
+    //new Effect.Appear(mdlSel, { duration: 0.1, from: 0.0, to: 0.7 });
 }
 function findNextModule(mdl){
-    var modules = $('div.Module');
+    var modules = $$('div.Module');
     for(var i=0; i<modules.length; i++)
-        if(modules[i]==mdl[0])
+        if(modules[i]==mdl)
             if(i==modules.length-1)
-                return $(modules[0]);
+                return modules[0];
             else
-                return $(modules[i+1]);
+                return modules[i+1];
 }
 function findPrevModule(mdl){
-    var modules = $('div.Module');
+    var modules = $$('div.Module');
     for(var i=0; i<modules.length; i++)
-        if(modules[i]==mdl[0])
+        if(modules[i]==mdl)
             if(i==0)
-                return $(modules[modules.length-1]);
+                return modules[modules.length-1];
             else
-                return $(modules[i-1]);
+                return modules[i-1];
 }
 
 function selectNext(event){
+    //alert(event.keyCode);
     var win = Windows.getFocusedWindow();
     
     if(win){
+        //if(event.keyCode==Event.KEY_ESC)
+        //    win.close();
         if(win['form'] && win['form'].formType=='ListForm'){
             var listGrid = win['form'].listGrid;
             switch(event.keyCode){
@@ -154,14 +163,14 @@ function selectNext(event){
                 case Event.KEY_UP:
                     var rows = listGrid.getSelectedRows() || [];
                     if(rows.length>0){
-                        var row = $(rows[0]).prev();
+                        var row = rows[0].previous();
                         if(row) listGrid.selectRow(row);
                     }
                     break;
                 case Event.KEY_DOWN:
                     var rows = listGrid.getSelectedRows() || [];
                     if(rows.length>0){
-                        var row = $(rows[0]).next();
+                        var row = rows[0].next();
                         if(row) listGrid.selectRow(row);
                     }
                     break;
@@ -294,17 +303,17 @@ popupMenu.setup();
 var rightClickLinkElement; // sağ tıklanan linki saklamak içün
 
 function showPopupMenu(event){
-    if(event.which==1 || !navigationEnabled) return;
+    if(Event.isLeftClick(event) || !navigationEnabled) return;
 
     //selReg = null;
     rightClickLinkElement = null;
     var menus = '';
     
-    var elm = $(event.target);
-    if(elm[0].tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.closest('a');
-    selReg = elm.hasClassName('Region') ? elm : elm.closest('.Region');
+    var elm = Event.element(event);
+    if(elm.tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.up('a');
+    selReg = elm.className.indexOf('Region')>-1 ? elm : elm.up('.Region');
 
-    popupMenu.show(event.pageX, event.pageY);
+    popupMenu.show(Event.pointerX(event), Event.pointerY(event));
 }
 
 //#############################################################################################
@@ -313,7 +322,7 @@ function showPopupMenu(event){
 
 function addModule(elmId){
     if(!elmId){ // if the module to be added is not defined ask it hesaaabı
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true }); 
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
         var str = '<p align="center"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -323,29 +332,29 @@ function addModule(elmId){
             str += '</optgroup>';
         });
         str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
-        win.getContent().prepend(str);
+        new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
-        var selCtrl = $('#selectModule');
+        var selCtrl = $('selectModule');
         selCtrl.selectedIndex = 0;
         selCtrl.focus();
-        $('#btnAddModuleOK').on('click', function(){addModule($('selectModule').value); Windows.getFocusedWindow().close();});
-        $('#btnAddModuleCancel').on('click', function(){Windows.getFocusedWindow().close();});
+        $('btnAddModuleOK').observe('click', function(){addModule($('selectModule').value); Windows.getFocusedWindow().close();});
+        $('btnAddModuleCancel').observe('click', function(){Windows.getFocusedWindow().close();});
         return;
     }
     // add the module whose name is given by the parameter 'elmId' kafası
-    var parentMdl = selReg.closest('.Module');
+    var parentMdl = selReg.up('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
-    new Ajax.Request('ModuleInfo.ashx?method=addModule&template='+currTemplate+'&moduleType='+elmId+'&region='+selReg.attr('id')+'&parentModuleId='+parentMdlId, {
+    if(parentMdl) parentMdlId = parentMdl.id.split('_')[1];
+    new Ajax.Request('ModuleInfo.ashx?method=addModule&template='+currTemplate+'&moduleType='+elmId+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            if(selReg.find('.Module').length==0)
-                selReg.html('');
-            selReg.append(req.responseText);
+            if(!selReg.down('.Module')) //selReg.innerHTML.startsWith('Empty region')
+                selReg.innerHTML = '';
+            new Insertion.Bottom(selReg, req.responseText);
             var newModule = selReg.immediateDescendants().last();
-            newModule.on('mousedown', highlightModule);
+            Event.observe(newModule, 'mousedown', highlightModule);
             selectModule(newModule);
 			editModule();
         },
@@ -353,8 +362,8 @@ function addModule(elmId){
     });
 }
 function editModule(name, id){ 
-    if(!name) name = selMod.attr('id').split('_')[0];
-    if(!id) id = selMod.attr('id').split('_')[1];
+    if(!name) name = selMod.id.split('_')[0];
+    if(!id) id = selMod.id.split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=editModule&name='+name+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -374,17 +383,17 @@ function editModule(name, id){
 function deleteModule(event){
     niceConfirm(
         lang('The module will be deleted!'), function(){
-            var name = selMod.attr('id').split('_')[0];
-            var id = selMod.attr('id').split('_')[1];
+            var name = selMod.id.split('_')[0];
+            var id = selMod.id.split('_')[1];
             var prevMdl = findPrevModule(selMod);
             new Ajax.Request('ModuleInfo.ashx?method=deleteModule&name='+name+'&id='+id, {
                 method: 'get',
                 onComplete: function(req) {
                     if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
-                    var region = $('#'+name+'_'+id).parent();
+                    var region = $(name+'_'+id).up();
                     if(region.immediateDescendants().length==1)
-                        region.prepend("<div class=\"cs_empty_reg\">" + lang('Empty region') + ': ' + region.attr('id') + '</div>');
-                    $('#'+name+'_'+id).remove();
+                        new Insertion.Top(region, "<div class=\"cs_empty_reg\">" + lang('Empty region') + ': ' + region.id + '</div>');
+                    Element.remove(name+'_'+id);
                     selectModule(prevMdl);
                 },
                 onException: function(req, ex){throw ex;}
@@ -393,26 +402,30 @@ function deleteModule(event){
     );
 }
 function upModule(event){
-    var id = selMod.attr('id').split('_')[1];
+    var id = selMod.id.split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=upModule&id='+id, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            var prev = selMod.prev();
-            selMod = selMod.insertBefore(prev);
+            var prev = selMod.previous();
+            selMod = Element.remove(selMod);
+            prev.up().insertBefore(selMod, prev);
             selectModule(selMod);            
         },
         onException: function(req, ex){throw ex;}
     });
 }
 function downModule(event){
-    var id = selMod.attr('id').split('_')[1];
+    var id = selMod.id.split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=downModule&id='+id, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
             var next = selMod.next();
-            selMod = selMod.insertAfter(next);
+            var up = selMod.up();
+            selMod = Element.remove(selMod);
+            if(next.next()==null) up.appendChild(selMod); else up.insertBefore(selMod, next.next());
+            //new Effect.Pulsate(selMod, {duration:1.0, pulses:3});
             selectModule(selMod);            
         },
         onException: function(req, ex){throw ex;}
@@ -421,8 +434,8 @@ function downModule(event){
 function copyModule(event){
     if(!selMod) {niceAlert(lang('Module is not copied! Please right-click on the module to be copied.')); return;}
     
-    var name = selMod.attr('id').split('_')[0];
-    var id = selMod.attr('id').split('_')[1];
+    var name = selMod.id.split('_')[0];
+    var id = selMod.id.split('_')[1];
     setCookie('copyModId', id);
     setCookie('copyModNm', name);
 }
@@ -433,21 +446,21 @@ function pasteModule(event){
     }
     var name = getCookie('copyModNm');
     var id = getCookie('copyModId');
-    var parentMdl = selReg.closest('.Module');
+    var parentMdl = selReg.up('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
+    if(parentMdl) parentMdlId = parentMdl.id.split('_')[1];
 
-    new Ajax.Request('ModuleInfo.ashx?method=copyModule&name='+name+'&id='+id+'&template='+currTemplate+'&region='+selReg.attr('id')+'&parentModuleId='+parentMdlId, {
+    new Ajax.Request('ModuleInfo.ashx?method=copyModule&name='+name+'&id='+id+'&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            if(selReg.find('.Module').length==0)
-                selReg.html('');
-            selReg.append(req.responseText);
+            if(!selReg.down('.Module')) //selReg.innerHTML.startsWith('Empty region')
+                selReg.innerHTML = '';
+            new Insertion.Bottom(selReg, req.responseText);
             var newModule = selReg.immediateDescendants().last();
             var ssm = new StyleSheetManager('moduleStyles');
-            ssm.applyStyleSheet(ajax({url:'ModuleInfo.ashx?method=getModuleCSS&name='+name+'&id='+newModule.attr('id').split('_')[1],isJSON:false,noCache:false}));
-            newModule.on('mousedown', highlightModule);
+            ssm.applyStyleSheet(ajax({url:'ModuleInfo.ashx?method=getModuleCSS&name='+name+'&id='+newModule.id.split('_')[1],isJSON:false,noCache:false}));
+            Event.observe(newModule, 'mousedown', highlightModule);
             selectModule(newModule);            
         },
         onException: function(req, ex){throw ex;}
@@ -461,13 +474,13 @@ function saveModule(pe){
         parameters: params,
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            $('#'+pe.entityName+'_'+pe.entityId).replace(req.responseText);
+            $(pe.entityName+'_'+pe.entityId).replace(req.responseText);
             Windows.getFocusedWindow().close();
             var ssm = new StyleSheetManager('moduleStyles');
             ssm.applyStyleSheet(pe.getControl('CSS').getValue());
-            var mdl = $('#'+pe.entityName+'_'+pe.entityId);
-            if(mdl.length){
-                mdl.on('mousedown', highlightModule);
+            var mdl = $(pe.entityName+'_'+pe.entityId);
+            if(mdl){
+                Event.observe(mdl, 'mousedown', highlightModule);
                 //new Effect.Pulsate(mdl, {duration:1.0, pulses:3});
                 selectModule(mdl);            
             }
@@ -477,7 +490,7 @@ function saveModule(pe){
 }
 function convertModule(elmId){
     if(!elmId){ // if the module to be converted is not defined ask it hesaaabı
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 230, wiredDrag: true, destroyOnClose: true }); 
+        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 230, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
         var str = '<p align="center" style="padding-top:22px"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -487,19 +500,19 @@ function convertModule(elmId){
             str += '</optgroup>';
         });
         str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
-        win.getContent().prepend(str);
+        new Insertion.Top(win.getContent(), str);
         win.showCenter();
         win.toFront();
-        var selCtrl = $('#selectModule');
+        var selCtrl = $('selectModule');
         selCtrl.selectedIndex = 0;
         selCtrl.focus();
-        $('#btnAddModuleOK').on('click', function(){convertModule($('selectModule').value); Windows.getFocusedWindow().close();});
-        $('#btnAddModuleCancel').on('click', function(){Windows.getFocusedWindow().close();});
+        $('btnAddModuleOK').observe('click', function(){convertModule($('selectModule').value); Windows.getFocusedWindow().close();});
+        $('btnAddModuleCancel').observe('click', function(){Windows.getFocusedWindow().close();});
         return;
     }
     // convert the module whose name is given by the parameter 'elmId' kafası
-	var id = selMod.attr('id').split('_')[1];
-	var name = selMod.attr('id').split('_')[0];
+	var id = selMod.id.split('_')[1];
+	var name = selMod.id.split('_')[0];
     new Ajax.Request('ModuleInfo.ashx?method=convertModule&moduleType='+elmId+'&moduleName='+name+'&id='+id, {
         method: 'get',
         onComplete: function(req) {
@@ -509,8 +522,8 @@ function convertModule(elmId){
     });
 }
 function exportModule(){
-    var name = selMod.attr('id').split('_')[0];
-    var id = selMod.attr('id').split('_')[1];
+    var name = selMod.id.split('_')[0];
+    var id = selMod.id.split('_')[1];
 
     new AceEditor({
         titleIcon: 'page',
@@ -520,9 +533,9 @@ function exportModule(){
     });
 }
 function importModule(){
-    var parentMdl = selReg.closest('.Module');
+    var parentMdl = selReg.up('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
+    if(parentMdl) parentMdlId = parentMdl.id.split('_')[1];
 
     new AceEditor({
         titleIcon: 'page',
@@ -533,7 +546,7 @@ function importModule(){
             icon: 'disc', type: 'primary', id: 'btnImportModule', text: lang('Save'), callback: function (editor) {
             var params = {data: editor.getValue()};
 
-            new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.attr('id')+'&parentModuleId='+parentMdlId, {
+            new Ajax.Request('ModuleInfo.ashx?method=importModule&template='+currTemplate+'&region='+selReg.id+'&parentModuleId='+parentMdlId, {
                 method: 'post',
                 parameters: params,
                 onComplete: function(req) {
@@ -564,7 +577,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
 
     caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
-    var win = new Window({className: 'alphacube', title: caption, width:800, height:500, wiredDrag: true, destroyOnClose:true}); 
+    var win = new Window({className: 'alphacube', title: caption, width:800, height:500, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 	win.cTagName = 'listform';
     var winContent = $(win.getContent());
 
@@ -626,8 +639,8 @@ function quickLoadImages(contentId, callback) {
 	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
 	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
 
-	$('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn cok">' + lang('OK') + '</span></div>');
-	$('#btnOK').on('click', function(){
+	$('fileBrowserFooter').insert('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn cok">' + lang('OK') + '</span></div>');
+	$('btnOK').observe('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
 		var params = {
 			values: selectedFiles.join('#NL#'),
@@ -648,16 +661,16 @@ function quickLoadImages(contentId, callback) {
 }
 function tagifySelectedPicture(id){
 	var entity = ajax({url:'EntityInfo.ashx?method=getEntity&entityName=ContentPicture&id=' + id,isJSON:true,noCache:false});
-	$(document.body).append('<img id="tagifySelectedPicture" src="'+entity.FileName+'" style="display:none;cursor:crosshair"/>');
-	var img = $('#tagifySelectedPicture');
+	$(document.body).insert('<img id="tagifySelectedPicture" src="'+entity.FileName+'" style="display:none;cursor:crosshair"/>');
+	var img = $('tagifySelectedPicture');
 	setTimeout(function(){
 		var tagData = entity.TagData ? eval('('+entity.TagData+')') : [];
-		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true}); 
+		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true, showEffect:Element.show, hideEffect:Element.hide}); 
 		var winContent = $(win.getContent());
-		winContent.append(img.show().remove());
-		winContent.append('<p align="right"><span class="ccBtn cok" id="btnTagifyOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyCancel">' + lang('Cancel') + '</span></p>');
+		winContent.insert(img.show().remove());
+		winContent.insert('<p align="right"><span class="ccBtn cok" id="btnTagifyOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyCancel">' + lang('Cancel') + '</span></p>');
 		
-		$('#btnTagifyOK').on('click', function(){
+		$('btnTagifyOK').observe('click', function(){
 			tagData = tagData.findAll(function(t){return t.remove!=true;});
 			entity.TagData = Object.toJSON(tagData);
 			new Ajax.Request('EntityInfo.ashx?method=save&entityName=ContentPicture&id=' + id, {
@@ -670,30 +683,30 @@ function tagifySelectedPicture(id){
 				onException: function (req, ex) { throw ex; }
 			});
 		});
-		$('#btnTagifyCancel').on('click', function(){
+		$('btnTagifyCancel').observe('click', function(){
 			Windows.getFocusedWindow().close();
 		});
 		tagData.each(function(tag, i){
 			var x = tag.x, y = tag.y;
-			winContent.append('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);">'+(tag.tag || '&nbsp;')+'</div>');
-			new Draggable('tag'+i, {onEnd:function(){tag.x=parseInt($('#tag'+i).css('left'));tag.y=parseInt($('#tag'+i).css('top'));}});
-			$('#tag'+i).on('dblclick', function(){
+			winContent.insert('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);">'+(tag.tag || '&nbsp;')+'</div>');
+			new Draggable('tag'+i, {onEnd:function(){tag.x=parseInt($('tag'+i).style.left);tag.y=parseInt($('tag'+i).style.top);}});
+			$('tag'+i).observe('dblclick', function(){
 				var winPos = win.getLocation();
 				openTagForm(winPos, tag, tagData);
 			});
 		});
-		img.on('click', function(event){
+		img.observe('click', function(event){
 			var winPos = win.getLocation();
-			var x = event.pageX - parseInt(winPos.left), y = event.pageY - parseInt(winPos.top);
+			var x = Event.pointerX(event) - parseInt(winPos.left), y = Event.pointerY(event) - parseInt(winPos.top);
 			var tagId = 'tag'+tagData.length;
-			winContent.append('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);"></div>');
+			winContent.insert('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);"></div>');
 			var tag = {x:x, y:y};
 			tagData.push(tag);
-			new Draggable(tagId, {onEnd:function(){tag.x=parseInt($('#'+tagId).css('left'));tag.y=parseInt($('#'+tagId).css('top'));}});
+			new Draggable(tagId, {onEnd:function(){tag.x=parseInt($(tagId).style.left);tag.y=parseInt($(tagId).style.top);}});
 			openTagForm(winPos, tag, tagData);
 			
-			$('#'+tagId).on('dblclick', function(){
-				var formTag = $('#tagify_edit');
+			$(tagId).observe('dblclick', function(){
+				var formTag = $('tagify_edit');
 				openTagForm(winPos, tag, tagData);
 			});
 		});
@@ -702,32 +715,32 @@ function tagifySelectedPicture(id){
 	}, 500);
 }
 function openTagForm(winPos, tag, tagData){
-	if($('#tagify_edit').length) $('#tagify_edit').remove();
+	if($('tagify_edit')) $('tagify_edit').remove();
 	
-	$(document.body).append('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn cok" id="btnTagifyEditOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyEditDelete">' + lang('Delete') + '</span></p></div>');
-	var formTag = $('#tagify_edit');
+	$(document.body).insert('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn cok" id="btnTagifyEditOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyEditDelete">' + lang('Delete') + '</span></p></div>');
+	var formTag = $('tagify_edit');
 
-	$('#btnTagifyEditOK').on('click', function(){
-		tag.tag = $('#tagify_edit .tagify_tag').val();
-		tag.text = $('#tagify_edit .tagify_text').val();
-		tag.url = $('#tagify_edit .tagify_url').val();
+	$('btnTagifyEditOK').observe('click', function(){
+		tag.tag = $('tagify_edit').down('.tagify_tag').value;
+		tag.text = $('tagify_edit').down('.tagify_text').value;
+		tag.url = $('tagify_edit').down('.tagify_url').value;
 		if(!tag.tag || tag.tag==''){
 			alert('Boş etiket giremezsiniz. Etiket üzerinde görünecek olan metni yazınız.');
 			return;
 		}
-		$('#tag'+tagData.indexOf(tag)).html(tag.tag);
-		$('#tagify_edit').remove();
+		$('tag'+tagData.indexOf(tag)).innerHTML = tag.tag;
+		$('tagify_edit').remove();
 	});
-	$('#btnTagifyEditDelete').on('click', function(){
-		$('#tag'+tagData.indexOf(tag)).remove();
+	$('btnTagifyEditDelete').observe('click', function(){
+		$('tag'+tagData.indexOf(tag)).remove();
 		tag.remove = true;
-		$('#tagify_edit').remove();
+		$('tagify_edit').remove();
 	});
 
-	formTag.css({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px', zIndex:80000});
-	formTag.find('.tagify_tag').val(tag.tag || '');
-	formTag.find('.tagify_text').val(tag.text || '');
-	formTag.find('.tagify_url').val(tag.url || '');
+	formTag.setStyle({left:(tag.x+parseInt(winPos.left)-20)+'px', top:(tag.y+parseInt(winPos.top)+20)+'px', zIndex:80000});
+	formTag.down('.tagify_tag').value = tag.tag || '';
+	formTag.down('.tagify_text').value = tag.text || '';
+	formTag.down('.tagify_url').value = tag.url || '';
 }
 function sortImages(){
 	var ths = this; // this is ListForm here
@@ -735,13 +748,15 @@ function sortImages(){
 	if(!table)
 		return;
 	
-	var rows = table.find('tr[id]');
+	var rows = table.select('tr[id]');
+	//if(!rows || rows.length==0)
+	//	return;
 	
 	var html = '<div id="sortableList">';
 	for(var i=0; i<rows.length; i++){
-		var row = $(rows[i]);
-		var src = $(row.find('td')[2]).attr('value');
-		html += '<div id="'+row.attr('id')+'" ondblclick="editData(\'ContentPicture\', '+row.attr('id').split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
+		var row = rows[i];
+		var src = row.select('td')[2].readAttribute('value');
+		html += '<div id="'+row.id+'" ondblclick="editData(\'ContentPicture\', '+row.id.split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
 	}
 	html += '</div>';
 	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
@@ -750,23 +765,23 @@ function sortImages(){
 	html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
 	html += '</p>';
 
-	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true }); 
+	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-	winContent.append(html);
+	winContent.insert(html);
     win.showCenter();
     win.toFront();
-    $('#btnSortImagesOK').on('click', function(){
+    $('btnSortImagesOK').observe('click', function(){
 		var sortOrder = Sortable.sequence('sortableList');
 		ajax({url:'EntityInfo.ashx?method=sortEntities&sortOrder='+sortOrder+'&entityName=ContentPicture',isJSON:false,noCache:true});
 		Windows.getFocusedWindow().close();
 		ths.fetchData();
 	});
-    $('#btnSortImagesCancel').on('click', function(){ths.fetchData(); Windows.getFocusedWindow().close();});
-    $('#btnSortImagesDelete').on('click', function(){
+    $('btnSortImagesCancel').observe('click', function(){ths.fetchData(); Windows.getFocusedWindow().close();});
+    $('btnSortImagesDelete').observe('click', function(){
 		niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
-			$('#sortableList div.sel').each(function(eix,elm){
+			$$('#sortableList div.sel').each(function(elm){
 				var id = elm.id.split('_')[1];
-				deleteDataWithoutWarning('ContentPicture', id, function(){$(elm).remove();});
+				deleteDataWithoutWarning('ContentPicture', id, function(){elm.remove();});
 			});
 		});
 	});
@@ -805,27 +820,27 @@ function showContentPictures(options) {
     html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
     html += '</p>';
 
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide });
     var winContent = $(win.getContent());
-    winContent.append(html);
+    winContent.insert(html);
     win.showCenter();
     win.toFront();
 
-    $('#btnQuickLoad').on('click', function () {
+    $('btnQuickLoad').observe('click', function () {
         quickLoadImages(options.contentId, showImages);
     });
 
-    $('#btnSortImagesOK').on('click', function () {
+    $('btnSortImagesOK').observe('click', function () {
         var sortOrder = Sortable.sequence('sortableList');
         ajax({ url: 'EntityInfo.ashx?method=sortEntities&sortOrder=' + sortOrder + '&entityName=ContentPicture', isJSON: false, noCache: true });
         Windows.getFocusedWindow().close();
     });
-    $('#btnSortImagesCancel').on('click', function () { Windows.getFocusedWindow().close(); });
-    $('#btnSortImagesDelete').on('click', function () {
+    $('btnSortImagesCancel').observe('click', function () { Windows.getFocusedWindow().close(); });
+    $('btnSortImagesDelete').observe('click', function () {
         niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
-            $('#sortableList div.sel').each(function (eix,elm) {
+            $$('#sortableList div.sel').each(function (elm) {
                 var id = elm.id.split('_')[1];
-                deleteDataWithoutWarning('ContentPicture', id, function () { $(elm).remove(); });
+                deleteDataWithoutWarning('ContentPicture', id, function () { elm.remove(); });
             });
         });
     });
@@ -839,8 +854,8 @@ function showContentPictures(options) {
             html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="selectPic(this)"><img src="' + src + '" width="60" height="60"/></div>';
         }
 
-        $('#sortableList').html('');
-        $('#sortableList').append(html);
+        $('sortableList').innerHTML = '';
+        $('sortableList').insert(html);
 
         Position.includeScrollOffsets = true;
         Sortable.create('sortableList', {
@@ -860,9 +875,9 @@ function showContentPictures(options) {
 
 // Category-Content Tree
 function openCategoryContentTree() {
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    winContent.css({overflow:'auto'});
+    winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getNodes, nodeClicked);
     win.show();
     win.toFront();
@@ -879,9 +894,9 @@ function nodeClicked(node){
 
 // Page-Module Tree
 function openPageModuleTree(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
-    winContent.css({overflow:'auto'});
+    winContent.setStyle({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getModuleNodes, nodeModuleClicked);
     win.show();
     win.toFront();
@@ -1240,7 +1255,7 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(selectedPath, onSelectFile){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), minWidth:913,  width: 965, minHeight:350, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), minWidth:913,  width: 965, minHeight:350, height: 600, wiredDrag: true, destroyOnClose: true, showEffect: Element.show, hideEffect: Element.hide }); 
     var winContent = $(win.getContent());
     var fm = new FileManager({
 		container:winContent,
@@ -1296,7 +1311,7 @@ var Trace = Class.create(); Trace.prototype = {
     initialize: function(){
         if(!traceMode) return;
         this.display = new Window({className: "alphacube", title: "Trace Log", width:450, closable:false, maximizable:false, wiredDrag: true}); 
-        var dim = getDimensions($(document.body));
+        var dim = $(document.body).getDimensions();
         this.display.setLocation(500, dim.width-490);
         this.display.show();
         this.display.toFront();
@@ -1304,14 +1319,14 @@ var Trace = Class.create(); Trace.prototype = {
         this.lastDt = new Date();
         
         var cntnt = this.display.getContent();
-        cntnt.css({width:'100%',overflow:'scroll'});
+        cntnt.setStyle({width:'100%',overflow:'scroll'});
     },
     write: function(sender, str){
         if(!traceMode || !this.display) return;
         var dt = new Date();
         var cntnt = this.display.getContent();
 
-        cntnt.html(cntnt.html()+ ' (' +(dt-this.lastDt)+ ')<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' ' + sender.id + ' : ' + str);
+        cntnt.innerHTML += ' (' +(dt-this.lastDt)+ ')<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' ' + sender.id + ' : ' + str;
         cntnt.scrollTop = cntnt.scrollHeight;
         this.lastDt = dt;
     },
@@ -1320,7 +1335,7 @@ var Trace = Class.create(); Trace.prototype = {
         var dt = new Date();
         var cntnt = this.display.getContent();
 
-        cntnt.html(cntnt.html()+ '<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' <font color=red>' + sender.id + ' : ' + str + '</font>');
+        cntnt.innerHTML += '<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' <font color=red>' + sender.id + ' : ' + str + '</font>';
         cntnt.scrollTop = cntnt.scrollHeight;
     }
 }

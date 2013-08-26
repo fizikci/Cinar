@@ -119,22 +119,18 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                //if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
+                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                     sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
-
-
-                //if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
-                    sb.Append("<script src=\"http://code.jquery.com/jquery.js\"></script>\n");
-                //if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
-                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? (Provider.CurrentCulture.Split('-')[0] + ".js.ashx") : ("/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js")) + "\"></script>\n");
 
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/effects.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/dragdrop.js\"></script>\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "cinar.cms.css.ashx" : "/_thumbs/cinar.cms.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "famfamfam.css.ashx" : "/_thumbs/famfamfam.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
@@ -156,8 +152,8 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append(@"
 <script type=""text/javascript"">
     if(designMode){
-        $(document).on('contextmenu', function(e){e.stopPropagation();}, false);
-        $(document).on('mousedown', function(e){showPopupMenu(e);}, false);
+        Event.observe(document, 'contextmenu', function(e){Event.stop(e);}, false);
+        Event.observe(document, 'mousedown', function(e){showPopupMenu(e);}, false);
     }
     var currTemplate = '" + template.FileName + @"';
     var moduleTypes = " + getModuleTypesJSON() + @";
@@ -192,6 +188,11 @@ namespace Cinar.CMS.Library.Handlers
 </script>
 ");
                 }
+
+                if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
+                    sb.Append("<script src=\"http://code.jquery.com/jquery.js\"></script> <script>jQuery.noConflict();</script>\n");
+                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
+                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 
