@@ -40,14 +40,14 @@ Window.prototype = {
         optionIndex = 1;
       }
       else
-        id = arguments[0] ? arguments[0].id : null;
+        id = (arguments[0] ? arguments[0].id : null);
     }
     
     // Generate unique ID if not specified
     if (!id)
       id = "window_" + new Date().getTime();
       
-    if ($(id))
+    if ($('#'+id).length)
       alert("Window " + id + " is already registered in the DOM! Make sure you use setDestroyOnClose() or destroyOnClose: true in the constructor");
 
     this.hasEffectLib = String.prototype.parseColor != null;
@@ -61,10 +61,6 @@ Window.prototype = {
       maximizable:       true,
       draggable:         true,
       userData:          null,
-      showEffect:        (this.hasEffectLib ? Effect.Appear : Element.show),
-      hideEffect:        (this.hasEffectLib ? Effect.Fade : Element.hide),
-      showEffectOptions: {},
-      hideEffectOptions: {},
       effectOptions:     null,
       parent:            document.body,
       title:             "&nbsp;",
@@ -84,62 +80,46 @@ Window.prototype = {
     if (typeof this.options.left == "undefined" &&  typeof this.options.right ==  "undefined") 
       this.options.left = Math.random()*500;
 
-    if (this.options.effectOptions) {
-      Object.extend(this.options.hideEffectOptions, this.options.effectOptions);
-      Object.extend(this.options.showEffectOptions, this.options.effectOptions);
-      if (this.options.showEffect == Element.Appear)
-        this.options.showEffectOptions.to = this.options.opacity;
-    }
-    if (this.hasEffectLib) {
-      if (this.options.showEffect == Effect.Appear)
-        this.options.showEffectOptions.to = this.options.opacity;
-    
-      if (this.options.hideEffect == Effect.Fade)
-        this.options.hideEffectOptions.from = this.options.opacity;
-    }
-    if (this.options.hideEffect == Element.hide)
-      this.options.hideEffect = function(){ Element.hide(this.element); if (this.options.destroyOnClose) this.destroy(); }.bind(this)
-    
     if (this.options.parent != document.body)  
       this.options.parent = $(this.options.parent);
       
     this.element = this._createWindow(id);
     
     // Bind event listener
-    this.eventMouseDown = this._initDrag.bindAsEventListener(this);
-    this.eventMouseUp   = this._endDrag.bindAsEventListener(this);
-    this.eventMouseMove = this._updateDrag.bindAsEventListener(this);
-    this.eventOnLoad    = this._getWindowBorderSize.bindAsEventListener(this);
-    this.eventMouseDownContent = this.toFront.bindAsEventListener(this);
-    this.eventResize = this._recenter.bindAsEventListener(this);
- 
-    this.topbar = $(this.element.id + "_top");
-    this.bottombar = $(this.element.id + "_bottom");
-    this.content = $(this.element.id + "_content");
+    //this.eventMouseDown = this._initDrag.bindAsEventListener(this);
+    //this.eventMouseUp   = this._endDrag.bindAsEventListener(this);
+    //this.eventMouseMove = this._updateDrag.bindAsEventListener(this);
+    //this.eventOnLoad    = this._getWindowBorderSize.bindAsEventListener(this);
+    //this.eventMouseDownContent = this.toFront.bindAsEventListener(this);
+    //this.eventResize = this._recenter.bindAsEventListener(this);
+	
+    this.topbar = $('#'+this.element.attr('id') + "_top");
+    this.bottombar = $('#'+this.element.attr('id') + "_bottom");
+    this.content = $('#'+this.element.attr('id') + "_content");
     
-    Event.observe(this.topbar, "mousedown", this.eventMouseDown);
-    Event.observe(this.bottombar, "mousedown", this.eventMouseDown);
-    Event.observe(this.content, "mousedown", this.eventMouseDownContent);
-    Event.observe(window, "load", this.eventOnLoad);
-    Event.observe(window, "resize", this.eventResize);
-    Event.observe(window, "scroll", this.eventResize);
+    this.topbar.bind("mousedown", this, this._initDrag);
+    this.bottombar.bind("mousedown", this, this._initDrag);
+    this.content.bind("mousedown", this, this.toFront);
+    $(window).bind("load", this, this._getWindowBorderSize);
+    $(window).bind("resize", this, this._recenter);
+    $(window).bind("scroll", this, this._recenter);
     
     if (this.options.draggable)  {
       var that = this;
-      [this.topbar, this.topbar.up().previous(), this.topbar.up().next()].each(function(element) {
-        element.observe("mousedown", that.eventMouseDown);
-        element.addClassName("top_draggable");
+      [this.topbar, this.topbar.parent().prev(), this.topbar.parent().next()].each(function(element) {
+        element.bind("mousedown", that, that._initDrag);
+        element.addClass("top_draggable");
       });
-      [this.bottombar.up(), this.bottombar.up().previous(), this.bottombar.up().next()].each(function(element) {
-        element.observe("mousedown", that.eventMouseDown);
-        element.addClassName("bottom_draggable");
+      [this.bottombar.parent(), this.bottombar.parent().prev(), this.bottombar.parent().next()].each(function(element) {
+        element.bind("mousedown", that, that._initDrag);
+        element.addClass("bottom_draggable");
       });
       
     }    
     
     if (this.options.resizable) {
-      this.sizer = $(this.element.id + "_sizer");
-      Event.observe(this.sizer, "mousedown", this.eventMouseDown);
+      this.sizer = $('#'+this.element.attr('id') + "_sizer");
+      this.sizer.on("mousedown", this, this._initDrag);
     }  
     
     this.useLeft = typeof this.options.left != "undefined";
@@ -173,15 +153,15 @@ Window.prototype = {
   // Destructor
   destroy: function() {
     this._notify("onDestroy");
-    Event.stopObserving(this.topbar, "mousedown", this.eventMouseDown);
-    Event.stopObserving(this.bottombar, "mousedown", this.eventMouseDown);
-    Event.stopObserving(this.content, "mousedown", this.eventMouseDownContent);
+    this.topbar.unbind("mousedown", this._initDrag);
+    this.bottombar.unbind("mousedown", this._initDrag);
+    this.content.unbind("mousedown", this.toFront);
     
-    Event.stopObserving(window, "load", this.eventOnLoad);
-    Event.stopObserving(window, "resize", this.eventResize);
-    Event.stopObserving(window, "scroll", this.eventResize);
+    $(window).unbind("load", this._getWindowBorderSize);
+    $(window).unbind("resize", this._recenter);
+    $(window).unbind("scroll", this._recenter);
     
-    Event.stopObserving(this.content, "load", this.options.onload);
+    this.content.unbind("load", this.options.onload);
 
     if (this._oldParent) {
       var content = this.getContent();
@@ -198,15 +178,15 @@ Window.prototype = {
     }
 
     if (this.sizer)
-        Event.stopObserving(this.sizer, "mousedown", this.eventMouseDown);
+        this.sizer.unbind("mousedown", this.toFront);
 
     if (this.options.url) 
       this.content.src = null
 
      if(this.iefix) 
-      Element.remove(this.iefix);
+      this.iefix.remove();
 
-    Element.remove(this.element);
+    this.element.remove();
     Windows.unregister(this);      
   },
     
@@ -222,7 +202,7 @@ Window.prototype = {
   
   // Sets the content with an element id
   setContent: function(id, autoresize, autoposition) {
-    var element = $(id);
+    var element = $('#'+id);
     if (null == element) throw "Unable to find element '" + id + "' in DOM";
     this._oldParent = element.parentNode;
 
@@ -230,9 +210,9 @@ Window.prototype = {
     var p = null;
 
     if (autoresize) 
-      d = Element.getDimensions(element);
+      d = getDimensions(element);
     if (autoposition) 
-      p = Position.cumulativeOffset(element);
+      p = element.offset();
 
     var content = this.getContent();
     // Clear HTML (and even iframe)
@@ -244,7 +224,7 @@ Window.prototype = {
     if (autoresize) 
       this.setSize(d.width, d.height);
     if (autoposition) 
-      this.setLocation(p[1] - this.heightN, p[0] - this.widthW);    
+      this.setLocation(p.left - this.heightN, p.top - this.widthW);    
   },
   
 //  setClassName: function(className){
@@ -263,38 +243,12 @@ Window.prototype = {
       this.options.url = null;
       
   	  var content ="<div id=\"" + this.getId() + "_content\" class=\"" + this.options.className + "_content\"> </div>";
-      $(this.getId() +"_table_content").innerHTML = content;
+      $('#'+this.getId() +"_table_content").html(content);
       
-      this.content = $(this.element.id + "_content");
+      this.content = $('#'+this.getId() + "_content");
     }
       
-    this.getContent().innerHTML = html;
-  },
-  
-  setAjaxContent: function(url, options, showCentered, showModal) {
-    this.showFunction = showCentered ? "showCenter" : "show";
-    this.showModal = showModal || false;
-  
-    options = options || {};
-
-    // Clear HTML (and even iframe)
-    this.setHTMLContent("");
- 
-    this.onComplete = options.onComplete;
-    if (! this._onCompleteHandler)
-      this._onCompleteHandler = this._setAjaxContent.bind(this);
-    options.onComplete = this._onCompleteHandler;
-
-    new Ajax.Request(url, options);    
-    options.onComplete = this.onComplete;
-  },
-  
-  _setAjaxContent: function(originalRequest) {
-    Element.update(this.getContent(), originalRequest.responseText);
-    if (this.onComplete)
-      this.onComplete(originalRequest);
-    this.onComplete = null;
-    this[this.showFunction](this.showModal)
+    this.getContent().html(html);
   },
   
   setURL: function(url) {
@@ -302,12 +256,12 @@ Window.prototype = {
     if (!this.options.url) {
   	  this.options.url = url;
       var content= "<iframe frameborder=\"0\" name=\"" + this.getId() + "_content\"  id=\"" + this.getId() + "_content\" src=\"" + url + "\"> </iframe>";
-      $(this.getId() +"_table_content").innerHTML = content;
+      $('#'+this.getId() +"_table_content").html(content);
       
-      this.content = $(this.element.id + "_content");
+      this.content = $('#'+this.getId() + "_content");
     } else {
   	  this.options.url = url;
-	    $(this.element.getAttribute('id') + '_content').src = url;
+	    $('#'+this.getId() + '_content').src = url;
     }
   },
 
@@ -317,12 +271,12 @@ Window.prototype = {
 
   refresh: function() {
     if (this.options.url)
-	    $(this.element.getAttribute('id') + '_content').src = this.options.url;
+	    $('#'+this.getId() + '_content').src = this.options.url;
   },
   
   // Stores position/size in a cookie, by default named with window id
   setCookie: function(name, expires, path, domain, secure) {
-    name = name || this.element.id;
+    name = name || this.element.attr('id');
     this.cookie = [name, expires, path, domain, secure];
     
     // Get cookie
@@ -346,14 +300,14 @@ Window.prototype = {
       this.useLeft = x[0] == "l";
       this.useTop = y[0] == "t";
 
-      this.element.setStyle(this.useLeft ? {left: x[1]} : {right: x[1]});
-      this.element.setStyle(this.useTop ? {top: y[1]} : {bottom: y[1]});
+      this.element.css(this.useLeft ? {left: x[1]} : {right: x[1]});
+      this.element.css(this.useTop ? {top: y[1]} : {bottom: y[1]});
     }
   },
   
   // Gets window ID
   getId: function() {
-    return this.element.id;
+    return this.element.attr('id');
   },
   
   // Detroys itself when closing 
@@ -366,25 +320,25 @@ Window.prototype = {
     this.constraintPad = Object.extend(this.constraintPad, padding || {});
     // Reset location to apply constraint
     if (this.useTop && this.useLeft)
-      this.setLocation(parseFloat(this.element.style.top), parseFloat(this.element.style.left));
+      this.setLocation(parseFloat(this.element.css('top')), parseFloat(this.element.css('left')));
   },
   
   // initDrag event
 
   _initDrag: function(event) {
     // No resize on minimized window
-    if (Event.element(event) == this.sizer && this.isMinimized())
+    if ($(event.target) == this.sizer && this.isMinimized())
       return;
 
     // No move on maximzed window
-    if (Event.element(event) != this.sizer && this.isMaximized())
+    if ($(event.target) != this.sizer && this.isMaximized())
       return;
       
     if (isIE && this.heightN == 0)
       this._getWindowBorderSize();
     
     // Get pointer X,Y
-    this.pointer = [Event.pointerX(event), Event.pointerY(event)];
+    this.pointer = [event.pageX, event.pageY];
     
     if (this.options.wiredDrag) 
       this.currentDrag = this._createWiredElement();
@@ -392,7 +346,7 @@ Window.prototype = {
       this.currentDrag = this.element;
       
     // Resize
-    if (Event.element(event) == this.sizer) {
+    if ($(event.target) == this.sizer) {
       this.doResize = true;
       this.widthOrg = this.width;
       this.heightOrg = this.height;
@@ -404,7 +358,7 @@ Window.prototype = {
       this.doResize = false;
 
       // Check if click on close button, 
-      var closeButton = $(this.getId() + '_close');
+      var closeButton = $('#'+this.getId() + '_close');
       if (closeButton && Position.within(closeButton, this.pointer[0], this.pointer[1])) {
         this.currentDrag = null;
         return;
@@ -417,8 +371,8 @@ Window.prototype = {
       this._notify("onStartMove");
     }    
     // Register global event to capture mouseUp and mouseMove
-    Event.observe(document, "mouseup", this.eventMouseUp, false);
-    Event.observe(document, "mousemove", this.eventMouseMove, false);
+    document.bind("mouseup", this, this._endDrag, false);
+    document.bind("mousemove", this, this._updateDrag, false);
     
     // Add an invisible div to keep catching mouse event over iframes
     WindowUtilities.disableScreen('__invisible__', '__invisible__');
@@ -428,12 +382,12 @@ Window.prototype = {
     document.body.onselectstart = function () { return false; };
     
     this.currentDrag.show();
-    Event.stop(event);
+    event.stopPropagation();
   },
 
   // updateDrag event
   _updateDrag: function(event) {
-    var pointer = [Event.pointerX(event), Event.pointerY(event)];    
+    var pointer = [event.pageX, event.pageY];    
     var dx = pointer[0] - this.pointer[0];
     var dy = pointer[1] - this.pointer[1];
     
@@ -449,12 +403,12 @@ Window.prototype = {
       if (this.useLeft) 
         w = this._updateWidthConstraint(w)
       else 
-        this.currentDrag.setStyle({right: (this.rightOrg -dx) + 'px'});
+        this.currentDrag.css({right: (this.rightOrg -dx) + 'px'});
       // Check if it's a bottom position, update it to keep upper-left corner at the same position
       if (this.useTop) 
         h = this._updateHeightConstraint(h)
       else
-        this.currentDrag.setStyle({bottom: (this.bottomOrg -dy) + 'px'});
+        this.currentDrag.css({bottom: (this.bottomOrg -dy) + 'px'});
         
       this.setSize(w , h);
       this._notify("onResize");
@@ -468,20 +422,20 @@ Window.prototype = {
         var newLeft = this._updateLeftConstraint(left);
         // Keep mouse pointer correct
         this.pointer[0] += newLeft-left;
-        this.currentDrag.setStyle({left: newLeft + 'px'});
+        this.currentDrag.css({left: newLeft + 'px'});
       }
       else 
-        this.currentDrag.setStyle({right: parseFloat(this.currentDrag.getStyle('right')) - dx + 'px'});
+        this.currentDrag.css({right: parseFloat(this.currentDrag.getStyle('right')) - dx + 'px'});
       
       if (this.useTop) {
         var top =  parseFloat(this.currentDrag.getStyle('top')) + dy;
         var newTop = this._updateTopConstraint(top);
         // Keep mouse pointer correct
         this.pointer[1] += newTop - top;
-        this.currentDrag.setStyle({top: newTop + 'px'});
+        this.currentDrag.css({top: newTop + 'px'});
       }
       else 
-        this.currentDrag.setStyle({bottom: parseFloat(this.currentDrag.getStyle('bottom')) - dy + 'px'});
+        this.currentDrag.css({bottom: parseFloat(this.currentDrag.getStyle('bottom')) - dy + 'px'});
 
       this._notify("onMove");
     }
@@ -489,7 +443,7 @@ Window.prototype = {
       this._fixIEOverlapping(); 
       
     this._removeStoreLocation();
-    Event.stop(event);
+    event.stopPropagation();
   },
 
    // endDrag callback
@@ -503,10 +457,10 @@ Window.prototype = {
       this._notify("onEndMove");
     
     // Release event observing
-    Event.stopObserving(document, "mouseup", this.eventMouseUp,false);
-    Event.stopObserving(document, "mousemove", this.eventMouseMove, false);
+    document.unbind("mouseup", this._endDrag, false);
+    document.unbind("mousemove", this._updateDrag, false);
 
-    Event.stop(event);
+    event.stopPropagation();
     
     this._hideWiredElement();
 
@@ -520,7 +474,7 @@ Window.prototype = {
 
   _updateLeftConstraint: function(left) {
     if (this.constraint && this.useLeft && this.useTop) {
-      var width = this.options.parent == document.body ? WindowUtilities.getPageSize().windowWidth : this.options.parent.getDimensions().width;
+      var width = this.options.parent == document.body ? WindowUtilities.getPageSize().windowWidth : getDimensions(this.options.parent).width;
 
       if (left < this.constraintPad.left)
         left = this.constraintPad.left;
@@ -532,7 +486,7 @@ Window.prototype = {
   
   _updateTopConstraint: function(top) {
     if (this.constraint && this.useLeft && this.useTop) {        
-      var height = this.options.parent == document.body ? WindowUtilities.getPageSize().windowHeight : this.options.parent.getDimensions().height;
+      var height = this.options.parent == document.body ? WindowUtilities.getPageSize().windowHeight : getDimensions(this.options.parent).height;
       
       var h = this.height + this.heightN + this.heightS;
 
@@ -546,7 +500,7 @@ Window.prototype = {
   
   _updateWidthConstraint: function(w) {
     if (this.constraint && this.useLeft && this.useTop) {
-      var width = this.options.parent == document.body ? WindowUtilities.getPageSize().windowWidth : this.options.parent.getDimensions().width;
+      var width = this.options.parent == document.body ? WindowUtilities.getPageSize().windowWidth : getDimensions(this.options.parent).width;
       var left =  parseFloat(this.element.getStyle("left"));
 
       if (left + w + this.widthE + this.widthW > width - this.constraintPad.right) 
@@ -557,7 +511,7 @@ Window.prototype = {
   
   _updateHeightConstraint: function(h) {
     if (this.constraint && this.useLeft && this.useTop) {
-      var height = this.options.parent == document.body ? WindowUtilities.getPageSize().windowHeight : this.options.parent.getDimensions().height;
+      var height = this.options.parent == document.body ? WindowUtilities.getPageSize().windowHeight : getDimensions(this.options.parent).height;
       var top =  parseFloat(this.element.getStyle("top"));
 
       if (top + h + this.heightN + this.heightS > height - this.constraintPad.bottom) 
@@ -570,9 +524,9 @@ Window.prototype = {
   // Creates HTML window code
   _createWindow: function(id) {
     var className = this.options.className;
-    var win = document.createElement("div");
-    win.setAttribute('id', id);
-    win.className = "dialog";
+    var win = $(document.createElement("div"));
+    win.attr('id', id);
+    win.addClass("dialog");
 
     var content;
     if (this.options.url)
@@ -586,7 +540,7 @@ Window.prototype = {
     var seAttributes = this.options.resizable ? "class='" + className + "_sizer' id='" + id + "_sizer'" : "class='"  + className + "_se'";
     var blank = "../themes/default/blank.gif";
     
-    win.innerHTML = closeDiv + minDiv + maxDiv + "\
+    win.html(closeDiv + minDiv + maxDiv + "\
       <table id='"+ id +"_row1' class=\"top table_window\">\
         <tr>\
           <td class='"+ className +"_nw'></td>\
@@ -608,11 +562,11 @@ Window.prototype = {
             <td " + seAttributes + "></td>\
         </tr>\
       </table>\
-    ";
-    Element.hide(win);
-    this.options.parent.insertBefore(win, this.options.parent.firstChild);
-    Event.observe($(id + "_content"), "load", this.options.onload);
-    return win;
+    ");
+    win.hide();
+    win.insertBefore(this.options.parent.firstChild);
+    $('#'+id + "_content").on("load", this.options.onload);
+    return $(win);
   },
   
   
@@ -620,15 +574,15 @@ Window.prototype = {
     var className = this.options.className;
     var id = this.getId();
     var win = this;
-    $A(["_close","_minimize","_maximize","_sizer", "_content"]).each(function(value) { win._toggleClassName($(id + value), className + value, newClassName + value) });
-    $$("#" + id + " td").each(function(td) {td.className = td.className.sub(className,newClassName) });
+    $A(["_close","_minimize","_maximize","_sizer", "_content"]).each(function(value) { win._toggleClassName($('#'+id + value), className + value, newClassName + value) });
+    $("#" + id + " td").each(function(eix,td) {td[0].className = td[0].className.sub(className,newClassName) });
     this.options.className = newClassName;
   },
   
   _toggleClassName: function(element, oldClassName, newClassName) {
     if (element) {
-      element.removeClassName(oldClassName);
-      element.addClassName(newClassName);
+      element.removeClass(oldClassName);
+      element.addClass(newClassName);
     }
   },
   
@@ -643,8 +597,8 @@ Window.prototype = {
     left += Position.deltaX;
     // end by BK
 
-    this.element.setStyle({top: top + 'px'});
-    this.element.setStyle({left: left + 'px'});
+    this.element.css({top: top + 'px'});
+    this.element.css({left: left + 'px'});
 
     this.useLeft = true;
     this.useTop = true;
@@ -690,14 +644,14 @@ Window.prototype = {
     this.width = width;
     this.height = height;
     var e = this.currentDrag ? this.currentDrag : this.element;
-    e.setStyle({width: width + this.widthW + this.widthE + "px"})
-    e.setStyle({height: height  + this.heightN + this.heightS + "px"})
+    e.css({width: width + this.widthW + this.widthE + "px"})
+    e.css({height: height  + this.heightN + this.heightS + "px"})
 
     // Update content height
     if (!this.currentDrag || this.currentDrag == this.element) {
-      var content = $(this.element.id + '_content');
-      content.setStyle({height: height  + 'px'});
-      content.setStyle({width: width  + 'px'});
+      var content = $('#'+this.getId() + '_content');
+      content.css({height: height  + 'px'});
+      content.css({width: width  + 'px'});
     }
   },
   
@@ -731,10 +685,10 @@ Window.prototype = {
     
     // To restore overflow if need be
     if (this.oldStyle)
-      this.getContent().setStyle({overflow: this.oldStyle});
+      this.getContent().css({overflow: this.oldStyle});
       
     if (! this.width || !this.height) {
-      var size = WindowUtilities._computeSize(this.content.innerHTML, this.content.id, this.width, this.height, 0, this.options.className)
+      var size = WindowUtilities._computeSize(this.content.html(), this.content.attr('id'), this.width, this.height, 0, this.options.className)
       if (this.height)
         this.width = size + 5
       else
@@ -746,10 +700,7 @@ Window.prototype = {
       this._center(this.centerTop, this.centerLeft);    
     
     this._notify("onBeforeShow");   
-    if (this.options.showEffect != Element.show && this.options.showEffectOptions )
-      this.options.showEffect(this.element, this.options.showEffectOptions);  
-    else
-      this.options.showEffect(this.element);  
+    this.element.show();  
       
     this._checkIEOverlapping();
     this.visible = true;
@@ -795,9 +746,8 @@ Window.prototype = {
       
       this.pageSize = pageSize;
       // set height of Overlay to take up whole page and show
-      if ($('overlay_modal')) {
-        $('overlay_modal').style.height = (pageSize.pageHeight + 'px');
-        $('overlay_modal').style.width = (pageSize.pageWidth + 'px');
+      if ($('#overlay_modal')) {
+        $('#overlay_modal').css({height:(pageSize.pageHeight + 'px'), width: (pageSize.pageWidth + 'px')});
       }    
       if (this.options.recenterAuto)
         this._center(this.centerTop, this.centerLeft);    
@@ -813,9 +763,9 @@ Window.prototype = {
     }
     // To avoid bug on scrolling bar
     this.oldStyle = this.getContent().getStyle('overflow') || "auto"
-    this.getContent().setStyle({overflow: "hidden"});
+    this.getContent().css({overflow: "hidden"});
 
-    this.options.hideEffect(this.element, this.options.hideEffectOptions);  
+    this.element.hide();  
 
      if(this.iefix) 
       this.iefix.hide();
@@ -830,15 +780,6 @@ Window.prototype = {
       if (this.options.closeCallback && ! this.options.closeCallback(this)) 
         return;
 
-      if (this.options.destroyOnClose) {
-        var destroyFunc = this.destroy.bind(this);
-        if (this.options.hideEffectOptions.afterFinish) {
-          var func = this.options.hideEffectOptions.afterFinish;
-          this.options.hideEffectOptions.afterFinish = function() {func();destroyFunc() }
-        }
-        else 
-          this.options.hideEffectOptions.afterFinish = function() {destroyFunc() }
-      }
       Windows.updateFocusedWindow();
       
       this.doNotNotifyHide = true;
@@ -849,28 +790,28 @@ Window.prototype = {
   },
   
   minimize: function() {
-    var r2 = $(this.getId() + "_row2");
-    var dh = r2.getDimensions().height;
+    var r2 = $('#'+this.getId() + "_row2");
+    var dh = getDimensions(r2).height;
     
     if (r2.visible()) {
       var h  = this.element.getHeight() - dh;
       this.height -= dh;
 
       r2.hide()
-      this.element.setStyle({height: h + "px"})
+      this.element.css({height: h + "px"})
       if (! this.useTop) {
         var bottom = parseFloat(this.element.getStyle('bottom'));
-        this.element.setStyle({bottom: (bottom + dh) + 'px'});
+        this.element.css({bottom: (bottom + dh) + 'px'});
       }
     } 
     else {      
       var h  = this.element.getHeight() + dh;
       this.height += dh;
       
-      this.element.setStyle({height: h + "px"})
+      this.element.css({height: h + "px"})
       if (! this.useTop) {
         var bottom = parseFloat(this.element.getStyle('bottom'));
-        this.element.setStyle({bottom: (bottom - dh) + 'px'});
+        this.element.css({bottom: (bottom - dh) + 'px'});
       }
       r2.show();
       this.toFront();
@@ -904,7 +845,7 @@ Window.prototype = {
       
       if (this.options.parent != document.body) {
         windowScroll =  {top:0, left:0, bottom:0, right:0};
-        var dim = this.options.parent.getDimensions();
+        var dim = getDimensions(this.options.parent);
         pageSize.windowWidth = dim.width;
         pageSize.windowHeight = dim.height;
         top = 0; 
@@ -918,8 +859,8 @@ Window.prototype = {
         top +=  Math.max(0, this.constraintPad.top);
       }
       
-      this.element.setStyle(this.useLeft ? {left: left} : {right: left});
-      this.element.setStyle(this.useTop ? {top: top} : {bottom: top});
+      this.element.css(this.useLeft ? {left: left} : {right: left});
+      this.element.css(this.useTop ? {top: top} : {bottom: top});
 
       this.setSize(pageSize.windowWidth - this.widthW - this.widthE , pageSize.windowHeight - this.heightN - this.heightS)
       this.toFront();
@@ -933,7 +874,7 @@ Window.prototype = {
   },
   
   isMinimized: function() {
-    var r2 = $(this.getId() + "_row2");
+    var r2 = $('#'+this.getId() + "_row2");
     return !r2.visible();
   },
   
@@ -942,12 +883,11 @@ Window.prototype = {
   },
   
   setOpacity: function(opacity) {
-    if (Element.setOpacity)
-      Element.setOpacity(this.element, opacity);
+      this.element.css('opacity', opacity);
   },
   
   setZIndex: function(zindex) {
-    this.element.setStyle({zIndex: zindex});
+    this.element.css({zIndex: zindex});
     Windows.updateZindex(zindex, this);
   },
 
@@ -955,11 +895,11 @@ Window.prototype = {
     if (!newTitle || newTitle == "") 
       newTitle = "&nbsp;";
       
-    Element.update(this.element.id + '_top', newTitle);
+    $('#'+this.getId() + '_top').html(newTitle);
   },
 
   setStatusBar: function(element) {
-    var statusBar = $(this.getId() + "_bottom");
+    var statusBar = $('#'+this.getId() + "_bottom");
 
     if (typeof(element) == "object") {
       if (this.bottombar.firstChild)
@@ -968,13 +908,13 @@ Window.prototype = {
         this.bottombar.appendChild(element);
     }
     else
-      this.bottombar.innerHTML = element;
+      this.bottombar.html(element);
   },
 
   _checkIEOverlapping: function() {
     if(!this.iefix && (navigator.appVersion.indexOf('MSIE')>0) && (navigator.userAgent.indexOf('Opera')<0) && (this.element.getStyle('position')=='absolute')) {
-        new Insertion.After(this.element.id, '<iframe id="' + this.element.id + '_iefix" '+ 'style="display:none;position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);" ' + 'src="javascript:false;" frameborder="0" scrolling="no"></iframe>');
-        this.iefix = $(this.element.id+'_iefix');
+        $('#'+this.getId()).append('<iframe id="' + this.getId() + '_iefix" '+ 'style="display:none;position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);" ' + 'src="javascript:false;" frameborder="0" scrolling="no"></iframe>');
+        this.iefix = $('#'+this.getId()+'_iefix');
     }
     if(this.iefix) 
       setTimeout(this._fixIEOverlapping.bind(this), 50);
@@ -982,32 +922,32 @@ Window.prototype = {
 
   _fixIEOverlapping: function() {
       Position.clone(this.element, this.iefix);
-      this.iefix.style.zIndex = this.element.style.zIndex - 1;
+      this.iefix.css('z-index',this.element.css('z-index') - 1);
       this.iefix.show();
   },
   
   _getWindowBorderSize: function(event) {
     // Hack to get real window border size!!
     var div = this._createHiddenDiv(this.options.className + "_n")
-    this.heightN = Element.getDimensions(div).height;    
-    div.parentNode.removeChild(div)
+    this.heightN = getDimensions(div).height;    
+    $(div).remove();
 
     var div = this._createHiddenDiv(this.options.className + "_s")
-    this.heightS = Element.getDimensions(div).height;    
-    div.parentNode.removeChild(div)
+    this.heightS = getDimensions(div).height;    
+    $(div).remove();
 
     var div = this._createHiddenDiv(this.options.className + "_e")
-    this.widthE = Element.getDimensions(div).width;    
-    div.parentNode.removeChild(div)
+    this.widthE = getDimensions(div).width;    
+    $(div).remove();
 
     var div = this._createHiddenDiv(this.options.className + "_w")
-    this.widthW = Element.getDimensions(div).width;
-    div.parentNode.removeChild(div);
+    this.widthW = getDimensions(div).width;
+    $(div).remove();
 
     // Workaround for IE!!
     if (isIE) {
-      this.heightS = $(this.getId() +"_row3").getDimensions().height;
-      this.heightN = $(this.getId() +"_row1").getDimensions().height;
+      this.heightS = getDimensions($('#'+this.getId() +"_row3")).height;
+      this.heightN = getDimensions($('#'+this.getId() +"_row1")).height;
     }
 
     // Safari size fix
@@ -1021,12 +961,12 @@ Window.prototype = {
  
   _createHiddenDiv: function(className) {
     var objBody = document.body;
-    var win = document.createElement("div");
-    win.setAttribute('id', this.element.id+ "_tmp");
-    win.className = className;
-    win.style.display = 'none';
-    win.innerHTML = '';
-    objBody.insertBefore(win, objBody.firstChild);
+    var win = $(document.createElement("div"));
+    win.attr('id', this.element.attr('id')+ "_tmp");
+    win.addClass(className);
+    win.hide();
+    win.html('');
+    win.insertBefore(objBody.firstChild);
     return win;
   },
   
@@ -1044,8 +984,8 @@ Window.prototype = {
       this.useLeft = this.storedLocation.useLeft;
       this.useTop = this.storedLocation.useTop;
       
-      this.element.setStyle(this.useLeft ? {left: this.storedLocation.left} : {right: this.storedLocation.right});
-      this.element.setStyle(this.useTop ? {top: this.storedLocation.top} : {bottom: this.storedLocation.bottom});
+      this.element.css(this.useLeft ? {left: this.storedLocation.left} : {right: this.storedLocation.right});
+      this.element.css(this.useTop ? {top: this.storedLocation.top} : {bottom: this.storedLocation.bottom});
       this.setSize(this.storedLocation.width, this.storedLocation.height);
       
       Windows.resetOverflow();
@@ -1081,27 +1021,27 @@ Window.prototype = {
     if (! this.wiredElement) {
       if (isIE)
         this._getWindowBorderSize();
-      var div = document.createElement("div");
-      div.className = "wired_frame " + this.options.className + "_wired_frame";
+      var div = $(document.createElement("div"));
+      div.addClass("wired_frame " + this.options.className + "_wired_frame");
       
-      div.style.position = 'absolute';
-      this.options.parent.insertBefore(div, this.options.parent.firstChild);
+      div.css('position','absolute');
+      div.insertBefore(this.options.parent.firstChild);
       this.wiredElement = $(div);
     }
     if (this.useLeft) 
-      this.wiredElement.setStyle({left: this.element.getStyle('left')});
+      this.wiredElement.css({left: this.element.getStyle('left')});
     else 
-      this.wiredElement.setStyle({right: this.element.getStyle('right')});
+      this.wiredElement.css({right: this.element.getStyle('right')});
       
     if (this.useTop) 
-      this.wiredElement.setStyle({top: this.element.getStyle('top')});
+      this.wiredElement.css({top: this.element.getStyle('top')});
     else 
-      this.wiredElement.setStyle({bottom: this.element.getStyle('bottom')});
+      this.wiredElement.css({bottom: this.element.getStyle('bottom')});
 
-    var dim = this.element.getDimensions();
-    this.wiredElement.setStyle({width: dim.width + "px", height: dim.height +"px"});
+    var dim = getDimensions(this.element);
+    this.wiredElement.css({width: dim.width + "px", height: dim.height +"px"});
 
-    this.wiredElement.setStyle({zIndex: Windows.maxZIndex+30});
+    this.wiredElement.css({zIndex: Windows.maxZIndex+30});
     return this.wiredElement;
   },
   
@@ -1112,14 +1052,14 @@ Window.prototype = {
       this.currentDrag = null;
     else {
       if (this.useLeft) 
-        this.element.setStyle({left: this.currentDrag.getStyle('left')});
+        this.element.css({left: this.currentDrag.getStyle('left')});
       else 
-        this.element.setStyle({right: this.currentDrag.getStyle('right')});
+        this.element.css({right: this.currentDrag.getStyle('right')});
 
       if (this.useTop) 
-        this.element.setStyle({top: this.currentDrag.getStyle('top')});
+        this.element.css({top: this.currentDrag.getStyle('top')});
       else 
-        this.element.setStyle({bottom: this.currentDrag.getStyle('bottom')});
+        this.element.css({bottom: this.currentDrag.getStyle('bottom')});
 
       this.currentDrag.hide();
       this.currentDrag = null;
@@ -1192,7 +1132,7 @@ var Windows = {
     else {
       // Move overlay over all windows
       if (Window.keepMultiModalWindow) {
-        $('overlay_modal').style.zIndex = Windows.maxZIndex + 20;
+        $('#overlay_modal').css('z-index',Windows.maxZIndex + 20);
         Windows.maxZIndex += 20;
         WindowUtilities._hideSelect(this.modalWindows.last().getId());
       }
@@ -1246,7 +1186,7 @@ var Windows = {
     var win = this.getWindow(id)
     if (win && win.visible)
       win.minimize();
-    Event.stop(event);
+    event.stopPropagation();
   },
   
   // Maximizes a window with its id
@@ -1254,7 +1194,7 @@ var Windows = {
     var win = this.getWindow(id)
     if (win && win.visible)
       win.maximize();
-    Event.stop(event);
+    event.stopPropagation();
   },
 
   // Closes a window with its id
@@ -1263,17 +1203,17 @@ var Windows = {
     if (win) 
       win.close()//win.options.destroyOnClose ? win.close() : win.hide();
     if (event)
-      Event.stop(event);
+      event.stopPropagation();
   },
   
   unsetOverflow: function(except) {    
-    this.windows.each(function(d) { d.oldOverflow = d.getContent().getStyle("overflow") || "auto" ; d.getContent().setStyle({overflow: "hidden"}) });
+    this.windows.each(function(d) { d.oldOverflow = d.getContent().getStyle("overflow") || "auto" ; d.getContent().css({overflow: "hidden"}) });
     if (except && except.oldOverflow)
-      except.getContent().setStyle({overflow: except.oldOverflow});
+      except.getContent().css({overflow: except.oldOverflow});
   },
 
   resetOverflow: function() {
-    this.windows.each(function(d) { if (d.oldOverflow) d.getContent().setStyle({overflow: d.oldOverflow}) });
+    this.windows.each(function(d) { if (d.oldOverflow) d.getContent().css({overflow: d.oldOverflow}) });
   },
 
   updateZindex: function(zindex, win) {
@@ -1374,7 +1314,7 @@ var Dialog = {
   },
   
   setInfoMessage: function(message) {
-    $('modal_dialog_message').update(message);
+    $('#modal_dialog_message').update(message);
   },
   
   closeInfo: function() {
@@ -1412,7 +1352,7 @@ var Dialog = {
     parameters.closable = false;
     
     var win = new Window(parameters);
-    win.getContent().innerHTML = content;
+    win.getContent().html(content);
     win.showCenter(true, parameters.top, parameters.left);  
     win.setDestroyOnClose();
     
@@ -1441,7 +1381,7 @@ var Dialog = {
     var win = Windows.focusedWindow;
     if (!win.okCallback || win.okCallback(win)) {
       // Remove onclick on button
-      $$("#" + win.getId()+" input").each(function(element) {element.onclick=null;})
+      $("#" + win.getId()+" input").each(function(eix,element) {element.onclick=null;})
       win.close();
     }
   },
@@ -1449,7 +1389,7 @@ var Dialog = {
   cancelCallback: function() {
     var win = Windows.focusedWindow;
     // Remove onclick on button
-    $$("#" + win.getId()+" input").each(function(element) {element.onclick=null})
+    $("#" + win.getId()+" input").each(function(eix,element) {element.onclick=null})
     win.close();
     if (win.cancelCallback)
       win.cancelCallback(win);
@@ -1552,7 +1492,7 @@ var WindowUtilities = {
     var objBody = document.body;
 
     // prep objects
-     var objOverlay = $(overlayId);
+     var objOverlay = $('#'+overlayId);
 
     var pageSize = WindowUtilities.getPageSize();
 
@@ -1563,17 +1503,15 @@ var WindowUtilities = {
     }  
   
     // set height of Overlay to take up whole page and show
-    objOverlay.style.height = (pageSize.pageHeight + 'px');
-    objOverlay.style.width = (pageSize.windowWidth + 'px');
-    objOverlay.style.display = 'block';  
+    objOverlay.css({height:(pageSize.pageHeight + 'px'), width: (pageSize.windowWidth + 'px'), display: 'block'});  
   },
 
    enableScreen: function(id) {
      id = id || 'overlay_modal';
-     var objOverlay =  $(id);
+     var objOverlay =  $('#'+id);
     if (objOverlay) {
       // hide lightbox and overlay
-      objOverlay.style.display = 'none';
+      objOverlay.hide();
 
       // make select boxes visible using old value
       if (id != "__invisible__") 
@@ -1586,10 +1524,10 @@ var WindowUtilities = {
   _hideSelect: function(id) {
     if (isIE) {
       id = id ==  null ? "" : "#" + id + " ";
-      $$(id + 'select').each(function(element) {
+      $(id + 'select').each(function(eix,element) {
         if (! WindowUtilities.isDefined(element.oldVisibility)) {
-          element.oldVisibility = element.style.visibility ? element.style.visibility : "visible";
-          element.style.visibility = "hidden";
+          element.oldVisibility = $(element).css('visibility') ? $(element).css('visibility') : "visible";
+          $(element).css('visibility', "hidden");
         }
       });
     }
@@ -1598,19 +1536,19 @@ var WindowUtilities = {
   _showSelect: function(id) {
     if (isIE) {
       id = id ==  null ? "" : "#" + id + " ";
-      $$(id + 'select').each(function(element) {
+      $(id + 'select').each(function(eix,element) {
         if (WindowUtilities.isDefined(element.oldVisibility)) {
           // Why?? Ask IE
           try {
-            element.style.visibility = element.oldVisibility;
+            $(element).css('visibility', element.oldVisibility);
           } catch(e) {
-            element.style.visibility = "visible";
+            $(element).css('visibility', "visible");
           }
           element.oldVisibility = null;
         }
         else {
-          if (element.style.visibility)
-            element.style.visibility = "visible";
+          if ($(element).css('visibility'))
+            $(element).css('visibility', "visible");
         }
       });
     }
@@ -1627,22 +1565,23 @@ var WindowUtilities = {
   // container for the overlay pattern and the inline image.
   initLightbox: function(id, className) {
     // Already done, just update zIndex
-    if ($(id)) {
-      Element.setStyle(id, {zIndex: Windows.maxZIndex + 10});
+    if ($('#'+id).length) {
+      $('#'+id).css({zIndex: Windows.maxZIndex + 10});
     }
     // create overlay div and hardcode some functional styles (aesthetic styles are in CSS file)
     else {
       var objBody = document.body;
-      var objOverlay = document.createElement("div");
-      objOverlay.setAttribute('id', id);
-      objOverlay.className = "overlay_" + className
-      objOverlay.style.display = 'none';
-      objOverlay.style.position = 'absolute';
-      objOverlay.style.top = '0';
-      objOverlay.style.left = '0';
-      objOverlay.style.zIndex = Windows.maxZIndex + 10;
-       objOverlay.style.width = '100%';
-      objBody.insertBefore(objOverlay, objBody.firstChild);
+      var objOverlay = $(document.createElement("div"));
+      objOverlay.attr('id', id);
+      objOverlay.addClass("overlay_" + className);
+      objOverlay.css({
+		  display: 'none',
+		  position: 'absolute',
+		  top: '0',
+		  left: '0',
+		  zIndex: Windows.maxZIndex + 10,
+		  width: '100%'});
+      objOverlay.insertBefore(objBody.firstChild);
     }
   },
   
@@ -1673,29 +1612,31 @@ var WindowUtilities = {
     
   _computeSize: function(content, id, width, height, margin, className) {
     var objBody = document.body;
-    var tmpObj = document.createElement("div");
-    tmpObj.setAttribute('id', id);
-    tmpObj.className = className + "_content";
+    var tmpObj = $(document.createElement("div"));
+    tmpObj.attr('id', id);
+    tmpObj.addClass(className + "_content");
 
     if (height)
-      tmpObj.style.height = height + "px"
+      tmpObj.css('height',height + "px");
     else
-      tmpObj.style.width = width + "px"
+      tmpObj.css('width', width + "px");
   
-    tmpObj.style.position = 'absolute';
-    tmpObj.style.top = '0';
-    tmpObj.style.left = '0';
-    tmpObj.style.display = 'none';
+    tmpObj.css({
+       position:'absolute',
+       top:'0',
+       left:'0',
+       display:'none'
+	});
 
-    tmpObj.innerHTML = content;
-    objBody.insertBefore(tmpObj, objBody.firstChild);
+    tmpObj.html(content);
+    tmpObj.insertBefore(objBody.firstChild);
     
     var size;
     if (height)
-      size = $(id).getDimensions().width + margin;
+      size = getDimensions($('#'+id)).width + margin;
     else
-      size = $(id).getDimensions().height + margin;
-    objBody.removeChild(tmpObj);
+      size = getDimensions($('#'+id)).height + margin;
+    tmpObj.remove();
     return size;
   }  
 }

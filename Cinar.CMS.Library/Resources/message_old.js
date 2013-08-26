@@ -1,11 +1,11 @@
 ﻿// comments
 
 function commentsShow(moduleId, req, params){
-    $('#comments'+moduleId+'_'+params.parentId).append(req.responseText);
+    new Insertion.Bottom('comments'+moduleId+'_'+params.parentId, req.responseText);
 }
 
 function commentsAdd(active, id, allowAnon, isUserAnon, withTitle, parentId, showWeb){
-    var frm = $('#commentForm'+id);
+    var frm = $('commentForm'+id);
     if(frm)
         frm.remove();
     var str = '<div class="commentForm" id="commentForm'+id+'"><form action="#" onsubmit="runModuleMethod(\'Comments\','+id+',\'SaveComment\',$(this).serialize(true),commentSaved); return false;">';
@@ -30,23 +30,23 @@ function commentsAdd(active, id, allowAnon, isUserAnon, withTitle, parentId, sho
         str += lang('Text')+'<br/>';
         str += '<textarea name="text"></textarea><br/>';
         str += '<input type="hidden" name="parentId" value="'+parentId+'"/>';
-        str += '<div style="text-align:right"><input type="button" value="'+lang('Cancel')+'" onclick="$(\'#commentForm'+id+'\').remove()"/><input type="submit" value="'+lang('OK')+'"/></div>';
+        str += '<div style="text-align:right"><input type="button" value="'+lang('Cancel')+'" onclick="$(\'commentForm'+id+'\').remove()"/><input type="submit" value="'+lang('OK')+'"/></div>';
     }
     str += '</form></div>';
     
-    $('#comments'+id+'_'+parentId).append(str);
-    $('#commentForm'+id).scrollTo();
+    new Insertion.Bottom('comments'+id+'_'+parentId, str);
+    $('commentForm'+id).scrollTo();
 }
 
 function commentSaved(moduleId, req, params){
-    $('#commentForm'+moduleId).remove();
-    $('#comments'+moduleId+'_'+params.parentId).append(req.responseText);
+    $('commentForm'+moduleId).remove();
+    new Insertion.Bottom('comments'+moduleId+'_'+params.parentId, req.responseText);
 }
 
 // recommend
 
 function recommend(moduleId){
-    var divId = '#recommendForm'+moduleId;
+    var divId = 'recommendForm'+moduleId;
     
     var str = '<div class="recommendForm" id="'+divId+'">';
     str += '<div class="title">'+lang('Recommend to a friend')+'</div>';
@@ -64,11 +64,11 @@ function recommend(moduleId){
 
     str += '<input type="hidden" name="link" value="'+location.href+'"/>';
     
-    str += '<div class="buttons"><input type="button" value="'+lang('Cancel')+'" onclick="$(\'#recommendForm'+moduleId+'\').remove(); hideOverlay();"/> <input type="submit" value="'+lang('OK')+'"/></div>';
+    str += '<div class="buttons"><input type="button" value="'+lang('Cancel')+'" onclick="$(\'recommendForm'+moduleId+'\').remove(); hideOverlay();"/> <input type="submit" value="'+lang('OK')+'"/></div>';
 
     str += '</form></div>';
     
-    $("#ContentTools_"+moduleId).append(str);
+    new Insertion.Bottom("ContentTools_"+moduleId, str);
     $(divId).hide();
     showElementWithOverlay(divId, false);
 }
@@ -76,7 +76,7 @@ function recommended(moduleId, req, params){
     if(req.responseText.startsWith(lang('ERR:'))) {
         alert(req.responseText);
     } else {
-        $('#recommendForm'+moduleId).remove();
+        $('recommendForm'+moduleId).remove();
         hideOverlay();
         alert(req.responseText);
     }

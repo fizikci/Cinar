@@ -88,7 +88,7 @@ WindowCloseKey = {
   init: function(keyCode) {
     if (keyCode)
       WindowCloseKey.keyCode = keyCode;
-    Event.observe(document, 'keydown', this._closeCurrentWindow.bindAsEventListener(this));
+    document.bind('keydown', this, this._closeCurrentWindow);
   },
   
   _closeCurrentWindow: function(event) {
