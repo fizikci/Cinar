@@ -2190,7 +2190,7 @@ namespace Cinar.DBTools
         {
             try
             {
-                IDBToolsForm form = (IDBToolsForm)Activator.CreateInstance(Type.GetType(arg));
+                var form = (IDBToolsForm)Activator.CreateInstance(Type.GetType(arg));
                 form.MainForm = this;
                 (form as Form).Icon = this.Icon;
                 form.Show();
@@ -2205,7 +2205,7 @@ namespace Cinar.DBTools
 
         private void cmdSearchTableNamesInFiles(string arg)
         {
-            FormSearchProjectFolder f = new FormSearchProjectFolder();
+            var f = new FormSearchProjectFolder();
 
             if (f.ShowDialog() == DialogResult.OK)
             {
@@ -2225,7 +2225,7 @@ namespace Cinar.DBTools
                                                                      SearchOption.AllDirectories));
                     keyWords = imageNames.ToArray();
 
-                    StringBuilder allFilesContent = new StringBuilder();
+                    var allFilesContent = new StringBuilder();
                     foreach (var file in allFiles)
                         allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
                     strAllFileContent = allFilesContent.ToString();
@@ -2238,7 +2238,7 @@ namespace Cinar.DBTools
                     imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*.JS", SearchOption.AllDirectories));
                     keyWords = imageNames.ToArray();
 
-                    StringBuilder allFilesContent = new StringBuilder();
+                    var allFilesContent = new StringBuilder();
                     foreach (var file in allFiles)
                         allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
                     strAllFileContent = allFilesContent.ToString();
@@ -2249,6 +2249,19 @@ namespace Cinar.DBTools
                 {
                     var imageNames = new List<string>();
                     imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*.CSS", SearchOption.AllDirectories));
+                    keyWords = imageNames.ToArray();
+
+                    StringBuilder allFilesContent = new StringBuilder();
+                    foreach (var file in allFiles)
+                        allFilesContent.AppendLine(File.ReadAllText(file).ToUpper());
+                    strAllFileContent = allFilesContent.ToString();
+                    allFilesContent.Clear();
+                    allFilesContent = null;
+                }
+                else if (f.WhatToSearch == "ASPX files not used in Project Folder")
+                {
+                    var imageNames = new List<string>();
+                    imageNames.AddRange(Directory.EnumerateFiles(f.ProjectFolder, "*.ASPX", SearchOption.AllDirectories));
                     keyWords = imageNames.ToArray();
 
                     StringBuilder allFilesContent = new StringBuilder();
@@ -2272,14 +2285,14 @@ namespace Cinar.DBTools
                     {
                         StringBuilder sb = new StringBuilder();
 
-                        if (f.WhatToSearch != "Image names not used in project folder" && f.WhatToSearch != "Javascript files not used in Project Folder" && f.WhatToSearch != "CSS files not used in Project Folder")
+                        if (f.WhatToSearch != "Image names not used in project folder" && f.WhatToSearch != "Javascript files not used in Project Folder" && f.WhatToSearch != "CSS files not used in Project Folder" && f.WhatToSearch != "ASPX files not used in Project Folder")
                             sb.AppendLine("create table search_results (keyword varchar(255), object_name varchar(255), content text);");
 
                         for (int i = 0; i < keyWords.Length && !bwd.Canceled; i++)
                         {
                             string kw = keyWords[i];
 
-                            if (f.WhatToSearch == "Image names not used in project folder" || f.WhatToSearch == "Javascript files not used in Project Folder" || f.WhatToSearch == "CSS files not used in Project Folder")
+                            if (f.WhatToSearch == "Image names not used in project folder" || f.WhatToSearch == "Javascript files not used in Project Folder" || f.WhatToSearch == "CSS files not used in Project Folder" || f.WhatToSearch == "ASPX files not used in Project Folder")
                             {
                                 if (strAllFileContent.IndexOf(Path.GetFileName(kw).ToUpper()) == -1)
                                     sb.AppendLine(kw);
