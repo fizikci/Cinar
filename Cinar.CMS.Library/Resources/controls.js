@@ -74,7 +74,7 @@ var Control = Class.create(); Control.prototype = {
     },
     hideBtn: function(event) {
         if (this.options.hideBtn) return;
-        if (Position.within(this.button, event.pageX, event.pageY)) return;
+        if (Position.within(this.button[0], event.pageX, event.pageY)) return;
         this.button.hide();
     },
     setEditorPos: function(editor) {
@@ -2200,7 +2200,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
     show: function(x, y) {
         var menu = $('#smMenu');
         var winDim = Position.getWindowSize();
-        var scrollPos = document.viewport.getScrollOffsets();
+        var scrollPos = getViewportScrollOffsets();
         if (x > scrollPos[0] + winDim.width - menu.width()) x -= menu.width();
         if (y > scrollPos[1] + winDim.height - menu.outerHeight()) y -= menu.outerHeight();
         if (x < 0) x = 0;
@@ -2241,7 +2241,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         var menu = $('#'+id);
         var linkPos = link.offset();
         var winDim = Position.getWindowSize();
-        var scrollPos = document.viewport.getScrollOffsets();
+        var scrollPos = getViewportScrollOffsets();
 
         if (linkPos.left + link.outerWidth() + menu.outerWidth() < scrollPos[0] + winDim.width)
             x = linkPos.left + link.outerWidth() - 5;

@@ -2089,3 +2089,6 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
 function getDimensions(elm){
 	return {width:$(elm).outerWidth(), height:$(elm).outerHeight()};
 }
+function getViewportScrollOffsets(){
+	return [$(window).scrollLeft(), $(window).scrollTop()];
+}

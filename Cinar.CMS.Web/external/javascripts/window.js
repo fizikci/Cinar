@@ -86,32 +86,32 @@ Window.prototype = {
     this.element = this._createWindow(id);
     
     // Bind event listener
-    //this.eventMouseDown = this._initDrag.bindAsEventListener(this);
-    //this.eventMouseUp   = this._endDrag.bindAsEventListener(this);
-    //this.eventMouseMove = this._updateDrag.bindAsEventListener(this);
-    //this.eventOnLoad    = this._getWindowBorderSize.bindAsEventListener(this);
-    //this.eventMouseDownContent = this.toFront.bindAsEventListener(this);
-    //this.eventResize = this._recenter.bindAsEventListener(this);
+    this.eventMouseDown = this._initDrag.bindAsEventListener(this);
+    this.eventMouseUp   = this._endDrag.bindAsEventListener(this);
+    this.eventMouseMove = this._updateDrag.bindAsEventListener(this);
+    this.eventOnLoad    = this._getWindowBorderSize.bindAsEventListener(this);
+    this.eventMouseDownContent = this.toFront.bindAsEventListener(this);
+    this.eventResize = this._recenter.bindAsEventListener(this);
 	
     this.topbar = $('#'+this.element.attr('id') + "_top");
     this.bottombar = $('#'+this.element.attr('id') + "_bottom");
     this.content = $('#'+this.element.attr('id') + "_content");
     
-    this.topbar.bind("mousedown", this, this._initDrag);
-    this.bottombar.bind("mousedown", this, this._initDrag);
-    this.content.bind("mousedown", this, this.toFront);
-    $(window).bind("load", this, this._getWindowBorderSize);
-    $(window).bind("resize", this, this._recenter);
-    $(window).bind("scroll", this, this._recenter);
+    this.topbar.bind("mousedown", this.eventMouseDown);
+    this.bottombar.bind("mousedown", this.eventMouseDown);
+    this.content.bind("mousedown", this.eventMouseDownContent);
+    $(window).bind("load", this.eventOnLoad);
+    $(window).bind("resize", this.eventResize);
+    $(window).bind("scroll", this.eventResize);
     
     if (this.options.draggable)  {
       var that = this;
       [this.topbar, this.topbar.parent().prev(), this.topbar.parent().next()].each(function(element) {
-        element.bind("mousedown", that, that._initDrag);
+        element.bind("mousedown", that.eventMouseDown);
         element.addClass("top_draggable");
       });
       [this.bottombar.parent(), this.bottombar.parent().prev(), this.bottombar.parent().next()].each(function(element) {
-        element.bind("mousedown", that, that._initDrag);
+        element.bind("mousedown", that.eventMouseDown);
         element.addClass("bottom_draggable");
       });
       
@@ -119,7 +119,7 @@ Window.prototype = {
     
     if (this.options.resizable) {
       this.sizer = $('#'+this.element.attr('id') + "_sizer");
-      this.sizer.on("mousedown", this, this._initDrag);
+      this.sizer.bind("mousedown", this.eventMouseDown);
     }  
     
     this.useLeft = typeof this.options.left != "undefined";
@@ -153,17 +153,17 @@ Window.prototype = {
   // Destructor
   destroy: function() {
     this._notify("onDestroy");
-    this.topbar.unbind("mousedown", this._initDrag);
-    this.bottombar.unbind("mousedown", this._initDrag);
-    this.content.unbind("mousedown", this.toFront);
+    this.topbar.unbind("mousedown", this.eventMouseDown);
+    this.bottombar.unbind("mousedown", this.eventMouseDown);
+    this.content.unbind("mousedown", this.eventMouseDownContent);
     
-    $(window).unbind("load", this._getWindowBorderSize);
-    $(window).unbind("resize", this._recenter);
-    $(window).unbind("scroll", this._recenter);
+    $(window).unbind("load", this.eventOnLoad);
+    $(window).unbind("resize", this.eventResize);
+    $(window).unbind("scroll", this.eventResize);
     
     this.content.unbind("load", this.options.onload);
 
-    if (this._oldParent) {
+    if (this._oldParent.length) {
       var content = this.getContent();
       var originalContent = null;
       for(var i = 0; i < content.childNodes.length; i++) {
@@ -173,12 +173,12 @@ Window.prototype = {
         originalContent = null;
       }
       if (originalContent)
-        this._oldParent.appendChild(originalContent);
+        this._oldParent.append(originalContent);
       this._oldParent = null;
     }
 
     if (this.sizer)
-        this.sizer.unbind("mousedown", this.toFront);
+        this.sizer.unbind("mousedown", this.eventMouseDown);
 
     if (this.options.url) 
       this.content.src = null
@@ -204,7 +204,7 @@ Window.prototype = {
   setContent: function(id, autoresize, autoposition) {
     var element = $('#'+id);
     if (null == element) throw "Unable to find element '" + id + "' in DOM";
-    this._oldParent = element.parentNode;
+    this._oldParent = element.parent();
 
     var d = null;
     var p = null;
@@ -371,8 +371,8 @@ Window.prototype = {
       this._notify("onStartMove");
     }    
     // Register global event to capture mouseUp and mouseMove
-    document.bind("mouseup", this, this._endDrag, false);
-    document.bind("mousemove", this, this._updateDrag, false);
+    $(document).bind("mouseup", this.eventMouseUp);
+    $(document).bind("mousemove", this.eventMouseMove);
     
     // Add an invisible div to keep catching mouse event over iframes
     WindowUtilities.disableScreen('__invisible__', '__invisible__');
@@ -457,8 +457,8 @@ Window.prototype = {
       this._notify("onEndMove");
     
     // Release event observing
-    document.unbind("mouseup", this._endDrag, false);
-    document.unbind("mousemove", this._updateDrag, false);
+    $(document).unbind("mouseup", this.eventMouseUp,false);
+    $(document).unbind("mousemove", this.eventMouseMove, false);
 
     event.stopPropagation();
     
@@ -1517,7 +1517,7 @@ var WindowUtilities = {
       if (id != "__invisible__") 
         WindowUtilities._showSelect();
       
-      objOverlay.parentNode.removeChild(objOverlay);
+      objOverlay.remove();//parentNode.removeChild(objOverlay);
     }
   },
 

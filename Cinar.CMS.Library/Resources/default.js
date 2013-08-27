@@ -625,7 +625,7 @@ function navigationPopupInit(id, horizontal){
 
 function showManset(event, id){
     var elm = $(event.target);
-    if(elm.hasClassName('pic') || elm[0].tagName=='A')
+    if(elm.hasClass('pic') || elm[0].tagName=='A')
     {
         var clItem = $(elm).closest('.clItem');
         if(clItem.length==0) return;
@@ -789,7 +789,7 @@ function lightBox(img){
 		}
 	});
 	lbImg.on('mousemove', function(event){
-		var scrollOffset = document.viewport.getScrollOffsets();
+		var scrollOffset = getViewportScrollOffsets();
 		var pointerPos = {x:event.pointerX()-scrollOffset.left,y:event.pointerY()-scrollOffset.top};
 		lightBoxDiv.find('.tag_bg').each(function(eix,tagElm){
 			$(tagElm).show();
@@ -812,7 +812,7 @@ function lightBox_hideAllTags(){
 function centerToView(elm){
 	elm = $(elm);
 	var dim = getDimensions(elm);
-	var posView = document.viewport.getScrollOffsets();
+	var posView = getViewportScrollOffsets();
 	var dimView = Position.getWindowSize();
 	elm.css({left:(posView[0]+(dimView.width-dim.width)/2)+'px', top:(posView[1]+(dimView.height-dim.height)/2)+'px'});	
 }
