@@ -209,8 +209,8 @@ function regionSelected(){return selReg!=null;}
 function moduleCanBePasted(){return regionSelected() && getCookie('copyModId')!=null;}
 function showFirstHR(){return moduleSelected() || moduleCanBePasted();}
 function showSecondHR(){return moduleSelected() || regionSelected();}
-function contentLinkSelected() { return rightClickLinkElement != null && rightClickLinkElement.href.indexOf('item=') > -1; }
-function tagLinkSelected() { return rightClickLinkElement != null && rightClickLinkElement.href.indexOf('tagId=') > -1; }
+function contentLinkSelected() { return rightClickLinkElement.length && rightClickLinkElement.attr('href').indexOf('item=') > -1; }
+function tagLinkSelected() { return rightClickLinkElement.length && rightClickLinkElement.attr('href').indexOf('tagId=') > -1; }
 
 popupMenu.menuItems = [
     {text:lang('Copy Module'), icon:'copy', isEnabled:moduleSelected, callback:copyModule},
@@ -302,7 +302,7 @@ function showPopupMenu(event){
     
     var elm = $(event.target);
     if(elm[0].tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.closest('a');
-    selReg = elm.hasClassName('Region') ? elm : elm.closest('.Region');
+    selReg = elm.hasClass('Region') ? elm : elm.closest('.Region');
 
     popupMenu.show(event.pageX, event.pageY);
 }

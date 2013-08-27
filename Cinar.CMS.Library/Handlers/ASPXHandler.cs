@@ -156,8 +156,10 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append(@"
 <script type=""text/javascript"">
     if(designMode){
-        $(document).on('contextmenu', function(e){e.stopPropagation();}, false);
-        $(document).on('mousedown', function(e){showPopupMenu(e);}, false);
+        document.oncontextmenu = function() {return false;};
+        $(document).mousedown(function(e){
+            showPopupMenu(e);
+        });
     }
     var currTemplate = '" + template.FileName + @"';
     var moduleTypes = " + getModuleTypesJSON() + @";
