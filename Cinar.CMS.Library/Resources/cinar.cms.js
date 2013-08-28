@@ -162,7 +162,7 @@ function selectNext(event){
                     var rows = listGrid.getSelectedRows() || [];
                     if(rows.length>0){
                         var row = $(rows[0]).next();
-                        if(row) listGrid.selectRow(row);
+                        if(row.length) listGrid.selectRow(row);
                     }
                     break;
             }
@@ -336,7 +336,7 @@ function addModule(elmId){
     // add the module whose name is given by the parameter 'elmId' kafası
     var parentMdl = selReg.closest('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
+    if(parentMdl.length) parentMdlId = parentMdl.attr('id').split('_')[1];
     new Ajax.Request('ModuleInfo.ashx?method=addModule&template='+currTemplate+'&moduleType='+elmId+'&region='+selReg.attr('id')+'&parentModuleId='+parentMdlId, {
         method: 'get',
         onComplete: function(req) {
@@ -344,7 +344,7 @@ function addModule(elmId){
             if(selReg.find('.Module').length==0)
                 selReg.html('');
             selReg.append(req.responseText);
-            var newModule = selReg.immediateDescendants().last();
+            var newModule = selReg.find('>').last();
             newModule.on('mousedown', highlightModule);
             selectModule(newModule);
 			editModule();
@@ -382,7 +382,7 @@ function deleteModule(event){
                 onComplete: function(req) {
                     if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
                     var region = $('#'+name+'_'+id).parent();
-                    if(region.immediateDescendants().length==1)
+                    if(region.find('>').length==1)
                         region.prepend("<div class=\"cs_empty_reg\">" + lang('Empty region') + ': ' + region.attr('id') + '</div>');
                     $('#'+name+'_'+id).remove();
                     selectModule(prevMdl);
@@ -435,7 +435,7 @@ function pasteModule(event){
     var id = getCookie('copyModId');
     var parentMdl = selReg.closest('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
+    if(parentMdl.length) parentMdlId = parentMdl.attr('id').split('_')[1];
 
     new Ajax.Request('ModuleInfo.ashx?method=copyModule&name='+name+'&id='+id+'&template='+currTemplate+'&region='+selReg.attr('id')+'&parentModuleId='+parentMdlId, {
         method: 'get',
@@ -444,7 +444,7 @@ function pasteModule(event){
             if(selReg.find('.Module').length==0)
                 selReg.html('');
             selReg.append(req.responseText);
-            var newModule = selReg.immediateDescendants().last();
+            var newModule = selReg.find('>').last();
             var ssm = new StyleSheetManager('moduleStyles');
             ssm.applyStyleSheet(ajax({url:'ModuleInfo.ashx?method=getModuleCSS&name='+name+'&id='+newModule.attr('id').split('_')[1],isJSON:false,noCache:false}));
             newModule.on('mousedown', highlightModule);
@@ -522,7 +522,7 @@ function exportModule(){
 function importModule(){
     var parentMdl = selReg.closest('.Module');
     var parentMdlId = '0';
-    if(parentMdl) parentMdlId = parentMdl.attr('id').split('_')[1];
+    if(parentMdl.length) parentMdlId = parentMdl.attr('id').split('_')[1];
 
     new AceEditor({
         titleIcon: 'page',

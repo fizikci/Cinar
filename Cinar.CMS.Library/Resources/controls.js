@@ -254,21 +254,21 @@ var StringEdit = Class.create(); StringEdit.prototype = {
 
         var wrapCheck = list.find('.wrapCheck');
         wrapCheck.bind('click', function() {
-            if (wrapCheck.checked)
+            if (wrapCheck.is(':checked'))
                 ths.aceEdit.getSession().setUseWrapMode(true);//ta.attr('wrap');
             else
                 ths.aceEdit.getSession().setUseWrapMode(false); //ta.attr('wrap', 'off');
-            setCookie('wrap', wrapCheck.checked ? 1 : 0);
+            setCookie('wrap', wrapCheck.is(':checked') ? 1 : 0);
         });
         var nl2brCheck = list.find('.nl2br');
         nl2brCheck.bind('click', function() {
-            setCookie('nl2br', nl2brCheck.checked ? 1 : 0);
+            setCookie('nl2br', nl2brCheck.is(':checked') ? 1 : 0);
         });
 
         ta.on('keydown', function(event) {
             switch (event.keyCode) {
             case Event.KEY_RETURN:
-                if (list.find('.nl2br').checked)
+                if (list.find('.nl2br').is(':checked'))
                     ths.aceEdit.insert('<br/>');
                 break;
             }
@@ -876,7 +876,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         var filtEdit = $('#'+this.editorId);
-        if (filtEdit)
+        if (filtEdit.length)
             filtEdit.find(':first').html('');
         this.button.bind('click', this.showEditor.bind(this));
 
@@ -896,12 +896,12 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
         this.filter = new FilterEditor($('#'+this.editorId).find(':first'), ajax({ url: 'EntityInfo.ashx?method=getFieldsList&entityName=' + entityNameToUse, isJSON: true, noCache: false }));
 
         var list = $('#'+this.editorId);
-        if (list.visible()) {
+        if (list.is(':visible')) {
             list.remove();
             currEditor = null;
             return;
         }
-        if (this.input.disabled) return;
+        if (this.input.is(':disabled')) return;
 
         var btnOK = $('#'+this.editorId + 'btnOK');
         var btnCancel = $('#'+this.editorId + 'btnCancel');
@@ -976,7 +976,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         var editor = $('#'+this.editorId);
         var ctrl = this.div;
 
-        if (editor.visible()) {
+        if (editor.is(':visible')) {
             editor.remove();
             currEditor = null;
             return;
@@ -1157,7 +1157,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
             this.beforeOpenList();
 
         var list = $('#'+this.editor);
-        if (this.input.disabled) return;
+        if (this.input.is(':disabled')) return;
 
         if (!this.listDimensionCalculated) {
             var w = this.div.width();
@@ -1186,7 +1186,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
                 i++;
                 elm = $('#__itm' + this.hndl + '_' + i);
             }
-            if (selElm) {
+            if (selElm.length) {
                 selElm.addClass('checkedItem');
                 //Scroll.to(selElm);
             }
@@ -1448,15 +1448,15 @@ var EditForm = Class.create(); EditForm.prototype = {
     },
     showDesc: function(event) {
         var elm = $(event.target).closest('INPUT');
-        if (elm.ctrl)
-            this.tdDesc.html(elm.ctrl.description);
+        if (elm[0].ctrl)
+            this.tdDesc.html(elm[0].ctrl.description);
         var td = elm.closest('tr').find('td');
-        if (td) td.css({ backgroundColor: '#316AC5', color: 'white' });
+        if (td.length) td.css({ backgroundColor: '#316AC5', color: 'white' });
     },
     clearDesc: function(event) {
         var elm = $(event.target).closest('INPUT');
         var td = elm.closest('tr').find('td');
-        if (td) td.css({ backgroundColor: '', color: '' });
+        if (td.length) td.css({ backgroundColor: '', color: '' });
     },
     serialize: function() {
         var h = new Object();
@@ -1840,7 +1840,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         var i = 0;
         var table = this.container.find(':first');
         if (table[0].tagName != 'TBODY') table = table.find(':first');
-        var rows = table.immediateDescendants();
+        var rows = table.find('>');
         var rowCount = rows.length;
         rows.each(function(i, elm) { if (i < rowCount - 1) elm.remove(); }); //table.rows.clear(); demek bu.
         while (true) {
@@ -2044,7 +2044,7 @@ var TreeView = Class.create(); TreeView.prototype = {
 
         this.container.append('<div id="nd_' + rootData + '"><span class="cbtn cplus"></span><span class="cbtn ccategory"></span> <span class="nodeName">' + rootText + '</span></div>');
         var node = $('#nd_' + rootData);
-        node['node'] = { data: rootData, text: rootText, type: 'category', collapsed: true };
+        node[0]['node'] = { data: rootData, text: rootText, type: 'category', collapsed: true };
         this.rootElement = node;
         node.find(':first').bind('click', this.toggle.bind(this));
         node.find('span.nodeName').bind('click', this.nodeClick.bind(this));
@@ -2058,7 +2058,7 @@ var TreeView = Class.create(); TreeView.prototype = {
             img = $(event.target);
             div = img.parent();
         }
-        var node = div['node'];
+        var node = div[0]['node'];
 
         var childrenDiv = $('#nd_' + node.data + '_children');
         if (!childrenDiv) {

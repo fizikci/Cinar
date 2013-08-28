@@ -25,7 +25,7 @@ $(function(){
 	var effectInExecution=null;
 	$('.toogleDesc .clItem').each(function(eix,elm){
 		var elmDesc = $(elm).find('div.clDesc');
-		if(elmDesc){
+		if(elmDesc.length){
 			elmDesc.hide();
 			$(elm).on('mouseenter', function(event){
 				event.stop();
@@ -392,7 +392,7 @@ function editCurrImage(path){
 	});
 	
 	$('#cc_crop').on('click', function(){
-		if(!sel.visible()){
+		if(!sel.is(':visible')){
 			niceAlert('Select first');
 			return;
 		}
@@ -406,7 +406,7 @@ function editCurrImage(path){
 			return;
 		}
 		else {
-			if(sel.visible()) toggleSelect();
+			if(sel.is(':visible')) toggleSelect();
 			imgPreview.src = path + '?' + new Date().getMilliseconds();
 		}
 	});
@@ -417,7 +417,7 @@ function editCurrImage(path){
 			return;
 		}
 		else {
-			if(sel.visible()) toggleSelect();
+			if(sel.is(':visible')) toggleSelect();
 			imgPreview.src = path + '?' + new Date().getMilliseconds();
 		}
 	});
@@ -428,7 +428,7 @@ function editCurrImage(path){
 			return;
 		}
 		else {
-			if(sel.visible()) toggleSelect();
+			if(sel.is(':visible')) toggleSelect();
 			imgPreview.src = path + '?' + new Date().getMilliseconds();
 		}
 	});
@@ -439,7 +439,7 @@ function editCurrImage(path){
 			return;
 		}
 		else {
-			if(sel.visible()) toggleSelect();
+			if(sel.is(':visible')) toggleSelect();
 			imgPreview.src = path + '?' + new Date().getMilliseconds();
 		}
 	});
@@ -450,7 +450,7 @@ function editCurrImage(path){
 			return;
 		}
 		else {
-			if(sel.visible()) toggleSelect();
+			if(sel.is(':visible')) toggleSelect();
 			imgPreview.src = path + '?' + new Date().getMilliseconds();
 		}
 	});
@@ -519,8 +519,9 @@ function fadeShowShowImg(fadeShow, indexElm){
 }
 function fadeWithArrowsShow(elm, which){
 	var nextImg = which=='next' ? elm.currentImg.next('.clItem') : elm.currentImg.previous('.clItem');
+	nextImg = nextImg.length ? nextImg[0] : null;
 	if(!nextImg)
-		nextImg = which=='next' ? elm.find('.clItem') : elm.find('.clItem').last();
+		nextImg = which=='next' ? $(elm).find('.clItem') : $(elm).find('.clItem').last();
 	if(nextImg && nextImg!=elm.currentImg){
 		var curr = elm.currentImg;
 		curr.fade({ duration: 0.5, from: 1, to: 0.01, afterFinish: function(){curr.css({ zIndex:1 });} });
@@ -707,8 +708,8 @@ function lightBox(img){
 					'</div>';
 	$(document.body).append(html);
 	lightBoxDiv = $('#lightBoxDiv');
-	lightBoxDiv.find('#lbPrev').on('click',function(){if(img.previous('img')) {img = img.previous('img'); showPic();}});
-	lightBoxDiv.find('#lbNext').on('click',function(){if(img.next('img')) {img = img.next('img'); showPic();}});
+	lightBoxDiv.find('#lbPrev').on('click',function(){if(img.prev('img').length) {img = img.prev('img'); showPic();}});
+	lightBoxDiv.find('#lbNext').on('click',function(){if(img.next('img').length) {img = img.next('img'); showPic();}});
 	
 	if(fbLikeExist){
 		lightBoxDiv.find('#lbLove').on('click',function(){

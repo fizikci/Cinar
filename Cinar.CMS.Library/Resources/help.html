@@ -257,33 +257,34 @@
     .cwarning {background-position:0px -2320px;}
     .cWhereAmI {background-position:0px -2336px;}
     </style>
+	<script src="http://code.jquery.com/jquery.js"></script>
     <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
     <script src="default.js.ashx"></script>
     <script src="tr.js.ashx"></script>
     <script src="controls.js.ashx"></script>
     <script>
-        document.observe('dom:loaded', function () {
-            $$('.part, h1').each(Element.hide);
-            $$('.part').first().show();
-            $$('h1').first().show();
+        $(function () {
+            $('.part, h1').hide();
+            $('.part').first().show();
+            $('h1').first().show();
 
             showTree();
         });
 
         function toggle(event) {
-            $$('.part').each(Element.hide);
-            $(Event.element(event)).next().show();
+            $('.part').hide();
+            $(event.target).next().show();
         }
 
         function execute(btn) {
-            window.parent.eval($(btn).up().previous('pre.code').innerText);
+            window.parent.eval($(btn).parent().prev('pre.code').text());
         }
         var tree;
         function showTree() {
-            tree = new TreeView($('leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
+            tree = new TreeView($('#leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
             tree.toggle(tree.rootElement);
-            tree.toggle(tree.rootElement.down('.treeChildren').down());
-            tree.toggle(tree.rootElement.down('.treeChildren').down().next());
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first'));
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first').next());
         }
         function getNodes(data) {
             if (data == 'root') {
@@ -358,16 +359,16 @@
 
         }
         function nodeClicked(node) {
-            $$('.part, h1').each(Element.hide);
+            $('.part, h1').hide();
             if (node.data.indexOf('statik') == 0) {
                 var id = node.data.split('_')[1];
-                $(id).show();
-                $(id).next().show();
+                $('#'+id).show();
+                $('#'+id).next().show();
             }
             else if (node.data.indexOf("ref_entity$")==0)
             {
                 var parts = node.data.split('$');
-                var h1 = $(parts[0] + '_' + parts[1]);
+                var h1 = $('#'+parts[0] + '_' + parts[1]);
                 if (h1) {
                     h1.show();
                     h1.next().show();
@@ -376,7 +377,7 @@
                 {
                     var html = '<h1 id="' + parts[0] + '_' + parts[1] + '">' + node.text + '</h1>';
                     html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getEntityDocs&entityName=' + parts[1] }) + "</div>";
-                    $('contentPanel').insert(html);
+                    $('contentPanel').append(html);
                 }
             }
         }
@@ -863,11 +864,11 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                                     'Poll','PollAnswer','PollAnswerLang','PollQuestion','PollQuestionLang','PollResults','prev','Product','ProductList','Recommendation','refresh',
                                     'RegionRepeater','save','script','SearchForm','SearchResults','sort','Source','SourceDetail','SourceLang','SQLDataList','SQLLog','StaticHtml',
                                     'Table', 'TabView', 'Tag', 'TagCloud', 'TagLang', 'TarihSaat', 'Template', 'tree', 'User', 'UserActivationForm', 'UserComment', 'video', 'view_mode', 'warning', 'WhereAmI'];
-                    document.observe('dom:loaded', function () {
+                    $(function () {
                         var html = '';
                         for (var i = 0; i < classes.length; i++)
                             html += '<span class="btn2 cbtn c' + classes[i] + '" title="Bold">' + classes[i] + '</span>';
-                        $('iconsDiv').insert(html);
+                        $('iconsDiv').append(html);
                     });
                 </script>
                 <div id="iconsDiv"></div>  
