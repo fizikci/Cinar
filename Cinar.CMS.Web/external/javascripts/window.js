@@ -163,7 +163,7 @@ Window.prototype = {
     
     this.content.unbind("load", this.options.onload);
 
-    if (this._oldParent.length) {
+    if (this._oldParent && this._oldParent.length) {
       var content = this.getContent();
       var originalContent = null;
       for(var i = 0; i < content.childNodes.length; i++) {

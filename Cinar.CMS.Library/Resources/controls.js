@@ -344,7 +344,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
-        if ($('#'+this.editorId)) {
+        if ($('#'+this.editorId).length) {
             $('#'+this.editorId).remove();
             currEditor = null;
             return;
@@ -450,7 +450,7 @@ var FileManager = Class.create(); FileManager.prototype = {
     getFileList: function() {
         var list = $('#fileBrowserList');
 
-        if ($('#fileBrowserLoading')) $('#fileBrowserLoading').show();
+        if ($('#fileBrowserLoading').length) $('#fileBrowserLoading').show();
         var ths = this;
         new Ajax.Request('SystemInfo.ashx?method=getFileList&folder=' + currFolder, {
             onComplete: function(resp) {
@@ -491,7 +491,7 @@ var FileManager = Class.create(); FileManager.prototype = {
                         $(elm).on('click', function(event) {
                             var path = currFolder + '/' + $(elm).attr('name');
                             if (!(event.ctrlKey || event.shiftKey || event.metaKey))
-                                list.find('.fileNameBox').each(function(eix,fnm) { fnm.removeClass('fileSelected'); });
+                                list.find('.fileNameBox').each(function(eix,fnm) { $(fnm).removeClass('fileSelected'); });
                             $(elm).toggleClass('fileSelected');
                             $('#fileManagerRenameForm input[name=newName]').val($(elm).attr('name'));
                         });
@@ -510,7 +510,7 @@ var FileManager = Class.create(); FileManager.prototype = {
                         $(elm).on('click', function(event) {
                             var path = currFolder + '/' + $(elm).attr('name');
                             if (!(event.ctrlKey || event.shiftKey || event.metaKey))
-                                list.find('.fileNameBox').each(function(eix,fnm) { fnm.removeClass('fileSelected'); });
+                                list.find('.fileNameBox').each(function(eix,fnm) { $(fnm).removeClass('fileSelected'); });
                             $(elm).toggleClass('fileSelected');
                             $('#fileManagerRenameForm input[name=newName]').val($(elm).attr('name'));
                         });
@@ -581,7 +581,7 @@ var LookUp = Class.create(); LookUp.prototype = {
         }
     },
     showEditor: function (event) {
-        if ($('#'+this.editorId)) {
+        if ($('#'+this.editorId).length) {
             $('#'+this.editorId).remove();
             currEditor = null;
             return;
@@ -762,7 +762,7 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
         this.input['ctrl'] = this;
     },
     showEditor: function(event) {
-        if ($('#'+this.editorId)) {
+        if ($('#'+this.editorId).length) {
             $('#'+this.editorId).remove();
             currEditor = null;
             return;
@@ -1122,14 +1122,14 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         this.input['ctrl'] = this;
     },
     beforeOpenList: function() {
-        if (!this.editor) {
+        if (!(this.editor && this.editor.length)) {
             this.div.after('<div class="editor hideOnOut ComboBox" style="display:none"></div>');
             this.editor = this.div.next();
             this.fetchData();
         }
     },
     beforeOpenListForFields: function() {
-        if (!this.editor) {
+        if (!(this.editor && this.editor.length)) {
             this.div.after('<div class="editor hideOnOut ComboBox" style="display:none"></div>');
             this.editor = this.div.next();
         }
@@ -1156,7 +1156,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         else
             this.beforeOpenList();
 
-        var list = $('#'+this.editor);
+        var list = $(this.editor);
         if (this.input.is(':disabled')) return;
 
         if (!this.listDimensionCalculated) {
@@ -1170,9 +1170,9 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         if (this.options.multiSelect) { // multiselect listeler için seçili olanları yeşil falan gösterelim.
             var i = 0;
             var elm = $('#__itm' + this.hndl + '_' + i);
-            while (elm) {
+            while (elm.length) {
                 elm.removeClass('checkedItem');
-                if (this.input.val().indexOf(elm.html()) > -1)
+                if (this.input.val().indexOf(elm.text()) > -1)
                     elm.addClass('checkedItem');
                 i++;
                 elm = $('#__itm' + this.hndl + '_' + i);
@@ -1180,8 +1180,8 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         } else {
             var i = 0, selElm = null;
             var elm = $('#__itm' + this.hndl + '_' + i);
-            while (elm) {
-                if (this.input.val().indexOf(elm.html()) > -1) selElm = elm;
+            while (elm.length) {
+                if (this.input.val().indexOf(elm.text()) > -1) selElm = elm;
                 elm.removeClass('checkedItem');
                 i++;
                 elm = $('#__itm' + this.hndl + '_' + i);
@@ -1195,7 +1195,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         list.show();
     },
     fetchData: function() {
-        var list = $('#'+this.editor);
+        var list = $(this.editor);
         list.html('');
 
         var insertionHtml = '';
@@ -1209,7 +1209,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         if (list.outerHeight() > this.listHeight) list.css({ height: this.listHeight + 'px' });
         var i = 0;
         var elm = $('#__itm' + this.hndl + '_' + i);
-        while (elm) {
+        while (elm.length) {
             elm.bind('mouseover', this.onItemMouseOver.bind(this));
             elm.bind('mouseout', this.onItemMouseOut.bind(this));
             elm.bind('click', this.onItemClick.bind(this));
@@ -1294,7 +1294,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
     onItemClick: function(e) {
         var elm = $(e.target).closest('DIV');
         var list = this.editor;
-        var index = list.find('.item').indexOf(elm);
+        var index = list.find('.item').toArray().indexOf(elm[0]);
         this.setSelectedIndex(index);
         list.hide();
     }
@@ -1588,8 +1588,8 @@ var ListForm = Class.create(); ListForm.prototype = {
 
                 ths.listGrid = new ListGrid(dataArea.find(':first'), ths.options.selectCallback, ths.sortCallback.bind(ths));
 
-                $('#btnPrev' + ths.hndl).setOpacity(ths.pageIndex <= 0 ? 0.3 : 1.0);
-                $('#btnNext' + ths.hndl).setOpacity(ths.listGrid.mayHaveNextPage(ths.limit) ? 1.0 : 0.3);
+                $('#btnPrev' + ths.hndl).css('opacity',ths.pageIndex <= 0 ? 0.3 : 1.0);
+                $('#btnNext' + ths.hndl).css('opacity',ths.listGrid.mayHaveNextPage(ths.limit) ? 1.0 : 0.3);
                 $('#pageNo' + ths.hndl).html(ths.pageIndex + 1);
             },
             onException: function(req, ex) { throw ex; }
@@ -1950,12 +1950,10 @@ var ListGrid = Class.create(); ListGrid.prototype = {
 
         var ths = this;
 
-        $A(this.table.getElementsByTagName('TH')).each(function(col) {
-            $(col).bind('click', ths.colClick.bind(ths));
-        });
+		this.table.find('TH').click(ths.colClick.bind(ths));
 
-        var rows = $A(this.table.getElementsByTagName('TR'));
-        rows.each(function(row) {
+        var rows = this.table.find('TR');
+        rows.each(function(i, row) {
             row = $(row);
             if (!row[0].id) return;
             row.bind('mouseover', ths.rowOver.bind(ths));
@@ -1983,12 +1981,14 @@ var ListGrid = Class.create(); ListGrid.prototype = {
             this.selectCallback(row.find(':first').html(), row.find(':first').next().html());
     },
     selectRow: function(row) {
+		row = $(row);
         var ths = this;
         this.table.find('.selected').each(function(eix,r) { ths.deselectRow($(r)); });
         row.addClass('selected');
         row.removeClass('hover');
     },
     deselectRow: function(row) {
+		row = $(row);
         row.removeClass('selected');
     },
     getSelectedRows: function() {
@@ -2024,7 +2024,7 @@ var ListGrid = Class.create(); ListGrid.prototype = {
         if (this.sortCallback) this.sortCallback(col[0].id);
     },
     mayHaveNextPage: function(maxRowCount) {
-        return this.table && this.table.getElementsByTagName('TR').length > maxRowCount;
+        return this.table && this.table.find('TR').length > maxRowCount;
     }
 };
 
