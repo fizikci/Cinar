@@ -875,7 +875,7 @@ Window.prototype = {
   
   isMinimized: function() {
     var r2 = $('#'+this.getId() + "_row2");
-    return !r2.visible();
+    return !r2.is(':visible');
   },
   
   isMaximized: function() {
