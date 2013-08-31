@@ -2,8 +2,6 @@
     version: '1.0'
 };
 
-var traceMode = false;
-var trace = null;
 var regions = [];
 var regionNames = [];
 var regionDivs = [];
@@ -11,15 +9,19 @@ var navigationEnabled = true;
 
 $(function(){
     try{
-        trace = new Trace();
-        trace.write({id:'Sistem'}, 'page load started');
-		
+		if(designMode){
+			document.oncontextmenu = function() {return false;};
+			$(document).mousedown(function(e){
+				showPopupMenu(e);
+			});
+		}
+	
 		Windows.addObserver({
 			onShow: function(){
 				navigationEnabled = false;
 			},
 			onClose: function(){
-				//if(!Windows.getFocusedWindow())
+				if(!(Windows.getFocusedWindow() && Windows.getFocusedWindow().visible))
 					navigationEnabled = true;
 			}
 		});
@@ -44,7 +46,7 @@ $(function(){
 
         clearFlashes();
         
-        $(document).on('keydown', selectNext);
+        $(document).on('keydown', documentKeyDown);
         
         mdlSel = $('#mdlSel'); mdlSel2 = $('#mdlSel2'); mdlSel3 = $('#mdlSel3'); mdlSel4 = $('#mdlSel4');
         $('div.Module').each(function(eix,mdl){
@@ -52,14 +54,9 @@ $(function(){
         });
         selectFirstModule();
 		setInterval(refreshModuleHighlighter, 2000);
-        
-        trace.write({id:'Sistem'}, 'page load finished');
     }
     catch(e){
-        if(typeof e == 'String')
-            trace.warn({id:'PageLoad'}, e);
-        else
-            trace.warn({id:'PageLoad'}, e.name + ' : ' + e.message);
+		alert(e.toString());
     }
 });
 
@@ -135,65 +132,98 @@ function findPrevModule(mdl){
                 return $(modules[i-1]);
 }
 
-function selectNext(event){
+function documentKeyDown(event){
+	if(navigationEnabled && event.keyCode==93){
+		popupMenu.show(100, 100);
+		var selMenuItem = $("#smMenuContainer div:first div:first").addClass('menu_selected');
+		return false;
+	}
+
     var win = Windows.getFocusedWindow();
-    
-    if(win){
+    if(win && win.visible){
         if(win['form'] && win['form'].formType=='ListForm'){
             var listGrid = win['form'].listGrid;
             switch(event.keyCode){
                 case Event.KEY_RETURN:
                     win['form'].cmdEdit();
-                    break;
+                    return false;
                 case Event.KEY_INSERT:
                     win['form'].cmdAdd();
-                    break;
+                    return false;
                 case Event.KEY_DELETE:
                     win['form'].cmdDelete();
-                    break;
+                    return false;
                 case Event.KEY_UP:
                     var rows = listGrid.getSelectedRows() || [];
                     if(rows.length>0){
                         var row = $(rows[0]).prev();
                         if(row) listGrid.selectRow(row);
                     }
-                    break;
+                    return false;
                 case Event.KEY_DOWN:
                     var rows = listGrid.getSelectedRows() || [];
                     if(rows.length>0){
                         var row = $(rows[0]).next();
                         if(row.length) listGrid.selectRow(row);
                     }
-                    break;
+                    return false;
             }
         }
+		
+		if(win.name && win.name.startsWith('dialog_')){
+			switch(event.keyCode){
+				case Event.KEY_RETURN:
+					win.onKeyEnter();
+                    return false;
+				case Event.KEY_ESC:
+					win.close();
+                    return false;
+			}
+		}
     }
     
-    if(!navigationEnabled) return; //***
+    if(!navigationEnabled && $("#smMenuContainer div:first").is(':visible')) {
+		var selMenuItem = $("#smMenuContainer div.menu_selected:first");
+		switch(event.keyCode){
+			case Event.KEY_UP:
+				selMenuItem.prev('div').trigger('mouseover');
+				return false;
+			case Event.KEY_DOWN:
+				selMenuItem.next('div').trigger('mouseover');
+				return false;
+			case Event.KEY_LEFT:
+				return false;
+			case Event.KEY_RIGHT:
+				return false;
+		}
+	}
+
+	if(!navigationEnabled)
+		return false;
     
     switch(event.keyCode){
         case Event.KEY_INSERT:
             addModule();
-            break;
+            return false;
         case Event.KEY_RETURN:
             editModule();
-            break;
+            return false;
         case Event.KEY_DELETE:
             deleteModule();
-            break;
+            return false;
         case Event.KEY_LEFT:
             selMod = findPrevModule(selMod);
             selectModule(selMod);
-            selMod.scrollTo();
-            break;
+            $('html, body').animate({scrollTop: selMod.offset().top}, 200);
+            return false;
         case Event.KEY_RIGHT:
             selMod = findNextModule(selMod);
             selectModule(selMod);
-            selMod.scrollTo();
-            break;
+            $('html, body').animate({scrollTop: selMod.offset().top}, 200);
+            return false;
         case Event.KEY_UP:
         case Event.KEY_DOWN:
-            break;
+            return false;
     }
 }
 
@@ -291,14 +321,13 @@ popupMenu.onHide = function(){
 }
 popupMenu.setup();
 
-var rightClickLinkElement; // sağ tıklanan linki saklamak içün
+var rightClickLinkElement = $(); // sağ tıklanan linki saklamak içün
 
 function showPopupMenu(event){
     if(event.which==1 || !navigationEnabled) return;
 
     //selReg = null;
-    rightClickLinkElement = null;
-    var menus = '';
+    rightClickLinkElement = $();
     
     var elm = $(event.target);
     if(elm[0].tagName=='A') rightClickLinkElement = elm; else rightClickLinkElement = elm.closest('a');
@@ -461,7 +490,7 @@ function saveModule(pe){
         parameters: params,
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-            $('#'+pe.entityName+'_'+pe.entityId).replace(req.responseText);
+            $('#'+pe.entityName+'_'+pe.entityId).replaceWith(req.responseText);
             Windows.getFocusedWindow().close();
             var ssm = new StyleSheetManager('moduleStyles');
             ssm.applyStyleSheet(pe.getControl('CSS').getValue());
@@ -866,6 +895,7 @@ function openCategoryContentTree() {
     win['form'] = new TreeView(winContent, 1, lang('Root'), getNodes, nodeClicked);
     win.show();
     win.toFront();
+	win['form'].toggle(win['form'].rootElement);
 }
 function getNodes(catId){
     return ajax({url:'EntityInfo.ashx?method=getTreeList&catId='+catId,isJSON:true,noCache:true});
@@ -882,22 +912,23 @@ function openPageModuleTree(){
     var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
     var winContent = $(win.getContent());
     winContent.css({overflow:'auto'});
-    win['form'] = new TreeView(winContent, 1, lang('Root'), getModuleNodes, nodeModuleClicked);
+    win['form'] = new TreeView(winContent, -1, lang('Root'), getModuleNodes, nodeModuleClicked);
     win.show();
     win.toFront();
+	win['form'].toggle(win['form'].rootElement);
 }
 function getModuleNodes(catId){
-    if(catId==1){
+    if(catId==-1){
         var nodes = [];
-        templates.each(function(tmpl){nodes.push({data:tmpl, text:tmpl, type:'category'});});
+        templates.each(function(tmpl){nodes.push({data:tmpl.split('.')[0], text:tmpl, type:'category'});});
         return nodes;
     }
     else
-        return ajax({url:'ModuleInfo.ashx?method=getModuleList&page='+catId,isJSON:true,noCache:true});
+        return ajax({url:'ModuleInfo.ashx?method=getModuleList&page='+catId+'.aspx',isJSON:true,noCache:true});
 }
 function nodeModuleClicked(node){
     if(node.type=='category')
-        editTemplate(node.data);
+        editTemplate(node.text);
     else
         editModule(node.type, node.data);
 }
@@ -1284,43 +1315,4 @@ function editTag() {
 }
 function openConsole(){
     new Console('Console.ashx');
-}
-
-//##########################################
-//#     UTILITY Functions & Classes        #
-//##########################################
-
-var Trace = Class.create(); Trace.prototype = {
-    lastDt: null,
-    display: null,
-    initialize: function(){
-        if(!traceMode) return;
-        this.display = new Window({className: "alphacube", title: "Trace Log", width:450, closable:false, maximizable:false, wiredDrag: true}); 
-        var dim = getDimensions($(document.body));
-        this.display.setLocation(500, dim.width-490);
-        this.display.show();
-        this.display.toFront();
-        this.display.minimize();
-        this.lastDt = new Date();
-        
-        var cntnt = this.display.getContent();
-        cntnt.css({width:'100%',overflow:'scroll'});
-    },
-    write: function(sender, str){
-        if(!traceMode || !this.display) return;
-        var dt = new Date();
-        var cntnt = this.display.getContent();
-
-        cntnt.html(cntnt.html()+ ' (' +(dt-this.lastDt)+ ')<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' ' + sender.id + ' : ' + str);
-        cntnt.scrollTop = cntnt.scrollHeight;
-        this.lastDt = dt;
-    },
-    warn: function(sender, str){
-        if(!traceMode || !this.display) return;
-        var dt = new Date();
-        var cntnt = this.display.getContent();
-
-        cntnt.html(cntnt.html()+ '<br/>' + dt.getMinutes()+':'+dt.getSeconds()+':'+dt.getMilliseconds() + ' <font color=red>' + sender.id + ' : ' + str + '</font>');
-        cntnt.scrollTop = cntnt.scrollHeight;
-    }
 }

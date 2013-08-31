@@ -119,15 +119,15 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                //if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
+                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                     sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
 
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0};</script>\n", Provider.DesignMode.ToJS());
 
 
-                //if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
-                    sb.Append("<script src=\"http://code.jquery.com/jquery.js\"></script>\n");
-                //if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
+                if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
+                    sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
+                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                     sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
 
@@ -155,12 +155,6 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "controls.js.ashx" : "/_thumbs/controls.js") + "\"></script>\n");
                     sb.Append(@"
 <script type=""text/javascript"">
-    if(designMode){
-        document.oncontextmenu = function() {return false;};
-        $(document).mousedown(function(e){
-            showPopupMenu(e);
-        });
-    }
     var currTemplate = '" + template.FileName + @"';
     var moduleTypes = " + getModuleTypesJSON() + @";
     var entityTypes = " + getEntityTypesJSON() + @";

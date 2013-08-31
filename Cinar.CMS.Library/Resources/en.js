@@ -93,6 +93,7 @@ langRes['Quick Load'] = 'Quick Load';
 langRes['Tag Picture'] = 'Tag Picture';
 langRes['Sort'] = 'Sort';
 langRes['Help'] = 'Help';
+langRes['Plese select a picture file to edit'] = 'Plese select a picture file to edit';
 
 // message.js
 langRes['Recommend to a friend'] = 'Recommend to a friend';

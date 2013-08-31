@@ -1,12 +1,12 @@
 ﻿// on load
 $(function(){
 	// on body click find visible editors and hide if not the click is within
-    $(document.body).on('mousedown', function(event){
+    $('html,body').on('mousedown', function(event){
         $('.hideOnOut').each(function(eix,editor){
             if(!Position.within(editor, event.pageX,event.pageY)){
                 if(editor.id=='smMenu' && $(editor).is(':visible'))
                     popupMenu.onHide();
-				if($(event.target).hasClass('hideOnOutException') || $(event.target).closest('.hideOnOutException'))
+				if($(event.target).hasClass('hideOnOutException') || $(event.target).closest('.hideOnOutException').length)
 					Prototype.K();
 				else
 					$(editor).hide();
@@ -567,8 +567,9 @@ function showElementWithOverlay(elm, autoHide, color){
 	if(Prototype.Browser.IE) {dim.height = $('body')[0].scrollHeight; dim.width -= 20;}
     
     var perde = $('#___perde');
+	$('#___perde').show(); 
     if(perde.length==0){
-        $(document.body).prepend('<div id="___perde" style="display:none;position: absolute;top: 0;left: 0;z-index: 90000;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
+        $(document.body).prepend('<div id="___perde" style="position: absolute;top: 0;left: 0;z-index: 90000;width:'+dim.width+'px;height:'+dim.height+'px;background-color: '+(color ? color : '#000')+';"'+(autoHide?' onclick="hideOverlay()"':'')+'></div>');
         perde = $('#___perde');
 		perde.on('mouseover', function(){
 			$('.hideOnPerde').each(function(eix,hop){
@@ -577,12 +578,18 @@ function showElementWithOverlay(elm, autoHide, color){
 		});
     }
 
-    new Effect.Appear(perde, { duration: .2, from: 0.0, to: 0.8, afterFinish:function(){ elm.css({position:'absolute', zIndex:100000}); elm.show(); } });
+    perde.animate({opacity:0.8}, 200, "linear");
+	elm.css({position:'absolute', zIndex:100000}); 
+	elm.fadeIn(200); 
+
 	showingElementWithOverlay = elm;
 }
 function hideOverlay(){
-    new Effect.Appear('___perde', { duration: .2, from: 0.8, to: 0.0, afterFinish:function(){ $('#___perde').hide(); $(document.body).css({overflow:'auto'});} });
-	showingElementWithOverlay.hide();
+    $('#___perde').animate({opacity:0.0}, 200, "linear", function(){ 
+		$('#___perde').hide(); 
+		$(document.body).css({overflow:'auto'});
+	});
+	showingElementWithOverlay.fadeOut(200);
 	showingElementWithOverlay.css('z-index', showingElementWithOverlayZIndex);
 	showingElementWithOverlay = false;
 }
@@ -759,7 +766,7 @@ function lightBox(img){
 			
 			if(img.attr('tag')=='video'){
 				var w = lbImgDim.width, h = lbImgDim.height;
-				lbImg.replace(img.attr('desc'));
+				lbImg.replaceWith(img.attr('desc'));
 				lightBoxDiv.find('iframe').css({width:w+'px', height:h+'px'}).attr('id','lbImg');
 			}
 
@@ -998,7 +1005,7 @@ function showDataListPage(url, dataListId) {
     var dataList = $('#DataList_' + dataListId);
     var html = ajax({ url: url, isJSON: false, noCache: true });
     if (html) {
-        dataList.replace(html);
+        dataList.replaceWith(html);
         if (preparePaging)
             preparePaging(dataList);
     }
@@ -1065,9 +1072,6 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
     }
 };
 
-
-
-
 /*
 ###################################
 #            Utility              #
@@ -1104,10 +1108,10 @@ function ajax(options){
 */
 Object.extend(String.prototype, {
     startsWith: function(str){
-        return this.substr(0, str.length) == str;
+        return this.toLowerCase().substr(0, str.length) == str.toLowerCase();
     },
     endsWith: function(str){
-        return this.substr(this.length-str.length) == str;
+        return this.toLowerCase().substr(this.length-str.length) == str.toLowerCase();
     },
     htmlEncode: function(){
         var enc = escape(this);
@@ -1117,6 +1121,15 @@ Object.extend(String.prototype, {
         enc = enc.replace(/&/g,"%26");
         enc = enc.replace(/@/g,"%40");
         return enc;
+    },
+    linkify: function() {
+        var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+        var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+        var emailAddressPattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim;
+        return this
+            .replace(urlPattern, '<a href="$&">$&</a>')
+            .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
+            .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
     }
 });
 
@@ -1143,40 +1156,6 @@ Position.getWindowSize = function(w) {
 
 	return { width: width, height: height };
 }
-
-// for scrolling elemnts in overflowed elements, thanks to robmadole, http://dev.rubyonrails.org/ticket/8208
-Scroll = Class.create(); 
-Scroll = { 
-    to: function(element) { 
-        element = $(element); 
-
-		var elementOverflow = element; 
-        var valueT = 0, valueL = 0; 
-  
-        do 
-        { 
-            if (!elementOverflow.parentNode) { break; } 
-  
-            valueT += elementOverflow.offset().top  || 0; 
-            valueL += elementOverflow.offset().left || 0; 
-  
-            if (elementOverflow.parentNode.getHeight() < elementOverflow.parentNode.scrollHeight) 
-            { 
-                elementOverflow.parentNode.scrollTop  = valueT; 
-                elementOverflow.parentNode.scrollLeft = valueL; 
-  
-                Element.scrollTo(elementOverflow); 
-                return; 
-            } 
-  
-             elementOverflow = elementOverflow.parentNode; 
-        } while (true); 
-  
-         var pos = element.offset(); 
-         window.scrollTo(pos.left, pos.top); 
-         return element; 
-    } 
-};
 
 ////////////////////////////
 //
@@ -1359,51 +1338,67 @@ function nicePrompt(prompt, validationCallback, okCallback){
     var selCtrl = $('#promptCtrl');
     selCtrl.focus();
     if(!validationCallback) validationCallback = function(){return true;};
-    $('#btnPromptOK').on('click', function(){
+	
+	win.name = 'dialog_prompt';
+	
+	win.onKeyEnter = function(){
         var val = selCtrl.val();
         if(validationCallback(val)){
             Windows.getFocusedWindow().close();
             if(okCallback) okCallback(val);
         }
-    });
+    };
+    $('#btnPromptOK').on('click', win.onKeyEnter);
     $('#btnPromptCancel').on('click', function(){Windows.getFocusedWindow().close();});
 }
 function niceAlert(alert){
     var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
-    var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
+    var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
     str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
-    $('#btnPromptOK').on('click', function(){Windows.getFocusedWindow().close();});
+	
+	win.name = 'dialog_alert';
+	
+	win.onKeyEnter = function(){Windows.getFocusedWindow().close();};
+    $('#btnPromptOK').on('click', win.onKeyEnter);
 }
 function niceInfo(alert, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
-    var str = '<br/>' + alert.replace('\n','<br/>') + '<br/>';
+    var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
     str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
-    $('#btnPromptOK').on('click', function(){
+	
+	win.name = 'dialog_info';
+	
+	win.onKeyEnter = function(){
         Windows.getFocusedWindow().close();
         if(okCallback) okCallback();
-    });
+    };
+    $('#btnPromptOK').on('click', win.onKeyEnter);
 }
 function niceConfirm(confirm, okCallback){
     var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
-    var str = '<p align="center"><br/>' + confirm + '</p>';
+    var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + confirm + '</p>';
     str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
     var selCtrl = $('#btnPromptCancel');
     selCtrl.focus();
-    $('#btnPromptOK').on('click', function(){
+	
+	win.name = 'dialog_confirm';
+	
+	win.onKeyEnter = function(){
         Windows.getFocusedWindow().close();
         if(okCallback) okCallback();
-    });
+    };
+    $('#btnPromptOK').on('click', win.onKeyEnter);
     $('#btnPromptCancel').on('click', function(){Windows.getFocusedWindow().close();});
 }
