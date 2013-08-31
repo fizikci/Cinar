@@ -186,10 +186,10 @@ function documentKeyDown(event){
 		var selMenuItem = $("#smMenuContainer div.menu_selected:first");
 		switch(event.keyCode){
 			case Event.KEY_UP:
-				selMenuItem.prev('div').trigger('mouseover');
+				selMenuItem.prevAll('div:visible').first().trigger('mouseover');
 				return false;
 			case Event.KEY_DOWN:
-				selMenuItem.next('div').trigger('mouseover');
+				selMenuItem.nextAll('div:visible').first().trigger('mouseover');
 				return false;
 			case Event.KEY_LEFT:
 				return false;
