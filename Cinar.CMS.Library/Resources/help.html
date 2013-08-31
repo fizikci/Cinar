@@ -324,16 +324,16 @@
             else if (data == 'ref_module') {
                 var res = [];
                 for (var i = 0; i < window.parent.moduleTypes.length; i++)
-                    res.push({ data: 'ref_module_grup$' + window.parent.moduleTypes[i].grup, text: window.parent.moduleTypes[i].grup, type: 'category' });
+                    res.push({ data: 'ref_module_grup-' + window.parent.moduleTypes[i].grup, text: window.parent.moduleTypes[i].grup, type: 'category' });
                 return res;
             }
-            else if (data.indexOf('ref_module_grup$') == 0) {
-                var grupName = data.split('$')[1];
+            else if (data.indexOf('ref_module_grup-') == 0) {
+                var grupName = data.split('-')[1];
                 var res = [];
                 for (var i = 0; i < window.parent.moduleTypes.length; i++)
                     if (window.parent.moduleTypes[i].grup==grupName)
                         for (var j = 0; j < window.parent.moduleTypes[i].items.length; j++)
-                            res.push({ data: 'ref_module_module$' + window.parent.moduleTypes[i].items[j].id, text: window.parent.moduleTypes[i].items[j].name, type: 'content' });
+                            res.push({ data: 'ref_module_module-' + window.parent.moduleTypes[i].items[j].id, text: window.parent.moduleTypes[i].items[j].name, type: 'content' });
                 return res;
             }
             else if (data == 'ref_entity') {
@@ -346,14 +346,14 @@
                 var res = [];
                 for (var i = 0; i < window.parent.entityTypes.length; i++)
                     if (window.parent.entityTypes[i][2])
-                        res.push({ data: 'ref_entity$' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
                 return res;
             }
             else if (data == 'ref_detay_entity') {
                 var res = [];
                 for (var i = 0; i < window.parent.entityTypes.length; i++)
                     if (!window.parent.entityTypes[i][2])
-                        res.push({ data: 'ref_entity$' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
                 return res;
             }
 
@@ -365,11 +365,11 @@
                 $('#'+id).show();
                 $('#'+id).next().show();
             }
-            else if (node.data.indexOf("ref_entity$")==0)
+            else if (node.data.indexOf("ref_entity-")==0)
             {
-                var parts = node.data.split('$');
+                var parts = node.data.split('-');
                 var h1 = $('#'+parts[0] + '_' + parts[1]);
-                if (h1) {
+                if (h1.length) {
                     h1.show();
                     h1.next().show();
                 }
@@ -377,7 +377,7 @@
                 {
                     var html = '<h1 id="' + parts[0] + '_' + parts[1] + '">' + node.text + '</h1>';
                     html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getEntityDocs&entityName=' + parts[1] }) + "</div>";
-                    $('contentPanel').append(html);
+                    $('#contentPanel').append(html);
                 }
             }
         }
@@ -778,7 +778,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
     entityName: 'Content', 
     id: 1,
     title: 'Çok basit içerik girişi',
-    <b>hideCategory</b>: 'İçerik,Temel',
+    <b>hideCategory</b>: 'İçerik,Temel,Extra',
     filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
 });</pre>
                 <div align="right">
@@ -791,7 +791,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
     entityName: 'Content', 
     id: 1,
     title: 'Basit içerik girişi',
-    hideCategory: 'İçerik,Temel',
+    hideCategory: 'İçerik,Temel,Extra',
     <b>showRelatedEntities</b>: ['ContentPicture', 'ContentLang'],
     filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
 });</pre>
@@ -805,7 +805,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
     entityName: 'Content', 
     id: 1,
     title: 'Çok basit içerik girişi',
-    hideCategory: 'İçerik,Temel',
+    hideCategory: 'İçerik,Temel,Extra',
     showRelatedEntities: [],
     filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle=',
     <b>renameLabels</b>: {

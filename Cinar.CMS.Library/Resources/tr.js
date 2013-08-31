@@ -93,6 +93,7 @@ langRes['Quick Load'] = 'Hızlı Yükle';
 langRes['Tag Picture'] = 'Etiketle';
 langRes['Sort'] = 'Sırala';
 langRes['Help'] = 'Yardım';
+langRes['Plese select a picture file to edit'] = 'Lütfen düzenlemek için bir resim dosyası seçiniz';
 
 // message.js
 langRes['Recommend to a friend'] = 'Arkadaşınıza tavsiye edin';

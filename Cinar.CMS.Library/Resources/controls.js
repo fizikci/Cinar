@@ -132,7 +132,7 @@ var IntegerEdit = Class.create(); IntegerEdit.prototype = {
         this.input.bind('keydown', this.onKeyDown.bind(this));
         this.input.css({textAlign:'right'});
 
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     onKeyDown: function(event){
 		if(event.keyCode>=96 && event.keyCode<=105)
@@ -172,7 +172,7 @@ var DecimalEdit = Class.create(); DecimalEdit.prototype = {
         this.input.bind('keydown', this.onKeyDown.bind(this));
         this.input.css({textAlign:'right'});
 
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     onKeyDown: function(event){
 		if(event.keyCode>=96 && event.keyCode<=105)
@@ -213,7 +213,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
         else
             this.button.bind('click', this.showEditor.bind(this));
 
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     showEditor: function(event) {
         var ths = this;
@@ -305,7 +305,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                         $(document.body).append('<div id="' + ths.editorId + 'Preview" style="background:white;overflow:auto;text-align:left;left:' + pos.left + 'px;top:' + pos.top + 'px;z-index:' + Windows.maxZIndex + ';width:' + dim.width + 'px;height:' + dim.height + 'px;position:absolute;"></div>');
                     }
                     $('#'+ths.editorId + 'Preview').html(ths.aceEdit.getValue());
-                    showElementWithOverlay(ths.editorId + 'Preview', true, 'black');
+                    showElementWithOverlay('#'+ths.editorId + 'Preview', true, 'black');
                 });
         });
 
@@ -341,7 +341,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         this.button.bind('click', this.showEditor.bind(this));
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     showEditor: function(event) {
         if ($('#'+this.editorId).length) {
@@ -428,9 +428,9 @@ var FileManager = Class.create(); FileManager.prototype = {
         this.container.find('form').each(function(eix,frm) {
             $(frm).on('submit', function() {
                 $('#fileBrowserLoading').show();
-                $(frm).find('input[name=folder]').setValue(currFolder);
+                $(frm).find('input[name=folder]').val(currFolder);
                 if ($(frm).hasClass('delForm'))
-                    $(frm).find('input[name=name]').setValue($('#fileBrowserList .fileSelected').collect(function(elm) { return elm.attr('name'); }).join('#NL#'));
+                    $(frm).find('input[name=name]').val($A($('#fileBrowserList .fileSelected')).collect(function(elm) { return $(elm).attr('name'); }).join('#NL#'));
             });
         });
         currFolder = this.folder;
@@ -442,8 +442,13 @@ var FileManager = Class.create(); FileManager.prototype = {
         imageEditorInit();
         $('#fb_btnImgEdit').on('click', function() {
             var arr = ths.getSelectedFiles();
-            if (arr.length > 0)
-                editCurrImage(arr[0]);
+            if (arr.length > 0){
+				var name = arr[0];
+				if(name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
+					editCurrImage(name);
+				else
+					niceAlert(lang('Plese select a picture file to edit'));
+			}
         });
 
     },
@@ -524,7 +529,7 @@ var FileManager = Class.create(); FileManager.prototype = {
 
     },
     getSelectedFiles: function() {
-        return $('#fileBrowserList .fileSelected').collect(function(elm) { return currFolder + '/' + elm.attr('name'); });
+        return $A($('#fileBrowserList .fileSelected')).collect(function(elm) { return currFolder + '/' + $(elm).attr('name'); });
     },
     getSize: function(item) {
         if (item.size < 0) return ''; //***
@@ -556,6 +561,7 @@ var FileManager = Class.create(); FileManager.prototype = {
 };
 fileBrowserUploadFeedback = function (msg, url) {
 	currPicEdit.getFileList();
+	currPicEdit.container.find('form').trigger('reset');
 }
 
 
@@ -573,7 +579,7 @@ var LookUp = Class.create(); LookUp.prototype = {
         this.button.bind('click', this.showEditor.bind(this));
         this.input.bind('focus', this.focus.bind(this));
         this.input.bind('blur', this.blur.bind(this));
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
 
         if (this.options.entityName) {
             var txt = value ? ajax({ url: this.options.itemsUrl + '?method=getEntityNameValue&entityName=' + this.options.entityName + '&id=' + value, isJSON: false, noCache: false }) : '';
@@ -611,7 +617,8 @@ var LookUp = Class.create(); LookUp.prototype = {
         $('#btnDelete' + lf.hndl).hide();
         $('#btnInfo' + lf.hndl).hide();
 
-        list.append('<center><span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></center>');
+        list.find('.lf-listFormFooter').append('<span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span>');
+		list.find('#' + this.editorId + 'btnCancel').css('margin','0px 0px 0px 20px');
 
         var btnCancel = $('#'+this.editorId + 'btnCancel');
         btnCancel.bind('click', this.showEditor.bind(this));
@@ -759,7 +766,7 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
     initialize: function(id, value, options) {
         Object.extend(this, new Control(id, value, options));
         this.button.bind('click', this.showEditor.bind(this));
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     showEditor: function(event) {
         if ($('#'+this.editorId).length) {
@@ -880,7 +887,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
             filtEdit.find(':first').html('');
         this.button.bind('click', this.showEditor.bind(this));
 
-        this.input['ctrl'] = this;
+        if(this.input.length) this.input[0]['ctrl'] = this;
     },
     showEditor: function(event) {
         if (!$('#'+this.editorId).length)
@@ -962,7 +969,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         this.setText(value);
         this.button.bind('click', this.showEditor.bind(this));
         this.input.bind('click', this.showEditor.bind(this));
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
         this.input.readOnly = true;
     },
     showEditor: function(event) {
@@ -1119,7 +1126,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         } else
             this.setValue(value);
 
-        this.input['ctrl'] = this;
+        this.input[0]['ctrl'] = this;
     },
     beforeOpenList: function() {
         if (!(this.editor && this.editor.length)) {
@@ -1186,7 +1193,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
                 i++;
                 elm = $('#__itm' + this.hndl + '_' + i);
             }
-            if (selElm.length) {
+            if (selElm && selElm.length) {
                 selElm.addClass('checkedItem');
                 //Scroll.to(selElm);
             }
@@ -1353,8 +1360,8 @@ var EditForm = Class.create(); EditForm.prototype = {
                 if (control.category != cat || control.type == 'ListForm') continue;
                 if (hideCategory.indexOf(cat) > -1) hideFieldValue[control.id] = control.value;
                 if (renameLabels && renameLabels[control.id]) { control.label = renameLabels[control.id]; control.description = ''; }
-                str += '<tr ' + (hideFieldValue[control.id] != undefined ? 'style="display:none"' : '') + '>';
-                str += '<td onclick="$(this).parent().find(\'input\').focus()">' + (hideFieldValue[control.id] != undefined ? '' : ('&nbsp;' + control.label)) + '</td>';
+                str += '<tr ' + (hideFieldValue[control.id] !== undefined ? 'style="display:none"' : '') + '>';
+                str += '<td onclick="$(this).parent().find(\'input\').focus()">' + (hideFieldValue[control.id] !== undefined ? '' : ('&nbsp;' + control.label)) + '</td>';
                 str += '<td id="' + this.cntrlId + i + '"></td>';
                 str += '</tr>';
             }
@@ -1378,7 +1385,7 @@ var EditForm = Class.create(); EditForm.prototype = {
             control.options.container = $('#'+this.cntrlId + i);
             control.options.relatedEditForm = ths;
             // Eğer bu EditForm bir EditForm'un içindeki detail ListForm'unda "Yeni Ekle" butonuna tıklayarak açılıyorsa... (ilişkili kontrolü gizle)
-            if (control.id && hideFieldValue[control.id] != undefined) {
+            if (control.id && hideFieldValue[control.id] !== undefined) {
                 control.options.hidden = true;
                 control.value = hideFieldValue[control.id];
             }
@@ -1441,7 +1448,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 aControl.setValue(controls[i].value);
         }
         // yoksa detail linklerini gizleyelim
-        if (!details.find('span')) {
+        if (details.find('span').length==0) {
             details.hide();
             $('#detailsHeader' + this.hndl).hide();
         }
@@ -1524,7 +1531,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.options = options;
 
         this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
-        this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: 'filter' + this.hndl, readOnly: true });
+        this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: '#filter' + this.hndl, readOnly: true });
         $('#btnFilter' + this.hndl).bind('click', this.fetchData.bind(this));
 
         this.container.append('<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"' + (this.options.hideFilterPanel ? ' style="top:4px"' : '') + '></div>');
@@ -1579,7 +1586,7 @@ var ListForm = Class.create(); ListForm.prototype = {
                 if (ths.options['renameLabels']) {
                     var headers = dataArea.find('TH');
                     for (var i = 0; i < headers.length; i++) {
-                        var fieldName = headers[i].attr("id").split('_')[1];
+                        var fieldName = $(headers[i]).attr("id").split('_')[1];
                         var key = fieldName.indexOf('.') > -1 ? fieldName.split('.')[1] : fieldName;
                         if (ths.options.renameLabels[key])
                             headers[i].html(ths.options.renameLabels[key]);
@@ -1783,7 +1790,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
     },
     fieldChanged: function(sender) {
         var row = sender.input.closest('.filterRow');
-        var rowCount = row.parent().childNodes.length;
+        var rowCount = row.parent().children().length;
         var tdOp = row.find('.tdOp');
         var tdControl = row.find('.tdControl');
 
@@ -1805,7 +1812,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
             var fieldMetadata = this.fields[sender.selectedIndex - 1];
             var aControl = createControl('c' + rowCount, fieldMetadata, tdControl);
             aControl.label = fieldMetadata.label;
-            if (!row.next()) {
+            if (!row.next().length) {
                 row.after(this.rowHtml);
                 var cb2 = new ComboBox('f' + (rowCount + 1), null, { items: this.fieldsComboItems, container: row.next().find('.tdField') });
                 cb2.options.onChange = this.fieldChanged.bind(this);
@@ -1814,7 +1821,7 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
     },
     opChanged: function(sender) {
         var row = sender.input.closest('.filterRow');
-        var cbField = $(row.find('.tdField INPUT'))['ctrl'];
+        var cbField = row.find('.tdField INPUT')[0]['ctrl'];
         var tdControl = row.find('.tdControl');
         tdControl.html('');
         if (sender.getValue().indexOf('@') > -1)
@@ -1826,9 +1833,10 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         var h = new Object();
         var rows = this.container.find('.filterRow');
         for (var i = 0; i < rows.length - 1; i++) {
-            var inpField = rows[i].find('.tdField INPUT');
-            var inpOp = rows[i].find('.tdOp INPUT');
-            var inpCtrl = rows[i].find('.tdControl INPUT');
+			var row = $(rows[i]);
+            var inpField = row.find('.tdField INPUT')[0];
+            var inpOp = row.find('.tdOp INPUT')[0];
+            var inpCtrl = row.find('.tdControl INPUT')[0];
             h['f_' + i] = inpField['ctrl'].getValue();
             h['o_' + i] = inpOp['ctrl'].getValue();
             h['c_' + i] = inpCtrl['ctrl'].getValue();
@@ -1842,11 +1850,11 @@ var FilterEditor = Class.create(); FilterEditor.prototype = {
         if (table[0].tagName != 'TBODY') table = table.find(':first');
         var rows = table.find('>');
         var rowCount = rows.length;
-        rows.each(function(i, elm) { if (i < rowCount - 1) elm.remove(); }); //table.rows.clear(); demek bu.
+        rows.each(function(i, elm) { if (i < rowCount - 1) $(elm).remove(); }); //table.rows.clear(); demek bu.
         while (true) {
             if (!h['f_' + i]) break;
             table.prepend(this.rowHtml);
-            var row = this.container.find('.filterRow');
+            var row = $(this.container.find('.filterRow')[i]);
             var tdField = row.find('.tdField');
             var tdOp = row.find('.tdOp');
             var tdControl = row.find('.tdControl');
@@ -2000,14 +2008,15 @@ var ListGrid = Class.create(); ListGrid.prototype = {
         var res = [];
         var headers = this.table.find('TH');
         for (var i = 0; i < selRows.length; i++) {
+			var selRow = $(selRows[i]);
             var r = {};
             for (var k = 0; k < headers.length; k++) {
-                var fieldName = headers[k].attr("id").split('_')[1];
+                var fieldName = $(headers[k]).attr("id").split('_')[1];
                 var key = fieldName.indexOf('.') > -1 ? fieldName.split('.')[1] : fieldName;
                 if (r[key])
-                    r[key + "2"] = selRows[i].find('TD')[k].attr("value");
+                    r[key + "2"] = $(selRow.find('TD')[k]).attr("value");
                 else
-                    r[key] = selRows[i].find('TD')[k].attr("value");
+                    r[key] = $(selRow.find('TD')[k]).attr("value");
             }
             res.push(r);
         }
@@ -2061,7 +2070,7 @@ var TreeView = Class.create(); TreeView.prototype = {
         var node = div[0]['node'];
 
         var childrenDiv = $('#nd_' + node.data + '_children');
-        if (!childrenDiv) {
+        if (!childrenDiv.length) {
             div.append('<div class="treeChildren" id="nd_' + node.data + '_children"></div>');
             childrenDiv = $('#nd_' + node.data + '_children');
             var nodes = this.getNodesCallback(node.data) || [];
@@ -2071,7 +2080,7 @@ var TreeView = Class.create(); TreeView.prototype = {
                 n.collapsed = true;
                 childrenDiv.append('<div id="nd_' + n.data + '">' + (n.type == 'category' ? '<span class="cbtn cplus"></span>' : '') + '<span class="cbtn c' + n.type + '"></span> <span class="nodeName">' + n.text + '</span></div>');
                 var nDiv = $('#nd_' + n.data);
-                nDiv['node'] = n;
+                nDiv[0]['node'] = n;
                 nDiv.find(':first').bind('click', this.toggle.bind(this));
                 nDiv.find('span.nodeName').bind('click', this.nodeClick.bind(this));
             }
@@ -2090,11 +2099,11 @@ var TreeView = Class.create(); TreeView.prototype = {
     },
     nodeClick: function(event) {
         var span = $(event.target);
-        this.container.find('.nodeName').each(function(eix,elm) { $(elm).css({ fontWeight: 'normal' }); });
+        this.container.find('.nodeName').each(function(eix,elm) { $(elm).css({ fontWeight: '' }); });
         span.css({ fontWeight: 'bold' });
         var div = span.parent();
         if (this.nodeClickCallback)
-            this.nodeClickCallback(div['node']);
+            this.nodeClickCallback(div[0]['node']);
     }
 };
 
@@ -2185,9 +2194,9 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
             if (menu.text == '-')
                 s += (tab + '\t<hr id="' + (subId + '_' + index) + '"/>\n');
             else if (menu.items && menu.items.length > 0)
-                s += (tab + '\t<div class="menuFolder" onmouseover="showSubMenu(this,\'' + (id + '_' + index) + '\')" id="' + (subId + '_' + index) + '" onmouseout="menuOut(this)"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
+                s += (tab + '\t<div class="menuFolder" onmouseover="showSubMenu(this,\'' + (id + '_' + index) + '\')" id="' + (subId + '_' + index) + '"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
             else
-                s += (tab + '\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '" onmouseout="menuOut(this)"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
+                s += (tab + '\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
         });
         s += (tab + '</div>\n');
         menus.each(function(menu, index) {
@@ -2198,6 +2207,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         return s;
     },
     show: function(x, y) {
+		$('#StaticHtml_2').append('show - ');
         var menu = $('#smMenu');
         var winDim = Position.getWindowSize();
         var scrollPos = getViewportScrollOffsets();
@@ -2226,7 +2236,9 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
     },
     hideMenu: function(link) {
         link = $(link);
-        link.css({ backgroundColor: '#316AC5', color: 'white' });
+		link.parent().find('.menu_selected').removeClass('menu_selected');
+		link.addClass('menu_selected');
+		$('#StaticHtml_2').append(link.attr('class'));
         //if(link.className!='menuFolder') return;
         $('#smMenuContainer > *').each(function(eix,elm) {
             var upElmId = link.parent().attr('id');
@@ -2277,7 +2289,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         }
     },
     runMenu: function(link) {
-        var theItem = this.findMenuItem(link);
+       var theItem = this.findMenuItem(link);
         $(link).parent().hide();
         this.onHide();
         $('#smMenuContainer').hide();
@@ -2303,9 +2315,7 @@ function showSubMenu(link, id){
 function runMenu(link){
     popupMenu.runMenu(link);
 }
-function menuOut(link){
-    $(link).css({backgroundColor:'', color:''});
-}
+
 function wr(s){document.write(s);}
 
 //#############################

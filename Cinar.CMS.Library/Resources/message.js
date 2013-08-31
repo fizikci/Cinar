@@ -35,7 +35,7 @@ function commentsAdd(active, id, allowAnon, isUserAnon, withTitle, parentId, sho
     str += '</form></div>';
     
     $('#comments'+id+'_'+parentId).append(str);
-    $('#commentForm'+id).scrollTo();
+	$('html, body').animate({scrollTop: $('#commentForm'+id).offset().top}, 200);
 }
 
 function commentSaved(moduleId, req, params){

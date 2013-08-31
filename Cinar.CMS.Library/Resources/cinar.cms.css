@@ -122,10 +122,15 @@ div.smMenu hr {
     margin-top:5px;
     margin-bottom:5px;
 }
+div.menu_selected {
+	background-color: #316AC5;
+	color: white;
+}
 
 div.treeChildren {padding-left:16px}
 div.treeChildren img {vertical-align:middle}
 #nd_root span {cursor:pointer}
+span.nodeName {cursor:pointer}
 
 td 
 {
@@ -277,7 +282,7 @@ ul.tabs a.active-tab
 #fileBrowser td.picture {background-image:url(/external/icons/picture.png);}
 #fileBrowser .size {text-align:right;}
 #fileBrowser .date {text-align:right;}
-#fileBrowserLoading {background-image:url(/external/icons/loading.gif);width:43px; height:11px;display:none;float:right;}
+#fileBrowserLoading {background-image:url(/external/icons/loading.gif);width:43px; height:11px;display:none;position: absolute;right: 20px;bottom: 16px;}
 
 div.fileNameBox {
     cursor: pointer;
