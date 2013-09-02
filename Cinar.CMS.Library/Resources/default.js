@@ -165,7 +165,7 @@ $(function(){
 	if($('.lightBox').length){
 		$('html,body').on('keydown', function(event){
 			var lightBoxDiv = $('#lightBoxDiv');
-			if(!lightBoxDiv) return;
+			if(lightBoxDiv.length==0) return;
             switch(event.keyCode){
 				case Event.KEY_LEFT:
 					lightBoxDiv.find('#lbPrev').simulate('click');
