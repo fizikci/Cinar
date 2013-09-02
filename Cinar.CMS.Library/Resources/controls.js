@@ -112,15 +112,6 @@ var Control = Class.create(); Control.prototype = {
     }
 };
 
-$(function(){
-	$(document).on('keydown', function(event){
-		if(event.keyCode==Event.KEY_ESC && currEditor && currEditor.parentControl && currEditor.parentControl.showEditor){
-			currEditor.parentControl.showEditor();
-			currEditor = null;
-		}
-	});
-});
-
 //############################
 //#       IntegerEdit        #
 //############################
@@ -2207,7 +2198,6 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         return s;
     },
     show: function(x, y) {
-		$('#StaticHtml_2').append('show - ');
         var menu = $('#smMenu');
         var winDim = Position.getWindowSize();
         var scrollPos = getViewportScrollOffsets();
@@ -2238,7 +2228,6 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         link = $(link);
 		link.parent().find('.menu_selected').removeClass('menu_selected');
 		link.addClass('menu_selected');
-		$('#StaticHtml_2').append(link.attr('class'));
         //if(link.className!='menuFolder') return;
         $('#smMenuContainer > *').each(function(eix,elm) {
             var upElmId = link.parent().attr('id');
