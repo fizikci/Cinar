@@ -21,27 +21,11 @@ $(function(){
 	$('.gogPop img').each(function(eix,img){
 		$(img).on('mouseover', gogPop);
 	});
-	// listelerde description alanlarının görünüp gizlenmesi
-	var effectInExecution=null;
-	$('.toogleDesc .clItem').each(function(eix,elm){
-		var elmDesc = $(elm).find('div.clDesc');
-		if(elmDesc.length){
-			elmDesc.hide();
-			$(elm).on('mouseenter', function(event){
-				event.stop();
-				new Effect.Parallel([new Effect.BlindDown(elmDesc), new Effect.Morph(elm, {style:'background:#C1C3C2; border-color:#838383;'})], {duration:0.3, afterFinish: function(){$(elm).css({borderColor:'#838383'});}});
-			});
-			$(elm).on('mouseleave', function(event){
-				event.stop();
-				new Effect.Parallel([new Effect.BlindUp(elmDesc), new Effect.Morph(elm, {style:'background:#E1E3E2; border-color:#E1E3E2;', afterFinish: function(){elmDesc.css({height:'auto'});}})], {duration:0.3});
-			});
-		}
-    });
 	// listelerde description alanlarının resim üzerinde görünüp gizlenmesi
 	$('.showDescOnImg img').each(function(eix,elm){
 		var elmImg = $(elm);
-		var elmDesc = $(elm).next('div.clDesc');
-		if($(elm).closest('.lightBox')) elmDesc.on('click', function(){lightBox(elmImg);});
+		var elmDesc = $(elm).nextAll('div.clDesc');
+		if($(elm).closest('.lightBox').length) elmDesc.on('click', function(){lightBox(elmImg);});
 		if(elmDesc.length){
 			elmDesc.hide();
 			elmImg.on('mouseenter', function(event){
@@ -92,7 +76,7 @@ $(function(){
 			$(elm).css({zIndex:2});
 		}
 		else
-			$(elm).fade({ duration: 0.05, from: 1, to: 0.01 });
+			$(elm).fadeOut(50);
 		$(elm).closest('.fadeShow').find('.indexElms').first().append('<img src="/external/icons/bullet_'+(i==0 ? 'gray':'white')+'.png" index="'+i+'"/>');
 		var indexElm = $(elm).closest('.fadeShow').find('.indexElms').first().find('*').last();
 		indexElm.on('click', function(event){
@@ -117,7 +101,7 @@ $(function(){
 			$(elm).closest('.fadeWithArrows').currentImg = elm;
 			$(elm).css({zIndex:2});
 		} else {
-			$(elm).fade({ duration: 0.05, from: 1, to: 0.01 });
+			$(elm).fadeIn(50);
 		}
 	});
 	// slideShow
@@ -179,7 +163,7 @@ $(function(){
 		});
 	// lightBox olayı
 	if($('.lightBox').length){
-		document.on('keydown', function(event){
+		$('html,body').on('keydown', function(event){
 			var lightBoxDiv = $('#lightBoxDiv');
 			if(!lightBoxDiv) return;
             switch(event.keyCode){
@@ -284,9 +268,9 @@ function slideAllShow(items, index, dim){
 	var space = (dim.width-w)/(items.length-1);
 	for(var i=0; i<items.length; i++){
 		var l = i<=index ? i * space : ((i-1)*space+w);
-		new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
-		items[i].find('.clTitle').hide();
-		items[i].find('.clDesc').hide();
+		$(items[i]).animate({left:l+'px'}, 400);
+		$(items[i]).find('.clTitle').hide();
+		$(items[i]).find('.clDesc').hide();
 	}
 	elm.find('.clTitle').show();
 	elm.find('.clDesc').show();
@@ -295,9 +279,9 @@ function slideAllShow(items, index, dim){
 function slideAllCollapse(items, dim){
 	for(var i=0; i<items.length; i++){
 		var l = dim.width/items.length*i;
-		new Effect.Morph(items[i], {style:'left:'+l+'px', duration: 0.4});
-		items[i].find('.clTitle').hide();
-		items[i].find('.clDesc').hide();
+		$(items[i]).animate({left:l+'px'}, 400);
+		$(items[i]).find('.clTitle').hide();
+		$(items[i]).find('.clDesc').hide();
 	}
 }
 
@@ -476,14 +460,14 @@ function slideShowSlide(elm, dir){
     var dimID = getDimensions(elm.find('.innerDiv'));
 
 	if(leftID + dimID.width < dimCl.width+60)
-		new Effect.Move(elm.find('.innerDiv'), { x: -1*leftID, y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
+		elm.find('.innerDiv').animate({ left: -1*leftID}, 1000, function(){elm.alreadySliding = false;} );
 	else if(dir == 'back'){
 		if(leftID < 0)
-			new Effect.Move(elm.find('.innerDiv'), { x: elm.find('.clipper').getWidth()+20, y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
+			elm.find('.innerDiv').animate({ left: elm.find('.clipper').width()+20}, 1000, function(){elm.alreadySliding = false;} );
 		else
 			elm.alreadySliding = false;
 	} else
-		new Effect.Move(elm.find('.innerDiv'), { x: -1*(elm.find('.clipper').getWidth()+20), y: 0, mode: 'relative', duration:1.0, afterFinish:function(){elm.alreadySliding = false;} });
+		elm.find('.innerDiv').animate({ left: -1*(elm.find('.clipper').width()+20)}, 1000, function(){elm.alreadySliding = false;} );
 		
 	clearTimeout(elm.timeout);
 	if(elm.playing && !elm.mouseIsOver){
@@ -508,24 +492,24 @@ function fadeShowShowImg(fadeShow, indexElm){
 	clearTimeout(fadeShow.timeout);
 	var i = parseInt(indexElm.attr('index'));
 	
-	fadeShow.currentImg.fade({ duration: 0.5, from: 1, to: 0.01 });
+	fadeShow.currentImg.fadeOut(500);
 	fadeShow.currentImg.css({zIndex:1});
 	
 	fadeShow.currentImg = fadeShow.find('.clItem')[i];
-	fadeShow.currentImg.fade({ duration: 0.5, from: 0, to: 1 });
+	fadeShow.currentImg.fadeIn(500);
 	fadeShow.currentImg.css({zIndex:2});
 
 	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 4000);
 }
 function fadeWithArrowsShow(elm, which){
-	var nextImg = which=='next' ? elm.currentImg.next('.clItem') : elm.currentImg.previous('.clItem');
+	var nextImg = which=='next' ? elm.currentImg.nextAll('.clItem') : elm.currentImg.prevAll('.clItem');
 	nextImg = nextImg.length ? nextImg[0] : null;
 	if(!nextImg)
 		nextImg = which=='next' ? $(elm).find('.clItem') : $(elm).find('.clItem').last();
 	if(nextImg && nextImg!=elm.currentImg){
 		var curr = elm.currentImg;
-		curr.fade({ duration: 0.5, from: 1, to: 0.01, afterFinish: function(){curr.css({ zIndex:1 });} });
-		nextImg.fade({ duration: 0.5, from: 0, to: 1, afterFinish: function(){nextImg.css({ zIndex:2 });} });
+		curr.fadeOut(500, function(){curr.css({ zIndex:1 });} );
+		nextImg.fadeIn(500, function(){nextImg.css({ zIndex:2 });} );
 		elm.currentImg = nextImg;
 	}
 }
@@ -677,8 +661,8 @@ function linkTags(contentId){
 
 // resimlerin images.google'daki gibi pırtlaması için
 function gogPop(event){
-	var pop = $('#gogPopDiv'); if(pop) pop.remove();
-	var lightBoxDiv = $('#lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
+	var pop = $('#gogPopDiv'); if(pop.length) pop.remove();
+	var lightBoxDiv = $('#lightBoxDiv'); if(lightBoxDiv.length) lightBoxDiv.remove();
 	
 	var img = $(event.target);
 	
@@ -688,23 +672,26 @@ function gogPop(event){
 		else
 			$('#mostLikedIcon').css({zIndex:'auto'});
 	}
-	$(document.body).append('<div id="gogPopDiv" class="hideOnOut"><img src="'+img.src+'"/></div>');
+	$('body').append('<div id="gogPopDiv" style="display:none" class="hideOnOut"><img src="'+img.attr('src')+'"/></div>');
 	pop = $('#gogPopDiv');
-	if(img.closest('.lightBox'))
-		pop.find('img').on('click', function(){lightBox(img);});
-	var pos = img.offset();
-	var dim = getDimensions(img);
-	var popDim = getDimensions(pop);
-	pop.css({left:(pos.left-(popDim.width-dim.width)/2)+'px', top:(pos.top-(popDim.height-dim.height)/2)+'px'});
-	pop.hide();
-	new Effect.Appear(pop, { duration: 0.2, from: 0.0, to: 1.0 });
+	pop.find('img').load(function(){
+		if(img.closest('.lightBox').length)
+			pop.find('img').on('click', function(){lightBox(img);});
+		var pos = img.offset();
+		var dim = getDimensions(img);
+		var popDim = getDimensions(pop);
+		pop.css({left:(pos.left-(popDim.width-dim.width)/2)+'px', top:(pos.top-(popDim.height-dim.height)/2)+'px'});
+		//pop.hide();
+		pop.fadeIn();
+	});
 }
 // lightbox faclty
 function lightBox(img){
+	img = $(img);
 	var lightBoxDiv = $('#lightBoxDiv'); if(lightBoxDiv) lightBoxDiv.remove();
 	
 	var fbLikeExist = img.closest('.lightBox').hasClass('fbLike');
-	var allImg = img.parent().find('img');
+	var allImg = $A(img.closest('.lightBox').find('img').toArray());
 	var html = '<div id="lightBoxDiv">'+
 					'<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>'+
 					'<img id="lbImg" src="'+img.attr('path')+'"/>'+
@@ -713,10 +700,10 @@ function lightBox(img){
 					'<div id="lbCenter"></div>'+
 					'<div id="lbRight"><div id="lbCounter">1/20</div>'+(fbLikeExist?'<img id="lbLove" src="'+img.attr('likeSrc')+'"/> <span id="lbLoveCount">0</span>':'') + '</div>'+
 					'</div>';
-	$(document.body).append(html);
+	$('body').append(html);
 	lightBoxDiv = $('#lightBoxDiv');
-	lightBoxDiv.find('#lbPrev').on('click',function(){if(img.prev('img').length) {img = img.prev('img'); showPic();}});
-	lightBoxDiv.find('#lbNext').on('click',function(){if(img.next('img').length) {img = img.next('img'); showPic();}});
+	lightBoxDiv.find('#lbPrev').on('click',function(){if(img.prevAll('img').length) {img = img.prevAll('img'); showPic();}});
+	lightBoxDiv.find('#lbNext').on('click',function(){if(img.nextAll('img').length) {img = img.nextAll('img'); showPic();}});
 	
 	if(fbLikeExist){
 		lightBoxDiv.find('#lbLove').on('click',function(){
@@ -738,17 +725,17 @@ function lightBox(img){
 		lightBoxDiv.find('#lbNext').hide();
 		lightBoxDiv.hide();
 		lightBoxDiv.find('.tag_bg').each(function(eix,tbg){$(tbg).remove();});
-		lbImg.src = img.attr('path'); 
+		lbImg.attr('src', img.attr('path')); 
 	}
 	lightBoxDiv.hide();
 	var lbImg = $('#lbImg');
-	lbImg.on('load', function(){
+	lbImg.load(function(){
 		var tagData = img.attr('tagData') ? eval('('+img.attr('tagData')+')') : [];
-		lightBoxDiv.find('#lbCounter').html((allImg.indexOf(img) + 1) + ' / ' + allImg.length);
+		lightBoxDiv.find('#lbCounter').html((allImg.indexOf(img[0]) + 1) + ' / ' + allImg.length);
 		centerToView(lightBoxDiv);
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true, 'white');
-		new Effect.Appear(lightBoxDiv, { duration: 0.5, from: 0.0, to: 1.0, afterFinish: function(){
+		lightBoxDiv.show(1, function(){
 			var lbImgDim = getDimensions(lbImg);
 			lightBoxDiv.find('#lbPrev').css({top:(lbImgDim.height/2-19)+'px', left:'10px'});
 			lightBoxDiv.find('#lbNext').css({top:(lbImgDim.height/2-19)+'px', right:'10px'});
@@ -786,11 +773,11 @@ function lightBox(img){
 				});
 				lightBoxDiv.find('#lbCenter').html(tagText);
 			}
-		} });
+		} );
 	});
 	lightBoxDiv.on('mouseover', function(){
-		if(img.previous('img')) $('#lbPrev').show(); else $('#lbPrev').hide();
-		if(img.next('img')) lightBoxDiv.find('#lbNext').show(); else lightBoxDiv.find('#lbNext').hide();
+		if(img.prevAll('img')) $('#lbPrev').show(); else $('#lbPrev').hide();
+		if(img.nextAll('img')) lightBoxDiv.find('#lbNext').show(); else lightBoxDiv.find('#lbNext').hide();
 		if(img.attr('tag')=='video'){
 			$('#lbPrev').hide();
 			lightBoxDiv.find('#lbNext').hide();
@@ -798,7 +785,7 @@ function lightBox(img){
 	});
 	lbImg.on('mousemove', function(event){
 		var scrollOffset = getViewportScrollOffsets();
-		var pointerPos = {x:event.pointerX()-scrollOffset.left,y:event.pointerY()-scrollOffset.top};
+		var pointerPos = {x:event.pageX-scrollOffset.left,y:event.pageY-scrollOffset.top};
 		lightBoxDiv.find('.tag_bg').each(function(eix,tagElm){
 			$(tagElm).show();
 			var tagElmPos = $(tagElm).viewportOffset();
