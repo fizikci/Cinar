@@ -132,10 +132,19 @@ function findPrevModule(mdl){
                 return $(modules[i-1]);
 }
 
+var lastFocusedInput = null;
+
 function documentKeyDown(event){
 	if(navigationEnabled && event.keyCode==93){
 		popupMenu.show(100, 100);
 		var selMenuItem = $("#smMenuContainer div:first div:first").addClass('menu_selected');
+		return false;
+	}
+
+	if(event.keyCode==Event.KEY_ESC && currEditor && currEditor.parentControl && currEditor.parentControl.showEditor){
+		currEditor.parentControl.showEditor();
+		currEditor = null;
+		event.stopPropagation();
 		return false;
 	}
 
@@ -170,14 +179,33 @@ function documentKeyDown(event){
             }
         }
 		
-		if(win.name && win.name.startsWith('dialog_')){
+		if(win.name && win.name.startsWith('dialog_') && event.keyCode==Event.KEY_RETURN){
+			win.onKeyEnter();
+            return false;
+		}
+		
+		if(win && event.keyCode==Event.KEY_ESC){
+			win.close();
+			if(lastFocusedInput){
+				$(lastFocusedInput).focus();
+				lastFocusedInput = null;
+			}
+			return false;
+		}
+		
+		if(win && win['form'] && win['form'].formType=='EditForm'){
 			switch(event.keyCode){
 				case Event.KEY_RETURN:
-					win.onKeyEnter();
-                    return false;
-				case Event.KEY_ESC:
-					win.close();
-                    return false;
+					win['form'].saveClick();
+					return false;
+				case Event.KEY_INSERT:
+					var f = $(':focus');
+					if(f.length && f[0]['ctrl'] && f[0]['ctrl'].button){
+						f[0]['ctrl'].button.click();
+						lastFocusedInput = f[0];
+						return false;
+					}
+					break;
 			}
 		}
     }
@@ -191,40 +219,59 @@ function documentKeyDown(event){
 			case Event.KEY_DOWN:
 				selMenuItem.nextAll('div:visible').first().trigger('mouseover');
 				return false;
+			case Event.KEY_ESC:
+				$('.hideOnOut').hide();
+				navigationEnabled = true;
+				$("#smMenuContainer .menu_selected").removeClass('menu_selected');
+				return false;
 			case Event.KEY_LEFT:
+				if(selMenuItem.parent().attr('id')=='smMenu')
+					return false;
+				selMenuItem.parent().hide();
+				var id = selMenuItem.parent().attr('id').replace('smM','m');
+				var supMenu = $('#'+id);
+				$("#smMenuContainer .menu_selected").removeClass('menu_selected');
+				supMenu.trigger('mouseover');
 				return false;
 			case Event.KEY_RIGHT:
+				var id = selMenuItem.attr('id').replace('m','smM');
+				var subMenu = $('#'+id);
+				if(subMenu.length){
+					$("#smMenuContainer .menu_selected").removeClass('menu_selected');
+					subMenu.find('div:visible').first().trigger('mouseover');
+				}
+				return false;
+			case Event.KEY_RETURN:
+				selMenuItem.trigger('click');
 				return false;
 		}
 	}
 
-	if(!navigationEnabled)
-		return false;
-    
-    switch(event.keyCode){
-        case Event.KEY_INSERT:
-            addModule();
-            return false;
-        case Event.KEY_RETURN:
-            editModule();
-            return false;
-        case Event.KEY_DELETE:
-            deleteModule();
-            return false;
-        case Event.KEY_LEFT:
-            selMod = findPrevModule(selMod);
-            selectModule(selMod);
-            $('html, body').animate({scrollTop: selMod.offset().top}, 200);
-            return false;
-        case Event.KEY_RIGHT:
-            selMod = findNextModule(selMod);
-            selectModule(selMod);
-            $('html, body').animate({scrollTop: selMod.offset().top}, 200);
-            return false;
-        case Event.KEY_UP:
-        case Event.KEY_DOWN:
-            return false;
-    }
+    if(navigationEnabled)
+		switch(event.keyCode){
+			case Event.KEY_INSERT:
+				addModule();
+				return false;
+			case Event.KEY_RETURN:
+				editModule();
+				return false;
+			case Event.KEY_DELETE:
+				deleteModule();
+				return false;
+			case Event.KEY_LEFT:
+				selMod = findPrevModule(selMod);
+				selectModule(selMod);
+				$('html, body').animate({scrollTop: selMod.offset().top}, 200);
+				return false;
+			case Event.KEY_RIGHT:
+				selMod = findNextModule(selMod);
+				selectModule(selMod);
+				$('html, body').animate({scrollTop: selMod.offset().top}, 200);
+				return false;
+			case Event.KEY_UP:
+			case Event.KEY_DOWN:
+				return false;
+		}
 }
 
 //#######################################################
