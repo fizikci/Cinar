@@ -8,8 +8,11 @@ $(function(){
                     popupMenu.onHide();
 				if($(event.target).hasClass('hideOnOutException') || $(event.target).closest('.hideOnOutException').length)
 					Prototype.K();
-				else
+				else {
 					$(editor).hide();
+					currEditor = null;
+					return false;
+				}
             }
         });
         $('.removeOnOut').each(function(eix,editor){

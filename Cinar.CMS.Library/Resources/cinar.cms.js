@@ -141,8 +141,10 @@ function documentKeyDown(event){
 		return false;
 	}
 
-	if(event.keyCode==Event.KEY_ESC && currEditor && currEditor.parentControl && currEditor.parentControl.showEditor){
-		currEditor.parentControl.showEditor();
+	if(event.keyCode==Event.KEY_ESC && currEditor){
+		if(currEditor.parentControl && currEditor.parentControl.showEditor)
+			currEditor.parentControl.showEditor();
+		currEditor.hide();
 		currEditor = null;
 		event.stopPropagation();
 		return false;
@@ -184,7 +186,11 @@ function documentKeyDown(event){
             return false;
 		}
 		
-		if(win && event.keyCode==Event.KEY_ESC){
+		if(event.keyCode==Event.KEY_ESC){
+			if(win['form'] && win['form'].formType=='EditForm' && win['form'].isModified()){
+				return false;
+			}
+
 			win.close();
 			if(lastFocusedInput){
 				$(lastFocusedInput).focus();
@@ -193,7 +199,7 @@ function documentKeyDown(event){
 			return false;
 		}
 		
-		if(win && win['form'] && win['form'].formType=='EditForm'){
+		if(win['form'] && win['form'].formType=='EditForm'){
 			switch(event.keyCode){
 				case Event.KEY_RETURN:
 					win['form'].saveClick();
