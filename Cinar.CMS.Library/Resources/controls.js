@@ -762,7 +762,13 @@ var TagEdit = Class.create(); TagEdit.prototype = {
 		
         var ths = this;
 
-		this.input.keyup(function(){
+		this.input.keyup(function(event){
+			switch(event.keyCode){
+				case Event.KEY_UP:
+				case Event.KEY_DOWN:
+				case Event.KEY_RETURN:
+					return false;
+			}
 			var str = ths.getValue().split(',').last().trim();
 			if(str.length>=2)
 				new Ajax.Request(ths.options.itemsUrl + '?method=getList&entityName=' + ths.options.entityName+'&extraFilter=_nameField_like'+str+'%', {
@@ -772,7 +778,6 @@ var TagEdit = Class.create(); TagEdit.prototype = {
 						if (req.responseText.startsWith('ERR:'))
 							ths.options.items = [req.responseText.substr(4)];
 						else {
-							ths.listDimensionCalculated = false;
 							ths.options.items = $A(eval('(' + req.responseText + ')')).findAll(function(elm){return elm[0]!=0;});
 							ths.openList();
 						}
@@ -783,11 +788,31 @@ var TagEdit = Class.create(); TagEdit.prototype = {
 				var list = $(ths.editor);
 				list.html('');
 				list.hide();
-				ths.listDimensionCalculated = false;
+				currEditor = null;
 			}
 		});
 
-        this.input[0]['ctrl'] = this;
+		this.input.keydown(function(event){
+			switch(event.keyCode){
+				case Event.KEY_UP:
+					var sel = $(ths.editor).find('.selItem');
+					sel.prev().mouseover();
+					return false;
+				case Event.KEY_DOWN:
+					var sel = $(ths.editor).find('.selItem');
+					if(sel.length)
+						sel.next().mouseover();
+					else
+						$(ths.editor).find('.item:first').mouseover();
+					return false;
+				case Event.KEY_RETURN:
+					var sel = $(ths.editor).find('.selItem');
+					sel.click();
+					return false;
+			}
+		});
+   
+		this.input[0]['ctrl'] = this;
     },
     beforeOpenList: function() {
         if (!(this.editor && this.editor.length)) {
@@ -796,22 +821,19 @@ var TagEdit = Class.create(); TagEdit.prototype = {
         }
         this.fetchData();
     },
-    listDimensionCalculated: false,
     openList: function() {
         this.beforeOpenList();
 
         var list = $(this.editor);
         if (this.input.is(':disabled')) return;
-
-        if (!this.listDimensionCalculated) {
-            var w = this.div.width();
-            var h = list.outerHeight();
-            h = h > this.listHeight ? this.listHeight : h;
-            list.css({ height: h + 'px', width: w + 'px' });
-            this.listDimensionCalculated = true;
-        }
+		list.height('');
+		var w = this.div.width();
+		var h = list.outerHeight();
+		h = h > this.listHeight ? this.listHeight : h;
+		list.css({ height: h + 'px', width: w + 'px' });
 
         list.show();
+		currEditor = list;
     },
     fetchData: function() {
         var list = $(this.editor);
@@ -836,6 +858,7 @@ var TagEdit = Class.create(); TagEdit.prototype = {
         }
 
         list.hide();
+		currEditor = null;
     },
     getValue: function() {
         return this.input.val();
@@ -854,6 +877,7 @@ var TagEdit = Class.create(); TagEdit.prototype = {
 		var lastVal = this.getValue().substring(0, this.getValue().lastIndexOf(','));
 		this.setValue((lastVal ? lastVal+', ' : '') + elm.text() + ", ");
         list.hide();
+		currEditor = null;
 		this.input.focus();
 		this.input.val(this.input.val());
     }
@@ -1301,6 +1325,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         }
 
         list.show();
+		currEditor = list;
     },
     fetchData: function() {
         var list = $(this.editor);
@@ -1326,6 +1351,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         }
 
         list.hide();
+		currEditor = null;
     },
     getValue: function() {
         return this.value;
@@ -1405,6 +1431,7 @@ var ComboBox = Class.create(); ComboBox.prototype = {
         var index = list.find('.item').toArray().indexOf(elm[0]);
         this.setSelectedIndex(index);
         list.hide();
+		currEditor = null;
     }
 };
 
@@ -1425,6 +1452,7 @@ var EditForm = Class.create(); EditForm.prototype = {
     tdDesc: null,
     onSave: null,
     cntrlId: null,
+	initialData: null,
     initialize: function(container, controls, entityName, entityId, strFilterExp, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
         container = $(container);
         if (container == null) container = $(document.body);
@@ -1556,7 +1584,9 @@ var EditForm = Class.create(); EditForm.prototype = {
             details.hide();
             $('#detailsHeader' + this.hndl).hide();
         }
-    },
+    
+		this.initialData = this.serialize();
+	},
     showDesc: function(event) {
         var elm = $(event.target).closest('INPUT');
         if (elm[0].ctrl)
@@ -1592,7 +1622,14 @@ var EditForm = Class.create(); EditForm.prototype = {
             this.onSave(this);
         else
             niceAlert(res);
-    }
+    },
+	isModified: function(){
+		var data = this.serialize();
+		for(var key in data)
+			if(data[key]!=this.initialData[key])
+				return true;
+		return false;
+	}
 };
 
 function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
