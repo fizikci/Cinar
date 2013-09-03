@@ -897,7 +897,7 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
         if ($('#'+this.editorId).length) {
             $('#'+this.editorId).remove();
             currEditor = null;
-            return;
+            return false;
         }
 
         var ths = this;
@@ -1031,7 +1031,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
         if (list.is(':visible')) {
             list.remove();
             currEditor = null;
-            return;
+            return false;
         }
         if (this.input.is(':disabled')) return;
 
@@ -1111,7 +1111,7 @@ var DateTimeEdit = Class.create(); DateTimeEdit.prototype = {
         if (editor.is(':visible')) {
             editor.remove();
             currEditor = null;
-            return;
+            return false;
         } else {
             this.buildCal(this.dateValue.getMonth() + 1, this.dateValue.getFullYear());
             this.setEditorPos(editor);
