@@ -106,6 +106,7 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             switch (ct)
             {
+                case ControlType.TagEdit:
                 case ControlType.StringEdit:
                     if (UIControlType == "Textarea")
                         sb.AppendFormat("<textarea class=\"form-control\" name=\"{0}\" id=\"{0}\">{1}</textarea>", FieldName, CMSUtility.HtmlEncode(value));

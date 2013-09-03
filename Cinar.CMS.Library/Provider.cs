@@ -229,6 +229,9 @@ namespace Cinar.CMS.Library
                         if (columnProps.References != null)
                             options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
                         break;
+                    case ControlType.TagEdit:
+                        options += ",entityName:'Tag', itemsUrl:'EntityInfo.ashx'";
+                        break;
                     default:
                         throw new Exception(Provider.GetResource("{0} type of controls not supported yet.", editProps.ControlType));
                 }
@@ -1909,6 +1912,9 @@ namespace Cinar.CMS.Library
                     case ControlType.LookUp:
                         if (columnProps.References != null)
                             options += ",entityName:'" + columnProps.References.Name + "', itemsUrl:'EntityInfo.ashx'";
+                        break;
+                    case ControlType.TagEdit:
+                        options += ",entityName:'Tag', itemsUrl:'EntityInfo.ashx'";
                         break;
                     default:
                         throw new Exception(Provider.GetResource("{0} type of controls not supported yet.", editProps.ControlType));

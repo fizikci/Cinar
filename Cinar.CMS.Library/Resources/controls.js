@@ -749,6 +749,116 @@ var LookUp = Class.create(); LookUp.prototype = {
     }
 };
 
+//#########################
+//#       TagEdit        #
+//#########################
+
+var TagEdit = Class.create(); TagEdit.prototype = {
+    listHeight: 200,
+    initialize: function(id, value, options) {
+        Object.extend(this, new Control(id, value, options));
+        if (options.listHeight) this.listHeight = options.listHeight;
+        this.options.hideBtn = true;
+		
+        var ths = this;
+
+		this.input.keyup(function(){
+			var str = ths.getValue().split(',').last().trim();
+			if(str.length>=2)
+				new Ajax.Request(ths.options.itemsUrl + '?method=getList&entityName=' + ths.options.entityName+'&extraFilter=_nameField_like'+str+'%', {
+					method: 'get',
+					asynchronous: false,
+					onComplete: function(req) {
+						if (req.responseText.startsWith('ERR:'))
+							ths.options.items = [req.responseText.substr(4)];
+						else {
+							ths.listDimensionCalculated = false;
+							ths.options.items = $A(eval('(' + req.responseText + ')')).findAll(function(elm){return elm[0]!=0;});
+							ths.openList();
+						}
+					},
+					onException: function(req, ex) { throw ex; }
+				});
+			else {
+				var list = $(ths.editor);
+				list.html('');
+				list.hide();
+				ths.listDimensionCalculated = false;
+			}
+		});
+
+        this.input[0]['ctrl'] = this;
+    },
+    beforeOpenList: function() {
+        if (!(this.editor && this.editor.length)) {
+            this.div.after('<div class="editor hideOnOut TagEdit" style="display:none"></div>');
+            this.editor = this.div.next();
+        }
+        this.fetchData();
+    },
+    listDimensionCalculated: false,
+    openList: function() {
+        this.beforeOpenList();
+
+        var list = $(this.editor);
+        if (this.input.is(':disabled')) return;
+
+        if (!this.listDimensionCalculated) {
+            var w = this.div.width();
+            var h = list.outerHeight();
+            h = h > this.listHeight ? this.listHeight : h;
+            list.css({ height: h + 'px', width: w + 'px' });
+            this.listDimensionCalculated = true;
+        }
+
+        list.show();
+    },
+    fetchData: function() {
+        var list = $(this.editor);
+        list.html('');
+
+        var insertionHtml = '';
+        for (var i = 0; i < this.options.items.length; i++) {
+            var row = this.options.items[i];
+            var text = typeof row == 'object' ? (row.length > 1 ? row[1] : row[0]) : row;
+            insertionHtml += '<div class="item" id="__itm' + this.hndl + '_' + i + '"><nobr>' + text + '</nobr></div>';
+        }
+        list.append(insertionHtml);
+
+        if (list.outerHeight() > this.listHeight) list.css({ height: this.listHeight + 'px' });
+        var i = 0;
+        var elm = $('#__itm' + this.hndl + '_' + i);
+        while (elm.length) {
+            elm.bind('mouseover', this.onItemMouseOver.bind(this));
+            elm.bind('click', this.onItemClick.bind(this));
+            i++;
+            elm = $('#__itm' + this.hndl + '_' + i);
+        }
+
+        list.hide();
+    },
+    getValue: function() {
+        return this.input.val();
+    },
+    setValue: function(val) {
+        return this.input.val(val);
+    },
+    onItemMouseOver: function(e) {
+        var elm = $(e.target).closest('.item');
+		elm.closest('.editor').find('.item').removeClass('selItem');
+        elm.addClass('selItem');
+    },
+    onItemClick: function(e) {
+        var elm = $(e.target).closest('DIV');
+        var list = this.editor;
+		var lastVal = this.getValue().substring(0, this.getValue().lastIndexOf(','));
+		this.setValue((lastVal ? lastVal+', ' : '') + elm.text() + ", ");
+        list.hide();
+		this.input.focus();
+		this.input.val(this.input.val());
+    }
+};
+
 //############################
 //#         MemoEdit         #
 //############################
@@ -1411,6 +1521,9 @@ var EditForm = Class.create(); EditForm.prototype = {
             case 'ComboBox':
                 aControl = new ComboBox(control.id, control.value, control.options);
                 break;
+            case 'TagEdit':
+                aControl = new TagEdit(control.id, control.value, control.options);
+                break;
             case 'LookUp':
                 aControl = new LookUp(control.id, control.value, control.options);
                 break;
@@ -1922,6 +2035,9 @@ function createControl(id, fieldMetadata, container){
             break;
         case 'ComboBox':
             aControl = new ComboBox(id, fieldMetadata.value, fieldMetadata.options);
+            break;
+        case 'TagEdit':
+            aControl = new TagEdit(id, fieldMetadata.value, fieldMetadata.options);
             break;
         case 'LookUp':
             aControl = new LookUp(id, fieldMetadata.value, fieldMetadata.options);
