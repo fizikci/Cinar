@@ -61,7 +61,8 @@ namespace Cinar.CMS.Library
         CSSEdit,
         MemoEdit,
         FilterEdit,
-        LookUp
+        LookUp,
+        TagEdit
     }
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]

@@ -380,7 +380,7 @@ namespace Cinar.CMS.Library.Handlers
         private void getList()
         {
             string entityName = context.Request["entityName"];
-            string extraFilter = context.Request.Form["extraFilter"] ?? "";
+            string extraFilter = context.Request["extraFilter"] ?? "";
             IDatabaseEntity[] entities = Provider.GetIdNameList(entityName, extraFilter, "");
             context.Response.Write("[\n");
             context.Response.Write("[0, '" + Provider.GetResource("Select") + "']\n");
