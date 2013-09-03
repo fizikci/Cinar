@@ -10,7 +10,7 @@ $(function(){
 					Prototype.K();
 				else {
 					$(editor).hide();
-					currEditor = null;
+					if(currEditor && editor==currEditor[0]) currEditor = null;
 					return false;
 				}
             }

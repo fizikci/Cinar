@@ -193,13 +193,13 @@ function documentKeyDown(event){
 
 			win.close();
 			if(lastFocusedInput){
-				$(lastFocusedInput).focus();
+				$(lastFocusedInput).focus(); lastFocusedInput.val(lastFocusedInput.val());
 				lastFocusedInput = null;
 			}
 			return false;
 		}
 		
-		if(win['form'] && win['form'].formType=='EditForm'){
+		if(!currEditor && win['form'] && win['form'].formType=='EditForm'){
 			switch(event.keyCode){
 				case Event.KEY_RETURN:
 					win['form'].saveClick();
