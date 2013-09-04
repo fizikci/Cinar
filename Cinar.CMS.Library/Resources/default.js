@@ -10,8 +10,10 @@ $(function(){
 					Prototype.K();
 				else {
 					$(editor).hide();
-					if(currEditor && editor==currEditor[0]) currEditor = null;
-					return false;
+					if(currEditor && editor==currEditor[0]) {
+						currEditor = null;
+						return false;
+					}
 				}
             }
         });
