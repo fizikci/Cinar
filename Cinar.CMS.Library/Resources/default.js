@@ -1394,3 +1394,73 @@ function niceConfirm(confirm, okCallback){
     $('#btnPromptOK').on('click', win.onKeyEnter);
     $('#btnPromptCancel').on('click', function(){Windows.getFocusedWindow().close();});
 }
+
+////////////////////////
+//    Editor Buttons
+////////////////////////
+
+$(function(){
+    var editOnSiteHTML = '<div id="editOnSiteHTML" style="display:none">';
+	editOnSiteHTML += '<span class="fff add" onclick="editOnSiteObj.insertHandler()" title="' + lang('Add') + '"></span>';
+	editOnSiteHTML += '<span class="fff pencil" onclick="editOnSiteObj.editHandler()" title="'+lang('Edit')+'"></span>';
+	editOnSiteHTML += '<span class="fff delete" onclick="editOnSiteObj.deleteHandler()" title="' + lang('Delete') + '"></span>';
+	editOnSiteHTML += '</div>';
+	$(document.body).append(editOnSiteHTML);
+});
+
+var editOnSiteObj = {}, editOnSiteDefaults = {
+    entityName: 'Content',
+    id: 0,
+    insertHandler: function(){
+		if(editOnSiteObj.entityName)
+			openEntityEditForm({
+				entityName:editOnSiteObj.entityName, 
+				id:0,
+				hideCategory: 'İçerik,Temel,Extra',
+				showRelatedEntities: []
+			});	
+	},
+    insertCallback: function(){location.reload();},
+    editHandler: function(){
+		if(editOnSiteObj.entityName)
+			openEntityEditForm({
+				entityName:editOnSiteObj.entityName, 
+				id:editOnSiteObj.id,
+				hideCategory: 'İçerik,Temel,Extra',
+				showRelatedEntities: []
+			});
+	},
+    editCallback: function(){location.reload();},
+    deleteHandler: function(){deleteData(editOnSiteObj.entityName, editOnSiteObj.id, editOnSiteObj.deleteCallback);},
+    deleteCallback: function(){location.reload();}
+	//commands: [
+	//	{name:lang('Edit'), icon:'pencil', handler:function(){}}
+	//]
+};
+
+function editOnSite(elm, editOnSiteArgs){
+    elm = $(elm);
+	editOnSiteObj = jQuery.extend({}, editOnSiteDefaults, editOnSiteArgs || {});
+
+	var editOnSiteElm = $('#editOnSiteHTML');
+	editOnSiteElm.hide();
+    if(editOnSiteObj.insertHandler==null) editOnSiteElm.find('.add').hide(); else editOnSiteElm.find('.add').show();
+    if(editOnSiteObj.editHandler==null) editOnSiteElm.find('.pencil').hide(); else editOnSiteElm.find('.pencil').show();
+    if(editOnSiteObj.deleteHandler==null) editOnSiteElm.find('.delete').hide(); else editOnSiteElm.find('.delete').show();
+	
+	editOnSiteElm.find('span.commands').remove();
+	if(editOnSiteObj.commands){
+		var cmdHtml = '<span class="commands">';
+		for(var i=0; i<editOnSiteObj.commands.length; i++)
+			cmdHtml += '<span class="fff '+editOnSiteObj.commands[i].icon+'" onclick="editOnSiteObj.commands['+i+'].handler()" title="'+editOnSiteObj.commands[i].name+'"></span>';
+		cmdHtml += '</span>';
+		editOnSiteElm.append(cmdHtml);
+	}
+
+    var pos = elm.offset();
+    var dim = getDimensions(elm);
+    editOnSiteElm.css({left:(pos.left+dim.width-editOnSiteElm.width())+'px', top:pos.top+'px'});
+    editOnSiteElm.show();
+}
+
+
