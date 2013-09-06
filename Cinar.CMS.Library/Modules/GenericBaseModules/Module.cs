@@ -221,10 +221,10 @@ InnerHtml,32,<hr/>
                 resBottomHtml = engine.Output;
             }
 
-            if (String.IsNullOrEmpty(strShow))
-                return String.Empty;
-            else
+            if(!String.IsNullOrEmpty(strShow) || Provider.DesignMode)
                 return resTopHtml + strShow + resBottomHtml;
+
+            return String.Empty;
         }
 
         public string Show()

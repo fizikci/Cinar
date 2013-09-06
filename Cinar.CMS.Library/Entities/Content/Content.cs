@@ -266,16 +266,22 @@ namespace Cinar.CMS.Library.Entities
             set;
         }
 
+        private string extraField1 = "";
+        private string extraField2 = "";
+        private string extraField3 = "";
+        private string extraField4 = "";
+        private string extraField5 = "";
+
         [EditFormFieldProps(Category = "Extra")]
-        public string ExtraField1 { get; set; }
+        public string ExtraField1 { get { return extraField1; } set { extraField1 = value; } }
         [EditFormFieldProps(Category = "Extra")]
-        public string ExtraField2 { get; set; }
+        public string ExtraField2 { get { return extraField2; } set { extraField2 = value; } }
         [EditFormFieldProps(Category = "Extra")]
-        public string ExtraField3 { get; set; }
+        public string ExtraField3 { get { return extraField3; } set { extraField3 = value; } }
         [EditFormFieldProps(Category = "Extra")]
-        public string ExtraField4 { get; set; }
+        public string ExtraField4 { get { return extraField4; } set { extraField4 = value; } }
         [EditFormFieldProps(Category = "Extra")]
-        public string ExtraField5 { get; set; }
+        public string ExtraField5 { get { return extraField5; } set { extraField5 = value; } }
 
         protected override void beforeSave(bool isUpdate)
         {
