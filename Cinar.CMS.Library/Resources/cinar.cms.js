@@ -1307,6 +1307,16 @@ function editPageLoadScript(){
 //#####################################
 
 function configure(){
+	openEntityEditForm({
+		entityName: 'Configuration',
+		id:1,
+		hideCategory:'Temel,Basic',
+		title:'Çınar CMS Ayarlar',//lang('Configuration'),
+		callback: function(){
+			location.reload();
+		}
+	});
+	/*
     new Ajax.Request('EntityInfo.ashx?method=edit&entityName=Configuration&id=1', {
         method: 'get',
         onComplete: function(req) {
@@ -1317,6 +1327,7 @@ function configure(){
         },
         onException: function(req, ex){throw ex;}
     });
+	*/
 }
 
 //###########################################################################################
