@@ -93,6 +93,9 @@ namespace Cinar.CMS.Library.Entities
 
         public void Save()
         {
+            List<string> errors = this.Validate();
+            if (errors.Count > 0)
+                throw new Exception("<ul><li>" + errors.StringJoin("</li><li>") + "</li></ul>");
             try
             {
                 Provider.Database.Begin();
