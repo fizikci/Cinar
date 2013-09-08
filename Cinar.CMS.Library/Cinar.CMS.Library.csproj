@@ -211,11 +211,9 @@
     <None Include="Resources\tr.js" />
     <None Include="Resources\help.html" />
     <None Include="Resources\famfamfam.css" />
-    <Content Include="_files\BasePage.js.txt" />
     <Content Include="_files\hndlr_EntityInfo_getFieldsList.txt" />
     <Content Include="_files\hndlr_EntityInfo_getGridList.txt" />
     <Content Include="_files\new_design_specs.txt" />
-    <Content Include="_files\SSS.js" />
     <Content Include="_files\ToDoList.txt" />
   </ItemGroup>
   <ItemGroup>

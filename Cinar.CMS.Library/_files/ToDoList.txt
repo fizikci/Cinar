@@ -41,7 +41,7 @@
  43. [OK] QuickEntry'de metin ve description için str_replace("\n", "<br>") yap.
  44. [OK] Module.canReadFromCache() yarým kaldý. Bitir.
  45. [OK] Author ve Source tablolarýna yeni alanlarý ekle, eskilerini sil.
- 46. PictureEdit'in daha güzel bi versiyonunu yapalým
+ 46. [OK] PictureEdit'in daha güzel bi versiyonunu yapalým
  47. [OK] Module'e beforeShow metodu ekle, Content gibi show içinde yapýlan veritabaný updatelerini bu metodda yap.
  48. [OK] addModule metodunda modül belirtilmemiþse sor
  49. [OK] avatarDir, memberDir, uploadDir gibi parametrelerin kullanýmýný saðlayalým.
