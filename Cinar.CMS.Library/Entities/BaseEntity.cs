@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Cinar.Database;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace Cinar.CMS.Library.Entities
 {
@@ -64,6 +65,7 @@ namespace Cinar.CMS.Library.Entities
             throw new Exception(Provider.GetResource("Please override the method GetNameField() for the entity {0}", this.GetType().Name));
         }
 
+        [Description("Returns the JSON for the EditForm of this entity.")]
         public string GetPropertyEditorJSON()
         {
             return Provider.GetPropertyEditorJSON(this, false);
@@ -91,6 +93,7 @@ namespace Cinar.CMS.Library.Entities
             return errorList;
         }
 
+        [Description("Saves this entity to database (if Id>0 updates, else inserts)")]
         public void Save()
         {
             List<string> errors = this.Validate();
@@ -144,7 +147,7 @@ namespace Cinar.CMS.Library.Entities
         protected virtual void beforeSave(bool isUpdate) { }
         protected virtual void afterSave(bool isUpdate) { }
 
-
+        [Description("Deletes this entity")]
         public void Delete()
         {
             try

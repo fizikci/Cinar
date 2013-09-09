@@ -4,6 +4,7 @@ using Cinar.Database;
 using System.Drawing;
 using System.Collections;
 using System.Xml.Serialization;
+using System.ComponentModel;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
@@ -448,6 +449,7 @@ namespace Cinar.CMS.Library.Entities
             return true;
         }
 
+        [Description("Returns the upper category of this content which is the closest to the root category.")]
         public int FindMainCategoryId()
         {
             if (String.IsNullOrEmpty(this.Hierarchy))
@@ -464,6 +466,7 @@ namespace Cinar.CMS.Library.Entities
             return this.Hierarchy!=hierarchy && this.Hierarchy.StartsWith(hierarchy);
         }
 
+        [Description("Returns true if this content under the content specified with id")]
         public bool IsUnder(int id)
         {
             return this.Id!=id && this.Hierarchy.Contains(id.ToString().PadLeft(5, '0'));
@@ -474,6 +477,7 @@ namespace Cinar.CMS.Library.Entities
             return this.Hierarchy != hierarchy && hierarchy.StartsWith(this.Hierarchy);
         }
 
+        [Description("Deletes this content and children contents recursively")]
         public void RecursiveDelete()
         {
             Provider.Database.Execute(innerRecursiveDelete);
@@ -487,7 +491,7 @@ namespace Cinar.CMS.Library.Entities
             this.Delete();
         }
 
-
+        [Description("Returns the path of the thumb picture of this content picture")]
         public string GetThumbPicture(int width, int height, bool cropPicture)
         {
             return Provider.GetThumbPath(this.Picture, width, height, cropPicture);
@@ -495,6 +499,7 @@ namespace Cinar.CMS.Library.Entities
 
 
         [XmlIgnore]
+        [Description("Category of this content.")]
         public Content Category
         {
             get
@@ -504,7 +509,9 @@ namespace Cinar.CMS.Library.Entities
                 return Provider.Database.Read<Content>(this.CategoryId);
             }
         }
+
         [XmlIgnore]
+        [Description("Returns the root content. All the other contents is branches of the root content.")]
         public Content Root
         {
             get
@@ -512,7 +519,9 @@ namespace Cinar.CMS.Library.Entities
                 return Provider.Database.Read<Content>(1);
             }
         }
+        
         [XmlIgnore]
+        [Description("Returns the child contents of this content.")]
         public List<Content> Contents
         {
             get

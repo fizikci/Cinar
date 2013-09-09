@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Cinar.CMS.Library.Entities;
@@ -465,6 +466,22 @@ namespace Cinar.CMS.Library.Handlers
             context.Response.Write("OK");
         }
 
+        private string getShortName(Type type)
+        {
+            if (type == typeof (string))
+                return "string";
+            if (type == typeof (int))
+                return "int";
+            if (type == typeof (bool))
+                return "bool";
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition()== typeof(List<>))
+            {
+                return "List<"+ getShortName(type.GetGenericArguments()[0]) + ">"; // use this...
+            }
+            return type.Name;
+        }
+
         private void getEntityDocs()
         {
             string entityName = context.Request["entityName"];
@@ -475,12 +492,14 @@ namespace Cinar.CMS.Library.Handlers
 
             sb.Append("<h2>Database Properties</h2>");
             sb.Append("<table>\n");
-            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
+            sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
                 "Type",
                 "Name",
                 "Declaring Type",
                 "Description",
                 "Default Value");
+
+            int i = 0;
 
             foreach (PropertyInfo pi in entityType.GetProperties())
             {
@@ -492,18 +511,21 @@ namespace Cinar.CMS.Library.Handlers
                     caption = pi.Name;
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
 
-                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
-                    pi.PropertyType.Name,
+                sb.AppendFormat("<tr{5}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
+                    getShortName(pi.PropertyType),
                     pi.Name,
                     pi.DeclaringType.Name,
                     caption == description ? "" : (caption + ". ") + description,
-                    pi.GetValue(obj, null));
+                    pi.GetValue(obj, null),
+                    i%2==0 ? "":" class=\"odd\"");
+                i++;
             }
             sb.Append("</table>\n");
 
+            i = 0;
             sb.Append("<h2>Read Only Properties</h2>");
             sb.Append("<table>\n");
-            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+            sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
                 "Type",
                 "Name",
                 "Declaring Type",
@@ -516,17 +538,21 @@ namespace Cinar.CMS.Library.Handlers
 
                 DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
 
-                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
-                    pi.PropertyType.Name,
+                sb.AppendFormat("<tr{4}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                    getShortName(pi.PropertyType),
                     pi.Name,
                     pi.DeclaringType.Name,
-                    desc.Description);
+                    desc.Description,
+                    i % 2 == 0 ? "" : " class=\"odd\"");
+                i++;
             }
             sb.Append("</table>\n");
 
+            i = 0;
+
             sb.Append("<h2>Methods</h2>");
             sb.Append("<table>\n");
-            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+            sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
                 "Type",
                 "Name",
                 "Declaring Type",
@@ -534,23 +560,27 @@ namespace Cinar.CMS.Library.Handlers
 
             foreach (MethodInfo pi in entityType.GetMethods(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (pi.IsPublic) continue;
+                if (pi.IsSpecialName) continue;
 
                 DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
 
-                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
-                    pi.ReturnType.Name,
+                sb.AppendFormat("<tr{4}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                    getShortName(pi.ReturnType),
                     pi.Name,
                     pi.DeclaringType.Name,
-                    desc.Description);
+                    desc.Description,
+                    i % 2 == 0 ? "" : " class=\"odd\"");
+                i++;
             }
             sb.Append("</table>\n");
+
+            i = 0;
 
             if (obj.GetType() != typeof(Lang))
             {
                 sb.Append("<h2>Related Entities</h2>");
                 sb.Append("<table>\n");
-                sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
                     "Entity Name",
                     "Related Field Name",
                     "Label",
@@ -563,11 +593,13 @@ namespace Cinar.CMS.Library.Handlers
                         ColumnDetailAttribute fda = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
                         if (fda.References == entityType)
                         {
-                            sb.AppendFormat("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
+                            sb.AppendFormat("<tr{4}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
                                 type.Name,
                                 pi.Name,
                                 Provider.GetResource(type.Name).ToHTMLString(),
-                                Provider.GetResource(type.Name + "Desc").ToHTMLString());
+                                Provider.GetResource(type.Name + "Desc").ToHTMLString(),
+                                i % 2 == 0 ? "" : " class=\"odd\"");
+                            i++;
                         }
                     }
                 sb.Append("</table>\n");
