@@ -9,7 +9,19 @@
             line-height: normal;
             color: rgb(80, 80, 80);
         }
-
+		table {
+			border-spacing:0px;
+		}
+		tr.header {
+			background: #B1B1B1;
+			font-weight: bold;
+		}
+		tr.odd {
+			background:#eee;
+		}
+		td {
+			padding:3px;
+		}
         h1 {
             font-size: 18px;
             border-bottom: 1px solid rgba(33, 74, 133, 0.22);
@@ -345,14 +357,14 @@
                 var res = [];
                 for (var i = 0; i < window.parent.entityTypes.length; i++)
                     if (window.parent.entityTypes[i][2])
-                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][0] + ' (' + window.parent.entityTypes[i][1] + ')', type: 'content' });
                 return res;
             }
             else if (data == 'ref_detay_entity') {
                 var res = [];
                 for (var i = 0; i < window.parent.entityTypes.length; i++)
                     if (!window.parent.entityTypes[i][2])
-                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][1], type: 'content' });
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][0] + ' (' + window.parent.entityTypes[i][1] + ')', type: 'content' });
                 return res;
             }
 
