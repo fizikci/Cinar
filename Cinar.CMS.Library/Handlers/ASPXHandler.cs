@@ -126,7 +126,10 @@ namespace Cinar.CMS.Library.Handlers
 
 
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
+                {
                     sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
+                    sb.Append("<script src=\"/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
+                }
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                     sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");

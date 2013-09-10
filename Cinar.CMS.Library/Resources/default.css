@@ -369,6 +369,8 @@
     height: 16px;
     text-align: right;
     width: 37px;
+	vertical-align: bottom;
+	font-size: 11px !important;
 }
 .cc_ei_canvas img {
 	position:absolute;
@@ -382,6 +384,7 @@
 	height:100px;
     background-color: #D8DFEA;
     opacity: 0.5;
+	border: 1px dashed black;
 }
 
 #cc_ei_se, #cc_ei_nw {
