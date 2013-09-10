@@ -11,6 +11,7 @@ using Cinar.CMS.Library.Modules;
 using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
 using Module = System.Reflection.Module;
 using System.Drawing;
+using System.Globalization;
 
 //using System.IO;
 
@@ -649,10 +650,10 @@ namespace Cinar.CMS.Library.Handlers
         private void editImageCrop()
         {
             string path = Provider.Request["path"];
-            int x = int.Parse(Provider.Request["x"]);
-            int y = int.Parse(Provider.Request["y"]);
-            int w = int.Parse(Provider.Request["w"]);
-            int h = int.Parse(Provider.Request["h"]);
+            int x = (int)double.Parse(Provider.Request["x"], NumberStyles.Any, CultureInfo.InvariantCulture);
+            int y = (int)double.Parse(Provider.Request["y"], NumberStyles.Any, CultureInfo.InvariantCulture);
+            int w = (int)double.Parse(Provider.Request["w"], NumberStyles.Any, CultureInfo.InvariantCulture);
+            int h = (int)double.Parse(Provider.Request["h"], NumberStyles.Any, CultureInfo.InvariantCulture);
             if (w<16 || h<16)
             {
                 context.Response.Write("ERR: Crop Width and Hight cannot be less than 16");

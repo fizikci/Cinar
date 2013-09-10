@@ -10,7 +10,7 @@ $(function(){
 					Prototype.K();
 				else {
 					$(editor).hide();
-					if(currEditor && editor==currEditor[0]) {
+					if(typeof(currEditor)!='undefined' && currEditor && editor==currEditor[0]) {
 						currEditor = null;
 						return false;
 					}
@@ -133,7 +133,7 @@ $(function(){
 			$(elm).find('.playBtn').on('click', function(){
 				elm.playing = !elm.playing;
 				if(elm.playing){
-					$(elm).find('.playBtn').src = '/external/icons/pause.png';
+					$(elm).find('.playBtn').attr('src', '/external/icons/pause.png');
 					slideShowSlide(elm);
 				} else {
 					clearTimeout(elm.timeout);
@@ -258,11 +258,6 @@ $(function(){
 		});
 		slideAll.on('mouseleave', function(){slideAllCollapse(items, dim); slideAllTimer = setInterval(slideAllIntFunc, 5000);});
 	});
-	// image editor
-	if($('.cc_edit_img').length){
-		imageEditorInit();
-		$('.cc_edit_img').each(makeImageEditable);
-	}
 });
 
 var slideAllCurrIndex = -1;
@@ -288,172 +283,6 @@ function slideAllCollapse(items, dim){
 		$(items[i]).find('.clTitle').hide();
 		$(items[i]).find('.clDesc').hide();
 	}
-}
-
-var cc_edit_curr = null;
-function imageEditorInit(){
-	if($('#cc_ei_btn').length==0)
-		$(document.body).append('<button id="cc_ei_btn" style="display:none">Edit</button>');
-	else
-		return;
-		
-	$('#cc_ei_btn').on('click', editCurrImage);
-}
-function editCurrImage(path){
-	if(!path){
-		path = cc_edit_curr.attr('path') || cc_edit_curr.attr('src');
-		if(!path || path.startsWith('/_thumbs')){
-			niceAlert(lang('Editable image path not defined'));
-			return;
-		}
-	}
-	
-	var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true }); 
-	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn cselect">Select</span><span id="cc_crop" class="ccBtn ccrop">Crop</span><span id="cc_turncw" class="ccBtn cturncw">Turn CW</span><span id="cc_turnccw" class="ccBtn cturnccw">Turn CCW</span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn cresize">Resize</span><span id="cc_reset" class="ccBtn creset">Reset</span></div>';
-	str += '<div class="cc_ei_canvas"><img id="cc_ei_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"></div><div id="cc_ei_nw" style="display:none"></div><div id="cc_ei_se" style="display:none"></div></div>';
-	str += '<div id="cc_ei_status"></div>';
-	win.getContent().prepend(str);
-	win.showCenter();
-	win.toFront();
-	
-	var imgPreview = $('#cc_ei_preview');
-	var sel = $('#cc_ei_selection');
-
-	$('#cc_select').on('click', toggleSelect);
-	function toggleSelect(){
-		sel.toggle();
-		$('#cc_ei_nw').toggle();
-		$('#cc_ei_se').toggle();
-	}
-	
-	new Draggable('cc_ei_selection', {onDrag:function(){
-		var dim = getDimensions(sel);
-		var pos = sel.position();
-		$('#cc_ei_nw').css({left:(pos.left-5)+'px', top:(pos.top-5)+'px'});
-		$('#cc_ei_se').css({left:(pos.left+dim.width-5)+'px', top:(pos.top+dim.height-5)+'px'});
-		$('#cc_ei_status').html('<b>File:</b> ' + path + ' &nbsp; <b>Selection:</b> ' + pos.left + ', ' + pos.top + ', ' + dim.width + ', ' + dim.height);
-	}});
-	new Draggable('cc_ei_nw', {onDrag:resizeSelection});
-	new Draggable('cc_ei_se', {onDrag:resizeSelection});
-	
-	function resizeSelection(){
-		var posNW = $('#cc_ei_nw').position();
-		var posSE = $('#cc_ei_se').position();
-		sel.css({
-			left: (posNW.left+5) + 'px',
-			top: (posNW.top+5) + 'px',
-			width: (posSE.left-posNW.left) + 'px',
-			height: (posSE.top-posNW.top) + 'px'
-		});
-		
-		var dim = getDimensions(sel);
-		var pos = sel.position();
-		$('#cc_ei_status').html('<b>File:</b> ' + path + ' &nbsp; <b>Selection:</b> ' + pos.left + ', ' + pos.top + ', ' + dim.width + ', ' + dim.height);
-	}
-	
-	imgPreview.on('load', function(){
-		var dim = getDimensions(imgPreview);
-		var dimCanvas = getDimensions(imgPreview.parent());
-		if(dimCanvas.width>dim.width)
-			imgPreview.css({left:(dimCanvas.width-dim.width)/2+'px'});
-		if(dimCanvas.height>dim.height)
-			imgPreview.css({top:(dimCanvas.height-dim.height)/2+'px'});
-		if(dimCanvas.width<dim.width)
-			imgPreview.parent().scrollLeft = (dim.width-dimCanvas.width)/2;
-		if(dimCanvas.height<dim.height)
-			imgPreview.parent().scrollTop = (dim.height-dimCanvas.height)/2;
-		
-		$('#cc_ei_width').val(dim.width);
-		$('#cc_ei_height').val(dim.height);
-		
-		$('#cc_ei_status').html('<b>File:</b> ' + path);
-	});
-	
-	$('#cc_ei_width').on('change', function(){
-		var dim = getDimensions(imgPreview);
-		var w = parseInt($('#cc_ei_width').val());
-		$('#cc_ei_height').val(Math.round(w*dim.height/dim.width));
-	});
-	$('#cc_ei_height').on('change', function(){
-		var dim = getDimensions(imgPreview);
-		var h = parseInt($('#cc_ei_height').val());
-		$('#cc_ei_width').val(Math.round(h*dim.width/dim.height));
-	});
-	
-	$('#cc_crop').on('click', function(){
-		if(!sel.is(':visible')){
-			niceAlert('Select first');
-			return;
-		}
-		var dim = getDimensions(sel);
-		var pos = sel.position();
-		var posImg = imgPreview.position();
-		
-		var res = ajax({url:'EditImageCrop.ashx?x='+(pos.left-posImg.left)+'&y='+(pos.top-posImg.top)+'&w='+dim.width+'&h='+dim.height+'&path='+path, isJSON:false, noCache:true});
-		if(res.startsWith('ERR:')){
-			niceAlert(res);
-			return;
-		}
-		else {
-			if(sel.is(':visible')) toggleSelect();
-			imgPreview.src = path + '?' + new Date().getMilliseconds();
-		}
-	});
-	$('#cc_turncw').on('click', function(){
-		var res = ajax({url:'EditImageRotate.ashx?dir=CW&path='+path, isJSON:false, noCache:true});
-		if(res.startsWith('ERR:')){
-			niceAlert(res);
-			return;
-		}
-		else {
-			if(sel.is(':visible')) toggleSelect();
-			imgPreview.src = path + '?' + new Date().getMilliseconds();
-		}
-	});
-	$('#cc_turnccw').on('click', function(){
-		var res = ajax({url:'EditImageRotate.ashx?dir=CCW&path='+path, isJSON:false, noCache:true});
-		if(res.startsWith('ERR:')){
-			niceAlert(res);
-			return;
-		}
-		else {
-			if(sel.is(':visible')) toggleSelect();
-			imgPreview.src = path + '?' + new Date().getMilliseconds();
-		}
-	});
-	$('#cc_resize').on('click', function(){
-		var res = ajax({url:'EditImageResize.ashx?width='+$('#cc_ei_width').val()+'&height='+$('#cc_ei_height').val()+'&path='+path, isJSON:false, noCache:true});
-		if(res.startsWith('ERR:')){
-			niceAlert(res);
-			return;
-		}
-		else {
-			if(sel.is(':visible')) toggleSelect();
-			imgPreview.src = path + '?' + new Date().getMilliseconds();
-		}
-	});
-	$('#cc_reset').on('click', function(){
-		var res = ajax({url:'EditImageReset.ashx?path='+path, isJSON:false, noCache:true});
-		if(res.startsWith('ERR:')){
-			niceAlert(res);
-			return;
-		}
-		else {
-			if(sel.is(':visible')) toggleSelect();
-			imgPreview.src = path + '?' + new Date().getMilliseconds();
-		}
-	});
-}
-
-function makeImageEditable(eix,img){
-	$(img).on('mouseenter', function(){
-		cc_edit_curr = img;
-		var dim = getDimensions(img);
-		var pos = $(img).offset();
-		var btn = $('#cc_ei_btn');
-		btn.css({left:(pos.left + dim.width-40)+'px', top:(pos.top + dim.height-20)+'px'});
-		btn.show();
-	});
 }
 
 function slideShowSlide(elm, dir){
@@ -1323,7 +1152,7 @@ function nicePrompt(prompt, validationCallback, okCallback){
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"></p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1347,7 +1176,7 @@ function niceAlert(alert){
     var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1361,7 +1190,7 @@ function niceInfo(alert, okCallback){
     var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1378,7 +1207,7 @@ function niceConfirm(confirm, okCallback){
     var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + confirm + '</p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();

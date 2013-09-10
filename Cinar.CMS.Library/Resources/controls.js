@@ -228,7 +228,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
                 '<div id="' + this.editorId + 'ta" style="border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;position: absolute;left: 0px;right: 0px;bottom: 31px;top: 19px;"></div>' +
-                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn cok">' + lang('OK') + '</span> <span class="ccBtn ccancel">' + lang('Cancel') + '</span></center>');
+                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></center>');
 
         var ta = $('#'+this.editorId + 'ta');
 
@@ -358,7 +358,7 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
         });
         fileBrowserCurrInput = this.input;
 
-        $('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></div>');
+        $('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></div>');
 
         var btnCancel = $('#'+this.editorId + 'btnCancel');
         btnCancel.bind('click', this.showEditor.bind(this));
@@ -555,6 +555,170 @@ fileBrowserUploadFeedback = function (msg, url) {
 	currPicEdit.container.find('form').trigger('reset');
 }
 
+var cc_edit_curr = null;
+function imageEditorInit(){
+	if($('#cc_ei_btn').length==0)
+		$(document.body).append('<button id="cc_ei_btn" style="display:none">Edit</button>');
+	else
+		return;
+		
+	$('#cc_ei_btn').on('click', function(){editCurrImage();});
+}
+function editCurrImage(path){
+	if(!path){
+		path = cc_edit_curr.attr('path') || cc_edit_curr.attr('src');
+		if(!path || path.startsWith('/_thumbs')){
+			niceAlert(lang('Editable image path not defined'));
+			return;
+		}
+	}
+	
+	var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true }); 
+	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn"><span class="fff shape_handles"></span>Select</span><span id="cc_crop" class="ccBtn"><span class="fff cut"></span>Crop</span><span id="cc_turncw" class="ccBtn"><span class="fff arrow_rotate_clockwise"></span>Turn CW</span><span id="cc_turnccw" class="ccBtn"><span class="fff arrow_rotate_anticlockwise"></span>Turn CCW</span><span class="fff shape_group"></span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn">Resize</span><span id="cc_reset" class="ccBtn"><span class="fff arrow_undo"></span>Reset</span></div>';
+	str += '<div class="cc_ei_canvas"><img id="cc_ei_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"></div><div id="cc_ei_nw" style="display:none"></div><div id="cc_ei_se" style="display:none"></div></div>';
+	str += '<div id="cc_ei_status"></div>';
+	win.getContent().prepend(str);
+	win.showCenter();
+	win.toFront();
+	
+	var imgPreview = $('#cc_ei_preview');
+	var sel = $('#cc_ei_selection');
+
+	$('#cc_select').on('click', toggleSelect);
+	function toggleSelect(){
+		sel.toggle();
+		$('#cc_ei_nw').toggle();
+		$('#cc_ei_se').toggle();
+	}
+	
+	$('#cc_ei_selection').draggable({drag:function(){
+		var dim = getDimensions(sel);
+		var pos = sel.position();
+		$('#cc_ei_nw').css({left:(pos.left-5)+'px', top:(pos.top-5)+'px'});
+		$('#cc_ei_se').css({left:(pos.left+dim.width-5)+'px', top:(pos.top+dim.height-5)+'px'});
+		$('#cc_ei_status').html('<b>File:</b> ' + path + ' &nbsp; <b>Selection:</b> ' + pos.left + ', ' + pos.top + ', ' + dim.width + ', ' + dim.height);
+	}});
+	$('#cc_ei_nw').draggable({drag:resizeSelection});
+	$('#cc_ei_se').draggable({drag:resizeSelection});
+	
+	function resizeSelection(){
+		var posNW = $('#cc_ei_nw').position();
+		var posSE = $('#cc_ei_se').position();
+		sel.css({
+			left: (posNW.left+5) + 'px',
+			top: (posNW.top+5) + 'px',
+			width: (posSE.left-posNW.left) + 'px',
+			height: (posSE.top-posNW.top) + 'px'
+		});
+		
+		var dim = getDimensions(sel);
+		var pos = sel.position();
+		$('#cc_ei_status').html('<b>File:</b> ' + path + ' &nbsp; <b>Selection:</b> ' + pos.left + ', ' + pos.top + ', ' + dim.width + ', ' + dim.height);
+	}
+	
+	imgPreview.on('load', function(){
+		var dim = getDimensions(imgPreview);
+		var dimCanvas = getDimensions(imgPreview.parent());
+		if(dimCanvas.width>dim.width)
+			imgPreview.css({left:(dimCanvas.width-dim.width)/2+'px'});
+		if(dimCanvas.height>dim.height)
+			imgPreview.css({top:(dimCanvas.height-dim.height)/2+'px'});
+		if(dimCanvas.width<dim.width)
+			imgPreview.parent().scrollLeft = (dim.width-dimCanvas.width)/2;
+		if(dimCanvas.height<dim.height)
+			imgPreview.parent().scrollTop = (dim.height-dimCanvas.height)/2;
+		
+		$('#cc_ei_width').val(dim.width);
+		$('#cc_ei_height').val(dim.height);
+		
+		$('#cc_ei_status').html('<b>File:</b> ' + path);
+	});
+	
+	$('#cc_ei_width').on('change', function(){
+		var dim = getDimensions(imgPreview);
+		var w = parseInt($('#cc_ei_width').val());
+		$('#cc_ei_height').val(Math.round(w*dim.height/dim.width));
+	});
+	$('#cc_ei_height').on('change', function(){
+		var dim = getDimensions(imgPreview);
+		var h = parseInt($('#cc_ei_height').val());
+		$('#cc_ei_width').val(Math.round(h*dim.width/dim.height));
+	});
+	
+	$('#cc_crop').on('click', function(){
+		if(!sel.is(':visible')){
+			niceAlert('Select first');
+			return;
+		}
+		var dim = getDimensions(sel);
+		var pos = sel.position();
+		var posImg = imgPreview.position();
+		
+		var res = ajax({url:'EditImageCrop.ashx?x='+(pos.left-posImg.left)+'&y='+(pos.top-posImg.top)+'&w='+dim.width+'&h='+dim.height+'&path='+path, isJSON:false, noCache:true});
+		if(res.startsWith('ERR:')){
+			niceAlert(res);
+			return;
+		}
+		else {
+			if(sel.is(':visible')) toggleSelect();
+			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
+		}
+	});
+	$('#cc_turncw').on('click', function(){
+		var res = ajax({url:'EditImageRotate.ashx?dir=CW&path='+path, isJSON:false, noCache:true});
+		if(res.startsWith('ERR:')){
+			niceAlert(res);
+			return;
+		}
+		else {
+			if(sel.is(':visible')) toggleSelect();
+			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
+		}
+	});
+	$('#cc_turnccw').on('click', function(){
+		var res = ajax({url:'EditImageRotate.ashx?dir=CCW&path='+path, isJSON:false, noCache:true});
+		if(res.startsWith('ERR:')){
+			niceAlert(res);
+			return;
+		}
+		else {
+			if(sel.is(':visible')) toggleSelect();
+			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
+		}
+	});
+	$('#cc_resize').on('click', function(){
+		var res = ajax({url:'EditImageResize.ashx?width='+$('#cc_ei_width').val()+'&height='+$('#cc_ei_height').val()+'&path='+path, isJSON:false, noCache:true});
+		if(res.startsWith('ERR:')){
+			niceAlert(res);
+			return;
+		}
+		else {
+			if(sel.is(':visible')) toggleSelect();
+			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
+		}
+	});
+	$('#cc_reset').on('click', function(){
+		var res = ajax({url:'EditImageReset.ashx?path='+path, isJSON:false, noCache:true});
+		if(res.startsWith('ERR:')){
+			niceAlert(res);
+			return;
+		}
+		else {
+			if(sel.is(':visible')) toggleSelect();
+			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
+		}
+	});
+}
+function makeImageEditable(eix,img){
+	$(img).on('mouseenter', function(){
+		cc_edit_curr = $(img);
+		var dim = getDimensions(img);
+		var pos = cc_edit_curr.offset();
+		var btn = $('#cc_ei_btn');
+		btn.css({left:(pos.left + dim.width-40)+'px', top:(pos.top + dim.height-20)+'px'});
+		btn.show();
+	});
+}
 
 //############################
 //#          LookUp          #
@@ -608,7 +772,7 @@ var LookUp = Class.create(); LookUp.prototype = {
         $('#btnDelete' + lf.hndl).hide();
         $('#btnInfo' + lf.hndl).hide();
 
-        list.find('.lf-listFormFooter').append('<span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span>');
+        list.find('.lf-listFormFooter').append('<span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span>');
 		list.find('#' + this.editorId + 'btnCancel').css('margin','0px 0px 0px 20px');
 
         var btnCancel = $('#'+this.editorId + 'btnCancel');
@@ -905,10 +1069,10 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
         $(document.body).append('<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">' +
             '<div id="' + this.editorId + 'ta" style="height: 429px;border-bottom: 1px solid #bbb;"></div><br/>' +
             '<center>' +
-            '<span id="' + this.editorId + 'btnOK" class="ccBtn cok">' + lang('OK') + '</span> ' +
-            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="ccBtn cload">' + lang('Load default') + '</span> ' : '') +
-            '<span id="' + this.editorId + 'btnPicture" class="ccBtn cpicture">' + lang('Add picture') + '</span> ' +
-            '<span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span>' +
+            '<span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> ' +
+            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="ccBtn"><span class="fff lorry"></span>' + lang('Load default') + '</span> ' : '') +
+            '<span id="' + this.editorId + 'btnPicture" class="ccBtn"><span class="fff picture"></span>' + lang('Add picture') + '</span> ' +
+            '<span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span>' +
             '</center>' +
             '</div>');
 
@@ -1016,7 +1180,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     },
     showEditor: function(event) {
         if (!$('#'+this.editorId).length)
-            $(document.body).append('<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="ccBtn cok">' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="ccBtn ccancel">' + lang('Cancel') + '</span></center></div>');
+            $(document.body).append('<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></center></div>');
         else
             $('#'+this.editorId).find(':first').html("");
         var entityNameToUse = this.options.entityName;
@@ -1499,7 +1663,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr><td colspan="2" id="details' + this.hndl + '"></td></tr>';
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
-        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn csave" id="btnSave' + this.hndl + '">' + lang('Save') + '</span></td></tr>';
+        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span>' + lang('Save') + '</span></td></tr>';
         str += '</table>';
 
         container.append(str);
@@ -1560,7 +1724,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 var entityDisplayName = controls.find(function(c) { return c.id == 'Title' || c.id == 'Name' || c.id == 'Question' }).value;
                 if (entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
                 if (!showRelatedEntities || showRelatedEntities.indexOf(control.entityName) > -1)
-                    details.append('<span class="ccBtn c' + control.entityName + '" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')">' + control.label + '</span>');
+                    details.append('<span class="ccBtn" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')"><span class="fff '+getEntityIcon(control.entityName)+'"></span>' + control.label + '</span>');
                 continue;
             default:
                 throw 'No control of this kind: ' + control.type;
@@ -1671,7 +1835,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn cfilter" style="margin:0px 0px 0px 10px">' + lang('Apply') + '</span></td></table>');
+        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span>' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: '#filter' + this.hndl, readOnly: true });
         $('#btnFilter' + this.hndl).bind('click', this.fetchData.bind(this));
 
@@ -1681,7 +1845,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         if (this.options.commands)
             for (var i = 0; i < this.options.commands.length; i++) {
                 var cmd = this.options.commands[i];
-                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn c' + cmd.icon + '">' + lang(cmd.name) + '</span></div>';
+                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn"><span class="fff '+cmd.icon+'"></span>' + lang(cmd.name) + '</span></div>';
             }
         str += '<span class="cbtn cprev" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="cpager" id="pageNo' + this.hndl + '">1</span>';

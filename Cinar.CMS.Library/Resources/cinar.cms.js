@@ -26,6 +26,12 @@ $(function(){
 			}
 		});
 
+		// image editor
+		if($('.cc_edit_img').length){
+			imageEditorInit();
+			$('.cc_edit_img').each(makeImageEditable);
+		}
+
         if (!designMode) return; //***
 
         regionDivs = $('.Region');//$('Header','Left','Content','Right','Footer').compact();
@@ -550,7 +556,6 @@ function saveModule(pe){
             var mdl = $('#'+pe.entityName+'_'+pe.entityId);
             if(mdl.length){
                 mdl.on('mousedown', highlightModule);
-                //new Effect.Pulsate(mdl, {duration:1.0, pulses:3});
                 selectModule(mdl);            
             }
         },
@@ -827,12 +832,12 @@ function sortImages(){
 	}
 	html += '</div>';
 	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
-	html += '   <span class="ccBtn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
-	html += '   <span class="ccBtn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
-	html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span>' + lang('Delete') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span>' + lang('OK') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span>';
 	html += '</p>';
 
-	var win = new Window({ className: 'alphacube', title: '<span class="cbtn csort"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true }); 
+	var win = new Window({ className: 'alphacube', title: '<span class="fff text_list_numbers"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true }); 
     var winContent = $(win.getContent());
 	winContent.append(html);
     win.showCenter();
@@ -879,12 +884,12 @@ function showContentPictures(options) {
     var html = '<div id="sortableList">';
     html += '</div>';
     html += '<p style="position:absolute;bottom:8px;left:8px;">';
-    html += '   <span class="ccBtn cDataConverter" id="btnQuickLoad">' + lang('Quick Load') + '</span>';
+    html += '   <span class="ccBtn" id="btnQuickLoad"><span class="fff lightning"></span>' + lang('Quick Load') + '</span>';
     html += '</p>';
     html += '<p style="position:absolute;bottom:8px;right:8px;">';
-    html += '   <span class="ccBtn cdelete" id="btnSortImagesDelete">' + lang('Delete') + '</span>';
-    html += '   <span class="ccBtn cok" id="btnSortImagesOK">' + lang('OK') + '</span>';
-    html += '   <span class="ccBtn ccancel" id="btnSortImagesCancel">' + lang('Cancel') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span>' + lang('Delete') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span>' + lang('OK') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span>';
     html += '</p>';
 
     var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
@@ -1059,6 +1064,43 @@ function insertEditForm(pe, callback){
 	});
 }
 
+function getEntityIcon(entityName){
+    //var moduleTypes = {name:'Anket',id:'Poll'},{name:'Anket Sonuçları',id:'PollResults'},{name:'Arama Formu',id:'SearchForm'},{name:'Arama Sonuçları',id:'SearchResults'},{name:'Ajanda',id:'Ajanda'},{name:'Dil Listesi',id:'LanguageList'},{name:'Grafik',id:'Chart'},{name:'Statik HTML',id:'StaticHtml'},{name:'Tarih Saat',id:'TarihSaat'},{name:'Banner',id:'Banner'},{name:'Döviz Kurları',id:'ExchangeRates'},{name:'Sepet',id:'Basket'},{name:'Sepet Özeti',id:'BasketSummary'},{name:'Ürün Listesi',id:'ProductList'},{name:'? AuthorBox',id:'AuthorBox'},{name:'? AuthorList',id:'AuthorList'},{name:'Manşet (Filtreli)',id:'Manset'},{name:'Manşet (Gruplanmış)',id:'MansetByGrouping'},{name:'Otoİçerik Listesi',id:'AutoContentListByFilter'},{name:'Resim Galerisi',id:'ImageGallery'},{name:'Data List',id:'DataList'},{name:'Form',id:'Form'},{name:'Form Alanı',id:'FormField'},{name:'Grid',id:'Grid'},{name:'Sayfa Güvenliği',id:'PageSecurity'},{name:'SQL DataList',id:'SQLDataList'},{name:'Etiket Bulutu',id:'TagCloud'},{name:'İçerik',id:'ContentDisplay'},{name:'İçerik Albümü',id:'ContentGallery'},{name:'İçerik Araçları',id:'ContentTools'},{name:'İçerik Listesi (etiket filtreli)',id:'ContentListByTag'},{name:'İçerik Listesi (filtreli)',id:'ContentListByFilter'},{name:'İçerik Listesi (gruplanmış)',id:'LastContents'},{name:'Kaynak Detayı',id:'SourceDetail'},{name:'Menü',id:'Navigation'},{name:'Menü (alt menülerle)',id:'NavigationWithChildren'},{name:'Neredeyim Linkleri',id:'WhereAmI'},{name:'Resim ve Dosyalar',id:'ContentPicture'},{name:'Yazar Detayı',id:'AuthorDetail'},{name:'? ModuleRepeater',id:'ModuleRepeater'},{name:'Çerçeve',id:'Frame'},{name:'Konteyner',id:'Container'},{name:'Kopyalanmış Bölge',id:'RegionRepeater'},{name:'Tab View',id:'TabView'},{name:'Tablo',id:'Table'},{name:'Genel Form',id:'GenericForm'},{name:'Ziyaretçi Mesajı',id:'ContactUs'},{name:'Ziyaretçi Yorumları',id:'Comments'},{name:'? LoginForm2',id:'LoginForm2'},{name:'Aktivasyon formu',id:'UserActivationForm'},{name:'Login Formu',id:'LoginForm'},{name:'Şifre hatırlat formu',id:'PasswordForm'},{name:'Üyelik Formu',id:'MembershipForm'},{name:'Data Dönüştürücü',id:'DataConverter'}];
+    var entityIcons = {
+		'AuthorLang':'user_edit', 
+		'ModuleCache':'brick', 
+		'SourceLang':'house', 
+		'Template':'html', 
+		'PollQuestion':'chart_pie', 
+		'PollQuestionLang':'chart_pie',
+		'PollAnswer':'chart_pie',
+		'PollAnswerLang':'chart_pie',
+		'BannerAd':'photo',
+		'Configuration':'cog',
+		'Lang':'flag_red',
+		'ExchangeRate':'money',
+		'Tag':'tag_red',
+		'TagLang':'tag_red',
+		'Content':'page_white',
+		'ContentLang':'page_white',
+		'ContentTag':'tag_red',
+		'ContentSource':'house',
+		'ContentUser':'user',
+		'Source':'house',
+		'User':'user',
+		'Log':'database',
+		'ContentPictureLang':'picture',
+		'ContentPicture':'picture',
+		'Recommendation':'email_go',
+		'UserPrefferedAuthor':'user_edit',
+		'Circulation':'chart_bar',
+		'Product':'ipod',
+		'Author':'user_edit',
+		'UserComment':'comments',
+		'ContactUs':'email'
+		};
+	return entityIcons[entityName];
+}
 //################################################################
 //#        TEMPLATE (EDIT, COPY, DELETE, RENAME) FUNCTIONS       #
 //################################################################
