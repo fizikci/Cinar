@@ -1327,10 +1327,11 @@ namespace Cinar.Database
             DataTable dt = this.GetDataTable(sql, parameters);
             if (dt == null || dt.Rows.Count == 0)
                 return null;
-            else if (dt.Rows.Count == 1)
-                return dt.Rows[0];
-            else
-                throw new ApplicationException("There is more than one row returned by that sql. (" + sql + ")");
+
+            return dt.Rows[dt.Rows.Count-1];
+            
+            //else
+            //    throw new ApplicationException("There is more than one row returned by that sql. (" + sql + ")");
         }
         public DataRow GetDataRow(string sql)
         {

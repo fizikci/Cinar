@@ -41,11 +41,11 @@ $(function(){
 		
 		var mdlSelHTML = '<div id="mdlSel">';
 		mdlSelHTML += '<div><nobr>';
-		mdlSelHTML += '<span class="cbtn cmodule_edit" onclick="editModule()" title="'+lang('Edit')+'"></span>';
-		mdlSelHTML += '<span class="cbtn cmodule_delete" onclick="deleteModule()" title="' + lang('Delete') + '"></span>';
-		mdlSelHTML += '<span class="cbtn carrow_up" onclick="upModule()" title="' + lang('Move Up') + '"></span>';
-		mdlSelHTML += '<span class="cbtn carrow_down" onclick="downModule()" title="' + lang('Move Down') + '"></span>';
-		mdlSelHTML += '<span class="cbtn cmodule_add" onclick="addModule()" title="' + lang('Add Module') + '"></span>';
+		mdlSelHTML += '<span class="fff brick_edit" onclick="editModule()" title="'+lang('Edit')+'"></span>';
+		mdlSelHTML += '<span class="fff brick_delete" onclick="deleteModule()" title="' + lang('Delete') + '"></span>';
+		mdlSelHTML += '<span class="fff arrow_up" onclick="upModule()" title="' + lang('Move Up') + '"></span>';
+		mdlSelHTML += '<span class="fff arrow_down" onclick="downModule()" title="' + lang('Move Down') + '"></span>';
+		mdlSelHTML += '<span class="fff brick_add" onclick="addModule()" title="' + lang('Add Module') + '"></span>';
 		mdlSelHTML += '</nobr></div>';
 		mdlSelHTML += '</div><div id="mdlSel2"></div><div id="mdlSel3"></div><div id="mdlSel4"></div>';
 		$(document.body).append(mdlSelHTML);
@@ -302,50 +302,50 @@ function contentLinkSelected() { return rightClickLinkElement.length && rightCli
 function tagLinkSelected() { return rightClickLinkElement.length && rightClickLinkElement.attr('href').indexOf('tagId=') > -1; }
 
 popupMenu.menuItems = [
-    {text:lang('Copy Module'), icon:'copy', isEnabled:moduleSelected, callback:copyModule},
-    {text:lang('Paste Module'), icon:'paste', isEnabled:moduleCanBePasted, callback:pasteModule},
+    {text:lang('Copy Module'), icon:'page_white_copy', isEnabled:moduleSelected, callback:copyModule},
+    {text:lang('Paste Module'), icon:'page_white_paste', isEnabled:moduleCanBePasted, callback:pasteModule},
     {text:'-', isEnabled:showFirstHR},
-    {text:lang('For This Module'), icon:'module', isEnabled:moduleSelected, items:[
-            {text:lang('Edit')+' (Ent)', icon:'module_edit', isEnabled:moduleSelected, callback:function(){editModule();}},
-            {text:lang('Delete')+' (Del)', icon:'module_delete', isEnabled:moduleSelected, callback:deleteModule},
+    {text:lang('For This Module'), icon:'brick', isEnabled:moduleSelected, items:[
+            {text:lang('Edit')+' (Ent)', icon:'brick_edit', isEnabled:moduleSelected, callback:function(){editModule();}},
+            {text:lang('Delete')+' (Del)', icon:'brick_delete', isEnabled:moduleSelected, callback:deleteModule},
             {text:lang('Move Up'), icon:'arrow_up', isEnabled:moduleSelected, callback:upModule},
             {text:lang('Move Down'), icon:'arrow_down', isEnabled:moduleSelected, callback:downModule},
-            {text:lang('Convert To'), icon:'module', isEnabled:moduleSelected, callback:convertModule},
-			{text:lang('Export')+'...', icon:'exportTemplate', callback:exportModule}
+            {text:lang('Convert To'), icon:'brick', isEnabled:moduleSelected, callback:convertModule},
+			{text:lang('Export')+'...', icon:'brick_go', callback:exportModule}
         ]},
-    {text:lang('Add Module')+' (Ins)', icon:'module_add', isEnabled:regionSelected, items:[
-			{text:lang('Import')+'...', icon:'importTemplate', callback:importModule}
+    {text:lang('Add Module')+' (Ins)', icon:'brick_add', isEnabled:regionSelected, items:[
+			{text:lang('Import')+'...', icon:'brick_go', callback:importModule}
 		]},
     {text:'-', isEnabled:showSecondHR},
-    {text:lang('For This Page'), icon:'general', items:[
-            {text:lang('Edit')+'...', icon:'page_rename', callback:editTemplate},
+    {text:lang('For This Page'), icon:'page', items:[
+            {text:lang('Edit')+'...', icon:'page_edit', callback:editTemplate},
             {text:lang('Copy')+'...', icon:'page_copy', callback:copyTemplate},
             {text:lang('Delete'), icon:'page_delete', callback:deleteTemplate},
-            {text:lang('Rename')+'...', icon:'page_rename', callback:renameTemplate}
+            {text:lang('Rename')+'...', icon:'page_edit', callback:renameTemplate}
         ]},
-    {text:lang('Add New Page')+'...', icon:'page_copy', callback:addTemplate},
-    {text:lang('Other Pages'), icon:'pages', items:[]},
-    {text:lang('Export')+'...', icon:'exportTemplate', callback:exportTemplate},
-    {text:lang('Import')+'...', icon:'importTemplate', callback:importTemplate},
+    {text:lang('Add New Page')+'...', icon:'page_add', callback:addTemplate},
+    {text:lang('Other Pages'), icon:'page_white_stack', items:[]},
+    {text:lang('Export')+'...', icon:'page_go', callback:exportTemplate},
+    {text:lang('Import')+'...', icon:'page_lightning', callback:importTemplate},
     {text:'-'},
-    {text:lang('Data'), icon:'data', items:[]},
-    {text:lang('Category-Content Tree'), icon:'tree', callback:openCategoryContentTree},
-    {text:lang('Page-Module Tree'), icon:'tree', callback:openPageModuleTree},
+    {text:lang('Data'), icon:'database', items:[]},
+    {text:lang('Category-Content Tree'), icon:'chart_organisation', callback:openCategoryContentTree},
+    {text:lang('Page-Module Tree'), icon:'chart_organisation', callback:openPageModuleTree},
     {text:'-'},
-    {text:lang('Configuration'), icon:'Configuration', callback:configure},
-    { text: lang('File Manager'), icon: 'folder_module', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
+    {text:lang('Configuration'), icon:'cog', callback:configure},
+    { text: lang('File Manager'), icon: 'folder_picture', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
     {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
     {text:lang('Edit General Javascript'), icon:'script', callback:editJavascript},
-    {text:lang('Edit Page Load Script'), icon:'script', callback:editPageLoadScript},
-    {text:lang('Clear Cache'), icon:'cache', callback:clearCache},
+    {text:lang('Edit Page Load Script'), icon:'page_white_csharp', callback:editPageLoadScript},
+    {text:lang('Clear Cache'), icon:'database_delete', callback:clearCache},
     {text:lang('Edit Content'), icon: 'edit', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
-    {text:lang('Console'), icon: 'console', callback: openConsole },
-    { text: lang('Switch to View Mode'), icon: 'view_mode', callback: endDesignMode },
+    {text:lang('Console'), icon: 'application_xp_terminal', callback: openConsole },
+    { text: lang('Switch to View Mode'), icon: 'cup', callback: endDesignMode },
     {
-        text: lang('Help'), icon: 'ok', callback: function () {
+        text: lang('Help'), icon: 'help', callback: function () {
             new CinarWindow({
-                titleIcon: 'ok',
+                titleIcon: 'help',
                 title: 'Çınar CMS Documentation',
                 width: 1100,
                 height: 700,
@@ -357,9 +357,9 @@ popupMenu.menuItems = [
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
-    items[i+1] = {text:mdlGrup.grup, icon:'folder_module', items:[]};
+    items[i+1] = {text:mdlGrup.grup, icon:'folder', items:[]};
     mdlGrup.items.each(function(mdlTp, j){
-        items[i+1].items[j] = {text:mdlTp.name, icon:mdlTp.id, data:mdlTp.id, callback:addModule};
+        items[i+1].items[j] = {text:mdlTp.name, icon:getModuleIcon(mdlTp.id), data:mdlTp.id, callback:addModule};
     });
 });
 var _cntr = 0;
@@ -370,7 +370,7 @@ templates.each(function(template, i){
 _cntr = 0;
 entityTypes.each(function(entTp,i){
     if(entTp[2])
-        popupMenu.menuItems[12].items[_cntr++] = {text:entTp[1], icon:entTp[0], data:entTp[0], callback:openEntityListForm};
+        popupMenu.menuItems[12].items[_cntr++] = {text:entTp[1], icon:getEntityIcon(entTp[0]), data:entTp[0], callback:openEntityListForm};
 });
 popupMenu.onShow = function(){
 	navigationEnabled = false;
@@ -401,7 +401,7 @@ function showPopupMenu(event){
 
 function addModule(elmId){
     if(!elmId){ // if the module to be added is not defined ask it hesaaabı
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true }); 
+        var win = new Window({ className: 'alphacube', title: '<span class="fff brick_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 210, wiredDrag: true, destroyOnClose: true }); 
         var str = '<p align="center"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -410,14 +410,14 @@ function addModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
+        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
         win.getContent().prepend(str);
         win.showCenter();
         win.toFront();
         var selCtrl = $('#selectModule');
-        selCtrl.selectedIndex = 0;
+        selCtrl[0].selectedIndex = 0;
         selCtrl.focus();
-        $('#btnAddModuleOK').on('click', function(){addModule($('selectModule').value); Windows.getFocusedWindow().close();});
+        $('#btnAddModuleOK').on('click', function(){addModule($('#selectModule').val()); Windows.getFocusedWindow().close();});
         $('#btnAddModuleCancel').on('click', function(){Windows.getFocusedWindow().close();});
         return;
     }
@@ -564,7 +564,7 @@ function saveModule(pe){
 }
 function convertModule(elmId){
     if(!elmId){ // if the module to be converted is not defined ask it hesaaabı
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cmodule_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 230, wiredDrag: true, destroyOnClose: true }); 
+        var win = new Window({ className: 'alphacube', title: '<span class="fff brick_add"></span> ' + lang('Select Module'), maximizable: false, minimizable: false, width: 220, height: 230, wiredDrag: true, destroyOnClose: true }); 
         var str = '<p align="center" style="padding-top:22px"><select size="10" id="selectModule">';
         moduleTypes.each(function(mdlGrup, i){
             str += '<optgroup label="'+mdlGrup.grup+'">';
@@ -573,14 +573,14 @@ function convertModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="ccBtn cok" id="btnAddModuleOK">' + lang('OK') + '</span> <span class="ccBtn ccancel" id="btnAddModuleCancel">' + lang('Cancel') + '</span></p>';
+        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
         win.getContent().prepend(str);
         win.showCenter();
         win.toFront();
         var selCtrl = $('#selectModule');
-        selCtrl.selectedIndex = 0;
+        selCtrl[0].selectedIndex = 0;
         selCtrl.focus();
-        $('#btnAddModuleOK').on('click', function(){convertModule($('selectModule').value); Windows.getFocusedWindow().close();});
+        $('#btnAddModuleOK').on('click', function(){convertModule(selCtrl.val()); Windows.getFocusedWindow().close();});
         $('#btnAddModuleCancel').on('click', function(){Windows.getFocusedWindow().close();});
         return;
     }
@@ -650,7 +650,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 
 	var lastOpenedEntityListForm = Windows.getLastWindowByCTagName('listform');
 
-    caption = '<span class="cbtn c' + entityName + '"></span> ' + caption;
+    caption = '<span class="fff ' + getEntityIcon(entityName) + '"></span> ' + caption;
     var win = new Window({className: 'alphacube', title: caption, width:800, height:500, wiredDrag: true, destroyOnClose:true}); 
 	win.cTagName = 'listform';
     var winContent = $(win.getContent());
@@ -713,7 +713,7 @@ function quickLoadImages(contentId, callback) {
 	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
 	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
 
-	$('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn cok">' + lang('OK') + '</span></div>');
+	$('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></div>');
 	$('#btnOK').on('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
 		var params = {
@@ -742,7 +742,7 @@ function tagifySelectedPicture(id){
 		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true}); 
 		var winContent = $(win.getContent());
 		winContent.append(img.show().remove());
-		winContent.append('<p align="right"><span class="ccBtn cok" id="btnTagifyOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyCancel">' + lang('Cancel') + '</span></p>');
+		winContent.append('<p align="right"><span class="ccBtn" id="btnTagifyOK"><span class="fff accept"></span>' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>');
 		
 		$('#btnTagifyOK').on('click', function(){
 			tagData = tagData.findAll(function(t){return t.remove!=true;});
@@ -791,7 +791,7 @@ function tagifySelectedPicture(id){
 function openTagForm(winPos, tag, tagData){
 	if($('#tagify_edit').length) $('#tagify_edit').remove();
 	
-	$(document.body).append('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn cok" id="btnTagifyEditOK">' + lang('OK') + '</span><span class="ccBtn ccancel" id="btnTagifyEditDelete">' + lang('Delete') + '</span></p></div>');
+	$(document.body).append('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn" id="btnTagifyEditOK"><span class="fff accept"></span>' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyEditDelete"><span class="fff cancel"></span>' + lang('Delete') + '</span></p></div>');
 	var formTag = $('#tagify_edit');
 
 	$('#btnTagifyEditOK').on('click', function(){
@@ -892,7 +892,7 @@ function showContentPictures(options) {
     html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span>';
     html += '</p>';
 
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn c'+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
+    var win = new Window({ className: 'alphacube', title: '<span class="fff '+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
     var winContent = $(win.getContent());
     winContent.append(html);
     win.showCenter();
@@ -940,6 +940,65 @@ function showContentPictures(options) {
     showImages();
 }
 
+function getModuleIcon(moduleName){
+    var moduleIcons = {
+		'Poll':'chart_pie',
+		'PollResults':'chart_curve',
+		'SearchForm':'application_form_magnify',
+		'SearchResults':'page_white_magnify',
+		'Ajanda':'calendar',
+		'LanguageList':'flag_red',
+		'Chart':'chart_curve',
+		'StaticHtml':'xhtml',
+		'TarihSaat':'date',
+		'Banner':'money',
+		'ExchangeRates':'money_dollar',
+		'Basket':'basket',
+		'BasketSummary':'basket_edit',
+		'ProductList':'ipod',
+		'AuthorBox':'user_edit',
+		'AuthorList':'user',
+		'Manset':'page_go',
+		'MansetByGrouping':'page_go',
+		'AutoContentListByFilter':'page_gear',
+		'ImageGallery':'photos',
+		'DataList':'table',
+		'Form':'application_form',
+		'FormField':'textfield',
+		'Grid':'table',
+		'PageSecurity':'page_key',
+		'SQLDataList':'database_table',
+		'TagCloud':'tag_red',
+		'ContentDisplay':'page_red',
+		'ContentGallery':'photos',
+		'ContentTools':'page_gear',
+		'ContentListByTag':'tag_red',
+		'ContentListByFilter':'magnify',
+		'LastContents':'page',
+		'SourceDetail':'house',
+		'Navigation':'link',
+		'NavigationWithChildren':'link',
+		'WhereAmI':'link',
+		'ContentPicture':'picture',
+		'AuthorDetail':'user_edit',
+		'ModuleRepeater':'brick_add',
+		'Frame':'photo',
+		'Container':'application',
+		'RegionRepeater':'page_red',
+		'TabView':'tab',
+		'Table':'table',
+		'GenericForm':'application_form',
+		'ContactUs':'email',
+		'Comments':'comments',
+		'LoginForm2':'application_form',
+		'UserActivationForm':'application_form',
+		'LoginForm':'application_form',
+		'PasswordForm':'application_form',
+		'MembershipForm':'application_form',
+		'DataConverter':'cog'
+	};
+	return moduleIcons[moduleName];
+}
 
 //#####################################
 //#          TREE FUNCTIONS           #
@@ -947,7 +1006,7 @@ function showContentPictures(options) {
 
 // Category-Content Tree
 function openCategoryContentTree() {
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Category-Content Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="fff chart_organisation"></span> ' + lang('Category-Content Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
     var winContent = $(win.getContent());
     winContent.css({overflow:'auto'});
     win['form'] = new TreeView(winContent, 1, lang('Root'), getNodes, nodeClicked);
@@ -967,7 +1026,7 @@ function nodeClicked(node){
 
 // Page-Module Tree
 function openPageModuleTree(){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn ctree"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="fff chart_organisation"></span> ' + lang('Page-Module Tree'), top: 63, left: 15, width: 400, height: 600, wiredDrag: true, destroyOnClose: true }); 
     var winContent = $(win.getContent());
     winContent.css({overflow:'auto'});
     win['form'] = new TreeView(winContent, -1, lang('Root'), getModuleNodes, nodeModuleClicked);
@@ -1065,7 +1124,6 @@ function insertEditForm(pe, callback){
 }
 
 function getEntityIcon(entityName){
-    //var moduleTypes = {name:'Anket',id:'Poll'},{name:'Anket Sonuçları',id:'PollResults'},{name:'Arama Formu',id:'SearchForm'},{name:'Arama Sonuçları',id:'SearchResults'},{name:'Ajanda',id:'Ajanda'},{name:'Dil Listesi',id:'LanguageList'},{name:'Grafik',id:'Chart'},{name:'Statik HTML',id:'StaticHtml'},{name:'Tarih Saat',id:'TarihSaat'},{name:'Banner',id:'Banner'},{name:'Döviz Kurları',id:'ExchangeRates'},{name:'Sepet',id:'Basket'},{name:'Sepet Özeti',id:'BasketSummary'},{name:'Ürün Listesi',id:'ProductList'},{name:'? AuthorBox',id:'AuthorBox'},{name:'? AuthorList',id:'AuthorList'},{name:'Manşet (Filtreli)',id:'Manset'},{name:'Manşet (Gruplanmış)',id:'MansetByGrouping'},{name:'Otoİçerik Listesi',id:'AutoContentListByFilter'},{name:'Resim Galerisi',id:'ImageGallery'},{name:'Data List',id:'DataList'},{name:'Form',id:'Form'},{name:'Form Alanı',id:'FormField'},{name:'Grid',id:'Grid'},{name:'Sayfa Güvenliği',id:'PageSecurity'},{name:'SQL DataList',id:'SQLDataList'},{name:'Etiket Bulutu',id:'TagCloud'},{name:'İçerik',id:'ContentDisplay'},{name:'İçerik Albümü',id:'ContentGallery'},{name:'İçerik Araçları',id:'ContentTools'},{name:'İçerik Listesi (etiket filtreli)',id:'ContentListByTag'},{name:'İçerik Listesi (filtreli)',id:'ContentListByFilter'},{name:'İçerik Listesi (gruplanmış)',id:'LastContents'},{name:'Kaynak Detayı',id:'SourceDetail'},{name:'Menü',id:'Navigation'},{name:'Menü (alt menülerle)',id:'NavigationWithChildren'},{name:'Neredeyim Linkleri',id:'WhereAmI'},{name:'Resim ve Dosyalar',id:'ContentPicture'},{name:'Yazar Detayı',id:'AuthorDetail'},{name:'? ModuleRepeater',id:'ModuleRepeater'},{name:'Çerçeve',id:'Frame'},{name:'Konteyner',id:'Container'},{name:'Kopyalanmış Bölge',id:'RegionRepeater'},{name:'Tab View',id:'TabView'},{name:'Tablo',id:'Table'},{name:'Genel Form',id:'GenericForm'},{name:'Ziyaretçi Mesajı',id:'ContactUs'},{name:'Ziyaretçi Yorumları',id:'Comments'},{name:'? LoginForm2',id:'LoginForm2'},{name:'Aktivasyon formu',id:'UserActivationForm'},{name:'Login Formu',id:'LoginForm'},{name:'Şifre hatırlat formu',id:'PasswordForm'},{name:'Üyelik Formu',id:'MembershipForm'},{name:'Data Dönüştürücü',id:'DataConverter'}];
     var entityIcons = {
 		'AuthorLang':'user_edit', 
 		'ModuleCache':'brick', 
@@ -1101,6 +1159,7 @@ function getEntityIcon(entityName){
 		};
 	return entityIcons[entityName];
 }
+
 //################################################################
 //#        TEMPLATE (EDIT, COPY, DELETE, RENAME) FUNCTIONS       #
 //################################################################
@@ -1377,7 +1436,7 @@ function configure(){
 //###########################################################################################
 
 function openFileManager(selectedPath, onSelectFile){
-    var win = new Window({ className: 'alphacube', title: '<span class="cbtn cfolder_module.png"></span> ' + lang('File Manager'), minWidth:913,  width: 965, minHeight:350, height: 600, wiredDrag: true, destroyOnClose: true }); 
+    var win = new Window({ className: 'alphacube', title: '<span class="fff folder_picture"></span> ' + lang('File Manager'), minWidth:913,  width: 965, minHeight:350, height: 600, wiredDrag: true, destroyOnClose: true }); 
     var winContent = $(win.getContent());
     var fm = new FileManager({
 		container:winContent,

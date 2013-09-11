@@ -217,14 +217,14 @@ var StringEdit = Class.create(); StringEdit.prototype = {
 
         list.append(
             '<div>' +
-                '<span class="cbtn ceditor_bold" title="Bold"></span>' +
-                '<span class="cbtn ceditor_italic" title="Italic"></span>' +
-                '<span class="cbtn ceditor_underline" title="Underline"></span>' +
-                '<span class="cbtn ceditor_font" title="Font Size & Color"></span>' +
-                '<span class="cbtn cpicture" title="Add Picture"></span>' +
-                '<span class="cbtn ceditor_anchor" title="Add Link"></span>' +
-                '<span class="cbtn cNavigationWithChildren" title="Break lines"></span>' +
-                '<span class="cbtn ceye" style="margin-left:40px" title="Preview"></span>' +
+                '<span class="fff text_bold" title="Bold"></span>' +
+                '<span class="fff text_italic" title="Italic"></span>' +
+                '<span class="fff text_underline" title="Underline"></span>' +
+                '<span class="fff text_smallcaps" title="Font Size & Color"></span>' +
+                '<span class="fff picture" title="Add Picture"></span>' +
+                '<span class="fff link" title="Add Link"></span>' +
+                '<span class="fff text_padding_bottom" title="Break lines"></span>' +
+                '<span class="fff eye" style="margin-left:40px" title="Preview"></span>' +
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
                 '<div id="' + this.editorId + 'ta" style="border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;position: absolute;left: 0px;right: 0px;bottom: 31px;top: 19px;"></div>' +
@@ -234,8 +234,8 @@ var StringEdit = Class.create(); StringEdit.prototype = {
 
         if (this.input.disabled) return;
 
-        var btnOK = list.find('.cok');
-        var btnCancel = list.find('.ccancel');
+        var btnOK = list.find('.accept').parent();
+        var btnCancel = list.find('.cancel').parent();
         btnOK.unbind('click', __oldBtnOKClick);
         btnCancel.unbind('click', __oldBtnCancelClick);
         __oldBtnOKClick = this.setHtml.bind(this);
@@ -246,9 +246,9 @@ var StringEdit = Class.create(); StringEdit.prototype = {
         var wrapCheck = list.find('.wrapCheck');
         wrapCheck.bind('click', function() {
             if (wrapCheck.is(':checked'))
-                ths.aceEdit.getSession().setUseWrapMode(true);//ta.attr('wrap');
+                ths.aceEdit.getSession().setUseWrapMode(true);
             else
-                ths.aceEdit.getSession().setUseWrapMode(false); //ta.attr('wrap', 'off');
+                ths.aceEdit.getSession().setUseWrapMode(false);
             setCookie('wrap', wrapCheck.is(':checked') ? 1 : 0);
         });
         var nl2brCheck = list.find('.nl2br');
@@ -265,18 +265,18 @@ var StringEdit = Class.create(); StringEdit.prototype = {
             }
         });
 
-        list.find('.cbtn').each(function(eix,img) {
+        list.find('.fff').each(function(eix,img) {
             if (img.className.indexOf('bold') > -1)
                 $(this).bind('click', function() { ths.aceEdit.insert('<b>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</b>'); });
             if (img.className.indexOf('italic') > -1)
                 $(this).bind('click', function() { ths.aceEdit.insert('<i>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</i>'); });
             if (img.className.indexOf('underline') > -1)
                 $(this).bind('click', function() { ths.aceEdit.insert('<u>' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</u>'); });
-            if (img.className.indexOf('font') > -1)
+            if (img.className.indexOf('smallcaps') > -1)
                 $(this).bind('click', function() { ths.aceEdit.insert('<font size="5" color="black">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</font>'); });
-            if (img.className.indexOf('anchor') > -1)
+            if (img.className.indexOf('link') > -1)
                 $(this).bind('click', function () { ths.aceEdit.insert('<a href="http://www.address.com" target="_blank">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</a>'); });
-            if (img.className.indexOf('cNavigationWithChildren') > -1)
+            if (img.className.indexOf('text_padding_bottom') > -1)
                 $(this).bind('click', function () { alert("not implemented yet"); });
             if (img.className.indexOf('picture') > -1)
                 $(this).bind('click', function() {
@@ -573,7 +573,7 @@ function editCurrImage(path){
 		}
 	}
 	
-	var win = new Window({ className: 'alphacube', title: '<span class="cbtn cedit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true }); 
+	var win = new Window({ className: 'alphacube', title: '<span class="fff edit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true }); 
 	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn"><span class="fff shape_handles"></span>Select</span><span id="cc_crop" class="ccBtn"><span class="fff cut"></span>Crop</span><span id="cc_turncw" class="ccBtn"><span class="fff arrow_rotate_clockwise"></span>Turn CW</span><span id="cc_turnccw" class="ccBtn"><span class="fff arrow_rotate_anticlockwise"></span>Turn CCW</span><span class="fff shape_group"></span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn">Resize</span><span id="cc_reset" class="ccBtn"><span class="fff arrow_undo"></span>Reset</span></div>';
 	str += '<div class="cc_ei_canvas"><img id="cc_ei_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"></div><div id="cc_ei_nw" style="display:none"></div><div id="cc_ei_se" style="display:none"></div></div>';
 	str += '<div id="cc_ei_status"></div>';
@@ -1799,7 +1799,7 @@ var EditForm = Class.create(); EditForm.prototype = {
 function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
 	var dim = getDimensions($(document.body));
 	var left=dim.width-390, top=60, width=350, height=dim.height-60;
-	var win = new Window({ className: "alphacube", title: '<span class="cbtn c'+entityName+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true }); 
+	var win = new Window({ className: "alphacube", title: '<span class="fff '+getEntityIcon(entityName)+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true }); 
 	var winContent = $(win.getContent());
 	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues);
 	pe.onSave = onSave;
@@ -1847,14 +1847,14 @@ var ListForm = Class.create(); ListForm.prototype = {
                 var cmd = this.options.commands[i];
                 str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn"><span class="fff '+cmd.icon+'"></span>' + lang(cmd.name) + '</span></div>';
             }
-        str += '<span class="cbtn cprev" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
+        str += '<span class="fff resultset_previous" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="cpager" id="pageNo' + this.hndl + '">1</span>';
-        str += '<span class="cbtn cnext" id="btnNext' + this.hndl + '" title="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"></span>';
-        str += '<span class="cbtn cadd" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
-        str += '<span class="cbtn cedit" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
-        str += '<span class="cbtn cdelete" id="btnDelete' + this.hndl + '" title="' + lang('Delete') + ' (Del)"></span>';
-        str += '<span class="cbtn crefresh" id="btnRefresh' + this.hndl + '" title="' + lang('Refresh') + '"></span>';
-        str += '<span class="cbtn cinfo" id="btnInfo' + this.hndl + '" title="' + lang('Info') + '"></span>';
+        str += '<span class="fff resultset_next" id="btnNext' + this.hndl + '" title="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"></span>';
+        str += '<span class="fff add" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
+        str += '<span class="fff pencil" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
+        str += '<span class="fff delete" id="btnDelete' + this.hndl + '" title="' + lang('Delete') + ' (Del)"></span>';
+        str += '<span class="fff database_refresh" id="btnRefresh' + this.hndl + '" title="' + lang('Refresh') + '"></span>';
+        str += '<span class="fff information" id="btnInfo' + this.hndl + '" title="' + lang('Info') + '"></span>';
         str += '</div>';
         this.container.append(str);
         $('#btnPrev' + this.hndl).bind('click', this.cmdPrev.bind(this));
@@ -2359,7 +2359,7 @@ var TreeView = Class.create(); TreeView.prototype = {
         this.getNodesCallback = getNodesCallback;
         this.nodeClickCallback = nodeClickCallback;
 
-        this.container.append('<div id="nd_' + rootData + '"><span class="cbtn cplus"></span><span class="cbtn ccategory"></span> <span class="nodeName">' + rootText + '</span></div>');
+        this.container.append('<div id="nd_' + rootData + '"><span class="fff bullet_toggle_plus"></span><span class="fff folder"></span> <span class="nodeName">' + rootText + '</span></div>');
         var node = $('#nd_' + rootData);
         node[0]['node'] = { data: rootData, text: rootText, type: 'category', collapsed: true };
         this.rootElement = node;
@@ -2386,7 +2386,7 @@ var TreeView = Class.create(); TreeView.prototype = {
             for (var i = 0; i < nodes.length; i++) {
                 var n = nodes[i];
                 n.collapsed = true;
-                childrenDiv.append('<div id="nd_' + n.data + '">' + (n.type == 'category' ? '<span class="cbtn cplus"></span>' : '') + '<span class="cbtn c' + n.type + '"></span> <span class="nodeName">' + n.text + '</span></div>');
+                childrenDiv.append('<div id="nd_' + n.data + '">' + (n.type == 'category' ? '<span class="fff bullet_toggle_plus"></span>' : '') + '<span class="fff ' + (n.type=='category'?'folder':'bullet_picture') + '"></span> <span class="nodeName">' + n.text + '</span></div>');
                 var nDiv = $('#nd_' + n.data);
                 nDiv[0]['node'] = n;
                 nDiv.find(':first').bind('click', this.toggle.bind(this));
@@ -2396,13 +2396,13 @@ var TreeView = Class.create(); TreeView.prototype = {
         if (node.collapsed) {
             childrenDiv.show();
             node.collapsed = false;
-            img.removeClass('cplus');
-            img.addClass('cminus');
+            img.removeClass('bullet_toggle_plus');
+            img.addClass('bullet_toggle_minus');
         } else {
             childrenDiv.hide();
             node.collapsed = true;
-            img.removeClass('cminus');
-            img.addClass('cplus');
+            img.removeClass('bullet_toggle_minus');
+            img.addClass('bullet_toggle_plus');
         }
     },
     nodeClick: function(event) {
@@ -2502,9 +2502,9 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
             if (menu.text == '-')
                 s += (tab + '\t<hr id="' + (subId + '_' + index) + '"/>\n');
             else if (menu.items && menu.items.length > 0)
-                s += (tab + '\t<div class="menuFolder" onmouseover="showSubMenu(this,\'' + (id + '_' + index) + '\')" id="' + (subId + '_' + index) + '"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
+                s += (tab + '\t<div class="menuFolder" onmouseover="showSubMenu(this,\'' + (id + '_' + index) + '\')" id="' + (subId + '_' + index) + '"><span class="fff ' + menu.icon + '"></span> ' + menu.text + '</div>\n');
             else
-                s += (tab + '\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '"><span class="cbtn c' + menu.icon + '"></span> ' + menu.text + '</div>\n');
+                s += (tab + '\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '"><span class="fff ' + menu.icon + '"></span> ' + menu.text + '</div>\n');
         });
         s += (tab + '</div>\n');
         menus.each(function(menu, index) {
@@ -2637,7 +2637,7 @@ var Console = Class.create(); Console.prototype = {
     cmdHist: [],
     cmdHistIndex: 0,
     initialize: function(requestUrl) {
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn cconsole" style="vertical-align:middle"></span> ' + lang('Console'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true });
+        var win = new Window({ className: 'alphacube', title: '<span class="fff application_xp_terminal" style="vertical-align:middle"></span> ' + lang('Console'), width: 800, height: 400, wiredDrag: true, destroyOnClose: true });
         var container = win.getContent();
 
         container.append('<textarea id="_cnsl"></textarea>');
@@ -2769,7 +2769,7 @@ var AceEditor = Class.create(); AceEditor.prototype = {
 
         ths.options = options;
 
-        var win = new Window({ className: 'alphacube', title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
+        var win = new Window({ className: 'alphacube', title: '<span class="fff ' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
         var winContent = $(win.getContent());
         var html = '<div id="txtSource" style="position:absolute;top:4px;left:4px;right:4px;bottom:60px;border-bottom:1px solid #ccc"></div><div style="position:absolute;left:4px;right:4px;bottom:8px;height:36px;text-align:center">';
         for (var i = 0; i < options.buttons.length; i++) {
