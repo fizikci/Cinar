@@ -851,7 +851,7 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
 
         var winOptions = {
             className: 'alphacube',
-            title: '<span class="cbtn c' + options.titleIcon + '"></span> ' + options.title,
+            title: '<span class="fff ' + options.titleIcon + '"></span> ' + options.title,
             width: options.width,
             height: options.height,
             wiredDrag: true,
@@ -1148,7 +1148,7 @@ var TextAreaUtil = {
 //##########################
 
 function nicePrompt(prompt, validationCallback, okCallback){
-    var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
+    var title = '<span class="fff information" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"></p>';
@@ -1173,7 +1173,7 @@ function nicePrompt(prompt, validationCallback, okCallback){
     $('#btnPromptCancel').on('click', function(){Windows.getFocusedWindow().close();});
 }
 function niceAlert(alert){
-    var title = '<span class="cbtn cerror" style="vertical-align:middle"></span> ' + lang('Error');
+    var title = '<span class="fff error" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
     str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
@@ -1187,7 +1187,7 @@ function niceAlert(alert){
     $('#btnPromptOK').on('click', win.onKeyEnter);
 }
 function niceInfo(alert, okCallback){
-    var title = '<span class="cbtn cinfo" style="vertical-align:middle"></span> ' + lang('Information');
+    var title = '<span class="fff information" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
     str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
@@ -1204,7 +1204,7 @@ function niceInfo(alert, okCallback){
     $('#btnPromptOK').on('click', win.onKeyEnter);
 }
 function niceConfirm(confirm, okCallback){
-    var title = '<span class="cbtn cwarning" style="vertical-align:middle"></span> ' + lang('Warning');
+    var title = '<span class="fff information" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + confirm + '</p>';
     str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';

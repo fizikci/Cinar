@@ -3,7 +3,7 @@
     height:16px; width:16px;
     background:url(/external/icons/famfamfam.png) no-repeat 0 0;
     vertical-align: bottom;
-    margin-right: 5px;
+	cursor: pointer;
 }
 
 .fff.accept{background-position: 0 0}
@@ -863,7 +863,7 @@
 .fff.tab_delete{background-position: -224px -336px}
 .fff.tab_edit{background-position: -240px -336px}
 .fff.tab_go{background-position: -256px -336px}
-.fff.table{background-position: -272px -336px}
+.fff.table{background-position: -272px -336px; margin-bottom:0px !important}
 .fff.table_add{background-position: -288px -336px}
 .fff.table_delete{background-position: -304px -336px}
 .fff.table_edit{background-position: -320px -336px}
