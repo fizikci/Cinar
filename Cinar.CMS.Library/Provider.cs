@@ -317,6 +317,8 @@ namespace Cinar.CMS.Library
                 options = options.Replace("_MODERATED_", GetResource("_MODERATED_"));
             if (options.Contains("_WHICHPICTURE_"))
                 options = options.Replace("_WHICHPICTURE_", GetResource("_WHICHPICTURE_"));
+            if (options.Contains("_WHICHPICTURE2_"))
+                options = options.Replace("_WHICHPICTURE2_", GetResource("_WHICHPICTURE2_"));
             if (options.Contains("_VIEWCONDITION_"))
                 options = options.Replace("_VIEWCONDITION_", GetResource("_VIEWCONDITION_"));
             if (options.Contains("_LEGENDPOSITIONS_"))
@@ -1987,16 +1989,45 @@ namespace Cinar.CMS.Library
         {
             get
             {
-                return Provider.Request.UserAgent == null ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("crawler") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("bot") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("spider") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("larbin") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("search") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("indexer") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("archiver") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("nutch") ||
-                    Provider.Request.UserAgent.ToLowerInvariant().Contains("capture");
+                List<string> crawlers = new List<string>()
+                {
+                    "bot","crawler","spider","80legs","baidu","yahoo! slurp","ia_archiver","mediapartners-google",
+                    "lwp-trivial","nederland.zoek","ahoy","anthill","appie","arale","araneo","ariadne",            
+                    "atn_worldwide","atomz","bjaaland","ukonline","calif","combine","cosmos","cusco",
+                    "cyberspyder","digger","grabber","downloadexpress","ecollector","ebiness","esculapio",
+                    "esther","felix ide","hamahakki","kit-fireball","fouineur","freecrawl","desertrealm",
+                    "gcreep","golem","griffon","gromit","gulliver","gulper","whowhere","havindex","hotwired",
+                    "htdig","ingrid","informant","inspectorwww","iron33","teoma","ask jeeves","jeeves",
+                    "image.kapsi.net","kdd-explorer","label-grabber","larbin","linkidator","linkwalker",
+                    "lockon","marvin","mattie","mediafox","merzscope","nec-meshexplorer","udmsearch","moget",
+                    "motor","muncher","muninn","muscatferret","mwdsearch","sharp-info-agent","webmechanic",
+                    "netscoop","newscan-online","objectssearch","orbsearch","packrat","pageboy","parasite",
+                    "patric","pegasus","phpdig","piltdownman","pimptrain","plumtreewebaccessor","getterrobo-plus",
+                    "raven","roadrunner","robbie","robocrawl","robofox","webbandit","scooter","search-au",
+                    "searchprocess","senrigan","shagseeker","site valet","skymob","slurp","snooper","speedy",
+                    "curl_image_client","suke","www.sygol.com","tach_bw","templeton","titin","topiclink","udmsearch",
+                    "urlck","valkyrie libwww-perl","verticrawl","victoria","webscout","voyager","crawlpaper",
+                    "webcatcher","t-h-u-n-d-e-r-s-t-o-n-e","webmoose","pagesinventory","webquest","webreaper",
+                    "webwalker","winona","occam","robi","fdse","jobo","rhcs","gazz","dwcp","yeti","fido","wlm",
+                    "wolp","wwwc","xget","legs","curl","webs","wget","sift","cmc"
+                };
+
+                if (string.IsNullOrWhiteSpace(Provider.Request.UserAgent))
+                    return true;
+
+                string ua = Provider.Request.UserAgent.ToLower();
+                return crawlers.Exists(x => ua.Contains(x));
+
+                //return Provider.Request.UserAgent == null ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("crawler") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("bot") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("spider") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("larbin") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("search") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("indexer") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("archiver") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("nutch") ||
+                //    Provider.Request.UserAgent.ToLowerInvariant().Contains("capture");
             }
         }
         public static string GetRequestFileName()

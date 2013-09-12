@@ -124,7 +124,6 @@
     <Compile Include="Handlers\CMSModule.cs" />
     <Compile Include="Handlers\Console.cs" />
     <Compile Include="Handlers\ASHXHandler.cs" />
-    <Compile Include="Modules\Administration\DataConverter.cs" />
     <Compile Include="Modules\Containers\Container.cs" />
     <Compile Include="Modules\Content\ContentListByTag.cs" />
     <Compile Include="Modules\Content\TagCloud.cs" />

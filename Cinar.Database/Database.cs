@@ -1474,8 +1474,19 @@ namespace Cinar.Database
                 this.Begin();
 
                 DataTable dt = this.ReadTable(entityType, selectSql, parameters);
+                int a = 0;
                 foreach (DataRow dr in dt.Rows)
-                    result.Add(DataRowToEntity(entityType, dr));
+                {
+                    try
+                    {
+                        a = a + 1;
+                        result.Add(DataRowToEntity(entityType, dr));
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(a + ". kayıtta hata", ex);
+                    }
+                }
 
                 this.Commit();
             }
