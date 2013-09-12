@@ -338,7 +338,7 @@ namespace Cinar.CMS.Library.Handlers
                 DataRow drModule = Provider.Database.GetDataRow("select Id, Template, Region, OrderNo from Module where Id={0}", mid);
                 if (drModule == null) { sendErrorMessage(Provider.GetResource("Module ID {0} does not exist", mid)); return; }
                 DataRow drModuleFrom = Provider.Database.GetDataRow("select top 1 Id, OrderNo from Module where Template={0} and Region={1} and OrderNo" + (down ? ">=" : "<=") + "{2} and Id<>{3} order by OrderNo " + (down ? "asc" : "desc"), drModule["Template"], drModule["Region"], drModule["OrderNo"], mid);
-                if (drModuleFrom == null) { sendErrorMessage(Provider.GetResource("This module is only module in its region")); return; }
+                if (drModuleFrom == null) { sendErrorMessage(Provider.GetResource("No more move for this module")); return; }
 
                 if (drModule["OrderNo"].Equals(drModuleFrom["OrderNo"]))
                 {

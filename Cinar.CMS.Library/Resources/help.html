@@ -30,8 +30,10 @@
         }
 
         h2 {
+			margin-top:20px;
             font-size: 16px;
             font-weight: normal;
+			border-bottom:1px solid rgba(33, 74, 133, 0.22);
         }
 
         h3 {
@@ -177,6 +179,7 @@
                 return [
                     { data: 'statik_p9', text: 'Veri listeleme formu', type: 'content' },
                     { data: 'statik_p10', text: 'Veri düzenleme formu', type: 'content' },
+                    { data: 'statik_p15', text: 'Entity okuma ve kaydetme fonksiyonları', type: 'content' },
                     { data: 'statik_p14', text: 'Yönetim paneline Hayır!', type: 'content' },
                     { data: 'statik_p11', text: 'Diğer JS fonksiyonları', type: 'content' },
                 ];
@@ -788,7 +791,6 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
         </div>
 
-
         <h1 id="p13">Efekt ve animasyonlar</h1>
         <div class="part">
             Çınar CMS'de modüllerin "CSS Class" özelliğine class isimleri yazarak efekt ve animasyonlar ekleyebilirsiniz. Bunlar:
@@ -860,6 +862,42 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </pre>
         </div>
 
+		<h1 id="p15">Entity okuma ve kaydetme fonksiyonları</h1>
+		<div class="part">
+			<h2>Adı ve id'si ile bir entity'yi okumak için</h2>
+			<pre>readEntity(entityName, id, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Okunacak entity'nin adı (Content, Author gibi..)</li>
+				<li>id: Okunacak entity'nin idsi</li>
+				<li>callback: Entity okunduktan sonra çağrılacak fonksiyon referansı. Bu fonksiyona okunan entity parametre olarak gönderilir.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntity('Content', 1, function(entity){
+	alert(JSON.stringify(entity));
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+			<h2>Adı ve filtresi belirtilerek entity listesi okumak için</h2>
+			<pre>readEntityList(entityName, filter, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Okunacak entity'nin adı (Content, Author gibi..)</li>
+				<li>filter: where koşulu (ClassName='Content' AND CategoryId=1 gibi..)</li>
+				<li>callback: Entity okunduktan sonra çağrılacak fonksiyon referansı. Bu fonksiyona okunan entity parametre olarak gönderilir.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntityList('Content', 'CategoryId=1', function(entityList){
+	alert(JSON.stringify(entityList));
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+		</div>
     </div>
 </body>
 </html>

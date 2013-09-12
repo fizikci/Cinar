@@ -333,7 +333,7 @@ popupMenu.menuItems = [
     {text:lang('Page-Module Tree'), icon:'chart_organisation', callback:openPageModuleTree},
     {text:'-'},
     {text:lang('Configuration'), icon:'cog', callback:configure},
-    { text: lang('File Manager'), icon: 'folder_picture', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
+    {text:lang('File Manager'), icon: 'folder_picture', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
     {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
     {text:lang('Edit General Javascript'), icon:'script', callback:editJavascript},
     {text:lang('Edit Page Load Script'), icon:'page_white_csharp', callback:editPageLoadScript},
@@ -341,7 +341,7 @@ popupMenu.menuItems = [
     {text:lang('Edit Content'), icon: 'edit', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
     {text:lang('Console'), icon: 'application_xp_terminal', callback: openConsole },
-    { text: lang('Switch to View Mode'), icon: 'cup', callback: endDesignMode },
+    {text:lang('Switch to View Mode'), icon: 'cup', callback: endDesignMode },
     {
         text: lang('Help'), icon: 'help', callback: function () {
             new CinarWindow({
@@ -1121,6 +1121,23 @@ function insertEditForm(pe, callback){
 		},
 		onException: function(req, ex){throw ex;}
 	});
+}
+
+function readEntity(entityName, id, callback){
+	readEntityList(entityName, 'Id='+id, function(list){ callback(list[0]);});
+}
+
+function readEntityList(entityName, filter, callback){
+    new Ajax.Request('EntityInfo.ashx?method=getEntityList&entityName='+entityName+'&filter='+filter, {
+        method: 'get',
+        onComplete: function(req) {
+            if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+            var res = null;
+            try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
+			callback(res);
+        },
+        onException: function(req, ex){throw ex;}
+    });
 }
 
 function getEntityIcon(entityName){
