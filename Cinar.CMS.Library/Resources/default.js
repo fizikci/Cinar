@@ -404,12 +404,13 @@ function showElementWithOverlay(elm, autoHide, color){
 }
 function hideOverlay(){
     $('#___perde').animate({opacity:0.0}, 200, "linear", function(){ 
-		$('#___perde').hide(); 
+        $('#___perde').hide();
+        showingElementWithOverlay.remove();
+        showingElementWithOverlay = false;
 		$(document.body).css({overflow:'auto'});
 	});
 	showingElementWithOverlay.fadeOut(200);
 	showingElementWithOverlay.css('z-index', showingElementWithOverlayZIndex);
-	showingElementWithOverlay = false;
 }
 
 /*
