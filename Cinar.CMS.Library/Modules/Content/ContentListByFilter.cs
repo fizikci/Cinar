@@ -108,7 +108,7 @@ namespace Cinar.CMS.Library.Modules
             Hashtable htOperators = new Hashtable();
             Hashtable htParams = new Hashtable();
             alParams = new Dictionary<string, object>();
-            foreach (string criteria in this.filter.Split(new string[] { " AND " }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string criteria in this.filter.Split(new string[] { " AND ", " and ", " And " }, StringSplitOptions.RemoveEmptyEntries))
             {
                 string[] pair = criteria.Split(new string[] { "like@", "<=@", ">=@", "<>@", "<@", ">@", "=@", "like", "<=", ">=", "<>", "<", ">", "=" }, StringSplitOptions.None);
                 htOperators[pair[0]] = criteria.Substring(pair[0].Length, criteria.Length - pair[0].Length - pair[1].Length);

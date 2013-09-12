@@ -1269,7 +1269,7 @@ var editOnSiteObj = {}, editOnSiteDefaults = {
 
 function editOnSite(elm, editOnSiteArgs){
     elm = $(elm);
-	editOnSiteObj = jQuery.extend({}, editOnSiteDefaults, editOnSiteArgs || {});
+	editOnSiteObj = jQuery.extend({elm:elm}, editOnSiteDefaults, editOnSiteArgs || {});
 
 	var editOnSiteElm = $('#editOnSiteHTML');
 	editOnSiteElm.hide();
