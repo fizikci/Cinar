@@ -795,7 +795,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
         <div class="part">
             Çınar CMS'de modüllerin "CSS Class" özelliğine class isimleri yazarak efekt ve animasyonlar ekleyebilirsiniz. Bunlar:
             <ul>
-                <li><b>lightBox:</b> Modülün içindeki resimlerin slide show şeklinde izlenebilmesini sağlar</li>
+                <li><b>lightBox:</b> Modülün içindeki resimlere tıklandığında pop up şeklinde açılmasını sağlar</li>
                 <li><b>gogPop:</b> Google'ın resim aramasında olduğu gibi fareyi resimlerin üzerine sürüklediğinizde resmin biraz büyümesini sağlar</li>
                 <li><b>hideOnOut:</b> Dışarıda bir yere tıklandığında elementin gizlenmesini sağlar</li>
                 <li><b>removeOnOut:</b> Dışarıda bir yere tıklandığında elementin yok edilmesini sağlar</li>
@@ -807,6 +807,19 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                 <li><b>slideAll:</b> Tüm resimleri kaydırarak gösterir</li>
                 <li><b>cc_edit_img:</b> Eklendiği resmin üzerine tıklandığında düzenlenebilmesini sağlar (resize, crop, vs..)</li>
             </ul>
+            <h2>lightBox</h2>
+            Resme tıklandığında Youtube videosu olarak açılması için
+            <pre class="code">
+&lt;img 
+    border="0" 
+    height="100" 
+    src="$=entity.Picture" 
+    path="$=entity.Picture$"
+    entityId='$=entity.Id$'
+    title="$=Provider.Server.HtmlEncode(entity.Title)$"
+    tag='video'
+    desc='&lt;iframe src="http://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen>&lt;/iframe>'/>
+            </pre>
         </div>
 
         <h1 id="p14">Yönetim paneline Hayır!</h1>
