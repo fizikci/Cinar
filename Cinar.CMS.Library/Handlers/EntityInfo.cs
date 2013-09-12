@@ -425,6 +425,8 @@ namespace Cinar.CMS.Library.Handlers
         private void getEntityList()
         {
             string entityName = context.Request["entityName"];
+            string orderBy = context.Request["orderBy"] ?? "OrderNo";
+            string orderAsc = context.Request["orderAsc"] ?? "1";
             Type tip = Provider.GetEntityType(entityName);
             string filter = context.Request["filter"] ?? "";
 
@@ -433,7 +435,7 @@ namespace Cinar.CMS.Library.Handlers
 
             string where = "where " + (String.IsNullOrEmpty(filter) ? "1=1" : "(" + filter + ")");
 
-            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select * from [" + entityName + "] " + where + " order by OrderNo", filterParser.GetParams());
+            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select * from [" + entityName + "] " + where + " order by " + orderBy + (orderAsc=="1"?"":" desc"), filterParser.GetParams());
 
             context.Response.Write(entities.ToJSON());
         }

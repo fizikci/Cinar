@@ -1124,11 +1124,12 @@ function insertEditForm(pe, callback){
 }
 
 function readEntity(entityName, id, callback){
-	readEntityList(entityName, 'Id='+id, function(list){ callback(list[0]);});
+	readEntityList(entityName, 'Id='+id, function(list){ callback(list[0]);},'Id',1);
 }
-
-function readEntityList(entityName, filter, callback){
-    new Ajax.Request('EntityInfo.ashx?method=getEntityList&entityName='+entityName+'&filter='+filter, {
+function readEntityList(entityName, filter, callback, orderBy, orderAsc) {
+    orderBy = orderBy || 'OrderNo';
+    orderAsc = typeof (orderAsc) == 'undefined' ? 1 : orderAsc;
+    new Ajax.Request('EntityInfo.ashx?method=getEntityList&entityName='+entityName+'&filter='+filter+'&orderBy='+orderBy+'&orderAsc='+orderAsc, {
         method: 'get',
         onComplete: function(req) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
