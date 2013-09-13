@@ -774,7 +774,7 @@ var StyleEditor = Class.create({
         $('div.__styleEditor input.clBtn').each((function(i,btn) {
             btn.on('click', this.showPalette.bind(this, btn, i));
         }).bind(this));
-        $('#cmbPalette').on('change', (function(){this.setColors($('#cmbPalette').options[$('#cmbPalette').selectedIndex].value);}).bind(this));
+        $('#cmbPalette').on('change', (function(){this.setColors($('#cmbPalette').val());}).bind(this));
     },
     fieldIndex: 0,
     showPalette: function(btn, i) {
