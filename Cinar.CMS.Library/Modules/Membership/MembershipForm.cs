@@ -286,12 +286,12 @@ namespace Cinar.CMS.Library.Modules
 
             sb.Append(@"
                         <script>
-                        document.observe('dom:loaded', function(){
+                        jQuery(function(){
                             var user_data = {};
                             _USERDATA_
-                            var elems = Form.getElements('fMembership');
+                            var elems = $('#fMembership').filter(':input');
                             for(var i=0; i<elems.length; i++)
-                                elems[i].setValue(user_data[elems[i].name]);
+                                $(elems[i]).val(user_data[$(elems[i]).attr('name')]);
                         });
                         </script>");
 
