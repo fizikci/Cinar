@@ -171,7 +171,7 @@ namespace Cinar.CMS.Library.Modules
                 sb.AppendFormat("<div id=\"chart{0}\"></div>\n", this.Id);
 
                 sb.Append("<script type=\"text/javascript\">\n");
-                sb.AppendFormat("document.observe('dom:loaded', function(){{\n");
+                sb.AppendFormat("jQuery(function(){{\n");
                 sb.AppendFormat("    var c = new Chart('chart{0}', {{\n", this.Id);
                 sb.AppendFormat("        chartType:'{0}',\n", this.chartType);
                 sb.AppendFormat("        data:[[{0}]],\n", data.Values.Replace("|", "],["));

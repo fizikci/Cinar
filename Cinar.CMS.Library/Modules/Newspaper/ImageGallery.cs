@@ -84,12 +84,12 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("var defDesc{0} = {1};\n", this.Id, content.Description.ToJS());
             sb.AppendFormat("function showImage{0}(i){{\n", this.Id);
             sb.AppendFormat("\tif(i==imgGal{0}.length) i = 0;\n", this.Id);
-            sb.AppendFormat("\t$('pg{0}_'+i).addClassName('sel');\n", this.Id);
-            sb.AppendFormat("\t$('pg{0}_'+currImg{0}).removeClassName('sel');\n", this.Id);
+            sb.AppendFormat("\t$('#pg{0}_'+i).addClass('sel');\n", this.Id);
+            sb.AppendFormat("\t$('#pg{0}_'+currImg{0}).removeClass('sel');\n", this.Id);
             sb.AppendFormat("\tvar pic = imgGal{0}[i];\n", this.Id);
-            sb.AppendFormat("\t$('imgGalPic{0}').src = pic.fileName;\n", this.Id);
-            sb.AppendFormat("\t$('imgGalTit{0}').innerHTML = pic.title?pic.title:defTitle{0};\n", this.Id);
-            sb.AppendFormat("\t$('imgGalDesc{0}').innerHTML = pic.desc?pic.desc:defDesc{0};\n", this.Id);
+            sb.AppendFormat("\t$('#imgGalPic{0}').attr('src', pic.fileName);\n", this.Id);
+            sb.AppendFormat("\t$('#imgGalTit{0}').html(pic.title?pic.title:defTitle{0});\n", this.Id);
+            sb.AppendFormat("\t$('#imgGalDesc{0}').html(pic.desc?pic.desc:defDesc{0});\n", this.Id);
             sb.AppendFormat("\tcurrImg{0} = i;\n", this.Id);
             sb.AppendFormat("}}\n");
             sb.AppendFormat("</script>\n");
