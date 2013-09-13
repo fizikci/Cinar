@@ -96,9 +96,9 @@ namespace Cinar.CMS.Library.Entities
         [Description("Saves this entity to database (if Id>0 updates, else inserts)")]
         public void Save()
         {
-            List<string> errors = this.Validate();
-            if (errors.Count > 0)
-                throw new Exception("<ul><li>" + errors.StringJoin("</li><li>") + "</li></ul>");
+            //List<string> errors = this.Validate();
+            //if (errors.Count > 0)
+            //    throw new Exception("<ul><li>" + errors.StringJoin("</li><li>") + "</li></ul>");
             try
             {
                 Provider.Database.Begin();

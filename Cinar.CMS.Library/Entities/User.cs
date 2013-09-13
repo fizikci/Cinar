@@ -177,6 +177,9 @@ namespace Cinar.CMS.Library.Entities
                 //this.Password = Provider.MD5(this.Password); // password işi SetFieldsByPostData'da hallediliyor
                 this.Visible = false;
                 this.Keyword = CMSUtility.MD5(DateTime.Now.Ticks.ToString());
+
+                if(string.IsNullOrWhiteSpace(this.Country) && Provider.Request.UserLanguages.Length>0)
+                    this.Country = Provider.Request.UserLanguages[0];
             }
             else {
                 this.Visible = true;
