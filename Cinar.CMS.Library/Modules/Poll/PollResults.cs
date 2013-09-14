@@ -43,7 +43,7 @@ namespace Cinar.CMS.Library.Modules
             IDatabaseEntity[] sorular = Provider.Database.ReadList(typeof(PollQuestion), "select * from PollQuestion order by InsertDate desc");
             Provider.Translate(sorular);
 
-            UriParser uriParser = new UriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
+            CinarUriParser uriParser = new CinarUriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
 
             foreach (PollQuestion anket in sorular)
             {

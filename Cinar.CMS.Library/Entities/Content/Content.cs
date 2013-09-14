@@ -519,7 +519,7 @@ namespace Cinar.CMS.Library.Entities
                 return Provider.Database.Read<Content>(1);
             }
         }
-        
+
         [XmlIgnore]
         [Description("Returns the child contents of this content.")]
         public List<Content> Contents
@@ -527,6 +527,16 @@ namespace Cinar.CMS.Library.Entities
             get
             {
                 return Provider.Database.ReadList<Content>("select * from Content where CategoryId={0}", this.Id);
+            }
+        }
+
+        [XmlIgnore]
+        [Description("Returns the picture and files of this content.")]
+        public List<ContentPicture> Files
+        {
+            get
+            {
+                return Provider.Database.ReadList<ContentPicture>("select * from ContentPicture where ContentId={0}", this.Id);
             }
         }
 

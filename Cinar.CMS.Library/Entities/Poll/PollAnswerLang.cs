@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select PollAnswerLang.Id as [PollAnswerLang.Id], PollAnswerLang.Answer as [PollAnswerLang.Answer], Lang.Name as [Lang.Name], PollAnswerLang.Visible as [PollAnswerLang.Visible] from [PollAnswerLang] left join [Lang] ON Lang.Id = [PollAnswerLang].LangId")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select PollAnswerLang.Id as [PollAnswerLang.Id], PollAnswerLang.Answer as [PollAnswerLang.Answer], Lang.Name as [Lang.Name], PollAnswerLang.Visible as [PollAnswerLang.Visible] from [PollAnswerLang] left join [Lang] ON Lang.Id = [PollAnswerLang].LangId", QueryOrderBy = "PollAnswerLang.Id desc")]
     public class PollAnswerLang : BaseEntity
     {
         private int pollAnswerId;

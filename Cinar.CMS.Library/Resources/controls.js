@@ -742,48 +742,17 @@ var LookUp = Class.create(); LookUp.prototype = {
         }
     },
     showEditor: function (event) {
-        if ($('#'+this.editorId).length) {
-            $('#'+this.editorId).remove();
-            currEditor = null;
-            return;
-        }
-
-        $(document.body).append('<div class="editor LookUp" style="display:none" id="' + this.editorId + '"></div>');
-
-        var list = $('#'+this.editorId);
-        if (this.input.disabled) return;
-
-        var entityName = this.options.entityName;
-        var extraFilter = this.options.extraFilter;
-        var selectCallback = this.onSelect.bind(this);
-
-        var options = {
-            entityName: entityName,
-            hrEntityName: entityTypes.find(function (item) { return item[0] == entityName; })[1],
-            fields: ajax({ url: 'EntityInfo.ashx?method=getFieldsList&entityName=' + entityName, isJSON: true, noCache: false }),
-            ajaxUri: 'EntityInfo.ashx',
-            forSelect: true,
-            selectCallback: selectCallback
-        }
-        if (extraFilter) options.extraFilter = extraFilter;
-        var lf = new ListForm(list, options);
-        $('#btnAdd' + lf.hndl).hide();
-        $('#btnEdit' + lf.hndl).hide();
-        $('#btnDelete' + lf.hndl).hide();
-        $('#btnInfo' + lf.hndl).hide();
-
-        list.find('.lf-listFormFooter').append('<span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span>');
-		list.find('#' + this.editorId + 'btnCancel').css('margin','0px 0px 0px 20px');
-
-        var btnCancel = $('#'+this.editorId + 'btnCancel');
-        btnCancel.bind('click', this.showEditor.bind(this));
-
-        if (this.afterShowEditor) this.afterShowEditor();
-
-        this.setEditorPos(list);
-
-        list.show();
-        event.preventDefault();
+		var ths = this;
+		openEntityListForm({
+			entityName: ths.options.entityName, 
+			extraFilter: ths.options.extraFilter,
+			title:ths.label,
+			hideFilterPanel:true,
+			selectCallback: function(v, txt){
+				Windows.getFocusedWindow().close();
+				ths.onSelect(v, txt);
+			}
+		});
     },
     complete: function () {
         if (this.input.val() && this.input.val().length >= 1) {

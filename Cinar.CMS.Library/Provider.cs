@@ -953,15 +953,15 @@ namespace Cinar.CMS.Library
             return parentCat.Hierarchy + (String.IsNullOrEmpty(parentCat.Hierarchy) ? "" : ",") + parentCat.Id.ToString().PadLeft(5, '0');
         }
 
-        public static void Translate(IDatabaseEntity[] entities)
+        public static IDatabaseEntity[] Translate(IDatabaseEntity[] entities)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || entities == null || entities.Length == 0)
-                return; //*** aynı dil çevirmeye gerek yok.
+                return entities; //*** aynı dil çevirmeye gerek yok.
 
             string entityName = entities[0].GetType().Name;
 
             if (Provider.Database.Tables[entityName + "Lang"] == null)
-                return; //*** dil tablosu yok
+                return entities; //*** dil tablosu yok
 
             int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
             ArrayList alIds = new ArrayList();
@@ -984,6 +984,8 @@ namespace Cinar.CMS.Library
                         pi.SetValue(relatedEntity, drLang[dc], null);
                     }
             }
+
+            return entities;
         }
         public static void Translate(string entityName, DataTable dt)
         {
@@ -2288,9 +2290,9 @@ namespace Cinar.CMS.Library
         }
     }
 
-    public class UriParser : UriBuilder
+    public class CinarUriParser : UriBuilder
     {
-        public UriParser(string url)
+        public CinarUriParser(string url)
             : base(url)
         {
             this.queryPart = new QueryParts(this.Query, this);
@@ -2311,9 +2313,9 @@ namespace Cinar.CMS.Library
         public class QueryParts
         {
             private Hashtable ht;
-            private UriParser parser;
+            private CinarUriParser parser;
 
-            public QueryParts(string query, UriParser parser)
+            public QueryParts(string query, CinarUriParser parser)
             {
                 this.parser = parser;
                 this.ht = new Hashtable();
@@ -2346,6 +2348,10 @@ namespace Cinar.CMS.Library
                     ht[key] = value;
                     rebuildQuery();
                 }
+            }
+
+            public void Add(string key, string val) {
+                this[key] = val;
             }
 
             public void Remove(string key)

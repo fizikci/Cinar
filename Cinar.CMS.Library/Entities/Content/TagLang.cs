@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id as [TagLang.Id], TagLang.Name as [TagLang.Name], Lang.Name as [Lang.Name], TagLang.Visible as [TagLang.Visible] from [TagLang] left join [Lang] ON Lang.Id = [TagLang].LangId")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select TagLang.Id as [TagLang.Id], TagLang.Name as [TagLang.Name], Lang.Name as [Lang.Name], TagLang.Visible as [TagLang.Visible] from [TagLang] left join [Lang] ON Lang.Id = [TagLang].LangId", QueryOrderBy = "TagLang.Id desc")]
     public class TagLang : NamedEntityLang
     {
         private int tagId = 1;
@@ -14,6 +14,14 @@ namespace Cinar.CMS.Library.Entities
         {
             get { return tagId; }
             set { tagId = value; }
+        }
+
+        private string displayName;
+        [ColumnDetail(Length = 100)]
+        public string DisplayName
+        {
+            get { return displayName; }
+            set { displayName = value; }
         }
 
         private Tag _tag;

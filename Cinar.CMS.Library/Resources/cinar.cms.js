@@ -668,7 +668,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         renameLabels: renameLabels
     }
 	if(entityName=='ContentPicture'){
-	    options.commands.push({id: 'QuickLoad', icon: 'DataConverter', name: 'Quick Load', handler: function () {
+	    options.commands.push({id: 'QuickLoad', icon: 'lightning', name: 'Quick Load', handler: function () {
 	        var contentId = parseInt(this.filter.getValue().split('=')[1]);
 	        var ths = this;
 	        quickLoadImages(contentId, function () { ths.fetchData(); });
@@ -680,6 +680,11 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 		}});
 		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:sortImages});
 		options.limit = 200;
+	}
+	if(entityName=='Content'){
+	    options.commands.push({id: 'English', icon: 'flag_red', name: 'English', handler: function () {
+			alert('Not implemented yet');
+        }});
 	}
 	
 	if(extraCommands){
@@ -1139,6 +1144,26 @@ function readEntityList(entityName, filter, callback, orderBy, orderAsc) {
         },
         onException: function(req, ex){throw ex;}
     });
+}
+function deleteEntity(entityName, id, callback, showWarning){
+	if(showWarning)
+		deleteData(entityName, id, callback);
+	else
+		deleteDataWithoutWarning(entityName, id, callback);
+}
+function saveEntity(entityName, entity, callback){
+	var method = entity.Id>0 ? 'save':'insertNew';
+	new Ajax.Request('EntityInfo.ashx?method='+method+'&entityName='+entityName+'&id='+entity.Id, {
+		method: 'post',
+		parameters: entity,
+		onComplete: function(req) {
+			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
+			if(entity.Id==0) entity.Id = parseInt(req.responseText);
+			if(callback)
+				callback();
+		},
+		onException: function(req, ex){throw ex;}
+	});
 }
 
 function getEntityIcon(entityName){
