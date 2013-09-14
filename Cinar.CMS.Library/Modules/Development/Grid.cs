@@ -82,7 +82,7 @@ namespace Cinar.CMS.Library.Modules
                 return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]", EntityName);
 
             string pageUrl = Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl;
-            UriParser uriParser = new UriParser(pageUrl);
+            CinarUriParser uriParser = new CinarUriParser(pageUrl);
 
             if (!String.IsNullOrEmpty(Provider.Request["delete"]))
             {
@@ -177,7 +177,7 @@ namespace Cinar.CMS.Library.Modules
             string nameField = testEntity.GetNameColumn();
             
             // data
-            uriParser = new UriParser(pageUrl);
+            uriParser = new CinarUriParser(pageUrl);
             foreach (DataRow dr in dt.Rows)
             {
                 sb.Append("<tr class=\"data\">\n");
@@ -205,7 +205,7 @@ namespace Cinar.CMS.Library.Modules
 
             // paging
             string prevPageLink = "", nextPageLink = "";
-            uriParser = new UriParser(pageUrl);
+            uriParser = new CinarUriParser(pageUrl);
             if (pageNo > 0)
             {
                 uriParser.QueryPart["pageNo"] = (pageNo - 1).ToString();

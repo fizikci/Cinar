@@ -408,8 +408,8 @@ $=this.HeadSection$
                 <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
                 <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
                 <pre>$
-    for(int i=0; i<100; i++) 
-        echo("&lt;b>" + i + "&lt;/b>");
+    for(int i=0; i&lt;100; i++) 
+        echo("&lt;b&gt;" + i + "&lt;/b>");
 $</pre>
                 </li>
                 <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
@@ -697,6 +697,24 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                     <button onclick="window.parent.openPageModuleTree()">Execute</button></div>
             </div>
             <div class="codeSample">
+                <h3>Dosya yöneticisini açmak ve dosya seçtirmek:</h3>
+                <ul>
+                    <li>openFileManager(selectedPath, onSelectFile)</li>
+                    <li>selectedPath: FileManager'da gösterilecek dosya.</li>
+                    <li>onSelectFile: Bir dosya seçildiğinde çalışacak olan fonksiyon referansı</li>
+                </ul>
+                <pre class="code">openFileManager('/UserFiles/logo.png', function(filePath){
+	new CinarWindow({
+		url:filePath,
+		title: 'Resim Önizleme',
+		width:640,
+		height:480
+	});
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
                 <h3>Bir elementi perde üzerinde açmak:</h3>
                 <ul>
                     <li>showElementWithOverlay(elm, autoHide, color) metodu bu işe yarar</li>
@@ -906,6 +924,26 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             <div class="codeSample">
                 <pre class="code">readEntityList('Content', 'CategoryId=1', function(entityList){
 	alert(JSON.stringify(entityList));
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>			
+			
+			<h2>Entity'yi veritabanına kaydetmek</h2>
+			<pre>saveEntity(entityName, entity, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Kaydedilecek entity'nin adı (Content, Author gibi..)</li>
+				<li>entity: JSON formatında entity. readEntity fonksiyonundan dönen JSON gibi.</li>
+				<li>callback: Entity kaydedildikten sonra çağrılacak fonksiyon referansı.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntity('Content', 1, function(entity){
+	entity.Title = 'Kök entitisi';
+	saveEntity('Content', entity, function(){
+		alert('tamamdır');
+	});
 });</pre>
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
