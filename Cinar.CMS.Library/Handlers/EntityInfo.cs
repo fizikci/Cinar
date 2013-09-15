@@ -495,8 +495,8 @@ namespace Cinar.CMS.Library.Handlers
             sb.Append("<h2>Database Properties</h2>");
             sb.Append("<table>\n");
             sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
-                "Type",
                 "Name",
+                "Type",
                 "Declaring Type",
                 "Description",
                 "Default Value");
@@ -514,8 +514,8 @@ namespace Cinar.CMS.Library.Handlers
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
 
                 sb.AppendFormat("<tr{5}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>\n",
-                    getShortName(pi.PropertyType),
                     pi.Name,
+                    getShortName(pi.PropertyType),
                     pi.DeclaringType.Name,
                     caption == description ? "" : (caption + ". ") + description,
                     pi.GetValue(obj, null),

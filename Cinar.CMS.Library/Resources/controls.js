@@ -228,7 +228,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
                 '<div id="' + this.editorId + 'ta" style="border-bottom: 1px solid #bbb;border-top: 1px solid #bbb;position: absolute;left: 0px;right: 0px;bottom: 31px;top: 19px;"></div>' +
-                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></center>');
+                '<center style="position: absolute;left: 0px;right: 0px;bottom: 4px;"><span class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span> <span class="ccBtn"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></center>');
 
         var ta = $('#'+this.editorId + 'ta');
 
@@ -335,40 +335,11 @@ var PictureEdit = Class.create(); PictureEdit.prototype = {
         this.input[0]['ctrl'] = this;
     },
     showEditor: function(event) {
-        if ($('#'+this.editorId).length) {
-            $('#'+this.editorId).remove();
-            currEditor = null;
-            return;
-        }
-        $(document.body).append('<div class="editor PictureEdit" style="display:none" id="' + this.editorId + '">' + '</div>');
-
-        var list = $('#'+this.editorId);
-        if (this.input.disabled) return;
-
-        var ths = this;
-
-        this.fileManager = new FileManager({
-            container: list,
-            folder: ths.input.val() != '' ? ths.input.val().substring(0, ths.input.val().lastIndexOf("/")) : undefined,
-            onSelectFile: function(path) {
-                ths.setValue(path);
-                ths.showEditor();
-            },
-            canDelete: true
-        });
-        fileBrowserCurrInput = this.input;
-
-        $('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></div>');
-
-        var btnCancel = $('#'+this.editorId + 'btnCancel');
-        btnCancel.bind('click', this.showEditor.bind(this));
-
-        if (this.afterShowEditor) this.afterShowEditor();
-
-        this.setEditorPos(list);
-
-        list.show();
-        event.preventDefault();
+		var ths = this;
+		openFileManager(ths.getValue(), function(filePath){
+			Windows.getFocusedWindow().close();
+			ths.setValue(filePath);
+		});
     },
     getValue: function() {
         return this.input.val();
@@ -430,13 +401,12 @@ var FileManager = Class.create(); FileManager.prototype = {
 
         var ths = this;
 
-        imageEditorInit();
         $('#fb_btnImgEdit').on('click', function() {
             var arr = ths.getSelectedFiles();
             if (arr.length > 0){
 				var name = arr[0];
 				if(name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
-					editCurrImage(name);
+					editImage(name);
 				else
 					niceAlert(lang('Plese select a picture file to edit'));
 			}
@@ -555,26 +525,21 @@ fileBrowserUploadFeedback = function (msg, url) {
 	currPicEdit.container.find('form').trigger('reset');
 }
 
-var cc_edit_curr = null;
-function imageEditorInit(){
-	if($('#cc_ei_btn').length==0)
-		$(document.body).append('<button id="cc_ei_btn" style="display:none">Edit</button>');
-	else
-		return;
-		
-	$('#cc_ei_btn').on('click', function(){editCurrImage();});
-}
-function editCurrImage(path){
-	if(!path){
-		path = cc_edit_curr.attr('path') || cc_edit_curr.attr('src');
-		if(!path || path.startsWith('/_thumbs')){
+function editImage(path){
+	if(typeof path == 'string'){
+		if(path.startsWith('/_thumbs')){
 			niceAlert(lang('Editable image path not defined'));
 			return;
 		}
+		if(!path.startsWith('/'))
+			path = $(path).attr('path') || $(path).attr('src');
+	}
+	else {
+		path = $(path).attr('path') || $(path).attr('src');
 	}
 	
 	var win = new Window({ className: 'alphacube', title: '<span class="fff edit"></span> ' + lang('Edit Picture'), resizable: false, maximizable: false, minimizable: false, width: 800, height: 600, wiredDrag: true, destroyOnClose: true }); 
-	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn"><span class="fff shape_handles"></span>Select</span><span id="cc_crop" class="ccBtn"><span class="fff cut"></span>Crop</span><span id="cc_turncw" class="ccBtn"><span class="fff arrow_rotate_clockwise"></span>Turn CW</span><span id="cc_turnccw" class="ccBtn"><span class="fff arrow_rotate_anticlockwise"></span>Turn CCW</span><span class="fff shape_group"></span><input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn">Resize</span><span id="cc_reset" class="ccBtn"><span class="fff arrow_undo"></span>Reset</span></div>';
+	var str = '<div class="cc_ei_toolbar"><span id="cc_select" class="ccBtn"><span class="fff shape_handles"></span> Select</span><span id="cc_crop" class="ccBtn"><span class="fff cut"></span> Crop</span><span id="cc_turncw" class="ccBtn"><span class="fff arrow_rotate_clockwise"></span> Turn CW</span><span id="cc_turnccw" class="ccBtn"><span class="fff arrow_rotate_anticlockwise"></span> Turn CCW</span><span class="fff shape_group"></span> <input id="cc_ei_width"/> x <input id="cc_ei_height"/><span id="cc_resize" class="ccBtn"> Resize</span><span id="cc_reset" class="ccBtn"><span class="fff arrow_undo"></span> Reset</span></div>';
 	str += '<div class="cc_ei_canvas"><img id="cc_ei_preview" src="'+path+'"/><div id="cc_ei_selection" style="display:none"></div><div id="cc_ei_nw" style="display:none"></div><div id="cc_ei_se" style="display:none"></div></div>';
 	str += '<div id="cc_ei_status"></div>';
 	win.getContent().prepend(str);
@@ -707,16 +672,6 @@ function editCurrImage(path){
 			if(sel.is(':visible')) toggleSelect();
 			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
 		}
-	});
-}
-function makeImageEditable(eix,img){
-	$(img).on('mouseenter', function(){
-		cc_edit_curr = $(img);
-		var dim = getDimensions(img);
-		var pos = cc_edit_curr.offset();
-		var btn = $('#cc_ei_btn');
-		btn.css({left:(pos.left + dim.width-40)+'px', top:(pos.top + dim.height-20)+'px'});
-		btn.show();
 	});
 }
 
@@ -1038,10 +993,10 @@ var MemoEdit = Class.create(); MemoEdit.prototype = {
         $(document.body).append('<div class="editor MemoEdit" style="display:none" id="' + this.editorId + '">' +
             '<div id="' + this.editorId + 'ta" style="height: 429px;border-bottom: 1px solid #bbb;"></div><br/>' +
             '<center>' +
-            '<span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> ' +
-            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="ccBtn"><span class="fff lorry"></span>' + lang('Load default') + '</span> ' : '') +
-            '<span id="' + this.editorId + 'btnPicture" class="ccBtn"><span class="fff picture"></span>' + lang('Add picture') + '</span> ' +
-            '<span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span>' +
+            '<span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span> ' +
+            (this.docType == 'css' ? '<span id="' + this.editorId + 'btnDefault" class="ccBtn"><span class="fff lorry"></span> ' + lang('Load default') + '</span> ' : '') +
+            '<span id="' + this.editorId + 'btnPicture" class="ccBtn"><span class="fff picture"></span> ' + lang('Add picture') + '</span> ' +
+            '<span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span> ' + lang('Cancel') + '</span>' +
             '</center>' +
             '</div>');
 
@@ -1149,7 +1104,7 @@ var FilterEdit = Class.create(); FilterEdit.prototype = {
     },
     showEditor: function(event) {
         if (!$('#'+this.editorId).length)
-            $(document.body).append('<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></center></div>');
+            $(document.body).append('<div class="editor FilterEdit" style="display:none" id="' + this.editorId + '"><div id="' + this.editorId + 'div" style="overflow:auto;height:270px"></div><center><span id="' + this.editorId + 'btnOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span> <span id="' + this.editorId + 'btnCancel" class="ccBtn"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></center></div>');
         else
             $('#'+this.editorId).find(':first').html("");
         var entityNameToUse = this.options.entityName;
@@ -1632,7 +1587,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr><td colspan="2" id="details' + this.hndl + '"></td></tr>';
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
-        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span>' + lang('Save') + '</span></td></tr>';
+        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span> ' + lang('Save') + '</span></td></tr>';
         str += '</table>';
 
         container.append(str);
@@ -1693,7 +1648,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 var entityDisplayName = controls.find(function(c) { return c.id == 'Title' || c.id == 'Name' || c.id == 'Question' }).value;
                 if (entityDisplayName) entityDisplayName = ' (' + entityDisplayName.split("'").join('').split('"').join('') + ')';
                 if (!showRelatedEntities || showRelatedEntities.indexOf(control.entityName) > -1)
-                    details.append('<span class="ccBtn" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')"><span class="fff '+getEntityIcon(control.entityName)+'"></span>' + control.label + '</span>');
+                    details.append('<span class="ccBtn" onclick="openEntityListForm(\'' + control.entityName + '\', \'' + control.label + entityDisplayName + '\', \'' + control.relatedFieldName + '=' + this.entityId + '\')"><span class="fff '+getEntityIcon(control.entityName)+'"></span> ' + control.label + '</span>');
                 continue;
             default:
                 throw 'No control of this kind: ' + control.type;
@@ -1804,7 +1759,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span>' + lang('Apply') + '</span></td></table>');
+        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span> ' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: '#filter' + this.hndl, readOnly: true });
         $('#btnFilter' + this.hndl).bind('click', this.fetchData.bind(this));
 
@@ -1814,7 +1769,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         if (this.options.commands)
             for (var i = 0; i < this.options.commands.length; i++) {
                 var cmd = this.options.commands[i];
-                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn"><span class="fff '+cmd.icon+'"></span>' + lang(cmd.name) + '</span></div>';
+                str += '<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn"><span class="fff '+cmd.icon+'"></span> ' + lang(cmd.name) + '</span></div>';
             }
         str += '<span class="fff resultset_previous" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="cpager" id="pageNo' + this.hndl + '">1</span>';

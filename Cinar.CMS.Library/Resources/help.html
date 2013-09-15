@@ -34,6 +34,7 @@
             font-size: 16px;
             font-weight: normal;
 			border-bottom:1px solid rgba(33, 74, 133, 0.22);
+			color: darkorange;
         }
 
         h3 {
@@ -93,6 +94,7 @@
             bottom:0px;
             top:0px;
             padding-left: 10px;
+			overflow-y:scroll;
         }
         span.nodeName {
             font-size: 13px;
@@ -122,6 +124,7 @@
     <script src="tr.js.ashx"></script>
     <script src="controls.js.ashx"></script>
     <link href="famfamfam.css.ashx" rel="stylesheet" />
+	<link href="cinar.cms.css.ashx" rel="stylesheet" type="text/css">
     <script>
         $(function () {
             $('.part, h1').hide();
@@ -139,17 +142,22 @@
         function execute(btn) {
             window.parent.eval($(btn).parent().prev('pre.code').text());
         }
+        function executeHere(btn) {
+            eval($(btn).parent().prev('pre.code').text());
+        }
         var tree;
         function showTree() {
             tree = new TreeView($('#leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
             tree.toggle(tree.rootElement);
             tree.toggle(tree.rootElement.find('.treeChildren > *:first'));
             tree.toggle(tree.rootElement.find('.treeChildren > *:first').next());
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first').next().next());
         }
         function getNodes(data) {
             if (data == 'root') {
                 return [
                     { data: 'overview', text: 'Genel Bakış', type: 'category' },
+                    { data: 'statik_p8', text: 'Javascript nesne ve metodları', type: 'category' },
                     { data: 'reference', text: 'Referans', type: 'category' }
                 ];
             }
@@ -166,7 +174,6 @@
             }
             else if (data == 'reference') {
                 return [
-                    { data: 'statik_p8', text: 'Javascript nesne ve metodları', type: 'category' },
                     { data: 'ref_module', text: 'Modüller', type: 'category' },
                     { data: 'ref_entity', text: 'Entitiler', type: 'category' },
                     { data: 'ref_provider', text: 'Provider', type: 'content' },
@@ -180,7 +187,7 @@
                     { data: 'statik_p9', text: 'Veri listeleme formu', type: 'content' },
                     { data: 'statik_p10', text: 'Veri düzenleme formu', type: 'content' },
                     { data: 'statik_p15', text: 'Entity okuma ve kaydetme fonksiyonları', type: 'content' },
-                    { data: 'statik_p14', text: 'Yönetim paneline Hayır!', type: 'content' },
+                    { data: 'statik_p14', text: 'EditOnSite ile site yönetimi', type: 'content' },
                     { data: 'statik_p11', text: 'Diğer JS fonksiyonları', type: 'content' },
                 ];
             }
@@ -715,6 +722,14 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                     <button onclick="execute(this)">Execute</button></div>
             </div>
             <div class="codeSample">
+                <h3>Modülü ajax ile refresh etmek:</h3>
+				Özellikle sayfa üzerinden bir entitinin eklenmesi ya da değiştirilmesi durumunda modülün ajax ile sessizce refresh edilmesi gerekli olabilir.
+                <ul>
+                    <li>refreshModule(module) metodu bu işe yarar</li>
+                    <li>Burada module parametresi modülün id'si veya DOM referansıdır. ('#StaticHtml_15' gibi..)</li>
+                </ul>
+            </div>
+			<div class="codeSample">
                 <h3>Bir elementi perde üzerinde açmak:</h3>
                 <ul>
                     <li>showElementWithOverlay(elm, autoHide, color) metodu bu işe yarar</li>
@@ -801,7 +816,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                     $(function () {
                         var html = '';
                         for (var i = 0; i < classes2.length; i++)
-                            html += '<div class="btn2"><span class="fff ' + classes2[i] + '"></span>' + classes2[i]+"</div>";
+                            html += '<div class="btn2"><span class="fff ' + classes2[i] + '"></span> ' + classes2[i]+"</div>";
                         $('#iconsDiv2').append(html);
                     });
                 </script>
@@ -840,30 +855,50 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </pre>
         </div>
 
-        <h1 id="p14">Yönetim paneline Hayır!</h1>
+        <h1 id="p14">EditOnSite ile site yönetimi</h1>
         <div class="part">
-            Çınar CMS'in bir yönetim paneli yoktur. Çünkü:
+            <h2>Çınar CMS'in bir yönetim paneli yoktur. Çünkü:</h2>
             <ul>
                 <li>Çınar CMS'le çok farklı web siteleri geliştirebilirsiniz. Bunların hepsine uyacak standart bir yönetim paneli yapılamaz.</li>
-                <li>Yönetim panellerinin kullanımı ekstra emek ister.</li>
+                <li>Yönetim panellerinin öğrenilmesi ekstra emek ister.</li>
                 <li>Basit siteler için kompleks yönetim panelleri bir tezattan başka bir şey değildir.</li>
             </ul>
-            Çınar CMS ile yapılmış siteler kendi sayfaları üzerinden yönetilebilir.
+            <h2>Çınar CMS ile yapılmış siteler kendi sayfaları üzerinden yönetilebilir.</h2>
             <ul>
                 <li>Bunun için Çınar CMS'te EditOnSite adında bir teknoloji geliştirildi.</li>
                 <li>Örneğin sitenizde ürünlerin listelendiği sayfalar olsun.</li>
                 <li>Genellikle bu ürünler yönetim paneli denilen merdiven altı sayfalarda düzenlenir.</li>
-                <li>Oysa sitede ürünler zaten listeleniyor, niye direk buradan düzenlenmesin.</li>
+                <li>Oysa sitede ürünler zaten listeleniyor, niye direk buradan düzenlenmesin?</li>
             </ul>
-            EditOnSite'ı kullanmak çok kolaydır:
+            <h2>EditOnSite'ı kullanmak çok kolaydır:</h2>
             <ul>
-                <li>Herhangi bir içeriği gösteren HTML elementine onmouseover="edinOnSite(this)" yazmak yeterli.</li>
+                <li>Herhangi bir içeriği gösteren HTML elementine onmouseover="editOnSite(this)" yazmak yeterli.</li>
                 <li>Elbette bu kadar basit değil. :) Ama ana fikir bundan ibarettir.</li>
-                <li>Çınar CMS'te içerikler (ve diğer tüm veriler) DataList ile modülü ile listelenir.</li>
+                <li>Çınar CMS'te içerikler (ve diğer tüm veriler) DataList modülü ile listelenir.</li>
                 <li>DataList modülü içeriği gösteren bir şablon tanımlar.</li>
-                <li>Bu şablonu içine alan HTML elementine onmouseover="editOnSite(this, {options})" yazıldığında, fare bu elementin üzerine sürüklendiğinde butonlar belirir.</li>
+                <li>Bu şablonu içine alan HTML elementine onmouseover="editOnSite(this, {options})" yazıldığında, fare bu elementin üzerine sürüklendiğinde ekleme, silme, değiştirme butonları belirir.</li>
+				<li>Bu butonlar default olarak içerik entitisi için çalışır. Eğer ikinci parametre olan option belirtilirse editOnSite'ın çalışma şekli tamamen değiştirilebilir.</li>
             </ul>
-            Örnek kod:
+			<b>Options yapısı:</b>
+            <pre class="code">{
+	entityName: 'Content', // entity adı
+	id: 1, // entiti id'si 
+	editHandler: function, // edit butonuna tıklandığında çalışacak fonksiyon (default EditForm açar)
+	editCallback: function, // edit başarılı olunca çalışacak fonksiyon  (modülü refresh eder)
+	deleteHandler: function, // delete butonuna tıklandığında çalışacak fonksiyon (deleteEntity ile silme işi yapar)
+	deleteCallback: function, // delete başarılı olunca çalışacak fonksiyon  (modülü refresh eder)
+	insertHandler: function, // insert butonuna tıklandığında çalışacak fonksiyon (EditForm açar)
+	insertCallback: function, // insert başarılı olunca çalışacak fonksiyon (modülü refresh eder)
+	
+	// ekstra komutlar aşağıdaki diziye eklenebilir
+	commands:[
+		{name:'Bilgi', icon:'information', handler:function(){alert($=entity.Id$);}}
+	]
+}
+            </pre>
+			
+            <h2>Örnek 1:</h2>
+			Sayfanıza bir DataList modülü ekleyip içerik listelemesini sağlayın. Aşağıdaki örnek kodu Şablon olarak girin:
             <pre class="code">
 &lt;div class="col-lg-4" 
     $ if(Provider.User.IsInRole('Editor')) { $
@@ -891,10 +926,34 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
     &lt;p>&lt;a class="btn btn-default" href="$=entity.GetPageLinkWithTitle('')$">Devamını oku &raquo;&lt;/a>&lt;/p>
 &lt;/div>
             </pre>
+			Bu kodda deleteHandler:null set edilerek delete butonunun görünmesi engellenmiş. editHandler ve insertHandler da null set edilebilir.<br/>
+			<br/>
+			<h2>Örnek 2:</h2>
+			Listelenen resimlerin editImage fonksiyonu ile site üzerinden manipüle edilmesini sağlamak:
+			<pre class="code">
+&lt;img 
+	src = "$=entity.Picture$"
+
+$ if(Provider.User.IsInRole('Editor')) { $
+
+	onmouseover="editOnSite(this, {
+			editHandler: null, 
+			deleteHandler: null, 
+			insertHandler: null, 
+			commands:[
+				{name:'editImage', icon:'picture_edit', handler:function(){editImage('$=entity.Picture$');}}
+			]
+		})"
+
+$ } $
+
+/>
+			</pre>
         </div>
 
 		<h1 id="p15">Entity okuma ve kaydetme fonksiyonları</h1>
 		<div class="part">
+
 			<h2>Adı ve id'si ile bir entity'yi okumak için</h2>
 			<pre>readEntity(entityName, id, callback)</pre>
 			fonksiyonu kullanılır. Parametreler:
@@ -929,7 +988,7 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                     <button onclick="execute(this)">Execute</button></div>
             </div>			
 			
-			<h2>Entity'yi veritabanına kaydetmek</h2>
+			<h2>Entity'yi veritabanına kaydetmek için</h2>
 			<pre>saveEntity(entityName, entity, callback)</pre>
 			fonksiyonu kullanılır. Parametreler:
 			<ul>
@@ -939,10 +998,33 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
 			</ul>
 			<h3>Örnek:</h3>
             <div class="codeSample">
-                <pre class="code">readEntity('Content', 1, function(entity){
-	entity.Title = 'Kök entitisi';
-	saveEntity('Content', entity, function(){
-		alert('tamamdır');
+                <pre class="code">var yazar = {Name:'John Lennox', Description:'Matematik ve felsefe profesörü'};
+saveEntity('Author', yazar, function(){
+	openEntityEditForm({
+		entityName:'Author',
+		id: yazar.Id,
+		title: 'Az önce kaydettiğimiz yazar'
+	});
+});
+				</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+			
+			<h2>Entity'yi silmek için</h2>
+			<pre>deleteEntity(entityName, id, callback, noWarning)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Silinecek entity'nin adı (Content, Author gibi..)</li>
+				<li>id: id'si</li>
+				<li>callback: Entity silindikten sonra çağrılacak fonksiyon referansı.</li>
+				<li>noWarning: Eğer true set edilirse hiç uyarmadan silme işlemi yapılır (default false)</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntityList('Author', 'Name=John Lennox', function(entityList){
+	deleteEntity('Author', entityList[0].Id, function(){
+		niceInfo(entityList[0].Name + ' isimli yazar silindi');
 	});
 });</pre>
                 <div align="right">
