@@ -83,8 +83,8 @@ $(function(){
 		else
 			$(elm).fadeOut(50);
 		$(elm).closest('.fadeShow').find('.indexElms').first().append('<img src="/external/icons/bullet_'+(i==0 ? 'gray':'white')+'.png" index="'+i+'"/>');
-		var indexElm = $(elm).closest('.fadeShow').find('.indexElms').first().find('*').last();
-		indexElm.on('click', function(event){
+		var indexElm = $(elm).closest('.fadeShow').find('.indexElms').first().find('*').last()[0];
+		$(indexElm).on('click', function(event){
 			fadeShowShowImg($(elm).closest('.fadeShow'), indexElm);
 		});
 	});
@@ -312,26 +312,26 @@ function fadeShowShowImg(fadeShow, indexElm){
 	var currIndexElm = null;
 	if(!indexElm){
 		indexElm = fadeShow.find('.indexElms');
-		if(!indexElm) return;
-		currIndexElm = indexElm.find('*')[fadeShow.find('.clItem').indexOf(fadeShow.currentImg)];
-		indexElm = currIndexElm.next() ? currIndexElm.next() : fadeShow.find('.indexElms img');
+		if(indexElm.length)	indexElm = indexElm[0];	else return;
+		currIndexElm = $(indexElm).find('*')[fadeShow.find('.clItem').index(fadeShow.currentImg)];
+		indexElm = $(currIndexElm).next().length ? $(currIndexElm).next()[0] : fadeShow.find('.indexElms img')[0];
 	}
 	else
-		currIndexElm = fadeShow.find('.indexElms').find('*')[fadeShow.find('.clItem').indexOf(fadeShow.currentImg)];
+		currIndexElm = fadeShow.find('.indexElms').find('*')[fadeShow.find('.clItem').index(fadeShow.currentImg)];
 		
 	indexElm.src = '/external/icons/bullet_gray.png';
 	if(currIndexElm)
 		currIndexElm.src = '/external/icons/bullet_white.png';
 	
 	clearTimeout(fadeShow.timeout);
-	var i = parseInt(indexElm.attr('index'));
+	var i = parseInt($(indexElm).attr('index'));
 	
-	fadeShow.currentImg.fadeOut(500);
-	fadeShow.currentImg.css({zIndex:1});
+	$(fadeShow.currentImg).fadeOut(500);
+	$(fadeShow.currentImg).css({zIndex:1});
 	
 	fadeShow.currentImg = fadeShow.find('.clItem')[i];
-	fadeShow.currentImg.fadeIn(500);
-	fadeShow.currentImg.css({zIndex:2});
+	$(fadeShow.currentImg).fadeIn(500);
+	$(fadeShow.currentImg).css({zIndex:2});
 
 	fadeShow.timeout = setTimeout(function(){fadeShowShowImg(fadeShow);}, 4000);
 }
@@ -1153,7 +1153,7 @@ function nicePrompt(prompt, validationCallback, okCallback){
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:115, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p align="center"><br/>' + prompt + '<br/>';
     str += '<input type="text" id="promptCtrl" style="width:400px"></p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1177,7 +1177,7 @@ function niceAlert(alert){
     var title = '<span class="fff error" style="vertical-align:middle"></span> ' + lang('Error');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1191,7 +1191,7 @@ function niceInfo(alert, okCallback){
     var title = '<span class="fff information" style="vertical-align:middle"></span> ' + lang('Information');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + alert.replace('\n','<br/>') + '</p>';
-    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></p>';
+    str += '</br><p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1208,7 +1208,7 @@ function niceConfirm(confirm, okCallback){
     var title = '<span class="fff information" style="vertical-align:middle"></span> ' + lang('Warning');
     var win = new Window({className: 'alphacube', title: title, maximizable:false, minimizable:false, width:420, height:100, wiredDrag: true, destroyOnClose:true}); 
     var str = '<p style="padding: 10px;height: 61px;overflow-y: auto;">' + confirm + '</p>';
-    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
+    str += '<p style="position: absolute;right: 0;bottom: 3px;"><span id="btnPromptOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span> <span id="btnPromptCancel" class="ccBtn"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>';
     win.getContent().prepend(str);
     win.showCenter();
     win.toFront();
@@ -1231,41 +1231,42 @@ function niceConfirm(confirm, okCallback){
 
 $(function(){
     var editOnSiteHTML = '<div id="editOnSiteHTML" style="display:none">';
-	editOnSiteHTML += '<span class="fff add" onclick="editOnSiteObj.insertHandler()" title="' + lang('Add') + '"></span>';
-	editOnSiteHTML += '<span class="fff pencil" onclick="editOnSiteObj.editHandler()" title="'+lang('Edit')+'"></span>';
-	editOnSiteHTML += '<span class="fff delete" onclick="editOnSiteObj.deleteHandler()" title="' + lang('Delete') + '"></span>';
+	editOnSiteHTML += '<span class="fff add" onclick="editOnSiteLastElm = editOnSiteObj.elm; editOnSiteObj.insertHandler()" title="' + lang('Add') + '"></span>';
+	editOnSiteHTML += '<span class="fff pencil" onclick="editOnSiteLastElm = editOnSiteObj.elm; editOnSiteObj.editHandler()" title="'+lang('Edit')+'"></span>';
+	editOnSiteHTML += '<span class="fff delete" onclick="editOnSiteLastElm = editOnSiteObj.elm; editOnSiteObj.deleteHandler()" title="' + lang('Delete') + '"></span>';
 	editOnSiteHTML += '</div>';
 	$(document.body).append(editOnSiteHTML);
 });
 
+var editOnSiteLastElm = null;
 var editOnSiteObj = {}, editOnSiteDefaults = {
     entityName: 'Content',
     id: 0,
+
     insertHandler: function(){
 		if(editOnSiteObj.entityName)
 			openEntityEditForm({
 				entityName:editOnSiteObj.entityName, 
 				id:0,
 				hideCategory: 'İçerik,Temel,Extra',
-				showRelatedEntities: []
+				showRelatedEntities: [],
+				callback: editOnSiteObj.insertCallback
 			});	
 	},
-    insertCallback: function(){location.reload();},
+    insertCallback: function(){refreshModule(editOnSiteLastElm.closest('.Module')); $('#editOnSiteHTML').hide();},
     editHandler: function(){
 		if(editOnSiteObj.entityName)
 			openEntityEditForm({
 				entityName:editOnSiteObj.entityName, 
 				id:editOnSiteObj.id,
 				hideCategory: 'İçerik,Temel,Extra',
-				showRelatedEntities: []
+				showRelatedEntities: [],
+				callback: editOnSiteObj.editCallback
 			});
 	},
-    editCallback: function(){location.reload();},
+    editCallback: function(){refreshModule(editOnSiteLastElm.closest('.Module')); $('#editOnSiteHTML').hide();},
     deleteHandler: function(){deleteData(editOnSiteObj.entityName, editOnSiteObj.id, editOnSiteObj.deleteCallback);},
-    deleteCallback: function(){location.reload();}
-	//commands: [
-	//	{name:lang('Edit'), icon:'pencil', handler:function(){}}
-	//]
+    deleteCallback: function(){editOnSiteLastElm.remove(); $('#editOnSiteHTML').hide();}
 };
 
 function editOnSite(elm, editOnSiteArgs){
@@ -1289,7 +1290,7 @@ function editOnSite(elm, editOnSiteArgs){
 
     var pos = elm.offset();
     var dim = getDimensions(elm);
-    editOnSiteElm.css({left:(pos.left+dim.width-editOnSiteElm.width())+'px', top:pos.top+'px'});
+    editOnSiteElm.css({left:pos.left+((dim.width-editOnSiteElm.width())/2)+'px', top:pos.top+((dim.height-editOnSiteElm.height())/2)+'px'});
     editOnSiteElm.show();
 }
 

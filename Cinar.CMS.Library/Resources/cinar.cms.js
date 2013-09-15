@@ -26,12 +26,6 @@ $(function(){
 			}
 		});
 
-		// image editor
-		if($('.cc_edit_img').length){
-			imageEditorInit();
-			$('.cc_edit_img').each(makeImageEditable);
-		}
-
         if (!designMode) return; //***
 
         regionDivs = $('.Region');//$('Header','Left','Content','Right','Footer').compact();
@@ -410,7 +404,7 @@ function addModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
+        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span> ' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>';
         win.getContent().prepend(str);
         win.showCenter();
         win.toFront();
@@ -573,7 +567,7 @@ function convertModule(elmId){
             });
             str += '</optgroup>';
         });
-        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span>' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>';
+        str += '</select><br/></br><span class="ccBtn" id="btnAddModuleOK"><span class="fff accept"></span> ' + lang('OK') + '</span> <span class="ccBtn" id="btnAddModuleCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>';
         win.getContent().prepend(str);
         win.showCenter();
         win.toFront();
@@ -718,7 +712,7 @@ function quickLoadImages(contentId, callback) {
 	if (contentId) // eğer contentId gelmişse, ths'i ListForm gibi yapıyoruz
 	    ths = { filter: { value: 'ContentId=' + contentId }, fetchData: function () { }};
 
-	$('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn"><span class="fff accept"></span>' + lang('OK') + '</span></div>');
+	$('#fileBrowserFooter').append('<div style="float:right;margin-top:4px"><span id="btnOK" class="ccBtn"><span class="fff accept"></span> ' + lang('OK') + '</span></div>');
 	$('#btnOK').on('click', function(){
 		var selectedFiles = fm.getSelectedFiles();
 		var params = {
@@ -747,7 +741,7 @@ function tagifySelectedPicture(id){
 		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true}); 
 		var winContent = $(win.getContent());
 		winContent.append(img.show().remove());
-		winContent.append('<p align="right"><span class="ccBtn" id="btnTagifyOK"><span class="fff accept"></span>' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span></p>');
+		winContent.append('<p align="right"><span class="ccBtn" id="btnTagifyOK"><span class="fff accept"></span> ' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>');
 		
 		$('#btnTagifyOK').on('click', function(){
 			tagData = tagData.findAll(function(t){return t.remove!=true;});
@@ -796,7 +790,7 @@ function tagifySelectedPicture(id){
 function openTagForm(winPos, tag, tagData){
 	if($('#tagify_edit').length) $('#tagify_edit').remove();
 	
-	$(document.body).append('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn" id="btnTagifyEditOK"><span class="fff accept"></span>' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyEditDelete"><span class="fff cancel"></span>' + lang('Delete') + '</span></p></div>');
+	$(document.body).append('<div id="tagify_edit" class="editor hideOnOut" style="width:200px;height:123px"><table><tr><td>Etiket:</td><td><input class="tagify_tag"/></td></tr><tr><td>Metin:</td><td><input class="tagify_text"/></td></tr><tr><td>URL:</td><td><input class="tagify_url"/></td></tr></table><p align="right"><span class="ccBtn" id="btnTagifyEditOK"><span class="fff accept"></span> ' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyEditDelete"><span class="fff cancel"></span> ' + lang('Delete') + '</span></p></div>');
 	var formTag = $('#tagify_edit');
 
 	$('#btnTagifyEditOK').on('click', function(){
@@ -837,9 +831,9 @@ function sortImages(){
 	}
 	html += '</div>';
 	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
-	html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span>' + lang('Delete') + '</span>';
-	html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span>' + lang('OK') + '</span>';
-	html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span> ' + lang('Delete') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span> ' + lang('OK') + '</span>';
+	html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span>';
 	html += '</p>';
 
 	var win = new Window({ className: 'alphacube', title: '<span class="fff text_list_numbers"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true }); 
@@ -889,12 +883,12 @@ function showContentPictures(options) {
     var html = '<div id="sortableList">';
     html += '</div>';
     html += '<p style="position:absolute;bottom:8px;left:8px;">';
-    html += '   <span class="ccBtn" id="btnQuickLoad"><span class="fff lightning"></span>' + lang('Quick Load') + '</span>';
+    html += '   <span class="ccBtn" id="btnQuickLoad"><span class="fff lightning"></span> ' + lang('Quick Load') + '</span>';
     html += '</p>';
     html += '<p style="position:absolute;bottom:8px;right:8px;">';
-    html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span>' + lang('Delete') + '</span>';
-    html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span>' + lang('OK') + '</span>';
-    html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span>' + lang('Cancel') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span> ' + lang('Delete') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span> ' + lang('OK') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span>';
     html += '</p>';
 
     var win = new Window({ className: 'alphacube', title: '<span class="fff '+options.titleIcon+'"></span> '+options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
@@ -943,6 +937,22 @@ function showContentPictures(options) {
     }
 
     showImages();
+}
+
+function refreshModule(module){
+	module = $(module);
+	if(module.length==0)
+		module = selMod;
+		
+    var name = module.attr('id').split('_')[0].substring(1);
+    var id = module.attr('id').split('_')[1];
+	
+	var queryString = location.href.indexOf('?')>-1 ? '&' + location.href.substring(location.href.indexOf('?')+1) : '';
+	
+    var html = ajax({ url: '/GetModuleHtml.ashx?name='+name+'&id='+id + queryString, isJSON: false, noCache: true });
+
+    module.replaceWith(html);
+	module.mousedown(highlightModule);
 }
 
 function getModuleIcon(moduleName){
@@ -1145,20 +1155,21 @@ function readEntityList(entityName, filter, callback, orderBy, orderAsc) {
         onException: function(req, ex){throw ex;}
     });
 }
-function deleteEntity(entityName, id, callback, showWarning){
-	if(showWarning)
-		deleteData(entityName, id, callback);
-	else
+function deleteEntity(entityName, id, callback, noWarning){
+	if(noWarning)
 		deleteDataWithoutWarning(entityName, id, callback);
+	else
+		deleteData(entityName, id, callback);
 }
 function saveEntity(entityName, entity, callback){
-	var method = entity.Id>0 ? 'save':'insertNew';
+	var method = (typeof(entity.Id)=='undefined' || !entity.Id) ? 'insertNew' : 'save';
 	new Ajax.Request('EntityInfo.ashx?method='+method+'&entityName='+entityName+'&id='+entity.Id, {
 		method: 'post',
 		parameters: entity,
 		onComplete: function(req) {
 			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
-			if(entity.Id==0) entity.Id = parseInt(req.responseText);
+			if(method=='insertNew') 
+				entity.Id = parseInt(req.responseText);
 			if(callback)
 				callback();
 		},
