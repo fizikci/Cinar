@@ -62,10 +62,7 @@ namespace Cinar.DBTools
             imageListTabs.Images.Add("File", FamFamFam.page);
 
             #region commands
-            cmdMan.AfterCommandExecute = () =>
-            {
-                showSelectedObjectOnPropertyGrid();
-            };
+            cmdMan.AfterCommandExecute = showSelectedObjectOnPropertyGrid;
 
             cmdMan.Commands = new CommandCollection(){
                     #region main menu
