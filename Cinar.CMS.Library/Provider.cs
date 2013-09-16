@@ -987,6 +987,10 @@ namespace Cinar.CMS.Library
 
             return entities;
         }
+        public static IDatabaseEntity[] Translate(IList entities)
+        {
+            return Translate(entities.OfType<IDatabaseEntity>().ToArray());
+        }
         public static void Translate(string entityName, DataTable dt)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)

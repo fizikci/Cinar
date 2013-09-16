@@ -1796,6 +1796,12 @@ var ListForm = Class.create(); ListForm.prototype = {
 
         this.fetchData();
     },
+	addCommand: function(cmd){
+		this.container.find('.lf-listFormFooter').prepend(
+			'<div style="float:left;margin-top:4px"><span id="btnListFormsCmd' + cmd.id + this.hndl + '" class="ccBtn"><span class="fff '+cmd.icon+'"></span> ' + lang(cmd.name) + '</span></div>'
+		);
+        $('#btnListFormsCmd' + cmd.id + this.hndl).bind('click', cmd.handler.bind(this));
+	},
     fetchData: function() {
         var params = null;
         if (this.filter && this.filter.filter)
