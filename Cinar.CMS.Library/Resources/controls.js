@@ -74,7 +74,7 @@ var Control = Class.create(); Control.prototype = {
     },
     hideBtn: function(event) {
         if (this.options.hideBtn) return;
-        if (Position.within(this.button[0], event.pageX, event.pageY)) return;
+        if ($(this.button[0]).is(':hover')) return;
         this.button.hide();
     },
     setEditorPos: function(editor) {
@@ -82,7 +82,7 @@ var Control = Class.create(); Control.prototype = {
         currEditor = editor;
         currEditor.parentControl = this;
         var div = $(this.div);
-        var dim = Position.getWindowSize();
+        var dim = getWindowSize();
         var pos = div.offset();
 
         if (dim.width < pos.left + editor.width())
@@ -1723,7 +1723,7 @@ var EditForm = Class.create(); EditForm.prototype = {
 function openEditForm(entityName, entityId, title, controls, onSave, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues) {
 	var dim = getDimensions($(document.body));
 	var left=dim.width-390, top=60, width=350, height=dim.height-60;
-	var win = new Window({ className: "alphacube", title: '<span class="fff '+getEntityIcon(entityName)+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true }); 
+	var win = new Window({ className: "alphacube", title: '<span class="fff '+(getEntityIcon(entityName) || getModuleIcon(entityName))+'"></span> ' + title, left: left, top: top, width: width, height: height, wiredDrag: true, destroyOnClose: true }); 
 	var winContent = $(win.getContent());
 	var pe = new EditForm(winContent, controls, entityName, entityId, filter, hideCategory, renameLabels, showRelatedEntities, defaultValues);
 	pe.onSave = onSave;
@@ -2446,7 +2446,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
     },
     show: function(x, y) {
         var menu = $('#smMenu');
-        var winDim = Position.getWindowSize();
+        var winDim = getWindowSize();
         var scrollPos = getViewportScrollOffsets();
         if (x > scrollPos[0] + winDim.width - menu.width()) x -= menu.width();
         if (y > scrollPos[1] + winDim.height - menu.outerHeight()) y -= menu.outerHeight();
@@ -2488,7 +2488,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
 
         var menu = $('#'+id);
         var linkPos = link.offset();
-        var winDim = Position.getWindowSize();
+        var winDim = getWindowSize();
         var scrollPos = getViewportScrollOffsets();
 
         if (linkPos.left + link.outerWidth() + menu.outerWidth() < scrollPos[0] + winDim.width)

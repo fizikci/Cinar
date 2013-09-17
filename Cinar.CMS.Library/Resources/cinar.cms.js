@@ -947,7 +947,10 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 			if(!id || id<=0) return;
 			tagifySelectedPicture(id);
 		}});
-		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:sortImages});
+		options.commands.push({id:'Sort', icon:'sort', name:'Sort', handler:function(){
+			var contentId = parseInt(this.filter.getValue().split('=')[1]);
+			showContentPictures({contentId:contentId});
+		}});
 		options.limit = 200;
 	}
 	if(entityName=='Content'){
@@ -1026,7 +1029,7 @@ function tagifySelectedPicture(id){
 	var img = $('#tagifySelectedPicture');
 	setTimeout(function(){
 		var tagData = entity.TagData ? eval('('+entity.TagData+')') : [];
-		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.getWidth()+10, height:img.getHeight()+60, wiredDrag: true, destroyOnClose:true}); 
+		var win = new Window({className: 'alphacube', title: entity.FileName, width:img.width()+10, height:img.height()+60, wiredDrag: true, destroyOnClose:true}); 
 		var winContent = $(win.getContent());
 		winContent.append(img.show().remove());
 		winContent.append('<p align="right"><span class="ccBtn" id="btnTagifyOK"><span class="fff accept"></span> ' + lang('OK') + '</span><span class="ccBtn" id="btnTagifyCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span></p>');
@@ -1050,7 +1053,7 @@ function tagifySelectedPicture(id){
 		tagData.each(function(tag, i){
 			var x = tag.x, y = tag.y;
 			winContent.append('<div id="tag'+i+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);">'+(tag.tag || '&nbsp;')+'</div>');
-			new Draggable('tag'+i, {onEnd:function(){tag.x=parseInt($('#tag'+i).css('left'));tag.y=parseInt($('#tag'+i).css('top'));}});
+			$('#tag'+i).draggable({stop:function(){tag.x=parseInt($('#tag'+i).css('left'));tag.y=parseInt($('#tag'+i).css('top'));}});
 			$('#tag'+i).on('dblclick', function(){
 				var winPos = win.getLocation();
 				openTagForm(winPos, tag, tagData);
@@ -1063,7 +1066,7 @@ function tagifySelectedPicture(id){
 			winContent.append('<div id="'+tagId+'" class="tag_bg" style="cursor:move;position:absolute;top:'+y+'px;left:'+x+'px;width:100px;background:url(/external/icons/tagbg1.png);"></div>');
 			var tag = {x:x, y:y};
 			tagData.push(tag);
-			new Draggable(tagId, {onEnd:function(){tag.x=parseInt($('#'+tagId).css('left'));tag.y=parseInt($('#'+tagId).css('top'));}});
+			$('#'+tagId).draggable({stop:function(){tag.x=parseInt($('#'+tagId).css('left'));tag.y=parseInt($('#'+tagId).css('top'));}});
 			openTagForm(winPos, tag, tagData);
 			
 			$('#'+tagId).on('dblclick', function(){
@@ -1094,7 +1097,7 @@ function openTagForm(winPos, tag, tagData){
 	});
 	$('#btnTagifyEditDelete').on('click', function(){
 		$('#tag'+tagData.indexOf(tag)).remove();
-		tag.remove = true;
+		tag[0].remove = true;
 		$('#tagify_edit').remove();
 	});
 
@@ -1102,62 +1105,6 @@ function openTagForm(winPos, tag, tagData){
 	formTag.find('.tagify_tag').val(tag.tag || '');
 	formTag.find('.tagify_text').val(tag.text || '');
 	formTag.find('.tagify_url').val(tag.url || '');
-}
-function sortImages(){
-	var ths = this; // this is ListForm here
-	var table = ths.listGrid.table; 
-	if(!table)
-		return;
-	
-	var rows = table.find('tr[id]');
-	
-	var html = '<div id="sortableList">';
-	for(var i=0; i<rows.length; i++){
-		var row = $(rows[i]);
-		var src = $(row.find('td')[2]).attr('value');
-		html += '<div id="'+row.attr('id')+'" ondblclick="editData(\'ContentPicture\', '+row.attr('id').split('_')[1]+')" class="sortItem" onclick="selectPic(this)"><img src="'+src+'" width="60" height="60"/></div>';
-	}
-	html += '</div>';
-	html += '<p align="right" style="position:absolute;bottom:0px;right:0px;">';
-	html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span> ' + lang('Delete') + '</span>';
-	html += '   <span class="ccBtn" id="btnSortImagesOK"><span class="fff accept"></span> ' + lang('OK') + '</span>';
-	html += '   <span class="ccBtn" id="btnSortImagesCancel"><span class="fff cancel"></span> ' + lang('Cancel') + '</span>';
-	html += '</p>';
-
-	var win = new Window({ className: 'alphacube', title: '<span class="fff text_list_numbers"></span> Order Pictures', width: 1100, height: 600, wiredDrag: true, destroyOnClose: true }); 
-    var winContent = $(win.getContent());
-	winContent.append(html);
-    win.showCenter();
-    win.toFront();
-	
-    $('#btnSortImagesOK').on('click', function(){
-		var sortOrder = Sortable.sequence('sortableList');
-		ajax({url:'EntityInfo.ashx?method=sortEntities&sortOrder='+sortOrder+'&entityName=ContentPicture',isJSON:false,noCache:true});
-		Windows.getFocusedWindow().close();
-		ths.fetchData();
-	});
-    $('#btnSortImagesCancel').on('click', function(){ths.fetchData(); Windows.getFocusedWindow().close();});
-    $('#btnSortImagesDelete').on('click', function(){
-		niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
-			$('#sortableList div.sel').each(function(eix,elm){
-				var id = elm.id.split('_')[1];
-				deleteDataWithoutWarning('ContentPicture', id, function(){$(elm).remove();});
-			});
-		});
-	});
-
-	Position.includeScrollOffsets = true;
-	$('#sortableList').sortable({tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList',
-		onChange:function(elm){ draggedPic = elm;},
-		onUpdate:function(){ }
-	});
-}
-var draggedPic = null;
-function selectPic(pic){
-	pic = $(pic);
-	if(pic!=draggedPic)
-		pic.toggleClassName('sel');
-	draggedPic = null;
 }
 
 function showContentPictures(options) {
@@ -1173,6 +1120,7 @@ function showContentPictures(options) {
     html += '</div>';
     html += '<p style="position:absolute;bottom:8px;left:8px;">';
     html += '   <span class="ccBtn" id="btnQuickLoad"><span class="fff lightning"></span> ' + lang('Quick Load') + '</span>';
+    html += '   <span class="ccBtn" id="btnSortImagesEdit"><span class="fff picture_edit"></span> ' + lang('Edit Picture') + '</span>';
     html += '</p>';
     html += '<p style="position:absolute;bottom:8px;right:8px;">';
     html += '   <span class="ccBtn" id="btnSortImagesDelete"><span class="fff delete"></span> ' + lang('Delete') + '</span>';
@@ -1189,15 +1137,22 @@ function showContentPictures(options) {
     $('#btnQuickLoad').on('click', function () {
         quickLoadImages(options.contentId, showImages);
     });
+    $('#btnSortImagesEdit').on('click', function () {
+		var selImgs = $('#sortableList div.sel img');
+		if(selImgs.length>0)
+			editImage(selImgs.attr('src'));
+		else
+			niceInfo(lang('Select a picture first'));
+    });
 
     $('#btnSortImagesOK').on('click', function () {
-        var sortOrder = Sortable.sequence('sortableList');
+        var sortOrder = $('#sortableList').sortable("serialize").replace(/[^\d]+/g,',').substring(1);
         ajax({ url: 'EntityInfo.ashx?method=sortEntities&sortOrder=' + sortOrder + '&entityName=ContentPicture', isJSON: false, noCache: true });
         Windows.getFocusedWindow().close();
     });
     $('#btnSortImagesCancel').on('click', function () { Windows.getFocusedWindow().close(); });
     $('#btnSortImagesDelete').on('click', function () {
-        niceConfirm('Seçtiğiniz resimler bu listeden kaldırılacak. Emin misiniz?', function () {
+        niceConfirm(lang('The selected pictures will be removed from this list.'), function () {
             $('#sortableList div.sel').each(function (eix,elm) {
                 var id = elm.id.split('_')[1];
                 deleteDataWithoutWarning('ContentPicture', id, function () { $(elm).remove(); });
@@ -1211,18 +1166,13 @@ function showContentPictures(options) {
         for (var i = 0; i < list.length; i++) {
             var row = list[i];
             var src = row.FileName;
-            html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="selectPic(this)"><img src="' + src + '" width="60" height="60"/></div>';
+            html += '<div id="a_' + row.Id + '" ondblclick="editData(\'ContentPicture\', ' + row.Id + ')" class="sortItem" onclick="$(this).toggleClass(\'sel\')"><img src="' + src + '" width="60" height="60"/></div>';
         }
 
         $('#sortableList').html('');
         $('#sortableList').append(html);
 
-        Position.includeScrollOffsets = true;
-        Sortable.create('sortableList', {
-            tag: 'div', overlap: 'horizontal', constraint: false, scroll: 'sortableList',
-            onChange: function (elm) { draggedPic = elm; },
-            onUpdate: function () { }
-        });
+        $('#sortableList').sortable();
     }
 
     showImages();

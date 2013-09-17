@@ -305,7 +305,7 @@ div.fileNameBox img {max-width:80px; max-height:80px}
 }
 
 #sortableList {position:absolute;top:0px;bottom:40px;right:0px;left:0px;overflow:scroll;border-bottom: 1px solid #316AC5;}
-#sortableList div.sortItem {display:inline-block;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;}
+#sortableList div.sortItem {float:left;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;}
 #sortableList div.sortItem img {width: 137px;height: 101px;}
 #sortableList div.sel {border-color:blue; background:#316AC5;}
 

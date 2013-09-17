@@ -3,7 +3,7 @@ $(function(){
 	// on body click find visible editors and hide if not the click is within
     $('html,body').on('mousedown', function(event){
         $('.hideOnOut').each(function(eix,editor){
-            if(!Position.within(editor, event.pageX,event.pageY)){
+            if(!$(editor).is(':hover')){
                 if(editor.id=='smMenu' && $(editor).is(':visible'))
                     popupMenu.onHide();
 				if($(event.target).hasClass('hideOnOutException') || $(event.target).closest('.hideOnOutException').length)
@@ -18,7 +18,7 @@ $(function(){
             }
         });
         $('.removeOnOut').each(function(eix,editor){
-            if(!Position.within(editor, event.pageX,event.pageY))
+            if(!$(editor).is(':hover'))
                 $(editor).remove();
         });
 	});
@@ -378,7 +378,7 @@ function showElementWithOverlay(elm, autoHide, color){
 	showingElementWithOverlayZIndex = elm.css('z-index');
     elm.hide();
 	
-	var dim = Position.getWindowSize();
+	var dim = getWindowSize();
 	var bodyDim = getDimensions($('html')[0]);
 	if(dim.height<bodyDim.height)
 		dim = bodyDim;
@@ -643,7 +643,7 @@ function centerToView(elm){
 	elm = $(elm);
 	var dim = getDimensions(elm);
 	var posView = getViewportScrollOffsets();
-	var dimView = Position.getWindowSize();
+	var dimView = getWindowSize();
 	elm.css({left:(posView[0]+(dimView.width-dim.width)/2)+'px', top:(posView[1]+(dimView.height-dim.height)/2)+'px'});	
 }
 
@@ -970,7 +970,7 @@ Object.extend(Array.prototype, {
 	}
 });
 
-Position.getWindowSize = function(w) {
+function getWindowSize(w) {
 	var width, height;
 	w = w ? w : window;
 	width = w.innerWidth || (w.document.documentElement.clientWidth || w.document.body.clientWidth);
