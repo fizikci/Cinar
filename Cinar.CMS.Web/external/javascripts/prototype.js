@@ -523,42 +523,7 @@ RegExp.prototype.match = RegExp.prototype.test;
 RegExp.escape = function(str) {
   return String(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
 };
-var PeriodicalExecuter = Class.create({
-  initialize: function(callback, frequency) {
-    this.callback = callback;
-    this.frequency = frequency;
-    this.currentlyExecuting = false;
 
-    this.registerCallback();
-  },
-
-  registerCallback: function() {
-    this.timer = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
-  },
-
-  execute: function() {
-    this.callback(this);
-  },
-
-  stop: function() {
-    if (!this.timer) return;
-    clearInterval(this.timer);
-    this.timer = null;
-  },
-
-  onTimerEvent: function() {
-    if (!this.currentlyExecuting) {
-      try {
-        this.currentlyExecuting = true;
-        this.execute();
-        this.currentlyExecuting = false;
-      } catch(e) {
-        this.currentlyExecuting = false;
-        throw e;
-      }
-    }
-  }
-});
 Object.extend(String, {
   interpret: function(value) {
     return value == null ? '' : String(value);
@@ -1642,65 +1607,6 @@ var ObjectRange = Class.create(Enumerable, (function() {
     cache: {}
   };
   
-var Position = {
-  includeScrollOffsets: false,
-
-  prepare: function() {
-    this.deltaX =  window.pageXOffset
-                || document.documentElement.scrollLeft
-                || document.body.scrollLeft
-                || 0;
-    this.deltaY =  window.pageYOffset
-                || document.documentElement.scrollTop
-                || document.body.scrollTop
-                || 0;
-  },
-
-  within: function(element, x, y) {
-    if (this.includeScrollOffsets)
-      return this.withinIncludingScrolloffsets(element, x, y);
-    this.xcomp = x;
-    this.ycomp = y;
-    this.offset = $(element).offset();
-
-    return (y >= this.offset.top &&
-            y <  this.offset.top + element.offsetHeight &&
-            x >= this.offset.left &&
-            x <  this.offset.left + element.offsetWidth);
-  },
-
-  withinIncludingScrolloffsets: function(element, x, y) {
-    var offsetcache = $(element).offset();
-
-    this.xcomp = x + offsetcache.left - this.deltaX;
-    this.ycomp = y + offsetcache.top - this.deltaY;
-    this.offset = $(element).offset();
-
-    return (this.ycomp >= this.offset.top &&
-            this.ycomp <  this.offset.top + element.offsetHeight &&
-            this.xcomp >= this.offset.left &&
-            this.xcomp <  this.offset.left + element.offsetWidth);
-  },
-
-  overlap: function(mode, element) {
-    if (!mode) return 0;
-    if (mode == 'vertical')
-      return ((this.offset[1] + element.offsetHeight) - this.ycomp) /
-        element.offsetHeight;
-    if (mode == 'horizontal')
-      return ((this.offset[0] + element.offsetWidth) - this.xcomp) /
-        element.offsetWidth;
-  }
-
-
-};
-
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
-////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
 ////////////////////////////////////////////////////////////////// AJAX //////////////////////////////////////
 
 var Ajax = {

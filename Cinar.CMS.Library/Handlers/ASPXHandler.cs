@@ -127,6 +127,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
                 {
+                    sb.Append("<link href=\"/external/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css\" rel=\"stylesheet\">\n");
                     sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
                     sb.Append("<script src=\"/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
                 }

@@ -336,7 +336,7 @@ Window.prototype = {
 
       // Check if click on close button, 
       var closeButton = $('#'+this.getId() + '_close');
-      if (closeButton && Position.within(closeButton, this.pointer[0], this.pointer[1])) {
+      if (closeButton && closeButton.is(':hover')) {
         this.currentDrag = null;
         return;
       }
@@ -568,12 +568,6 @@ Window.prototype = {
     top = this._updateTopConstraint(top);
     left = this._updateLeftConstraint(left);
     
-    // by BK
-    Position.prepare();
-    top += Position.deltaY;
-    left += Position.deltaX;
-    // end by BK
-
     this.element.css({top: top + 'px'});
     this.element.css({left: left + 'px'});
 
