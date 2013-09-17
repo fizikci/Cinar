@@ -1242,13 +1242,14 @@ var editOnSiteLastElm = null;
 var editOnSiteObj = {}, editOnSiteDefaults = {
     entityName: 'Content',
     id: 0,
-
+	catId:1,
     insertHandler: function(){
 		if(editOnSiteObj.entityName)
 			openEntityEditForm({
 				entityName:editOnSiteObj.entityName, 
 				id:0,
 				hideCategory: 'İçerik,Temel,Extra',
+				filter:'CategoryId='+editOnSiteObj.catId,
 				showRelatedEntities: [],
 				callback: editOnSiteObj.insertCallback
 			});	
@@ -1259,6 +1260,7 @@ var editOnSiteObj = {}, editOnSiteDefaults = {
 			openEntityEditForm({
 				entityName:editOnSiteObj.entityName, 
 				id:editOnSiteObj.id,
+				filter:'CategoryId='+editOnSiteObj.catId,
 				hideCategory: 'İçerik,Temel,Extra',
 				showRelatedEntities: [],
 				callback: editOnSiteObj.editCallback

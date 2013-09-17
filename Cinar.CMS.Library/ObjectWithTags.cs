@@ -88,7 +88,7 @@ namespace Cinar.CMS.Library
                 string fieldName = pi.Name;
                 object val = pi.GetValue(this, null);
 
-                if (val == null || !val.ToString().StartsWith("http://"))
+                if (val == null || !(val.ToString().StartsWith("http://") || val.ToString().StartsWith("https://")))
                     continue; //***
 
                 try

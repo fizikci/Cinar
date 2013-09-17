@@ -836,7 +836,7 @@ namespace Cinar.Scripting
                         }
                         catch
                         {
-                            //throw new Exception("Cannot convert from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
+                            throw new Exception("Cannot convert from " + paramValues[j].GetType().Name + " to " + pinfo[j].ParameterType.Name + " or undefined method: " + this);
                         }
                     }
                     res = mi.Invoke(res, paramValues.ToArray());
