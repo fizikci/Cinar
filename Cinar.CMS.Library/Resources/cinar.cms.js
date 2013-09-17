@@ -1129,6 +1129,7 @@ function sortImages(){
 	winContent.append(html);
     win.showCenter();
     win.toFront();
+	
     $('#btnSortImagesOK').on('click', function(){
 		var sortOrder = Sortable.sequence('sortableList');
 		ajax({url:'EntityInfo.ashx?method=sortEntities&sortOrder='+sortOrder+'&entityName=ContentPicture',isJSON:false,noCache:true});
@@ -1146,7 +1147,7 @@ function sortImages(){
 	});
 
 	Position.includeScrollOffsets = true;
-	Sortable.create('sortableList', {tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList',
+	$('#sortableList').sortable({tag: 'div', overlap: 'horizontal', constraint: false, scroll:'sortableList',
 		onChange:function(elm){ draggedPic = elm;},
 		onUpdate:function(){ }
 	});
