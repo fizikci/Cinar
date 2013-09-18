@@ -1023,6 +1023,37 @@ namespace Cinar.CMS.Library
                     }
             }
         }
+        public static string Translate(string name) 
+        {
+            if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
+                return name;
+
+            List<StaticResource> sr = null;
+            List<StaticResourceLang> srl = null;
+
+            if (HttpContext.Current.Cache["StaticResource"] == null)
+                HttpContext.Current.Cache["StaticResource"] = Provider.Database.ReadList<StaticResource>("select * from StaticResource order by Name");
+            if (HttpContext.Current.Cache["StaticResourceLang"] == null)
+                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.ReadList<StaticResourceLang>("select * from StaticResourceLang order by LangId, StaticResourceId");
+
+            sr = (List<StaticResource>)HttpContext.Current.Cache["StaticResource"];
+            srl = (List<StaticResourceLang>)HttpContext.Current.Cache["StaticResourceLang"];
+
+            int srIndex = sr.BinarySearch(new StaticResource { Name = name });
+            if (srIndex < 0)
+            {
+                new StaticResource { Name = name }.Save();
+                return name;
+            }
+
+            StaticResource srItem = sr[srIndex];
+            int srlIndex = srl.BinarySearch(new StaticResourceLang { LangId = Provider.CurrentLanguage.Id, StaticResourceId = srItem.Id });
+
+            if (srlIndex > -1)
+                return srl[srlIndex].Translation;
+
+            return name;
+        }
 
         public static string TranslateColumnName(string entityName, string columnName)
         {
