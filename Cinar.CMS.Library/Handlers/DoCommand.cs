@@ -192,9 +192,9 @@ namespace Cinar.CMS.Library.Handlers
                             case "StaticHtml":
                                 StaticHtml sh = (StaticHtml)m;
                                 sh.InnerHtml = scriptifySafe(sh.InnerHtml);
-                                sh.InnerHtml1 = scriptifySafe(sh.InnerHtml1);
-                                sh.InnerHtml2 = scriptifySafe(sh.InnerHtml2);
-                                sh.InnerHtml3 = scriptifySafe(sh.InnerHtml3);
+                                //sh.InnerHtml1 = scriptifySafe(sh.InnerHtml1);
+                                //sh.InnerHtml2 = scriptifySafe(sh.InnerHtml2);
+                                //sh.InnerHtml3 = scriptifySafe(sh.InnerHtml3);
                                 break;
                             case "Chart":
                                 Chart chart = (Chart)m;
