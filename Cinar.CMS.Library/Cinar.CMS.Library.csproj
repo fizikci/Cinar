@@ -57,6 +57,22 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.GData.Apps, Version=2.2.0.28024, Culture=neutral, PublicKeyToken=e6feebfe441b89cb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\Google.GData.Apps.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Client, Version=2.2.0.28023, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\Google.GData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Contacts, Version=2.2.0.28024, Culture=neutral, PublicKeyToken=7e065189dd4b982f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\Google.GData.Contacts.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Extensions, Version=2.2.0.28024, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\Google.GData.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\_library\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -99,6 +115,7 @@
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Containers\ModuleRepeater.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
+    <Compile Include="Modules\Membership\GoogleContacts.cs" />
     <Compile Include="Modules\Membership\LoginForm2.cs" />
     <Compile Include="Modules\Misc\Chart.cs" />
     <Compile Include="Modules\Newspaper\AuthorBox.cs" />
@@ -202,6 +219,10 @@
     <Compile Include="Provider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_library\Google.GData.Apps.dll" />
+    <Content Include="_library\Google.GData.Client.dll" />
+    <Content Include="_library\Google.GData.Contacts.dll" />
+    <Content Include="_library\Google.GData.Extensions.dll" />
     <None Include="Resources\default.css" />
     <None Include="Resources\conf_default.css" />
     <None Include="Resources\controls.js" />

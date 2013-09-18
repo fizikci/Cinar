@@ -698,7 +698,7 @@ namespace System
             req.Headers["Accept-Charset"] = "ISO-8859-9,utf-8;q=0.7,*;q=0.7";
             req.Headers["Keep-Alive"] = "300";
             req.KeepAlive = true;
-            req.Headers["Cookie"] = "ASP.NET_SessionId=2n5drm45iqroub550diydu55";
+            //req.Headers["Cookie"] = "ASP.NET_SessionId=2n5drm45iqroub550diydu55";
             req.Headers["Cache-Control"] = "max-age=0";
 
             using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())

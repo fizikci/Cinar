@@ -1023,7 +1023,7 @@ namespace Cinar.CMS.Library
                     }
             }
         }
-        public static string Translate(string name) 
+        public static string TR(string name) 
         {
             if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
                 return name;
@@ -1042,7 +1042,30 @@ namespace Cinar.CMS.Library
             int srIndex = sr.BinarySearch(new StaticResource { Name = name });
             if (srIndex < 0)
             {
-                new StaticResource { Name = name }.Save();
+                StaticResource newSR = new StaticResource { Name = name };
+                newSR.Save();
+
+                try
+                {
+                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                    foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
+                    {
+                        string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                        Encoding resolvedEncoding = Encoding.UTF8;
+                        string translate = url.DownloadPage(ref resolvedEncoding);
+                        StaticResourceLang newSRL = new StaticResourceLang
+                        {
+                            LangId = l.Id,
+                            StaticResourceId = newSR.Id,
+                            Translation = translate.SplitWithTrim('"')[1]
+                        };
+                        newSRL.Save();
+                        if (Provider.CurrentLanguage.Id == l.Id)
+                            name = newSRL.Translation;
+                    }
+                }
+                catch { }
+
                 return name;
             }
 

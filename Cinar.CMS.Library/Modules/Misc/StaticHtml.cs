@@ -15,7 +15,7 @@ namespace Cinar.CMS.Library.Modules
             get { return innerHtml; }
             set { innerHtml = value; }
         }
-
+/*
         private int langId1 = 0;
         [ColumnDetail(References = typeof(Lang)), EditFormFieldProps(ControlType = ControlType.LookUp)]
         public int LangId1
@@ -63,20 +63,20 @@ namespace Cinar.CMS.Library.Modules
             get { return innerHtml3; }
             set { innerHtml3 = value; }
         }
-        
+*/        
         internal override string show()
         {
             string html = "";
 
             // dili tesbit edelüm
-            if (Provider.CurrentLanguage.Id == Provider.Configuration.DefaultLang)
-                html = this.innerHtml;
-            else if (Provider.CurrentLanguage.Id == langId1)
-                html = this.innerHtml1;
-            else if (Provider.CurrentLanguage.Id == langId2)
-                html = this.innerHtml2;
-            else if (Provider.CurrentLanguage.Id == langId3)
-                html = this.innerHtml3;
+            //if (Provider.CurrentLanguage.Id == Provider.Configuration.DefaultLang)
+            //    html = this.innerHtml;
+            //else if (Provider.CurrentLanguage.Id == langId1)
+            //    html = this.innerHtml1;
+            //else if (Provider.CurrentLanguage.Id == langId2)
+            //    html = this.innerHtml2;
+            //else if (Provider.CurrentLanguage.Id == langId3)
+            //    html = this.innerHtml3;
 
             if (String.IsNullOrEmpty(html)) html = this.innerHtml;
 
