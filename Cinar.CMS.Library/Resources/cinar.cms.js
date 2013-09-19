@@ -315,39 +315,32 @@ popupMenu.menuItems = [
             {text:lang('Edit')+'...', icon:'page_edit', callback:editTemplate},
             {text:lang('Copy')+'...', icon:'page_copy', callback:copyTemplate},
             {text:lang('Delete'), icon:'page_delete', callback:deleteTemplate},
-            {text:lang('Rename')+'...', icon:'page_edit', callback:renameTemplate}
+            {text:lang('Rename')+'...', icon:'page_edit', callback:renameTemplate},
+			{text:lang('Export')+'...', icon:'page_go', callback:exportTemplate}
         ]},
     {text:lang('Add New Page')+'...', icon:'page_add', callback:addTemplate},
     {text:lang('Other Pages'), icon:'page_white_stack', items:[]},
-    {text:lang('Export')+'...', icon:'page_go', callback:exportTemplate},
     {text:lang('Import')+'...', icon:'page_lightning', callback:importTemplate},
     {text:'-'},
     {text:lang('Data'), icon:'database', items:[]},
     {text:lang('Category-Content Tree'), icon:'chart_organisation', callback:openCategoryContentTree},
     {text:lang('Page-Module Tree'), icon:'chart_organisation', callback:openPageModuleTree},
     {text:'-'},
-    {text:lang('Configuration'), icon:'cog', callback:configure},
+    {text:lang('Configuration'), icon:'cog', items:[
+			{text:lang('Site Settings'), icon:'cog', callback:configure},
+			{text:lang('Edit Page Load Script'), icon:'page_white_csharp', callback:editPageLoadScript},
+			{text:lang('Clear Cache'), icon:'database_delete', callback:clearCache},
+			{text:lang('Export Localization')+'...', icon:'flag_green', callback:exportLocalization},
+			{text:lang('Import Localization')+'...', icon:'flag_red', callback:importLocalization},
+        ]},
     {text:lang('File Manager'), icon: 'folder_picture', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
     {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
     {text:lang('Edit General Javascript'), icon:'script', callback:editJavascript},
-    {text:lang('Edit Page Load Script'), icon:'page_white_csharp', callback:editPageLoadScript},
-    {text:lang('Clear Cache'), icon:'database_delete', callback:clearCache},
     {text:lang('Edit Content'), icon: 'edit', isEnabled: contentLinkSelected, callback: editContent },
     {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
     {text:lang('Console'), icon: 'application_xp_terminal', callback: openConsole },
     {text:lang('Switch to View Mode'), icon: 'cup', callback: endDesignMode },
-    {
-        text: lang('Help'), icon: 'help', callback: function () {
-            new CinarWindow({
-                titleIcon: 'help',
-                title: 'Çınar CMS Documentation',
-                width: 1100,
-                height: 700,
-                url: '/help.html.ashx',
-                position:'left'
-            });
-        }
-    }
+    {text:lang('Help'), icon: 'help', callback: function () {new CinarWindow({titleIcon: 'help', title: 'Çınar CMS Documentation', width: 1100, height: 700, url: '/help.html.ashx', position:'left'});} }
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
@@ -364,7 +357,7 @@ templates.each(function(template, i){
 _cntr = 0;
 entityTypes.each(function(entTp,i){
     if(entTp[2])
-        popupMenu.menuItems[12].items[_cntr++] = {text:entTp[1], icon:getEntityIcon(entTp[0]), data:entTp[0], callback:openEntityListForm};
+        popupMenu.menuItems[11].items[_cntr++] = {text:entTp[1], icon:getEntityIcon(entTp[0]), data:entTp[0], callback:openEntityListForm};
 });
 popupMenu.onShow = function(){
 	navigationEnabled = false;
@@ -1178,9 +1171,9 @@ function showContentPictures(options) {
     showImages();
 }
 
-//################################################################
-//#        TEMPLATE (EDIT, COPY, DELETE, RENAME) FUNCTIONS       #
-//################################################################
+//################################################################################
+//#        TEMPLATE (EDIT, COPY, DELETE, RENAME, IMPORT, EXPORT) FUNCTIONS       #
+//################################################################################
 
 function addTemplate(){
     new AceEditor({
@@ -1284,10 +1277,6 @@ function saveTemplate(editor, templateName){
         onException: function(req, ex){throw ex;}
     });
 }
-
-//##############################################
-//#     IMPORT & EXPORT TEMPLATES (PAGES)      #
-//##############################################
 
 function exportTemplate(){
     new AceEditor({
@@ -1498,4 +1487,36 @@ function editTag() {
 }
 function openConsole(){
     new Console('Console.ashx');
+}
+function exportLocalization(){
+    new AceEditor({
+        titleIcon: 'flag_green',
+        title: lang('Export Localization'),
+        text: ajax({ url: 'SystemInfo.ashx?method=exportLocalization', isJSON: false, noCache: true }),
+        lang: 'xml'
+    });
+}
+function importLocalization(){
+    new AceEditor({
+        titleIcon: 'flag_red',
+        title: lang('Import Localization'),
+        text: 'Paste exported localization xml here',
+        lang: 'xml',
+        buttons: [{
+            icon: 'disc', type: 'primary', id: 'btnSaveImport', text: lang('Save'), callback: function (editor) {
+                var params = new Object();
+                params['xmlData'] = editor.getValue();
+                new Ajax.Request('SystemInfo.ashx?method=importLocalization', {
+                    method: 'post',
+                    parameters: params,
+                    onComplete: function (req) {
+                        if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                        Windows.getFocusedWindow().close();
+                        niceInfo(lang('Resources added.'));
+                    },
+                    onException: function (req, ex) { throw ex; }
+                });
+            }
+        }]
+    });
 }

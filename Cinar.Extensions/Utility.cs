@@ -425,6 +425,13 @@ namespace System
                 res[i] = res[i].Trim();
             return res;
         }
+        public static string[] SplitWithTrim(this string str, string seperator, params char[] trimChars)
+        {
+            string[] res = str.Split(new string[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < res.Length; i++)
+                res[i] = res[i].Trim(trimChars);
+            return res;
+        }
         public static string SplitAndGetLast(this string str, char seperator)
         {
             string[] res = str.SplitWithTrim(seperator);
@@ -594,7 +601,7 @@ namespace System
                 return char.ToUpper(str[0]).ToString();
 
             str = str.Trim();
-            if(!str.Contains(" "))
+            if (!str.Contains(" "))
                 return char.ToUpper(str[0]) + str.Substring(1).ToLower();
 
             var parts = str.Split(' ');
@@ -602,6 +609,26 @@ namespace System
                 parts[i] = parts[i].Capitalize();
 
             return parts.StringJoin(" ");
+        }
+        public static string CapitalizeFirstLetter(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return "";
+            if (str.Length == 1)
+                return char.ToUpper(str[0]).ToString();
+
+            str = str.Trim();
+            return char.ToUpper(str[0]) + str.Substring(1).ToLower();
+        }
+        public static string CapitalizeFirstLetterInvariant(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return "";
+            if (str.Length == 1)
+                return char.ToUpperInvariant(str[0]).ToString();
+
+            str = str.Trim();
+            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLower();
         }
         public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
         {
