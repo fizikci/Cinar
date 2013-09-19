@@ -1243,14 +1243,14 @@ var editOnSiteObj = {}, editOnSiteDefaults = {
     entityName: 'Content',
     id: 0,
 	catId:1,
+	hideCategory: 'İçerik,Temel,Extra',
     insertHandler: function(){
 		if(editOnSiteObj.entityName)
 			openEntityEditForm({
 				entityName:editOnSiteObj.entityName, 
 				id:0,
-				hideCategory: 'İçerik,Temel,Extra',
+				hideCategory: editOnSiteObj.hideCategory,
 				filter:'CategoryId='+editOnSiteObj.catId,
-				showRelatedEntities: [],
 				callback: editOnSiteObj.insertCallback
 			});	
 	},
@@ -1261,8 +1261,8 @@ var editOnSiteObj = {}, editOnSiteDefaults = {
 				entityName:editOnSiteObj.entityName, 
 				id:editOnSiteObj.id,
 				filter:'CategoryId='+editOnSiteObj.catId,
-				hideCategory: 'İçerik,Temel,Extra',
-				showRelatedEntities: [],
+				hideCategory: editOnSiteObj.hideCategory,
+				showRelatedEntities: ['ContentLang','ContentPicture'],
 				callback: editOnSiteObj.editCallback
 			});
 	},
