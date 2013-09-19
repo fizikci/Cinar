@@ -224,6 +224,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 '<span class="fff picture" title="Add Picture"></span>' +
                 '<span class="fff link" title="Add Link"></span>' +
                 '<span class="fff text_padding_bottom" title="Break lines"></span>' +
+                '<span class="fff flag_red" title="Translate"></span>' +
                 '<span class="fff eye" style="margin-left:40px" title="Preview"></span>' +
                 '<div style="float:right"><input type="checkbox" class="wrapCheck" ' + (wrap == '1' ? 'checked' : '') + '/> Wrap <input type="checkbox" class="nl2br" ' + (nl2br == '1' ? 'checked' : '') + '/> nl2br</div>' +
                 '</div>' +
@@ -278,6 +279,8 @@ var StringEdit = Class.create(); StringEdit.prototype = {
                 $(this).bind('click', function () { ths.aceEdit.insert('<a href="http://www.address.com" target="_blank">' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '</a>'); });
             if (img.className.indexOf('text_padding_bottom') > -1)
                 $(this).bind('click', function () { alert("not implemented yet"); });
+            if (img.className.indexOf('flag_red') > -1)
+                $(this).bind('click', function() { ths.aceEdit.insert('$=Provider.TR("' + ths.aceEdit.session.getTextRange(ths.aceEdit.getSelectionRange()) + '")$'); });
             if (img.className.indexOf('picture') > -1)
                 $(this).bind('click', function() {
                     openFileManager(null, function(path) {
