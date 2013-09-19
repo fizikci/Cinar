@@ -1,4 +1,5 @@
-﻿using Cinar.Database;
+﻿using System;
+using Cinar.Database;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
@@ -49,6 +50,16 @@ namespace Cinar.CMS.Library.Entities
             //return Provider.Items["_LANGS_"].ToString();
 
             return @"[['sq-AL','Albanian (Albania)'],['ar-SA','Arabic (Saudi Arabia)'],['hy-AM','Armenian (Armenia)'],['eu-ES','Basque (Basque)'],['bg-BG','Bulgarian (Bulgaria)'],['ca-ES','Catalan (Catalan)'],['zh-CN','Chinese (China)'],['hr-HR','Croatian (Croatia)'],['cs-CZ','Czech (Czech Republic)'],['da-DK','Danish (Denmark)'],['en-US','English (United States)'],['et-EE','Estonian (Estonia)'],['fi-FI','Finnish (Finland)'],['fr-FR','French (France)'],['ka-GE','Georgian (Georgia)'],['de-DE','German (Germany)'],['el-GR','Greek (Greece)'],['he-IL','Hebrew (Israel)'],['hi-IN','Hindi (India)'],['hr-BA','Hırvatça (Bosna-Hersek)'],['hu-HU','Hungarian (Hungary)'],['id-ID','Indonesian (Indonesia)'],['it-IT','Italian (Italy)'],['ja-JP','Japanese (Japan)'],['kk-KZ','Kazakh (Kazakhstan)'],['kn-IN','Kannada (India)'],['ko-KR','Korean (Korea)'],['ky-KG','Kyrgyz (Kyrgyzstan)'],['lt-LT','Lithuanian (Lithuania)'],['fa-IR','Persian (Iran)'],['pl-PL','Polish (Poland)'],['pt-PT','Portuguese (Portugal)'],['ro-RO','Romanian (Romania)'],['ru-RU','Russian (Russia)'],['es-ES','Spanish (Spain)'],['sv-SE','Swedish (Sweden)'],['th-TH','Thai (Thailand)'],['tr-TR','Turkish (Turkey)'],['uk-UA','Ukrainian (Ukraine)'],['vi-VN','Vietnamese (Vietnam)']]";
+        }
+
+        internal static string[] GetLangFullCodeAndName(string langCode)
+        {
+            string json = GetLangsJSON();
+            json = json.Substring(3, json.Length - 6);
+            foreach(string item in json.SplitWithTrim("'],['"))
+                if(item.StartsWith(langCode + "-"))
+                    return item.SplitWithTrim("','");
+            throw new Exception("lang code not found");
         }
     }
 }

@@ -366,7 +366,7 @@ var langRes = {};
 function lang(code){
     var str = langRes ? langRes[code] : null;
     if(str==null)
-        return (designMode?'? ':'') + code;
+        return code;
     return str;
 }
 

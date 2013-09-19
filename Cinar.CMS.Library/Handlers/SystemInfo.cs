@@ -6,6 +6,8 @@ using System.Text;
 using System.Collections;
 using System.Xml;
 using Cinar.CMS.Library.Modules;
+using Cinar.CMS.Library.Entities;
+using System.Web;
 
 //using System.IO;
 
@@ -130,6 +132,16 @@ namespace Cinar.CMS.Library.Handlers
                 case "createFolder":
                     {
                         createFolder();
+                        break;
+                    }
+                case "exportLocalization":
+                    {
+                        exportLocalization();
+                        break;
+                    }
+                case "importLocalization":
+                    {
+                        importLocalization();
                         break;
                     }
                 default:
@@ -418,6 +430,90 @@ namespace Cinar.CMS.Library.Handlers
             {
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Hata');</script>");
             }
+        }
+
+        private void exportLocalization()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            Lang def = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+            List<Lang> langs = Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0} order by Code", def.Id);
+            Provider.cacheResources();
+            List<StaticResource> cacheSR = (List<StaticResource>)HttpContext.Current.Cache["StaticResource"];
+            List<StaticResourceLang> cacheSRL = (List<StaticResourceLang>)HttpContext.Current.Cache["StaticResourceLang"];
+
+            sb.AppendFormat("<localization defaultLang=\"{0}\">\n", def.Code.Split('-')[0]);
+
+            foreach (StaticResource sr in cacheSR)
+            {
+                sb.AppendFormat("\t<entry phrase=\"{0}\">\n", Provider.Server.HtmlEncode(sr.Name));
+                foreach (Lang l in langs)
+                {
+                    int index = cacheSRL.BinarySearch(new StaticResourceLang { LangId = l.Id, StaticResourceId = sr.Id });
+                    if(index>-1)
+                        sb.AppendFormat("\t\t<lang name=\"{0}\">{1}</lang>\n", l.Code.Split('-')[0], Provider.Server.HtmlEncode(cacheSRL[index].Translation));
+                    else
+                        sb.AppendFormat("\t\t<lang name=\"{0}\"></lang>\n", l.Code.Split('-')[0]);
+                }
+                sb.Append("\t</entry>\n");
+            }
+
+            sb.Append("</localization>\n");
+
+            context.Response.Write(sb.ToString());
+        }
+        private void importLocalization()
+        {
+            string xmlData = context.Request["xmlData"];
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlData);
+
+            Provider.Database.Execute(() =>
+            {
+                Provider.Database.ExecuteNonQuery("truncate table StaticResourceLang;");
+                Provider.Database.ExecuteNonQuery("truncate table StaticResource;");
+
+                string[] defLangArr = Lang.GetLangFullCodeAndName(doc.FirstChild.Attributes["defaultLang"].Value);
+                Lang def = Provider.Database.Read<Lang>("Code={0}", defLangArr[0]);
+                if (def == null)
+                {
+                    def = new Lang { Name = defLangArr[1], Code = defLangArr[0] };
+                    def.Save();
+                }
+
+                Dictionary<string, Lang> langs = new Dictionary<string, Lang>();
+                foreach (XmlNode node in doc.FirstChild.FirstChild.ChildNodes)
+                {
+                    string langCode = node.Attributes["name"].Value;
+                    string[] langArr = Lang.GetLangFullCodeAndName(langCode);
+                    langs[langCode] = Provider.Database.Read<Lang>("Code={0}", langArr[0]);
+                    if (langs[langCode] == null)
+                    {
+                        langs[langCode] = new Lang { Name = langArr[1], Code = langArr[0] };
+                        langs[langCode].Save();
+                    }
+                }
+
+                foreach (XmlNode entry in doc.SelectNodes("/localization/entry"))
+                {
+                    var sr = new StaticResource { Name = entry.Attributes["phrase"].Value };
+                    sr.Save();
+
+                    foreach (XmlNode lang in entry.ChildNodes)
+                    {
+                        try
+                        {
+                            var srl = new StaticResourceLang { Translation = lang.InnerText, StaticResourceId = sr.Id, LangId = langs[lang.Attributes["name"].Value].Id };
+                            srl.Save();
+                        }
+                        catch { }
+                    }
+
+                }
+            });
+
+            context.Response.Write("OK");
         }
 
         #region import/export utility

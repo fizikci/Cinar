@@ -1031,10 +1031,7 @@ namespace Cinar.CMS.Library
             List<StaticResource> sr = null;
             List<StaticResourceLang> srl = null;
 
-            if (HttpContext.Current.Cache["StaticResource"] == null)
-                HttpContext.Current.Cache["StaticResource"] = Provider.Database.ReadList<StaticResource>("select * from StaticResource order by Name");
-            if (HttpContext.Current.Cache["StaticResourceLang"] == null)
-                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.ReadList<StaticResourceLang>("select * from StaticResourceLang order by LangId, StaticResourceId");
+            cacheResources();
 
             sr = (List<StaticResource>)HttpContext.Current.Cache["StaticResource"];
             srl = (List<StaticResourceLang>)HttpContext.Current.Cache["StaticResourceLang"];
@@ -1052,12 +1049,13 @@ namespace Cinar.CMS.Library
                     {
                         string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
                         Encoding resolvedEncoding = Encoding.UTF8;
-                        string translate = url.DownloadPage(ref resolvedEncoding);
+                        string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                        if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
                         StaticResourceLang newSRL = new StaticResourceLang
                         {
                             LangId = l.Id,
                             StaticResourceId = newSR.Id,
-                            Translation = translate.SplitWithTrim('"')[1]
+                            Translation = translate
                         };
                         newSRL.Save();
                         if (Provider.CurrentLanguage.Id == l.Id)
@@ -1072,10 +1070,39 @@ namespace Cinar.CMS.Library
             StaticResource srItem = sr[srIndex];
             int srlIndex = srl.BinarySearch(new StaticResourceLang { LangId = Provider.CurrentLanguage.Id, StaticResourceId = srItem.Id });
 
-            if (srlIndex > -1)
-                return srl[srlIndex].Translation;
+            if (srlIndex < 0) {
+                try
+                {
+                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                    Lang l = Provider.CurrentLanguage;
+                    string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                    Encoding resolvedEncoding = Encoding.UTF8;
+                    string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                    if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                    StaticResourceLang newSRL = new StaticResourceLang
+                    {
+                        LangId = l.Id,
+                        StaticResourceId = srItem.Id,
+                        Translation = translate
+                    };
+                    newSRL.Save();
+                    name = newSRL.Translation;
+                }
+                catch { }
 
-            return name;
+                return name;
+
+            }
+            else
+                return srl[srlIndex].Translation;
+        }
+
+        internal static void cacheResources()
+        {
+            if (HttpContext.Current.Cache["StaticResource"] == null)
+                HttpContext.Current.Cache["StaticResource"] = Provider.Database.ReadList<StaticResource>("select * from StaticResource order by Name");
+            if (HttpContext.Current.Cache["StaticResourceLang"] == null)
+                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.ReadList<StaticResourceLang>("select * from StaticResourceLang order by LangId, StaticResourceId");
         }
 
         public static string TranslateColumnName(string entityName, string columnName)
