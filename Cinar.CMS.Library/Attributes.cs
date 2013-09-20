@@ -10,6 +10,7 @@ namespace Cinar.CMS.Library
             Options = "";
             ControlType = ControlType.Undefined;
             Visible = true;
+            OrderNo = 100;
         }
 
         public bool Visible { get; set; }
