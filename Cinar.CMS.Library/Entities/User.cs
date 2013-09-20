@@ -170,7 +170,6 @@ namespace Cinar.CMS.Library.Entities
 
             this.Name = this.Name.Capitalize();
             this.Surname = this.Surname.Capitalize();
-            this.Company = this.Company.Capitalize();
 
             if (!isUpdate)
             {

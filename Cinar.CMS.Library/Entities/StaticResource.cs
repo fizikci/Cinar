@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Cinar.CMS.Library.Entities
 {
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name from [StaticResource]", QueryOrderBy = "Name")]
-    public class StaticResource : BaseEntity, IComparable<StaticResource>
+    public class StaticResource : BaseEntity
     {
         [ColumnDetail(IsNotNull=true), EditFormFieldProps(Options = "isHTML:false")]
         public string Name { get; set; }
@@ -19,18 +19,6 @@ namespace Cinar.CMS.Library.Entities
         public override string GetNameColumn()
         {
             return "Name";
-        }
-
-        protected override void afterSave(bool isUpdate)
-        {
-            base.afterSave(isUpdate);
-
-            HttpContext.Current.Cache.Remove("StaticResource");
-        }
-
-        public int CompareTo(StaticResource other)
-        {
-            return this.Name.CompareTo(other.Name);
         }
     }
 }

@@ -1028,19 +1028,19 @@ namespace Cinar.CMS.Library
             if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
                 return name;
 
-            List<StaticResource> sr = null;
-            List<StaticResourceLang> srl = null;
+            Dictionary<string, int> sr = null;
+            Dictionary<string, string> srl = null;
 
             cacheResources();
 
-            sr = (List<StaticResource>)HttpContext.Current.Cache["StaticResource"];
-            srl = (List<StaticResourceLang>)HttpContext.Current.Cache["StaticResourceLang"];
+            sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
+            srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
 
-            int srIndex = sr.BinarySearch(new StaticResource { Name = name });
-            if (srIndex < 0)
+            if (!sr.ContainsKey(name))
             {
                 StaticResource newSR = new StaticResource { Name = name };
                 newSR.Save();
+                sr[name] = newSR.Id;
 
                 try
                 {
@@ -1058,6 +1058,7 @@ namespace Cinar.CMS.Library
                             Translation = translate
                         };
                         newSRL.Save();
+                        srl[newSR.Id+"_"+newSRL.LangId] = newSRL.Translation;
                         if (Provider.CurrentLanguage.Id == l.Id)
                             name = newSRL.Translation;
                     }
@@ -1067,10 +1068,10 @@ namespace Cinar.CMS.Library
                 return name;
             }
 
-            StaticResource srItem = sr[srIndex];
-            int srlIndex = srl.BinarySearch(new StaticResourceLang { LangId = Provider.CurrentLanguage.Id, StaticResourceId = srItem.Id });
+            int srItem = sr[name];
 
-            if (srlIndex < 0) {
+            if (!srl.ContainsKey(srItem + "_" + Provider.CurrentLanguage.Id))
+            {
                 try
                 {
                     var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
@@ -1082,10 +1083,11 @@ namespace Cinar.CMS.Library
                     StaticResourceLang newSRL = new StaticResourceLang
                     {
                         LangId = l.Id,
-                        StaticResourceId = srItem.Id,
+                        StaticResourceId = srItem,
                         Translation = translate
                     };
                     newSRL.Save();
+                    srl[srItem + "_" + newSRL.LangId] = newSRL.Translation;
                     name = newSRL.Translation;
                 }
                 catch { }
@@ -1094,15 +1096,15 @@ namespace Cinar.CMS.Library
 
             }
             else
-                return srl[srlIndex].Translation;
+                return srl[srItem + "_" + Provider.CurrentLanguage.Id];
         }
 
         internal static void cacheResources()
         {
             if (HttpContext.Current.Cache["StaticResource"] == null)
-                HttpContext.Current.Cache["StaticResource"] = Provider.Database.ReadList<StaticResource>("select * from StaticResource order by Name");
+                HttpContext.Current.Cache["StaticResource"] = Provider.Database.GetDictionary<string,int>("select Name, Id from StaticResource");
             if (HttpContext.Current.Cache["StaticResourceLang"] == null)
-                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.ReadList<StaticResourceLang>("select * from StaticResourceLang order by LangId, StaticResourceId");
+                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string,string>("select concat(StaticResourceId,'_',LangId), Translation from StaticResourceLang");
         }
 
         public static string TranslateColumnName(string entityName, string columnName)
