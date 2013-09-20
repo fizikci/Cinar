@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Cinar.CMS.Library.Entities;
 using Cinar.Database;
+using Cinar.Scripting;
 
 
 namespace Cinar.CMS.Library.Modules
@@ -273,7 +274,11 @@ namespace Cinar.CMS.Library.Modules
             sb.Replace("{SiteName}", Provider.Configuration.SiteName);
             sb.Replace("{SiteAddress}", Provider.Configuration.SiteAddress);
 
-            return sb.ToString();
+            Interpreter engine = Provider.GetInterpreter(sb.ToString(), this);
+            engine.Parse();
+            engine.Execute();
+
+            return engine.Output;
         }
 
         protected override bool canBeCachedInternal()
@@ -289,9 +294,9 @@ namespace Cinar.CMS.Library.Modules
                         jQuery(function(){
                             var user_data = {};
                             _USERDATA_
-                            var elems = $('#fMembership').filter(':input');
+                            var elems = jQuery('#fMembership').filter(':input');
                             for(var i=0; i<elems.length; i++)
-                                $(elems[i]).val(user_data[$(elems[i]).attr('name')]);
+                                jQuery(elems[i]).val(user_data[jQuery(elems[i]).attr('name')]);
                         });
                         </script>");
 

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Cinar.CMS.Library.Entities
 {
-    public class StaticResourceLang : BaseEntity, IComparable<StaticResourceLang>
+    public class StaticResourceLang : BaseEntity
     {
         [ColumnDetail(IsNotNull = true, References = typeof(StaticResource)), EditFormFieldProps(ControlType = ControlType.LookUp)]
         public int StaticResourceId { get; set; }
@@ -37,21 +37,6 @@ namespace Cinar.CMS.Library.Entities
         public override string GetNameColumn()
         {
             return "Translation";
-        }
-
-        protected override void afterSave(bool isUpdate)
-        {
-            base.afterSave(isUpdate);
-
-            HttpContext.Current.Cache.Remove("StaticResourceLang");
-        }
-
-        public int CompareTo(StaticResourceLang other)
-        {
-            int res = LangId.CompareTo(other.LangId);
-            if (res == 0)
-                return StaticResourceId.CompareTo(other.StaticResourceId);
-            return res;
         }
     }
 

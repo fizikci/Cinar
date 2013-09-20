@@ -122,7 +122,7 @@ namespace Cinar.CMS.Library.Handlers
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                     sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
 
-                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1};</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang);
+                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}';</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0]);
 
 
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
