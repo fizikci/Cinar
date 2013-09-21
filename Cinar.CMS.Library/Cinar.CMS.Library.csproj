@@ -97,6 +97,7 @@
     <Compile Include="Entities\Content\ContentContent.cs" />
     <Compile Include="Entities\Content\SourceLang.cs" />
     <Compile Include="Entities\Content\Hit.cs" />
+    <Compile Include="Entities\UserSettings.cs" />
     <Compile Include="Entities\StaticResourceLang.cs" />
     <Compile Include="Entities\StaticResource.cs" />
     <Compile Include="Entities\SimpleBaseEntity.cs" />
