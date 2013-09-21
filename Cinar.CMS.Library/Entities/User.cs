@@ -239,5 +239,19 @@ namespace Cinar.CMS.Library.Entities
              return Provider.GetThumbPath(this.Avatar, width, height, cropPicture);
         }
 
+
+        public UserSettings Settings
+        {
+            get
+            {
+                var us = Provider.Database.Read<UserSettings>("UserId={0}", Provider.User.Id);
+                if (us == null)
+                {
+                    us = new UserSettings { UserId = Provider.User.Id};
+                    us.Save();
+                }
+                return us;
+            }
+        }
     }
 }
