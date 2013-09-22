@@ -1,6 +1,7 @@
 ﻿using System;
 using Cinar.Database;
 using System.Xml.Serialization;
+using System.Drawing;
 
 //using System.IO;
 
@@ -92,14 +93,24 @@ namespace Cinar.CMS.Library.Entities
             base.beforeSave(isUpdate);
 
             // resim gelmişse kaydedelim
-            if (Provider.Request.Files["FileNameFile"] != null && Provider.Request.Files["FileNameFile"].ContentLength > 0)
+            if (Provider.Request.Files["FileName"] != null && Provider.Request.Files["FileName"].ContentLength > 0)
             {
-                string picFileName = Provider.Request.Files["FileNameFile"].FileName;
+                string picFileName = Provider.Request.Files["FileName"].FileName;
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Provider.Request.Files["FileNameFile"].SaveAs(Provider.MapPath(imgUrl));
+                    Image bmp = Image.FromStream(Provider.Request.Files["FileName"].InputStream);
+                    if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                    {
+                        Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                        imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                    }
+                    else
+                        Provider.Request.Files["FileName"].SaveAs(Provider.MapPath(imgUrl));
                     this.FileName = imgUrl;
+
+                    Provider.DeleteThumbFiles(imgUrl);
                 }
             }
         }

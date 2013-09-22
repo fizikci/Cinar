@@ -8,10 +8,6 @@ namespace Cinar.CMS.Library.Entities
 {
     public abstract class BaseEntity : ObjectWithTags, IDatabaseEntity
     {
-        #region fields
-
-        #endregion
-
         public virtual void Initialize()
         {
         }

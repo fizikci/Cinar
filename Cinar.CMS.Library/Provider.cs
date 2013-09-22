@@ -1393,7 +1393,7 @@ namespace Cinar.CMS.Library
                 return "ERR: " + ex.Message;
             }
 
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + "_" + imageUrl.Replace("/","_");
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + (cropPicture?"_cr":"") + "_" + imageUrl.Replace("/","_");
             string thumbPath = Provider.MapPath(thumbUrl);
 
             if (!File.Exists(thumbPath) || File.GetLastWriteTime(path) > File.GetLastWriteTime(thumbPath))
@@ -1921,6 +1921,12 @@ namespace Cinar.CMS.Library
             }
 
             return url;
+        }
+
+        public static void DeleteThumbFiles(string urlPath)
+        {
+            foreach (string thumbFilePath in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + urlPath.Replace("/", "_")))
+                File.Delete(thumbFilePath);
         }
 
     }

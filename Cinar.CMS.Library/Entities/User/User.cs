@@ -4,6 +4,7 @@ using System.Text;
 using Cinar.Database;
 using System.Web;
 using System.Collections.Specialized;
+using System.IO;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
@@ -148,10 +149,12 @@ namespace Cinar.CMS.Library.Entities
                 if (String.IsNullOrEmpty(avatarDir))
                     throw new Exception(Provider.GetResource("Avatar folder is not specified in config file."));
                 if (!avatarDir.EndsWith("/")) avatarDir += "/";
-                string avatarUrlPath = avatarDir + this.Email + System.IO.Path.GetExtension(postedFile.FileName);
+                string avatarUrlPath = avatarDir + this.Email + Path.GetExtension(postedFile.FileName);
                 string avatarFilePath = Provider.MapPath(avatarUrlPath);
                 Provider.Request.Files["Avatar"].SaveAs(avatarFilePath);
                 this.Avatar = avatarUrlPath;
+
+                Provider.DeleteThumbFiles(avatarUrlPath);
             }
         }
 
@@ -182,6 +185,8 @@ namespace Cinar.CMS.Library.Entities
             }
             else {
                 this.Visible = true;
+                if (string.IsNullOrWhiteSpace(this.Password))
+                    this.Password = Provider.Database.GetString("select Password from User where Id={0}", this.Id);
             }
         }
 

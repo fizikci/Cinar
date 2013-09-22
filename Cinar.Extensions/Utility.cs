@@ -1324,7 +1324,7 @@ namespace System
         public static string ToJS(this object val)
         {
             if (val == null) return "null";
-            if (val.GetType().IsEnum) return "'" + Enum.GetName(val.GetType(), val) + "'";
+            if (val.GetType().IsEnum) return "\"" + Enum.GetName(val.GetType(), val) + "\"";
 
             switch (val.GetType().Name)
             {

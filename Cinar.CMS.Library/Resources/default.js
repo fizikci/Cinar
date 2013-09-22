@@ -1,6 +1,6 @@
 ﻿// on load
 $(function(){
-	if(currLang=='ar')
+	if(typeof(currLang)!='undefined' && currLang=='ar')
 		$('html').attr('dir', 'rtl');
 	// on body click find visible editors and hide if not the click is within
     $('html,body').on('mousedown', function(event){
