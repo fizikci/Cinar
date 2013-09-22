@@ -64,6 +64,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "Admin":
                     new Admin().ProcessRequest(context);
                     break;
+                case "Social":
+                    new Social().ProcessRequest(context);
+                    break;
                 case "RunModuleMethod":
                 case "DoLogin":
                 case "SaveMember":
