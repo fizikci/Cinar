@@ -299,13 +299,13 @@ namespace Cinar.CMS.Library.Entities
                 throw new Exception(Provider.GetResource("You should enter title"));
 
             // resim gelmişse kaydedelim
-            if (Provider.Request.Files["PictureFile"] != null && Provider.Request.Files["PictureFile"].ContentLength > 0)
+            if (Provider.Request.Files["Picture"] != null && Provider.Request.Files["Picture"].ContentLength > 0)
             {
-                string picFileName = Provider.Request.Files["PictureFile"].FileName;
+                string picFileName = Provider.Request.Files["Picture"].FileName;
                 if (!String.IsNullOrEmpty(picFileName))
                 {
                     string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
-                    Image bmp = Image.FromStream(Provider.Request.Files["PictureFile"].InputStream);
+                    Image bmp = Image.FromStream(Provider.Request.Files["Picture"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
                         Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
@@ -313,8 +313,30 @@ namespace Cinar.CMS.Library.Entities
                         bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
                     else
-                        Provider.Request.Files["PictureFile"].SaveAs(Provider.MapPath(imgUrl));
+                        Provider.Request.Files["Picture"].SaveAs(Provider.MapPath(imgUrl));
                     this.Picture = imgUrl;
+
+                    Provider.DeleteThumbFiles(imgUrl);
+                }
+            }
+            if (Provider.Request.Files["Picture2"] != null && Provider.Request.Files["Picture2"].ContentLength > 0)
+            {
+                string picFileName = Provider.Request.Files["Picture2"].FileName;
+                if (!String.IsNullOrEmpty(picFileName))
+                {
+                    string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
+                    Image bmp = Image.FromStream(Provider.Request.Files["Picture2"].InputStream);
+                    if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                    {
+                        Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                        imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                    }
+                    else
+                        Provider.Request.Files["Picture2"].SaveAs(Provider.MapPath(imgUrl));
+                    this.Picture2 = imgUrl;
+
+                    Provider.DeleteThumbFiles(imgUrl);
                 }
             }
 
@@ -422,6 +444,12 @@ namespace Cinar.CMS.Library.Entities
             if (this.Id == 1)
                 throw new Exception(Provider.GetResource("Root category cannot be deleted!"));
 
+            foreach (ContentContent cc in Provider.Database.ReadList(typeof(ContentContent), "select * from ContentContent where ParentContentId={0}", this.Id))
+            {
+                cc.ChildContent.Delete();
+                cc.Delete();
+            }
+
             foreach (ContentPicture cp in Provider.Database.ReadList(typeof(ContentPicture), "select * from ContentPicture where ContentId={0}", this.Id))
                 cp.Delete();
 
@@ -521,12 +549,22 @@ namespace Cinar.CMS.Library.Entities
         }
 
         [XmlIgnore]
-        [Description("Returns the child contents of this content.")]
+        [Description("Returns the sub contents of this content. (where CategoryId = this.Id)")]
         public List<Content> Contents
         {
             get
             {
                 return Provider.Database.ReadList<Content>("select * from Content where CategoryId={0}", this.Id);
+            }
+        }
+
+        [XmlIgnore]
+        [Description("Returns the child contents of this content.")]
+        public List<Content> ChildContents
+        {
+            get
+            {
+                return Provider.Database.ReadList<Content>("select * from Content where Id in (select ChildContentId from ContentContent where ParentContentId={0})", this.Id);
             }
         }
 

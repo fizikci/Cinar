@@ -137,9 +137,9 @@
 	position: absolute;
     background: #316AC5;
 
-	-moz-box-shadow: 3px 3px 4px black;
-	-webkit-box-shadow: 3px 3px 4px black;
-	box-shadow: 3px 3px 4px black;
+	-moz-box-shadow: 0px 0px 13px black;
+	-webkit-box-shadow: 0px 0px 13px black;
+	box-shadow: 0px 0px 13px black;
 	/* For IE 8 */
 	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='black')";
 	/* For IE 5.5 - 7 */

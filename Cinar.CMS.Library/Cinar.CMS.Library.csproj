@@ -97,7 +97,8 @@
     <Compile Include="Entities\Content\ContentContent.cs" />
     <Compile Include="Entities\Content\SourceLang.cs" />
     <Compile Include="Entities\Content\Hit.cs" />
-    <Compile Include="Entities\UserSettings.cs" />
+    <Compile Include="Entities\User\UserContact.cs" />
+    <Compile Include="Entities\User\UserSettings.cs" />
     <Compile Include="Entities\StaticResourceLang.cs" />
     <Compile Include="Entities\StaticResource.cs" />
     <Compile Include="Entities\SimpleBaseEntity.cs" />
@@ -132,7 +133,7 @@
     <Compile Include="Entities\Content\ContentTag.cs" />
     <Compile Include="Entities\Content\TagLang.cs" />
     <Compile Include="Entities\Content\Tag.cs" />
-    <Compile Include="Entities\UserRelatedEntity.cs" />
+    <Compile Include="Entities\User\UserRelatedEntity.cs" />
     <Compile Include="Entities\Poll\PollQuestionLang.cs" />
     <Compile Include="Entities\Poll\PollAnswerLang.cs" />
     <Compile Include="Entities\Content\ContentSource.cs" />
@@ -176,7 +177,7 @@
     <Compile Include="Entities\Content\Source.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Entities\NamedEntity.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\User\User.cs" />
     <Compile Include="Handlers\SystemInfo.cs" />
     <Compile Include="Handlers\EntityInfo.cs" />
     <Compile Include="Handlers\DoCommand.cs" />

@@ -151,6 +151,11 @@ namespace Cinar.CMS.Library.Handlers
                         editImageReset();
                         break;
                     }
+                case "addContacts":
+                    {
+                        addContacts();
+                        break;
+                    }
             }
         }
 
@@ -799,6 +804,41 @@ namespace Cinar.CMS.Library.Handlers
             }
             else
                 context.Response.Write("ERR: File not exist");
+        }
+
+        private void addContacts()
+        {
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
+            foreach (string email in emails)
+            {
+                try
+                {
+                    var u = Provider.Database.Read<User>("Email={0}", email);
+                    new UserContact { UserId = u.Id }.Save();
+                }
+                catch { }
+            }
+            Provider.Response.Write("ok");
+        }
+
+        private void inviteContacts()
+        {
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
+            foreach (string email in emails)
+            {
+                try
+                {
+                    Provider.SendMail(Provider.User.Email, email, Provider.User.FullName + " isimli kişiden davetiye", string.Format(@"
+Merhaba,<br/>
+<br/>
+Arkadaşın {0} seni bu siteye davet ediyor:<br/>
+<br/>
+http://{1}
+", Provider.User.FullName, Provider.Configuration.SiteAddress));
+                }
+                catch { }
+            }
+            Provider.Response.Write("ok");
         }
 
 
