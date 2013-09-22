@@ -32,6 +32,8 @@ namespace Cinar.CMS.Library.Entities
 
         public DateTime LastNotificationCheck { get; set; }
 
+        public DateTime LastPrivateMessageCheck { get; set; }
+
         public bool NeedsConfirmation { get; set; }
 
         public bool IsInfoHidden { get; set; }
