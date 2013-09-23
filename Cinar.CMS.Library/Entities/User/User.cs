@@ -244,6 +244,28 @@ namespace Cinar.CMS.Library.Entities
              return Provider.GetThumbPath(this.Avatar, width, height, cropPicture);
         }
 
+        protected override bool beforeDelete()
+        {
+            bool res = base.beforeDelete();
+            if (res)
+            {
+                List<ReportedUser> reports = Provider.Database.ReadList<ReportedUser>(FilterExpression.Where("UserId", CriteriaTypes.Eq, this.Id));
+                if(reports!=null)
+                    foreach (var report in reports)
+                        report.Delete();
+
+                List<UserContact> contacts = Provider.Database.ReadList<UserContact>(FilterExpression.Where("UserId", CriteriaTypes.Eq, this.Id));
+                if (contacts != null)
+                    foreach (var contact in contacts)
+                        contact.Delete();
+
+                UserSettings settings = Provider.Database.Read<UserSettings>("UserId={0}", this.Id);
+                if (settings != null)
+                    settings.Delete();
+
+            }
+            return true;
+        }
 
         public UserSettings Settings
         {

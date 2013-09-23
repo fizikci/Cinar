@@ -843,22 +843,32 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
     initialize: function (options) {
         var ths = this;
         options = Object.extend({
-            titleIcon: 'page',
+            titleIcon: 'none',
             title: 'Çınar Window',
             width: 950,
             height: 600,
             html: '',
             url: '',
-            position: 'center' // left, right
+            position: 'center', // left, right
+			resizable:         false,
+			closable:          true,
+			minimizable:       false,
+			maximizable:       false,
+			draggable:         true
         }, options || {});
 
         var winOptions = {
             className: 'alphacube',
-            title: '<span class="fff ' + options.titleIcon + '"></span> ' + options.title,
+            title: (options.titleIcon!='none' ? '<span class="fff ' + options.titleIcon + '"></span> ' : '') + options.title,
             width: options.width,
             height: options.height,
             wiredDrag: true,
-            destroyOnClose: true
+            destroyOnClose: true,
+			resizable: options.resizable,
+			closable:  options.closable,
+			minimizable: options.minimizable,
+			maximizable: options.maximizable,
+			draggable: options.draggable
         };
 
         switch (options.position) {
