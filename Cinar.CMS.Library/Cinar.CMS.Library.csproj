@@ -97,7 +97,9 @@
     <Compile Include="Entities\Content\ContentContent.cs" />
     <Compile Include="Entities\Content\SourceLang.cs" />
     <Compile Include="Entities\Content\Hit.cs" />
+    <Compile Include="Entities\Message\PrivateLastMessage.cs" />
     <Compile Include="Entities\Message\PrivateMessage.cs" />
+    <Compile Include="Entities\User\ReportedUser.cs" />
     <Compile Include="Entities\User\UserContact.cs" />
     <Compile Include="Entities\User\UserSettings.cs" />
     <Compile Include="Entities\StaticResourceLang.cs" />

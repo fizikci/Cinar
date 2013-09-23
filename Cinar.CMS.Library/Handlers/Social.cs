@@ -31,10 +31,7 @@ namespace Cinar.CMS.Library.Handlers
 
         public override void ProcessRequest()
         {
-            string path = context.Request.Url.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
-            string fileName = path.Substring(path.LastIndexOf('/') + 1);
-            fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
-            switch (fileName)
+            switch (context.Request["method"])
             {
                 case "sendMessage":
                     {
@@ -46,19 +43,31 @@ namespace Cinar.CMS.Library.Handlers
                         getMessageCount();
                         break;
                     }
+                case "getLastMessages":
+                    {
+                        getLastMessages();
+                        break;
+                    }
                 case "getMessages":
                     {
-                        new NotImplementedException();
-                        break;
+                        throw new NotImplementedException();
                     }
                 case "setMessageRead":
                     {
-                        new NotImplementedException();
-                        break;
+                        throw new NotImplementedException();
                     }
                 case "deleteMessage":
                     {
-                        new NotImplementedException();
+                        throw new NotImplementedException();
+                    }
+                case "reportUser":
+                    {
+                        reportUser();
+                        break;
+                    }
+                default:
+                    {
+                        sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
                         break;
                     }
             }
@@ -82,6 +91,26 @@ namespace Cinar.CMS.Library.Handlers
             context.Response.Write(Provider.Database.GetInt("select * from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id));
         }
 
+        private void getLastMessages()
+        {
+            context.Response.Write(Provider.Database.ReadList<PrivateLastMessage>("select * from PrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id).ToJSON());
+        }
+
+        private void reportUser()
+        {
+            string nick = context.Request["nick"];
+            string reason = context.Request["reason"];
+            string reasonText = context.Request["reasonText"];
+
+            new ReportedUser
+            {
+                UserId = Provider.Database.Read<User>("Nick={0}", nick).Id,
+                Reason = reason,
+                ReasonText = reasonText
+            }.Save();
+
+            context.Response.Write("ok");
+        }
 
         //private string vx34ftd24()
         //{
