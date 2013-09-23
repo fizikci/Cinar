@@ -93,7 +93,8 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getLastMessages()
         {
-            context.Response.Write(Provider.Database.ReadList<PrivateLastMessage>("select * from PrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id).ToJSON());
+            var msgs = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id);
+            context.Response.Write(msgs.ToJSON());
         }
 
         private void reportUser()

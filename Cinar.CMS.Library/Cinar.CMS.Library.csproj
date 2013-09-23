@@ -130,6 +130,7 @@
     <Compile Include="Modules\Newspaper\ImageGallery.cs" />
     <Compile Include="Modules\Newspaper\Manset.cs" />
     <Compile Include="Modules\Newspaper\MansetByGrouping.cs" />
+    <Compile Include="Modules\Social\GoogleContacts.cs" />
     <Compile Include="StaticResources.cs" />
     <Compile Include="Template.cs">
     </Compile>

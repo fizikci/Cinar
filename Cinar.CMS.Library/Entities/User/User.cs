@@ -5,6 +5,7 @@ using Cinar.Database;
 using System.Web;
 using System.Collections.Specialized;
 using System.IO;
+using System.Drawing;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
@@ -150,8 +151,18 @@ namespace Cinar.CMS.Library.Entities
                     throw new Exception(Provider.GetResource("Avatar folder is not specified in config file."));
                 if (!avatarDir.EndsWith("/")) avatarDir += "/";
                 string avatarUrlPath = avatarDir + this.Email + Path.GetExtension(postedFile.FileName);
-                string avatarFilePath = Provider.MapPath(avatarUrlPath);
-                Provider.Request.Files["Avatar"].SaveAs(avatarFilePath);
+
+                Image bmp = Image.FromStream(Provider.Request.Files["Avatar"].InputStream);
+                if (bmp.Width > 100)
+                {
+                    Image bmp2 = bmp.ScaleImage(100, 0);
+                    avatarUrlPath = avatarUrlPath.Substring(0, avatarUrlPath.LastIndexOf('.')) + ".jpg";
+                    bmp2.SaveJpeg(Provider.MapPath(avatarUrlPath), Provider.Configuration.ThumbQuality);
+                }
+                else
+                    Provider.Request.Files["Avatar"].SaveAs(Provider.MapPath(avatarUrlPath));
+
+
                 this.Avatar = avatarUrlPath;
 
                 Provider.DeleteThumbFiles(avatarUrlPath);
