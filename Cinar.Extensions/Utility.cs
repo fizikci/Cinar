@@ -711,7 +711,13 @@ namespace System
         }
 
         #region download page with proper encoding
-        //private static Encoding e = null;
+        public static string DownloadPage(this string url)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                return wc.DownloadString(url);
+            }
+        }
         public static string DownloadPage(this string url, ref Encoding resolvedEncoding)
         {
             byte[] buffer = null;

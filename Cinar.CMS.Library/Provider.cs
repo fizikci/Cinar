@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
@@ -1450,6 +1451,7 @@ namespace Cinar.CMS.Library
         #endregion
 
         #region wrappers
+        [Description("Web config app settings")]
         public static NameValueCollection AppSettings
         {
             get
@@ -1457,6 +1459,7 @@ namespace Cinar.CMS.Library
                     return System.Web.Configuration.WebConfigurationManager.AppSettings;
             }
         }
+        [Description("Returns HttpContext.Current.Server")]
         public static HttpServerUtility Server
         {
             get
@@ -1464,6 +1467,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Server;
             }
         }
+        [Description("")]
         public static HttpRequest Request
         {
             get
@@ -1471,6 +1475,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Request;
             }
         }
+        [Description("")]
         public static HttpResponse Response
         {
             get
@@ -1478,6 +1483,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Response;
             }
         }
+        [Description("")]
         public static HttpSessionState Session
         {
             get
@@ -1485,14 +1491,17 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Session;
             }
         }
+        [Description("Returns HttpContext.Current.Items (item storage for request )")]
         public static IDictionary Items
         {
             get { return HttpContext.Current.Items; }
         }
+        [Description("Returns HttpContext.Current.Application")]
         public static HttpApplicationState Application
         {
             get { return HttpContext.Current.Application; }
         }
+        [Description("Returns HttpContext.Current.User")]
         public static IPrincipal ContextUser
         {
             get
@@ -1504,6 +1513,7 @@ namespace Cinar.CMS.Library
                 HttpContext.Current.User = value;
             }
         }
+        [Description("Returns local path of the url")]
         public static string MapPath(string path)
         {
             if (AppSettings.AllKeys.Contains("MapPathPrefix"))
@@ -1513,6 +1523,7 @@ namespace Cinar.CMS.Library
         #endregion
 
         #region SendMail
+        [Description("Sends mail with display names")]
         public static string SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message)
         {
             try
@@ -1545,14 +1556,17 @@ namespace Cinar.CMS.Library
                 return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
             }
         }
+        [Description("Sends mail from \"from\" to \"to\".")]
         public static string SendMail(string from, string to, string subject, string message)
         {
             return Provider.SendMail(from, from, to, to, subject, message);
         }
+        [Description("Sends mail to the parameter \"to\".")]
         public static string SendMail(string to, string subject, string message)
         {
             return Provider.SendMail(null, null, to, to, subject, message);
         }
+        [Description("Sends mail to Configuration.Email")]
         public static string SendMail(string subject, string message)
         {
             return Provider.SendMail(null, null, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, subject, message);
@@ -1726,6 +1740,28 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
+        [Description("Builds url with the query string parameters")]
+        public static string BuildUrl(string pageUrl, string paramName, string paramValue)
+        {
+            return BuildUrl(pageUrl, paramName, paramValue, "","");
+        }
+        [Description("Builds url with the query string parameters")]
+        public static string BuildUrl(string pageUrl, string paramName1, string paramValue1, string paramName2, string paramValue2)
+        {
+            if (string.IsNullOrWhiteSpace(pageUrl))
+                pageUrl = Provider.Request.RawUrl;
+
+            if (!pageUrl.StartsWith("http"))
+                pageUrl = "http://" + Provider.Configuration.SiteAddress + (pageUrl.StartsWith("/") ? "" : "/") + pageUrl;
+
+            CinarUriParser uriParser = new CinarUriParser(pageUrl);
+            uriParser.QueryPart[paramName1] = paramValue1;
+            if(!string.IsNullOrWhiteSpace(paramName2))
+                uriParser.QueryPart[paramName2] = paramValue2;
+
+            return uriParser.ToString();
+        }
+
         public static string PostData(string url, Dictionary<string, string> data)
         {
             // Create a request using a URL that can receive a post.
@@ -1803,6 +1839,7 @@ namespace Cinar.CMS.Library
                 return "";
         }
 
+        [Description("Creates and saves log entry")]
         public static void Log(string logType, string category, string description)
         {
             Log log = new Log();
@@ -1812,6 +1849,7 @@ namespace Cinar.CMS.Library
             log.Save();
         }
 
+        [Description("Returns the interpreter for the given code by the template parameter")]
         public static Interpreter GetInterpreter(string template, object forThis)
         {
             Interpreter engine = new Interpreter(template, new List<string>() { "Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules", "Cinar.CMS.Library.Handlers" });
@@ -1833,6 +1871,7 @@ namespace Cinar.CMS.Library
             return engine;
         }
 
+        [Description("Returns human readable url of content")]
         public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
         {
             if (id == 1)
@@ -1852,6 +1891,7 @@ namespace Cinar.CMS.Library
                     id);
         }
 
+        [Description("Returns human readable url of content")]
         public static string GetPageUrl(string template, int contentId)
         {
             Content content = Provider.Database.Read<Entities.Content>(contentId);
@@ -1861,6 +1901,7 @@ namespace Cinar.CMS.Library
                 return "javascript:alert('No such content'); return false;";
         }
 
+        [Description("Reads exchange rates from http://www.tcmb.gov.tr/kurlar/today.xml")]
         public static ExchangeRate GetExchangeRates()
         {
             ExchangeRate res = Provider.Database.Read<ExchangeRate>("InsertDate >= {0}", DateTime.Now.Date);
@@ -1923,12 +1964,18 @@ namespace Cinar.CMS.Library
             return url;
         }
 
+        [Description("Deletes the thumb pictures of urlPath (/UserFiles/Images/foo/bar.jpg)")]
         public static void DeleteThumbFiles(string urlPath)
         {
             foreach (string thumbFilePath in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + urlPath.Replace("/", "_")))
                 File.Delete(thumbFilePath);
         }
 
+        [Description("Returns visitor location in JSON format")]
+        public static string GetVisitorLocation()
+        {
+            return "http://freegeoip.net/json/".DownloadPage();
+        }
     }
 
     public class CMSUtility
