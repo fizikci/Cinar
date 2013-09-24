@@ -209,7 +209,7 @@ var StringEdit = Class.create(); StringEdit.prototype = {
     showEditor: function(event) {
         var ths = this;
 
-        this.win = new CinarWindow({ title: ths.label });
+        this.win = new CinarWindow({ title: ths.label, maximizable:true });
         var list = this.win.getContent();
 
         var wrap = getCookie('wrap');

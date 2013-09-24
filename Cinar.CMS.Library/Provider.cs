@@ -29,6 +29,7 @@ namespace Cinar.CMS.Library
 {
     public class Provider
     {
+        [Description("Database reference"), Category("Database")]
         public static Database.Database Database
         {
             get
@@ -50,6 +51,7 @@ namespace Cinar.CMS.Library
             }
         }
 
+        [Browsable(false)]
         public static ControlType GetDefaultControlType(Cinar.Database.DbType dbType, PropertyInfo pi, ColumnDetailAttribute columnProps)
         {
             ControlType ct = ControlType.Undefined;
@@ -155,7 +157,6 @@ namespace Cinar.CMS.Library
 
             return ct;
         }
-
         public static string GetPropertyEditorJSON(object obj, bool addInvisibles)
         {
             StringBuilder sb = new StringBuilder();
@@ -186,9 +187,11 @@ namespace Cinar.CMS.Library
                     columnProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
-                if (caption.StartsWith(pi.DeclaringType.Name+".") && !Provider.DesignMode)
+                if (caption.StartsWith(pi.DeclaringType.Name+"."))
                     caption = pi.Name;
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
+                if (description.StartsWith(pi.DeclaringType.Name + "."))
+                    description = "";
 
                 string options = "";
                 if (columnProps.IsNotNull && !editProps.Options.Contains("required:")) options += ",required:true";
@@ -294,6 +297,7 @@ namespace Cinar.CMS.Library
 
             return propEditorJSON;
         }
+        [Browsable(false)]
         public static string ParseOptions(string options)
         {
             if (options.Contains("_LANGS_"))
@@ -334,6 +338,7 @@ namespace Cinar.CMS.Library
             return options;
         }
 
+        [Browsable(false)]
         public static Type GetType(string typeNamespace, string typeName)
         {
             Type type = Assembly.GetExecutingAssembly().GetType("Cinar.CMS.Library." + typeNamespace + "." + typeName, false, true);
@@ -416,6 +421,7 @@ namespace Cinar.CMS.Library
             return types;
         }
         private static Hashtable assemblies = new Hashtable();
+        [Browsable(false)]
         public static Assembly GetAssembly(string assemblyName)
         {
             if (assemblies[assemblyName] == null)
@@ -454,6 +460,7 @@ namespace Cinar.CMS.Library
             return sb.ToString();
         }
 
+        [Browsable(false)]
         public static void OnBeginRequest()
         {
             Provider.Response.Charset = "utf-8";
@@ -481,6 +488,7 @@ namespace Cinar.CMS.Library
             }
         }
 
+        [Description("Renames template (Foo.aspx => Bar.aspx")]
         public static bool DesignMode
         {
             get
@@ -519,12 +527,13 @@ namespace Cinar.CMS.Library
                 Provider.Session["User"] = value;
             }
         }
+        [Browsable(false)]
         public static void SetHttpContextUser()
         {
             if (Provider.Session["User"] == null)
             {
-                Entities.User user = (Entities.User)Provider.Database.Read(typeof(Entities.User), "Email='anonim'");
-               Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
+                User user = (User)Provider.Database.Read(typeof(User), "Email='anonim'");
+                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
                 Provider.Session["User"] = user;
             }
             else
@@ -858,6 +867,7 @@ namespace Cinar.CMS.Library
         {
             return GetTemplate((Content)Provider.Database.Read(typeof(Content), id), moduleTemplate);
         }
+        [Description("Deletes a template with the modules in it")]
         public static void DeleteTemplate(string template, bool clearTemplateReferences)
         {
             if (String.IsNullOrEmpty(template))
@@ -894,6 +904,7 @@ namespace Cinar.CMS.Library
                 throw ex;
             }
         }
+        [Description("Copies a templates with all the modules in it (Foo.aspx => Bar.aspx")]
         public static bool CopyTemplate(string template, string newName)
         {
             try
@@ -918,6 +929,7 @@ namespace Cinar.CMS.Library
                 throw ex;
             }
         }
+        [Description("Renames template (Foo.aspx => Bar.aspx")]
         public static bool RenameTemplate(string template, string newName)
         {
             try
@@ -954,6 +966,7 @@ namespace Cinar.CMS.Library
             return parentCat.Hierarchy + (String.IsNullOrEmpty(parentCat.Hierarchy) ? "" : ",") + parentCat.Id.ToString().PadLeft(5, '0');
         }
 
+        [Description("Translates entities")]
         public static IDatabaseEntity[] Translate(IDatabaseEntity[] entities)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || entities == null || entities.Length == 0)
@@ -988,10 +1001,12 @@ namespace Cinar.CMS.Library
 
             return entities;
         }
+        [Description("Translates entities")]
         public static IDatabaseEntity[] Translate(IList entities)
         {
             return Translate(entities.OfType<IDatabaseEntity>().ToArray());
         }
+        [Description("Translates datatable")]
         public static void Translate(string entityName, DataTable dt)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)
@@ -1024,6 +1039,7 @@ namespace Cinar.CMS.Library
                     }
             }
         }
+        [Description("Returns the translation of phrase from default language to the current language. First looks at cache, if not found uses Google to translate and writes it to database and caches.")]
         public static string TR(string name) 
         {
             if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
@@ -1108,6 +1124,7 @@ namespace Cinar.CMS.Library
                 HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string,string>("select concat(StaticResourceId,'_',LangId), Translation from StaticResourceLang");
         }
 
+        [Description("Translates entity column name")]
         public static string TranslateColumnName(string entityName, string columnName)
         {
             string columnTitle = "";
@@ -1136,46 +1153,17 @@ namespace Cinar.CMS.Library
         }
 
         #region Resource
-        /*
-        private static Hashtable _resources = new Hashtable();
-        public static Hashtable StaticResources(string lang)
-        {
-            if (_resources[lang] != null)
-                return (Hashtable)_resources[lang];
-
-            Hashtable ht = new Hashtable();
-
-            //try
-            //{
-            //    XmlDocument doc = new XmlDocument();
-            //    doc.Load(Provider.MapPath("/external/lang/" + lang + ".xml"));
-
-            //    foreach (XmlNode node in doc.SelectNodes("/resources/entry"))
-            //        ht[node.Attributes["key"].Value] = node.Attributes["value"].Value;
-            //}
-            //catch 
-            //{
- 
-            //}
-
-            _resources[lang] = ht;
-
-            return ht;
-        }
-        */
+        [Browsable(false)]
         public static string GetResource(string code, params object[] args)
         {
             string lang = CurrentCulture.Split('-')[0];
 
             string str = lang == "tr" ? (StaticResources.tr.ContainsKey(code) ? StaticResources.tr[code] : null) : (StaticResources.en.ContainsKey(code) ? StaticResources.en[code] : null);
 
-            if(Provider.DesignMode)
-                return str == null ? "? " + String.Format(code, args) : String.Format(str, args);
-            else
-                return str == null ? String.Format(code, args) : String.Format(str, args);
+            return str == null ? String.Format(code, args) : String.Format(str, args);
         }
-
         //TODO: Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
+        [Browsable(false)]
         public static string GetModuleResource(string code)
         {
             string lang = CurrentCulture.Split('-')[0];
@@ -1281,6 +1269,7 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
+        [Browsable(false)]
         public static string ReadStyles(List<Modules.Module> modules)
         {
             if (modules == null || modules.Count == 0)
@@ -1334,6 +1323,7 @@ namespace Cinar.CMS.Library
             dt = Provider.Database.ReadTable(entityType, sql, parameters);
             return dt;
         }
+        [Description("Returns the number of records for the entity. Where: 'CategoryId=1 AND TitlelikeHello%'")]
         public static int ReadListTotalCount(Type entityType, string where, object[] parameters)
         {
             string sql = "select count(*)  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
@@ -1357,6 +1347,7 @@ namespace Cinar.CMS.Library
                 String.IsNullOrEmpty(className) ? "" : (" class=\"" + className + "\""),
                 String.IsNullOrEmpty(extraAttributes) ? "" : " " + extraAttributes);
         }
+        [Description("Resizes image to specified dimensions and returns the thumb picture path")]
         public static string GetThumbPath(string imageUrl, int prefWidth, int prefHeight, bool cropPicture)
         {
             if (String.IsNullOrEmpty(imageUrl))
@@ -1447,7 +1438,6 @@ namespace Cinar.CMS.Library
             }
             return thumbUrl;
         }
-
         #endregion
 
         #region wrappers
@@ -1467,7 +1457,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Server;
             }
         }
-        [Description("")]
+        [Description("Returns HttpContext.Current.Request")]
         public static HttpRequest Request
         {
             get
@@ -1475,7 +1465,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Request;
             }
         }
-        [Description("")]
+        [Description("Returns HttpContext.Current.Response")]
         public static HttpResponse Response
         {
             get
@@ -1483,7 +1473,7 @@ namespace Cinar.CMS.Library
                 return HttpContext.Current.Response;
             }
         }
-        [Description("")]
+        [Description("Returns HttpContext.Current.Session")]
         public static HttpSessionState Session
         {
             get
@@ -1807,19 +1797,16 @@ namespace Cinar.CMS.Library
             return responseFromServer;
         }
 
-
         internal static IFormatProvider GetFormatProvider()
         {
 
             return System.Threading.Thread.CurrentThread.CurrentCulture;
         }
 
-
         public static string ToString(Exception ex, bool asHTML)
         {
             return Provider.ToString(ex, Provider.DesignMode, Provider.DevelopmentMode, asHTML);
         }
-
         public static string ToString(Exception ex, bool inDetail, bool withStackTrace, bool asHTML)
         {
             if (inDetail)
@@ -1890,7 +1877,6 @@ namespace Cinar.CMS.Library
                     contentTitle.MakeFileName().ToLowerInvariant(),
                     id);
         }
-
         [Description("Returns human readable url of content")]
         public static string GetPageUrl(string template, int contentId)
         {
@@ -1931,6 +1917,7 @@ namespace Cinar.CMS.Library
         }
 
         internal static Dictionary<Regex, string> routes = null;
+        [Browsable(false)]
         public static Dictionary<Regex, string> Routes
         {
             get
