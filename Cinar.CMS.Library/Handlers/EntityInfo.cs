@@ -118,6 +118,16 @@ namespace Cinar.CMS.Library.Handlers
                         getEntityDocs();
                         break;
                     }
+                case "getProviderDocs":
+                    {
+                        getProviderDocs();
+                        break;
+                    }
+                case "getUtilityDocs":
+                    {
+                        getUtilityDocs();
+                        break;
+                    }
                 default:
                     {
                         sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
@@ -568,7 +578,7 @@ namespace Cinar.CMS.Library.Handlers
 
                 sb.AppendFormat("<tr{4}><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>\n",
                     getShortName(pi.ReturnType),
-                    pi.Name,
+                    pi.Name + "(" + pi.GetParameters().Select(p => "<b>"+getShortName(p.ParameterType) + "</b> " + p.Name).StringJoin(", ") + ")",
                     pi.DeclaringType.Name,
                     desc.Description,
                     i % 2 == 0 ? "" : " class=\"odd\"");
@@ -610,5 +620,73 @@ namespace Cinar.CMS.Library.Handlers
             Provider.Response.Write(sb.ToString());
         }
 
+        private string getStaticClassDocs(Type type)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<h2>Static Properties</h2>");
+            sb.Append("<table>\n");
+            sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td></tr>\n",
+                "Name",
+                "Type",
+                "Description");
+
+            int i = 0;
+
+            foreach (PropertyInfo pi in type.GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                if (pi.Name == "Item") continue;
+                BrowsableAttribute b = pi.GetAttribute<BrowsableAttribute>();
+                if (b!=null && b.Browsable == false) continue;
+                DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
+
+                string caption = pi.Name;
+
+                sb.AppendFormat("<tr{3}><td>{0}</td><td>{1}</td><td>{2}</td></tr>\n",
+                    pi.Name,
+                    getShortName(pi.PropertyType),
+                    desc.Description,
+                    i % 2 == 0 ? "" : " class=\"odd\"");
+                i++;
+            }
+            sb.Append("</table>\n");
+
+            i = 0;
+
+            sb.Append("<h2>Static Methods</h2>");
+            sb.Append("<table>\n");
+            sb.AppendFormat("<tr class=\"header\"><td>{0}</td><td>{1}</td><td>{2}</td></tr>\n",
+                "Return Type",
+                "Name",
+                "Description");
+
+            foreach (MethodInfo pi in type.GetMethods(BindingFlags.Public | BindingFlags.Static))
+            {
+                if (pi.IsSpecialName) continue;
+                BrowsableAttribute b = pi.GetAttribute<BrowsableAttribute>();
+                if (b != null && b.Browsable == false) continue;
+                DescriptionAttribute desc = pi.GetAttribute<DescriptionAttribute>() ?? new DescriptionAttribute();
+
+                sb.AppendFormat("<tr{3}><td>{0}</td><td>{1}</td><td>{2}</td></tr>\n",
+                    getShortName(pi.ReturnType),
+                    pi.Name + "(" + pi.GetParameters().Select(p => "<b>" + getShortName(p.ParameterType) + "</b> " + p.Name).StringJoin(", ") + ")",
+                    desc.Description,
+                    i % 2 == 0 ? "" : " class=\"odd\"");
+                i++;
+            }
+            sb.Append("</table>\n");
+
+            return sb.ToString();
+        }
+
+        private void getProviderDocs()
+        {
+            Provider.Response.Write(getStaticClassDocs(typeof(Provider)));
+        }
+
+        private void getUtilityDocs()
+        {
+            Provider.Response.Write(getStaticClassDocs(typeof(Utility)));
+        }
     }
 }

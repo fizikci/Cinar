@@ -250,6 +250,30 @@
                     $('#contentPanel').append(html);
                 }
             }
+            else if (node.data == 'ref_provider') {
+                var h1 = $('#provider');
+                if (h1.length) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else {
+                    var html = '<h1 id="provider">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getProviderDocs' }) + "</div>";
+                    $('#contentPanel').append(html);
+                }
+            }
+            else if (node.data == 'ref_utility') {
+                var h1 = $('#utility');
+                if (h1.length) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else {
+                    var html = '<h1 id="utility">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getUtilityDocs' }) + "</div>";
+                    $('#contentPanel').append(html);
+                }
+            }
         }
 
     </script>

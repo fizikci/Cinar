@@ -903,7 +903,9 @@ namespace System
         {
             object[] attribs = mi.GetCustomAttributes(attributeType, true);
             object res = null;
-            if (attribs.Length > 0) res = attribs[0]; else res = attributeType.GetConstructor(Type.EmptyTypes).Invoke(null);
+            if (attribs.Length > 0) res = attribs[0]; 
+            else if(attributeType.GetConstructor(Type.EmptyTypes)!=null)
+                res = attributeType.GetConstructor(Type.EmptyTypes).Invoke(null);
             return res;
         }
         public static T GetAttribute<T>(this ICustomAttributeProvider mi)

@@ -340,7 +340,7 @@ popupMenu.menuItems = [
     {text:lang('Edit Tag'), icon: 'edit', isEnabled: tagLinkSelected, callback: editTag },
     {text:lang('Console'), icon: 'application_xp_terminal', callback: openConsole },
     {text:lang('Switch to View Mode'), icon: 'cup', callback: endDesignMode },
-    {text:lang('Help'), icon: 'help', callback: function () {new CinarWindow({titleIcon: 'help', title: 'Çınar CMS Documentation', width: 1100, height: 700, url: '/help.html.ashx', position:'left'});} }
+    {text:lang('Help'), icon: 'help', callback: function () {new CinarWindow({titleIcon: 'help', title: 'Çınar CMS Documentation', width: 1100, height: 700, maximizable:true, url: '/help.html.ashx', position:'left'});} }
 ];
 moduleTypes.each(function(mdlGrup, i){
     var items = popupMenu.menuItems[4].items;
