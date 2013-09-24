@@ -34,6 +34,10 @@ namespace Cinar.CMS.Library.Handlers
             string path = context.Request.Url.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
             string fileName = path.Substring(path.LastIndexOf('/') + 1);
             fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
+
+            if(fileName=="DoCommand")
+                fileName = Provider.Request["method"];
+
             switch (fileName)
             {
                 case "DoLogin":
@@ -154,6 +158,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "addContacts":
                     {
                         addContacts();
+                        break;
+                    }
+                case "getLocation":
+                    {
+                        getLocation();
                         break;
                     }
             }
@@ -841,6 +850,10 @@ http://{1}
             Provider.Response.Write("ok");
         }
 
+        private void getLocation() 
+        {
+            context.Response.Write(Provider.GetVisitorLocation());
+        }
 
         //private string vx34ftd24()
         //{

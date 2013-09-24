@@ -93,6 +93,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "EditImageReset":
                     new DoCommand().ProcessRequest(context);
                     break;
+                case "DoCommand":
+                    new DoCommand().ProcessRequest(context);
+                    break;
                 case "Console":
                     new Console().ProcessRequest(context);
                     break;
