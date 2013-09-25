@@ -29,6 +29,201 @@ namespace Cinar.CMS.Library
 {
     public class Provider
     {
+        [Description("The user who logged in. (This is the most used Provider poperty)")]
+        public static User User
+        {
+            get
+            {
+                if (Provider.Session["User"] == null)
+                    SetHttpContextUser();
+                return (User)Provider.Session["User"];
+            }
+            set
+            {
+                Provider.Session["User"] = value;
+            }
+        }
+        [Description("The content which the web site displays now. (This is also the most used Provider poperty)")]
+        public static Content Content
+        {
+            get
+            {
+                if (Provider.Items["item"] == null && Provider.Session["item"] != null)
+                {
+                    IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", Provider.Session["item"]);
+                    if (items == null)
+                        items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", 1);
+                    Provider.Translate(items);
+                    Provider.Items["item"] = (Content)(items.Length == 1 ? items[0] : null);
+                }
+                return (Content)Provider.Items["item"];
+            }
+            internal set
+            {
+                Provider.Items["item"] = value;
+                if (value != null && !value.Id.Equals(Provider.Session["item"]))
+                    Provider.Session["item"] = value.Id;
+            }
+        }
+        [Description("Returns the current active tag by using Request[\"tag\"] or Request[\"tagId\"] parameters")]
+        public static Tag Tag
+        {
+            get
+            {
+                if (Provider.Items["tag"] == null)
+                {
+                    if (!String.IsNullOrEmpty(Provider.Request["tagId"]))
+                    {
+                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Id={0}", Provider.Request["tagId"]);
+                        Provider.Translate(items);
+                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
+                    }
+                    else if (!String.IsNullOrEmpty(Provider.Request["tag"]))
+                    {
+                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]);
+                        Provider.Translate(items);
+                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
+                    }
+                    else
+                        return null;
+                }
+                return (Tag)Provider.Items["tag"];
+            }
+            internal set
+            {
+                Provider.Items["item"] = value;
+                if (value != null && !value.Id.Equals(Provider.Session["item"]))
+                    Provider.Session["item"] = value.Id;
+            }
+        }
+        [Description("Previous content which is in the same category")]
+        public static int PreviousContentId
+        {
+            get
+            {
+                if (Items["previousContentId"] == null)
+                {
+                    string tagSQL = "";
+                    if (Provider.Tag != null && Provider.Tag.Id > 0)
+                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = " + Provider.Tag.Id + ")";
+                    Items["previousContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id<{0} AND CategoryId={1} " + tagSQL + " order by Id desc", Content.Id, Content.CategoryId);
+                }
+                return (int)Items["previousContentId"];
+            }
+        }
+        [Description("Next content which is in the same category")]
+        public static int NextContentId
+        {
+            get
+            {
+                if (Items["nextContentId"] == null)
+                {
+                    string tagSQL = "";
+                    if (Provider.Tag != null && Provider.Tag.Id > 0)
+                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = " + Provider.Tag.Id + ")";
+                    Items["nextContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id>{0} AND CategoryId={1} " + tagSQL + " order by Id", Content.Id, Content.CategoryId);
+                }
+                return (int)Items["nextContentId"];
+            }
+        }
+        [Description("The current language and culture code. (like en-US, tr-TR)")]
+
+        public static string CurrentCulture
+        {
+            get
+            {
+                string lang = (string)Provider.Session["currentCulture"];
+
+                if (lang == null)
+                {
+                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", Provider.Configuration.DefaultLang);
+                    if (lang == null)
+                    {
+                        Provider.Session["currentCulture"] = "tr-TR";
+                        throw new Exception(Provider.GetResource("There is no language record in Lang table with id {0}", Provider.Configuration.DefaultLang));
+                    }
+                    else
+                        Provider.Session["currentCulture"] = lang;
+                }
+                return lang;
+            }
+            internal set
+            {
+                if (Provider.Session != null)
+                    Provider.Session["currentCulture"] = value;
+            }
+        }
+        [Description("The current language entity")]
+        public static Lang CurrentLanguage
+        {
+            get
+            {
+                if (Provider.Items["currentLang"] == null)
+                    Provider.Items["currentLang"] = Provider.Database.Read(typeof(Lang), "Code={0}", CurrentCulture);
+                return (Lang)Provider.Items["currentLang"];
+            }
+        }
+        private static Configuration configuration;
+        [Description("Configuration settings. Especially you may need SiteName and SiteAddress properties")]
+        public static Configuration Configuration
+        {
+            get
+            {
+                if (configuration == null)
+                    configuration = Configuration.Read();
+                return configuration;
+            }
+            set
+            {
+                configuration = null;
+            }
+        }
+
+        [Description("Is the application in design mode?")]
+        public static bool DesignMode
+        {
+            get
+            {
+                // Editör giriş yaptıktan sonra design moda geçmek için bir butona tıklıyor
+                // DesignMode'dan çıkmak için aynı butona bir daha tıklıyor. Bu arada mode bool bir değer olarak session'da saklanıyor.
+                return Provider.User.IsInRole("Designer") && Provider.Session["DesignMode"] != null && (bool)Provider.Session["DesignMode"];
+            }
+            set
+            {
+                Provider.Session["DesignMode"] = value;
+            }
+        }
+        [Description("Is ShowExecutionTime=1 query string param set? Then process time of all modules written in the html output.")]
+        public static bool ShowExecutionTime
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(Provider.Request["ShowExecutionTime"]);
+            }
+        }
+        [Description("When development mode is on, the html output is more verbose for the developer. It's set from web.config.")]
+        public static bool DevelopmentMode
+        {
+            get
+            {
+                return AppSettings["developmentMode"] == "true";
+            }
+        }
+        [Browsable(false)]
+        public static void SetHttpContextUser()
+        {
+            if (Provider.Session["User"] == null)
+            {
+                User user = (User)Provider.Database.Read(typeof(User), "Email='anonim'");
+                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
+                Provider.Session["User"] = user;
+            }
+            else
+            {
+                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(Provider.User.Email), Provider.User.Roles.Split(','));
+            }
+        }
+
         [Description("Database reference"), Category("Database")]
         public static Database.Database Database
         {
@@ -51,6 +246,1049 @@ namespace Cinar.CMS.Library
             }
         }
 
+        [Browsable(false)]
+        public static IDatabaseEntity[] GetIdNameList(string entityName, string extraWhere, string simpleWhere)
+        {
+            Type tip = Provider.GetEntityType(entityName);
+            BaseEntity sampleEntity = Provider.CreateEntity(entityName);
+
+            extraWhere = extraWhere.Replace("_nameField_", sampleEntity.GetNameColumn());
+
+            FilterParser filterParser = new FilterParser(extraWhere, entityName);
+            extraWhere = filterParser.GetWhere();
+
+            string where = "where " + (String.IsNullOrEmpty(simpleWhere) ? "1=1" : simpleWhere) + (String.IsNullOrEmpty(extraWhere) ? "" : " AND (" + extraWhere + ")");
+
+            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select Id, [" + sampleEntity.GetNameColumn() + "] from [" + entityName + "]" + where + " order by [" + sampleEntity.GetNameColumn() + "]", filterParser.GetParams());
+            return entities;
+        }
+        [Browsable(false)]
+        public static string GetIdNameListAsJson(string entityName, string extraWhere, string simpleWhere)
+        {
+            IDatabaseEntity[] entities = Provider.GetIdNameList(entityName, extraWhere, simpleWhere);
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[\n");
+            sb.Append("[0, '" + Provider.GetResource("Select") + "']\n");
+            for (int i = 0; i < entities.Length; i++)
+            {
+                IDatabaseEntity entity = entities[i];
+                sb.Append(",[" + entity.Id.ToJS() + "," + entity.GetNameValue().ToJS() + "]");
+
+            }
+            sb.Append("]");
+            return sb.ToString();
+        }
+        public static DataTable ReadList(Type entityType, int pageIndex, int limit, string orderBy, string where, object[] parameters)
+        {
+            DataTable dt = null;
+            string sql = "";
+            string orderByDefault = "Id desc";
+
+            ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)CMSUtility.GetAttribute(entityType, typeof(ListFormPropsAttribute));
+            if (!String.IsNullOrEmpty(listFormProps.QuerySelect))
+            {
+                sql = listFormProps.QuerySelect + " where 1=1 " + (String.IsNullOrEmpty(where) ? "" : ("and " + where));
+                if (!String.IsNullOrEmpty(listFormProps.QueryOrderBy)) orderByDefault = listFormProps.QueryOrderBy;
+            }
+            else
+            {
+                PropertyInfo stringProperty = entityType.GetProperty(typeof(string));
+                string propertyName = stringProperty == null ? "" : ", " + entityType.Name + "." + stringProperty.Name;
+                sql = "select Id" + propertyName + "  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
+            }
+
+            if (string.IsNullOrEmpty(orderBy) || orderBy.Trim() == "")
+                orderBy = orderByDefault;
+
+            //if (orderBy.Contains(" "))
+            //{
+            //    string[] parts = orderBy.Split(' ');
+            //    orderBy = "[" + parts[0].Trim('[', ']') + "] " + parts[1];
+            //}
+            //else
+            //    orderBy = "[" + orderBy.Trim().Trim('[', ']') + "]";
+
+            sql += " order by " + orderBy;
+
+            sql = Provider.Database.AddPagingToSQL(sql, limit, pageIndex);
+            //sql += " limit " + limit + " offset " + (limit * pageIndex);
+
+            dt = Provider.Database.ReadTable(entityType, sql, parameters);
+            return dt;
+        }
+        [Description("Returns the number of records for the entity. Where: 'CategoryId=1 AND TitlelikeHello%'")]
+        public static int ReadListTotalCount(Type entityType, string where, object[] parameters)
+        {
+            string sql = "select count(*)  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
+
+            return Provider.Database.GetInt(sql, parameters);
+        }
+
+        [Description("Translates entities")]
+        public static IDatabaseEntity[] Translate(IDatabaseEntity[] entities)
+        {
+            if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || entities == null || entities.Length == 0)
+                return entities; //*** aynı dil çevirmeye gerek yok.
+
+            string entityName = entities[0].GetType().Name;
+
+            if (Provider.Database.Tables[entityName + "Lang"] == null)
+                return entities; //*** dil tablosu yok
+
+            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
+            ArrayList alIds = new ArrayList();
+            Array.ForEach<IDatabaseEntity>(entities, delegate(IDatabaseEntity ent) { alIds.Add(ent.Id.ToString()); });
+            string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
+
+            DataTable dtLang = Provider.Database.GetDataTable("select * from " + entityName + "Lang where " + entityName + "Id in (" + ids + ") and LangId={0}", langId);
+
+            foreach (DataRow drLang in dtLang.Rows)
+            {
+                IDatabaseEntity relatedEntity = Array.Find<IDatabaseEntity>(entities, delegate(IDatabaseEntity ent) { return drLang[entityName + "Id"].Equals(ent.Id); });
+                if (relatedEntity == null)
+                    continue; //***
+                foreach (DataColumn dc in dtLang.Columns)
+                    if (dc.DataType == typeof(string))
+                    {
+                        PropertyInfo pi = relatedEntity.GetType().GetProperty(dc.ColumnName);
+                        if (pi == null || drLang.IsNull(dc) || drLang[dc].ToString() == "")
+                            continue; //***
+                        pi.SetValue(relatedEntity, drLang[dc], null);
+                    }
+            }
+
+            return entities;
+        }
+        [Description("Translates entities")]
+        public static IDatabaseEntity[] Translate(IList entities)
+        {
+            return Translate(entities.OfType<IDatabaseEntity>().ToArray());
+        }
+        [Description("Translates datatable")]
+        public static void Translate(string entityName, DataTable dt)
+        {
+            if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)
+                return; //*** aynı dil çevirmeye gerek yok.
+
+            if (Provider.Database.Tables[entityName + "Lang"] == null)
+                return; //*** dil tablosu yok
+
+            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
+            ArrayList alIds = new ArrayList();
+            foreach (DataRow dr in dt.Rows) { alIds.Add(dr["Id"].ToString()); }
+            string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
+
+            DataTable dtLang = Provider.Database.GetDataTable("select * from " + entityName + "Lang where " + entityName + "Id in (" + ids + ") and LangId={0}", langId);
+
+            foreach (DataRow drLang in dtLang.Rows)
+            {
+                DataRow relatedRow = null;
+                foreach (DataRow dr in dt.Rows)
+                    if (drLang[entityName + "Id"].Equals(dr["Id"]))
+                        relatedRow = dr;
+                if (relatedRow == null)
+                    continue; //***
+
+                foreach (DataColumn dc in dtLang.Columns)
+                    if (dc.DataType == typeof(string))
+                    {
+                        if (relatedRow.Table.Columns[dc.ColumnName] != null && !drLang.IsNull(dc) && drLang[dc].ToString() != "")
+                            relatedRow[dc.ColumnName] = drLang[dc];
+                    }
+            }
+        }
+        [Description("Returns the translation of phrase from default language to the current language. First looks at cache, if not found uses Google to translate and writes it to database and caches.")]
+        public static string TR(string name)
+        {
+            if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
+                return name;
+
+            Dictionary<string, int> sr = null;
+            Dictionary<string, string> srl = null;
+
+            cacheResources();
+
+            sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
+            srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
+
+            if (!sr.ContainsKey(name))
+            {
+                StaticResource newSR = new StaticResource { Name = name };
+                newSR.Save();
+                sr[name] = newSR.Id;
+
+                try
+                {
+                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                    foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
+                    {
+                        string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                        Encoding resolvedEncoding = Encoding.UTF8;
+                        string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                        if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                        StaticResourceLang newSRL = new StaticResourceLang
+                        {
+                            LangId = l.Id,
+                            StaticResourceId = newSR.Id,
+                            Translation = translate
+                        };
+                        newSRL.Save();
+                        srl[newSR.Id + "_" + newSRL.LangId] = newSRL.Translation;
+                        if (Provider.CurrentLanguage.Id == l.Id)
+                            name = newSRL.Translation;
+                    }
+                }
+                catch { }
+
+                return name;
+            }
+
+            int srItem = sr[name];
+
+            if (!srl.ContainsKey(srItem + "_" + Provider.CurrentLanguage.Id))
+            {
+                try
+                {
+                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                    Lang l = Provider.CurrentLanguage;
+                    string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                    Encoding resolvedEncoding = Encoding.UTF8;
+                    string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                    if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                    StaticResourceLang newSRL = new StaticResourceLang
+                    {
+                        LangId = l.Id,
+                        StaticResourceId = srItem,
+                        Translation = translate
+                    };
+                    newSRL.Save();
+                    srl[srItem + "_" + newSRL.LangId] = newSRL.Translation;
+                    name = newSRL.Translation;
+                }
+                catch { }
+
+                return name;
+
+            }
+            else
+                return srl[srItem + "_" + Provider.CurrentLanguage.Id];
+        }
+
+        internal static void cacheResources()
+        {
+            if (HttpContext.Current.Cache["StaticResource"] == null)
+                HttpContext.Current.Cache["StaticResource"] = Provider.Database.GetDictionary<string, int>("select Name, Id from StaticResource");
+            if (HttpContext.Current.Cache["StaticResourceLang"] == null)
+                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string, string>("select concat(StaticResourceId,'_',LangId), Translation from StaticResourceLang");
+        }
+
+        [Description("Translates entity column name")]
+        public static string TranslateColumnName(string entityName, string columnName)
+        {
+            string columnTitle = "";
+            if (columnName == "Id" || columnName.EndsWith(".Id"))
+                columnTitle = "Id";
+            else if (columnName == "Visible" || columnName.EndsWith(".Visible"))
+                columnTitle = Provider.GetResource("BaseEntity.Visible");
+            else if (columnName == "Name")
+                columnTitle = Provider.GetResource("NamedEntity.Name");
+            else if (columnName.EndsWith(".Name"))
+                columnTitle = Provider.GetResource(columnName.Split('.')[0]);
+            else
+            {
+                if (columnName.Contains("."))
+                    columnTitle = Provider.GetResource(columnName);
+                else
+                    columnTitle = Provider.GetResource(entityName + "." + columnName);
+                if (columnTitle.StartsWith("? "))
+                {
+                    if (columnName == "TCategoryId.Title")
+                        columnTitle = Provider.GetResource("Content.CategoryId");
+                    else
+                        columnTitle = columnName;
+                }
+            }
+            return columnTitle;
+        }
+
+        [Description("Returns default stylesheet for all the module types")]
+        public static string GetAllModulesDefaultCSS()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Type type in Provider.GetModuleTypes())
+            {
+                Modules.Module module = Provider.CreateModule(type);
+                module.Id = 1;
+                sb.Append(module.GetDefaultCSS().Replace("#", "div.").Replace("_1", "") + "\n");
+            }
+            return sb.ToString();
+        }
+
+        public static string GetTemplate(Content content, string moduleTemplate)
+        {
+            if (content == null) throw new ArgumentException(Provider.GetResource("Content parameter cannot be null!"));
+
+            if (content.ShowInPage != "")
+                return content.ShowInPage;
+
+            string template = null;
+
+            List<Content> dtCats = (List<Content>)Provider.Items["dtTemplate: " + content.Hierarchy];
+            if (dtCats == null)
+            {
+                dtCats = Provider.Database.ReadList<Content>("select ShowContentsInPage, ShowCategoriesInPage from Content where Id in (" + content.Hierarchy + ")");
+                Provider.Items["dtTemplate: " + content.Hierarchy] = dtCats;
+            }
+            for (int i = dtCats.Count - 1; i >= 0; i--)
+            {
+                Content drCat = dtCats[i];
+                if (content.ClassName == "Category")
+                {
+                    if (!String.IsNullOrWhiteSpace(drCat.ShowCategoriesInPage))
+                    {
+                        template = drCat.ShowCategoriesInPage;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (!String.IsNullOrWhiteSpace(drCat.ShowContentsInPage))
+                    {
+                        template = drCat.ShowContentsInPage;
+                        break;
+                    }
+                }
+
+            }
+
+            if (String.IsNullOrEmpty(template)) template = moduleTemplate;
+            if (String.IsNullOrEmpty(template)) template = content.ClassName == "Category" ? Provider.Configuration.CategoryPage : Provider.Configuration.ContentPage;
+            return template;
+        }
+        public static string GetTemplateById(int id, string moduleTemplate)
+        {
+            return GetTemplate((Content)Provider.Database.Read(typeof(Content), id), moduleTemplate);
+        }
+        [Description("Deletes a template with the modules in it")]
+        public static void DeleteTemplate(string template, bool clearTemplateReferences)
+        {
+            if (String.IsNullOrEmpty(template))
+                throw new Exception("Silinecek dosya adı belirtilmemiş.");
+            else if (template == "Default.aspx")
+                throw new Exception("Default.aspx silinemez.");
+
+            template = template.Trim();
+
+            Provider.Database.Begin();
+
+            // delete the page
+            Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
+            if(templateRec!=null)
+                templateRec.Delete();
+
+            // delete the modules
+            try
+            {
+                foreach (Modules.Module module in Modules.Module.Read(template))
+                    module.Delete();
+
+                if (clearTemplateReferences)
+                {
+                    Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", "", template);
+                    Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", "", template);
+                }
+
+                Provider.Database.Commit();
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                throw ex;
+            }
+        }
+        [Description("Copies a templates with all the modules in it (Foo.aspx => Bar.aspx")]
+        public static bool CopyTemplate(string template, string newName)
+        {
+            try
+            {
+                Provider.Database.Begin();
+                Modules.Module[] modules = Modules.Module.Read(template);
+                for (int i = 0; i < modules.Length; i++)
+                {
+                    modules[i].SaveACopyFor(newName);
+                }
+
+                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
+                templateRec.Id = 0;
+                templateRec.FileName = newName;
+                templateRec.Save();
+                Provider.Database.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                throw ex;
+            }
+        }
+        [Description("Renames template (Foo.aspx => Bar.aspx")]
+        public static bool RenameTemplate(string template, string newName)
+        {
+            try
+            {
+                Provider.Database.Begin();
+                Provider.Database.ExecuteNonQuery("update Module set Template={0} where Template={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", newName, template);
+                Provider.Database.ExecuteNonQuery("update Content set ShowCategoriesInPage={0} where ShowCategoriesInPage={1}", newName, template);
+
+                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
+                templateRec.FileName = newName;
+                templateRec.Save();
+
+                Provider.Database.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Provider.Database.Rollback();
+                throw ex;
+            }
+        }
+
+
+        public static string GetHierarchyLike(int parentCatId)
+        {
+            Content parentCat = (Content)Provider.Database.Read(typeof(Content), parentCatId);
+
+            return Provider.GetHierarchyLike(parentCat);
+        }
+        public static string GetHierarchyLike(Content parentCat)
+        {
+            return parentCat.Hierarchy + (String.IsNullOrEmpty(parentCat.Hierarchy) ? "" : ",") + parentCat.Id.ToString().PadLeft(5, '0');
+        }
+
+
+        #region Resource
+        [Browsable(false)]
+        public static string GetResource(string code, params object[] args)
+        {
+            string lang = CurrentCulture.Split('-')[0];
+
+            string str = lang == "tr" ? (StaticResources.tr.ContainsKey(code) ? StaticResources.tr[code] : null) : (StaticResources.en.ContainsKey(code) ? StaticResources.en[code] : null);
+
+            return str == null ? String.Format(code, args) : String.Format(str, args);
+        }
+        //TODO: Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
+        [Browsable(false)]
+        public static string GetModuleResource(string code)
+        {
+            string lang = CurrentCulture.Split('-')[0];
+
+            Hashtable ht = new Hashtable();
+
+            if (lang == "tr")
+            {
+                // Anket
+                ht["Vote"] = "Oyla";
+                // Sepet
+                ht["Product"] = "Ürün Adı";
+                ht["List Price"] = "Liste Fiyatı";
+                ht["Our Price"] = "Bizim Fiyatımız";
+                ht["Amount"] = "Miktar";
+                ht["Remove"] = "Sil";
+                ht["Subtotal"] = "Ara Toplam";
+                ht["Discount"] = "İndirim";
+                ht["VAT"] = "KDV";
+                ht["Grand Total"] = "Toplam Tutar";
+                ht["Update Basket"] = "Sepeti Güncelle";
+                ht["Empty Basket"] = "Sepeti Boşalt";
+                ht["Proceed To Checkout"] = "Satın Al";
+                // AuthorSourceDetailBase
+                ht["To send email"] = "E-Posta göndermek için";
+                ht["Work"] = "İş";
+                ht["Cell"] = "Cep";
+                // ContentTools
+                ht["Comment"] = "Yorum yaz";
+                ht["Feedback"] = "Editöre email";
+                ht["Print"] = "Yazdır";
+                ht["Recommend"] = "Tavsiye et";
+                ht["Recommendation from [name]"] = "[name] isimli arkadaşınızdan tavsiye";
+                ht["Your message has been sent"] = "Mesajınız iletildi. Teşekkür ederiz.";
+                ht["Your message couldn't be sent"] = "Mesaj gönderilemedi. Lütfen site yöneticisine bildiriniz.";
+                // Navigation
+                ht["Home Page"] = "Ana Sayfa";
+                // DataList
+                ht["Previous Page"] = "Önceki Sayfa";
+                ht["Next Page"] = "Sonraki Sayfa";
+                // Form
+                ht["Save"] = "Kaydet";
+                // FormField
+                ht["Delete"] = "Sil";
+                // LoginForm
+                ht["Sign up"] = "Üye olmak istiyorum";
+                ht["My profile"] = "Üyelik bilgilerim.";
+                ht["Forgot your password?"] = "Şifremi unuttum.";
+                ht["Welcome"] = "Hoşgeldiniz";
+                ht["E-Mail"] = "E-Posta";
+                ht["Password"] = "Şifre";
+                ht["Remember me"] = "Beni hatırla";
+                ht["Send activation code"] = "Aktivasyon kodunu gönder";
+                ht["Enter"] = "Giriş";
+                // PasswordForm
+                ht["Enter your email address and click send button. You will receive your special adress where you can change your password."] = "Şifrenizi sıfırlamak için üye olurken kullandığınız email adresinizi yazınız.";
+                ht["There isn't any user with the email address you entered. Please check."] = "Bu email adresine sahip bir kullanıcı yok. Lütfen adresinizi doğru yazdığınızdan emin olunuz.";
+                ht["Please change your password by using the address below"] = "Aşağıdaki linki kullanarak şifrenizi yenileyebilirsiniz.";
+                ht["Your Password"] = "Şifre hatırlatma";
+                ht["A message sent to your email address. Please read it."] = "Email adresinize mesaj gönderildi. Lütfen bu mesajda yazılanları uygulayınız.";
+                ht["Send"] = "Gönder";
+                // UserActivationForm
+                ht["Enter your email address and click send button. You will receive your activation code."] = "E-Posta adresinizi girip tamama basınız. Aktivasyon kodunuz e-posta adresinize gönderilecektir.";
+                ht["Please activate your membership by using the address below"] = "Aşağıdaki linki kullanarak üyeliğinizi aktifleştirebilirsiniz.";
+                ht["Membership activation"] = "Üyelik aktivasyon";
+                // ContactUs
+                ht["Your message has been sent. Thank you."] = "Teşekkür ederiz. Mesajınız iletildi.";
+                ht["Thank"] = "Teşekkür";
+                ht["Complaint"] = "Şikayet";
+                ht["Request"] = "Talep";
+                ht["Recommendation"] = "Tavsiye";
+                ht["Your Name"] = "Adınız";
+                ht["Your Email Address"] = "E-Posta adresiniz";
+                ht["Subject"] = "Konu";
+                ht["Your Message"] = "Mesajınız";
+                // GenericForm
+                ht["Your form has been sent. Thank you."] = "Teşekkür ederiz. Mesajınız iletildi";
+                ht["Date"] = "Tarih";
+                ht["User"] = "Kullanıcı";
+                ht["IP"] = "IP";
+                ht["Referrer"] = "Referrer";
+                ht["User Agent"] = "User Agent";
+                ht["A form submitted by site visitor"] = "Site ziyaretçisinden form";
+                // Comments
+                ht["Total {1} comment, {2} reply"] = "Toplam {1} yorum, {2} cevap";
+                ht["(Write comment)"] = "(Yorum yaz)";
+                ht["(Reply)"] = "(Cevapla)";
+                ht["reply"] = "cevap";
+
+                if(ht[code]==null)
+                    ht[code] = (Provider.DesignMode ? "?!! " :"") + code;
+            }
+            else if (lang == "en")
+            {
+                ht[code] = code;
+            }
+            else
+            {
+                ht[code] = "? " + code;
+            }
+
+            return (string)ht[code];
+        }
+        #endregion
+
+        [Browsable(false)]
+        public static string ReadStyles(List<Modules.Module> modules)
+        {
+            if (modules == null || modules.Count == 0)
+                return String.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            modules.ForEach(delegate(Modules.Module module)
+            {
+                sb.Append(module.CSS.Replace("}", "}\n") + "\n");
+                if (module is ModuleContainer)
+                    sb.Append(ReadStyles((module as ModuleContainer).ChildModules));
+            });
+            return sb.ToString();
+        }
+
+
+        #region GetThumbPath
+        public static string GetThumbImgHTML(string imageUrl, int prefWidth, int prefHeight, string title, string className, string extraAttributes, bool cropPicture)
+        {
+            string path = Provider.GetThumbPath(imageUrl, prefWidth, prefHeight, cropPicture);
+
+            if (path.StartsWith("ERR:"))
+                return path.Substring(5);
+
+            return String.Format("<img src=\"{0}\" border=\"0\"{1}{2}{3}{4}{5}/>",
+                path,
+                String.IsNullOrEmpty(title) ? "" : (" alt=\"" + CMSUtility.HtmlEncode(title) + "\""),
+                prefWidth > 0 ? " width=\"" + prefWidth + "\"" : "",
+                prefHeight > 0 ? " height=\"" + prefHeight + "\"" : "",
+                String.IsNullOrEmpty(className) ? "" : (" class=\"" + className + "\""),
+                String.IsNullOrEmpty(extraAttributes) ? "" : " " + extraAttributes);
+        }
+        [Description("Resizes image to specified dimensions and returns the thumb picture path")]
+        public static string GetThumbPath(string imageUrl, int prefWidth, int prefHeight, bool cropPicture)
+        {
+            if (String.IsNullOrEmpty(imageUrl))
+            {
+                imageUrl = Provider.Configuration.NoPicture;
+                if (String.IsNullOrEmpty(imageUrl))
+                    return "https://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/apps/sodipodi.png";
+                    //return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
+            }
+
+            if (!imageUrl.StartsWith("/")) imageUrl = "/" + imageUrl;
+            //if (!imageUrl.StartsWith(".")) imageUrl = "." + imageUrl;
+
+            if (prefWidth == 0 && prefHeight == 0)
+            {
+                prefWidth = 100;
+                prefHeight = 0;
+            }
+
+            if (prefWidth == -1 && prefHeight == -1)
+                return imageUrl;
+
+            string path = null;
+            try
+            {
+                path = Provider.MapPath(imageUrl);
+                if (!File.Exists(path))
+                {
+                    path = Provider.MapPath(Provider.Configuration.NoPicture);
+                    if (!File.Exists(path))
+                        return imageUrl;
+                }
+            }
+            catch (Exception ex) {
+                return "ERR: " + ex.Message;
+            }
+
+            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + (cropPicture?"_cr":"") + "_" + imageUrl.Replace("/","_");
+            string thumbPath = Provider.MapPath(thumbUrl);
+
+            if (!File.Exists(thumbPath) || File.GetLastWriteTime(path) > File.GetLastWriteTime(thumbPath))
+            {
+                if (path.EndsWith(".gif") && System.Utility.IsGifAnimated(path))
+                {
+                    File.Copy(path, thumbPath);
+                }
+                else
+                {
+                    Image orjImg = null, imgDest = null;
+                    try
+                    {
+                        // burada resize ediyoruz
+                        orjImg = Image.FromFile(path);
+                        if (prefWidth == 0)
+                            imgDest = orjImg.ScaleImage(0, prefHeight);
+                        else if (prefHeight == 0)
+                            imgDest = orjImg.ScaleImage(prefWidth, 0);
+                        else
+                        {
+                            double picRatio = (double)orjImg.Width / (double)orjImg.Height;
+                            double prefRatio = (double)prefWidth / (double)prefHeight;
+                            if (picRatio >= prefRatio)
+                            {
+                                imgDest = orjImg.ScaleImage(prefWidth, 0);
+                                int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
+                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                    imgDest = imgDest.CropImage(0, y, prefWidth, prefHeight);
+                            }
+                            else
+                            {
+                                imgDest = orjImg.ScaleImage(0, prefHeight);
+                                int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
+                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
+                                    imgDest = imgDest.CropImage(x, 0, prefWidth, prefHeight);
+                            }
+                        }
+                        imgDest.SaveImage(thumbPath, Provider.Configuration.ThumbQuality * 1L);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (orjImg != null) orjImg.Dispose();
+                        if (imgDest != null) imgDest.Dispose();
+                        return "ERR: " + ex.Message;
+                    }
+                    if (orjImg != null) orjImg.Dispose();
+                    if (imgDest != null) imgDest.Dispose();
+                }
+            }
+            return thumbUrl;
+        }
+        #endregion
+
+        #region wrappers
+        [Description("Web config app settings")]
+        public static NameValueCollection AppSettings
+        {
+            get
+            {
+                    return System.Web.Configuration.WebConfigurationManager.AppSettings;
+            }
+        }
+        [Description("Returns HttpContext.Current.Server")]
+        public static HttpServerUtility Server
+        {
+            get
+            {
+                return HttpContext.Current.Server;
+            }
+        }
+        [Description("Returns HttpContext.Current.Request")]
+        public static HttpRequest Request
+        {
+            get
+            {
+                return HttpContext.Current.Request;
+            }
+        }
+        [Description("Returns HttpContext.Current.Response")]
+        public static HttpResponse Response
+        {
+            get
+            {
+                return HttpContext.Current.Response;
+            }
+        }
+        [Description("Returns HttpContext.Current.Session")]
+        public static HttpSessionState Session
+        {
+            get
+            {
+                return HttpContext.Current.Session;
+            }
+        }
+        [Description("Returns HttpContext.Current.Items (item storage for request )")]
+        public static IDictionary Items
+        {
+            get { return HttpContext.Current.Items; }
+        }
+        [Description("Returns HttpContext.Current.Application")]
+        public static HttpApplicationState Application
+        {
+            get { return HttpContext.Current.Application; }
+        }
+        [Description("Returns HttpContext.Current.User")]
+        public static IPrincipal ContextUser
+        {
+            get
+            {
+                return HttpContext.Current.User;
+            }
+            set
+            {
+                HttpContext.Current.User = value;
+            }
+        }
+        [Description("Returns local path of the url")]
+        public static string MapPath(string path)
+        {
+            if (AppSettings.AllKeys.Contains("MapPathPrefix"))
+                path = AppSettings["MapPathPrefix"] + path;
+            return Provider.Server.MapPath(path);
+        }
+        #endregion
+
+        #region SendMail
+        [Description("Sends mail with display names")]
+        public static string SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message)
+        {
+            try
+            {
+                MailAddress _from = new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName);
+                MailAddress _to = new MailAddress(to, toDisplayName);
+                MailMessage mail = new MailMessage(_from, _to);
+                if (!String.IsNullOrEmpty(from))
+                    mail.ReplyToList.Add(new MailAddress(from, fromDisplayName));
+                mail.Subject = subject;
+                if (to != _from.Address)
+                    mail.Bcc.Add(new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName));
+                mail.IsBodyHtml = true;
+                mail.Body = message;
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = Provider.Configuration.MailHost;
+                smtp.Port = Provider.Configuration.MailPort;
+                if (!String.IsNullOrEmpty(Provider.Configuration.MailUsername) && !String.IsNullOrEmpty(Provider.Configuration.MailPassword))
+                {
+                    smtp.UseDefaultCredentials = false;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Credentials = new NetworkCredential(Provider.Configuration.MailUsername, Provider.Configuration.MailPassword);
+                }
+                smtp.Send(mail);
+                return "";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
+            }
+        }
+        [Description("Sends mail from \"from\" to \"to\".")]
+        public static string SendMail(string from, string to, string subject, string message)
+        {
+            return Provider.SendMail(from, from, to, to, subject, message);
+        }
+        [Description("Sends mail to the parameter \"to\".")]
+        public static string SendMail(string to, string subject, string message)
+        {
+            return Provider.SendMail(null, null, to, to, subject, message);
+        }
+        [Description("Sends mail to Configuration.Email")]
+        public static string SendMail(string subject, string message)
+        {
+            return Provider.SendMail(null, null, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, subject, message);
+        }
+        #endregion
+
+        [Description("Builds url with the query string parameters")]
+        public static string BuildUrl(string pageUrl, string paramName, string paramValue)
+        {
+            return BuildUrl(pageUrl, paramName, paramValue, "","");
+        }
+        [Description("Builds url with the query string parameters")]
+        public static string BuildUrl(string pageUrl, string paramName1, string paramValue1, string paramName2, string paramValue2)
+        {
+            if (string.IsNullOrWhiteSpace(pageUrl))
+                pageUrl = Provider.Request.RawUrl;
+
+            if (!pageUrl.StartsWith("http"))
+                pageUrl = "http://" + Provider.Configuration.SiteAddress + (pageUrl.StartsWith("/") ? "" : "/") + pageUrl;
+
+            CinarUriParser uriParser = new CinarUriParser(pageUrl);
+            uriParser.QueryPart[paramName1] = paramValue1;
+            if(!string.IsNullOrWhiteSpace(paramName2))
+                uriParser.QueryPart[paramName2] = paramValue2;
+
+            return uriParser.ToString();
+        }
+
+        public static string PostData(string url, Dictionary<string, string> data)
+        {
+            // Create a request using a URL that can receive a post.
+            WebRequest request = WebRequest.Create(url);
+            request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+
+            // Set the Method property of the request to POST.
+            request.Method = "POST";
+            // Create POST data and convert it to a byte array.
+            string postData = null;
+            foreach (string key in data.Keys)
+            {
+                if (!string.IsNullOrEmpty(postData)) postData += "&";
+                postData += key + "=" + HttpUtility.UrlEncode(Encoding.UTF8.GetBytes(data[key] ?? ""));
+            }
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            // Set the ContentType property of the WebRequest.
+            request.ContentType = "application/x-www-form-urlencoded";
+            // Set the ContentLength property of the WebRequest.
+            request.ContentLength = byteArray.Length;
+            // Get the request stream.
+            System.IO.Stream dataStream = request.GetRequestStream();
+            // Write the data to the request stream.
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            // Close the Stream object.
+            dataStream.Close();
+            // Get the response.
+            WebResponse response = request.GetResponse();
+            // Display the status.
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+            // Get the stream containing content returned by the server.
+            dataStream = response.GetResponseStream();
+            // Open the stream using a StreamReader for easy access.
+            System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
+            // Read the content.
+            string responseFromServer = reader.ReadToEnd();
+            // Display the content.
+            //Console.WriteLine(responseFromServer);
+            // Clean up the streams.
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+            return responseFromServer;
+        }
+
+        internal static IFormatProvider GetFormatProvider()
+        {
+
+            return System.Threading.Thread.CurrentThread.CurrentCulture;
+        }
+
+        public static string ToString(Exception ex, bool asHTML)
+        {
+            return Provider.ToString(ex, Provider.DesignMode, Provider.DevelopmentMode, asHTML);
+        }
+        public static string ToString(Exception ex, bool inDetail, bool withStackTrace, bool asHTML)
+        {
+            if (inDetail)
+            {
+                string message = ex.Message + "\n\n";
+                string trace = ex.StackTrace + "\n\n";
+
+                message = ex.InnerException == null ? message : ex.InnerException.Message + "\n\n";
+                trace = ex.InnerException == null ? trace : ex.InnerException.StackTrace;
+
+                string res = withStackTrace ? message + trace : message;
+                if (asHTML) res = res.Replace("\n", "<br/>");
+
+                return res;
+            }
+            else
+                return "";
+        }
+
+        [Description("Creates and saves log entry")]
+        public static void Log(string logType, string category, string description)
+        {
+            Log log = new Log();
+            log.LogType = logType;
+            log.Category = category;
+            log.Description = description;
+            log.Save();
+        }
+
+        [Description("Returns the interpreter for the given code by the template parameter")]
+        public static Interpreter GetInterpreter(string template, object forThis)
+        {
+            Interpreter engine = new Interpreter(template, new List<string>() { "Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules", "Cinar.CMS.Library.Handlers" });
+            engine.AddAssembly(typeof(Provider).Assembly);
+            engine.AddAssembly(typeof(Utility).Assembly);
+            if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
+                foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
+                {
+                    Assembly assembly = GetAssembly(customAssembly);
+                    if (assembly == null)
+                        continue;
+                    engine.AddAssembly(assembly);
+                }
+
+            engine.SetAttribute("Context", new ProviderWrapper());
+            engine.SetAttribute("this", forThis);
+            engine.SetAttribute("db", Provider.Database);
+
+            return engine;
+        }
+
+        [Description("Returns human readable url of content")]
+        public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
+        {
+            if (id == 1)
+                return "/" + Provider.Configuration.MainPage;
+
+            if (Provider.DesignMode)
+                return string.Format(
+                    "/{0}?item={1}",
+                    template,
+                    id);
+
+            return string.Format(
+                    "/{0}/{1}/{2}_{3}.aspx",
+                    template.Replace(".aspx", "").ToLowerInvariant(),
+                    categoryTitle.MakeFileName().ToLowerInvariant(),
+                    contentTitle.MakeFileName().ToLowerInvariant(),
+                    id);
+        }
+        [Description("Returns human readable url of content")]
+        public static string GetPageUrl(string template, int contentId)
+        {
+            Content content = Provider.Database.Read<Entities.Content>(contentId);
+            if (content != null)
+                return Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Category.Title, content.Title);
+            else
+                return "javascript:alert('No such content'); return false;";
+        }
+
+        [Description("Reads exchange rates from http://www.tcmb.gov.tr/kurlar/today.xml")]
+        public static ExchangeRate GetExchangeRates()
+        {
+            ExchangeRate res = Provider.Database.Read<ExchangeRate>("InsertDate >= {0}", DateTime.Now.Date);
+            if (res == null)
+            {
+                res = new ExchangeRate();
+
+                WebClient wc = new WebClient();
+                wc.Encoding = Encoding.UTF8;
+                string xml = wc.DownloadString("http://www.tcmb.gov.tr/kurlar/today.xml");
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xml);
+
+                foreach (XmlNode node in doc.SelectNodes("//Currency[ForexSelling>0]"))
+                {
+                    string name = node.Attributes["Kod"].Value;
+                    int fiyat = (int)(decimal.Parse(node.SelectSingleNode("ForexSelling").InnerText, CultureInfo.InvariantCulture.NumberFormat) * 1000);
+                    try
+                    {
+                        res.SetMemberValue(name, fiyat);
+                    }catch{}
+                }
+
+                res.Save();
+            }
+            return res;
+        }
+
+        internal static Dictionary<Regex, string> routes = null;
+        [Browsable(false)]
+        public static Dictionary<Regex, string> Routes
+        {
+            get
+            {
+                if (routes == null)
+                {
+                    routes = new Dictionary<Regex, string>();
+                    string[] lines = Provider.Configuration.Routes.Replace("\r", "").SplitWithTrim('\n');
+                    foreach (var line in lines)
+                    {
+                        string[] parts = line.SplitWithTrim("=>");
+                        if (!parts[0].StartsWith("^"))
+                            parts[0] = "^" + parts[0];
+                        if (!parts[0].EndsWith("$"))
+                            parts[0] = parts[0] + "$";
+                        routes.Add(new Regex(parts[0]), parts[1]);
+                    }
+                }
+                return routes;
+            }
+        }
+
+        public static string GetRewritePath(string url)
+        {
+            foreach (var item in Routes)
+            {
+                if (item.Key.IsMatch(url))
+                    return item.Key.Replace(url, item.Value);
+            }
+
+            return url;
+        }
+
+        [Description("Deletes the thumb pictures of urlPath (/UserFiles/Images/foo/bar.jpg)")]
+        public static void DeleteThumbFiles(string urlPath)
+        {
+            foreach (string thumbFilePath in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + urlPath.Replace("/", "_")))
+                File.Delete(thumbFilePath);
+        }
+
+        [Description("Returns visitor location in JSON format")]
+        public static string GetVisitorLocation()
+        {
+            return ("http://freegeoip.net/json/"+GetIPAddress()).DownloadPage();
+        }
+
+        [Description("Returns visitor IP address")]
+        public static string GetIPAddress()
+        {
+            System.Web.HttpContext context = System.Web.HttpContext.Current;
+
+            string ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                string[] addresses = ipAddress.Split(',');
+                if (addresses.Length != 0)
+                {
+                    return addresses[0];
+                }
+            }
+
+            return context.Request.ServerVariables["REMOTE_ADDR"];
+        }
+
+        #region reflection and other internal facility
         [Browsable(false)]
         public static ControlType GetDefaultControlType(Cinar.Database.DbType dbType, PropertyInfo pi, ColumnDetailAttribute columnProps)
         {
@@ -173,7 +1411,7 @@ namespace Cinar.CMS.Library
                     continue; //***
 
                 editProps.Category = editProps.Category ?? Provider.GetResource((pi.DeclaringType == typeof(NamedEntity) ? obj.GetType() : pi.DeclaringType).Name);
-                editProps.OrderNo = editProps.OrderNo>0 ? editProps.OrderNo : ctrlOrderNo++;
+                editProps.OrderNo = editProps.OrderNo > 0 ? editProps.OrderNo : ctrlOrderNo++;
 
                 ColumnDetailAttribute columnProps = (ColumnDetailAttribute)CMSUtility.GetAttribute(pi, typeof(ColumnDetailAttribute));
 
@@ -187,7 +1425,7 @@ namespace Cinar.CMS.Library
                     columnProps.ColumnType = DbType.Int32;
 
                 string caption = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name);
-                if (caption.StartsWith(pi.DeclaringType.Name+"."))
+                if (caption.StartsWith(pi.DeclaringType.Name + "."))
                     caption = pi.Name;
                 string description = Provider.GetResource(pi.DeclaringType.Name + "." + pi.Name + "Desc");
                 if (description.StartsWith(pi.DeclaringType.Name + "."))
@@ -428,37 +1666,6 @@ namespace Cinar.CMS.Library
                 assemblies[assemblyName] = Assembly.Load(assemblyName);
             return (Assembly)assemblies[assemblyName];
         }
-        
-        public static IDatabaseEntity[] GetIdNameList(string entityName, string extraWhere, string simpleWhere)
-        {
-            Type tip = Provider.GetEntityType(entityName);
-            BaseEntity sampleEntity = Provider.CreateEntity(entityName);
-
-            extraWhere = extraWhere.Replace("_nameField_", sampleEntity.GetNameColumn());
-
-            FilterParser filterParser = new FilterParser(extraWhere, entityName);
-            extraWhere = filterParser.GetWhere();
-
-            string where = "where " + (String.IsNullOrEmpty(simpleWhere) ? "1=1" : simpleWhere) + (String.IsNullOrEmpty(extraWhere) ? "" : " AND (" + extraWhere + ")");
-
-            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select Id, [" + sampleEntity.GetNameColumn() + "] from [" + entityName + "]" + where + " order by [" + sampleEntity.GetNameColumn() + "]", filterParser.GetParams());
-            return entities;
-        }
-        public static string GetIdNameListAsJson(string entityName, string extraWhere, string simpleWhere)
-        {
-            IDatabaseEntity[] entities = Provider.GetIdNameList(entityName, extraWhere, simpleWhere);
-            StringBuilder sb = new StringBuilder();
-            sb.Append("[\n");
-            sb.Append("[0, '" + Provider.GetResource("Select") + "']\n");
-            for (int i = 0; i < entities.Length; i++)
-            {
-                IDatabaseEntity entity = entities[i];
-                sb.Append(",[" + entity.Id.ToJS() + "," + entity.GetNameValue().ToJS() + "]");
-
-            }
-            sb.Append("]");
-            return sb.ToString();
-        }
 
         [Browsable(false)]
         public static void OnBeginRequest()
@@ -488,190 +1695,7 @@ namespace Cinar.CMS.Library
             }
         }
 
-        [Description("Renames template (Foo.aspx => Bar.aspx")]
-        public static bool DesignMode
-        {
-            get
-            {
-                // Editör giriş yaptıktan sonra design moda geçmek için bir butona tıklıyor
-                // DesignMode'dan çıkmak için aynı butona bir daha tıklıyor. Bu arada mode bool bir değer olarak session'da saklanıyor.
-                return Provider.User.IsInRole("Designer") && Provider.Session["DesignMode"] != null && (bool)Provider.Session["DesignMode"];
-            }
-            set
-            {
-                Provider.Session["DesignMode"] = value;
-            }
-        }
-        public static bool ShowExecutionTime
-        {
-            get {
-                return !string.IsNullOrWhiteSpace(Provider.Request["ShowExecutionTime"]);
-            }
-        }
-        public static bool DevelopmentMode
-        {
-            get {
-                return AppSettings["developmentMode"] == "true";
-            }
-        }
-        public static User User
-        {
-            get
-            {
-                if (Provider.Session["User"] == null)
-                    SetHttpContextUser();
-                return (User)Provider.Session["User"];
-            }
-            set
-            {
-                Provider.Session["User"] = value;
-            }
-        }
         [Browsable(false)]
-        public static void SetHttpContextUser()
-        {
-            if (Provider.Session["User"] == null)
-            {
-                User user = (User)Provider.Database.Read(typeof(User), "Email='anonim'");
-                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(user.Email), user.Roles.Split(','));
-                Provider.Session["User"] = user;
-            }
-            else
-            {
-                Provider.ContextUser = new GenericPrincipal(new GenericIdentity(Provider.User.Email), Provider.User.Roles.Split(','));
-            }
-        }
-        public static string CurrentCulture
-        {
-            get
-            {
-                string lang = (string)Provider.Session["currentCulture"];
-
-                if (lang == null)
-                {
-                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", Provider.Configuration.DefaultLang);
-                    if (lang == null)
-                    {
-                        Provider.Session["currentCulture"] = "tr-TR";
-                        throw new Exception(Provider.GetResource("There is no language record in Lang table with id {0}", Provider.Configuration.DefaultLang));
-                    }
-                    else
-                        Provider.Session["currentCulture"] = lang;
-                }
-                return lang;
-            }
-            internal set
-            {
-                if (Provider.Session != null)
-                    Provider.Session["currentCulture"] = value;
-            }
-        }
-        public static Lang CurrentLanguage 
-        {
-            get {
-                if (Provider.Items["currentLang"] == null)
-                    Provider.Items["currentLang"] = Provider.Database.Read(typeof(Lang), "Code={0}", CurrentCulture);
-                return (Lang)Provider.Items["currentLang"];
-            }
-        }
-        private static Configuration configuration;
-        public static Configuration Configuration
-        {
-            get
-            {
-                if (configuration == null)
-                    configuration = Configuration.Read();
-                return configuration;
-            }
-            set
-            {
-                configuration = null;
-            }
-        }
-        public static Content Content
-        {
-            get
-            {
-                if (Provider.Items["item"] == null && Provider.Session["item"] != null)
-                {
-                    IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", Provider.Session["item"]);
-                    if(items==null)
-                        items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", 1);
-                    Provider.Translate(items);
-                    Provider.Items["item"] = (Content)(items.Length == 1 ? items[0] : null);
-                }
-                return (Content)Provider.Items["item"];
-            }
-            internal set
-            {
-                Provider.Items["item"] = value;
-                if (value != null && !value.Id.Equals(Provider.Session["item"]))
-                    Provider.Session["item"] = value.Id;
-            }
-        }
-        public static int PreviousContentId
-        {
-            get
-            {
-                if (Items["previousContentId"] == null)
-                {
-                    string tagSQL = "";
-                    if (Provider.Tag != null && Provider.Tag.Id>0)
-                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = "+Provider.Tag.Id+")";
-                    Items["previousContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id<{0} AND CategoryId={1} " + tagSQL + " order by Id desc", Content.Id, Content.CategoryId);
-                }
-                return (int)Items["previousContentId"];
-            }
-        }
-        public static int NextContentId
-        {
-            get
-            {
-                if (Items["nextContentId"] == null)
-                {
-                    string tagSQL = "";
-                    if (Provider.Tag != null && Provider.Tag.Id > 0)
-                        tagSQL = " AND Id in (SELECT ContentId FROM ContentTag WHERE TagId = " + Provider.Tag.Id + ")";
-                    Items["nextContentId"] = Provider.Database.GetInt("select top 1 Id from Content where Id>{0} AND CategoryId={1} " + tagSQL + " order by Id", Content.Id, Content.CategoryId);
-                }
-                return (int)Items["nextContentId"];
-            }
-        }
-
-        /// <summary>
-        /// Request["tag"] veya Request["tagId"] parametrelerini kullanarak aktif tag'ı döndürür
-        /// </summary>
-        public static Tag Tag
-        {
-            get
-            {
-                if (Provider.Items["tag"] == null)
-                {
-                    if (!String.IsNullOrEmpty(Provider.Request["tagId"]))
-                    {
-                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Id={0}", Provider.Request["tagId"]);
-                        Provider.Translate(items);
-                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
-                    }
-                    else if (!String.IsNullOrEmpty(Provider.Request["tag"]))
-                    {
-                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]);
-                        Provider.Translate(items);
-                        Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
-                    }
-                    else
-                        return null;
-                }
-                return (Tag)Provider.Items["tag"];
-            }
-            internal set
-            {
-                Provider.Items["item"] = value;
-                if (value != null && !value.Id.Equals(Provider.Session["item"]))
-                    Provider.Session["item"] = value.Id;
-            }
-        }
-
         public static Content UploadContent()
         {
             try
@@ -766,6 +1790,7 @@ namespace Cinar.CMS.Library
             }
         }
 
+        [Browsable(false)]
         public static string BuildPath(string fileName, string specialFolder, bool useYearMonthDateFolders)
         {
             string subFolders = "";
@@ -785,15 +1810,18 @@ namespace Cinar.CMS.Library
             return Provider.AppSettings[specialFolder] + subFolders + "/" + fileName;
         }
 
+        [Browsable(false)]
         public static string GetRegionInnerHtml(string template, string region)
         {
             var modules = new List<Modules.Module>(Modules.Module.Read(template, region));
             return GetRegionInnerHtml(modules);
         }
+        [Browsable(false)]
         public static string GetRegionInnerHtml(List<Modules.Module> modules)
         {
             return Provider.GetRegionInnerHtml(modules, true);
         }
+        [Browsable(false)]
         public static string GetRegionInnerHtml(List<Modules.Module> modules, bool editable)
         {
             var sb = new StringBuilder();
@@ -809,761 +1837,10 @@ namespace Cinar.CMS.Library
 
             return sb.ToString();
         }
-
-        public static string GetAllModulesDefaultCSS()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (Type type in Provider.GetModuleTypes())
-            {
-                Modules.Module module = Provider.CreateModule(type);
-                module.Id = 1;
-                sb.Append(module.GetDefaultCSS().Replace("#", "div.").Replace("_1", "") + "\n");
-            }
-            return sb.ToString();
-        }
-
-        public static string GetTemplate(Content content, string moduleTemplate)
-        {
-            if (content == null) throw new ArgumentException(Provider.GetResource("Content parameter cannot be null!"));
-
-            if (content.ShowInPage != "")
-                return content.ShowInPage;
-
-            string template = null;
-
-            List<Content> dtCats = (List<Content>)Provider.Items["dtTemplate: " + content.Hierarchy];
-            if (dtCats == null)
-            {
-                dtCats = Provider.Database.ReadList<Content>("select ShowContentsInPage, ShowCategoriesInPage from Content where Id in (" + content.Hierarchy + ")");
-                Provider.Items["dtTemplate: " + content.Hierarchy] = dtCats;
-            }
-            for (int i = dtCats.Count - 1; i >= 0; i--)
-            {
-                Content drCat = dtCats[i];
-                if (content.ClassName == "Category")
-                {
-                    if (!String.IsNullOrWhiteSpace(drCat.ShowCategoriesInPage))
-                    {
-                        template = drCat.ShowCategoriesInPage;
-                        break;
-                    }
-                }
-                else
-                {
-                    if (!String.IsNullOrWhiteSpace(drCat.ShowContentsInPage))
-                    {
-                        template = drCat.ShowContentsInPage;
-                        break;
-                    }
-                }
-
-            }
-
-            if (String.IsNullOrEmpty(template)) template = moduleTemplate;
-            if (String.IsNullOrEmpty(template)) template = content.ClassName == "Category" ? Provider.Configuration.CategoryPage : Provider.Configuration.ContentPage;
-            return template;
-        }
-        public static string GetTemplateById(int id, string moduleTemplate)
-        {
-            return GetTemplate((Content)Provider.Database.Read(typeof(Content), id), moduleTemplate);
-        }
-        [Description("Deletes a template with the modules in it")]
-        public static void DeleteTemplate(string template, bool clearTemplateReferences)
-        {
-            if (String.IsNullOrEmpty(template))
-                throw new Exception("Silinecek dosya adı belirtilmemiş.");
-            else if (template == "Default.aspx")
-                throw new Exception("Default.aspx silinemez.");
-
-            template = template.Trim();
-
-            Provider.Database.Begin();
-
-            // delete the page
-            Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
-            if(templateRec!=null)
-                templateRec.Delete();
-
-            // delete the modules
-            try
-            {
-                foreach (Modules.Module module in Modules.Module.Read(template))
-                    module.Delete();
-
-                if (clearTemplateReferences)
-                {
-                    Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", "", template);
-                    Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", "", template);
-                }
-
-                Provider.Database.Commit();
-            }
-            catch (Exception ex)
-            {
-                Provider.Database.Rollback();
-                throw ex;
-            }
-        }
-        [Description("Copies a templates with all the modules in it (Foo.aspx => Bar.aspx")]
-        public static bool CopyTemplate(string template, string newName)
-        {
-            try
-            {
-                Provider.Database.Begin();
-                Modules.Module[] modules = Modules.Module.Read(template);
-                for (int i = 0; i < modules.Length; i++)
-                {
-                    modules[i].SaveACopyFor(newName);
-                }
-
-                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
-                templateRec.Id = 0;
-                templateRec.FileName = newName;
-                templateRec.Save();
-                Provider.Database.Commit();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Provider.Database.Rollback();
-                throw ex;
-            }
-        }
-        [Description("Renames template (Foo.aspx => Bar.aspx")]
-        public static bool RenameTemplate(string template, string newName)
-        {
-            try
-            {
-                Provider.Database.Begin();
-                Provider.Database.ExecuteNonQuery("update Module set Template={0} where Template={1}", newName, template);
-                Provider.Database.ExecuteNonQuery("update Content set ShowInPage={0} where ShowInPage={1}", newName, template);
-                Provider.Database.ExecuteNonQuery("update Content set ShowContentsInPage={0} where ShowContentsInPage={1}", newName, template);
-                Provider.Database.ExecuteNonQuery("update Content set ShowCategoriesInPage={0} where ShowCategoriesInPage={1}", newName, template);
-
-                Template templateRec = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", template);
-                templateRec.FileName = newName;
-                templateRec.Save();
-
-                Provider.Database.Commit();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Provider.Database.Rollback();
-                throw ex;
-            }
-        }
-
-
-        public static string GetHierarchyLike(int parentCatId)
-        {
-            Content parentCat = (Content)Provider.Database.Read(typeof(Content), parentCatId);
-
-            return Provider.GetHierarchyLike(parentCat);
-        }
-        public static string GetHierarchyLike(Content parentCat)
-        {
-            return parentCat.Hierarchy + (String.IsNullOrEmpty(parentCat.Hierarchy) ? "" : ",") + parentCat.Id.ToString().PadLeft(5, '0');
-        }
-
-        [Description("Translates entities")]
-        public static IDatabaseEntity[] Translate(IDatabaseEntity[] entities)
-        {
-            if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || entities == null || entities.Length == 0)
-                return entities; //*** aynı dil çevirmeye gerek yok.
-
-            string entityName = entities[0].GetType().Name;
-
-            if (Provider.Database.Tables[entityName + "Lang"] == null)
-                return entities; //*** dil tablosu yok
-
-            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
-            ArrayList alIds = new ArrayList();
-            Array.ForEach<IDatabaseEntity>(entities, delegate(IDatabaseEntity ent) { alIds.Add(ent.Id.ToString()); });
-            string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
-
-            DataTable dtLang = Provider.Database.GetDataTable("select * from " + entityName + "Lang where " + entityName + "Id in (" + ids + ") and LangId={0}", langId);
-
-            foreach (DataRow drLang in dtLang.Rows)
-            {
-                IDatabaseEntity relatedEntity = Array.Find<IDatabaseEntity>(entities, delegate(IDatabaseEntity ent) { return drLang[entityName + "Id"].Equals(ent.Id); });
-                if (relatedEntity == null)
-                    continue; //***
-                foreach (DataColumn dc in dtLang.Columns)
-                    if (dc.DataType == typeof(string))
-                    {
-                        PropertyInfo pi = relatedEntity.GetType().GetProperty(dc.ColumnName);
-                        if (pi == null || drLang.IsNull(dc) || drLang[dc].ToString()=="")
-                            continue; //***
-                        pi.SetValue(relatedEntity, drLang[dc], null);
-                    }
-            }
-
-            return entities;
-        }
-        [Description("Translates entities")]
-        public static IDatabaseEntity[] Translate(IList entities)
-        {
-            return Translate(entities.OfType<IDatabaseEntity>().ToArray());
-        }
-        [Description("Translates datatable")]
-        public static void Translate(string entityName, DataTable dt)
-        {
-            if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)
-                return; //*** aynı dil çevirmeye gerek yok.
-
-            if (Provider.Database.Tables[entityName + "Lang"] == null)
-                return; //*** dil tablosu yok
-
-            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
-            ArrayList alIds = new ArrayList();
-            foreach(DataRow dr in dt.Rows) { alIds.Add(dr["Id"].ToString()); }
-            string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
-
-            DataTable dtLang = Provider.Database.GetDataTable("select * from " + entityName + "Lang where " + entityName + "Id in (" + ids + ") and LangId={0}", langId);
-
-            foreach (DataRow drLang in dtLang.Rows)
-            {
-                DataRow relatedRow = null;
-                foreach(DataRow dr in dt.Rows)
-                    if(drLang[entityName + "Id"].Equals(dr["Id"]))
-                        relatedRow = dr;
-                if (relatedRow == null)
-                    continue; //***
-
-                foreach (DataColumn dc in dtLang.Columns)
-                    if (dc.DataType == typeof(string))
-                    {
-                        if (relatedRow.Table.Columns[dc.ColumnName] != null && !drLang.IsNull(dc) && drLang[dc].ToString() != "")
-                            relatedRow[dc.ColumnName] = drLang[dc];
-                    }
-            }
-        }
-        [Description("Returns the translation of phrase from default language to the current language. First looks at cache, if not found uses Google to translate and writes it to database and caches.")]
-        public static string TR(string name) 
-        {
-            if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
-                return name;
-
-            Dictionary<string, int> sr = null;
-            Dictionary<string, string> srl = null;
-
-            cacheResources();
-
-            sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
-            srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
-
-            if (!sr.ContainsKey(name))
-            {
-                StaticResource newSR = new StaticResource { Name = name };
-                newSR.Save();
-                sr[name] = newSR.Id;
-
-                try
-                {
-                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
-                    foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
-                    {
-                        string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
-                        Encoding resolvedEncoding = Encoding.UTF8;
-                        string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
-                        if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
-                        StaticResourceLang newSRL = new StaticResourceLang
-                        {
-                            LangId = l.Id,
-                            StaticResourceId = newSR.Id,
-                            Translation = translate
-                        };
-                        newSRL.Save();
-                        srl[newSR.Id+"_"+newSRL.LangId] = newSRL.Translation;
-                        if (Provider.CurrentLanguage.Id == l.Id)
-                            name = newSRL.Translation;
-                    }
-                }
-                catch { }
-
-                return name;
-            }
-
-            int srItem = sr[name];
-
-            if (!srl.ContainsKey(srItem + "_" + Provider.CurrentLanguage.Id))
-            {
-                try
-                {
-                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
-                    Lang l = Provider.CurrentLanguage;
-                    string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
-                    Encoding resolvedEncoding = Encoding.UTF8;
-                    string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
-                    if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
-                    StaticResourceLang newSRL = new StaticResourceLang
-                    {
-                        LangId = l.Id,
-                        StaticResourceId = srItem,
-                        Translation = translate
-                    };
-                    newSRL.Save();
-                    srl[srItem + "_" + newSRL.LangId] = newSRL.Translation;
-                    name = newSRL.Translation;
-                }
-                catch { }
-
-                return name;
-
-            }
-            else
-                return srl[srItem + "_" + Provider.CurrentLanguage.Id];
-        }
-
-        internal static void cacheResources()
-        {
-            if (HttpContext.Current.Cache["StaticResource"] == null)
-                HttpContext.Current.Cache["StaticResource"] = Provider.Database.GetDictionary<string,int>("select Name, Id from StaticResource");
-            if (HttpContext.Current.Cache["StaticResourceLang"] == null)
-                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string,string>("select concat(StaticResourceId,'_',LangId), Translation from StaticResourceLang");
-        }
-
-        [Description("Translates entity column name")]
-        public static string TranslateColumnName(string entityName, string columnName)
-        {
-            string columnTitle = "";
-            if (columnName == "Id" || columnName.EndsWith(".Id"))
-                columnTitle = "Id";
-            else if (columnName == "Visible" || columnName.EndsWith(".Visible"))
-                columnTitle = Provider.GetResource("BaseEntity.Visible");
-            else if (columnName == "Name")
-                columnTitle = Provider.GetResource("NamedEntity.Name");
-            else if (columnName.EndsWith(".Name"))
-                columnTitle = Provider.GetResource(columnName.Split('.')[0]);
-            else
-            {
-                if (columnName.Contains("."))
-                    columnTitle = Provider.GetResource(columnName);
-                else
-                    columnTitle = Provider.GetResource(entityName + "." + columnName);
-                if (columnTitle.StartsWith("? ")) {
-                    if (columnName == "TCategoryId.Title")
-                        columnTitle = Provider.GetResource("Content.CategoryId");
-                    else
-                        columnTitle = columnName;
-                }
-            }
-            return columnTitle;
-        }
-
-        #region Resource
-        [Browsable(false)]
-        public static string GetResource(string code, params object[] args)
-        {
-            string lang = CurrentCulture.Split('-')[0];
-
-            string str = lang == "tr" ? (StaticResources.tr.ContainsKey(code) ? StaticResources.tr[code] : null) : (StaticResources.en.ContainsKey(code) ? StaticResources.en[code] : null);
-
-            return str == null ? String.Format(code, args) : String.Format(str, args);
-        }
-        //TODO: Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
-        [Browsable(false)]
-        public static string GetModuleResource(string code)
-        {
-            string lang = CurrentCulture.Split('-')[0];
-
-            Hashtable ht = new Hashtable();
-
-            if (lang == "tr")
-            {
-                // Anket
-                ht["Vote"] = "Oyla";
-                // Sepet
-                ht["Product"] = "Ürün Adı";
-                ht["List Price"] = "Liste Fiyatı";
-                ht["Our Price"] = "Bizim Fiyatımız";
-                ht["Amount"] = "Miktar";
-                ht["Remove"] = "Sil";
-                ht["Subtotal"] = "Ara Toplam";
-                ht["Discount"] = "İndirim";
-                ht["VAT"] = "KDV";
-                ht["Grand Total"] = "Toplam Tutar";
-                ht["Update Basket"] = "Sepeti Güncelle";
-                ht["Empty Basket"] = "Sepeti Boşalt";
-                ht["Proceed To Checkout"] = "Satın Al";
-                // AuthorSourceDetailBase
-                ht["To send email"] = "E-Posta göndermek için";
-                ht["Work"] = "İş";
-                ht["Cell"] = "Cep";
-                // ContentTools
-                ht["Comment"] = "Yorum yaz";
-                ht["Feedback"] = "Editöre email";
-                ht["Print"] = "Yazdır";
-                ht["Recommend"] = "Tavsiye et";
-                ht["Recommendation from [name]"] = "[name] isimli arkadaşınızdan tavsiye";
-                ht["Your message has been sent"] = "Mesajınız iletildi. Teşekkür ederiz.";
-                ht["Your message couldn't be sent"] = "Mesaj gönderilemedi. Lütfen site yöneticisine bildiriniz.";
-                // Navigation
-                ht["Home Page"] = "Ana Sayfa";
-                // DataList
-                ht["Previous Page"] = "Önceki Sayfa";
-                ht["Next Page"] = "Sonraki Sayfa";
-                // Form
-                ht["Save"] = "Kaydet";
-                // FormField
-                ht["Delete"] = "Sil";
-                // LoginForm
-                ht["Sign up"] = "Üye olmak istiyorum";
-                ht["My profile"] = "Üyelik bilgilerim.";
-                ht["Forgot your password?"] = "Şifremi unuttum.";
-                ht["Welcome"] = "Hoşgeldiniz";
-                ht["E-Mail"] = "E-Posta";
-                ht["Password"] = "Şifre";
-                ht["Remember me"] = "Beni hatırla";
-                ht["Send activation code"] = "Aktivasyon kodunu gönder";
-                ht["Enter"] = "Giriş";
-                // PasswordForm
-                ht["Enter your email address and click send button. You will receive your special adress where you can change your password."] = "Şifrenizi sıfırlamak için üye olurken kullandığınız email adresinizi yazınız.";
-                ht["There isn't any user with the email address you entered. Please check."] = "Bu email adresine sahip bir kullanıcı yok. Lütfen adresinizi doğru yazdığınızdan emin olunuz.";
-                ht["Please change your password by using the address below"] = "Aşağıdaki linki kullanarak şifrenizi yenileyebilirsiniz.";
-                ht["Your Password"] = "Şifre hatırlatma";
-                ht["A message sent to your email address. Please read it."] = "Email adresinize mesaj gönderildi. Lütfen bu mesajda yazılanları uygulayınız.";
-                ht["Send"] = "Gönder";
-                // UserActivationForm
-                ht["Enter your email address and click send button. You will receive your activation code."] = "E-Posta adresinizi girip tamama basınız. Aktivasyon kodunuz e-posta adresinize gönderilecektir.";
-                ht["Please activate your membership by using the address below"] = "Aşağıdaki linki kullanarak üyeliğinizi aktifleştirebilirsiniz.";
-                ht["Membership activation"] = "Üyelik aktivasyon";
-                // ContactUs
-                ht["Your message has been sent. Thank you."] = "Teşekkür ederiz. Mesajınız iletildi.";
-                ht["Thank"] = "Teşekkür";
-                ht["Complaint"] = "Şikayet";
-                ht["Request"] = "Talep";
-                ht["Recommendation"] = "Tavsiye";
-                ht["Your Name"] = "Adınız";
-                ht["Your Email Address"] = "E-Posta adresiniz";
-                ht["Subject"] = "Konu";
-                ht["Your Message"] = "Mesajınız";
-                // GenericForm
-                ht["Your form has been sent. Thank you."] = "Teşekkür ederiz. Mesajınız iletildi";
-                ht["Date"] = "Tarih";
-                ht["User"] = "Kullanıcı";
-                ht["IP"] = "IP";
-                ht["Referrer"] = "Referrer";
-                ht["User Agent"] = "User Agent";
-                ht["A form submitted by site visitor"] = "Site ziyaretçisinden form";
-                // Comments
-                ht["Total {1} comment, {2} reply"] = "Toplam {1} yorum, {2} cevap";
-                ht["(Write comment)"] = "(Yorum yaz)";
-                ht["(Reply)"] = "(Cevapla)";
-                ht["reply"] = "cevap";
-
-                if(ht[code]==null)
-                    ht[code] = (Provider.DesignMode ? "?!! " :"") + code;
-            }
-            else if (lang == "en")
-            {
-                ht[code] = code;
-            }
-            else
-            {
-                ht[code] = "? " + code;
-            }
-
-            return (string)ht[code];
-        }
-        #endregion
-
-        [Browsable(false)]
-        public static string ReadStyles(List<Modules.Module> modules)
-        {
-            if (modules == null || modules.Count == 0)
-                return String.Empty;
-
-            StringBuilder sb = new StringBuilder();
-            modules.ForEach(delegate(Modules.Module module)
-            {
-                sb.Append(module.CSS.Replace("}", "}\n") + "\n");
-                if (module is ModuleContainer)
-                    sb.Append(ReadStyles((module as ModuleContainer).ChildModules));
-            });
-            return sb.ToString();
-        }
-
-        public static DataTable ReadList(Type entityType, int pageIndex, int limit, string orderBy, string where, object[] parameters)
-        {
-            DataTable dt = null;
-            string sql = "";
-            string orderByDefault = "Id desc";
-
-            ListFormPropsAttribute listFormProps = (ListFormPropsAttribute)CMSUtility.GetAttribute(entityType, typeof(ListFormPropsAttribute));
-            if (!String.IsNullOrEmpty(listFormProps.QuerySelect))
-            {
-                sql = listFormProps.QuerySelect + " where 1=1 " + (String.IsNullOrEmpty(where) ? "" : ("and " + where));
-                if (!String.IsNullOrEmpty(listFormProps.QueryOrderBy)) orderByDefault = listFormProps.QueryOrderBy;
-            }
-            else
-            {
-                PropertyInfo stringProperty = entityType.GetProperty(typeof(string));
-                string propertyName = stringProperty == null ? "" : ", " + entityType.Name + "." + stringProperty.Name;
-                sql = "select Id" + propertyName + "  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
-            }
-            
-            if (string.IsNullOrEmpty(orderBy) || orderBy.Trim()=="")
-                orderBy = orderByDefault;
-
-            //if (orderBy.Contains(" "))
-            //{
-            //    string[] parts = orderBy.Split(' ');
-            //    orderBy = "[" + parts[0].Trim('[', ']') + "] " + parts[1];
-            //}
-            //else
-            //    orderBy = "[" + orderBy.Trim().Trim('[', ']') + "]";
-
-            sql += " order by " + orderBy;
-
-            sql = Provider.Database.AddPagingToSQL(sql, limit, pageIndex);
-            //sql += " limit " + limit + " offset " + (limit * pageIndex);
-
-            dt = Provider.Database.ReadTable(entityType, sql, parameters);
-            return dt;
-        }
-        [Description("Returns the number of records for the entity. Where: 'CategoryId=1 AND TitlelikeHello%'")]
-        public static int ReadListTotalCount(Type entityType, string where, object[] parameters)
-        {
-            string sql = "select count(*)  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
-
-            return Provider.Database.GetInt(sql, parameters);
-        }
-
-        #region GetThumbPath
-        public static string GetThumbImgHTML(string imageUrl, int prefWidth, int prefHeight, string title, string className, string extraAttributes, bool cropPicture)
-        {
-            string path = Provider.GetThumbPath(imageUrl, prefWidth, prefHeight, cropPicture);
-
-            if (path.StartsWith("ERR:"))
-                return path.Substring(5);
-
-            return String.Format("<img src=\"{0}\" border=\"0\"{1}{2}{3}{4}{5}/>",
-                path,
-                String.IsNullOrEmpty(title) ? "" : (" alt=\"" + CMSUtility.HtmlEncode(title) + "\""),
-                prefWidth > 0 ? " width=\"" + prefWidth + "\"" : "",
-                prefHeight > 0 ? " height=\"" + prefHeight + "\"" : "",
-                String.IsNullOrEmpty(className) ? "" : (" class=\"" + className + "\""),
-                String.IsNullOrEmpty(extraAttributes) ? "" : " " + extraAttributes);
-        }
-        [Description("Resizes image to specified dimensions and returns the thumb picture path")]
-        public static string GetThumbPath(string imageUrl, int prefWidth, int prefHeight, bool cropPicture)
-        {
-            if (String.IsNullOrEmpty(imageUrl))
-            {
-                imageUrl = Provider.Configuration.NoPicture;
-                if (String.IsNullOrEmpty(imageUrl))
-                    return "https://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/apps/sodipodi.png";
-                    //return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
-            }
-
-            if (!imageUrl.StartsWith("/")) imageUrl = "/" + imageUrl;
-            //if (!imageUrl.StartsWith(".")) imageUrl = "." + imageUrl;
-
-            if (prefWidth == 0 && prefHeight == 0)
-            {
-                prefWidth = 100;
-                prefHeight = 0;
-            }
-
-            if (prefWidth == -1 && prefHeight == -1)
-                return imageUrl;
-
-            string path = null;
-            try
-            {
-                path = Provider.MapPath(imageUrl);
-                if (!File.Exists(path))
-                {
-                    path = Provider.MapPath(Provider.Configuration.NoPicture);
-                    if (!File.Exists(path))
-                        return imageUrl;
-                }
-            }
-            catch (Exception ex) {
-                return "ERR: " + ex.Message;
-            }
-
-            string thumbUrl = "/_thumbs/" + prefWidth + "x" + prefHeight + (cropPicture?"_cr":"") + "_" + imageUrl.Replace("/","_");
-            string thumbPath = Provider.MapPath(thumbUrl);
-
-            if (!File.Exists(thumbPath) || File.GetLastWriteTime(path) > File.GetLastWriteTime(thumbPath))
-            {
-                if (path.EndsWith(".gif") && System.Utility.IsGifAnimated(path))
-                {
-                    File.Copy(path, thumbPath);
-                }
-                else
-                {
-                    Image orjImg = null, imgDest = null;
-                    try
-                    {
-                        // burada resize ediyoruz
-                        orjImg = Image.FromFile(path);
-                        if (prefWidth == 0)
-                            imgDest = orjImg.ScaleImage(0, prefHeight);
-                        else if (prefHeight == 0)
-                            imgDest = orjImg.ScaleImage(prefWidth, 0);
-                        else
-                        {
-                            double picRatio = (double)orjImg.Width / (double)orjImg.Height;
-                            double prefRatio = (double)prefWidth / (double)prefHeight;
-                            if (picRatio >= prefRatio)
-                            {
-                                imgDest = orjImg.ScaleImage(prefWidth, 0);
-                                int y = Convert.ToInt32((double)(imgDest.Height - prefHeight) / 2d);
-                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                    imgDest = imgDest.CropImage(0, y, prefWidth, prefHeight);
-                            }
-                            else
-                            {
-                                imgDest = orjImg.ScaleImage(0, prefHeight);
-                                int x = Convert.ToInt32((double)(imgDest.Width - prefWidth) / 2d);
-                                if (!cropPicture) // !cropPicture ifadesinde bir hata varmış gibi görünüyor ama böylesi doğru
-                                    imgDest = imgDest.CropImage(x, 0, prefWidth, prefHeight);
-                            }
-                        }
-                        imgDest.SaveImage(thumbPath, Provider.Configuration.ThumbQuality * 1L);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (orjImg != null) orjImg.Dispose();
-                        if (imgDest != null) imgDest.Dispose();
-                        return "ERR: " + ex.Message;
-                    }
-                    if (orjImg != null) orjImg.Dispose();
-                    if (imgDest != null) imgDest.Dispose();
-                }
-            }
-            return thumbUrl;
-        }
-        #endregion
-
-        #region wrappers
-        [Description("Web config app settings")]
-        public static NameValueCollection AppSettings
-        {
-            get
-            {
-                    return System.Web.Configuration.WebConfigurationManager.AppSettings;
-            }
-        }
-        [Description("Returns HttpContext.Current.Server")]
-        public static HttpServerUtility Server
-        {
-            get
-            {
-                return HttpContext.Current.Server;
-            }
-        }
-        [Description("Returns HttpContext.Current.Request")]
-        public static HttpRequest Request
-        {
-            get
-            {
-                return HttpContext.Current.Request;
-            }
-        }
-        [Description("Returns HttpContext.Current.Response")]
-        public static HttpResponse Response
-        {
-            get
-            {
-                return HttpContext.Current.Response;
-            }
-        }
-        [Description("Returns HttpContext.Current.Session")]
-        public static HttpSessionState Session
-        {
-            get
-            {
-                return HttpContext.Current.Session;
-            }
-        }
-        [Description("Returns HttpContext.Current.Items (item storage for request )")]
-        public static IDictionary Items
-        {
-            get { return HttpContext.Current.Items; }
-        }
-        [Description("Returns HttpContext.Current.Application")]
-        public static HttpApplicationState Application
-        {
-            get { return HttpContext.Current.Application; }
-        }
-        [Description("Returns HttpContext.Current.User")]
-        public static IPrincipal ContextUser
-        {
-            get
-            {
-                return HttpContext.Current.User;
-            }
-            set
-            {
-                HttpContext.Current.User = value;
-            }
-        }
-        [Description("Returns local path of the url")]
-        public static string MapPath(string path)
-        {
-            if (AppSettings.AllKeys.Contains("MapPathPrefix"))
-                path = AppSettings["MapPathPrefix"] + path;
-            return Provider.Server.MapPath(path);
-        }
-        #endregion
-
-        #region SendMail
-        [Description("Sends mail with display names")]
-        public static string SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message)
-        {
-            try
-            {
-                MailAddress _from = new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName);
-                MailAddress _to = new MailAddress(to, toDisplayName);
-                MailMessage mail = new MailMessage(_from, _to);
-                if (!String.IsNullOrEmpty(from))
-                    mail.ReplyToList.Add(new MailAddress(from, fromDisplayName));
-                mail.Subject = subject;
-                if (to != _from.Address)
-                    mail.Bcc.Add(new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName));
-                mail.IsBodyHtml = true;
-                mail.Body = message;
-
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = Provider.Configuration.MailHost;
-                smtp.Port = Provider.Configuration.MailPort;
-                if (!String.IsNullOrEmpty(Provider.Configuration.MailUsername) && !String.IsNullOrEmpty(Provider.Configuration.MailPassword))
-                {
-                    smtp.UseDefaultCredentials = false;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.Credentials = new NetworkCredential(Provider.Configuration.MailUsername, Provider.Configuration.MailPassword);
-                }
-                smtp.Send(mail);
-                return "";
-            }
-            catch(Exception ex)
-            {
-                return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
-            }
-        }
-        [Description("Sends mail from \"from\" to \"to\".")]
-        public static string SendMail(string from, string to, string subject, string message)
-        {
-            return Provider.SendMail(from, from, to, to, subject, message);
-        }
-        [Description("Sends mail to the parameter \"to\".")]
-        public static string SendMail(string to, string subject, string message)
-        {
-            return Provider.SendMail(null, null, to, to, subject, message);
-        }
-        [Description("Sends mail to Configuration.Email")]
-        public static string SendMail(string subject, string message)
-        {
-            return Provider.SendMail(null, null, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, subject, message);
-        }
         #endregion
 
         #region FetchAutoContent
+        [Browsable(false)]
         public static void FetchAutoContentDetails(Content content)
         {
             ContentSource contentSource = (ContentSource)Provider.Database.Read(typeof(ContentSource), content.ContentSourceId);
@@ -1576,7 +1853,7 @@ namespace Cinar.CMS.Library
             }
 
             WebRequest req = WebRequest.Create(content.SourceLink);
-            if(req.Proxy!=null)
+            if (req.Proxy != null)
                 req.Proxy.Credentials = CredentialCache.DefaultCredentials;
             WebResponse webResponse = req.GetResponse();
             string response = new System.IO.StreamReader(webResponse.GetResponseStream(), Encoding.GetEncoding("iso-8859-9")).ReadToEnd();
@@ -1618,6 +1895,7 @@ namespace Cinar.CMS.Library
             }
             content.Save();
         }
+        [Browsable(false)]
         public static void FetchAutoContent(ContentSource contentSource)
         {
             // bugün fetch edildiyse bir daha fetch etmeye gerek yok
@@ -1730,239 +2008,6 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
-        [Description("Builds url with the query string parameters")]
-        public static string BuildUrl(string pageUrl, string paramName, string paramValue)
-        {
-            return BuildUrl(pageUrl, paramName, paramValue, "","");
-        }
-        [Description("Builds url with the query string parameters")]
-        public static string BuildUrl(string pageUrl, string paramName1, string paramValue1, string paramName2, string paramValue2)
-        {
-            if (string.IsNullOrWhiteSpace(pageUrl))
-                pageUrl = Provider.Request.RawUrl;
-
-            if (!pageUrl.StartsWith("http"))
-                pageUrl = "http://" + Provider.Configuration.SiteAddress + (pageUrl.StartsWith("/") ? "" : "/") + pageUrl;
-
-            CinarUriParser uriParser = new CinarUriParser(pageUrl);
-            uriParser.QueryPart[paramName1] = paramValue1;
-            if(!string.IsNullOrWhiteSpace(paramName2))
-                uriParser.QueryPart[paramName2] = paramValue2;
-
-            return uriParser.ToString();
-        }
-
-        public static string PostData(string url, Dictionary<string, string> data)
-        {
-            // Create a request using a URL that can receive a post.
-            WebRequest request = WebRequest.Create(url);
-            request.Proxy.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-
-            // Set the Method property of the request to POST.
-            request.Method = "POST";
-            // Create POST data and convert it to a byte array.
-            string postData = null;
-            foreach (string key in data.Keys)
-            {
-                if (!string.IsNullOrEmpty(postData)) postData += "&";
-                postData += key + "=" + HttpUtility.UrlEncode(Encoding.UTF8.GetBytes(data[key] ?? ""));
-            }
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            // Set the ContentType property of the WebRequest.
-            request.ContentType = "application/x-www-form-urlencoded";
-            // Set the ContentLength property of the WebRequest.
-            request.ContentLength = byteArray.Length;
-            // Get the request stream.
-            System.IO.Stream dataStream = request.GetRequestStream();
-            // Write the data to the request stream.
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            // Close the Stream object.
-            dataStream.Close();
-            // Get the response.
-            WebResponse response = request.GetResponse();
-            // Display the status.
-            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-            // Get the stream containing content returned by the server.
-            dataStream = response.GetResponseStream();
-            // Open the stream using a StreamReader for easy access.
-            System.IO.StreamReader reader = new System.IO.StreamReader(dataStream);
-            // Read the content.
-            string responseFromServer = reader.ReadToEnd();
-            // Display the content.
-            //Console.WriteLine(responseFromServer);
-            // Clean up the streams.
-            reader.Close();
-            dataStream.Close();
-            response.Close();
-            return responseFromServer;
-        }
-
-        internal static IFormatProvider GetFormatProvider()
-        {
-
-            return System.Threading.Thread.CurrentThread.CurrentCulture;
-        }
-
-        public static string ToString(Exception ex, bool asHTML)
-        {
-            return Provider.ToString(ex, Provider.DesignMode, Provider.DevelopmentMode, asHTML);
-        }
-        public static string ToString(Exception ex, bool inDetail, bool withStackTrace, bool asHTML)
-        {
-            if (inDetail)
-            {
-                string message = ex.Message + "\n\n";
-                string trace = ex.StackTrace + "\n\n";
-
-                message = ex.InnerException == null ? message : ex.InnerException.Message + "\n\n";
-                trace = ex.InnerException == null ? trace : ex.InnerException.StackTrace;
-
-                string res = withStackTrace ? message + trace : message;
-                if (asHTML) res = res.Replace("\n", "<br/>");
-
-                return res;
-            }
-            else
-                return "";
-        }
-
-        [Description("Creates and saves log entry")]
-        public static void Log(string logType, string category, string description)
-        {
-            Log log = new Log();
-            log.LogType = logType;
-            log.Category = category;
-            log.Description = description;
-            log.Save();
-        }
-
-        [Description("Returns the interpreter for the given code by the template parameter")]
-        public static Interpreter GetInterpreter(string template, object forThis)
-        {
-            Interpreter engine = new Interpreter(template, new List<string>() { "Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules", "Cinar.CMS.Library.Handlers" });
-            engine.AddAssembly(typeof(Provider).Assembly);
-            engine.AddAssembly(typeof(Utility).Assembly);
-            if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
-                foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
-                {
-                    Assembly assembly = GetAssembly(customAssembly);
-                    if (assembly == null)
-                        continue;
-                    engine.AddAssembly(assembly);
-                }
-
-            engine.SetAttribute("Context", new ProviderWrapper());
-            engine.SetAttribute("this", forThis);
-            engine.SetAttribute("db", Provider.Database);
-
-            return engine;
-        }
-
-        [Description("Returns human readable url of content")]
-        public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
-        {
-            if (id == 1)
-                return "/" + Provider.Configuration.MainPage;
-
-            if (Provider.DesignMode)
-                return string.Format(
-                    "/{0}?item={1}",
-                    template,
-                    id);
-
-            return string.Format(
-                    "/{0}/{1}/{2}_{3}.aspx",
-                    template.Replace(".aspx", "").ToLowerInvariant(),
-                    categoryTitle.MakeFileName().ToLowerInvariant(),
-                    contentTitle.MakeFileName().ToLowerInvariant(),
-                    id);
-        }
-        [Description("Returns human readable url of content")]
-        public static string GetPageUrl(string template, int contentId)
-        {
-            Content content = Provider.Database.Read<Entities.Content>(contentId);
-            if (content != null)
-                return Provider.GetPageUrl(Provider.GetTemplate(content, ""), content.Id, content.Category.Title, content.Title);
-            else
-                return "javascript:alert('No such content'); return false;";
-        }
-
-        [Description("Reads exchange rates from http://www.tcmb.gov.tr/kurlar/today.xml")]
-        public static ExchangeRate GetExchangeRates()
-        {
-            ExchangeRate res = Provider.Database.Read<ExchangeRate>("InsertDate >= {0}", DateTime.Now.Date);
-            if (res == null)
-            {
-                res = new ExchangeRate();
-
-                WebClient wc = new WebClient();
-                wc.Encoding = Encoding.UTF8;
-                string xml = wc.DownloadString("http://www.tcmb.gov.tr/kurlar/today.xml");
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(xml);
-
-                foreach (XmlNode node in doc.SelectNodes("//Currency[ForexSelling>0]"))
-                {
-                    string name = node.Attributes["Kod"].Value;
-                    int fiyat = (int)(decimal.Parse(node.SelectSingleNode("ForexSelling").InnerText, CultureInfo.InvariantCulture.NumberFormat) * 1000);
-                    try
-                    {
-                        res.SetMemberValue(name, fiyat);
-                    }catch{}
-                }
-
-                res.Save();
-            }
-            return res;
-        }
-
-        internal static Dictionary<Regex, string> routes = null;
-        [Browsable(false)]
-        public static Dictionary<Regex, string> Routes
-        {
-            get
-            {
-                if (routes == null)
-                {
-                    routes = new Dictionary<Regex, string>();
-                    string[] lines = Provider.Configuration.Routes.Replace("\r", "").SplitWithTrim('\n');
-                    foreach (var line in lines)
-                    {
-                        string[] parts = line.SplitWithTrim("=>");
-                        if (!parts[0].StartsWith("^"))
-                            parts[0] = "^" + parts[0];
-                        if (!parts[0].EndsWith("$"))
-                            parts[0] = parts[0] + "$";
-                        routes.Add(new Regex(parts[0]), parts[1]);
-                    }
-                }
-                return routes;
-            }
-        }
-
-        public static string GetRewritePath(string url)
-        {
-            foreach (var item in Routes)
-            {
-                if (item.Key.IsMatch(url))
-                    return item.Key.Replace(url, item.Value);
-            }
-
-            return url;
-        }
-
-        [Description("Deletes the thumb pictures of urlPath (/UserFiles/Images/foo/bar.jpg)")]
-        public static void DeleteThumbFiles(string urlPath)
-        {
-            foreach (string thumbFilePath in Directory.GetFiles(Provider.MapPath("/_thumbs"), "*" + urlPath.Replace("/", "_")))
-                File.Delete(thumbFilePath);
-        }
-
-        [Description("Returns visitor location in JSON format")]
-        public static string GetVisitorLocation()
-        {
-            return "http://freegeoip.net/json/".DownloadPage();
-        }
     }
 
     public class CMSUtility

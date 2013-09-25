@@ -16,100 +16,99 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email, Roles, Visible from [User]")]
     public class User : BaseEntity
     {
-        [ColumnDetail(IsNotNull = true, Length = 100, IsUnique = true), EditFormFieldProps(Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(IsNotNull = true, Length = 100, IsUnique = true), EditFormFieldProps(Category="Login", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 16), EditFormFieldProps(Options = "password:true,required:false")]
+        [ColumnDetail(IsNotNull = true, Length = 16), EditFormFieldProps(Category = "Login", Options = "password:true,required:false")]
         public string Password { get; set; }
 
         [ColumnDetail(Length = 16), EditFormFieldProps(Visible = false)]
         public string Keyword { get; set; }
 
-        [ColumnDetail(Length = 100)]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Login")]
         public string Nick { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100)]
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login")]
         public string Roles { get; set; }
 
         #region kişisel
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal")]
         public string Name { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal")]
         public string Surname { get; set; }
+
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Personal", ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "avatarDir", SpecialNameField = "Nick", AddRandomNumber = false, UseYearMonthDayFolders = false)]
+        public string Avatar { get; set; }
 
         public string FullName
         {
             get { return string.IsNullOrWhiteSpace(Name + Surname) ? (string.IsNullOrWhiteSpace(Nick) ? Email : Nick) : (Name + " " + Surname); }
         }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal")]
         public string Gender { get; set; }
 
+        [EditFormFieldProps(Category = "Personal")]
         public DateTime BirthDate { get; set; }
 
+        [EditFormFieldProps(Category = "Personal")]
         public string IdentityNumber { get; set; }
-
-        #endregion
-
-        #region meslek
-
-        [ColumnDetail(Length = 50)]
-        public string Occupation { get; set; }
-
-        [ColumnDetail(Length = 100)]
-        public string Company { get; set; }
-
-        [ColumnDetail(Length = 50)]
-        public string Department { get; set; }
 
         #endregion
 
         #region iletişim (tel, adres, web)
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact")]
         public string PhoneCell { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact")]
         public string PhoneWork { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact")]
         public string PhoneHome { get; set; }
 
-        [ColumnDetail(Length = 200)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Contact")]
         public string AddressLine1 { get; set; }
 
-        [ColumnDetail(Length = 200)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Contact")]
         public string AddressLine2 { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact")]
         public string City { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact")]
         public string Country { get; set; }
 
-        [ColumnDetail(Length = 5)]
+        [ColumnDetail(Length = 5), EditFormFieldProps(Category = "Contact")]
         public string ZipCode { get; set; }
 
-        [ColumnDetail(Length = 150), EditFormFieldProps(Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
+        [ColumnDetail(Length = 150), EditFormFieldProps(Category = "Contact", Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
         public string Web { get; set; }
 
         #endregion
 
-        #region diğer
 
-        [ColumnDetail(Length = 50)]
+        #region other
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Other")]
+        public string Occupation { get; set; }
+
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Other")]
+        public string Company { get; set; }
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Other")]
+        public string Department { get; set; }
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Other")]
         public string Education { get; set; }
 
-        [ColumnDetail(Length = 200)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Other")]
         public string Certificates { get; set; }
 
-        [ColumnDetail(Length = 200)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Other")]
         public string About { get; set; }
-
-        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "avatarDir", SpecialNameField = "Nick", AddRandomNumber = false, UseYearMonthDayFolders = false)]
-        public string Avatar { get; set; }
 
         #endregion
 
@@ -120,6 +119,7 @@ namespace Cinar.CMS.Library.Entities
             Password = "";
         }
 
+        [EditFormFieldProps(Visible = false)]
         public int RedirectCount { get; set; }
 
         public bool IsAnonim() {
@@ -195,7 +195,7 @@ namespace Cinar.CMS.Library.Entities
                     this.Country = Provider.Request.UserLanguages[0];
             }
             else {
-                this.Visible = true;
+                //this.Visible = true; // böyle saçma şey olur mu lan? kim yazmış bunu!
                 if (string.IsNullOrWhiteSpace(this.Password))
                     this.Password = Provider.Database.GetString("select Password from User where Id={0}", this.Id);
             }
