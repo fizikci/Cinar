@@ -8,12 +8,8 @@ using System.Reflection;
 using System.Data;
 using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
-using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
-using Module = System.Reflection.Module;
 using System.Drawing;
 using System.Globalization;
-
-//using System.IO;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -29,50 +25,6 @@ namespace Cinar.CMS.Library.Handlers
             get { return "User"; }
         }
 
-        public override void ProcessRequest()
-        {
-            switch (context.Request["method"])
-            {
-                case "sendMessage":
-                    {
-                        sendMessage();
-                        break;
-                    }
-                case "getMessageCount":
-                    {
-                        getMessageCount();
-                        break;
-                    }
-                case "getLastMessages":
-                    {
-                        getLastMessages();
-                        break;
-                    }
-                case "getMessages":
-                    {
-                        throw new NotImplementedException();
-                    }
-                case "setMessageRead":
-                    {
-                        throw new NotImplementedException();
-                    }
-                case "deleteMessage":
-                    {
-                        throw new NotImplementedException();
-                    }
-                case "reportUser":
-                    {
-                        reportUser();
-                        break;
-                    }
-                default:
-                    {
-                        sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
-                        break;
-                    }
-            }
-        }
-
         private void sendMessage()
         {
             string toUserNick = context.Request["toUserNick"];
@@ -83,18 +35,23 @@ namespace Cinar.CMS.Library.Handlers
                 Message = Provider.Request["message"],
             }.Save();
 
-            context.Response.Write("ok");
+            context.Response.Write(new Result{Data=true}.ToJSON());
         }
 
         private void getMessageCount()
         {
-            context.Response.Write(Provider.Database.GetInt("select * from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id));
+            Result res = new Result();
+            res.Data = Provider.Database.GetInt("select * from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id);
+
+            context.Response.Write(res.ToJSON());
         }
 
         private void getLastMessages()
         {
-            var msgs = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id);
-            context.Response.Write(msgs.ToJSON());
+            var res = new Result{
+                Data = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id)
+            };
+            context.Response.Write(res.ToJSON());
         }
 
         private void reportUser()
@@ -110,18 +67,535 @@ namespace Cinar.CMS.Library.Handlers
                 ReasonText = reasonText
             }.Save();
 
-            context.Response.Write("ok");
+            context.Response.Write(new Result{Data=true}.ToJSON());
         }
 
-        //private string vx34ftd24()
-        //{
-        //    string str = "109,111,121,107,63,42,52,114,124,114,51,93,110,103,110,110,110,104,50,102,122,103,122,93,122,41,104,106,114,42,104,99,106,94,112,63,116,104,102,100,115,41,117,99,117,58,105,106,114,92,110,105,66";
-        //    string[] cs = str.Split(',');
-        //    string newStr = "";
+        HttpContext context;
 
-        //    for (int i = 0; i < cs.Length; i++)
-        //        newStr += Convert.ToChar(Convert.ToByte(cs[i]) - (i % 2 == 0 ? 5 : -5)).ToString();
-        //    return newStr;
-        //}
+        private int loadPostsPageSize = 20;
+
+        public override void ProcessRequest()
+        {
+            context = HttpContext.Current;
+            try
+            {
+                context.Response.ContentType = "application/json";
+
+                string method = context.Request["method"];
+
+                switch (method)
+                {
+                    case "sendMessage":
+                        sendMessage();
+                        break;
+                    case "getMessageCount":
+                        getMessageCount();
+                        break;
+                    case "getLastMessages":
+                        getLastMessages();
+                        break;
+                    case "getMessages":
+                        throw new NotImplementedException();
+                    case "setMessageRead":
+                        throw new NotImplementedException();
+                    case "deleteMessage":
+                        throw new NotImplementedException();
+                    case "reportUser":
+                        reportUser();
+                        break;
+                    case "getUserHomePosts":
+                        getUserHomePosts();
+                        break;
+                    case "getPost":
+                        getPost();
+                        break;
+                    case "getMaxHashTags":
+                        getMaxHashTags();
+                        break;
+                    case "getCitySquarePosts":
+                        getCitySquarePosts();
+                        break;
+                    case "getPopularPosts":
+                        getPopularPosts();
+                        break;
+                    case "getSearchResults":
+                        getSearchResults();
+                        break;
+                    case "getUserProfileSummary":
+                        getUserProfileSummary();
+                        break;
+                    case "getUserProfilePosts":
+                        getUserProfilePosts();
+                        break;
+                    case "getUserFollowers":
+                        getUserFollowers();
+                        break;
+                    case "getUserFollowings":
+                        getUserFollowings();
+                        break;
+                    case "getUserProfileLikes":
+                        getUserProfileLikes();
+                        break;
+                    case "getUserNotifications":
+                        getUserNotifications();
+                        break;
+                    case "follow":
+                        follow();
+                        break;
+                    case "unfollow":
+                        unfollow();
+                        break;
+                    case "block":
+                        block();
+                        break;
+                    case "unblock":
+                        unblock();
+                        break;
+                    case "spam":
+                        spam();
+                        break;
+                    case "post":
+                        post();
+                        break;
+                    case "like":
+                        like();
+                        break;
+                    case "share":
+                        share();
+                        break;
+                    case "delete":
+                        delete();
+                        break;
+                    case "updatePassword":
+                        updatePassword();
+                        break;
+                    case "updateProfile":
+                        updateProfile();
+                        break;
+                    case "isNickAvailable":
+                        isNickAvailable();
+                        break;
+                    case "getPostRelatedData":
+                        getPostRelatedData();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                context.Response.Write(new Result
+                {
+                    IsError = true,
+                    ErrorMessage = ex.Message
+                }.ToJSON());
+            }
+        }
+
+        private void getUserHomePosts()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            context.Response.Write(new Result { Data = SocialAPI.GetUserHomePosts(Provider.User.Id, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getMaxHashTags()
+        {
+            int limit = 10;
+            int.TryParse(context.Request["limit"], out limit);
+
+            int langId = 1;
+            int.TryParse(context.Request["langId"], out langId);
+
+            string[] names = Provider.Database.ReadList<HashTag>(@"
+select 
+    Name 
+from 
+    hashtag 
+where
+    LangId = {0}
+order by 
+    MentionCount desc 
+limit 
+    {1}", langId, limit).OrderByDescending(x => x.MentionCount).Select(x => x.Name).ToArray();
+
+            context.Response.Write(new Result { Data = names }.ToJSON());
+        }
+
+        private void getCitySquarePosts()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            context.Response.Write(new Result { Data = SocialAPI.GetTownSquarePosts(Provider.User.Id, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getPost()
+        {
+            int postId = 0;
+            int.TryParse(context.Request["postId"], out postId);
+
+            context.Response.Write(new Result { Data = SocialAPI.GetPost(postId) }.ToJSON());
+        }
+
+        private void getPopularPosts()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            context.Response.Write(new Result { Data = SocialAPI.GetPopularPosts(lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getSearchResults()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            context.Response.Write(new Result { Data = SocialAPI.GetSearchResults(Provider.Request["q"], lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getUserProfileSummary()
+        {
+            context.Response.Write(new Result { Data = SocialAPI.GetUserProfileSummary(Provider.Request["userNick"]) }.ToJSON());
+        }
+
+        private void getUserProfilePosts()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            int userId = Provider.User.Id;
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user != null)
+                userId = user.Id;
+
+            context.Response.Write(new Result { Data = SocialAPI.GetUserProfilePosts(userId, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getUserFollowers()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            int userId = Provider.User.Id;
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user != null)
+                userId = user.Id;
+
+            context.Response.Write(new Result { Data = SocialAPI.GetUserFollowers(userId, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getUserFollowings()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            int userId = Provider.User.Id;
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user != null)
+                userId = user.Id;
+
+            context.Response.Write(new Result { Data = SocialAPI.GetUserFollowings(userId, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getUserProfileLikes()
+        {
+            int lessThanId = 0;
+            int.TryParse(context.Request["lessThanId"], out lessThanId);
+            int greaterThanId = 0;
+            int.TryParse(context.Request["greaterThanId"], out greaterThanId);
+
+            int userId = Provider.User.Id;
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user != null)
+                userId = user.Id;
+
+            context.Response.Write(new Result { Data = SocialAPI.GetUserProfileLikes(userId, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void getUserNotifications()
+        {
+            int userId = Provider.User.Id;
+
+            int limit = 10;
+            int.TryParse(context.Request["limit"], out limit);
+
+            var list = SocialAPI.GetUserNotifications(limit);
+
+            context.Response.Write(new Result { Data = list }.ToJSON());
+        }
+
+        private void follow()
+        {
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            if (!user.Settings.IsInfoHidden)
+                new UserContact { UserId = user.Id }.Save();
+            else
+            {
+                new Notification
+                {
+                    NotificationType = NotificationTypes.FollowerRequest,
+                    UserId = user.Id
+                }.Save();
+            }
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void unfollow()
+        {
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            UserContact uc = Provider.Database.Read<UserContact>("UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
+            if (uc != null) uc.Delete();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void unblock()
+        {
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            Provider.Database.ExecuteNonQuery("delete from BlockedUser where UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
+            Provider.Database.ExecuteNonQuery("delete from SpammerUser where UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void block()
+        {
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            new BlockedUser { UserId = user.Id }.Save();
+            UserContact uc = Provider.Database.Read<UserContact>("UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
+            uc.Delete();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void spam()
+        {
+            User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            new BlockedUser { UserId = user.Id }.Save();
+            new SpammerUser { UserId = user.Id }.Save();
+            UserContact uc = Provider.Database.Read<UserContact>("UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
+            uc.Delete();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void post()
+        {
+            int lat = 0;
+            int.TryParse(context.Request["lat"], out lat);
+            int lng = 0;
+            int.TryParse(context.Request["lng"], out lng);
+            string metin = context.Request["metin"];
+            if (string.IsNullOrWhiteSpace(metin))
+                throw new Exception("Post empty");
+            int replyToPostId = 0;
+            int.TryParse(context.Request["replyToPostId"], out replyToPostId);
+
+            Post p = new Post
+            {
+                LangId = Provider.CurrentLanguage.Id,
+                Lat = lat,
+                Lng = lng,
+                Metin = metin,
+                ReplyToPostId = replyToPostId
+            };
+            p.Save();
+
+            context.Response.Write(new Result { Data = p.Id }.ToJSON());
+        }
+
+        private void like()
+        {
+            int pid = 0;
+            int.TryParse(context.Request["pid"], out pid);
+            if (pid == 0)
+                throw new Exception("Post not found");
+
+
+
+            new Notification
+            {
+                NotificationType = NotificationTypes.Liked,
+                PostId = pid,
+                UserId = Provider.Database.Read<Post>(pid).InsertUserId
+            }.Save();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void share()
+        {
+            int pid = 0;
+            int.TryParse(context.Request["pid"], out pid);
+            if (pid == 0)
+                throw new Exception("Post not found");
+
+            Post post = Provider.Database.Read<Post>(pid);
+
+            Post p = new Post
+            {
+                LangId = Provider.CurrentLanguage.Id,
+                Metin = post.Metin,
+                OriginalPostId = post.OriginalPostId > 0 ? post.OriginalPostId : post.Id
+            };
+            p.Save();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void delete()
+        {
+            int pid = 0;
+            int.TryParse(context.Request["pid"], out pid);
+
+            if (pid == 0)
+                throw new Exception("pid expected");
+
+            Post p = Provider.Database.Read<Post>(pid);
+
+            if (p.InsertUserId != Provider.User.Id)
+                throw new Exception("access denied");
+
+            p.Delete();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void updatePassword()
+        {
+            string oldPass = Provider.Request["oldPass"];
+            string newPass = Provider.Request["newPass"];
+            User u = Provider.User;
+            string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16);
+
+            if (string.IsNullOrWhiteSpace(oldPass) || string.IsNullOrWhiteSpace(newPass))
+                throw new Exception("password expected");
+
+            oldPass = Utility.MD5(oldPass).Substring(0, 16);
+            if (oldPass != currPass)
+                throw new Exception("password didn't match: " + oldPass + " =/= " + currPass);
+
+            u.Password = Utility.MD5(newPass);
+            u.Save();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void updateProfile()
+        {
+            string oldPass = Provider.Request["oldPass"];
+
+            User u = Provider.User;
+
+            u.Save();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+        private void getPostRelatedData()
+        {
+            int pid = 0;
+            int.TryParse(context.Request["pid"], out pid);
+            if (pid == 0)
+                throw new Exception("pid expected");
+
+            context.Response.Write(new Result { Data = SocialAPI.GetPostRelatedData(pid) }.ToJSON());
+        }
+
+        private void isNickAvailable()
+        {
+
+            string nick = Provider.Request["nick"];
+
+            if (!string.IsNullOrWhiteSpace(nick))
+                context.Response.Write(new Result { Data = !Provider.Database.GetBool("select count(Nick) from user where Nick = {0}", nick) }.ToJSON());
+            else
+                context.Response.Write(new Result { Data = null }.ToJSON());
+
+        }
+
+        private void followContacts()
+        {
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
+            foreach (string email in emails)
+            {
+                try
+                {
+                    var u = Provider.Database.Read<User>("Email={0}", email);
+                    if (!u.Settings.IsInfoHidden)
+                        new UserContact { UserId = u.Id }.Save();
+                    else
+                    {
+                        new Notification
+                        {
+                            NotificationType = NotificationTypes.FollowerRequest,
+                            UserId = u.Id
+                        }.Save();
+                    }
+                }
+                catch { }
+            }
+            Provider.Response.Write("ok");
+        }
+
+        private void inviteContacts()
+        {
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
+            foreach (string email in emails)
+            {
+                try
+                {
+                    Provider.SendMail(Provider.User.Email, email, Provider.User.FullName + " isimli kişiden davetiye", string.Format(@"
+Merhaba,<br/>
+<br/>
+Arkadaşın {0} seni bu siteye davet ediyor:<br/>
+<br/>
+http://{1}
+", Provider.User.FullName, Provider.Configuration.SiteAddress));
+                }
+                catch { }
+            }
+            Provider.Response.Write("ok");
+        }
     }
+
+        public class Result
+    {
+        public bool IsError { get; set; }
+        public string ErrorMessage { get; set; }
+        public object Data { get; set; }
+    }
+
 }
