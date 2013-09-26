@@ -25,6 +25,76 @@ namespace Cinar.CMS.Library.Handlers
             get { return "User"; }
         }
 
+        private void sendMessage()
+        {
+            string toUserNick = context.Request["toUserNick"];
+
+            new PrivateMessage
+            {
+                ToUserId = Provider.Database.Read<User>("Nick={0}", toUserNick).Id,
+                Message = Provider.Request["message"],
+            }.Save();
+
+            context.Response.Write(new Result{Data=true}.ToJSON());
+        }
+
+        private void getMessageCount()
+        {
+            Result res = new Result();
+            res.Data = Provider.Database.GetInt("select count(*) from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id);
+
+            context.Response.Write(res.ToJSON());
+        }
+
+        private void getLastMessages()
+        {
+            context.Response.Write(new Result
+            {
+                Data = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id)
+            }.ToJSON());
+        }
+
+        private void getMessages()
+        {
+            int UserId = 0;
+            int.TryParse(context.Request["UserId"], out UserId);
+
+            List<PrivateMessage> pm = 
+                Provider.Database.ReadList<PrivateMessage>(@"select 
+	                                                            Message,
+	                                                            ToUserId,
+	                                                            [Read],
+	                                                            InsertDate,
+	                                                            InsertUserId
+                                                            from
+	                                                            PrivateMessage
+                                                            where
+	                                                            (ToUserId = {0} AND InsertUserId = {1}) OR
+	                                                            (ToUserId = {1} AND InsertUserId = {0})
+                                                            order by InsertDate desc", Provider.User.Id, UserId);
+            context.Response.Write(new Result{Data = pm}.ToJSON());
+        }
+
+        private void reportUser()
+        {
+            string nick = context.Request["nick"];
+            string reason = context.Request["reason"];
+            string reasonText = context.Request["reasonText"];
+
+            new ReportedUser
+            {
+                UserId = Provider.Database.Read<User>("Nick={0}", nick).Id,
+                Reason = reason,
+                ReasonText = reasonText
+            }.Save();
+
+            context.Response.Write(new Result{Data=true}.ToJSON());
+        }
+
+        HttpContext context;
+
+        private int loadPostsPageSize = 20;
+
         public override void ProcessRequest()
         {
             context = HttpContext.Current;
@@ -46,7 +116,8 @@ namespace Cinar.CMS.Library.Handlers
                         getLastMessages();
                         break;
                     case "getMessages":
-                        throw new NotImplementedException();
+                        getMessages();
+                        break;
                     case "setMessageRead":
                         throw new NotImplementedException();
                     case "deleteMessage":

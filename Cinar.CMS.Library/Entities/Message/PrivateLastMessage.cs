@@ -21,6 +21,7 @@ namespace Cinar.CMS.Library.Entities
     public class ViewPrivateLastMessage : DatabaseEntity
     {
         public int MailBoxOwnerId { get; set; }
+        public int UserId { get; set; }
         public string FullName { get; set; }
         public string Nick { get; set; }
         public string Avatar { get; set; }
