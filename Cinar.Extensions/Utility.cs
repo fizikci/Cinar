@@ -715,6 +715,7 @@ namespace System
         {
             using (WebClient wc = new WebClient())
             {
+                wc.Encoding = Encoding.UTF8;
                 return wc.DownloadString(url);
             }
         }
