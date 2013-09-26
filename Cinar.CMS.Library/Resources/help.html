@@ -814,6 +814,26 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
             </div>
+            <div class="codeSample">
+                <h3>Youtube arama ve siteye ekleme :</h3>
+                <ul>
+                    <li>searchYoutubeVideo(callback, channelName, q) metodu ile Youtube search penceresinin açılması sağlanır</li>
+                    <li><b>callback:</b> Bir videonun seçilmesi durumunda çağrılan fonksiyon. Üzerine tıklanan resmin DOM referansını verir. Böylece videonun başlığı, açıklaması gibi özelliklerine erişilebilir. </li>
+                    <li><b>channelName:</b> Eğer sadece belli bir Youtube kanalında arama yapılması isteniyorsa bu parametre ile kanal adı gönderilebilir.</li>
+					<li><b>q:</b> Aranacak kelime</li>
+                </ul>
+                <pre class="code">searchYoutubeVideo(
+    function(elm){
+		elm = jQuery(elm).parent();
+		var title = elm.find('.vtit').text();
+		var description = elm.find('.vdesc').text(); 
+		var picture = elm.find('img').attr('src');
+		var videoId = elm.find('.vid').text();
+		alert(title);
+	});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
         </div>
 
         <h1 id="p12">Button kullanımı ve ikonlar</h1>

@@ -19,7 +19,8 @@ namespace Cinar.CMS.Library.Entities
 
         protected override void beforeSave(bool isUpdate)
         {
-            throw new Exception(Provider.TR("Mesaj güncellenemez"));
+            if(isUpdate)
+                throw new Exception(Provider.TR("Mesaj güncellenemez"));
         }
 
         protected override void afterSave(bool isUpdate)
