@@ -270,3 +270,51 @@
 #editOnSiteHTML .fff {
 	margin-right:5px;
 }
+
+#youtube-search {
+    height: 50px;
+    text-align: center;
+    padding-top: 9px;
+}
+#youtube-search input {
+    height: 24px;
+    border-radius: 10px 0px 0px 10px;
+    width: 316px;
+    border: 1px solid orange;
+    padding-left: 10px;
+}
+#youtube-search button {
+    height: 28px;
+    border-radius: 0px 10px 10px 0px;
+    vertical-align: top;
+    color: white;
+    background: orange;
+    border: none;
+    margin: 0px;
+    cursor: pointer;
+}
+
+#youtube-search-results {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50px;
+    bottom: 0px;
+    overflow: auto;
+}
+
+#youtube-search-results .search_item {
+    width: 30%;
+    float: left;
+    height: 160px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+#youtube-search-results .search_item img {
+    float: left;
+    margin: 4px;
+    width:120px;
+    height:80px;
+    cursor:pointer
+}

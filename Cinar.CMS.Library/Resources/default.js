@@ -1319,3 +1319,56 @@ function editOnSite(elm, editOnSiteArgs){
 }
 
 
+function searchYoutubeVideo(callback, channelName, q){
+    var html = '<div id="youtube-search"><input type="text" name="q" value="'+(q?q:'')+'"/><button>SEARCH</button></div><div id="youtube-search-results"></div>';
+    
+    new CinarWindow({
+            titleIcon: 'page',
+            title: 'Youtube Search',
+            width: 950,
+            height: 600,
+            html: html,
+            position: 'center' // left, right
+        });
+	if(channelName || q)
+		searchYouTube(callback, channelName, q);
+    $('#youtube-search button').click(function(){
+        searchYouTube(callback, channelName, $('#youtube-search input').val());
+    });
+}
+
+function searchYouTube(callback, channelName, q) {
+	var apiUrl = '';
+	if(channelName)
+		apiUrl = 'http://gdata.youtube.com/feeds/api/users/'+channelName+'/uploads/?v=2&alt=json&max-results=50' + (q?'&q='+q:'');
+	else if(q)
+		apiUrl = 'http://gdata.youtube.com/feeds/api/videos?v=2&alt=json&max-results=50&q=' + q;
+	else
+		return false;
+
+	jQuery.ajax({
+        url: apiUrl,
+        dataType: 'jsonp',
+        success: function (data) {
+            var row = "";
+            for (var i = 0; i < data.feed.entry.length; i++) {
+                row += "<div class='search_item'>";
+                row += "<img src=" + data.feed.entry[i].media$group.media$thumbnail[0].url + " />";
+                var viewCount = '';
+                if(data.feed.entry[i].yt$statistics)
+                    viewCount = "<span style='font-size:12px' color:#666666>(" + data.feed.entry[i].yt$statistics.viewCount + " views" + ")</span>";
+                row += "<span class=\"vtit\"><b>" + data.feed.entry[i].media$group.media$title.$t + "</b></span> "+viewCount+"<br/>";
+                if(data.feed.entry[i].media$group && data.feed.entry[i].media$group.media$description)
+                    row += "<span class=\"vdesc\" style='font-size:10px' color:#666666>" + data.feed.entry[i].media$group.media$description.$t + "</span><br/>";
+                row += '<span class="vid" style="display:none">'+data.feed.entry[i].id.$t.split(':').last()+'</span>';
+                row += "</div>";
+            }
+            jQuery("#youtube-search-results").html(row);
+            jQuery("#youtube-search-results img").click(function(){callback(jQuery(this));});
+        },
+        error: function () {
+            alert("Error loading youtube video results");
+        }
+    });
+    return false;
+}
