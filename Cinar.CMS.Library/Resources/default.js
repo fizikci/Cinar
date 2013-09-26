@@ -398,6 +398,8 @@ function showElementWithOverlay(elm, autoHide, color){
 		});
     }
 
+	$('body').css('overflow', 'hidden');
+	
     perde.animate({opacity:0.8}, 200, "linear");
 	elm.css({position:'absolute', zIndex:100000}); 
 	elm.fadeIn(200); 
@@ -411,7 +413,9 @@ function hideOverlay(){
         showingElementWithOverlay = false;
 		$(document.body).css({overflow:'auto'});
 	});
-	showingElementWithOverlay.fadeOut(200);
+	showingElementWithOverlay.fadeOut(200, function(){
+		$('body').css('overflow', 'auto');
+	});
 	showingElementWithOverlay.css('z-index', showingElementWithOverlayZIndex);
 }
 
@@ -530,13 +534,16 @@ function lightBox(img){
 	var fbLikeExist = img.closest('.lightBox').hasClass('fbLike');
 	var allImg = $A(img.closest('.lightBox').find('img').toArray());
 	var html = '<div id="lightBoxDiv">'+
-					'<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>'+
+					(allImg.length>0 ? '<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>' : '')+
 					'<img id="lbImg" src="'+img.attr('path')+'"/>'+
-					'<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>'+
+					(allImg.length>0 ? '<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>' : '')+
 					'<div id="lbLeft"></div>'+
 					'<div id="lbCenter"></div>'+
-					'<div id="lbRight"><div id="lbCounter">1/20</div>'+(fbLikeExist?'<img id="lbLove" src="'+img.attr('likeSrc')+'"/> <span id="lbLoveCount">0</span>':'') + '</div>'+
-					'</div>';
+					'<div id="lbRight">'+
+						(allImg.length>0 ? '<div id="lbCounter">1/20</div>' : '')+
+						(fbLikeExist?'<img id="lbLove" src="'+img.attr('likeSrc')+'"/> <span id="lbLoveCount">0</span>':'') + 
+					'</div>'+
+				'</div>';
 	$('body').append(html);
 	lightBoxDiv = $('#lightBoxDiv');
 	lightBoxDiv.find('#lbPrev').on('click',function(){if(img.prevAll('img').length) {img = img.prevAll('img'); showPic();}});
@@ -568,7 +575,8 @@ function lightBox(img){
 	var lbImg = $('#lbImg');
 	lbImg.load(function(){
 		var tagData = img.attr('tagData') ? eval('('+img.attr('tagData')+')') : [];
-		lightBoxDiv.find('#lbCounter').html((allImg.indexOf(img[0]) + 1) + ' / ' + allImg.length);
+		if(allImg.length>0)
+			lightBoxDiv.find('#lbCounter').html((allImg.indexOf(img[0]) + 1) + ' / ' + allImg.length);
 		centerToView(lightBoxDiv);
 		if(!showingElementWithOverlay)
 			showElementWithOverlay(lightBoxDiv, true, 'white');
@@ -584,9 +592,11 @@ function lightBox(img){
 				desc = '';
 			lightBoxDiv.find('#lbCenter').html(title); 
 			if(fbLikeExist) lightBoxDiv.find('#lbRight #lbLoveCount').html(img.attr('like')); 
-			lightBoxDiv.find('#lbLeft').css({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
+			if(allImg.length>0)
+				lightBoxDiv.find('#lbLeft').css({left:'10px',top:(lbImgDim.height+15)+'px',width:(title?45:90)+'%'}).show();
 			lightBoxDiv.find('#lbCenter').css({left:(lbImgDim.width*(desc?0.45:0)+10)+'px',width:(desc?45:90)+'%',top:(lbImgDim.height+15)+'px'}).show();
-			lightBoxDiv.find('#lbRight').css({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
+			if(allImg.length>0)
+				lightBoxDiv.find('#lbRight').css({left:(lbImgDim.width*.9+10)+'px',top:(lbImgDim.height+15)+'px'}).show();
 			
 			if(img.attr('tag')=='video'){
 				var w = lbImgDim.width, h = lbImgDim.height;

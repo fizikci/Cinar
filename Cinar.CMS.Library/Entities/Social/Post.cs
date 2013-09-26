@@ -3,6 +3,8 @@ using Cinar.CMS.Library.Entities;
 using Cinar.Database;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,6 +17,7 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length=200)]
         public string Metin { get; set; }
 
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit)]
         public string Picture { get; set; }
 
         /// <summary>
@@ -54,6 +57,43 @@ namespace Cinar.CMS.Library.Entities
                 post.Delete();
             Provider.Database.ExecuteNonQuery("delete from PostHashTag where PostId={0}", this.Id);
             return true;
+        }
+
+        protected override void afterDelete()
+        {
+            base.afterDelete();
+
+            if(!string.IsNullOrWhiteSpace(this.Picture))
+                File.Delete(Provider.MapPath(this.Picture));
+        }
+
+        protected override void beforeSave(bool isUpdate)
+        {
+            base.beforeSave(isUpdate);
+
+            if (!isUpdate)
+            {
+                // resim gelmişse kaydedelim
+                if (Provider.Request.Files["Picture"] != null && Provider.Request.Files["Picture"].ContentLength > 0)
+                {
+                    string picFileName = Provider.Request.Files["Picture"].FileName;
+                    if (!String.IsNullOrEmpty(picFileName))
+                    {
+                        string imgUrl = Provider.BuildPath("p_" + (DateTime.Now.Millisecond % 1000), "uploadDir", true) + picFileName.Substring(picFileName.LastIndexOf('.'));
+                        Image bmp = Image.FromStream(Provider.Request.Files["Picture"].InputStream);
+                        if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                        {
+                            Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                            bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                        }
+                        else
+                            Provider.Request.Files["Picture"].SaveAs(Provider.MapPath(imgUrl));
+                        this.Picture = imgUrl;
+
+                        Provider.DeleteThumbFiles(imgUrl);
+                    }
+                }
+            }
         }
 
         protected override void afterSave(bool isUpdate)

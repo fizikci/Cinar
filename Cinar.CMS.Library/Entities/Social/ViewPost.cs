@@ -15,6 +15,7 @@ namespace Cinar.CMS.Library.Entities
                     u.Nick as UserNick,
                     concat(u.Name,' ',u.Surname) as UserFullName,
                     p.Metin,
+                    p.Picture,
                     p.InsertDate,
                     p.ShareCount,
                     p.LikeCount,
@@ -33,6 +34,7 @@ namespace Cinar.CMS.Library.Entities
         public string UserNick { get; set; }
         public string UserFullName { get; set; }
         public string Metin { get; set; }
+        public string Picture { get; set; }
         public DateTime InsertDate { get; set; }
 
         public int ShareCount { get; set; }
