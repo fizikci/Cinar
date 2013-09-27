@@ -92,6 +92,7 @@
     <Compile Include="Entities\Commerce\BannerAd.cs" />
     <Compile Include="Entities\Commerce\ExchangeRate.cs" />
     <Compile Include="Entities\Commerce\Product.cs" />
+    <Compile Include="Entities\Commerce\PaymentTransaction.cs" />
     <Compile Include="Entities\Content\AuthorLang.cs" />
     <Compile Include="Entities\Content\ContentUser.cs" />
     <Compile Include="Entities\Content\ContentContent.cs" />
@@ -124,12 +125,14 @@
     <Compile Include="Entities\NamedEntityLang.cs" />
     <Compile Include="Handlers\Admin.cs" />
     <Compile Include="Handlers\ASPXHandler.cs" />
+    <Compile Include="Handlers\VirtualPOSBankAsya.cs" />
     <Compile Include="Handlers\Social.cs" />
     <Compile Include="Handlers\SocialAPI.cs" />
     <Compile Include="Modules\Commerce\Banner.cs" />
     <Compile Include="Modules\Commerce\Basket.cs" />
     <Compile Include="Modules\Commerce\BasketSummary.cs" />
     <Compile Include="Modules\Commerce\ExchangeRates.cs" />
+    <Compile Include="Modules\Commerce\Checkout.cs" />
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Containers\ModuleRepeater.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
