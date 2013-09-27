@@ -896,7 +896,7 @@ function getEntityIcon(entityName){
 	return entityIcons[entityName];
 }
 
-function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels) {
+function openEntityListForm(entityName, caption, extraFilter, forSelect, selectCallback, hideFilterPanel, editFormHideCategory, extraCommands, renameLabels, hideEditButtons) {
 
     if (typeof (entityName) == "object") {
         caption = entityName.title;
@@ -907,6 +907,7 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
         editFormHideCategory = entityName.editFormHideCategory;
         extraCommands = entityName.extraCommands;
         renameLabels = entityName.renameLabels;
+		hideEditButtons = entityName.hideEditButtons;
         entityName = entityName.entityName;
     }
 
@@ -927,7 +928,8 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 		commands: [],
 		hideFilterPanel: hideFilterPanel,
 		editFormHideCategory: editFormHideCategory,
-        renameLabels: renameLabels
+        renameLabels: renameLabels,
+		hideEditButtons: hideEditButtons
     }
 	if(entityName=='ContentPicture'){
 	    options.commands.push({id: 'QuickLoad', icon: 'lightning', name: 'Quick Load', handler: function () {

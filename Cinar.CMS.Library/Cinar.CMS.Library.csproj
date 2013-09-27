@@ -110,8 +110,8 @@
     <Compile Include="Entities\Social\ViewPost.cs" />
     <Compile Include="Entities\Social\ViewPostRelatedData.cs" />
     <Compile Include="Entities\Social\ViewProfileSummary.cs" />
-    <Compile Include="Entities\User\ReportedUser.cs" />
-    <Compile Include="Entities\User\UserContact.cs" />
+    <Compile Include="Entities\Social\ReportedUser.cs" />
+    <Compile Include="Entities\Social\UserContact.cs" />
     <Compile Include="Entities\User\UserSettings.cs" />
     <Compile Include="Entities\StaticResourceLang.cs" />
     <Compile Include="Entities\StaticResource.cs" />
@@ -133,6 +133,7 @@
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Containers\ModuleRepeater.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
+    <Compile Include="Modules\Social\PrivateMessages.cs" />
     <Compile Include="Modules\Social\GoogleContacts.cs" />
     <Compile Include="Modules\Membership\LoginForm2.cs" />
     <Compile Include="Modules\Misc\Chart.cs" />

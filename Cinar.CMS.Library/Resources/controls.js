@@ -1752,6 +1752,7 @@ var ListForm = Class.create(); ListForm.prototype = {
     listGrid: null,
     pageIndex: 0,
     limit: 20,
+	hideEditButtons: false,
     selRows: null, //set when getSelectedEntityId is called
     initialize: function(container, options) {
         idCounter++;
@@ -1777,9 +1778,11 @@ var ListForm = Class.create(); ListForm.prototype = {
         str += '<span class="fff resultset_previous" id="btnPrev' + this.hndl + '" title="' + lang('Previous Page') + ' (PgUp)"></span>';
         str += '<span class="cpager" id="pageNo' + this.hndl + '">1</span>';
         str += '<span class="fff resultset_next" id="btnNext' + this.hndl + '" title="' + lang('Next Page') + ' (PgDw)" style="margin-right:50px"></span>';
-        str += '<span class="fff add" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
-        str += '<span class="fff pencil" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
-        str += '<span class="fff delete" id="btnDelete' + this.hndl + '" title="' + lang('Delete') + ' (Del)"></span>';
+		if(!options.hideEditButtons){
+			str += '<span class="fff add" id="btnAdd' + this.hndl + '" title="' + lang('Add') + ' (Ins)"></span>';
+			str += '<span class="fff pencil" id="btnEdit' + this.hndl + '" title="' + lang('Edit') + ' (Ent)"></span>';
+			str += '<span class="fff delete" id="btnDelete' + this.hndl + '" title="' + lang('Delete') + ' (Del)"></span>';
+		}
         str += '<span class="fff database_refresh" id="btnRefresh' + this.hndl + '" title="' + lang('Refresh') + '"></span>';
         str += '<span class="fff information" id="btnInfo' + this.hndl + '" title="' + lang('Info') + '"></span>';
         str += '</div>';

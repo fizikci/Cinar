@@ -556,11 +556,12 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
             </div>
 
             <div class="codeSample">
-                <h3>Filtre panelini gizlemek:</h3>
+                <h3>Filtre panelini ve butonları gizlemek:</h3>
                 <pre class="code">openEntityListForm({
     entityName: 'User', 
     title: 'Web Site Users',
-    hideFilterPanel: true
+    hideFilterPanel: true,
+    hideEditButtons: true
 });</pre>
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
