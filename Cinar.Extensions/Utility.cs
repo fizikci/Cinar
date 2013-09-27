@@ -1456,6 +1456,54 @@ namespace System
         }
         #endregion
 
+        public static string ValidateCreditCardNumber(CardType cardType, string cardNumber)
+        {
+            byte[] number = new byte[16]; // number to validate
+
+            // Remove non-digits
+            int len = 0;
+            for (int i = 0; i < cardNumber.Length; i++)
+            {
+                if (char.IsDigit(cardNumber, i))
+                {
+                    if (len == 16) return "Kart numarası çok fazla haneden oluşuyor."; // number has too many digits
+                    number[len++] = byte.Parse(cardNumber[i].ToString());
+                }
+            }
+
+            // Validate based on card type, first if tests length, second tests prefix
+            switch (cardType)
+            {
+                case CardType.MASTERCARD:
+                    if (len != 16)
+                        return "MasterCard için uyumsuz kart numarası";
+                    if (number[0] != 5 || number[1] == 0 || number[1] > 5)
+                        return "MasterCard için uyumsuz kart numarası";
+                    break;
+
+                case CardType.VISA:
+                    if (len != 16 && len != 13)
+                        return "VISA için uyumsuz kart numarası";
+                    if (number[0] != 4)
+                        return "VISA için uyumsuz kart numarası";
+                    break;
+            }
+
+            // Use Luhn Algorithm to validate
+            int sum = 0;
+            for (int i = len - 1; i >= 0; i--)
+            {
+                if (i % 2 == len % 2)
+                {
+                    int n = number[i] * 2;
+                    sum += (n / 10) + (n % 10);
+                }
+                else
+                    sum += number[i];
+            }
+            return (sum % 10 == 0) ? "" : "Geçersiz kart numarası";
+        }
+
         public static object Deserialize(this string xml, Type type)
         {
             if (xml == null)
@@ -1858,4 +1906,9 @@ namespace System
         TopLeft,
         MiddleCenter
     }
+
+    public enum CardType
+    {
+        MASTERCARD, VISA
+    };
 }
