@@ -198,6 +198,10 @@ namespace Cinar.CMS.Library.Handlers
             context.Response.Write(new Result { Data = pm }.ToJSON());
         }
 
+        private void setMessageRead() { 
+            
+        }
+
         private void reportUser()
         {
             string nick = context.Request["nick"];
