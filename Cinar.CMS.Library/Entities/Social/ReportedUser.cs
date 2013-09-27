@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select ReportedUser.Id, Reporter.Nick as [Reporter.Nick], ReportedUser.Reason as [ReportedUser.Reason], Reported.Nick as [Reported.Nick] from [ReportedUser] INNER JOIN [User] as Reporter ON Reporter.Id=ReportedUser.InsertUserId INNER JOIN [User] as Reported ON Reported.Id=ReportedUser.UserId", QueryOrderBy = "ReportedUser.Id desc")]
     public class ReportedUser : BaseEntity
     {
         private int userId;
