@@ -67,6 +67,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "Social":
                     new Social().ProcessRequest(context);
                     break;
+                case "VirtualPOSBankAsya":
+                    new VirtualPOSBankAsya().ProcessRequest(context);
+                    break;
                 case "RunModuleMethod":
                 case "DoLogin":
                 case "SaveMember":

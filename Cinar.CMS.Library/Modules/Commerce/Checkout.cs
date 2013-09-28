@@ -21,7 +21,7 @@ function satinalma(){
     \$('#ccBtn').disable();
     \$('#ccLoad').css('visibility','visible');
 
-    new Ajax.Request('/Satinalma.ashx', {
+    new Ajax.Request('/VirtualPOSBankAsya.ashx', {
         method: 'post',
         parameters: \$('#ccForm').serialize(),
         onComplete: function(req) {
@@ -50,7 +50,8 @@ function satinalma(){
 
 &nbsp;<br/>
 <b>Ödenecek Tutar:</b><br/>
-<font size=""5"">0.00 TL</font><br/>
+$ using Cinar.CMS.Library.Handlers; $ 
+<font size=""5"">$=VirtualPOS.Amount$ TL</font><br/>
 <br/>
 <br/>
 <img src=""/external/icons/rapidssl.png"" width=""121""/>
