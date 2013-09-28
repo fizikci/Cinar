@@ -43,6 +43,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "sendMessage":
                         sendMessage();
                         break;
+                    case "updateLastOpenNotification":
+                        updateLastOpenNotification();
+                        break;
                     case "getMessageCount":
                         getMessageCount();
                         break;
@@ -159,6 +162,17 @@ namespace Cinar.CMS.Library.Handlers
             }.Save();
 
             context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
+
+        private void updateLastOpenNotification()
+        {
+            string date = context.Request["date"];
+            
+            Provider.User.Settings.LastNotificationCheck = DateTime.Parse(date);
+            Provider.User.Settings.Save();
+
+            context.Response.Write(new Result { Data = date }.ToJSON());
         }
 
         private void getMessageCount()
