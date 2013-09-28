@@ -125,6 +125,7 @@
     <Compile Include="Entities\NamedEntityLang.cs" />
     <Compile Include="Handlers\Admin.cs" />
     <Compile Include="Handlers\ASPXHandler.cs" />
+    <Compile Include="Handlers\VirtualPos.cs" />
     <Compile Include="Handlers\VirtualPOSBankAsya.cs" />
     <Compile Include="Handlers\Social.cs" />
     <Compile Include="Handlers\SocialAPI.cs" />

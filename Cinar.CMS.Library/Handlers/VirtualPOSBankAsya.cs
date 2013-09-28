@@ -12,86 +12,10 @@ using Cinar.CMS.Library;
 using Cinar.CMS.Library.Entities;
 using System.Linq;
 
-namespace OnlineSinav.Web.Library.Handlers
+namespace Cinar.CMS.Library.Handlers
 {
-    public class VirtualPOSBankAsya : IHttpHandler, IRequiresSessionState
+    public class VirtualPOSBankAsya : VirtualPOS
     {
-        public void ProcessRequest(HttpContext context)
-        {
-            try
-            {
-                string merchantId = Provider.AppSettings["merchantId"];
-                string merchantPassword = Provider.AppSettings["merchantPassword"];
-                double amount = 0d;
-                string brandId = Provider.Request["CardType"];
-                string pan = "";
-                // Remove non-digits
-                for (int i = 0; i < Provider.Request["CardNumber"].Length; i++)
-                {
-                    if (char.IsDigit(Provider.Request["CardNumber"], i))
-                        pan += Provider.Request["CardNumber"][i].ToString();
-                }
-
-                string expiryDate = Provider.Request["ExpiryYear"] + Provider.Request["ExpiryMonth"];
-                string cvv2 = Provider.Request["CVV2"];
-
-                CardType ct = (CardType) Enum.Parse(typeof (CardType), brandId);
-                string cardValid = Utility.ValidateCreditCardNumber(ct, pan);
-
-                if (cardValid != "")
-                {
-                    context.Response.Write("HATA: " + cardValid);
-                    return;
-                }
-
-                string request = createSaleRequest(merchantId, merchantPassword, amount, pan, expiryDate, cvv2, brandId);
-                string response = send(request);
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(response);
-                XmlNode node = doc.SelectSingleNode("//HostResponse/@ResultCode");
-                int sonuc = int.Parse(node.Value);
-
-                if (sonuc == 0)
-                {
-                    try
-                    {
-                        PaymentTransaction s = new PaymentTransaction();
-                        s.Amount = (int)(amount * 100);
-                        s.CheckoutType = CheckoutTypes.CreditCard;
-                        s.Result = response;
-                        s.Save();
-                    }
-                    catch (Exception ex)
-                    {
-                        string msg = amount+" TL tahsil edildi. Bu bilgi bir hata nedeniyle veritabanına kaydedilemedi. Lütfen bu bilgiyi manuel olarak kaydediniz.";
-                        Provider.SendMail("Tahsilat yapıldı ama sisteme kaydedilemedi!!!", msg);
-                        Provider.Log("Checkout", "Error", msg);
-                    }
-
-                    context.Response.Write("OK");
-                }
-                else
-                {
-                    context.Response.Write("HATA: Ödemenizin onaylanmasında bir hata oluştu.");
-                    Provider.Log("Checkout", "Error", amount+" TL tahsil edilmek istendi ama servisten " + sonuc + " nolu hata döndü. (" + (resultCodes.ContainsKey(sonuc) ? resultCodes[sonuc] : "??") + ")");
-                }
-            }
-            catch (Exception ex)
-            {
-                context.Response.Write("HATA: " + ex.Message);
-                Provider.Log("Checkout", "Error", ex.Message + (ex.InnerException != null ? "(" + ex.InnerException.Message + ")" : ""));
-            }
-        }
-
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-
         private string createSaleRequest(string merchantId, string merchantPassword, double amount, string pan, string expiryDate, string cvv2, string brandId)
         {
             string request = "";
@@ -225,5 +149,28 @@ namespace OnlineSinav.Web.Library.Handlers
             {-1, "Uygun (boş) terminal bulunamadı."},
 
         };
+
+        protected override bool Transact()
+        {
+            string merchantId = Provider.AppSettings["merchantId"];
+            string merchantPassword = Provider.AppSettings["merchantPassword"];
+
+            if (string.IsNullOrWhiteSpace(merchantId)) // debug mode
+                return true;
+
+            string request = createSaleRequest(merchantId, merchantPassword, Amount, CardNumber, ExpiryDate, CVV2, CardType.ToString());
+            Response = send(request);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(Response);
+            XmlNode node = doc.SelectSingleNode("//HostResponse/@ResultCode");
+            int sonuc = int.Parse(node.Value);
+
+            if (sonuc != 0) {
+                ResponseErrorNo = sonuc;
+                ResponseErrorMessage = resultCodes.ContainsKey(sonuc) ? resultCodes[sonuc] : "??";
+            }
+
+            return sonuc == 0;
+        }
     }
 }
