@@ -433,6 +433,8 @@ limit
             if (user == null)
                 throw new Exception("User unknown");
 
+            user.ContactCount = SocialAPI.GetUserFollowerCount(user.Id) + 1;
+
             if (!user.Settings.IsInfoHidden)
                 new UserContact { UserId = user.Id }.Save();
             else
@@ -443,6 +445,7 @@ limit
                     UserId = user.Id
                 }.Save();
             }
+            user.Save();
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
