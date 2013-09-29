@@ -37,6 +37,8 @@ namespace Cinar.CMS.Library.Entities
 
         public int Lat { get; set; }
         public int Lng { get; set; }
+        public string VideoId { get; set; }
+        public VideoTypes VideoType { get; set; }
 
         /// <summary>
         /// Kaç kişi bunu paylaştı
@@ -70,6 +72,29 @@ namespace Cinar.CMS.Library.Entities
         protected override void beforeSave(bool isUpdate)
         {
             base.beforeSave(isUpdate);
+
+            var urls = new Regex(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)");
+
+            foreach(Match m in urls.Matches(this.Metin))
+            {
+                if (m.Value.Contains("youtube.com"))
+                {
+                    string video_id = m.Value.SplitWithTrim("v=")[1];
+                    var ampersandPosition = video_id.IndexOf('&');
+                    if (ampersandPosition != -1)
+                    {
+                        video_id = video_id.Substring(0, ampersandPosition);
+                    }
+                    this.VideoId = video_id;
+                    this.VideoType = VideoTypes.Youtube;
+                }
+                if (m.Value.Contains("vimeo.com"))
+                {
+                    string video_id = m.Value.SplitAndGetLast('/');
+                    this.VideoId = video_id;
+                    this.VideoType = VideoTypes.Vimeo;
+                }
+            }
 
             if (!isUpdate)
             {
@@ -137,5 +162,11 @@ namespace Cinar.CMS.Library.Entities
                 }
             }
         }
+    }
+
+    public enum VideoTypes { 
+        None,
+        Youtube,
+        Vimeo
     }
 }
