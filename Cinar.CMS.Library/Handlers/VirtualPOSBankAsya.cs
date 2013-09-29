@@ -158,7 +158,7 @@ namespace Cinar.CMS.Library.Handlers
             if (string.IsNullOrWhiteSpace(merchantId)) // debug mode
                 return true;
 
-            string request = createSaleRequest(merchantId, merchantPassword, Amount, CardNumber, ExpiryDate, CVV2, CardType.ToString());
+            string request = createSaleRequest(merchantId, merchantPassword, AmountInCents/100d, CardNumber, ExpiryDate, CVV2, CardType.ToString());
             Response = send(request);
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(Response);
