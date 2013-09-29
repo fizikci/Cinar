@@ -10,6 +10,7 @@ using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
 using System.Drawing;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -532,6 +533,7 @@ limit
                     Metin = metin,
                     ReplyToPostId = replyToPostId
                 };
+
                 p.Save();
 
                 context.Response.Write("<html><head></head><body><script>window.parent.paylas(" + p.Id + ", '" + p.Picture + "');</script></body></html>");
