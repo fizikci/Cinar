@@ -1602,6 +1602,12 @@ namespace System
             return false;
         }
 
+        public static bool CanConvertToInteger(this string str)
+        {
+            int number = 0;
+            return int.TryParse(str, out number);
+        }
+
         public static void CopyDirectory(string src, string dst)
         {
             String[] files;

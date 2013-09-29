@@ -137,6 +137,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "getPostRelatedData":
                         getPostRelatedData();
                         break;
+                    case "createPostAd":
+                        createPostAd();
+                        break;
                     default:
                         break;
                 }
@@ -675,6 +678,23 @@ http://{1}
                 catch { }
             }
             Provider.Response.Write("ok");
+        }
+
+        private void createPostAd()
+        {
+            int postId = 0;
+            int.TryParse(Provider.Request["postId"], out postId);
+            if (postId == 0)
+            {
+                context.Response.Write(new Result { IsError = true, ErrorMessage = Provider.TR("Paylaşım seçiniz") }.ToJSON());
+                return;
+            }
+
+            PostAd pa = new PostAd();
+            pa.PostId = postId;
+            pa.Save();
+
+            context.Response.Write(new Result { Data = pa.Id }.ToJSON());
         }
     }
 

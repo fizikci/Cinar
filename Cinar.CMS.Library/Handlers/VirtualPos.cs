@@ -16,14 +16,15 @@ namespace Cinar.CMS.Library.Handlers
 {
     public abstract class VirtualPOS : IHttpHandler, IRequiresSessionState
     {
-        public static double Amount {
+        public static int AmountInCents {
             get {
                 if (Provider.Session["virtualpos_amount"] == null)
-                    Provider.Session["virtualpos_amount"] = 0d;
-                return (double) Provider.Session["virtualpos_amount"]; 
+                    Provider.Session["virtualpos_amount"] = 0;
+                return (int) Provider.Session["virtualpos_amount"]; 
             }
             set { Provider.Session["virtualpos_amount"] = value;}
         }
+
         protected CardType CardType;
         protected string CardNumber;
         protected string ExpiryDate;
@@ -45,8 +46,21 @@ namespace Cinar.CMS.Library.Handlers
                         CardNumber += Provider.Request["CardNumber"][i].ToString();
                 }
 
+                int year = 0;
+                int.TryParse(Provider.Request["ExpiryYear"], out year);
+                if (year < DateTime.Now.Year)
+                    throw new Exception("Son kullanma tarihi yanlış");
+
+                int month = 0;
+                int.TryParse(Provider.Request["ExpiryMonth"], out month);
+                if (!(month>=1 && month<=12))
+                    throw new Exception("Son kullanma tarihi yanlış");
+
                 ExpiryDate = Provider.Request["ExpiryYear"] + Provider.Request["ExpiryMonth"];
                 CVV2 = Provider.Request["CVV2"];
+
+                if (CVV2.Length != 3 || !CVV2.CanConvertToInteger())
+                    throw new Exception("CCV2 kodu hatalı");
 
                 CardType = (CardType) Enum.Parse(typeof (CardType), Provider.Request["CardType"]);
                 string cardValid = Utility.ValidateCreditCardNumber(CardType, CardNumber);
@@ -63,14 +77,14 @@ namespace Cinar.CMS.Library.Handlers
                     try
                     {
                         PaymentTransaction s = new PaymentTransaction();
-                        s.Amount = (int)(Amount * 100);
+                        s.Amount = AmountInCents;
                         s.CheckoutType = CheckoutTypes.CreditCard;
                         s.Result = Response;
                         s.Save();
                     }
                     catch (Exception ex)
                     {
-                        string msg = Amount+" TL tahsil edildi. Bu bilgi bir hata nedeniyle veritabanına kaydedilemedi. Lütfen bu bilgiyi manuel olarak kaydediniz.";
+                        string msg = (AmountInCents/100d)+" TL tahsil edildi. Bu bilgi bir hata nedeniyle veritabanına kaydedilemedi. Lütfen bu bilgiyi manuel olarak kaydediniz.";
                         Provider.SendMail("Tahsilat yapıldı ama sisteme kaydedilemedi!!!", msg);
                         Provider.Log("Checkout", "Error", msg);
                     }
@@ -80,7 +94,7 @@ namespace Cinar.CMS.Library.Handlers
                 else
                 {
                     context.Response.Write("HATA: Ödemenizin onaylanmasında bir hata oluştu.");
-                    Provider.Log("Checkout", "Error", Amount+" TL tahsil edilmek istendi ama servisten " + ResponseErrorNo + " nolu hata döndü. (" + ResponseErrorMessage + ")");
+                    Provider.Log("Checkout", "Error", (AmountInCents/100d)+" TL tahsil edilmek istendi ama servisten " + ResponseErrorNo + " nolu hata döndü. (" + ResponseErrorMessage + ")");
                 }
             }
             catch (Exception ex)
