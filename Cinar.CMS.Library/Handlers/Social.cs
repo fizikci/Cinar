@@ -517,18 +517,26 @@ limit
             int replyToPostId = 0;
             int.TryParse(context.Request["replyToPostId"], out replyToPostId);
 
-            Post p = new Post
-            {
-                LangId = Provider.CurrentLanguage.Id,
-                Lat = lat,
-                Lng = lng,
-                Metin = metin,
-                ReplyToPostId = replyToPostId
-            };
-            p.Save();
-
             context.Response.ContentType = "text/html";
-            context.Response.Write("<html><head></head><body><script>window.parent.paylas("+p.Id+", '"+p.Picture+"');</script></body></html>");
+
+            try
+            {
+                Post p = new Post
+                {
+                    LangId = Provider.CurrentLanguage.Id,
+                    Lat = lat,
+                    Lng = lng,
+                    Metin = metin,
+                    ReplyToPostId = replyToPostId
+                };
+                p.Save();
+
+                context.Response.Write("<html><head></head><body><script>window.parent.paylas(" + p.Id + ", '" + p.Picture + "');</script></body></html>");
+            }
+            catch(Exception ex)
+            {
+                context.Response.Write("<html><head></head><body><script>window.parent.niceAlert(" + ex.Message.ToJS() + ");</script></body></html>");
+            }
         }
 
         private void like()
