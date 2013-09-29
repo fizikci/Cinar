@@ -38,6 +38,12 @@ namespace Cinar.CMS.Library.Entities
 
         public bool IsInfoHidden { get; set; }
 
+        public bool MailAfterFollow { get; set; }
+
+        public bool MailAfterMessage { get; set; }
+
+        public bool MailAfterPostReply { get; set; }
+
         public override void SetFieldsByPostData(NameValueCollection postData)
         {
             base.SetFieldsByPostData(postData);
