@@ -17,6 +17,8 @@ namespace Cinar.CMS.Library.Entities
         About as Summary, 
         Web as Website,
         (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
+        (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
+        (select count(Id) from BlockedUser where InsertUserId=u.Id) as IsBlocked,
         (select count(Id) from UserContact where UserId=u.Id) as IsFollower,
         (select count(Id) from Post where InsertUserId=u.Id) as PaylasimCount,
         (select count(Id) from UserContact where InsertUserId=u.Id) as FollowingCount,
