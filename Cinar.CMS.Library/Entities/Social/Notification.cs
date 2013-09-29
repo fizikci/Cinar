@@ -48,8 +48,6 @@ namespace Cinar.CMS.Library.Entities
                     break;
                 case NotificationTypes.Mention:
                     break;
-                case NotificationTypes.PrivateMessage:
-                    break;
                 case NotificationTypes.Reply:
                     break;
                 case NotificationTypes.Followed:
@@ -76,10 +74,6 @@ namespace Cinar.CMS.Library.Entities
         /// Biri postunda senden bahsetti
         /// </summary>
         Mention,
-        /// <summary>
-        /// Sana özel mesaj gönderildi
-        /// </summary>
-        PrivateMessage,
         /// <summary>
         /// Biri postuna cevap yazdı
         /// </summary>
