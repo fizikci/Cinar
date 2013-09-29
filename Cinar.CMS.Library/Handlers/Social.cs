@@ -477,7 +477,13 @@ limit
             if (user == null)
                 throw new Exception("User unknown");
 
-            new BlockedUser { UserId = user.Id }.Save();
+            BlockedUser bu = Provider.Database.Read<BlockedUser>("select * from blockeduser where InsertUserId = {0} and UserId = {1}", Provider.User.Id, user.Id);
+
+            if (bu == null)
+                bu = new BlockedUser { UserId = user.Id };
+
+            bu.Save();
+
             UserContact uc = Provider.Database.Read<UserContact>("UserId={0} and InsertUserId={1}", user.Id, Provider.User.Id);
             uc.Delete();
 
@@ -586,12 +592,13 @@ limit
             string oldPass = Provider.Request["oldPass"];
             string newPass = Provider.Request["newPass"];
             User u = Provider.User;
-            string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16);
+            string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16).ToLower();
 
             if (string.IsNullOrWhiteSpace(oldPass) || string.IsNullOrWhiteSpace(newPass))
                 throw new Exception("password expected");
 
             oldPass = Utility.MD5(oldPass).Substring(0, 16);
+
             if (oldPass != currPass)
                 throw new Exception("password didn't match: " + oldPass + " =/= " + currPass);
 
