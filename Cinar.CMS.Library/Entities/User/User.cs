@@ -122,6 +122,8 @@ namespace Cinar.CMS.Library.Entities
         [EditFormFieldProps(Visible = false)]
         public int RedirectCount { get; set; }
 
+        public int ContactCount { get; set; }
+
         public bool IsAnonim() {
             return this.Email == "anonim";
         }
