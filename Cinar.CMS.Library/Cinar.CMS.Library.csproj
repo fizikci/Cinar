@@ -139,6 +139,7 @@
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Containers\ModuleRepeater.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
+    <Compile Include="Modules\Social\WordBlackListAdmin.cs" />
     <Compile Include="Modules\Social\PrivateMessages.cs" />
     <Compile Include="Modules\Social\GoogleContacts.cs" />
     <Compile Include="Modules\Membership\LoginForm2.cs" />
