@@ -546,14 +546,18 @@ limit
             if (pid == 0)
                 throw new Exception("Post not found");
 
+            int userId = Provider.Database.Read<Post>(pid).InsertUserId;
 
-
-            new Notification
-            {
-                NotificationType = NotificationTypes.Liked,
-                PostId = pid,
-                UserId = Provider.Database.Read<Post>(pid).InsertUserId
-            }.Save();
+            Notification n = Provider.Database.Read<Notification>
+                ("UserId = {0} and NotificationType = {1} and PostId = {2} and InsertUserId = {3}", userId, NotificationTypes.Liked, pid, Provider.User.Id);
+            
+            if(n == null)
+                new Notification
+                {
+                    NotificationType = NotificationTypes.Liked,
+                    PostId = pid,
+                    UserId = userId
+                }.Save();
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
