@@ -93,6 +93,11 @@ namespace Cinar.CMS.Library.Entities
                         Provider.DeleteThumbFiles(imgUrl);
                     }
                 }
+
+                foreach (var word in Provider.Database.ReadList<WordBlacklist>("select Name from WordBlacklist")) { 
+                    if(this.Metin.Contains(word.Name))
+                        throw new Exception(Provider.TR("Metin içersinde yasaklı kelimeler geçiyor."));
+                }
             }
         }
 
