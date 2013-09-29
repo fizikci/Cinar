@@ -278,16 +278,20 @@ namespace Cinar.CMS.Library.Entities
             return true;
         }
 
+        private UserSettings us;
         public UserSettings Settings
         {
             get
             {
-                var us = Provider.Database.Read<UserSettings>("UserId={0}", Provider.User.Id);
                 if (us == null)
                 {
-                    us = new UserSettings { UserId = Provider.User.Id};
-                    us.LastNotificationCheck = DateTime.Now;
-                    us.Save();
+                    us = Provider.Database.Read<UserSettings>("UserId={0}", Provider.User.Id);
+                    if (us == null)
+                    {
+                        us = new UserSettings { UserId = Provider.User.Id };
+                        us.LastNotificationCheck = DateTime.Now;
+                        us.Save();
+                    }
                 }
                 return us;
             }

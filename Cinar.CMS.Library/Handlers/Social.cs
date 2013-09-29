@@ -170,12 +170,10 @@ namespace Cinar.CMS.Library.Handlers
 
         private void updateLastOpenNotification()
         {
-            string date = context.Request["date"];
-            
-            Provider.User.Settings.LastNotificationCheck = DateTime.Parse(date);
+            Provider.User.Settings.LastNotificationCheck = DateTime.Now;
             Provider.User.Settings.Save();
 
-            context.Response.Write(new Result { Data = date }.ToJSON());
+            context.Response.Write(new Result { Data = true }.ToJSON());
         }
 
         private void getMessageCount()

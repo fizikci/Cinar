@@ -18,5 +18,6 @@ namespace Cinar.CMS.Library.Entities
         public NotificationTypes NotificationType { get; set; }
         public int PostId { get; set; }
 
+        public bool New { get; set; }
     }
 }
