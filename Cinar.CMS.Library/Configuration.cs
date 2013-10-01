@@ -276,6 +276,9 @@ namespace Cinar.CMS.Library
             set { membershipFormPage = value; }
         }
 
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 27, Category = "Özel Sayfalar")]
+        public string AfterMembershipPage { get; set; }
+
         private string membershipProfilePage = "Profile.aspx";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 28, Category = "Özel Sayfalar")]
         public string MembershipProfilePage
@@ -292,6 +295,9 @@ namespace Cinar.CMS.Library
             set { rememberPasswordFormPage = value; }
         }
 
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 29, Category = "Özel Sayfalar")]
+        public string AfterRememberPasswordPage { get; set; }
+
         private string userActivationPage = "Activation.aspx";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 30, Category = "Özel Sayfalar")]
         public string UserActivationPage
@@ -299,6 +305,9 @@ namespace Cinar.CMS.Library
             get { return userActivationPage; }
             set { userActivationPage = value; }
         }
+
+        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 30, Category = "Özel Sayfalar")]
+        public string AfterUserActivationPage { get; set; }
 
         private string adminPage = "Admin.aspx";
         [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates", OrderNo = 31, Category = "Özel Sayfalar")]

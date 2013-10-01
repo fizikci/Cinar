@@ -536,7 +536,16 @@ limit
 
                 p.Save();
 
-                context.Response.Write("<html><head></head><body><script>window.parent.paylas(" + p.Id + ", '" + p.Picture + "');</script></body></html>");
+                ViewPost vp = new ViewPost()
+                    {
+                        SharerNick = "",
+                        UserAvatar = Provider.GetThumbPath(p.InsertUser.Avatar, 48, 48, false),
+                        UserFullName = p.InsertUser.FullName,
+                        UserNick = p.InsertUser.Nick                        
+                    };
+                p.CopyPropertiesWithSameName(vp);
+
+                context.Response.Write("<html><head></head><body><script>window.parent.paylas(" + vp.ToJSON() + ");</script></body></html>");
             }
             catch(Exception ex)
             {
