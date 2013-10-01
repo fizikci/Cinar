@@ -616,18 +616,18 @@ limit
 
         private void updatePassword()
         {
-            string oldPass = Provider.Request["oldPass"];
+            //string oldPass = Provider.Request["oldPass"];
             string newPass = Provider.Request["newPass"];
             User u = Provider.User;
-            string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16).ToLower();
+            //string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16).ToLower();
 
-            if (string.IsNullOrWhiteSpace(oldPass) || string.IsNullOrWhiteSpace(newPass))
-                throw new Exception("password expected");
+            //if (string.IsNullOrWhiteSpace(oldPass) || string.IsNullOrWhiteSpace(newPass))
+            //    throw new Exception("password expected");
 
-            oldPass = Utility.MD5(oldPass).Substring(0, 16);
+            //oldPass = Utility.MD5(oldPass).Substring(0, 16);
 
-            if (oldPass != currPass)
-                throw new Exception("password didn't match: " + oldPass + " =/= " + currPass);
+            //if (oldPass != currPass)
+            //    throw new Exception("password didn't match: " + oldPass + " =/= " + currPass);
 
             u.Password = Utility.MD5(newPass);
             u.Save();
