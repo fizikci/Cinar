@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cinar.CMS.Library.Entities;
+using System.Web;
+using System.Web.Caching;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -30,6 +32,30 @@ namespace Cinar.CMS.Library.Handlers
         public static int GetUserFollowerCount(int userId)
         {
             return Provider.Database.GetInt("select count(Id) from UserContact where UserId={0}", userId);
+        }
+
+        public static ViewPost GetRandomPostAd() {
+            if (HttpContext.Current.Cache["post_ads"] == null)
+            {
+                List<PostAd> ads = Provider.Database.ReadList<PostAd>("select * from PostAd where Completed=0");
+                HttpContext.Current.Cache.Add("post_ads", ads, null, DateTime.Now.AddHours(1), Cache.NoSlidingExpiration, CacheItemPriority.High, 
+                    (String name, Object val, CacheItemRemovedReason r)=>{
+                        foreach (var ad in (List<PostAd>)val)
+                            ad.Save();
+                    }
+                );
+            }
+            List<PostAd> cachedAds = (List<PostAd>) HttpContext.Current.Cache["post_ads"];
+            PostAd p = cachedAds[new Random().Next(cachedAds.Count)];
+            ViewPost vp = new ViewPost()
+            {
+                SharerNick = "",
+                UserAvatar = Provider.GetThumbPath(p.InsertUser.Avatar, 48, 48, false),
+                UserFullName = p.InsertUser.FullName,
+                UserNick = p.InsertUser.Nick
+            };
+            p.CopyPropertiesWithSameName(vp);
+            return vp;
         }
 
         /// <summary>
@@ -69,6 +95,12 @@ namespace Cinar.CMS.Library.Handlers
                 ORDER BY 
                     p.Id DESC
                 LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+
+            if (lessThanId == 2147483647){
+                var pa = GetRandomPostAd();
+                if (pa != null)
+                    list.Insert(0, pa);
+            }
 
             foreach (var viewPost in list)
             {
@@ -124,6 +156,13 @@ namespace Cinar.CMS.Library.Handlers
                 ORDER BY 
                     p.Id DESC
                 LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);
+
+            if (lessThanId == 2147483647)
+            {
+                var pa = GetRandomPostAd();
+                if (pa != null)
+                    list.Insert(0, pa);
+            }
 
             foreach (var viewPost in list)
             {
@@ -192,6 +231,13 @@ namespace Cinar.CMS.Library.Handlers
                 idPart = "p.Id>{1}";
             if (idPart == null)
                 throw new Exception("lessThanId or greaterThanId expected");
+
+            if (lessThanId == 2147483647)
+            {
+                var pa = GetRandomPostAd();
+                if (pa != null)
+                    list.Insert(0, pa);
+            }
 
             List<ViewPost> list = Provider.Database.ReadList<ViewPost>(@"
                 SELECT 
@@ -272,6 +318,13 @@ namespace Cinar.CMS.Library.Handlers
                 ORDER BY 
                     p.Id DESC
                 LIMIT {2}", "%" + query + "%", lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+
+            if (lessThanId == 2147483647)
+            {
+                var pa = GetRandomPostAd();
+                if (pa != null)
+                    list.Insert(0, pa);
+            }
 
             foreach (var viewPost in list)
             {
