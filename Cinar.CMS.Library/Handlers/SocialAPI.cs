@@ -232,13 +232,6 @@ namespace Cinar.CMS.Library.Handlers
             if (idPart == null)
                 throw new Exception("lessThanId or greaterThanId expected");
 
-            if (lessThanId == 2147483647)
-            {
-                var pa = GetRandomPostAd();
-                if (pa != null)
-                    list.Insert(0, pa);
-            }
-
             List<ViewPost> list = Provider.Database.ReadList<ViewPost>(@"
                 SELECT 
                     p.Id,
@@ -263,6 +256,13 @@ namespace Cinar.CMS.Library.Handlers
                 ORDER BY 
                     (p.ShareCount+1) * (p.ShareCount+1) * (p.LikeCount+1) DESC
                 LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);
+
+            if (lessThanId == 2147483647)
+            {
+                var pa = GetRandomPostAd();
+                if (pa != null)
+                    list.Insert(0, pa);
+            }
 
             foreach (var viewPost in list)
             {
