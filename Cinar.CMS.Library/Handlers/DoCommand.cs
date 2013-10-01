@@ -467,7 +467,7 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
-                context.Response.Redirect(Provider.Configuration.MembershipFormPage);
+                context.Response.Redirect(Provider.Configuration.AfterUserActivationPage);
             }
             else
             {
@@ -489,7 +489,7 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
-                context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.MembershipFormPage : Provider.Configuration.MembershipProfilePage);
+                context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.AfterRememberPasswordPage : Provider.Configuration.AfterUserActivationPage);
             }
             else
             {
@@ -535,7 +535,7 @@ namespace Cinar.CMS.Library.Handlers
             else
                 user = Provider.User;
             user.SetFieldsByPostData(context.Request.Form);
-            user.Roles = "User"; // yeni bir user user'dan başka bir yetkiye sahip olamaz.
+            user.Roles = "User"; // yeni bir user User'dan başka bir yetkiye sahip olamaz.
             List<string> errorList = user.Validate();
             if (errorList.Count == 0)
             {
@@ -546,7 +546,7 @@ namespace Cinar.CMS.Library.Handlers
                     user.Roles = Provider.Database.GetString("select Roles from User where Id = {0}", user.Id);
                 
                 user.Save();
-                context.Response.Redirect(Provider.Configuration.MembershipFormPage + "?st=" + st);
+                context.Response.Redirect(Provider.Configuration.AfterMembershipPage + "?st=" + st);
             }
             else
             {
