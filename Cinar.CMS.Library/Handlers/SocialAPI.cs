@@ -38,7 +38,7 @@ namespace Cinar.CMS.Library.Handlers
             if (HttpContext.Current.Cache["post_ads"] == null)
             {
                 List<PostAd> ads = Provider.Database.ReadList<PostAd>("select * from PostAd where Completed=0");
-                HttpContext.Current.Cache.Add("post_ads", ads, null, DateTime.Now.AddHours(1), Cache.NoSlidingExpiration, CacheItemPriority.High, 
+                HttpContext.Current.Cache.Add("post_ads", ads, null, DateTime.Now.AddHours(10), Cache.NoSlidingExpiration, CacheItemPriority.High, 
                     (String name, Object val, CacheItemRemovedReason r)=>{
                         foreach (var ad in (List<PostAd>)val)
                             ad.Save();
@@ -46,16 +46,22 @@ namespace Cinar.CMS.Library.Handlers
                 );
             }
             List<PostAd> cachedAds = (List<PostAd>) HttpContext.Current.Cache["post_ads"];
-            PostAd p = cachedAds[new Random().Next(cachedAds.Count)];
-            ViewPost vp = new ViewPost()
+            if (cachedAds.Count > 0)
             {
-                SharerNick = "",
-                UserAvatar = Provider.GetThumbPath(p.InsertUser.Avatar, 48, 48, false),
-                UserFullName = p.InsertUser.FullName,
-                UserNick = p.InsertUser.Nick
-            };
-            p.CopyPropertiesWithSameName(vp);
-            return vp;
+                PostAd p = cachedAds[new Random().Next(cachedAds.Count)];
+                p.ViewCount++;
+                ViewPost vp = new ViewPost()
+                {
+                    SharerNick = "",
+                    UserAvatar = Provider.GetThumbPath(p.InsertUser.Avatar, 48, 48, false),
+                    UserFullName = p.InsertUser.FullName,
+                    UserNick = p.InsertUser.Nick
+                };
+                Provider.Database.Read<Post>(p.PostId).CopyPropertiesWithSameName(vp);
+                return vp;
+            }
+            else
+                return null;
         }
 
         /// <summary>
@@ -99,7 +105,7 @@ namespace Cinar.CMS.Library.Handlers
             if (lessThanId == 2147483647){
                 var pa = GetRandomPostAd();
                 if (pa != null)
-                    list.Insert(0, pa);
+                    list.Insert(1, pa);
             }
 
             foreach (var viewPost in list)
@@ -161,7 +167,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 var pa = GetRandomPostAd();
                 if (pa != null)
-                    list.Insert(0, pa);
+                    list.Insert(1, pa);
             }
 
             foreach (var viewPost in list)
@@ -261,7 +267,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 var pa = GetRandomPostAd();
                 if (pa != null)
-                    list.Insert(0, pa);
+                    list.Insert(1, pa);
             }
 
             foreach (var viewPost in list)
@@ -323,7 +329,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 var pa = GetRandomPostAd();
                 if (pa != null)
-                    list.Insert(0, pa);
+                    list.Insert(1, pa);
             }
 
             foreach (var viewPost in list)
