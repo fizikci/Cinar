@@ -37,8 +37,8 @@ namespace Cinar.CMS.Library.Handlers
         public static ViewPost GetRandomPostAd() {
             if (HttpContext.Current.Cache["post_ads"] == null)
             {
-                List<PostAd> ads = Provider.Database.ReadList<PostAd>("select * from PostAd where Completed=0");
-                HttpContext.Current.Cache.Add("post_ads", ads, null, DateTime.Now.AddHours(10), Cache.NoSlidingExpiration, CacheItemPriority.High, 
+                List<PostAd> ads = Provider.Database.ReadList<PostAd>("select * from PostAd where AdStatus=1");
+                HttpContext.Current.Cache.Add("post_ads", ads, null, DateTime.Now.AddSeconds(10), Cache.NoSlidingExpiration, CacheItemPriority.High, 
                     (String name, Object val, CacheItemRemovedReason r)=>{
                         foreach (var ad in (List<PostAd>)val)
                             ad.Save();

@@ -16,8 +16,16 @@ namespace Cinar.CMS.Library.Entities
             get { return Provider.Database.Read<Post>(PostId); }
         }
 
+        public int PaymentTransactionId { get; set; }
+        public PaymentTransaction PaymentTransaction
+        {
+            get { return Provider.Database.Read<PaymentTransaction>(PaymentTransactionId); }
+        }
+
+        public AdStatus AdStatus { get; set; }
+
         public int ViewCount { get; set; }
-        public bool Completed { get; set; }
+        public int ClickCount { get; set; }
 
         protected override void beforeSave(bool isUpdate)
         {
@@ -31,11 +39,27 @@ namespace Cinar.CMS.Library.Entities
                         pal = new PostAdLog { PostId = this.PostId, InsertDate = DateTime.Now.Date };
                     pal.ViewCount += delta;
                     pal.Save();
+
+                    // 1 CPM = 1 TL hesap ediyoruz
+                    // Ödenen para kuruş cinsinden olduğuna göre 1 CPM = 1000 views = 100 kuruş
+                    // Bu durumda 10 views = 1 kuruş. Yani kuruş olarak ödenen paranın 10 katı view yapılacak 
+                    if(this.PaymentTransaction.Amount*10 <= this.ViewCount)
+                        this.AdStatus = AdStatus.Completed;
                 }
             }
 
             if (!isUpdate)
+            {
                 HttpContext.Current.Cache.Remove("post_ads");
+                this.PaymentTransactionId = Provider.Database.GetInt("select max(Id) from PaymentTransaction where InsertUserId = " + Provider.User.Id);
+            }
         }
+    }
+
+    public enum AdStatus
+    {
+        Request,
+        Active,
+        Completed
     }
 }

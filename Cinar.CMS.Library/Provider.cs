@@ -224,11 +224,22 @@ namespace Cinar.CMS.Library
             }
         }
 
+        private static Database.Database __db = null;
+
         [Description("Database reference"), Category("Database")]
         public static Database.Database Database
         {
             get
             {
+                if (HttpContext.Current == null)
+                {
+                    if (__db != null) return __db;
+                    string sqlCon = Provider.AppSettings["sqlConnection"];
+                    DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), Provider.AppSettings["sqlProvider"]);
+                    if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", MapPath("/App_Data"));
+                    __db = new Database.Database(sqlCon, sqlPro, Provider.MapPath("/_thumbs/db.config"));
+                    return __db;
+                }
                 if (Provider.Items["db"] == null)
                 {
                     string sqlCon = Provider.AppSettings["sqlConnection"];
