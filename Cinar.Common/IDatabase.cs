@@ -119,6 +119,10 @@ namespace Cinar.Database
         bool GetBool(string sql);
         int GetInt(string sql, params object[] parameters);
         int GetInt(string sql);
+        List<int> GetIntList(string sql);
+        List<bool> GetBoolList(string sql);
+        List<DateTime> GetDateTimeList(string sql);
+        List<string> GetStringList(string sql);
         IDatabaseEntity Read(Type entityType, int id);
         T Read<T>(int id);
         IDatabaseEntity Read(Type entityType, string where, params object[] parameters);

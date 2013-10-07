@@ -52,6 +52,9 @@ namespace Cinar.CMS.Library.Entities
 
         protected override bool beforeDelete()
         {
+            if (Provider.Database.GetInt("select count(*) from PostAd where PostId={0}", this.Id) > 0)
+                throw new Exception(Provider.TR("Reklamı olan paylaşım silinemez."));
+
             Provider.Database.ExecuteNonQuery("delete from Notification where PostId={0}", this.Id);
             foreach (var post in Provider.Database.ReadList<Post>("select * from Post where OriginalPostId={0}", this.Id))
                 post.Delete();
@@ -117,11 +120,6 @@ namespace Cinar.CMS.Library.Entities
 
                         Provider.DeleteThumbFiles(imgUrl);
                     }
-                }
-
-                foreach (var word in Provider.Database.ReadList<WordBlacklist>("select Name from WordBlacklist")) { 
-                    if(this.Metin.Contains(word.Name))
-                        throw new Exception(Provider.TR("Metin içersinde yasaklı kelimeler geçiyor."));
                 }
             }
         }
