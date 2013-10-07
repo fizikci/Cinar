@@ -1405,6 +1405,22 @@ namespace Cinar.Database
             object o = GetValue(sql);
             return Convert.ToInt32(o ?? 0);
         }
+        public List<int> GetIntList(string sql)
+        {
+            return GetList<int>(sql);
+        }
+        public List<bool> GetBoolList(string sql)
+        {
+            return GetList<bool>(sql);
+        }
+        public List<DateTime> GetDateTimeList(string sql)
+        {
+            return GetList<DateTime>(sql);
+        }
+        public List<string> GetStringList(string sql)
+        {
+            return GetList<string>(sql);
+        }
 
         public void ClearEntityWebCache(Type entityType, int id)
         {
