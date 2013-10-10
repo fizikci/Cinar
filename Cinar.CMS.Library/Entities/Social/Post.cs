@@ -76,28 +76,38 @@ namespace Cinar.CMS.Library.Entities
         {
             base.beforeSave(isUpdate);
 
-            var urls = new Regex(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)");
-
-            foreach(Match m in urls.Matches(this.Metin))
+            try
             {
-                if (m.Value.Contains("youtube.com"))
+                var urls = new Regex(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)");
+
+                foreach (Match m in urls.Matches(this.Metin))
                 {
-                    string video_id = m.Value.SplitWithTrim("v=")[1];
-                    var ampersandPosition = video_id.IndexOf('&');
-                    if (ampersandPosition != -1)
+                    if (m.Value.Contains("youtube.com"))
                     {
-                        video_id = video_id.Substring(0, ampersandPosition);
+                        string video_id = m.Value.SplitWithTrim("v=")[1];
+                        var ampersandPosition = video_id.IndexOf('&');
+                        if (ampersandPosition != -1)
+                        {
+                            video_id = video_id.Substring(0, ampersandPosition);
+                        }
+                        this.VideoId = video_id;
+                        this.VideoType = VideoTypes.Youtube;
                     }
-                    this.VideoId = video_id;
-                    this.VideoType = VideoTypes.Youtube;
-                }
-                if (m.Value.Contains("vimeo.com"))
-                {
-                    string video_id = m.Value.SplitAndGetLast('/');
-                    this.VideoId = video_id;
-                    this.VideoType = VideoTypes.Vimeo;
+                    if (m.Value.Contains("vimeo.com"))
+                    {
+                        string video_id = m.Value.SplitAndGetLast('/');
+                        this.VideoId = video_id;
+                        this.VideoType = VideoTypes.Vimeo;
+                    }
+                    if (m.Value.Contains("dailymotion.com"))
+                    {
+                        string video_id = m.Value.SplitAndGetLast('/').Split('_')[0];
+                        this.VideoId = video_id;
+                        this.VideoType = VideoTypes.DailyMotion;
+                    }
                 }
             }
+            catch { } // video şart değil, hata olursa es geç.
 
             if (!isUpdate)
             {
@@ -162,9 +172,11 @@ namespace Cinar.CMS.Library.Entities
         }
     }
 
-    public enum VideoTypes { 
+    public enum VideoTypes
+    {
         None,
         Youtube,
-        Vimeo
+        Vimeo,
+        DailyMotion
     }
 }
