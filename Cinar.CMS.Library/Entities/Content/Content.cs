@@ -534,7 +534,7 @@ namespace Cinar.CMS.Library.Entities
             {
                 if (this.Id == 1)
                     return null;
-                return Provider.Database.Read<Content>(this.CategoryId);
+                return (Content)Provider.Translate(Provider.Database.Read<Content>(this.CategoryId));
             }
         }
 

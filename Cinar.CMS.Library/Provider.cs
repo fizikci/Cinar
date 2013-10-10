@@ -335,6 +335,13 @@ namespace Cinar.CMS.Library
             return Provider.Database.GetInt(sql, parameters);
         }
 
+        [Description("Translates entity")]
+        public static IDatabaseEntity Translate(IDatabaseEntity entity)
+        {
+            IDatabaseEntity[] list = new IDatabaseEntity[1];
+            list[0] = entity;
+            return Translate(list)[0];
+        }
         [Description("Translates entities")]
         public static IDatabaseEntity[] Translate(IDatabaseEntity[] entities)
         {
@@ -375,14 +382,20 @@ namespace Cinar.CMS.Library
         {
             return Translate(entities.OfType<IDatabaseEntity>().ToArray());
         }
+        [Description("Translates datarow")]
+        public static DataRow Translate(string entityName, DataRow dr)
+        {
+            Translate(entityName, dr.Table);
+            return dr;
+        }
         [Description("Translates datatable")]
-        public static void Translate(string entityName, DataTable dt)
+        public static DataTable Translate(string entityName, DataTable dt)
         {
             if (Provider.CurrentLanguage.Id == Configuration.DefaultLang || dt == null || dt.Rows.Count == 0)
-                return; //*** aynı dil çevirmeye gerek yok.
+                return dt; //*** aynı dil çevirmeye gerek yok.
 
             if (Provider.Database.Tables[entityName + "Lang"] == null)
-                return; //*** dil tablosu yok
+                return dt; //*** dil tablosu yok
 
             int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
             ArrayList alIds = new ArrayList();
@@ -407,6 +420,7 @@ namespace Cinar.CMS.Library
                             relatedRow[dc.ColumnName] = drLang[dc];
                     }
             }
+            return dt;
         }
         [Description("Returns the translation of phrase from default language to the current language. First looks at cache, if not found uses Google to translate and writes it to database and caches.")]
         public static string TR(string name)
