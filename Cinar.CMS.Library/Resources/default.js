@@ -901,7 +901,7 @@ function showDataListPage(url, dataListId) {
     var dataList = $('#DataList_' + dataListId);
     var html = ajax({ url: url, isJSON: false, noCache: true });
     if (html) {
-        dataList.html(html);
+        dataList.replaceWith(html);
         if (preparePaging)
             preparePaging(dataList);
     }
