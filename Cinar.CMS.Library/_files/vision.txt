@@ -1,0 +1,9 @@
+﻿vision:
+1. cinarteknoloji.com altında bir "module repository" oluştur
+2. Module > Add > From repository...
+3. Bu menü seçmek üzere modül repository'sini açar.
+4. Modüller resim ve ad ile listelenir. Arama yapılabilir. (etiketleme imkanı da olsun)
+5. Repository'deki modüller StaticHtml veya DataList modülünden türetilir, html'i ve CSS'i ile birlikte bulunur
+6. http://bootsnipp.com/ adresindeki gibi
+
+to do:

@@ -248,6 +248,7 @@
     <Compile Include="Provider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_files\vision.txt" />
     <Content Include="_library\Google.GData.Apps.dll" />
     <Content Include="_library\Google.GData.Client.dll" />
     <Content Include="_library\Google.GData.Contacts.dll" />
