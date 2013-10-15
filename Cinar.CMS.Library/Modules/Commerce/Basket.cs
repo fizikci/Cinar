@@ -7,9 +7,9 @@ using Cinar.CMS.Library.Entities;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Commerce")]
-    public class Basket : LinkList
+    public class Basket : StaticHtml
     {
-        internal static Sepet Sepet
+        public static Sepet Sepet
         {
             get {
                 if (Provider.Items["sepet"] == null)
@@ -44,57 +44,45 @@ namespace Cinar.CMS.Library.Modules
             Sepet.ReadNameAndPrice();
         }
 
-        internal override string show()
-        {
-            StringBuilder sb = new StringBuilder();
+        public Basket() {
+            this.InnerHtml = @"<form name='basket$=this.Id$' action='$=Provider.Request.RawUrl$' method='post'>
+    <table cellpadding='0' cellspacing='0' border='0'>
+    <tr class='header'>
+        <td class='productName'>$=Provider.TR('Ürün')$</td>
+        <td class='listPrice'>$=Provider.TR('Liste Fiyatı')$</td>
+        <td class='ourPrice'>$=Provider.TR('Bizim Fiyatımız')$</td>
+        <td class='amount'>$=Provider.TR('Miktar')$</td>
+        <td class='delete'>$=Provider.TR('Çıkar')$</td>
+    </tr>
+$
+    for (int i = 0; i < this.Sepet.Lines.Length; i++)
+    {
+        var si = this.Sepet.Lines[i];
+$
+        <tr class='$=i % 2 == 0 ? 'line' : 'line alt'$'>
+            <td class='productName'><a href=""$=si.Content.GetPageLinkWithTitle('')$"">$=si.Content.Title$</a></td>
+            <td class='listPrice'>$=si.ListPrice.ToString('0,0.00')$</td>
+            <td class='ourPrice'>$=si.OurPrice.ToString('0,0.00')$</td>
+            <td class='amount'><input type='text' name='up_$=si.ItemId$' value='$=si.Amount$' size='3' maxlength='3'/></td>
+            <td class='delete'><input type='checkbox' name='del' value='$=si.ItemId$'/></td>
+        </tr>
+$
+}
+$
+</table>
 
-            sb.AppendFormat("<form name='basket{0}' action='{1}' method='post'>", this.Id, Provider.DesignMode ? "#" : Provider.Request.RawUrl);
+<table class='totals'>
+<tr><td class='label'>$=Provider.TR('Ara Toplam')$</td><td class='value'>$=this.Sepet.AraToplam.ToString('0,0.00')$</td></tr>
+<tr><td class='label'>$=Provider.TR('İndirim Tutarı')$</td><td class='value'>$=this.Sepet.IndirimTutari.ToString('0,0.00')$</td></tr>
+<tr><td class='label'>$=Provider.TR('KDV Tutarı')$</td><td class='value'>$=this.Sepet.KDVTutari.ToString('0,0.00')$</td></tr>
+<tr><td class='label'><b>$=Provider.TR('Toplam Tutar')$</b></td><td class='value'><b>$=this.Sepet.ToplamTutar.ToString('0,0.00')$</b></td></tr>
+</table>
 
-            // sepeti göstürtelim
-            sb.Append("<table cellpadding='0' cellspacing='0' border='0'>");
-            sb.AppendFormat(@"
-                <tr class='header'>
-                    <td class='productName'>{0}</td>
-                    <td class='listPrice'>{1}</td>
-                    <td class='ourPrice'>{2}</td>
-                    <td class='amount'>{3}</td>
-                    <td class='delete'>{4}</td>
-                </tr>", 
-                      Provider.GetModuleResource("Product"), 
-                      Provider.GetModuleResource("List Price"), 
-                      Provider.GetModuleResource("Our Price"), 
-                      Provider.GetModuleResource("Amount"), 
-                      Provider.GetModuleResource("Remove"));
+<input type='submit' name='cmdUpdate' value='$=Provider.TR('Sepeti Güncelle')$'/>
+<input type='submit' name='cmdEmpty' value='$=Provider.TR('Sepeti Boşalt')$'/>
+<input type='submit' name='cmdCheckOut' value='$=Provider.TR('Ödemeyi Yap')$'/>
 
-            for (int i = 0; i < Sepet.Lines.Length; i++)
-            {
-                SepetItem si = Sepet.Lines[i];
-                sb.AppendFormat(@"
-                    <tr class='{5}'>
-                        <td class='productName'>{1}</td>
-                        <td class='listPrice'>{2:0,0.00}</td>
-                        <td class='ourPrice'>{3:0,0.00}</td>
-                        <td class='amount'><input type='text' name='up_{0}' value='{4}' size='3' maxlength='3'/></td>
-                        <td class='delete'><input type='checkbox' name='del' value='{0}'/></td>
-                    </tr>",
-                          si.ItemId, getLink(si.Content), si.ListPrice, si.OurPrice, si.Amount, i % 2 == 0 ? "row" : "row alt");
-            }
-            sb.Append("</table>");
-
-            sb.Append("<table class='totals'>");
-            sb.AppendFormat("<tr><td class='label'>{0}</td><td class='value'>{1:0,0.00}</td></tr>", Provider.GetModuleResource("Subtotal"), Sepet.AraToplam);
-            sb.AppendFormat("<tr><td class='label'>{0}</td><td class='value'>{1:0,0.00}</td></tr>", Provider.GetModuleResource("Discount"), Sepet.IndirimTutari);
-            sb.AppendFormat("<tr><td class='label'>{0}</td><td class='value'>{1:0,0.00}</td></tr>", Provider.GetModuleResource("VAT"), Sepet.KDVTutari);
-            sb.AppendFormat("<tr><td class='label'><b>{0}</b></td><td class='value'><b>{1:0,0.00}</b></td></tr>", Provider.GetModuleResource("Grand Total"), Sepet.ToplamTutar);
-            sb.Append("</table>");
-
-            sb.AppendFormat("<input type='submit' name='cmdUpdate' value='{0}'/>", Provider.GetModuleResource("Update Basket"));
-            sb.AppendFormat("<input type='submit' name='cmdEmpty' value='{0}'/>", Provider.GetModuleResource("Empty Basket"));
-            sb.AppendFormat("<input type='submit' name='cmdCheckOut' value='{0}'/>", Provider.GetModuleResource("Proceed To Checkout"));
-
-            sb.Append("</form>");
-
-            return sb.ToString();
+</form>";
         }
 
         public override string GetDefaultCSS()
@@ -104,11 +92,11 @@ namespace Cinar.CMS.Library.Modules
 
             sb.AppendFormat("#{0}_{1} tr.header {{background:orange; color:white; font-weight:bold}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} tr.header td {{padding: 3px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.row {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} tr.line {{}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} tr.alt {{background:#efefef;}}\n", this.Name, this.Id);
             sb.AppendFormat("\n");
             sb.AppendFormat("#{0}_{1} td.listPrice {{text-align:right}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.row td.listPrice {{text-decoration:line-through}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} tr.line td.listPrice {{text-decoration:line-through}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} td.ourPrice {{text-align:right;}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} td.amount {{text-align:right;}}\n", this.Name, this.Id);
             sb.AppendFormat("#{0}_{1} td.delete {{text-align:center;}}\n", this.Name, this.Id);
@@ -126,11 +114,11 @@ namespace Cinar.CMS.Library.Modules
         }
     }
 
-    internal class Sepet
+    public class Sepet
     {
         private HttpCookie kuki;
 
-        internal Sepet()
+        public Sepet()
         {
             kuki = Provider.Request.Cookies["sepet"];
             if (kuki == null)
@@ -141,7 +129,7 @@ namespace Cinar.CMS.Library.Modules
             Provider.Response.Cookies.Add(kuki);
         }
 
-        internal void Add(int itemId)
+        public void Add(int itemId)
         {
             int amount = GetAmount(itemId);
             if (amount == 0)
@@ -152,7 +140,7 @@ namespace Cinar.CMS.Library.Modules
             nameAndPriceAlreadyRead = false;
         }
 
-        internal void Remove(int itemId)
+        public void Remove(int itemId)
         {
             int amount = GetAmount(itemId);
             if (amount > 0)
@@ -163,7 +151,7 @@ namespace Cinar.CMS.Library.Modules
             lines = null;
         }
 
-        internal void Update(int itemId, int amount)
+        public void Update(int itemId, int amount)
         {
             int amountCurr = GetAmount(itemId);
             if (amountCurr == amount) return; //***
@@ -173,13 +161,13 @@ namespace Cinar.CMS.Library.Modules
             lines = null;
         }
 
-        internal void Empty()
+        public void Empty()
         {
             kuki.Value = "";
             lines = null;
         }
 
-        internal int GetAmount(int itemId)
+        public int GetAmount(int itemId)
         {
             for (int i = 0; i < this.Lines.Length; i++)
                 if (this.Lines[i].ItemId == itemId)
@@ -188,7 +176,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private SepetItem[] lines;
-        internal SepetItem[] Lines
+        public SepetItem[] Lines
         {
             get {
                 if (lines == null)
@@ -216,7 +204,7 @@ namespace Cinar.CMS.Library.Modules
         }
 
         private bool nameAndPriceAlreadyRead = false;
-        internal void ReadNameAndPrice()
+        public void ReadNameAndPrice()
         {
             if (this.Lines.Length == 0 || nameAndPriceAlreadyRead) return;
 
@@ -264,24 +252,24 @@ namespace Cinar.CMS.Library.Modules
             nameAndPriceAlreadyRead = true;
         }
 
-        internal decimal AraToplam;
-        internal decimal KDVTutari;
-        internal decimal IndirimTutari;
-        internal decimal ToplamTutar;
+        public decimal AraToplam;
+        public decimal KDVTutari;
+        public decimal IndirimTutari;
+        public decimal ToplamTutar;
     }
-    internal class SepetItem
+    public class SepetItem
     {
-        internal readonly int ItemId;
-        internal readonly int Amount;
+        public readonly int ItemId;
+        public readonly int Amount;
 
-        internal string Name;
-        internal decimal ListPrice;
-        internal decimal DiscountRate;
-        internal decimal OurPrice;
-        internal decimal VATRate;
-        internal Content Content;
+        public string Name;
+        public decimal ListPrice;
+        public decimal DiscountRate;
+        public decimal OurPrice;
+        public decimal VATRate;
+        public Content Content;
 
-        internal SepetItem(int itemId, int amount)
+        public SepetItem(int itemId, int amount)
         {
             if (itemId < 1 || amount < 1)
                 throw new Exception(Provider.GetResource("A product with id {0} cannot be add to the basket.", itemId));

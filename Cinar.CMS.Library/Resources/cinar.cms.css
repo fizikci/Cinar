@@ -212,46 +212,6 @@ table.bk-grid td {padding:0px; empty-cells:show; cursor:pointer;text-align:left;
 tr.selected {background: #316AC5; color:white}
 tr.hover {background: #efefef; color:#404040;}
 
-/* tab control*/
-.panel {
-	clear: both;
-	display: none;
-	background-color: white;
-	border-top: 1px solid #444;
-	padding:4px;
-}
-.panel.active-tab-body {
-	display: block;
-}
-ul.tabs {
-	list-style: none;
-	margin-left:0px;
-}
-ul.tabs li {
-	float: left;
-}
-ul.tabs a {
-	float: left;
-	padding: 5px 8px;
-	margin-left: 6px;
-	background-color: #DCDCDC;
-	text-decoration: none;
-	color: #999999;
-}
-ul.tabs a:hover {
-	border-top: 3px solid orange;
-	padding-top: 3px;
-}
-ul.tabs a.active-tab 
-{
-	background-color: white;
-	border-left: 1px solid #444;
-	border-right: 1px solid #444;
-	border-top: 3px solid orange;
-	padding-top: 3px;
-	color: #444;
-}
-
 #fileBrowser {}
 #fileBrowserList {
     overflow: auto;

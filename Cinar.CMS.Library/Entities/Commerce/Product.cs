@@ -2,7 +2,7 @@
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select Product.Id as [Product.Id], Product.ListPrice as [Product.ListPrice], Product.DiscountRate as [Product.DiscountRate], Product.VATRate as [Product.VATRate] from Product inner join Content on Content.Id = Product.ContentId")]
+    [ListFormProps(VisibleAtMainMenu = false, QuerySelect = "select Product.Id as [Product.Id], Product.ListPrice as [Product.ListPrice], Product.DiscountRate as [Product.DiscountRate], Product.VATRate as [Product.VATRate] from Product inner join Content on Content.Id = Product.ContentId", QueryOrderBy = "Product.Id")]
     public class Product : BaseEntity
     {
         private int contentId;
