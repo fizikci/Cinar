@@ -1226,7 +1226,7 @@ namespace Cinar.Database
             Table table = Tables[tableName];
 
             if (fExp == null) fExp = new FilterExpression();
-            if (fExp.PageSize == 0) fExp.PageSize = 10000;
+            if (fExp.PageSize == 0) fExp.PageSize = 50000;
             string where = fExp.Criterias.ToParamString();
             string orderBy = fExp.Orders.ToString();
             if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns[0].Name) + "]";
