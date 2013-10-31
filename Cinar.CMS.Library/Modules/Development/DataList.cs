@@ -163,7 +163,7 @@ namespace Cinar.CMS.Library.Modules
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
                     nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
-                        AjaxPaging ? "#" : uriParser.Uri.ToString(),
+                        AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
                         AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
