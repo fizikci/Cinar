@@ -412,7 +412,7 @@ namespace Cinar.CMS.Library.Entities
                 else
                     t.Save();
             }
-            if (isUpdate && !this.GetOriginalValues()["Visible"].Equals(this.Visible))
+            if (isUpdate && this.GetOriginalValues()["Visible"]!=null && !this.GetOriginalValues()["Visible"].Equals(this.Visible))
                 foreach (string strTag in arrNewTags)
                 {
                     Tag t = (Tag)Provider.Database.Read(typeof(Tag), "Name={0}", strTag);

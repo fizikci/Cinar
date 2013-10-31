@@ -814,7 +814,12 @@ function insertEditForm(pe, callback){
 		onComplete: function(req) {
 			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
 			Windows.getFocusedWindow().close();
-			if(callback) callback();
+			var res = null;
+		    try {
+		        res = eval('(' + req.responseText + ')');
+		        if (callback) callback(res);
+		    } catch (e) { niceAlert(e.message); }
+			
 		},
 		onException: function(req, ex){throw ex;}
 	});

@@ -376,7 +376,7 @@ namespace Cinar.CMS.Library.Handlers
             entity.SetFieldsByPostData(context.Request.Form);
 
             entity.Save();
-            context.Response.Write(entity.Id);
+            context.Response.Write(entity.ToJSON());
 
         }
 
