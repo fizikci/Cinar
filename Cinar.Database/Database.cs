@@ -61,6 +61,14 @@ namespace Cinar.Database
             set { enableSQLLog = value; }
         }
 
+        private bool createTablesAutomatically = true;
+        [XmlIgnore]
+        public bool CreateTablesAutomatically
+        {
+            get { return createTablesAutomatically; }
+            set { createTablesAutomatically = value; }
+        }
+
         [XmlIgnore]
         public string Name 
         { 
@@ -959,7 +967,11 @@ namespace Cinar.Database
                 Type type = entity.GetType();
 
                 if (tbl == null)
+                {
+                    if (!CreateTablesAutomatically)
+                        throw new Exception("Table for " + type.Name + " not exist. Please create table and refresh metadata.");
                     tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);
+                }
 
                 if (entity is ISerializeSubclassFields)
                     serialize(entity as ISerializeSubclassFields);
@@ -1216,7 +1228,11 @@ namespace Cinar.Database
         {
             Table table = GetTableForEntityType(entityType);
             if (table == null)
+            {
+                if (!CreateTablesAutomatically)
+                    throw new Exception("Table for " + entityType.Name + " not exist. Please create table and refresh metadata.");
                 table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
+            }
 
             return getDataTableFor(table.Name, fExp);
         }
@@ -1460,7 +1476,11 @@ namespace Cinar.Database
                 // first check the table existance
                 Table table = GetTableForEntityType(entityType);
                 if (table == null)
+                {
+                    if (!CreateTablesAutomatically)
+                        throw new Exception("Table for " + entityType.Name + " not exist. Please create table and refresh metadata.");
                     table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
+                }
                 
                 where = where.Trim();
                 string sql = where.StartsWith("select", StringComparison.InvariantCultureIgnoreCase) ? where : ("select * from [" + table.Name + "] where " + where);
@@ -1565,7 +1585,11 @@ namespace Cinar.Database
                 // first check the table existance
                 Table table = GetTableForEntityType(entityType);
                 if (table == null)
+                {
+                    if (!CreateTablesAutomatically)
+                        throw new Exception("Table for " + entityType.Name + " not exist. Please create table and refresh metadata.");
                     table = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
+                }
 
                 dt = this.GetDataTable(selectSql, parameters);
 
@@ -1585,7 +1609,11 @@ namespace Cinar.Database
             // first check the table existance
             Table tbl = GetTableForEntityType(entityType);
             if (tbl == null)
+            {
+                if (!CreateTablesAutomatically)
+                    throw new Exception("Table for " + entityType.Name + " not exist. Please create table and refresh metadata.");
                 tbl = tableMappingInfo[entityType] = this.CreateTableForType(entityType);
+            }
 
             return GetFromWithJoin(tbl);
         }

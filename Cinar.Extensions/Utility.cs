@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,6 +20,7 @@ using System.Threading;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.CSharp;
 
 namespace System
 {
@@ -630,6 +632,27 @@ namespace System
             str = str.Trim();
             return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLower();
         }
+        public static string ToLowerFirstLetter(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return "";
+            if (str.Length == 1)
+                return char.ToLower(str[0]).ToString();
+
+            str = str.Trim();
+            return char.ToLower(str[0]) + str.Substring(1);
+        }
+        public static string ToLowerFirstLetterInvariant(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return "";
+            if (str.Length == 1)
+                return char.ToLowerInvariant(str[0]).ToString();
+
+            str = str.Trim();
+            return char.ToLowerInvariant(str[0]) + str.Substring(1);
+        }
+
         public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
         {
             Encoding srcEncoding = Encoding.GetEncoding(srcEncodingName);
@@ -1294,6 +1317,28 @@ namespace System
             }
 
             return true;
+        }
+
+        public static string GetFriendlyName(this Type type)
+        {
+            using (var provider = new CSharpCodeProvider())
+            {
+                var typeRef = new CodeTypeReference(type);
+                string typeName = provider.GetTypeOutput(typeRef);
+                if (typeName.Contains("."))
+                {
+                    if (typeName.Contains("<"))
+                    {
+                        string[] parts = typeName.Split('<');
+                        string first = parts[0].SplitAndGetLast('.');
+                        string rest = parts[1].Trim('>').SplitWithTrim(',').Select(s => s.SplitAndGetLast('.')).StringJoin(", ");
+                        return first + "<" + rest + ">";
+                    }
+
+                    return typeName.SplitAndGetLast('.');
+                }
+                return typeName;
+            }
         }
 
         #endregion
