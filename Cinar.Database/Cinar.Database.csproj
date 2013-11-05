@@ -125,12 +125,8 @@
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.SQLEngine\Cinar.SQLEngine.csproj">
-      <Project>{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}</Project>
+      <Project>{ace76fdb-1b9d-4c3d-9b66-0b7d04a0f023}</Project>
       <Name>Cinar.SQLEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
-      <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
-      <Name>Cinar.SQLParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
