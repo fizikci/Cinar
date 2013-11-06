@@ -9,6 +9,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.ComponentModel;
+using System.IO;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -126,6 +127,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "getUtilityDocs":
                     {
                         getUtilityDocs();
+                        break;
+                    }
+                case "createContentPicturesByUploadingPictures":
+                    {
+                        createContentPicturesByUploadingPictures();
                         break;
                     }
                 default:
@@ -462,6 +468,40 @@ namespace Cinar.CMS.Library.Handlers
 
             BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
             context.Response.Write(entity.ToJSON());
+        }
+
+        private void createContentPicturesByUploadingPictures() 
+        { 
+            try
+            {
+                int contentId = 0;
+                int.TryParse(context.Request["contentId"], out contentId);
+                if (contentId <= 0)
+                    throw new Exception("content belirsiz");
+                Content c = Provider.Database.Read<Content>(contentId);
+
+                string folderName = "/UserFiles/aktor/"+c.InsertDate.ToString("yyyyMM")+"/"+contentId;
+                string path = Provider.MapPath(folderName);
+                if(!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                for (int i = 0; i < context.Request.Files.Count; i++)
+                {
+                    string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
+                    context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+                    string imgUrl = folderName + "/" + fileName;
+                    var cp = new ContentPicture { 
+                        ContentId = contentId,
+                        FileName = imgUrl
+                    };
+                    cp.Save();
+                }
+                context.Response.Write(@"<script>window.parent.location.reload();</script>");
+            }
+            catch
+            {
+                context.Response.Write(@"<script>window.parent.alert('Yükleme başarısız.');</script>");
+            }
         }
 
         private void sortEntities() {
