@@ -564,16 +564,19 @@ limit
 
             Notification n = Provider.Database.Read<Notification>
                 ("UserId = {0} and NotificationType = {1} and PostId = {2} and InsertUserId = {3}", userId, NotificationTypes.Liked, pid, Provider.User.Id);
-            
-            if(n == null)
-                new Notification
-                {
-                    NotificationType = NotificationTypes.Liked,
-                    PostId = pid,
-                    UserId = userId
-                }.Save();
 
-            context.Response.Write(new Result { Data = true }.ToJSON());
+            if (n == null)
+            {
+                new Notification
+                    {
+                        NotificationType = NotificationTypes.Liked,
+                        PostId = pid,
+                        UserId = userId
+                    }.Save();
+                context.Response.Write(new Result { Data = true }.ToJSON());
+            }
+            else
+                context.Response.Write(new Result { Data = false }.ToJSON());
         }
 
         private void share()
