@@ -81,8 +81,8 @@ namespace Cinar.CMS.Library.Modules
                 return Provider.GetResource("Select entity");
 
             Cinar.Database.Table tbl = Provider.Database.Tables[EntityName];
-            if(tbl==null)
-                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]",EntityName);
+            if (tbl == null)
+                return Provider.GetResource("The table [entityName] coulnd't be found").Replace("[entityName]", EntityName);
 
             string pageUrl = Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl;
             CinarUriParser uriParser = new CinarUriParser(pageUrl);
@@ -99,7 +99,7 @@ namespace Cinar.CMS.Library.Modules
 
             string sql = "";
             if (string.IsNullOrWhiteSpace(this.SQL))
-                sql = Provider.Database.AddPagingToSQL(String.Format(@"
+                sql = String.Format(@"
                     select
                         {0}
                     from
@@ -113,23 +113,24 @@ namespace Cinar.CMS.Library.Modules
                                      defaultWhere,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
-                                     this.Ascending ? "asc" : "desc"),
-                                     HowManyItems,
-                                     pageNo);
+                                     this.Ascending ? "asc" : "desc");
             else
             {
                 Interpreter engine = Provider.GetInterpreter(SQL, this);
                 engine.Parse();
                 engine.Execute();
-                SQL = engine.Output;
+                SQL = sql = engine.Output;
 
                 if (SQL.ToLowerInvariant().Contains("limit"))
                     return "Do not use limit in SQL. DataList does it.";
-
-                sql = Provider.Database.AddPagingToSQL(String.Format(SQL),
-                                    HowManyItems,
-                                    pageNo);
             }
+
+            string countSQL = "SELECT count(*) " + sql.Substring(sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase));
+            countSQL = countSQL.Substring(0, countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase));
+
+            sql = Provider.Database.AddPagingToSQL(sql,
+                    HowManyItems,
+                    pageNo);
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
@@ -139,7 +140,7 @@ namespace Cinar.CMS.Library.Modules
                 return "";
             else
                 sb.Append(base.show());
-            
+
             // paging
             if (this.ShowPaging)
             {
@@ -159,6 +160,20 @@ namespace Cinar.CMS.Library.Modules
                         AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelPrevPage == "Previous Page" ? Provider.GetModuleResource("Previous Page") : LabelPrevPage);
                 }
+
+                int count = Provider.Database.GetInt(countSQL, filterParser.GetParams());
+                string pagingWithNumbers = "<div class='pagingWithNumbers'>";
+                for (int i = 0; i < count / HowManyItems; i++)
+                {
+                    uriParser.QueryPart["pageNo" + this.Id] = i.ToString();
+                    pagingWithNumbers += String.Format("<a href=\"{0}\" class=\"pagingBtn{3}\"{1}>{2}</a>",
+                        AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
+                        AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
+                        i + 1,
+                        pageNo==i ? " active":"");
+                }
+                pagingWithNumbers += "</div>";
+
                 if (data.Rows.Count == HowManyItems)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
@@ -168,8 +183,8 @@ namespace Cinar.CMS.Library.Modules
                         LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
-                if(!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
-                    sb.AppendFormat("<div class=\"paging\">{0} {1}</div>", prevPageLink, nextPageLink);
+                if (!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
+                    sb.AppendFormat("<div class=\"paging\">{0} {1} {2}</div>", prevPageLink, pagingWithNumbers, nextPageLink);
             }
 
             return sb.ToString();
