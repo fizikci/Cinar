@@ -16,6 +16,9 @@ namespace Cinar.CMS.Library.Entities
         public int UserId { get; set; }
 
         [ColumnDetail(Length = 100)]
+        public string CoverPicture { get; set; }
+
+        [ColumnDetail(Length = 100)]
         public string BackgroundPicture { get; set; }
 
         [ColumnDetail(Length = 20)]
@@ -48,19 +51,31 @@ namespace Cinar.CMS.Library.Entities
         {
             base.SetFieldsByPostData(postData);
 
+            string avatarDir = Provider.AppSettings["avatarDir"];
+            if (String.IsNullOrEmpty(avatarDir))
+                throw new Exception(Provider.GetResource("Avatar folder is not specified in config file."));
+            if (!avatarDir.EndsWith("/")) avatarDir += "/";
+
             HttpPostedFile postedFile = Provider.Request.Files["BackgroundPicture"];
             if (postedFile != null && postedFile.ContentLength > 0)
             {
-                string avatarDir = Provider.AppSettings["avatarDir"];
-                if (String.IsNullOrEmpty(avatarDir))
-                    throw new Exception(Provider.GetResource("Avatar folder is not specified in config file."));
-                if (!avatarDir.EndsWith("/")) avatarDir += "/";
                 string bgUrlPath = avatarDir + Provider.User.Email + "_bg" + System.IO.Path.GetExtension(postedFile.FileName);
                 string avatarFilePath = Provider.MapPath(bgUrlPath);
                 postedFile.SaveAs(avatarFilePath);
                 this.BackgroundPicture = bgUrlPath;
 
                 Provider.DeleteThumbFiles(bgUrlPath);
+            }
+
+            postedFile = Provider.Request.Files["CoverPicture"];
+            if (postedFile != null && postedFile.ContentLength > 0)
+            {
+                string cvUrlPath = avatarDir + Provider.User.Email + "_cv" + System.IO.Path.GetExtension(postedFile.FileName);
+                string avatarFilePath = Provider.MapPath(cvUrlPath);
+                postedFile.SaveAs(avatarFilePath);
+                this.CoverPicture = cvUrlPath;
+
+                Provider.DeleteThumbFiles(cvUrlPath);
             }
         }
     }
