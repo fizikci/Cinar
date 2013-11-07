@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 namespace Cinar.CMS.Library.Entities
 {
     [TableDetail(IsView = true, ViewSQL = @"select 
-        Id, 
-        Nick as NickName, 
-        concat(Name,' ',Surname) as FullName, 
-        Avatar as UserAvatar,
-        About as Summary, 
-        Web as Website,
+	    u.Id, 
+	    u.Nick as NickName, 
+	    concat(u.Name,' ',u.Surname) as FullName, 
+	    u.Avatar as UserAvatar,
+	    u.About as Summary, 
+	    u.Web as Website,
+        us.CoverPicture,
         (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
         (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
         (select count(Id) from BlockedUser where InsertUserId=u.Id) as IsBlocked,
@@ -24,7 +25,7 @@ namespace Cinar.CMS.Library.Entities
         (select count(Id) from UserContact where InsertUserId=u.Id) as FollowingCount,
         (select count(Id) from UserContact where UserId=u.Id) as FollowerCount
     from 
-	    user as u")]
+	    user as u left join usersettings us on us.UserId=u.Id")]
     public class ViewProfileSummary : DatabaseEntity
     {
         public int Id { get; set; }
@@ -33,6 +34,7 @@ namespace Cinar.CMS.Library.Entities
         public string UserAvatar { get; set; }
         public string Summary {get; set;}
         public string Website {get; set;}
+        public string CoverPicture { get; set; }
         public bool IsFollowing { get; set; }
         public bool IsFollower { get; set; }
         public bool IsBlocked { get; set; }

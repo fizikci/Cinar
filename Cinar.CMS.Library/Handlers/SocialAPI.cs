@@ -360,20 +360,21 @@ namespace Cinar.CMS.Library.Handlers
 
             ViewProfileSummary profileSummary = Provider.Database.Read<ViewProfileSummary>(@"
             select 
-	            Id, 
-	            Nick as NickName, 
-	            concat(Name,' ',Surname) as FullName, 
-	            Avatar as UserAvatar,
-	            About as Summary, 
-	            Web as Website,
+	            u.Id, 
+	            u.Nick as NickName, 
+	            concat(u.Name,' ',u.Surname) as FullName, 
+	            u.Avatar as UserAvatar,
+	            u.About as Summary, 
+	            u.Web as Website,
+                us.CoverPicture,
 	            (select count(Id) from UserContact where UserId=u.Id and InsertUserId={1}) as IsFollowing,
 	            (select count(Id) from UserContact where UserId={1} and InsertUserId=u.Id) as IsFollower,
                 (select count(Id) from BlockedUser where UserId=u.Id and InsertUserId={1}) as IsBlocked,
 	            (select count(Id) from Post where InsertUserId=u.Id) as PaylasimCount,
 	            (select count(Id) from UserContact where InsertUserId=u.Id) as FollowingCount,
 	            (select count(Id) from UserContact where UserId=u.Id) as FollowerCount
-            from user as u
-            where Id = {0}", userId, Provider.User.Id);
+            from user as u left join usersettings us on us.UserId=u.Id
+            where u.Id= {0}", userId, Provider.User.Id);
 
             profileSummary.FollowersIFollow = Provider.Database.ReadList<ViewMiniUserInfo>(@"
             select Nick, concat(Name,' ',Surname) as FullName
