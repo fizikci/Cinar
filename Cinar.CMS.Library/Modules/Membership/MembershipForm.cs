@@ -170,59 +170,61 @@ namespace Cinar.CMS.Library.Modules
             ";
             string uyelikSozlesmesiCheck = @" onclick=""if(!this.form.cbAcceptRules.checked) {alert('Sözleþmeyi kabul etmelisiniz.'); return false;}""";
             string formHtml = @"
-                <table border=""0"" cellpadding=""4"">
-                <tr>
-                    <td>
-                        <div class=""subTitle"">Login Info</div>
-                        Email<br/><input type=""text"" name=""Email""/><br/>
-                        Password<br/><input type=""password"" name=""Password""/><br/>
-                        Password Again<br/><input type=""password"" name=""Password2""/><br/>
+<form id=""fMembership"" method=""post"" action=""SaveMember.ashx"" enctype=""multipart/form-data"">
+<table border=""0"" cellpadding=""4"">
+<tr>
+    <td>
+        <div class=""subTitle"">Login Info</div>
+        Email<br/><input type=""text"" name=""Email""/><br/>
+        Password<br/><input type=""password"" name=""Password""/><br/>
+        Password Again<br/><input type=""password"" name=""Password2""/><br/>
 
-                        <div class=""subTitle"">Personal Info</div>
-                        Nick<br/><input type=""text"" name=""Nick""/><br/>
-                        Avatar<br/><input type=""file"" name=""Avatar""/><br/>
-                        Name<br/><input type=""text"" name=""Name""/><br/>
-                        Surname<br/><input type=""text"" name=""Surname""/><br/>
-                        Gender<br/><select name=""Gender""><option>Erkek</option><option>Bayan</option></select><br/>
-                    </td>
-                    <td>
-                        <div class=""subTitle"">Contact Info</div>
-                        PhoneCell<br/><input type=""text"" name=""PhoneCell""/><br/>
-                        PhoneWork<br/><input type=""text"" name=""PhoneWork""/><br/>
-                        PhoneHome<br/><input type=""text"" name=""PhoneHome""/><br/>
-                        AddressLine1<br/><input type=""text"" name=""AddressLine1""/><br/>
-                        AddressLine2<br/><input type=""text"" name=""AddressLine2""/><br/>
-                        City<br/><input type=""text"" name=""City""/><br/>
-                        Country<br/><input type=""text"" name=""Country""/><br/>
-                        ZipCode<br/><input type=""text"" name=""ZipCode""/><br/>
-                        Web<br/><input type=""text"" name=""Web""/><br/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class=""subTitle"">Professional Info</div>
-                        Occupation<br/><input type=""text"" name=""Occupation""/><br/>
-                        Company<br/><input type=""text"" name=""Company""/><br/>
-                        Department<br/><input type=""text"" name=""Department""/><br/>
-                    </td>
-                    <td>
-                        <div class=""subTitle"">Other</div>
-                        Education<br/><input type=""text"" name=""Education""/><br/>
-                        Certificates<br/><textarea name=""Certificates""></textarea><br/>
-                        About<br/><textarea name=""About""></textarea><br/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan=""2"">{0}</td>
-                </tr>
-                <tr>
-                    <td colspan=""2"" align=""right"">
-                        <input type=""reset"" value=""Reset""/>
-                        <input type=""submit"" value=""Save""{1}/>
-                    </td>
-                </tr>
-                </table>
-                ";
+        <div class=""subTitle"">Personal Info</div>
+        Nick<br/><input type=""text"" name=""Nick""/><br/>
+        Avatar<br/><input type=""file"" name=""Avatar""/><br/>
+        Name<br/><input type=""text"" name=""Name""/><br/>
+        Surname<br/><input type=""text"" name=""Surname""/><br/>
+        Gender<br/><select name=""Gender""><option>Erkek</option><option>Bayan</option></select><br/>
+    </td>
+    <td>
+        <div class=""subTitle"">Contact Info</div>
+        PhoneCell<br/><input type=""text"" name=""PhoneCell""/><br/>
+        PhoneWork<br/><input type=""text"" name=""PhoneWork""/><br/>
+        PhoneHome<br/><input type=""text"" name=""PhoneHome""/><br/>
+        AddressLine1<br/><input type=""text"" name=""AddressLine1""/><br/>
+        AddressLine2<br/><input type=""text"" name=""AddressLine2""/><br/>
+        City<br/><input type=""text"" name=""City""/><br/>
+        Country<br/><input type=""text"" name=""Country""/><br/>
+        ZipCode<br/><input type=""text"" name=""ZipCode""/><br/>
+        Web<br/><input type=""text"" name=""Web""/><br/>
+    </td>
+</tr>
+<tr>
+    <td>
+        <div class=""subTitle"">Professional Info</div>
+        Occupation<br/><input type=""text"" name=""Occupation""/><br/>
+        Company<br/><input type=""text"" name=""Company""/><br/>
+        Department<br/><input type=""text"" name=""Department""/><br/>
+    </td>
+    <td>
+        <div class=""subTitle"">Other</div>
+        Education<br/><input type=""text"" name=""Education""/><br/>
+        Certificates<br/><textarea name=""Certificates""></textarea><br/>
+        About<br/><textarea name=""About""></textarea><br/>
+    </td>
+</tr>
+<tr>
+    <td colspan=""2"">{0}</td>
+</tr>
+<tr>
+    <td colspan=""2"" align=""right"">
+        <input type=""reset"" value=""Reset""/>
+        <input type=""submit"" value=""Save""{1}/>
+    </td>
+</tr>
+</table>
+</form>
+";
             this.newFormHtml = String.Format(formHtml, uyelikSozlesmesi, uyelikSozlesmesiCheck);
             this.editFormHtml = String.Format(formHtml, String.Empty, String.Empty);
         }
@@ -300,8 +302,6 @@ namespace Cinar.CMS.Library.Modules
                         });
                         </script>");
 
-            sb.AppendFormat("<form id=\"fMembership\" method=\"post\" action=\"SaveMember.ashx\" enctype=\"multipart/form-data\">\n");
-
             sb.Append(formHtml);
             bool isPostBack = Provider.Request["Email"] != null;
 
@@ -314,7 +314,6 @@ namespace Cinar.CMS.Library.Modules
                 sbUserData.AppendLine("                            user_data[\"" + pi.Name + "\"] = \"" + CMSUtility.HtmlEncode(isPostBack ? Provider.Request[pi.Name] : (val == null ? "" : val.ToString())) + "\";");
             }
 
-            sb.AppendFormat("</form>");
             sb = sb.Replace("_USERDATA_", sbUserData.ToString());
             return sb.ToString();
         }

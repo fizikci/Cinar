@@ -48,6 +48,7 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
+        public string RelationType { get; set; }
     }
 
 }
