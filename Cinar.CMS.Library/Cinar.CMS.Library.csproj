@@ -57,6 +57,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.6.4.2\lib\net40-client\Facebook.dll</HintPath>
+    </Reference>
     <Reference Include="Google.GData.Apps, Version=2.2.0.28024, Culture=neutral, PublicKeyToken=e6feebfe441b89cb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>_library\Google.GData.Apps.dll</HintPath>
@@ -77,6 +80,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\_library\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -249,6 +253,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="_files\vision.txt" />
+    <Content Include="_library\Facebook.dll" />
     <Content Include="_library\Google.GData.Apps.dll" />
     <Content Include="_library\Google.GData.Client.dll" />
     <Content Include="_library\Google.GData.Contacts.dll" />
