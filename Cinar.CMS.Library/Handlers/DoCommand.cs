@@ -12,6 +12,7 @@ using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
 using Module = System.Reflection.Module;
 using System.Drawing;
 using System.Globalization;
+using Facebook;
 
 //using System.IO;
 
@@ -163,6 +164,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "getLocation":
                     {
                         getLocation();
+                        break;
+                    }
+                case "FacebookLogin":
+                    {
+                        facebookLogin();
                         break;
                     }
             }
@@ -850,9 +856,65 @@ http://{1}
             Provider.Response.Write("ok");
         }
 
-        private void getLocation() 
+        private void getLocation()
         {
             context.Response.Write(Provider.GetVisitorLocation());
+        }
+
+        private void facebookLogin()
+        {
+            try
+            {
+                var accessToken = context.Request["accessToken"];
+                context.Session["AccessToken"] = accessToken;
+
+                /*
+    {
+      "last_name": "Keskin", 
+      "id": "642493603", 
+      "gender": "male", 
+      "name": "Bülent Keskin", 
+      "first_name": "Bülent", 
+      "email": "bulentkeskin@gmail.com", 
+      "username": "bbazk", 
+      "picture": {
+        "data": {
+          "url": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/203043_642493603_1648262181_q.jpg", 
+          "is_silhouette": false
+        }
+      }
+    }             */
+
+                var client = new FacebookClient(accessToken);
+                dynamic result = client.Get("me", new { fields = "id,name,email,username,gender,first_name,last_name,picture" });
+
+                User u = Provider.Database.Read<User>("FacebookId={0}", result.id);
+                if (u != null)
+                {
+                    Provider.User = u;
+                    context.Response.Redirect("/");
+                    return;
+                }
+
+                u = new User
+                {
+                    FacebookId = result.id,
+                    Name = result.first_name,
+                    Surname = result.last_name,
+                    Avatar = result.picture.data.url,
+                    Email = result.email,
+                    Nick = result.username,
+                    Gender = result.gender == "male" ? "Erkek" : "Kadın",
+                    Visible = true
+                };
+                u.Save();
+                Provider.User = u;
+                context.Response.Redirect("/");
+            }
+            catch (Exception ex)
+            {
+                context.Response.Write(ex.Message + (ex.InnerException!=null ? " ("+ex.InnerException.Message+")" : ""));
+            }
         }
 
         //private string vx34ftd24()

@@ -31,6 +31,9 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login")]
         public string Roles { get; set; }
 
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options="readOnly:true")]
+        public string FacebookId { get; set; }
+
         #region kişisel
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal")]
@@ -88,7 +91,6 @@ namespace Cinar.CMS.Library.Entities
         public string Web { get; set; }
 
         #endregion
-
 
         #region other
 
@@ -201,6 +203,8 @@ namespace Cinar.CMS.Library.Entities
                 if (string.IsNullOrWhiteSpace(this.Password))
                     this.Password = Provider.Database.GetString("select Password from User where Id={0}", this.Id);
             }
+
+            downloadPictureForFieldsThatStartsWithHttp();
         }
 
         protected override void afterSave(bool isUpdate)

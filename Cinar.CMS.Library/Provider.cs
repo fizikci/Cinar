@@ -2033,6 +2033,61 @@ namespace Cinar.CMS.Library
         }
         #endregion
 
+        public static string FacebookLoginButton
+        {
+            get {
+                string code = @"
+    <div class=""fb-login-button"" data-show-faces=""false"" data-width=""100"" data-max-rows=""1"" scope=""email,user_about_me""></div>
+    <div id=""fb-root""></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 'APP_ID',
+          status     : true,
+          cookie     : true,
+          xfbml      : true
+        });
+    
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+            if (response.status === 'connected') {
+                // the user is logged in and has authenticated your app, and response.authResponse supplies the user's ID, a valid access token, a signed request, and the time the access token and signed request each expire
+                var uid = response.authResponse.userID;
+                var accessToken = response.authResponse.accessToken;
+        
+                // Handle the access token
+                var form = document.createElement(""form"");
+                form.setAttribute(""method"", 'post');
+                form.setAttribute(""action"", '/FacebookLogin.ashx');
+                
+                var field = document.createElement(""input"");
+                field.setAttribute(""type"", ""hidden"");
+                field.setAttribute(""name"", 'accessToken');
+                field.setAttribute(""value"", accessToken);
+                form.appendChild(field);
+                
+                document.body.appendChild(form);
+                form.submit();
+            } else if (response.status === 'not_authorized') {
+                // the user is logged in to Facebook, but has not authenticated your app
+            } else {
+                // the user isn't logged in to Facebook.
+            }
+        });
+    };
+    
+      // Load the SDK Asynchronously
+      (function(d){
+         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement('script'); js.id = id; js.async = true;
+         js.src = ""//connect.facebook.net/en_US/all.js"";
+         ref.parentNode.insertBefore(js, ref);
+       }(document));
+    </script>
+";
+                return code.Replace("APP_ID", Provider.Configuration.FacebookAppId);
+            }
+        }
     }
 
     public class CMSUtility

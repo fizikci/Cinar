@@ -74,7 +74,7 @@ namespace Cinar.CMS.Library
             downloadPictureForFieldsThatStartsWithHttp();
         }
 
-        private void downloadPictureForFieldsThatStartsWithHttp()
+        protected void downloadPictureForFieldsThatStartsWithHttp()
         {
             foreach (PropertyInfo pi in this.GetType().GetProperties())
             {

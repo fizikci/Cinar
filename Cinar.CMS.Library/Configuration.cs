@@ -173,6 +173,14 @@ namespace Cinar.CMS.Library
             set { imageUploadMaxWidth = value; }
         }
 
+        protected string facebookAppId = "";
+        [EditFormFieldProps(OrderNo = 16, Category = "Uygulama Ayarları")]
+        public string FacebookAppId
+        {
+            get { return facebookAppId; }
+            set { facebookAppId = value; }
+        }
+
         #endregion
 
         #region mail props
