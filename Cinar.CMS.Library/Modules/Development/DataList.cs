@@ -164,7 +164,7 @@ namespace Cinar.CMS.Library.Modules
 
                 int count = Provider.Database.GetInt(countSQL, filterParser.GetParams());
                 string pagingWithNumbers = "<div class='pagingWithNumbers'>";
-                for (int i = 0; i < count / HowManyItems; i++)
+                for (int i = 0; i < Math.Ceiling((decimal) count / (decimal)HowManyItems); i++)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = i.ToString();
                     pagingWithNumbers += String.Format("<a href=\"{0}\" class=\"pagingBtn{3}\"{1}>{2}</a>",
@@ -175,7 +175,7 @@ namespace Cinar.CMS.Library.Modules
                 }
                 pagingWithNumbers += "</div>";
 
-                if (data.Rows.Count == HowManyItems)
+                if ((pageNo+1)*HowManyItems<count)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
                     nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
@@ -206,11 +206,11 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging {{background:#0C51B1;font-weight:bold;padding:4px;text-align:center}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging a {{color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging a.prev {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging a.next {{}}\n", this.Name, this.Id);
+            sb.Append(base.GetDefaultCSS());
+            sb.AppendFormat("#{0}_{1} .paging {{text-align: center;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} .paging * {{display: inline-block;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} .pagingBtn {{display: inline-block; padding: 0px 6px;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0}_{1} .pagingBtn.active {{background: gray; border-radius: 10px; color: white;}}\n", this.Name, this.Id);
             return sb.ToString();
         }
 
