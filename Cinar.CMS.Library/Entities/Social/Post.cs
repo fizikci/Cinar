@@ -68,7 +68,7 @@ namespace Cinar.CMS.Library.Entities
         {
             base.afterDelete();
 
-            if(!string.IsNullOrWhiteSpace(this.Picture))
+            if(!string.IsNullOrWhiteSpace(this.Picture) && this.OriginalPostId==0)
                 File.Delete(Provider.MapPath(this.Picture));
         }
 

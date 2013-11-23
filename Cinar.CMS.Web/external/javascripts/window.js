@@ -1386,15 +1386,8 @@ var WindowUtilities = {
   // From script.aculo.us
   getWindowScroll: function() {
     var w = window;
-      var T, L, W, H;
+      var W, H;
       with (w.document) {
-        if (w.document.documentElement && typeof documentElement.scrollTop != "undefined") {
-          T = documentElement.scrollTop;
-          L = documentElement.scrollLeft;
-        } else if (w.document.body) {
-          T = body.scrollTop;
-          L = body.scrollLeft;
-        }
         if (w.innerWidth) {
           W = w.innerWidth;
           H = w.innerHeight;
@@ -1406,7 +1399,8 @@ var WindowUtilities = {
           H = body.offsetHeight
         }
       }
-      return { top: T, left: L, width: W, height: H };
+
+      return { top: $('body').scrollTop(), left: $('body').scrollLeft(), width: W, height: H };
   }, 
   //
   // getPageSize()

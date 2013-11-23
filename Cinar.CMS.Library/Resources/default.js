@@ -945,7 +945,6 @@ var CinarWindow = Class.create(); CinarWindow.prototype = {
 
         switch (options.position) {
             case 'left':
-                var dim = getDimensions($(document.body));
                 winOptions.left = 20;
                 winOptions.top = 20;
                 break;
