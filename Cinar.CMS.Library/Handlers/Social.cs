@@ -592,7 +592,8 @@ limit
             {
                 LangId = Provider.CurrentLanguage.Id,
                 Metin = post.Metin,
-                OriginalPostId = post.OriginalPostId > 0 ? post.OriginalPostId : post.Id
+                OriginalPostId = post.OriginalPostId > 0 ? post.OriginalPostId : post.Id,
+                Picture = post.Picture
             };
             p.Save();
 

@@ -128,6 +128,10 @@ namespace Cinar.CMS.Library.Modules
             string countSQL = "SELECT count(*) " + sql.Substring(sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase));
             if (countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase) > -1)
                 countSQL = countSQL.Substring(0, countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase));
+            if (countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase) > -1)
+                countSQL = countSQL.Substring(0, countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase));
+            if (countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase) > -1)
+                countSQL = countSQL.Substring(0, countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase));
 
             sql = Provider.Database.AddPagingToSQL(sql,
                     HowManyItems,
