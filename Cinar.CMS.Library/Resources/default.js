@@ -1379,6 +1379,27 @@ function editOnSite(elm, editOnSiteArgs){
     editOnSiteElm.show();
 }
 
+function refreshModule(module) {
+    module = $(module);
+    if (module.length == 0)
+        module = selMod;
+    if (module.length == 0)
+    {
+        niceAlert("module not found");
+        return;
+    }
+
+    var name = module.attr('id').split('_')[0].substring(1);
+    var id = module.attr('id').split('_')[1];
+
+    var queryString = location.href.indexOf('?') > -1 ? '&' + location.href.substring(location.href.indexOf('?') + 1) : '';
+
+    var html = ajax({ url: '/GetModuleHtml.ashx?name=' + name + '&id=' + id + queryString, isJSON: false, noCache: true });
+
+    module.replaceWith(html);
+    if(highlightModule) module.mousedown(highlightModule);
+}
+
 
 function searchYoutubeVideo(callback, channelName, q){
     var html = '<div id="youtube-search"><input type="text" name="q" value="'+(q?q:'')+'"/><button>SEARCH</button></div><div id="youtube-search-results"></div>';

@@ -648,6 +648,34 @@ namespace Cinar.CMS.Library.Handlers
 
             return list;
         }
+
+        public static void FollowUser(int followerId, string nickToFollow, string emailToFollow)
+        {
+            User user = Provider.Database.Read<User>(string.IsNullOrWhiteSpace(nickToFollow) ? "Email={0}" : "Nick={0}", string.IsNullOrWhiteSpace(nickToFollow) ? emailToFollow : nickToFollow);
+            if (user == null)
+                throw new Exception("User unknown");
+
+            if (!user.Settings.NeedsConfirmation)
+            {
+                new UserContact { UserId = user.Id }.Save();
+                new Notification
+                {
+                    NotificationType = NotificationTypes.Followed,
+                    UserId = user.Id
+                }.Save();
+                user.ContactCount = SocialAPI.GetUserFollowerCount(user.Id);
+                user.Save();
+            }
+            else
+            {
+                new Notification
+                {
+                    NotificationType = NotificationTypes.FollowerRequest,
+                    UserId = user.Id
+                }.Save();
+            }
+        }
+
     }
 
 }
