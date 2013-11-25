@@ -578,6 +578,9 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
+        public static Content Get(int id) {
+            return Provider.Database.Read<Content>(id);
+        }
     }
 
 }

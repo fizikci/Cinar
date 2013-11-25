@@ -95,6 +95,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "EditImageResize":
                 case "EditImageReset":
                 case "FacebookLogin":
+                case "reportBug":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "DoCommand":
