@@ -1483,12 +1483,12 @@ function endDesignMode(){
     location.href = url;
 }
 function editContent(){
-    var params = rightClickLinkElement.href.toQueryParams();
+    var params = rightClickLinkElement.attr('href').toQueryParams();
     if(params && params.item)
         editData('Content', params.item);
 }
 function editTag() {
-    var params = rightClickLinkElement.href.toQueryParams();
+    var params = rightClickLinkElement.attr('href').toQueryParams();
     if (params && params.tagId)
         editData('Tag', params.tagId);
 }

@@ -439,8 +439,8 @@ namespace Cinar.CMS.Library.Handlers
             Lang def = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
             List<Lang> langs = Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0} order by Code", def.Id);
             Provider.cacheResources();
-            List<StaticResource> cacheSR = (List<StaticResource>)HttpContext.Current.Cache["StaticResource"];
-            List<StaticResourceLang> cacheSRL = (List<StaticResourceLang>)HttpContext.Current.Cache["StaticResourceLang"];
+            List<StaticResource> cacheSR = Provider.Database.ReadList<StaticResource>();
+            List<StaticResourceLang> cacheSRL = Provider.Database.ReadList<StaticResourceLang>();
 
             sb.AppendFormat("<localization defaultLang=\"{0}\">\n", def.Code.Split('-')[0]);
 
@@ -449,9 +449,9 @@ namespace Cinar.CMS.Library.Handlers
                 sb.AppendFormat("\t<entry phrase=\"{0}\">\n", Provider.Server.HtmlEncode(sr.Name));
                 foreach (Lang l in langs)
                 {
-                    int index = cacheSRL.BinarySearch(new StaticResourceLang { LangId = l.Id, StaticResourceId = sr.Id });
-                    if(index>-1)
-                        sb.AppendFormat("\t\t<lang name=\"{0}\">{1}</lang>\n", l.Code.Split('-')[0], Provider.Server.HtmlEncode(cacheSRL[index].Translation));
+                    var srlang = cacheSRL.Where(srl=>srl.LangId==l.Id && srl.StaticResourceId==sr.Id).FirstOrDefault();
+                    if (srlang != null)
+                        sb.AppendFormat("\t\t<lang name=\"{0}\">{1}</lang>\n", l.Code.Split('-')[0], Provider.Server.HtmlEncode(srlang.Translation));
                     else
                         sb.AppendFormat("\t\t<lang name=\"{0}\"></lang>\n", l.Code.Split('-')[0]);
                 }

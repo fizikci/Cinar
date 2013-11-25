@@ -171,6 +171,11 @@ namespace Cinar.CMS.Library.Handlers
                         facebookLogin();
                         break;
                     }
+                case "reportBug":
+                    {
+                        reportBug();
+                        break;
+                    }
             }
         }
 
@@ -915,6 +920,13 @@ http://{1}
             {
                 context.Response.Write(ex.Message + (ex.InnerException!=null ? " ("+ex.InnerException.Message+")" : ""));
             }
+        }
+
+        private void reportBug()
+        {
+            string desc = context.Request["desc"];
+            Provider.Log("Notice", "BugReport", desc);
+            context.Response.Write("OK");
         }
 
         //private string vx34ftd24()

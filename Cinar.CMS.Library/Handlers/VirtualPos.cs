@@ -86,7 +86,7 @@ namespace Cinar.CMS.Library.Handlers
                     {
                         string msg = (AmountInCents/100d)+" TL tahsil edildi. Bu bilgi bir hata nedeniyle veritabanına kaydedilemedi. Lütfen bu bilgiyi manuel olarak kaydediniz.";
                         Provider.SendMail("Tahsilat yapıldı ama sisteme kaydedilemedi!!!", msg);
-                        Provider.Log("Checkout", "Error", msg);
+                        Provider.Log("Error", "Checkout", msg);
                     }
 
                     context.Response.Write("OK");
@@ -94,13 +94,13 @@ namespace Cinar.CMS.Library.Handlers
                 else
                 {
                     context.Response.Write("HATA: Ödemenizin onaylanmasında bir hata oluştu.");
-                    Provider.Log("Checkout", "Error", (AmountInCents/100d)+" TL tahsil edilmek istendi ama servisten " + ResponseErrorNo + " nolu hata döndü. (" + ResponseErrorMessage + ")");
+                    Provider.Log("Error", "Checkout", (AmountInCents/100d)+" TL tahsil edilmek istendi ama servisten " + ResponseErrorNo + " nolu hata döndü. (" + ResponseErrorMessage + ")");
                 }
             }
             catch (Exception ex)
             {
                 context.Response.Write("HATA: " + ex.Message);
-                Provider.Log("Checkout", "Error", ex.Message + (ex.InnerException != null ? "(" + ex.InnerException.Message + ")" : ""));
+                Provider.Log( "Error","Checkout", ex.Message + (ex.InnerException != null ? "(" + ex.InnerException.Message + ")" : ""));
             }
         }
 
