@@ -8,6 +8,7 @@ using System.Xml;
 using Cinar.CMS.Library.Modules;
 using Cinar.CMS.Library.Entities;
 using System.Web;
+using System.Drawing;
 
 //using System.IO;
 
@@ -344,7 +345,18 @@ namespace Cinar.CMS.Library.Handlers
                 for (int i = 0; i < context.Request.Files.Count; i++)
                 {
                     string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
-                    context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+
+                    Image bmp = Image.FromStream(context.Request.Files[i].InputStream);
+                    if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                    {
+                        Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                        //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                        bmp2.SaveImage(Path.Combine(path, fileName), Provider.Configuration.ThumbQuality);
+                    }
+                    else
+                        Provider.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+
+                    //context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
                     context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
                 }
             }

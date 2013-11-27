@@ -1830,7 +1830,7 @@ var ListForm = Class.create(); ListForm.prototype = {
                         var fieldName = $(headers[i]).attr("id").split('_')[1];
                         var key = fieldName.indexOf('.') > -1 ? fieldName.split('.')[1] : fieldName;
                         if (ths.options.renameLabels[key])
-                            headers[i].html(ths.options.renameLabels[key]);
+                            $(headers[i]).html(ths.options.renameLabels[key]);
                     }
                 }
 

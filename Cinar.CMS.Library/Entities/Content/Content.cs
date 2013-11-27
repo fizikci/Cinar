@@ -288,6 +288,8 @@ namespace Cinar.CMS.Library.Entities
         {
             base.beforeSave(isUpdate);
 
+            this.Tags = this.Tags.Trim(',', ' ');
+
             if (!isUpdate)
                 this.Keyword = Guid.NewGuid().ToString();
 
