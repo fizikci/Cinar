@@ -394,6 +394,7 @@ namespace Cinar.CMS.Library.Handlers
         /// </summary>
         public static ViewPostRelatedData GetPostRelatedData(int pid)
         {
+            var post = Provider.Database.Read<Post>(pid);
             var res = new ViewPostRelatedData();
 
             res.RelatedUsers = Provider.Database.ReadList<ViewMiniUserInfo>(@"
@@ -441,6 +442,28 @@ namespace Cinar.CMS.Library.Handlers
             foreach (var viewPost in res.Replies)
                 viewPost.UserAvatar = Provider.GetThumbPath(viewPost.UserAvatar, 32, 32, false);
 
+            if (post.ReplyToPostId > 0)
+            {
+                res.ReplyToPost = Provider.Database.Read<ViewPost>(@"
+                    SELECT
+                        p.Id,
+                        u.Avatar as UserAvatar,
+                        u.Nick as UserNick,
+                        concat(u.Name,' ',u.Surname) as UserFullName,
+                        p.Metin,
+                        p.InsertDate,
+                        p.ShareCount,
+                        p.LikeCount
+                    FROM 
+                        Post p, User u
+                    WHERE 
+                        p.InsertUserId = u.Id AND
+                        p.Id = {0}"
+                    , post.ReplyToPostId);
+
+                if(res.ReplyToPost!=null)
+                    res.ReplyToPost.UserAvatar = Provider.GetThumbPath(res.ReplyToPost.UserAvatar, 32, 32, false);
+            }
             return res;
         }
 

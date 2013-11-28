@@ -14,5 +14,7 @@ namespace Cinar.CMS.Library.Entities
         public List<ViewMiniUserInfo> RelatedUsers { get; set; }
 
         public List<ViewPost> Replies { get; set; }
+
+        public ViewPost ReplyToPost { get; set; }
     }
 }

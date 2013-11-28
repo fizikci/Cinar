@@ -1400,7 +1400,7 @@ var WindowUtilities = {
         }
       }
 
-      return { top: $('body').scrollTop(), left: $('body').scrollLeft(), width: W, height: H };
+      return { top: $(window).scrollTop(), left: $(window).scrollLeft(), width: W, height: H };
   }, 
   //
   // getPageSize()
