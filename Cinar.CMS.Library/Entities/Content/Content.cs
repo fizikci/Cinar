@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Collections;
 using System.Xml.Serialization;
 using System.ComponentModel;
-//using System.IO;
+using System.Linq;
 
 namespace Cinar.CMS.Library.Entities
 {
@@ -229,7 +229,7 @@ namespace Cinar.CMS.Library.Entities
         }
 
         private string sourceLink;
-        [ColumnDetail(Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
+        [ColumnDetail(Length = 200), EditFormFieldProps(ControlType = ControlType.MemoEdit, Category = "Temel Bilgiler", OrderNo = 15)]
         public string SourceLink
         {
             get { return sourceLink; }
@@ -546,7 +546,7 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                return Provider.Database.Read<Content>(1);
+                return (Content)Provider.Translate(Provider.Database.Read<Content>(1));
             }
         }
 
@@ -556,7 +556,7 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                return Provider.Database.ReadList<Content>("select * from Content where CategoryId={0}", this.Id);
+                return Provider.Translate(Provider.Database.ReadList<Content>("select * from Content where CategoryId={0}", this.Id)).Cast<Content>().ToList();
             }
         }
 
@@ -566,7 +566,7 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                return Provider.Database.ReadList<Content>("select * from Content where Id in (select ChildContentId from ContentContent where ParentContentId={0})", this.Id);
+                return Provider.Translate(Provider.Database.ReadList<Content>("select * from Content where Id in (select ChildContentId from ContentContent where ParentContentId={0})", this.Id)).Cast<Content>().ToList();
             }
         }
 
@@ -576,12 +576,22 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                return Provider.Database.ReadList<ContentPicture>("select * from ContentPicture where ContentId={0}", this.Id);
+                return Provider.Translate(Provider.Database.ReadList<ContentPicture>("select * from ContentPicture where ContentId={0}", this.Id)).Cast<ContentPicture>().ToList();
+            }
+        }
+
+        [XmlIgnore]
+        [Description("Returns the pdf files of this content.")]
+        public List<ContentPicture> PdfFiles
+        {
+            get
+            {
+                return Provider.Translate(Provider.Database.ReadList<ContentPicture>("select * from ContentPicture where ContentId={0} AND fileName like {1}", this.Id, "%.pdf")).Cast<ContentPicture>().ToList();
             }
         }
 
         public static Content Get(int id) {
-            return Provider.Database.Read<Content>(id);
+            return (Content)Provider.Translate(Provider.Database.Read<Content>(id));
         }
     }
 
