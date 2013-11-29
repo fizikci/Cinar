@@ -345,24 +345,31 @@ namespace Cinar.CMS.Library.Handlers
                 for (int i = 0; i < context.Request.Files.Count; i++)
                 {
                     string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
-
-                    Image bmp = Image.FromStream(context.Request.Files[i].InputStream);
-                    if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                    path = Path.Combine(path, fileName);
+                    try
                     {
-                        Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
-                        //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        bmp2.SaveImage(Path.Combine(path, fileName), Provider.Configuration.ThumbQuality);
+                        // eğer dosya resim ise resize edelim
+                        Image bmp = Image.FromStream(context.Request.Files[i].InputStream);
+                        if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
+                        {
+                            Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
+                            //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                            bmp2.SaveImage(path, Provider.Configuration.ThumbQuality);
+                        }
+                        else
+                            Provider.Request.Files[i].SaveAs(path);
                     }
-                    else
-                        Provider.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+                    catch {
+                        Provider.Request.Files[i].SaveAs(path);
+                    }
 
                     //context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
                     context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Dosya yüklendi.', '" + folderName + "/" + fileName + "');</script>");
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız.');</script>");
+                context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Yükleme başarısız. '+"+ex.Message.ToJS()+");</script>");
             }
         }
         private void deleteFile()
