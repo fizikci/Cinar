@@ -366,7 +366,7 @@ var FileManager = Class.create(); FileManager.prototype = {
         Object.extend(this, options);
         if (!this.folder) this.folder = '/UserFiles';
         this.container = $(this.container ? this.container : document.body);
-        var html = '<div><div id="fileBrowserList"></div>' +
+        var html = '<div><div id="fileBrowserList" onselectstart="return false;"></div>' +
             '<div id="fileBrowserFooter">' +
             '<form action="SystemInfo.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
             '<input type="hidden" name="folder"/>' +

@@ -345,7 +345,7 @@ namespace Cinar.CMS.Library.Handlers
                 for (int i = 0; i < context.Request.Files.Count; i++)
                 {
                     string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
-                    path = Path.Combine(path, fileName);
+                    string imgPath = Path.Combine(path, fileName);
                     try
                     {
                         // eğer dosya resim ise resize edelim
@@ -354,13 +354,13 @@ namespace Cinar.CMS.Library.Handlers
                         {
                             Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
                             //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                            bmp2.SaveImage(path, Provider.Configuration.ThumbQuality);
+                            bmp2.SaveImage(imgPath, Provider.Configuration.ThumbQuality);
                         }
                         else
-                            Provider.Request.Files[i].SaveAs(path);
+                            Provider.Request.Files[i].SaveAs(imgPath);
                     }
                     catch {
-                        Provider.Request.Files[i].SaveAs(path);
+                        Provider.Request.Files[i].SaveAs(imgPath);
                     }
 
                     //context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
