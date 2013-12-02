@@ -39,8 +39,8 @@ namespace Cinar.CMS.Library.Entities
             switch (NotificationType)
             {
                 case NotificationTypes.Shared:
-                    this.Post.ShareCount++;
-                    this.Post.Save();
+                    this.Post.OriginalPost.ShareCount++;
+                    this.Post.OriginalPost.Save();
                     break;
                 case NotificationTypes.Liked:
                     this.Post.LikeCount++;

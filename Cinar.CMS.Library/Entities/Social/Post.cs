@@ -26,6 +26,11 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(References = typeof(Post))]
         public int OriginalPostId { get; set; }
 
+        public Post OriginalPost
+        {
+            get { return Provider.Database.Read<Post>(OriginalPostId); }
+        }
+
         /// <summary>
         /// Bu post hangi post'a cevap olarak yazıldı?
         /// </summary>
