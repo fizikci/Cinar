@@ -692,7 +692,9 @@ function getModuleIcon(moduleName){
 		'LoginForm':'application_form',
 		'PasswordForm':'application_form',
 		'MembershipForm':'application_form',
-		'DataConverter':'cog'
+		'DataConverter': 'cog',
+		'GotoTopButton': 'bullet_arrow_top',
+		'Checkout': 'creditcards'
 	};
 	return moduleIcons[moduleName];
 }
@@ -856,9 +858,9 @@ function saveEntity(entityName, entity, callback){
 		onComplete: function(req) {
 			if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
 			if(method=='insertNew') 
-				entity.Id = parseInt(req.responseText);
+				entity = eval('('+req.responseText+')');
 			if(callback)
-				callback();
+				callback(entity);
 		},
 		onException: function(req, ex){throw ex;}
 	});

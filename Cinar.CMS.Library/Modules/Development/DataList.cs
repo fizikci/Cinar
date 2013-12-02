@@ -21,6 +21,7 @@ namespace Cinar.CMS.Library.Modules
         public string SQL { get; set; }
 
         public int HowManyItems { get; set; }
+        public int Offset { get; set; }
 
         protected string orderBy = "Id";
         [ColumnDetail(Length = 20), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
@@ -107,13 +108,16 @@ namespace Cinar.CMS.Library.Modules
                     where
                         {2} {3}
                     order by
-                        {4} {5}",
+                        {4} {5}
+                    limit {6} offset {7}",
                                      "*",
                                      this.EntityName,
                                      defaultWhere,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
-                                     this.Ascending ? "asc" : "desc");
+                                     this.Ascending ? "asc" : "desc",
+                                     HowManyItems,
+                                     Offset);
             else
             {
                 Interpreter engine = Provider.GetInterpreter(SQL, this);
@@ -121,21 +125,25 @@ namespace Cinar.CMS.Library.Modules
                 engine.Execute();
                 SQL = sql = engine.Output;
 
-                if (SQL.ToLowerInvariant().Contains("limit"))
-                    return "Do not use limit in SQL. DataList does it.";
+                if (ShowPaging && SQL.ToLowerInvariant().Contains("limit"))
+                    return "Do not use limit in SQL with paging. DataList does it.";
             }
 
-            string countSQL = "SELECT count(*) " + sql.Substring(sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase));
-            if (countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase) > -1)
-                countSQL = countSQL.Substring(0, countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase));
-            if (countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase) > -1)
-                countSQL = countSQL.Substring(0, countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase));
-            if (countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase) > -1)
-                countSQL = countSQL.Substring(0, countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase));
+            string countSQL = "";
+            if (ShowPaging)
+            {
+                countSQL = "SELECT count(*) " + sql.Substring(sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase));
+                if (countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase) > -1)
+                    countSQL = countSQL.Substring(0, countSQL.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase));
+                if (countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase) > -1)
+                    countSQL = countSQL.Substring(0, countSQL.LastIndexOf("group by", StringComparison.InvariantCultureIgnoreCase));
+                if (countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase) > -1)
+                    countSQL = countSQL.Substring(0, countSQL.LastIndexOf("having", StringComparison.InvariantCultureIgnoreCase));
 
-            sql = Provider.Database.AddPagingToSQL(sql,
-                    HowManyItems,
-                    pageNo);
+                sql = Provider.Database.AddPagingToSQL(sql,
+                        HowManyItems,
+                        pageNo);
+            }
 
             data = Provider.Database.GetDataTable(sql, filterParser.GetParams());
 
@@ -231,6 +239,7 @@ namespace Cinar.CMS.Library.Modules
             PictureWidth = 0;
             DataTemplate = "$=entity.Id$ numaralý kayýt";
             HowManyItems = 30;
+            Offset = 0;
             Filter = "";
             EntityName = "";
             ShowPaging = true;
