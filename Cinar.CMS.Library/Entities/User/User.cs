@@ -119,6 +119,7 @@ namespace Cinar.CMS.Library.Entities
             RedirectCount = 0;
             Roles = "User";
             Password = "";
+            FacebookId = "0";
         }
 
         [EditFormFieldProps(Visible = false)]

@@ -10,6 +10,12 @@ namespace Cinar.CMS.Library.Entities
     public class UserSettings : BaseEntity
     {
         public UserSettings() {
+            CoverPicture = "";
+            BackgroundPicture = "";
+            BackgroundColor = "";
+            LinkColor = "";
+            BackgroundAlign = "";
+            BackgroundLayout = "";
         }
 
         [ColumnDetail(References=typeof(User), IsUnique=true)]

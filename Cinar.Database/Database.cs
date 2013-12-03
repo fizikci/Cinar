@@ -1301,6 +1301,27 @@ namespace Cinar.Database
             return sql;
         }
 
+        public string AddLimitOffsetToSQL(string sql, int limit, int offset)
+        {
+            switch (Provider)
+            {
+                case DatabaseProvider.PostgreSQL:
+                case DatabaseProvider.MySQL:
+                case DatabaseProvider.SQLite:
+                    return sql.Trim().Trim(';') + " LIMIT " + limit + " OFFSET " + offset;
+                case DatabaseProvider.SQLServer:
+                    int indexOfFrom = sql.IndexOf("from", StringComparison.InvariantCultureIgnoreCase);
+                    int indexOfOrderBy = sql.LastIndexOf("order by", StringComparison.InvariantCultureIgnoreCase);
+                    return "WITH _CinarResult AS (" +
+                            sql.Substring(0, indexOfFrom) +
+                            ", ROW_NUMBER() OVER (" + sql.Substring(indexOfOrderBy) + @") AS _CinarRowNumber " +
+                            sql.Substring(indexOfFrom, indexOfOrderBy - indexOfFrom) +
+                            ") select * from _CinarResult WHERE _CinarRowNumber BETWEEN " + (offset + 1) + " AND " + (limit + offset + 1) + ";";
+            }
+
+            return sql;
+        }
+
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
             return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr => (T)(dr[0] == DBNull.Value ? default(T) : dr[0])).ToList();
