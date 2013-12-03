@@ -100,6 +100,7 @@ namespace Cinar.CMS.Library.Modules
 
             string sql = "";
             if (string.IsNullOrWhiteSpace(this.SQL))
+            {
                 sql = String.Format(@"
                     select
                         {0}
@@ -118,15 +119,19 @@ namespace Cinar.CMS.Library.Modules
                                      this.Ascending ? "asc" : "desc",
                                      HowManyItems,
                                      Offset);
+            }
             else
             {
                 Interpreter engine = Provider.GetInterpreter(SQL, this);
                 engine.Parse();
                 engine.Execute();
-                SQL = sql = engine.Output;
+                sql = engine.Output;
 
-                if (ShowPaging && SQL.ToLowerInvariant().Contains("limit"))
+                if (ShowPaging && sql.ToLowerInvariant().Contains("limit"))
                     return "Do not use limit in SQL with paging. DataList does it.";
+
+                if (!ShowPaging && !sql.ToLowerInvariant().Contains("limit"))
+                    sql = Provider.Database.AddLimitOffsetToSQL(sql, HowManyItems, Offset);
             }
 
             string countSQL = "";
