@@ -144,6 +144,7 @@
     <Compile Include="Modules\Commerce\ProductList.cs" />
     <Compile Include="Modules\Containers\ModuleRepeater.cs" />
     <Compile Include="Modules\Development\SQLDataList.cs" />
+    <Compile Include="Modules\Membership\SocialAuth.cs" />
     <Compile Include="Modules\Misc\GotoTopButton.cs" />
     <Compile Include="Modules\Social\ShareButtons.cs" />
     <Compile Include="Modules\Social\WordBlackListAdmin.cs" />
@@ -316,6 +317,10 @@
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SocialAuthNet\SocialAuthNet.csproj">
+      <Project>{b714ed7c-65ed-4e2f-907e-faf3c64d6660}</Project>
+      <Name>SocialAuthNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

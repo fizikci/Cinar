@@ -31,8 +31,26 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login")]
         public string Roles { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options="readOnly:true")]
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
         public string FacebookId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string GoogleId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string YahooId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string MsnId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string LinkedinId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string TwitterId { get; set; }
+
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        public string MyspaceId { get; set; }
 
         #region kişisel
 

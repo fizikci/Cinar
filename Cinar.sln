@@ -41,29 +41,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Common", "Cinar.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.SQLEngine", "Cinar.SQLEngine\Cinar.SQLEngine.csproj", "{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cinar.IssueTracking", "Cinar.IssueTracking\", "{B755FE80-9284-4BF1-A6ED-B33EC39F7688}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{5EC4EB1E-BE93-4460-B231-CC7DCBFFD40D}|Cinar.Entities.dll;{E9B26A78-06FF-4D79-9C37-D4198DF126EB}|Cinar.Common.dll;{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}|Cinar.Database.dll;{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}|Cinar.SQLEngine.dll;{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}|Cinar.Extensions.dll;{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}|Cinar.POP3.dll;{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}|Cinar.SQLParser.dll;"
-		Debug.AspNetCompiler.VirtualPath = "/Cinar.IssueTracking"
-		Debug.AspNetCompiler.PhysicalPath = "Cinar.IssueTracking\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Cinar.IssueTracking\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/Cinar.IssueTracking"
-		Release.AspNetCompiler.PhysicalPath = "Cinar.IssueTracking\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Cinar.IssueTracking\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "26111"
-		VWDVirtualPath = "/"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Drawing", "Cinar.Drawing\Cinar.Drawing.csproj", "{503A444F-2A33-4CC5-BBAD-7440F1BF3916}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.CMS.Library", "Cinar.CMS.Library\Cinar.CMS.Library.csproj", "{97BEE0DF-85DB-4265-A5A7-C8C11B9C9322}"
@@ -71,7 +48,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cinar.CMS.Web", "Cinar.CMS.Web\", "{20591669-C8ED-46C3-A2B8-24E4CBAAAD48}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{97BEE0DF-85DB-4265-A5A7-C8C11B9C9322}|Cinar.CMS.Library.dll;{E9B26A78-06FF-4D79-9C37-D4198DF126EB}|Cinar.Common.dll;{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}|Cinar.Database.dll;{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}|Cinar.Extensions.dll;{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}|Cinar.SQLEngine.dll;{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}|Cinar.POP3.dll;{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}|Cinar.SQLParser.dll;{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}|Cinar.Scripting.dll;{6A041EA4-3C99-4D22-8E34-30F22392726E}|Cinar.RSSReader.dll;"
+		ProjectReferences = "{97BEE0DF-85DB-4265-A5A7-C8C11B9C9322}|Cinar.CMS.Library.dll;{E9B26A78-06FF-4D79-9C37-D4198DF126EB}|Cinar.Common.dll;{6727C03B-4CF9-4670-B2EC-63FACFBE5DFA}|Cinar.Database.dll;{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}|Cinar.Extensions.dll;{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}|Cinar.SQLEngine.dll;{E5AA23F7-818D-4D36-B2D3-EF8E4D60C01A}|Cinar.POP3.dll;{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}|Cinar.SQLParser.dll;{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}|Cinar.Scripting.dll;{6A041EA4-3C99-4D22-8E34-30F22392726E}|Cinar.RSSReader.dll;{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}|SocialAuthNet.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Cinar.CMS.Web"
 		Debug.AspNetCompiler.PhysicalPath = "Cinar.CMS.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Cinar.CMS.Web\"
@@ -91,6 +68,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cinar.CMS.Web", "Cinar.CMS.
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinar.Test", "Cinar.Test\Cinar.Test.csproj", "{4564B11B-7171-4DD3-8E7A-1941F67DC9F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialAuthNet", "SocialAuthNet\SocialAuthNet.csproj", "{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -592,30 +571,6 @@ Global
 		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|Mixed Platforms.Build.0 = Release|Any CPU
 		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|x64.ActiveCfg = Release|Any CPU
 		{ACE76FDB-1B9D-4C3D-9B66-0B7D04A0F023}.Release64|x86.ActiveCfg = Release|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|Any CPU.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|Any CPU.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|x64.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.development|x86.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|x64.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release|x86.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Any CPU.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Any CPU.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|x64.ActiveCfg = Debug|Any CPU
-		{B755FE80-9284-4BF1-A6ED-B33EC39F7688}.Release64|x86.ActiveCfg = Debug|Any CPU
 		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{503A444F-2A33-4CC5-BBAD-7440F1BF3916}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -712,6 +667,30 @@ Global
 		{4564B11B-7171-4DD3-8E7A-1941F67DC9F8}.Release64|x64.ActiveCfg = Release|x86
 		{4564B11B-7171-4DD3-8E7A-1941F67DC9F8}.Release64|x86.ActiveCfg = Release|x86
 		{4564B11B-7171-4DD3-8E7A-1941F67DC9F8}.Release64|x86.Build.0 = Release|x86
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|Any CPU.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|Any CPU.Build.0 = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|x64.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.development|x86.ActiveCfg = Debug|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|x64.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release|x86.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|Any CPU.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|Any CPU.Build.0 = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|Mixed Platforms.Build.0 = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|x64.ActiveCfg = Release|Any CPU
+		{B714ED7C-65ED-4E2F-907E-FAF3C64D6660}.Release64|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
