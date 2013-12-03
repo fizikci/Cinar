@@ -96,6 +96,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "EditImageReset":
                 case "FacebookLogin":
                 case "reportBug":
+                case "socialAuthLogin":
+                case "loginBySocialAuth":
+                case "getSocialFriends":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "DoCommand":

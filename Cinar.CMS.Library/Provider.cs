@@ -1172,6 +1172,7 @@ namespace Cinar.CMS.Library
             Interpreter engine = new Interpreter(template, new List<string>() { "Cinar.CMS.Library", "Cinar.CMS.Library.Entities", "Cinar.CMS.Library.Modules", "Cinar.CMS.Library.Handlers" });
             engine.AddAssembly(typeof(Provider).Assembly);
             engine.AddAssembly(typeof(Utility).Assembly);
+            engine.AddAssembly(typeof(Brickred.SocialAuth.NET.Core.ProviderFactory).Assembly);
             if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
                 foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
                 {

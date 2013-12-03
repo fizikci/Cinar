@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Reflection;
 using System.Data;
+using Brickred.SocialAuth.NET.Core.BusinessObjects;
 using Cinar.CMS.Library.Entities;
 using Cinar.CMS.Library.Modules;
 using ContentPicture = Cinar.CMS.Library.Entities.ContentPicture;
@@ -174,6 +175,21 @@ namespace Cinar.CMS.Library.Handlers
                 case "reportBug":
                     {
                         reportBug();
+                        break;
+                    }
+                case "socialAuthLogin":
+                    {
+                        socialAuthLogin();
+                        break;
+                    }
+                case "loginBySocialAuth":
+                    {
+                        loginBySocialAuth();
+                        break;
+                    }
+                case "getSocialFriends":
+                    {
+                        getSocialFriends();
                         break;
                     }
             }
@@ -927,6 +943,53 @@ http://{1}
             string desc = context.Request["desc"];
             Provider.Log("Notice", "BugReport", desc);
             context.Response.Write("OK");
+        }
+
+        private void socialAuthLogin()
+        {
+            PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
+
+            //Initialize User
+            SocialAuthUser objUser = new SocialAuthUser(selectedProvider);
+
+            //Call Login
+            objUser.Login(returnUrl: "loginBySocialAuth.ashx");
+        }
+
+        private void loginBySocialAuth()
+        {
+            UserProfile user = SocialAuthUser.GetCurrentUser().GetProfile();
+
+            User u = Provider.Database.Read<User>(user.Provider.ToString().CapitalizeFirstLetterInvariant()+"Id={0}", user.ID);
+            if (u != null)
+            {
+                Provider.User = u;
+                context.Response.Redirect("/");
+                return;
+            }
+
+            u = new User
+            {
+                Name = user.FirstName,
+                Surname = user.LastName,
+                Avatar = user.ProfilePictureURL,
+                Email = user.Email,
+                Nick = user.Username,
+                Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın",
+                Visible = true
+            };
+            u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
+            u.Save();
+            Provider.User = u;
+            context.Response.Redirect("/");
+        }
+
+        private void getSocialFriends()
+        {
+            PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
+            var contacts = SocialAuthUser.GetCurrentUser().GetContacts(selectedProvider);
+
+            context.Response.Write(contacts.ToJSON());
         }
 
         //private string vx34ftd24()
