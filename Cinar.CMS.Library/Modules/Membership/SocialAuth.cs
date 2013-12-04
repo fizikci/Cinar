@@ -13,6 +13,30 @@ namespace Cinar.CMS.Library.Modules
 
         public SocialAuth()
         {
+            InnerHtml = @"
+$
+    using Brickred.SocialAuth.NET.Core;
+    foreach (var provider in ProviderFactory.Providers)
+    {
+        var p = provider.ToString().Replace(""Brickred.SocialAuth.NET.Core.Wrappers."", """").Replace(""Wrapper"","""");
+        echo('<img src=""/external/icons/social/'+p+'.png"" onclick=""location.href=\'socialAuthLogin.ashx?provider='+p+'\';""/>');
+    }
+$
+<script>
+function loginWith(provider){
+    location.href='socialAuthLogin.ashx?provider='+provider;
+    /*
+    jQuery.ajax({
+        dataType: ""json"",
+        url: 'socialAuthLogin.ashx',
+        data: {provider:provider},
+        success: function(res){
+            alert(res);        
+        }
+    });
+    */
+}
+</script>";
         }
 
         internal override string show()

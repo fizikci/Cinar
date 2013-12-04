@@ -149,7 +149,7 @@
     <Compile Include="Modules\Social\ShareButtons.cs" />
     <Compile Include="Modules\Social\WordBlackListAdmin.cs" />
     <Compile Include="Modules\Social\PrivateMessages.cs" />
-    <Compile Include="Modules\Social\GoogleContacts.cs" />
+    <Compile Include="Modules\Social\SocialContacts.cs" />
     <Compile Include="Modules\Membership\LoginForm2.cs" />
     <Compile Include="Modules\Misc\Chart.cs" />
     <Compile Include="Modules\Newspaper\AuthorBox.cs" />

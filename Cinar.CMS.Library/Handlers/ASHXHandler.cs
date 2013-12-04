@@ -94,6 +94,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "EditImageRotate":
                 case "EditImageResize":
                 case "EditImageReset":
+                case "addContacts":
+                case "inviteContacts":
+                case "getLocation":
                 case "FacebookLogin":
                 case "reportBug":
                 case "socialAuthLogin":

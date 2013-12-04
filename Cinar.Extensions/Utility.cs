@@ -630,7 +630,7 @@ namespace System
                 return char.ToUpperInvariant(str[0]).ToString();
 
             str = str.Trim();
-            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLower();
+            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
         }
         public static string ToLowerFirstLetter(this string str)
         {
