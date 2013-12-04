@@ -162,6 +162,11 @@ namespace Cinar.CMS.Library.Handlers
                         addContacts();
                         break;
                     }
+                case "inviteContacts":
+                    {
+                        inviteContacts();
+                        break;
+                    }
                 case "getLocation":
                     {
                         getLocation();
@@ -588,6 +593,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 Provider.User = null;
                 Provider.DesignMode = false;
+                SocialAuthUser.GetCurrentUser().Logout();
                 context.Response.Redirect("/" + Provider.Configuration.MainPage);
             }
 
@@ -968,6 +974,27 @@ http://{1}
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(user.Email))
+            {
+                context.Response.Redirect("/");
+                return;
+            }
+
+            u = Provider.User.IsAnonim() ? Provider.Database.Read<User>("Email={0}", user.Email) : Provider.User;
+            if (!Provider.User.IsAnonim())
+            {
+                u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
+                if (string.IsNullOrWhiteSpace(u.Name)) u.Name = user.FirstName;
+                if (string.IsNullOrWhiteSpace(u.Surname)) u.Surname = user.LastName;
+                if (string.IsNullOrWhiteSpace(u.Avatar)) u.Avatar = user.ProfilePictureURL;
+                if (string.IsNullOrWhiteSpace(u.Gender)) u.Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın";
+                if (string.IsNullOrWhiteSpace(u.Country)) u.Country = user.Country;
+                u.Save();
+                Provider.User = u;
+                context.Response.Redirect("/");
+                return;
+            }
+
             u = new User
             {
                 Name = user.FirstName,
@@ -976,6 +1003,7 @@ http://{1}
                 Email = user.Email,
                 Nick = user.Username,
                 Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın",
+                Country = user.Country,
                 Visible = true
             };
             u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
@@ -986,8 +1014,8 @@ http://{1}
 
         private void getSocialFriends()
         {
-            PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
-            var contacts = SocialAuthUser.GetCurrentUser().GetContacts(selectedProvider);
+            //PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
+            var contacts = SocialAuthUser.GetCurrentUser().GetContacts(SocialAuthUser.CurrentProvider);
 
             context.Response.Write(contacts.ToJSON());
         }
