@@ -68,18 +68,6 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
     }
 
     /// <summary>
-    /// Configuration Option for SocialAuth.NET
-    /// </summary>
-    public enum AUTHENTICATION_OPTION
-    {
-        SOCIALAUTH_SECURITY_SOCIALAUTH_SCREEN, //Everything by socialauth including screen generation
-        SOCIALAUTH_SECURITY_CUSTOM_SCREEN, //Everything by socialauth but user's login url
-        FORMS_AUTHENTICATION, //Forms authentication
-        CUSTOM_SECURITY_CUSTOM_SCREEN, //User handles everything by calling API
-        NOT_SUPPORTED //Error
-    }
-
-    /// <summary>
     /// Level of scope set for provider. 
     /// DEFAULT => All Features scope 
     /// CUSTOM=>User specified scope only

@@ -36,6 +36,9 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
         public string Picture { get; set; }
 
+        [ColumnDetail(Length = 100), EditFormFieldProps(ControlType = ControlType.PictureEdit), PictureFieldProps(SpecialFolder = "uploadDir", SpecialNameField = "Name", AddRandomNumber = true, UseYearMonthDayFolders = true)]
+        public string Picture2 { get; set; }
+
         protected override void beforeSave(bool isUpdate)
         {
             base.beforeSave(isUpdate);

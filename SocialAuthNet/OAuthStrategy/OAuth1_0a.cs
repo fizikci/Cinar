@@ -106,7 +106,7 @@ namespace Brickred.SocialAuth.NET.Core
             oauthParameters.Add("oauth_timestamp", oauthHelper.GenerateTimeStamp());
             oauthParameters.Add("oauth_nonce", oauthHelper.GenerateNonce());
             oauthParameters.Add("oauth_version", "1.0");
-            oauthParameters.Add("oauth_callback", ConnectionToken.Domain + "SocialAuth/validate.sauth");
+            oauthParameters.Add("oauth_callback", ConnectionToken.Domain + "SocialAuth/validate_sauth.ashx");
 
             //2. Notify Consumer (optionally user may wish to add extra parameters)
             BeforeRequestingRequestToken(oauthParameters); // hook called

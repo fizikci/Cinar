@@ -964,19 +964,21 @@ http://{1}
 
         private void loginBySocialAuth()
         {
+            string redir = string.IsNullOrWhiteSpace(Provider.AppSettings["socialAuthRedirect"]) ? "/" : Provider.AppSettings["socialAuthRedirect"];
+
             UserProfile user = SocialAuthUser.GetCurrentUser().GetProfile();
 
             User u = Provider.Database.Read<User>(user.Provider.ToString().CapitalizeFirstLetterInvariant()+"Id={0}", user.ID);
             if (u != null)
             {
                 Provider.User = u;
-                context.Response.Redirect("/");
+                context.Response.Redirect(redir);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(user.Email))
             {
-                context.Response.Redirect("/");
+                context.Response.Redirect(redir);
                 return;
             }
 
@@ -991,7 +993,7 @@ http://{1}
                 if (string.IsNullOrWhiteSpace(u.Country)) u.Country = user.Country;
                 u.Save();
                 Provider.User = u;
-                context.Response.Redirect("/");
+                context.Response.Redirect(redir);
                 return;
             }
 
@@ -1009,7 +1011,7 @@ http://{1}
             u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
             u.Save();
             Provider.User = u;
-            context.Response.Redirect("/");
+            context.Response.Redirect(redir);
         }
 
         private void getSocialFriends()

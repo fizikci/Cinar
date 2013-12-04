@@ -46,12 +46,12 @@ namespace Brickred.SocialAuth.NET.Core
         public void ProcessRequest(HttpContext context)
         {
             //Call for Logout
-            if (current.Request.Url.ToString().IndexOf("logout.sauth") > -1)
+            if (current.Request.Url.ToString().IndexOf("logout_sauth.ashx") > -1)
             { SocialAuthUser.Disconnect(); }
 
 
             //Call for login (likely from HTML clients) with provider in parameter "p"
-            else if (HttpContext.Current.Request.RawUrl.ToLower().Contains("login.sauth"))
+            else if (HttpContext.Current.Request.RawUrl.ToLower().Contains("login_sauth.ashx"))
             {
                 string returnUrl = "";
                 if (current.Request["returnUrl"] != null)
@@ -63,15 +63,9 @@ namespace Brickred.SocialAuth.NET.Core
                 }
             }
 
-            //call to display login Form
-            else if (HttpContext.Current.Request.RawUrl.ToLower().Contains("loginform.sauth"))
-            {
-                RenderHtml();
-                HttpContext.Current.Response.End();
-            }
 
             //call to process response received from Providers
-            else if (HttpContext.Current.Request.RawUrl.ToLower().Contains("validate.sauth"))
+            else if (HttpContext.Current.Request.RawUrl.ToLower().Contains("validate_sauth.ashx"))
             {
                 SocialAuthUser.LoginCallback(HttpContext.Current.Request.Url.ToString());
             }
@@ -86,52 +80,6 @@ namespace Brickred.SocialAuth.NET.Core
         {
             get { return HttpContext.Current; }
         }
-
-        private void RenderHtml()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<html>");
-            sb.Append("<head>");
-            sb.Append("<script>");
-            sb.Append("function Login(providerName){window.location.href='login.sauth?p=' + providerName}");
-            sb.Append("</script>");
-            sb.AppendLine(@"<style>");
-            sb.AppendLine("input");
-            sb.AppendLine("{");
-            sb.AppendLine("font-family:Verdana;");
-            sb.AppendLine("font-size:14px;");
-            sb.AppendLine("width:200;");
-            sb.AppendLine("height:50;");
-            sb.AppendLine("}");
-            sb.AppendLine("");
-            sb.AppendLine(".formContainer");
-            sb.AppendLine("{");
-            sb.AppendLine("font-family:Verdana;");
-            sb.AppendLine("font-size:15px;");
-            sb.AppendLine("background:purple;");
-            sb.AppendLine("color:White;");
-            sb.AppendLine("padding-bottom:10px;");
-            sb.AppendLine("border: solid 7px #FF112F;");
-            sb.AppendLine("text-align:center;");
-            sb.AppendLine("width:700;");
-            sb.AppendLine("}");
-            sb.AppendLine("</style>");
-
-            sb.Append("</head>");
-            sb.Append(@"<body><form name=""form1"">");
-            sb.Append(@"<div align=""center""><div class=formContainer>");
-            sb.AppendLine(@"<div style=""width:inherit;background-color:#FF112F;height:30px;""><b>Please select a provider to login</b></div><br/>	");
-
-            Brickred.SocialAuth.NET.Core.ProviderFactory.Providers.ForEach(p =>
-                 sb.Append(@"<input type=""button"" value=""" + p.ProviderType.ToString().ToLower() + @""" OnClick=""Login('" + p.ProviderType.ToString().ToLower() + @"')""/><br/>"));
-            sb.Append("</div>");
-            sb.Append("</div></form></body>");
-            sb.Append("</html>");
-
-            HttpContext.Current.Response.Write(sb.ToString());
-
-        }
-
 
         #endregion
 

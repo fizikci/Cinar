@@ -24,12 +24,8 @@ THE SOFTWARE.
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Security;
-using Microsoft.IdentityModel.Claims;
-using System.Threading;
 using System.Net;
 using log4net;
 
@@ -73,7 +69,7 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
             //Load token
             token.UserReturnURL = returnUrl;
             SessionManager.AddConnectionToken(token);
-            SetUserAsLoggedIn();
+            //SetUserAsLoggedIn();
         }
 
         public SocialAuthUser() { }
@@ -132,17 +128,8 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
         /// <returns></returns>
         public static SocialAuthUser GetCurrentUser()
         {
-            AUTHENTICATION_OPTION option = Utility.GetAuthenticationOption();
-
             if (SessionManager.ConnectionsCount == 0)
-            {
-                if (option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_CUSTOM_SCREEN || option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_SOCIALAUTH_SCREEN)
-                    RedirectToLoginPage();
-                else
-                {
                     return new SocialAuthUser() { contextToken = new Token() };
-                }
-            }
             return new SocialAuthUser() { contextToken = GetCurrentConnectionToken() };
         }
 
@@ -362,49 +349,7 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
                 {
                     if (skipRedirectionIfAlreadyConnected)
                         return;
-                    else
-                    {
-                        if (Utility.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
-                        {
-                            returnURL = FormsAuthentication.DefaultUrl;
-                            SocialAuthUser.Redirect(returnURL);
-                        }
-
-                    }
                     return;
-                }
-
-                AUTHENTICATION_OPTION option = Utility.GetAuthenticationOption();
-
-                //Set where user should be redirected after successful login
-                if (Utility.GetAuthenticationOption() == AUTHENTICATION_OPTION.CUSTOM_SECURITY_CUSTOM_SCREEN
-                     && string.IsNullOrEmpty(returnURL))
-                    throw new Exception("Please specify return URL");
-                else if (option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_CUSTOM_SCREEN || option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_SOCIALAUTH_SCREEN)
-                {   //User has not specified and explicit return url. redirect to url from configuration
-                    if (string.IsNullOrEmpty(returnURL))
-                        returnURL = HttpContext.Current.Request.GetBaseURL() + Utility.GetSocialAuthConfiguration().Authentication.DefaultUrl;
-                }
-
-                //ReturnURL in request takes all priority
-                if (HttpContext.Current.Request["ReturnUrl"] != null)
-                {
-                    string ret = HttpContext.Current.Request["ReturnUrl"];
-                    if (Utility.GetAuthenticationOption() == AUTHENTICATION_OPTION.FORMS_AUTHENTICATION)
-                    {
-                        if (ret.ToLower().StartsWith(HttpContext.Current.Request.ApplicationPath.ToLower() + "/"))
-                        {
-                            ret = ret.Substring(ret.IndexOf("/", 1));
-                            if (ret.StartsWith("/"))
-                                ret = ret.Substring(1);
-                        }
-                    }
-                    if (ret.ToLower().Contains("wa=wsignin"))
-                        returnURL = HttpContext.Current.Request.GetBaseURL() + ret;
-                    else if (!ret.ToLower().StartsWith("http"))
-                        returnURL = HttpContext.Current.Request.GetBaseURL() + ret;
-                    else
-                        returnURL = ret;
                 }
 
                 SessionManager.InProgressToken = (new Token()
@@ -454,19 +399,9 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
             if (HttpContext.Current.Session != null)
                 SessionManager.RemoveAllConnections();
 
-            //cleanup any cookie
-            if (Utility.GetSocialAuthConfiguration().Authentication.AllowModificationToUserIdentity)
-            {
-                HttpContext.Current.Request.Cookies.Remove(FormsAuthentication.FormsCookieName);
-                FormsAuthentication.SignOut();
-            }
-
             //Redirect to login Page
             if (callback != null)
                 callback.Invoke();
-
-            RedirectToLoginPage(loginUrl);
-
         }
 
 
@@ -485,38 +420,10 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
 
 
             SessionManager.AddConnectionToken(SessionManager.InProgressToken);
-            SetUserAsLoggedIn();
+            //SetUserAsLoggedIn();
 
         }
 
-        /// <summary>
-        /// Sets Windows Identify Foundation Claims
-        /// </summary>
-        internal static void SetClaims()
-        {
-            if (HttpContext.Current.ApplicationInstance.IsSTSaware())
-            {
-                //Set Claims
-                IClaimsPrincipal principal = (IClaimsPrincipal)Thread.CurrentPrincipal;
-                IClaimsIdentity identity = (IClaimsIdentity)principal.Identity;
-
-                UserProfile Profile = GetCurrentConnectionToken().Profile;
-                if (!string.IsNullOrEmpty(Profile.DateOfBirth))
-                    identity.Claims.Add(new Claim(ClaimTypes.DateOfBirth.ToString(), Profile.DateOfBirth, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-                if (!string.IsNullOrEmpty(Profile.FirstName))
-                    identity.Claims.Add(new Claim(ClaimTypes.GivenName.ToString(), Profile.FirstName, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-                if (!string.IsNullOrEmpty(Profile.LastName))
-                    identity.Claims.Add(new Claim(ClaimTypes.Surname.ToString(), Profile.LastName, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-                if (!string.IsNullOrEmpty(Profile.Email))
-                    identity.Claims.Add(new Claim(ClaimTypes.Email.ToString(), Profile.Email, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-                if (!string.IsNullOrEmpty(Profile.Gender))
-                    identity.Claims.Add(new Claim(ClaimTypes.Gender.ToString(), Profile.Gender, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-                if (!string.IsNullOrEmpty(Profile.Country))
-                    identity.Claims.Add(new Claim(ClaimTypes.Country.ToString(), Profile.Country, "string", "SocialAuth.NET", Profile.Provider.ToString()));
-
-
-            }
-        }
 
         /// <summary>
         /// Redirect function
@@ -525,48 +432,6 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
         internal static void Redirect(string url)
         {
             HttpContext.Current.Response.Redirect(url, false);
-        }
-
-        /// <summary>
-        /// Redirects user to Login Screen based on authentication option chosen
-        /// </summary>
-        /// <param name="loginUrl"></param>
-        internal static void RedirectToLoginPage(string loginUrl = "")
-        {
-            /***************LOGIC***************
-             * If AuthenticationMode = SocialAuth 
-             *      and LoginUrl == empty, redirect to loginform.sauth 
-             *      and LoginUrl <> empty, redirect to LoginUrl
-             * If AuthenticationMode = FormsAuthentication call RedirectToLoginPage()
-             * If AuthenticationMode = Custom, redirect to Parameter passed in Login
-             * ********************************/
-
-            string loginUrlInConfigFile = Utility.GetSocialAuthConfiguration().Authentication.LoginUrl;
-            string redirectTo = "?ReturnUrl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.Url.ToString());
-
-            AUTHENTICATION_OPTION option = Utility.GetAuthenticationOption();
-
-            //* If AuthenticationMode = SocialAuth and LoginUrl == empty, redirect to loginform.sauth
-            if (option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_SOCIALAUTH_SCREEN)
-                SocialAuthUser.Redirect(HttpContext.Current.Request.GetBaseURL() + "socialauth/loginForm.sauth" + redirectTo);
-
-            //* If AuthenticationMode = SocialAuth and LoginUrl <> empty, redirect to LoginUrl
-            else if (option == AUTHENTICATION_OPTION.SOCIALAUTH_SECURITY_CUSTOM_SCREEN)
-                SocialAuthUser.Redirect(HttpContext.Current.Request.GetBaseURL() + loginUrlInConfigFile + (redirectTo.EndsWith(loginUrlInConfigFile) ? "" : redirectTo));
-
-            //* If AuthenticationMode = FormsAuthentication call RedirectToLoginPage()
-            else if (option == AUTHENTICATION_OPTION.FORMS_AUTHENTICATION)
-                FormsAuthentication.RedirectToLoginPage();
-
-            //* If AuthenticationMode = Custom, redirect to Configuration LoginURL OR otherwise SamePage as current request
-            else if (option == AUTHENTICATION_OPTION.CUSTOM_SECURITY_CUSTOM_SCREEN)
-            {
-                if (string.IsNullOrEmpty(loginUrl))
-                    throw new Exception("Please specify Login URL");
-                else
-                    SocialAuthUser.Redirect(HttpContext.Current.Request.GetBaseURL() + loginUrl + redirectTo);
-            }
-
         }
 
         internal static Token InProgressToken()
@@ -607,93 +472,6 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
                 return SessionManager.GetConnectionToken(SessionManager.GetCurrentConnection().ProviderType);
             else
                 return null;
-        }
-
-        /// <summary>
-        /// When authentication is successful OR token is provided, so final steps to mark
-        /// user as logged in.
-        /// </summary>
-        private static void SetUserAsLoggedIn()
-        {
-            //LoadProfile
-            SessionManager.GetCurrentConnection().GetConnectionToken().Profile = SessionManager.GetCurrentConnection().GetProfile();
-            //bool setUserAuthenticated = true;
-            bool setUserAuthenticated = Utility.GetSocialAuthConfiguration().Authentication.AllowModificationToUserIdentity;
-
-            if (setUserAuthenticated)
-                SetClaims();
-
-
-
-            if (Utility.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.None ||
-               Utility.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
-            {
-                CreateAuthenticationCookieAndRedirect(setUserAuthenticated);
-            }
-            else if (Utility.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
-            {
-                if (string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
-                {
-                    if (!string.IsNullOrEmpty(GetCurrentConnectionToken().UserReturnURL))
-                    {
-                        CreateAuthenticationCookieAndRedirect(setUserAuthenticated);
-                    }
-                    else
-                    {
-                        SessionManager.ExecuteCallback();
-                        HttpCookie authCookie = HttpContext.Current.Response.Cookies[FormsAuthentication.FormsCookieName];
-                        if (authCookie != null && !string.IsNullOrEmpty(authCookie.Value))
-                        {
-                            FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                            FormsAuthentication.RedirectFromLoginPage(ticket.Name, false);
-                        }
-                        else
-                            FormsAuthentication.RedirectFromLoginPage(SessionManager.GetUserSessionGUID().ToString(), false);
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(GetCurrentConnectionToken().UserReturnURL))
-                        CreateAuthenticationCookieAndRedirect(setUserAuthenticated);
-                    else
-                    {
-                        SessionManager.ExecuteCallback();
-                        FormsAuthentication.RedirectFromLoginPage(HttpContext.Current.User.Identity.Name, false);
-                    }
-                }
-            }
-
-        }
-
-        private static void CreateAuthenticationCookieAndRedirect(bool setUserAuthenticated)
-        {
-            string token = null;
-            HttpCookie cookie = HttpContext.Current.Response.Cookies[FormsAuthentication.FormsCookieName];
-            if (!string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
-            {
-                token = HttpContext.Current.User.Identity.Name;
-            }
-            else if (cookie != null && !string.IsNullOrEmpty(cookie.Value))
-            {
-                FormsAuthenticationTicket recTicket = FormsAuthentication.Decrypt(cookie.Value);
-                token = recTicket.Name;
-            }
-            else if (setUserAuthenticated)
-            {
-                token = SessionManager.GetUserSessionGUID().ToString();
-            }
-
-            if (token != null)
-            {
-                var ticket = new FormsAuthenticationTicket(token, false, HttpContext.Current.Session.Timeout);
-
-                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-                cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-                HttpContext.Current.Response.Cookies.Add(cookie);
-            }
-            
-            SessionManager.ExecuteCallback();
-            SocialAuthUser.Redirect(GetCurrentConnectionToken().UserReturnURL);
         }
 
         #endregion
