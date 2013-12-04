@@ -45,7 +45,7 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
         public SCOPE_LEVEL ScopeLevel { get; set; }
         public PROVIDER_TYPE Provider { get; set; }
         public string UserReturnURL { get; set; }
-        public string ProviderCallbackUrl { get { return Domain + "socialauth/validate.sauth"; } }
+        public string ProviderCallbackUrl { get { return Domain + "socialauth/validate_sauth.ashx"; } }
         public DateTime ExpiresOn { get; set; }
         public string AccessToken { get; set; }
         public string TokenSecret { get; set; }
