@@ -21,7 +21,7 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(IsNotNull = true, Length = 200)]
         public string Name { get; set; }
 
-        [ColumnDetail(Length = 300)]
+        [ColumnDetail(ColumnType = DbType.Text)]
         public string Description { get; set; }
 
         public override string GetNameValue()

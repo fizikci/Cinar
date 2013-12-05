@@ -213,6 +213,29 @@ namespace Brickred.SocialAuth.NET.Core
 namespace log4net
 {
 
+    public class LogManager
+    {
+        public static ILog GetLogger(string loggerName) {
+            return new Logger();
+        }
+    }
 
+    public interface ILog
+    {
+        void Info(string p);
+        void Error(string p);
+        void Debug(string p);
+        void Error(string p, Exception ex);
+        void Debug(string p, Exception ex);
+    }
+
+    public class Logger : ILog 
+    {
+        public void Info(string p) { }
+        public void Debug(string p) { }
+        public void Error(string p) { }
+        public void Error(string p, Exception ex) { }
+        public void Debug(string p, Exception ex) { }
+    }
 }
 

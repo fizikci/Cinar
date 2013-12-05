@@ -208,7 +208,7 @@ namespace Brickred.SocialAuth.NET.Core
             oauthParameters.Add("oauth_version", "1.0");
             BeforeRequestingAccessToken(oauthParameters); // hook called
             signature = oauthHelper.GenerateSignature(new Uri(provider.AccessTokenEndpoint), oauthParameters, provider.Consumerkey, provider.Consumersecret, provider.SignatureMethod, provider.TransportName, string.Empty);
-            oauthParameters.Add("oauth_signature", Utility.UrlEncode(signature));
+            oauthParameters.Add("oauth_signature", System.Web.HttpContext.Current.Server.UrlEncode(signature));
 
             //2. Notify Consumer (if applicable)
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(provider.AccessTokenEndpoint + "?" + oauthParameters.ToString().Replace("HMACSHA1", "HMAC-SHA1"));

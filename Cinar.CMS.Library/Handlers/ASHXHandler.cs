@@ -102,6 +102,9 @@ namespace Cinar.CMS.Library.Handlers
                 case "socialAuthLogin":
                 case "loginBySocialAuth":
                 case "getSocialFriends":
+                case "logout_sauth":
+                case "login_sauth":
+                case "validate_sauth":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "DoCommand":
