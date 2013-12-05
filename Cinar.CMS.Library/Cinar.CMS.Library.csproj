@@ -81,6 +81,10 @@
       <HintPath>..\_library\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -90,6 +94,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CinarSerialization.cs" />
@@ -159,6 +164,39 @@
     <Compile Include="Modules\Newspaper\Manset.cs" />
     <Compile Include="Modules\Newspaper\MansetByGrouping.cs" />
     <Compile Include="Modules\Social\LastPrivateMessages.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\Album.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\Contact.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\Enums.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\QueryParameters.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\SocialAuthUser.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\Token.cs" />
+    <Compile Include="SocialAuthNet\BusinessObjects\UserProfile.cs" />
+    <Compile Include="SocialAuthNet\Constants.cs" />
+    <Compile Include="SocialAuthNet\ExceptionHandler.cs" />
+    <Compile Include="SocialAuthNet\Extensions.cs" />
+    <Compile Include="SocialAuthNet\Interfaces\IOAuth1_0a.cs" />
+    <Compile Include="SocialAuthNet\Interfaces\IOauth1_0Hybrid.cs" />
+    <Compile Include="SocialAuthNet\Interfaces\IOAuth2_0.cs" />
+    <Compile Include="SocialAuthNet\Interfaces\IProvider.cs" />
+    <Compile Include="SocialAuthNet\Interfaces\IProviderConnect.cs" />
+    <Compile Include="SocialAuthNet\OAuthStrategy\OAuth1_0a.cs" />
+    <Compile Include="SocialAuthNet\OAuthStrategy\OAuth1_0Hybrid.cs" />
+    <Compile Include="SocialAuthNet\OAuthStrategy\OAuth2_0Server.cs" />
+    <Compile Include="SocialAuthNet\OAuthStrategy\OAuthHelper.cs" />
+    <Compile Include="SocialAuthNet\OAuthStrategy\OAuthStrategyBase.cs" />
+    <Compile Include="SocialAuthNet\Provider.cs" />
+    <Compile Include="SocialAuthNet\ProviderFactory.cs" />
+    <Compile Include="SocialAuthNet\SessionManager.cs" />
+    <Compile Include="SocialAuthNet\SocialAuthConfiguration.cs" />
+    <Compile Include="SocialAuthNet\SocialAuthManager.cs" />
+    <Compile Include="SocialAuthNet\Utility.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\FacebookWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\GoogleWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\LinkedInWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\MSNWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\MySpaceWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\TwitterWrapper.cs" />
+    <Compile Include="SocialAuthNet\Wrappers\YahooWrapper.cs" />
     <Compile Include="StaticResources.cs" />
     <Compile Include="Template.cs">
     </Compile>
@@ -260,6 +298,7 @@
     <Content Include="_library\Google.GData.Client.dll" />
     <Content Include="_library\Google.GData.Contacts.dll" />
     <Content Include="_library\Google.GData.Extensions.dll" />
+    <Content Include="_library\Newtonsoft.Json.dll" />
     <None Include="Resources\default.css" />
     <None Include="Resources\conf_default.css" />
     <None Include="Resources\controls.js" />
@@ -317,10 +356,6 @@
     <ProjectReference Include="..\Cinar.Scripting\Cinar.Scripting.csproj">
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SocialAuthNet\SocialAuthNet.csproj">
-      <Project>{b714ed7c-65ed-4e2f-907e-faf3c64d6660}</Project>
-      <Name>SocialAuthNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

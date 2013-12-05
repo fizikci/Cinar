@@ -197,6 +197,22 @@ namespace Cinar.CMS.Library.Handlers
                         getSocialFriends();
                         break;
                     }
+                case "logout_sauth":
+                    {
+                        logout_sauth();
+                        break;
+                    }
+                case "login_sauth":
+                    {
+                        login_sauth();
+                        break;
+                    }
+                case "validate_sauth":
+                    {
+                        validate_sauth();
+                        break;
+                    }
+
             }
         }
 
@@ -964,54 +980,66 @@ http://{1}
 
         private void loginBySocialAuth()
         {
-            string redir = string.IsNullOrWhiteSpace(Provider.AppSettings["socialAuthRedirect"]) ? "/" : Provider.AppSettings["socialAuthRedirect"];
-
-            UserProfile user = SocialAuthUser.GetCurrentUser().GetProfile();
-
-            User u = Provider.Database.Read<User>(user.Provider.ToString().CapitalizeFirstLetterInvariant()+"Id={0}", user.ID);
-            if (u != null)
+            try
             {
-                Provider.User = u;
-                context.Response.Redirect(redir);
-                return;
-            }
+                string redir = string.IsNullOrWhiteSpace(Provider.AppSettings["socialAuthRedirect"]) ? "/" : Provider.AppSettings["socialAuthRedirect"];
 
-            if (string.IsNullOrWhiteSpace(user.Email))
-            {
-                context.Response.Redirect(redir);
-                return;
-            }
+                UserProfile user = SocialAuthUser.GetCurrentUser().GetProfile();
+                if (user == null || String.IsNullOrWhiteSpace(user.ID))
+                {
+                    context.Response.Write("User profile cannot be read");
+                    return;
+                }
 
-            u = Provider.User.IsAnonim() ? Provider.Database.Read<User>("Email={0}", user.Email) : Provider.User;
-            if (!Provider.User.IsAnonim())
-            {
+                User u = Provider.Database.Read<User>(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id={0}", user.ID);
+                if (u != null)
+                {
+                    Provider.User = u;
+                    context.Response.Redirect(redir);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(user.Email))
+                {
+                    context.Response.Redirect(redir);
+                    return;
+                }
+
+                u = Provider.User.IsAnonim() ? Provider.Database.Read<User>("Email={0}", user.Email) : Provider.User;
+                if (!Provider.User.IsAnonim())
+                {
+                    u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
+                    if (string.IsNullOrWhiteSpace(u.Name)) u.Name = user.FirstName;
+                    if (string.IsNullOrWhiteSpace(u.Surname)) u.Surname = user.LastName;
+                    if (string.IsNullOrWhiteSpace(u.Avatar)) u.Avatar = user.ProfilePictureURL;
+                    if (string.IsNullOrWhiteSpace(u.Gender)) u.Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın";
+                    if (string.IsNullOrWhiteSpace(u.Country)) u.Country = user.Country;
+                    u.Save();
+                    Provider.User = u;
+                    context.Response.Redirect(redir);
+                    return;
+                }
+
+                u = new User
+                {
+                    Name = user.FirstName,
+                    Surname = user.LastName,
+                    Avatar = user.ProfilePictureURL,
+                    Email = user.Email,
+                    Nick = user.Username,
+                    Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın",
+                    Country = user.Country,
+                    Visible = true
+                };
                 u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
-                if (string.IsNullOrWhiteSpace(u.Name)) u.Name = user.FirstName;
-                if (string.IsNullOrWhiteSpace(u.Surname)) u.Surname = user.LastName;
-                if (string.IsNullOrWhiteSpace(u.Avatar)) u.Avatar = user.ProfilePictureURL;
-                if (string.IsNullOrWhiteSpace(u.Gender)) u.Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın";
-                if (string.IsNullOrWhiteSpace(u.Country)) u.Country = user.Country;
                 u.Save();
                 Provider.User = u;
                 context.Response.Redirect(redir);
-                return;
             }
-
-            u = new User
+            catch (Exception ex)
             {
-                Name = user.FirstName,
-                Surname = user.LastName,
-                Avatar = user.ProfilePictureURL,
-                Email = user.Email,
-                Nick = user.Username,
-                Gender = user.GenderType == GENDER.MALE ? "Erkek" : "Kadın",
-                Country = user.Country,
-                Visible = true
-            };
-            u.SetMemberValue(user.Provider.ToString().CapitalizeFirstLetterInvariant() + "Id", user.ID);
-            u.Save();
-            Provider.User = u;
-            context.Response.Redirect(redir);
+                context.Response.Write((ex.Message + '\n' + ex.StackTrace).Replace("\n","<br/>"));
+            }
         }
 
         private void getSocialFriends()
@@ -1020,6 +1048,35 @@ http://{1}
             var contacts = SocialAuthUser.GetCurrentUser().GetContacts(SocialAuthUser.CurrentProvider);
 
             context.Response.Write(contacts.ToJSON());
+        }
+
+        private void logout_sauth()
+        {
+            SocialAuthUser.Disconnect();
+        }
+
+        private void login_sauth()
+        {
+            string returnUrl = "";
+            if (context.Request["returnUrl"] != null)
+                returnUrl = context.Request["returnUrl"];
+
+            if (context.Request["p"] != null)
+            {
+                SocialAuthUser.Connect((PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), HttpContext.Current.Request["p"].ToUpper()), returnURL: returnUrl);
+            }
+        }
+
+        private void validate_sauth()
+        {
+            try
+            {
+                SocialAuthUser.LoginCallback(context.Request.Url.ToString());
+                context.Response.Redirect("/loginBySocialAuth.ashx");
+            }
+            catch (Exception ex) {
+                context.Response.Write((ex.Message + '\n' + ex.StackTrace).Replace("\n", "<br/>"));
+            }
         }
 
         //private string vx34ftd24()

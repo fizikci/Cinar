@@ -28,7 +28,6 @@ using System.Linq;
 using System.Text;
 using Brickred.SocialAuth.NET.Core.BusinessObjects;
 using System.Web;
-using Microsoft.IdentityModel.Claims;
 using System.Threading;
 using System.Collections.Specialized;
 using System.Net;
