@@ -157,16 +157,6 @@ namespace Cinar.CMS.Library.Handlers
                         editImageReset();
                         break;
                     }
-                case "addContacts":
-                    {
-                        addContacts();
-                        break;
-                    }
-                case "inviteContacts":
-                    {
-                        inviteContacts();
-                        break;
-                    }
                 case "getLocation":
                     {
                         getLocation();
@@ -212,7 +202,11 @@ namespace Cinar.CMS.Library.Handlers
                         validate_sauth();
                         break;
                     }
-
+                case "isNickAvailable":
+                    {
+                        isNickAvailable();
+                        break;
+                    }
             }
         }
 
@@ -864,41 +858,6 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write("ERR: File not exist");
         }
 
-        private void addContacts()
-        {
-            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
-            foreach (string email in emails)
-            {
-                try
-                {
-                    var u = Provider.Database.Read<User>("Email={0}", email);
-                    new UserContact { UserId = u.Id }.Save();
-                }
-                catch { }
-            }
-            Provider.Response.Write("ok");
-        }
-
-        private void inviteContacts()
-        {
-            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
-            foreach (string email in emails)
-            {
-                try
-                {
-                    Provider.SendMail(Provider.User.Email, email, Provider.User.FullName + " isimli kişiden davetiye", string.Format(@"
-Merhaba,<br/>
-<br/>
-Arkadaşın {0} seni bu siteye davet ediyor:<br/>
-<br/>
-http://{1}
-", Provider.User.FullName, Provider.Configuration.SiteAddress));
-                }
-                catch { }
-            }
-            Provider.Response.Write("ok");
-        }
-
         private void getLocation()
         {
             context.Response.Write(Provider.GetVisitorLocation());
@@ -1077,6 +1036,16 @@ http://{1}
             catch (Exception ex) {
                 context.Response.Write((ex.Message + '\n' + ex.StackTrace).Replace("\n", "<br/>"));
             }
+        }
+
+        private void isNickAvailable()
+        {
+            string nick = Provider.Request["nick"];
+
+            if (!string.IsNullOrWhiteSpace(nick))
+                context.Response.Write(new Result { Data = !Provider.Database.GetBool("select count(Nick) from user where Nick = {0}", nick) }.ToJSON());
+            else
+                context.Response.Write(new Result { Data = null }.ToJSON());
         }
 
         //private string vx34ftd24()

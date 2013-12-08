@@ -1454,3 +1454,36 @@ function searchYouTube(callback, channelName, q) {
     });
     return false;
 }
+
+function selectFlickrPhotoSet(flickerUserId, callback){
+    var html = '<div id="youtube-search"><div id="youtube-search-results"></div>';
+    new CinarWindow({
+            titleIcon: 'page',
+            title: 'Flickr Photo Sets',
+            width: 950,
+            height: 600,
+            html: html,
+            position: 'center' // left, right
+        });
+    jQuery.ajax({
+        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=156ed26be4fb59ae308b2a79e8d78d0d&user_id='+flickerUserId+'&per_page=500&format=json&nojsoncallback=1',
+        dataType: 'json',
+        success: function (data) {
+            var row = "";
+            for (var i = 0; i < data.photosets.photoset.length; i++) {
+				var p = data.photosets.photoset[i];
+				var pic = "http://farm" + p.farm+".staticflickr.com/"+p.server+"/"+p.primary+"_"+p.secret+"_n.jpg";
+                row += "<div class='search_item'>";
+                row += "<img src=" + pic + " />";
+                row += "<span class=\"ptit\"><b>" + p.title._content.replace('\n','<br/>') + "</b></span>";
+                row += '<span class="pid" style="display:none">'+p.id+'</span>';
+                row += "</div>";
+            }
+            jQuery("#youtube-search-results").html(row);
+            jQuery("#youtube-search-results img").click(function(){callback(jQuery(this));});
+        },
+        error: function () {
+            alert("Error loading flickr image results");
+        }
+    });
+}

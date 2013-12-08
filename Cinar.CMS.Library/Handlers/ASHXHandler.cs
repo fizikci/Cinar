@@ -94,8 +94,6 @@ namespace Cinar.CMS.Library.Handlers
                 case "EditImageRotate":
                 case "EditImageResize":
                 case "EditImageReset":
-                case "addContacts":
-                case "inviteContacts":
                 case "getLocation":
                 case "FacebookLogin":
                 case "reportBug":
@@ -105,6 +103,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "logout_sauth":
                 case "login_sauth":
                 case "validate_sauth":
+                case "isNickAvailable":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "DoCommand":
