@@ -176,9 +176,9 @@ namespace Cinar.CMS.Library.Entities
                 string avatarUrlPath = avatarDir + this.Email + Path.GetExtension(postedFile.FileName);
 
                 Image bmp = Image.FromStream(Provider.Request.Files["Avatar"].InputStream);
-                if (bmp.Width > 100)
+                if (bmp.Width > 240)
                 {
-                    Image bmp2 = bmp.ScaleImage(100, 0);
+                    Image bmp2 = bmp.ScaleImage(240, 0);
                     avatarUrlPath = avatarUrlPath.Substring(0, avatarUrlPath.LastIndexOf('.')) + ".jpg";
                     bmp2.SaveJpeg(Provider.MapPath(avatarUrlPath), Provider.Configuration.ThumbQuality);
                 }

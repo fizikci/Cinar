@@ -132,11 +132,14 @@ namespace Cinar.CMS.Library.Handlers
                     case "updateProfile":
                         updateProfile();
                         break;
-                    case "isNickAvailable":
-                        isNickAvailable();
-                        break;
                     case "getPostRelatedData":
                         getPostRelatedData();
+                        break;
+                    case "followContacts":
+                        followContacts();
+                        break;
+                    case "inviteContacts":
+                        inviteContacts();
                         break;
                     case "createPostAd":
                         createPostAd();
@@ -645,25 +648,14 @@ limit
             context.Response.Write(new Result { Data = SocialAPI.GetPostRelatedData(pid) }.ToJSON());
         }
 
-        private void isNickAvailable()
-        {
-
-            string nick = Provider.Request["nick"];
-
-            if (!string.IsNullOrWhiteSpace(nick))
-                context.Response.Write(new Result { Data = !Provider.Database.GetBool("select count(Nick) from user where Nick = {0}", nick) }.ToJSON());
-            else
-                context.Response.Write(new Result { Data = null }.ToJSON());
-
-        }
-
         private void followContacts()
         {
-            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
-            foreach (string email in emails)
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim('&');
+            foreach (string emailParts in emails)
             {
                 try
                 {
+                    var email = emailParts.SplitWithTrim('=')[1].Replace("%40", "@");
                     SocialAPI.FollowUser(Provider.User.Id, null, email);
                 }
                 catch { }
@@ -673,11 +665,12 @@ limit
 
         private void inviteContacts()
         {
-            string[] emails = Provider.Request.Form["emails"].SplitWithTrim(',');
-            foreach (string email in emails)
+            string[] emails = Provider.Request.Form["emails"].SplitWithTrim('&');
+            foreach (string emailParts in emails)
             {
                 try
                 {
+                    var email = emailParts.SplitWithTrim('=')[1].Replace("%40", "@");
                     Provider.SendMail(Provider.User.Email, email, Provider.User.FullName + " isimli kişiden davetiye", string.Format(@"
 Merhaba,<br/>
 <br/>
