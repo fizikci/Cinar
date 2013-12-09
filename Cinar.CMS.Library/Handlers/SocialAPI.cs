@@ -586,6 +586,24 @@ namespace Cinar.CMS.Library.Handlers
             return list;
         }
 
+        public static List<ViewPrivateMessage> GetPrivateMessages(int limit)
+        {
+            List<ViewPrivateMessage> list = Provider.Database.ReadList<ViewPrivateMessage>(@"
+                SELECT 
+                    *
+                FROM 
+                    ViewPrivateMessage
+                WHERE 
+                    UserId = {0}
+                Order By InsertDate desc
+                LIMIT {1}", Provider.User.Id, limit);
+
+            foreach (ViewPrivateMessage v in list)
+                v.UserPicture = Provider.GetThumbPath(v.UserPicture, 32, 32, false);
+
+            return list;
+        }
+
         /// <summary>
         /// Bu kullanının takip ettiği kullanıcıların listesi
         /// </summary>

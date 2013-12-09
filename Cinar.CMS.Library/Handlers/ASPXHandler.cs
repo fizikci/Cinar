@@ -114,6 +114,11 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 sb.Append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
+                sb.Append("<meta property=\"og:title\" content=\"" + Provider.Server.HtmlEncode(title) + "\"/>\n");
+                sb.Append("<meta property=\"og:image\" content=\"" + ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Picture)) ? Provider.Configuration.SiteLogo : Provider.Content.Picture) + "\"/>\n");
+                sb.Append("<meta property=\"og:site_name\" content=\"" + Provider.Server.HtmlEncode(Provider.Configuration.SiteName) + "\"/>\n");
+                sb.Append("<meta property=\"og:description\" content=\"" + ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Description)) ? CMSUtility.HtmlEncode(Provider.Content.Description) : CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription)) + "\"/>\n");
+
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");

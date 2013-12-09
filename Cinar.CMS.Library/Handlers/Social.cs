@@ -99,6 +99,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "getUserNotifications":
                         getUserNotifications();
                         break;
+                    case "getPrivateMessages":
+                        getPrivateMessages();
+                        break;
                     case "follow":
                         follow();
                         break;
@@ -216,6 +219,15 @@ namespace Cinar.CMS.Library.Handlers
                                                             order by InsertDate desc", Provider.User.Id, UserId);
             context.Response.Write(new Result { Data = pm }.ToJSON());
         }
+
+        private void updateLastOpenPrivateMessage()
+        {
+            Provider.User.Settings.LastPrivateMessageCheck = DateTime.Now;
+            Provider.User.Settings.Save();
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
+        }
+
 
         private void setMessageRead() { 
             
@@ -427,6 +439,18 @@ limit
             int.TryParse(context.Request["limit"], out limit);
 
             var list = SocialAPI.GetUserNotifications(limit);
+
+            context.Response.Write(new Result { Data = list }.ToJSON());
+        }
+
+        private void getPrivateMessages()
+        {
+            int userId = Provider.User.Id;
+
+            int limit = 10;
+            int.TryParse(context.Request["limit"], out limit);
+
+            var list = SocialAPI.GetPrivateMessages(limit);
 
             context.Response.Write(new Result { Data = list }.ToJSON());
         }

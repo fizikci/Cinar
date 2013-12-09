@@ -242,6 +242,13 @@ namespace Cinar.CMS.Library.Entities
                                 Provider.Configuration.SiteAddress,
                                 this.Keyword);
                 Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
+
+                // add admin (root) as first contact to this user
+                new UserContact
+                {
+                    UserId = Provider.Database.GetInt("select Id from User where Nick={0}", "admin"),
+                    InsertUserId = this.Id
+                }.Save();
             }
 
             if (this.Id == Provider.User.Id)

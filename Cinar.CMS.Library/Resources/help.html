@@ -835,6 +835,57 @@ Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
             </div>
+            <div class="codeSample">
+                <h3>Flickr'dan galeri (photoSet) seçme :</h3>
+                <ul>
+                    <li>selectFlickrPhotoSet(flickrApiKey, flickrUserId, callback) metodu ile Flickr'daki photosetlerin listelenmesi ve seçilebilmesi sağlanır</li>
+					<li><b>flickrApiKey</b> Flickr'da siteniz için oluşturduğunuz api key</li>
+					<li><b>flickrUserId</b> Flickr kullanıcı id'si.</li>
+                    <li><b>callback:</b> Bir photoSet'in seçilmesi durumunda çağrılan fonksiyon. Üzerine tıklanan resmin DOM referansını verir. Böylece fotoğrafın başlığı, açıklaması gibi özelliklerine erişilebilir.</li>
+                </ul>
+                <pre class="code">selectFlickrPhotoSet('_api_key_', '_user_id_', function(elm){
+	elm = jQuery(elm).parent(); 
+	var entity = {
+		ExtraField1: elm.find('.pid').text(), // bu alan daha sonra flickr'dan fotoğrafları göstermek için kullanılabilir
+		Title: elm.find('.ptit').text(),
+		CategoryId:27, // foto galeri için oluşturduğunuz kategori id'si
+		ClassName:'Content',
+		Picture: elm.find('img').attr('src').replace('_n.','_b.')
+	};
+	saveEntity('Content', entity, function(entity){
+		Windows.getFocusedWindow().close();
+		location.reload();
+	});
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Flickr'dan galeri (photoSet) resimlerini alma :</h3>
+                <ul>
+                    <li>getFlickrPhotos(flickrApiKey, photoSetId, callback) metodu ile Flickr'daki bir galerinin resimleri alınır</li>
+					<li><b>flickrApiKey</b> Flickr'da siteniz için oluşturduğunuz api key</li>
+					<li><b>photoSetId</b> selectFlickrPhotoSet fonksiyonu ile seçilen photoSet id'si. Flickr'dan da öğrenilebilir.</li>
+                    <li><b>callback:</b> Galeriye ait fotoğraflar bu fonksiyona parametre olarak verilir. [{photoUrl:'...', thumbUrl:'...'}, {photoUrl:'...', thumbUrl:'...'}, ..] şeklindedir.</li>
+                </ul>
+				Aşağıdaki kod StatikHTML modülüne yazılırsa, içeriğin ExtraField1 alanında belirtilmiş galerinin resimlerini lightbox ile gösterir. 
+                <pre class="code">&lt;div class="fotoGaleriThumbs"&gt;&lt;/div&gt;
+&lt;script src="/external/javascripts/lightbox/js/lightbox-2.6.min.js"&gt;&lt;/script&gt;
+&lt;link href="/external/javascripts/lightbox/css/lightbox.css" rel="stylesheet" /&gt;
+&lt;script&gt;
+jQuery(function(){
+    getFlickrPhotos('_api_key_', '$=entity.ExtraField1$',function (photos) {
+        var row = "";
+        for (var i = 0; i &lt; photos.length; i++) {
+            row += "&lt;a href='"+photos[i].photoUrl+"' data-lightbox='roadtrip$=this.Id$'&gt;&lt;img src='"+photos[i].thumbUrl+"' height='30' /&gt;&lt;/a&gt;";
+        }
+        jQuery(".fotoGaleriThumbs").html(row);
+    });
+});    
+&lt;/script&gt;</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
         </div>
 
         <h1 id="p12">Button kullanımı ve ikonlar</h1>
