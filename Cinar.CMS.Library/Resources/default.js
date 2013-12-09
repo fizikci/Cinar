@@ -1455,7 +1455,7 @@ function searchYouTube(callback, channelName, q) {
     return false;
 }
 
-function selectFlickrPhotoSet(flickerUserId, callback){
+function selectFlickrPhotoSet(flickrApiKey, flickrUserId, callback){
     var html = '<div id="youtube-search"><div id="youtube-search-results"></div>';
     new CinarWindow({
             titleIcon: 'page',
@@ -1466,7 +1466,7 @@ function selectFlickrPhotoSet(flickerUserId, callback){
             position: 'center' // left, right
         });
     jQuery.ajax({
-        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=156ed26be4fb59ae308b2a79e8d78d0d&user_id='+flickerUserId+'&per_page=500&format=json&nojsoncallback=1',
+        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key='+flickrApiKey+'&user_id='+flickrUserId+'&per_page=500&format=json&nojsoncallback=1',
         dataType: 'json',
         success: function (data) {
             var row = "";
@@ -1481,6 +1481,27 @@ function selectFlickrPhotoSet(flickerUserId, callback){
             }
             jQuery("#youtube-search-results").html(row);
             jQuery("#youtube-search-results img").click(function(){callback(jQuery(this));});
+        },
+        error: function () {
+            alert("Error loading flickr image results");
+        }
+    });
+}
+
+function getFlickrPhotos(flickrApiKey, photoSetId, callback){
+    jQuery.ajax({
+        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key='+flickrApiKey+'&photoset_id='+photoSetId+'&per_page=500&format=json&nojsoncallback=1',
+        dataType: 'json',
+        success: function (data) {
+            var photos = [];
+            for (var i = 0; i < data.photoset.photo.length; i++) {
+                var p = data.photoset.photo[i];
+				photos.push({
+					photoUrl: 'http://farm' + p.farm+'.staticflickr.com/'+p.server+'/'+p.id+'_'+p.secret+'_b.jpg',
+					thumbUrl: 'http://farm' + p.farm+'.staticflickr.com/'+p.server+'/'+p.id+'_'+p.secret+'_n.jpg'
+				});
+            }
+            callback(photos);
         },
         error: function () {
             alert("Error loading flickr image results");

@@ -94,6 +94,8 @@
     <Compile Include="Entities\Message\PrivateLastMessage.cs" />
     <Compile Include="Entities\Message\PrivateMessage.cs" />
     <Compile Include="Entities\Social\BlockedUser.cs" />
+    <Compile Include="Entities\Social\ViewPrivateMessage.cs" />
+    <Compile Include="Entities\Social\PostBlacklist.cs" />
     <Compile Include="Entities\Social\PostAdLog.cs" />
     <Compile Include="Entities\Social\WordBlacklist.cs" />
     <Compile Include="Entities\Social\PostAd.cs" />

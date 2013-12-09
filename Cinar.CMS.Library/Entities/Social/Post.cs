@@ -81,6 +81,13 @@ namespace Cinar.CMS.Library.Entities
         {
             base.beforeSave(isUpdate);
 
+            if (!isUpdate) { 
+                // aynı paylaşımı yapıyorsa kaydetmeyelim
+                string lastPost = Provider.Database.GetString("select top 1 Metin from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? "";
+                if (lastPost.Trim() == this.Metin.Trim())
+                    throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
+            }
+
             try
             {
                 var urls = new Regex(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)");
@@ -161,6 +168,7 @@ namespace Cinar.CMS.Library.Entities
                     }.Save();
                 }
 
+                // HashTags
                 foreach (Match m in Regex.Matches(this.Metin, @"#([\w\d]+)"))
                 {
                     HashTag ht = Provider.Database.Read<HashTag>("Name = {0} AND LangId={1}", m.Value.Substring(1), this.LangId);
@@ -173,6 +181,14 @@ namespace Cinar.CMS.Library.Entities
 
                     new PostHashTag { HashTagId = ht.Id, PostId = this.Id }.Save();
                 }
+
+                // Blacklist
+                foreach (var badWord in Provider.Database.ReadList<WordBlacklist>())
+                    if (this.Metin.Contains(badWord.Name))
+                    {
+                        new PostBlacklist { PostId = this.Id, WordBlacklistId = badWord.Id }.Save();
+                    }
+
             }
         }
     }
