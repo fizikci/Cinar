@@ -14,6 +14,9 @@ using Module = System.Reflection.Module;
 using System.Drawing;
 using System.Globalization;
 using Facebook;
+using System.Text.RegularExpressions;
+using System.Net;
+using Newtonsoft.Json;
 
 //using System.IO;
 
@@ -205,6 +208,11 @@ namespace Cinar.CMS.Library.Handlers
                 case "isNickAvailable":
                     {
                         isNickAvailable();
+                        break;
+                    }
+                case "parseWebPageHtmlAsContent":
+                    {
+                        parseWebPageHtmlAsContent();
                         break;
                     }
             }
@@ -1046,6 +1054,61 @@ namespace Cinar.CMS.Library.Handlers
                 context.Response.Write(new Result { Data = !Provider.Database.GetBool("select count(Nick) from user where Nick = {0}", nick) }.ToJSON());
             else
                 context.Response.Write(new Result { Data = null }.ToJSON());
+        }
+
+        private void parseWebPageHtmlAsContent()
+        {
+            string url = Provider.Request["url"];
+            if (string.IsNullOrWhiteSpace(url))
+                throw new Exception(Provider.TR("Url belirtiniz"));
+            if (!url.StartsWith("http://"))
+                url = "http://" + url;
+
+            //HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+            //web.OverrideEncoding = Encoding.UTF8;
+            //HtmlAgilityPack.HtmlDocument doc = web.Load(url);
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            using (System.Net.WebClient client = new System.Net.WebClient())
+            {
+                var html = client.DownloadString(url);
+                doc.LoadHtml(html);
+            }
+
+            doc.DocumentNode.Descendants()
+                .Where(n => n.Name == "script" || n.Name == "style")
+                .ToList()
+                .ForEach(n => n.Remove());
+
+            var result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
+            string metin = "";
+            foreach (var node in result)
+            {
+                metin += node.InnerText;//Your desire text
+            }
+
+            metin = metin.Replace("\r", "");
+            while (metin.Contains("\n\n"))
+                metin = metin.Replace("\n\n","\n");
+
+            metin = metin.Split('\n').Where(l => !string.IsNullOrWhiteSpace(l)).Select(l=>l.Trim()).ToList().StringJoin("\n\n");
+
+            string title = (from x in doc.DocumentNode.Descendants()
+                            where x.Name.ToLower() == "title"
+                            select x.InnerText).FirstOrDefault();
+
+            string desc = (from x in doc.DocumentNode.Descendants()
+                           where x.Name.ToLower() == "meta"
+                           && x.Attributes["name"] != null
+                           && x.Attributes["name"].Value.ToLower() == "description"
+                           select x.Attributes["content"].Value).FirstOrDefault();
+
+            List<string> imgs = (from x in doc.DocumentNode.Descendants()
+                                 where x.Name.ToLower() == "img" && x.Attributes["src"] != null && x.Attributes["src"].Value != null
+                                 select (new Uri(new Uri(url), x.Attributes["src"].Value)).ToString()).ToList<String>();
+
+            context.Response.ContentType = "application/json";
+            context.Response.Write(JsonConvert.SerializeObject(new {text=metin, imgs=imgs, title=title, desc=desc}));
+            //context.Response.Write("{text:" + metin.ToJS() + ", imgs:" + imgs.ToJSON() + ", title:" + title.ToJS() + ", desc:" + desc.ToJS() + "}");
         }
 
         //private string vx34ftd24()

@@ -104,6 +104,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "login_sauth":
                 case "validate_sauth":
                 case "isNickAvailable":
+                case "parseWebPageHtmlAsContent":
                     new DoCommand().ProcessRequest(context);
                     break;
                 case "DoCommand":
