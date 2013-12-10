@@ -60,6 +60,10 @@
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.6.4.2\lib\net40-client\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>_library\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\_library\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -281,6 +285,7 @@
   <ItemGroup>
     <Content Include="_files\vision.txt" />
     <Content Include="_library\Facebook.dll" />
+    <Content Include="_library\HtmlAgilityPack.dll" />
     <Content Include="_library\Newtonsoft.Json.dll" />
     <None Include="Resources\default.css" />
     <None Include="Resources\conf_default.css" />

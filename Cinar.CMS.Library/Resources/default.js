@@ -1508,3 +1508,46 @@ function getFlickrPhotos(flickrApiKey, photoSetId, callback){
         }
     });
 }
+//parseWebPageHtmlAsContent.ashx
+function parseWebPageHtmlAsContent(callback){
+    var html = '<div id="youtube-search"><input type="text" name="url" placeholder="Enter url of web page"/><button>PARSE</button></div><div class="parseHTMLForm"></div>';
+    
+    new CinarWindow({
+            titleIcon: 'page',
+            title: 'Parse HTML',
+            width: 950,
+            height: 600,
+            html: html,
+            position: 'center' // left, right
+        });
+    $('#youtube-search button').click(function(){
+		var data = ajax({ url: '/parseWebPageHtmlAsContent.ashx?url='+encodeURIComponent($('#youtube-search input').val()), isJSON: true, noCache: true });
+		var form_ui = '<div class="titleLabel">Title</div><input type="text" name="title"/><div class="descLabel">Description</div><textarea name="desc"></textarea>';
+		form_ui += '<div class="imgsLabel">Images</div><div class="imgs"></div><div class="textLabel">Text</div><textarea name="text"></textarea>';
+		form_ui += '<button class="btn btn-default btn-mini" id="btnOK" style="margin-left:8px;"><div class="fff accept"></div>OK</button>';
+		$('.parseHTMLForm').html(form_ui);
+		
+		$('.parseHTMLForm input[name=title]').val(data.title);
+		$('.parseHTMLForm textarea[name=desc]').val(data.desc);
+		$('.parseHTMLForm textarea[name=text]').val(data.text);
+		var imgs = '';
+		for(var i=0; i<data.imgs.length; i++)
+			imgs += '<img src="'+data.imgs[i]+'"/>';
+		$('.parseHTMLForm div.imgs').html(imgs);
+		
+		$('.parseHTMLForm div.imgs img').click(function(){
+			$('.parseHTMLForm div.imgs img').removeClass('selected');
+			$(this).addClass('selected');
+		});
+		
+		$('#btnOK').click(function(){
+			if(callback)
+				callback({
+					title: $('.parseHTMLForm input[name=title]').val(),
+					desc: $('.parseHTMLForm textarea[name=desc]').val(),
+					text: $('.parseHTMLForm textarea[name=text]').val(),
+					picture: $('.parseHTMLForm div.imgs img.selected').attr('src')
+				});
+		});
+    });
+}
