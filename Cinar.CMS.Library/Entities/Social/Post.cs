@@ -73,8 +73,13 @@ namespace Cinar.CMS.Library.Entities
         {
             base.afterDelete();
 
+            // paylaşıma ait resmi silelim
             if(!string.IsNullOrWhiteSpace(this.Picture) && this.OriginalPostId==0)
                 File.Delete(Provider.MapPath(this.Picture));
+
+            // bu paylaşıma yazılan cevapları silelim
+            foreach (Post p in Provider.Database.ReadList<Post>("select * from Post where ReplyToPostId={0}", this.Id))
+                p.Delete();
         }
 
         protected override void beforeSave(bool isUpdate)
@@ -173,13 +178,33 @@ namespace Cinar.CMS.Library.Entities
                 {
                     HashTag ht = Provider.Database.Read<HashTag>("Name = {0} AND LangId={1}", m.Value.Substring(1), this.LangId);
                     if (ht == null)
-                        ht = new HashTag { Name = m.Value.Substring(1), MentionCount = 1, LangId = this.LangId};
+                        ht = new HashTag { Name = m.Value.Substring(1), MentionCount = 1, LangId = this.LangId };
                     else
                         ht.MentionCount++;
 
                     ht.Save();
 
                     new PostHashTag { HashTagId = ht.Id, PostId = this.Id }.Save();
+                }
+
+                // mention
+                List<string> mentions = new List<string>();
+                foreach (Match m in Regex.Matches(this.Metin, @"@([\w\d]+)"))
+                {
+                    string nick = m.Value.Substring(1);
+                    if (mentions.Contains(nick))
+                        continue; //***
+
+                    User u = Provider.Database.Read<User>("Nick = {0}", nick);
+                    if (u != null)
+                    {
+                        new Notification { 
+                            NotificationType = NotificationTypes.Mention,
+                            PostId = this.Id,
+                            UserId = u.Id
+                        }.Save();
+                    }
+                    mentions.Add(nick);
                 }
 
                 // Blacklist
