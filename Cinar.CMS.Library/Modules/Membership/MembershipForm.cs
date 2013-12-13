@@ -166,9 +166,9 @@ namespace Cinar.CMS.Library.Modules
                             <br/>
                             {SiteName} dilediði zaman bu sözleþmeyi sona erdirebilir.<br/>
                         </div>
-                        <input type=""checkbox"" name=""cbAcceptRules"" value=1/> Sözleþmeyi kabul ediyorum.
+                        <input type=""checkbox"" name=""#cbAcceptRules"" value=1/> Sözleþmeyi kabul ediyorum.
             ";
-            string uyelikSozlesmesiCheck = @" onclick=""if(!this.form.cbAcceptRules.checked) {alert('Sözleþmeyi kabul etmelisiniz.'); return false;}""";
+            string uyelikSozlesmesiCheck = @" onclick=""if(!jQuery('#cbAcceptRules').is(':checked')) {alert('Sözleþmeyi kabul etmelisiniz.'); return false;}""";
             string formHtml = @"
 <form id=""fMembership"" method=""post"" action=""SaveMember.ashx"" enctype=""multipart/form-data"">
 <table border=""0"" cellpadding=""4"">
@@ -296,7 +296,7 @@ namespace Cinar.CMS.Library.Modules
                         jQuery(function(){
                             var user_data = {};
                             _USERDATA_
-                            var elems = jQuery('#fMembership').filter(':input');
+                            var elems = jQuery('#fMembership').find(':input');
                             for(var i=0; i<elems.length; i++)
                                 jQuery(elems[i]).val(user_data[jQuery(elems[i]).attr('name')]);
                         });
@@ -311,7 +311,7 @@ namespace Cinar.CMS.Library.Modules
                 if (pi.Name.Contains("Password") || pi.DeclaringType != typeof(User) || pi.GetSetMethod() == null) 
                     continue; //***
                 object val = pi.GetValue(user, null);
-                sbUserData.AppendLine("                            user_data[\"" + pi.Name + "\"] = \"" + CMSUtility.HtmlEncode(isPostBack ? Provider.Request[pi.Name] : (val == null ? "" : val.ToString())) + "\";");
+                sbUserData.AppendLine("                            user_data[\"" + pi.Name + "\"] = " + (isPostBack ? Provider.Request[pi.Name] : (val == null ? "" : val.ToString())).ToJS() + ";");
             }
 
             sb = sb.Replace("_USERDATA_", sbUserData.ToString());
