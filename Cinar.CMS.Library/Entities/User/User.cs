@@ -6,6 +6,7 @@ using System.Web;
 using System.Collections.Specialized;
 using System.IO;
 using System.Drawing;
+using System.Text.RegularExpressions;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
@@ -207,6 +208,9 @@ namespace Cinar.CMS.Library.Entities
 
             this.Name = this.Name.Capitalize();
             this.Surname = this.Surname.Capitalize();
+
+            if (!Regex.IsMatch(this.Nick, "^[a-z0-9]+$"))
+                throw new Exception(Provider.TR("Kullanıcı adı sadece harf ve rakamlardan oluşabilir"));
 
             if (!isUpdate)
             {

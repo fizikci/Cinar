@@ -37,6 +37,23 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(References = typeof(Post))]
         public int ReplyToPostId { get; set; }
 
+        public Post ReplyToPost {
+            get {
+                return Provider.Database.Read<Post>(this.ReplyToPostId);
+            }
+        }
+
+        [ColumnDetail(References = typeof(Post))]
+        public int ThreadId { get; set; }
+
+        public Post ThreadPost
+        {
+            get
+            {
+                return Provider.Database.Read<Post>(this.ThreadId);
+            }
+        }
+
         [ColumnDetail(References=typeof(Lang))]
         public int LangId { get; set; }
 
@@ -91,6 +108,9 @@ namespace Cinar.CMS.Library.Entities
                 string lastPost = Provider.Database.GetString("select top 1 Metin from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? "";
                 if (lastPost.Trim() == this.Metin.Trim())
                     throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
+
+                if (this.ReplyToPostId > 0)
+                    this.ThreadId = this.ReplyToPost.ThreadId > 0 ? this.ReplyToPost.ThreadId : this.ReplyToPost.Id;
             }
 
             try
@@ -160,17 +180,46 @@ namespace Cinar.CMS.Library.Entities
                     {
                         NotificationType = NotificationTypes.Shared,
                         PostId = this.Id,
-                        UserId = Provider.Database.Read<Post>(this.OriginalPostId).InsertUserId
+                        UserId = this.ReplyToPost.InsertUserId
                     }.Save();
                 }
-                if (this.ReplyToPostId > 0)
+                if (this.ReplyToPostId > 0 && this.ReplyToPost.InsertUserId != Provider.User.Id) // eğer kendi paylaşımı dışında bir paylaşıma cevap ise, o paylaşımı yazan kişiye haber ver
                 {
                     new Notification
                     {
                         NotificationType = NotificationTypes.Reply,
                         PostId = this.ReplyToPostId,
-                        UserId = Provider.Database.Read<Post>(this.ReplyToPostId).InsertUserId
+                        UserId = this.ReplyToPost.InsertUserId
                     }.Save();
+                }
+
+                // mention
+                List<string> mentions = new List<string>();
+                foreach (Match m in Regex.Matches(this.Metin, @"@([\w\d]+)"))
+                {
+                    string nick = m.Value.Substring(1);
+                    if (mentions.Contains(nick))
+                        continue; //***
+                    mentions.Add(nick);
+
+                    User u = Provider.Database.Read<User>("Nick = {0}", nick);
+                    if (u != null)
+                    {
+                        // kendi nickini yazmışsa bildirim gönderme
+                        if (u.Id == Provider.User.Id)
+                            continue;
+
+                        // cevap verilen paylaşımı yazan kişinin nicki ise mention bildirimi gönderme, çünkü zaten reply bildirimi gönderiliyor
+                        if (this.ReplyToPost != null && this.ReplyToPost.InsertUserId == u.Id)
+                            continue;
+
+                        new Notification
+                        {
+                            NotificationType = NotificationTypes.Mention,
+                            PostId = this.Id,
+                            UserId = u.Id
+                        }.Save();
+                    }
                 }
 
                 // HashTags
@@ -185,26 +234,6 @@ namespace Cinar.CMS.Library.Entities
                     ht.Save();
 
                     new PostHashTag { HashTagId = ht.Id, PostId = this.Id }.Save();
-                }
-
-                // mention
-                List<string> mentions = new List<string>();
-                foreach (Match m in Regex.Matches(this.Metin, @"@([\w\d]+)"))
-                {
-                    string nick = m.Value.Substring(1);
-                    if (mentions.Contains(nick))
-                        continue; //***
-
-                    User u = Provider.Database.Read<User>("Nick = {0}", nick);
-                    if (u != null)
-                    {
-                        new Notification { 
-                            NotificationType = NotificationTypes.Mention,
-                            PostId = this.Id,
-                            UserId = u.Id
-                        }.Save();
-                    }
-                    mentions.Add(nick);
                 }
 
                 // Blacklist
