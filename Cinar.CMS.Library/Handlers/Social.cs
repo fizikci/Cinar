@@ -47,6 +47,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "updateLastOpenNotification":
                         updateLastOpenNotification();
                         break;
+                    case "updateLastOpenPrivateMessage":
+                        updateLastOpenPrivateMessage();
+                        break;
                     case "getMessageCount":
                         getMessageCount();
                         break;
@@ -195,7 +198,20 @@ namespace Cinar.CMS.Library.Handlers
         {
             context.Response.Write(new Result
             {
-                Data = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id)
+                Data = Provider.Database.ReadList<ViewPrivateLastMessage>(@"
+                                                                                select 
+                                                                                    plm.MailBoxOwnerId AS MailBoxOwnerId,
+                                                                                    plm.UserId AS UserId,
+                                                                                    concat(u.Name,' ',u.Surname) AS FullName,
+                                                                                    u.Nick AS Nick,
+                                                                                    u.Avatar AS Avatar,
+                                                                                    plm.Summary AS Summary,
+                                                                                    plm.UpdateDate AS UpdateDate 
+                                                                                from 
+                                                                                    privatelastmessage plm, user u
+                                                                                where 
+                                                                                    plm.UserId = u.Id and
+                                                                                    plm.MailBoxOwnerId={0}", Provider.User.Id)
             }.ToJSON());
         }
 
@@ -528,7 +544,7 @@ limit
             int lng = 0;
             int.TryParse(context.Request["lng"], out lng);
             string metin = context.Request["metin"];
-            if (string.IsNullOrWhiteSpace(metin))
+            if (string.IsNullOrWhiteSpace(metin) && (Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0))
                 throw new Exception("Post empty");
             int replyToPostId = 0;
             int.TryParse(context.Request["replyToPostId"], out replyToPostId);
@@ -542,7 +558,7 @@ limit
                     LangId = Provider.CurrentLanguage.Id,
                     Lat = lat,
                     Lng = lng,
-                    Metin = metin,
+                    Metin = metin==null ? "" : metin,
                     ReplyToPostId = replyToPostId
                 };
 

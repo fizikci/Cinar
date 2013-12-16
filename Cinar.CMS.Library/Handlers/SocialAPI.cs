@@ -399,9 +399,13 @@ namespace Cinar.CMS.Library.Handlers
 
             res.RelatedUsers = Provider.Database.ReadList<ViewMiniUserInfo>(@"
                 select 
-                    * 
+                    Id,
+                    concat(Name,' ',Surname) AS FullName,
+                    Nick,
+                    Avatar,
+                    About 
                 from 
-                    ViewMiniUserInfo 
+                    User
                 where 
                     Id in (
                         select 
@@ -437,7 +441,7 @@ namespace Cinar.CMS.Library.Handlers
                     Post p, User u
                 WHERE 
                     p.InsertUserId = u.Id AND
-                    p.ReplyToPostId = {0} 
+                    p.ReplyToPostId = {0}
                 ORDER BY 
                     p.Id DESC"
                 , pid);
@@ -571,13 +575,22 @@ namespace Cinar.CMS.Library.Handlers
         public static List<ViewNotification> GetUserNotifications(int limit)
         {
             List<ViewNotification> list = Provider.Database.ReadList<ViewNotification>(@"
-                SELECT 
-                    *
-                FROM 
-                    ViewNotification
-                WHERE 
-                    NotifiedUserId = {0}
-                Order By InsertDate desc
+                select 
+                    n.UserId AS NotifiedUserId,
+                    (us.LastNotificationCheck < n.InsertDate) AS New,
+                    u.Nick AS UserName,
+                    u.Avatar AS UserPicture,
+                    n.InsertDate AS InsertDate,
+                    n.InsertUserId AS InsertUserId,
+                    n.NotificationType AS NotificationType,
+                    n.PostId AS PostId 
+                from 
+                    notification n, user u, usersettings us
+                where 
+                    u.Id = n.InsertUserId and 
+                    n.UserId = us.UserId AND
+                    n.UserId = {0}
+                Order By n.InsertDate desc
                 LIMIT {1}", Provider.User.Id, limit);
 
             foreach (ViewNotification v in list)
@@ -589,13 +602,20 @@ namespace Cinar.CMS.Library.Handlers
         public static List<ViewPrivateMessage> GetPrivateMessages(int limit)
         {
             List<ViewPrivateMessage> list = Provider.Database.ReadList<ViewPrivateMessage>(@"
-                SELECT 
-                    *
-                FROM 
-                    ViewPrivateMessage
-                WHERE 
-                    UserId = {0}
-                Order By InsertDate desc
+                select 
+                    (us.LastPrivateMessageCheck < n.UpdateDate) AS New,
+                    u.Nick AS UserName,
+                    u.Avatar AS UserPicture,
+                    n.UpdateDate AS InsertDate,
+                    n.UserId AS UserId,
+                    n.Summary AS Message 
+                from 
+                    privatelastmessage n, user u, usersettings us
+                where 
+                    u.Id = n.MailBoxOwnerId and 
+                    n.UserId = us.UserId AND
+                    n.UserId = {0}
+                Order By n.UpdateDate desc
                 LIMIT {1}", Provider.User.Id, limit);
 
             foreach (ViewPrivateMessage v in list)
