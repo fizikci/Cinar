@@ -180,7 +180,7 @@ namespace Cinar.CMS.Library.Entities
                     {
                         NotificationType = NotificationTypes.Shared,
                         PostId = this.Id,
-                        UserId = this.ReplyToPost.InsertUserId
+                        UserId = this.OriginalPost.InsertUserId
                     }.Save();
                 }
                 if (this.ReplyToPostId > 0 && this.ReplyToPost.InsertUserId != Provider.User.Id) // eğer kendi paylaşımı dışında bir paylaşıma cevap ise, o paylaşımı yazan kişiye haber ver
