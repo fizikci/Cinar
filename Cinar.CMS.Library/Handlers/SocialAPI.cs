@@ -88,12 +88,13 @@ namespace Cinar.CMS.Library.Handlers
                     p.VideoId,
                     p.VideoType,
                     p.InsertDate,
-                    p.ShareCount,
-                    p.LikeCount,
+                    IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
+                    IFNULL(po.LikeCount, p.LikeCount)   as LikeCount ,
                     p.OriginalPostId,
                     p.ReplyToPostId
                 FROM 
-                    Post p, User u
+                    Post p inner join User u
+                    left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
                     (p.InsertUserId in (select UserId from UserContact where InsertUserId={0}) OR p.InsertUserId = {0}) AND
@@ -148,13 +149,14 @@ namespace Cinar.CMS.Library.Handlers
                     p.VideoId,
                     p.VideoType,
                     p.InsertDate,
-                    p.ShareCount,
-                    p.LikeCount,
+                    IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
+                    IFNULL(po.LikeCount, p.LikeCount)  as LikeCount,
                     p.OriginalPostId,
                     p.ReplyToPostId
                 FROM 
                     Post p
                     inner join User u ON p.InsertUserId = u.Id
+                    left join Post po ON po.Id=p.OriginalPostId
                     left join UserSettings us ON u.Id = us.UserId
                 WHERE 
                     us.IsInfoHidden <> 1 AND
@@ -249,12 +251,13 @@ namespace Cinar.CMS.Library.Handlers
                     p.VideoId,
                     p.VideoType,
                     p.InsertDate,
-                    p.ShareCount,
-                    p.LikeCount,
+                    IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
+                    IFNULL(po.LikeCount, p.LikeCount)   as LikeCount,
                     p.OriginalPostId,
                     p.ReplyToPostId
                 FROM 
-                    Post p, User u
+                    Post p inner join User u
+                    left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
                     " + idPart + @" AND
@@ -311,12 +314,13 @@ namespace Cinar.CMS.Library.Handlers
                     p.Metin,
                     p.Picture,
                     p.InsertDate,
-                    p.ShareCount,
-                    p.LikeCount,
+                    IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
+                    IFNULL(po.LikeCount, p.LikeCount) as LikeCount,
                     p.OriginalPostId,
                     p.ReplyToPostId
                 FROM 
-                    Post p, User u
+                    Post p inner join User u
+                    left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
                     p.Metin like {0} AND
@@ -415,8 +419,9 @@ namespace Cinar.CMS.Library.Handlers
                         where 
                             PostId={0} AND 
                             (NotificationType={1} OR NotificationType={2})
-                    )",
-                pid,
+                    )
+                limit 5",
+                (post.OriginalPost ?? post).Id,
                 NotificationTypes.Shared,
                 NotificationTypes.Liked);
 
@@ -441,10 +446,11 @@ namespace Cinar.CMS.Library.Handlers
                     Post p, User u
                 WHERE 
                     p.InsertUserId = u.Id AND
-                    p.ReplyToPostId = {0}
+                    (p.ReplyToPostId = {0} OR (p.ThreadId = {1} AND p.ThreadId>0)) AND
+                    p.Id > {0}
                 ORDER BY 
-                    p.Id DESC"
-                , pid);
+                    p.Id"
+                , (post.OriginalPost ?? post).Id, post.ThreadId > 0 ? post.ThreadId : pid);
 
             foreach (var viewPost in res.Replies)
                 viewPost.UserAvatar = Provider.GetThumbPath(viewPost.UserAvatar, 32, 32, false);
@@ -500,15 +506,16 @@ namespace Cinar.CMS.Library.Handlers
                     concat(u.Name,' ',u.Surname) as UserFullName,
                     p.Metin,
                     p.InsertDate,
-                    p.ShareCount,
-                    p.LikeCount,
+                    IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
+                    IFNULL(po.LikeCount, p.LikeCount) as LikeCount,
                     p.Picture,
                     p.VideoId,
                     p.VideoType,
                     p.OriginalPostId,
                     p.ReplyToPostId
                 FROM 
-                    Post p, User u
+                    Post p inner join User u
+                    left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
                     p.InsertUserId = {0} AND

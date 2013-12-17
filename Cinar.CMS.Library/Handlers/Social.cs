@@ -549,6 +549,9 @@ limit
             int replyToPostId = 0;
             int.TryParse(context.Request["replyToPostId"], out replyToPostId);
 
+            Post replyToPost = null; 
+            if(replyToPostId>0) replyToPost = Provider.Database.Read<Post>(replyToPostId);
+
             context.Response.ContentType = "text/html";
 
             try
@@ -559,7 +562,7 @@ limit
                     Lat = lat,
                     Lng = lng,
                     Metin = metin==null ? "" : metin,
-                    ReplyToPostId = replyToPostId
+                    ReplyToPostId = replyToPostId>0 ? (replyToPost.OriginalPost == null ? replyToPostId : replyToPost.OriginalPost.Id) : 0
                 };
 
                 p.Save();
@@ -588,18 +591,19 @@ limit
             if (pid == 0)
                 throw new Exception("Post not found");
 
-            int userId = Provider.Database.Read<Post>(pid).InsertUserId;
+            Post post = Provider.Database.Read<Post>(pid);
+            post = post.OriginalPost ?? post;
 
             Notification n = Provider.Database.Read<Notification>
-                ("UserId = {0} and NotificationType = {1} and PostId = {2} and InsertUserId = {3}", userId, NotificationTypes.Liked, pid, Provider.User.Id);
+                ("UserId = {0} and NotificationType = {1} and PostId = {2} and InsertUserId = {3}", post.InsertUserId, NotificationTypes.Liked, post.Id, Provider.User.Id);
 
             if (n == null)
             {
                 new Notification
                     {
                         NotificationType = NotificationTypes.Liked,
-                        PostId = pid,
-                        UserId = userId
+                        PostId = post.Id,
+                        UserId = post.InsertUserId
                     }.Save();
                 context.Response.Write(new Result { Data = true }.ToJSON());
             }
