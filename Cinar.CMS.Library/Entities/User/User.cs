@@ -32,25 +32,25 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login")]
         public string Roles { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible=false)]
         public string FacebookId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string GoogleId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string YahooId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string MsnId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string LinkedinId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string TwitterId { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", Options = "readOnly:true")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Visible = false)]
         public string MyspaceId { get; set; }
 
         #region kişisel

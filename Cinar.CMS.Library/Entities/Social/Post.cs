@@ -105,9 +105,12 @@ namespace Cinar.CMS.Library.Entities
 
             if (!isUpdate) { 
                 // aynı paylaşımı yapıyorsa kaydetmeyelim
-                string lastPost = Provider.Database.GetString("select top 1 Metin from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? "";
-                if (lastPost.Trim() == this.Metin.Trim())
+                var lastPost = Provider.Database.Read<Post>("select top 1 * from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? new Post();
+                if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim())
                     throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
+
+                if (lastPost.InsertDate.AddSeconds(30) > DateTime.Now)
+                    throw new Exception(Provider.TR("30 saniye içinde iki paylaşım yapılamaz"));
 
                 if (this.ReplyToPostId > 0)
                     this.ThreadId = this.ReplyToPost.ThreadId > 0 ? this.ReplyToPost.ThreadId : this.ReplyToPost.Id;
