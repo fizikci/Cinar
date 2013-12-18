@@ -42,6 +42,7 @@ langRes['The day before yesterday'] = 'İki gün önce';
 langRes['Last week'] = 'Geçen hafta';
 langRes['Last month'] = 'Geçen ay';
 langRes['Console'] = 'Konsol';
+langRes['Search'] = 'Ara';
 
 // cinar.cms.js
 langRes['Empty region'] = 'Boş bölge';
