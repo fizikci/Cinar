@@ -109,16 +109,16 @@ namespace Cinar.CMS.Library.Modules
                     where
                         {2} {3}
                     order by
-                        {4} {5}
-                    limit {6} offset {7}",
+                        {4} {5}",
                                      "*",
                                      this.EntityName,
                                      defaultWhere,
                                      String.IsNullOrEmpty(where) ? "" : ("and " + where),
                                      this.OrderBy,
-                                     this.Ascending ? "asc" : "desc",
-                                     HowManyItems,
-                                     Offset);
+                                     this.Ascending ? "asc" : "desc");
+
+                if (!ShowPaging)
+                    sql = Provider.Database.AddLimitOffsetToSQL(sql, HowManyItems, Offset);
             }
             else
             {
@@ -129,6 +129,9 @@ namespace Cinar.CMS.Library.Modules
 
                 if (ShowPaging && sql.ToLowerInvariant().Contains("limit"))
                     return "Do not use limit in SQL with paging. DataList does it.";
+
+                if (!sql.ToLowerInvariant().Contains("order by"))
+                    sql += " order by " + this.OrderBy + " " + (this.Ascending ? "asc":"desc");
 
                 if (!ShowPaging && !sql.ToLowerInvariant().Contains("limit"))
                     sql = Provider.Database.AddLimitOffsetToSQL(sql, HowManyItems, Offset);
