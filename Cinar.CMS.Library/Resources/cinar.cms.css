@@ -167,6 +167,11 @@ table.filterTable td.tdControl {width:120px;}
 tr.filterRow  input[type=button] {border:none;padding:0px; margin:0px}
 
 /* ListForm classes */
+.lf-search {
+    position: absolute;
+    right: 0px;
+    top: 4px;
+}
 table.lf-filter {
     position: absolute;
     left: 4px;

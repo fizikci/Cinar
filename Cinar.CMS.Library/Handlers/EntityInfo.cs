@@ -182,6 +182,9 @@ namespace Cinar.CMS.Library.Handlers
             string limit = String.IsNullOrEmpty(context.Request["limit"]) ? "20" : context.Request["limit"];
             int fieldNo = 0;
 
+            Type entityType = Provider.GetEntityType(entityName);
+            BaseEntity sampleEntity = Provider.CreateEntity(entityType);
+
             while (context.Request.Form["f_" + fieldNo] != null)
             {
                 string op = context.Request.Form["o_" + fieldNo];
@@ -190,11 +193,17 @@ namespace Cinar.CMS.Library.Handlers
                 where += (where == "" ? "" : " AND ") + field + op + val;
                 fieldNo++;
             }
+            if (!string.IsNullOrWhiteSpace(context.Request.Form["search"]))
+            {
+                string search = context.Request.Form["search"];
+                if (!search.Contains("%")) search = "%" + search + "%"; 
+                where += " AND " + sampleEntity.GetNameColumn() + "like" + search;
+            }
 
             FilterParser filterParser = new FilterParser(where, entityName);
             where = filterParser.GetWhere();
 
-            DataTable dt = Provider.ReadList(Provider.GetEntityType(entityName), Int32.Parse(page), Int32.Parse(limit), orderBy, where, filterParser.GetParams());
+            DataTable dt = Provider.ReadList(entityType, Int32.Parse(page), Int32.Parse(limit), orderBy, where, filterParser.GetParams());
 
             context.Response.Write("<table class=\"bk-grid\" border=\"0\" cellspacing=\"0\" cellpadding=\"2\">\n");
             if (dt != null)

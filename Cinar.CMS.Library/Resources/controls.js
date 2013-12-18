@@ -1767,7 +1767,12 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: '#filter' + this.hndl, readOnly: true });
         $('#btnFilter' + this.hndl).bind('click', this.fetchData.bind(this));
 
-        this.container.append('<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"' + (this.options.hideFilterPanel ? ' style="top:4px"' : '') + '></div>');
+        if (this.options.hideFilterPanel) {
+            this.container.prepend('<div class="lf-search"><input type="text" id="search_' + this.hndl + '"/><span id="btnSearch' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span> ' + lang('Search') + '</span></div>');
+            $('#btnSearch' + this.hndl).bind('click', this.fetchData.bind(this));
+        }
+
+        this.container.append('<div class="lf-dataArea" id="lf-dataArea' + this.hndl + '"></div>');
 
         var str = '<div class="lf-listFormFooter">';
         if (this.options.commands)
@@ -1809,10 +1814,12 @@ var ListForm = Class.create(); ListForm.prototype = {
         $('#btnListFormsCmd' + cmd.id + this.hndl).bind('click', cmd.handler.bind(this));
 	},
     fetchData: function() {
-        var params = null;
-        if (this.filter && this.filter.filter)
-            params = this.filter.filter.serialize();
         var ths = this;
+        var params = {};
+        if (ths.filter && ths.filter.filter)
+            params = ths.filter.filter.serialize();
+        params.search = $('#search_' + ths.hndl).val();
+
         new Ajax.Request(this.options.ajaxUri + '?method=getGridList&entityName=' + this.options.entityName + (this.options.extraFilter ? '&extraFilter=' + this.options.extraFilter : '') + (this.options.orderBy ? '&orderBy=' + this.options.orderBy : '') + '&page=' + this.pageIndex + '&limit=' + (this.options.limit || this.limit), {
             method: 'post',
             parameters: params,
