@@ -48,5 +48,16 @@ namespace Cinar.Database
                 ht = new Hashtable();
             return ht;
         }
+
+
+        public void BeforeSave()
+        {
+            
+        }
+
+        public void AfterSave()
+        {
+            
+        }
     }
 }

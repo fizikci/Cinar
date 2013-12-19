@@ -22,9 +22,9 @@ namespace Cinar.CMS.Library.Modules
             return Module.Read(ModuleId).show();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (ModuleId > 0)
             {

@@ -92,56 +92,39 @@ namespace Cinar.CMS.Library.Entities
         [Description("Saves this entity to database (if Id>0 updates, else inserts)")]
         public void Save()
         {
-            //List<string> errors = this.Validate();
-            //if (errors.Count > 0)
-            //    throw new Exception("<ul><li>" + errors.StringJoin("</li><li>") + "</li></ul>");
-            try
-            {
-                Provider.Database.Begin();
-
-                bool savedBefore = (Id > 0);
-
-                this.UpdateDate = DateTime.Now;
-                this.UpdateUserId = Provider.User.Id;
-                if (!savedBefore)
-                {
-                    this.InsertDate = DateTime.Now;
-                    this.InsertUserId = Provider.User.Id;
-                }
-
-                this.beforeSave(savedBefore);
-
-                #region if critical entity, log it
-                if (this is ICriticalEntity)
-                {
-                    if (savedBefore)
-                    {
-                        Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
-                        IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
-                        string changes = originalEntity.CompareFields(this);
-
-                        Provider.Log("History_" + this.GetType().Name, "Update", changes);
-                    }
-                    else
-                    {
-                        Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
-                    }
-                }
-                #endregion
-
-                Provider.Database.Save(this);
-                this.afterSave(savedBefore);
-
-                Provider.Database.Commit();
-            }
-            catch (Exception ex)
-            {
-                Provider.Database.Rollback();
-                throw ex;
-            }
+             Provider.Database.Save(this);
         }
-        protected virtual void beforeSave(bool isUpdate) { }
-        protected virtual void afterSave(bool isUpdate) { }
+
+        public virtual void BeforeSave()
+        {
+            this.UpdateDate = DateTime.Now;
+            this.UpdateUserId = Provider.User.Id;
+            if (Id==0)
+            {
+                this.InsertDate = DateTime.Now;
+                this.InsertUserId = Provider.User.Id;
+            }
+
+            #region if critical entity, log it
+            if (this is ICriticalEntity)
+            {
+                if (Id>0)
+                {
+                    Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
+                    IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
+                    string changes = originalEntity.CompareFields(this);
+
+                    Provider.Log("History_" + this.GetType().Name, "Update", changes);
+                }
+                else
+                {
+                    Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
+                }
+            }
+            #endregion
+
+        }
+        public virtual void AfterSave() { }
 
         [Description("Deletes this entity")]
         public void Delete()

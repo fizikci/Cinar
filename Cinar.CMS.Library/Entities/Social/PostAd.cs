@@ -27,9 +27,11 @@ namespace Cinar.CMS.Library.Entities
         public int ViewCount { get; set; }
         public int ClickCount { get; set; }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            if (isUpdate)
+            base.BeforeSave();
+
+            if (Id>0)
             {
                 var delta = this.ViewCount - (int)this.GetOriginalValues()["ViewCount"];
                 if (delta > 0)
@@ -48,7 +50,7 @@ namespace Cinar.CMS.Library.Entities
                 }
             }
 
-            if (!isUpdate)
+            if (Id==0)
             {
                 HttpContext.Current.Cache.Remove("post_ads");
                 this.PaymentTransactionId = Provider.Database.GetInt("select max(Id) from PaymentTransaction where InsertUserId = " + Provider.User.Id);

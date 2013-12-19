@@ -28,9 +28,9 @@ namespace Cinar.CMS.Library.Entities
             return "Name";
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             // resim gelmişse kaydedelim
             if (Provider.Request.Files["Picture"] != null && Provider.Request.Files["Picture"].ContentLength > 0)

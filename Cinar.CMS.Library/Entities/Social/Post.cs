@@ -99,11 +99,11 @@ namespace Cinar.CMS.Library.Entities
                 p.Delete();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
-            if (!isUpdate) { 
+            if (Id==0) { 
                 // aynı paylaşımı yapıyorsa kaydetmeyelim
                 var lastPost = Provider.Database.Read<Post>("select top 1 * from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? new Post();
                 if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim())
@@ -149,7 +149,7 @@ namespace Cinar.CMS.Library.Entities
             }
             catch { } // video şart değil, hata olursa es geç.
 
-            if (!isUpdate)
+            if (Id==0)
             {
                 // resim gelmişse kaydedelim
                 if (Provider.Request.Files["Picture"] != null && Provider.Request.Files["Picture"].ContentLength > 0)
@@ -174,9 +174,12 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            if (!isUpdate) {
+            base.AfterSave();
+
+            if (Id==0)
+            {
                 if (this.OriginalPostId > 0)
                 {
                     new Notification

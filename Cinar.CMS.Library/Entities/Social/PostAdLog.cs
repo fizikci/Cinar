@@ -17,13 +17,12 @@ namespace Cinar.CMS.Library.Entities
         public int PostId { get; set; }
         public int ViewCount { get; set; }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
-            if (!isUpdate) {
+            if (Id==0)
                 this.InsertDate = DateTime.Now.Date;
-            }
         }
     }
 }

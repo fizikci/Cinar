@@ -84,9 +84,9 @@ namespace Cinar.CMS.Library.Modules
             return sb.ToString();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (this.cols == 0)
                 throw new Exception(Provider.GetResource("Columns number cannot be zero"));

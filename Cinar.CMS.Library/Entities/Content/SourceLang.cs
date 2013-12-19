@@ -28,9 +28,9 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             // isimsiz source mi olur! kontrolu
             if (String.IsNullOrEmpty(this.Name))

@@ -38,9 +38,9 @@ namespace Cinar.CMS.Library.Entities
             set { message = value; }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             string errorMessage = "";
             if (String.IsNullOrEmpty(this.name))

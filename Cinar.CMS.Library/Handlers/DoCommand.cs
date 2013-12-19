@@ -936,13 +936,20 @@ namespace Cinar.CMS.Library.Handlers
 
         private void socialAuthLogin()
         {
-            PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
+            try
+            {
+                PROVIDER_TYPE selectedProvider = (PROVIDER_TYPE)Enum.Parse(typeof(PROVIDER_TYPE), context.Request["provider"].ToUpperInvariant());
 
-            //Initialize User
-            SocialAuthUser objUser = new SocialAuthUser(selectedProvider);
+                //Initialize User
+                SocialAuthUser objUser = new SocialAuthUser(selectedProvider);
 
-            //Call Login
-            objUser.Login(returnUrl: "loginBySocialAuth.ashx");
+                //Call Login
+                objUser.Login(returnUrl: "loginBySocialAuth.ashx");
+            }
+            catch (Exception ex)
+            {
+                context.Response.Write(ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : ""));
+            }
         }
 
         private void loginBySocialAuth()

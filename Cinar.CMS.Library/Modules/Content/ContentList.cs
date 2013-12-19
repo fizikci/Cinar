@@ -460,9 +460,9 @@ namespace Cinar.CMS.Library.Modules
             return sb.ToString();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (this.howManyItems <= this.skipFirst)
                 throw new Exception(Provider.GetResource("[Skip First] must be less than [How Many Items]"));

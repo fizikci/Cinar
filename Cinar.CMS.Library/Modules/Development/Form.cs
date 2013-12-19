@@ -116,11 +116,13 @@ namespace Cinar.CMS.Library.Modules
             entityNameChanged = oldEntityName != this.EntityName;
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
+            base.AfterSave();
+
             if (entityNameChanged)
             {
-                if (isUpdate)
+                if (Id>0)
                     foreach (Module mdl in Module.Read(Provider.Database.GetDataTable("select * from Module where Name='FormField' and ParentModuleId=" + this.Id)))
                         mdl.Delete();
 

@@ -103,9 +103,9 @@ namespace Cinar.CMS.Library.Entities
             set { responseCount = value; }
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            base.afterSave(isUpdate);
+            base.AfterSave();
 
             // eğer parent'ı varsa parent'ın responseCount'unu arttıralım
             if (this.ParentId > 0)

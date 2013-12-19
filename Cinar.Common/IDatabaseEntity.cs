@@ -17,6 +17,9 @@ namespace Cinar.Database
             set;
         }
 
+        void BeforeSave();
+        void AfterSave();
+
         string GetNameColumn();
         string GetNameValue();
 
