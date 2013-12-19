@@ -47,9 +47,9 @@ namespace Cinar.CMS.Library.Modules
             }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (this.page == this.Template && this.regionToRepeat == this.Region)
                 throw new Exception(Provider.GetResource("Same region of same page cannot be copied"));

@@ -38,22 +38,22 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
         /// <summary>
         /// Gets Firstname and Lastname of a contact
         /// </summary>
-        public string Name {  get; internal set; }
+        public string Name {  get; set; }
         /// <summary>
         /// Gets provider's specific UserID (if provided by provider)
         /// </summary>
-        public string ID { get; internal set; }
+        public string ID { get; set; }
         /// <summary>
         /// Gets EmailID of a contact (if provided by provider)
         /// </summary>
-        public string Email { get; internal set; }
+        public string Email { get; set; }
         /// <summary>
         /// Gets Profile URL of a contact (if provided by provider)
         /// </summary>
-        public string ProfileURL { get; internal set; }
+        public string ProfileURL { get; set; }
         /// <summary>
         /// Gets Profile Picture of a contact (if provided by provider)
         /// </summary>
-        public string ProfilePictureURL { get; internal set; }
+        public string ProfilePictureURL { get; set; }
     }
 }

@@ -31,9 +31,11 @@ namespace Cinar.CMS.Library.Entities
             get { return Provider.Database.Read<Post>(PostId); }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            if (isUpdate)
+            base.BeforeSave();
+
+            if (Id>0)
                 return;
 
             switch (NotificationType)

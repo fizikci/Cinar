@@ -126,9 +126,9 @@ namespace Cinar.CMS.Library.Modules
             return sb.ToString();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (Regex.Match(this.fieldOrder, "[^\\w,\\,]").Success)
                 throw new Exception(Provider.GetResource("FieldOrder is invalid. Please enter fields as {0}", ContentDisplay.defaultFieldOrder));

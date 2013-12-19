@@ -284,13 +284,13 @@ namespace Cinar.CMS.Library.Entities
         [EditFormFieldProps(Category = "Extra")]
         public string ExtraField5 { get { return extraField5; } set { extraField5 = value; } }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             this.Tags = this.Tags.Trim(',', ' ');
 
-            if (!isUpdate)
+            if (Id==0)
                 this.Keyword = Guid.NewGuid().ToString();
 
             if (this.Id == 1)
@@ -346,7 +346,7 @@ namespace Cinar.CMS.Library.Entities
             {
                 // eğer kategori değişmişse alt içeriklerin hiyerarşilerini update edelim.
                 string newHierarchy = Provider.GetHierarchyLike(this.catId);
-                if (isUpdate && this.Hierarchy != newHierarchy)
+                if (Id>0 && this.Hierarchy != newHierarchy)
                     Provider.Database.ExecuteNonQuery(String.Format("update Content set Hierarchy=REPLACE(Hierarchy,'{0},{1}','{2},{1}')", this.Hierarchy, this.Id.ToString().PadLeft(5, '0'), newHierarchy));
 
                 // yeni hiyerarşi
@@ -427,16 +427,16 @@ namespace Cinar.CMS.Library.Entities
                 }
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            base.afterSave(isUpdate);
+            base.AfterSave();
 
             // Aktif content'te değişiklik olduysa tekrar okunmasını sağlayalım
             if (Provider.Content != null && Provider.Content.Id == this.Id)
                 Provider.Content = null;
 
             // etiketleri güncelleyelim
-            updateTags(isUpdate);
+            updateTags(Id>0);
         }
 
         protected override bool beforeDelete()

@@ -202,9 +202,9 @@ namespace Cinar.CMS.Library.Entities
             return errorList;
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             this.Name = this.Name.Capitalize();
             this.Surname = this.Surname.Capitalize();
@@ -212,7 +212,7 @@ namespace Cinar.CMS.Library.Entities
             if (!Regex.IsMatch(this.Nick, "^[a-zA-Z0-9_]+$"))
                 throw new Exception(Provider.TR("Kullanıcı adı sadece harf ve rakamlardan oluşabilir"));
 
-            if (!isUpdate)
+            if (Id==0)
             {
                 //this.Password = Provider.MD5(this.Password); // password işi SetFieldsByPostData'da hallediliyor
                 this.Visible = false;
@@ -230,12 +230,12 @@ namespace Cinar.CMS.Library.Entities
             downloadPictureForFieldsThatStartsWithHttp();
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            base.afterSave(isUpdate);
+            base.AfterSave();
             
             
-            if (!isUpdate)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
+            if (Id==0)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
             {
                 string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>
@@ -250,7 +250,7 @@ namespace Cinar.CMS.Library.Entities
                 // add admin (root) as first contact to this user
                 new UserContact
                 {
-                    UserId = Provider.Database.GetInt("select Id from User where Nick={0}", "admin"),
+                    UserId = Provider.Database.GetInt("select Id from [User] where Nick={0}", "admin"),
                     InsertUserId = this.Id
                 }.Save();
             }

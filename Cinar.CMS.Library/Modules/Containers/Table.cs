@@ -70,9 +70,9 @@ namespace Cinar.CMS.Library.Modules
             return false;
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (this.rows < 1 || this.rows > 30 || this.cols < 1 || this.cols > 30)
                 throw new Exception(Provider.GetResource("Row and column numbers must be between 1 and 30"));
@@ -80,7 +80,7 @@ namespace Cinar.CMS.Library.Modules
             string regionId = "tblCell" + this.Id;
 
             //TODO: aşağıdaki fasilite yanlış çalışıyor.. Fazla modül siliyor.
-            if (isUpdate)
+            if (Id>0)
             {
                 // silinecek cell'leri bulalım
                 Module[] modules = Module.Read(Provider.Database.GetDataTable("select * from [Module] where Region > '" + (regionId + "_" + this.Rows) + "_' UNION ALL select * from [Module] where Region like '" + regionId + "_%' and substring(Region, " + (regionId.Length + 4) + ", 1)>='" + this.Cols + "' and Template='" + this.Template + "';"));

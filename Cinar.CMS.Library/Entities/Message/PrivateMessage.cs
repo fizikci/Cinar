@@ -17,15 +17,17 @@ namespace Cinar.CMS.Library.Entities
         public bool DeletedBySender { get; set; }
         public bool DeletedByReceiver { get; set; }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            if(isUpdate)
+            base.BeforeSave();
+
+            if (Id>0)
                 throw new Exception(Provider.TR("Mesaj güncellenemez"));
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            base.afterSave(isUpdate);
+            base.AfterSave();
 
             PrivateLastMessage plm = Provider.Database.Read<PrivateLastMessage>("MailBoxOwnerId={0} AND UserId={1}", Provider.User.Id, this.ToUserId);
             if (plm == null)

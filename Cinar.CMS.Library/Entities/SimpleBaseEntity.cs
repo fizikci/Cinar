@@ -61,48 +61,36 @@ namespace Cinar.CMS.Library.Entities
 
         public void Save()
         {
-            try
-            {
-                Provider.Database.Begin();
-
-                bool savedBefore = (Id > 0);
-
-                if (!savedBefore)
-                    this.InsertDate = DateTime.Now;
-
-                this.beforeSave(savedBefore);
-
-                #region if critical entity, log it
-                if (this is ICriticalEntity)
-                {
-                    if (savedBefore)
-                    {
-                        Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
-                        IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
-                        string changes = originalEntity.CompareFields(this);
-
-                        Provider.Log("History_" + this.GetType().Name, "Update", changes);
-                    }
-                    else
-                    {
-                        Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
-                    }
-                }
-                #endregion
-
-                Provider.Database.Save(this);
-                this.afterSave(savedBefore);
-
-                Provider.Database.Commit();
-            }
-            catch (Exception ex)
-            {
-                Provider.Database.Rollback();
-                throw ex;
-            }
+            Provider.Database.Save(this);
         }
-        protected virtual void beforeSave(bool isUpdate) { }
-        protected virtual void afterSave(bool isUpdate) { }
+        public virtual void BeforeSave()
+        {
+            if (this.Id==0)
+                this.InsertDate = DateTime.Now;
+
+            #region if critical entity, log it
+            if (this is ICriticalEntity)
+            {
+                if (Id>0)
+                {
+                    Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
+                    IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
+                    string changes = originalEntity.CompareFields(this);
+
+                    Provider.Log("History_" + this.GetType().Name, "Update", changes);
+                }
+                else
+                {
+                    Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
+                }
+            }
+            #endregion
+            
+        }
+        public virtual void AfterSave()
+        {
+            
+        }
 
 
         public void Delete()

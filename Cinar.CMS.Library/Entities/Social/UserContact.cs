@@ -23,13 +23,13 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
-            if (!isUpdate)
+            if (Id==0)
             {
-                if(Provider.Database.GetInt("select count(*) from UserContact where InsertDate>{0}",DateTime.Now.Date)>=50)
+                if (Provider.Database.GetInt("select count(*) from UserContact where InsertDate>{0}", DateTime.Now.Date) >= 50)
                     throw new Exception(Provider.TR("Günde 50 kişiden fazla takip edilemez"));
             }
         }

@@ -978,6 +978,7 @@ namespace Cinar.Database
 
                 Hashtable ht = EntityToHashtable(entity);
 
+                entity.BeforeSave();
                 if (entity.Id == 0)
                 {
                     this.Insert(tbl.Name, ht);
@@ -989,6 +990,7 @@ namespace Cinar.Database
                 {
                     this.Update(tbl.Name, ht);
                 }
+                entity.AfterSave();
 
                 this.Commit();
             }

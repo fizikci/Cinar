@@ -52,7 +52,7 @@ $
         foreach(var contact in foundMemberContacts)
             echo('<li><input type=""checkbox"" name=""memberContact"" value=""'+contact.Email+'""/>'+contact.Name+' ('+contact.Email+')</li>');
         echo('</ul>');
-        echo('<button onclick=""addContacts(this)"">'+Provider.TR('Seçilen kişileri adres defterime ekle')+'</button>');
+        echo('<button onclick=""addContacts(this)"">'+Provider.TR('Seçilen kişileri takip et')+'</button>');
     }
     if(foundContacts && foundContacts.Count>0){
         echo('<ul class=""contacts"">');

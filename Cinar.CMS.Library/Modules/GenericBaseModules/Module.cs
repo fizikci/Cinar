@@ -285,63 +285,44 @@ InnerHtml,32,<hr/>
 
         public void Save()
         {
-
-            try
+            if (Id>0)
             {
-                Provider.Database.Begin();
+                Provider.Database.ExecuteNonQuery(
+                    "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8} where Id={0}", //  and Name={1}
+                    Id, 
+                    Name, 
+                    Template, 
+                    Region, 
+                    OrderNo, 
+                    CSS, 
+                    this.Serialize(),
+                    ParentModuleId,
+                    UseCache);
 
-                bool savedBefore = (Id > 0);
-
-                this.beforeSave(savedBefore);
-
-                if (savedBefore)
-                {
-                    Provider.Database.ExecuteNonQuery(
-                        "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8} where Id={0}", //  and Name={1}
-                        Id, 
-                        Name, 
-                        Template, 
-                        Region, 
-                        OrderNo, 
-                        CSS, 
-                        this.Serialize(),
-                        ParentModuleId,
-                        UseCache);
-
-                    this.deleteCache();
-                    Provider.Database.ClearEntityWebCache(typeof(Module), this.Id);
-                }
-                else
-                {
-                    this.OrderNo = Convert.ToInt32(Provider.Database.GetValue("select max(OrderNo)+1 from Module where Template={0} and Region={1}", this.Template, this.Region));
-                    Provider.Database.ExecuteNonQuery(
-                        "insert into Module (Name, Template, Region, OrderNo, CSS, ParentModuleId, UseCache) values ({0},{1},{2},{3},{4},{5},{6})", 
-                        Name, 
-                        Template, 
-                        Region, 
-                        OrderNo, 
-                        CSS, 
-                        ParentModuleId,
-                        UseCache);
-                    this.Id = Convert.ToInt32(Provider.Database.GetValue("select max(Id) from Module"));
-                    Provider.Database.ExecuteNonQuery(
-                        "update Module set Details = {0} where Id={1}", 
-                        this.Serialize(), 
-                        this.Id);
-                }
-
-                this.afterSave(savedBefore);
-
-                Provider.Database.Commit();
+                this.deleteCache();
+                Provider.Database.ClearEntityWebCache(typeof(Module), this.Id);
             }
-            catch (Exception ex)
+            else
             {
-                Provider.Database.Rollback();
-                throw ex;
+                this.OrderNo = Convert.ToInt32(Provider.Database.GetValue("select max(OrderNo)+1 from Module where Template={0} and Region={1}", this.Template, this.Region));
+                Provider.Database.ExecuteNonQuery(
+                    "insert into Module (Name, Template, Region, OrderNo, CSS, ParentModuleId, UseCache) values ({0},{1},{2},{3},{4},{5},{6})", 
+                    Name, 
+                    Template, 
+                    Region, 
+                    OrderNo, 
+                    CSS, 
+                    ParentModuleId,
+                    UseCache);
+                this.Id = Convert.ToInt32(Provider.Database.GetValue("select max(Id) from Module"));
+                Provider.Database.ExecuteNonQuery(
+                    "update Module set Details = {0} where Id={1}", 
+                    this.Serialize(), 
+                    this.Id);
             }
         }
-        protected virtual void beforeSave(bool isUpdate) { }
-        protected virtual void afterSave(bool isUpdate) { }
+        public virtual void BeforeSave() { }
+        public virtual void AfterSave() { }
 
         public string Serialize()
         {

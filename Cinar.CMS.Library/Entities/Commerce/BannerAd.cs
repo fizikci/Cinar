@@ -99,9 +99,9 @@ namespace Cinar.CMS.Library.Entities
             set { clickCount = value; }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             if (this.Tags.Length > 0)
                 if (Regex.Match(this.Tags, "[^\\w,\\,\\s]").Success)

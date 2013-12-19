@@ -138,9 +138,10 @@ namespace Cinar.CMS.Library.Modules
             return sb.ToString();
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
+
             if (!this.MansetFieldOrder.Contains("image"))
                 throw new Exception(Provider.GetResource("\"image\" is essential for the Field Order of the Headline module."));
 

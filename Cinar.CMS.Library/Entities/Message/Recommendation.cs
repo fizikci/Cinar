@@ -57,9 +57,9 @@ namespace Cinar.CMS.Library.Entities
             set { emailTo = value; }
         }
 
-        protected override void afterSave(bool isUpdate)
+        public override void AfterSave()
         {
-            base.afterSave(isUpdate);
+            base.AfterSave();
 
             // eğer content varsa content'in recommendCount'unu arttıralım
             if (this.contentId > 0)

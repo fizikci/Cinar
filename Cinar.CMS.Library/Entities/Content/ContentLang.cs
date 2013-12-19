@@ -111,9 +111,9 @@ namespace Cinar.CMS.Library.Entities
             set { spotTitle = value; }
         }
 
-        protected override void beforeSave(bool isUpdate)
+        public override void BeforeSave()
         {
-            base.beforeSave(isUpdate);
+            base.BeforeSave();
 
             // başlıksız içerik mi olur! kontrolü
             if (String.IsNullOrEmpty(this.Title))
