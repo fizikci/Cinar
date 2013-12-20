@@ -4,6 +4,7 @@ using System.Text;
 using Cinar.Database;
 using System.Web;
 using System.Collections.Specialized;
+using System.Drawing;
 
 namespace Cinar.CMS.Library.Entities
 {
@@ -78,7 +79,17 @@ namespace Cinar.CMS.Library.Entities
             {
                 string cvUrlPath = avatarDir + Provider.User.Email + "_cv" + System.IO.Path.GetExtension(postedFile.FileName);
                 string avatarFilePath = Provider.MapPath(cvUrlPath);
-                postedFile.SaveAs(avatarFilePath);
+
+                Image bmp = Image.FromStream(postedFile.InputStream);
+                if (bmp.Width > 715)
+                {
+                    Image bmp2 = bmp.ScaleImage(715, 0);
+                    bmp2.SaveImage(avatarFilePath, Provider.Configuration.ThumbQuality);
+                }
+                else
+                    postedFile.SaveAs(avatarFilePath);
+
+
                 this.CoverPicture = cvUrlPath;
 
                 Provider.DeleteThumbFiles(cvUrlPath);
