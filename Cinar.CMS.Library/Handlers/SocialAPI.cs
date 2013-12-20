@@ -610,7 +610,7 @@ namespace Cinar.CMS.Library.Handlers
         {
             List<ViewPrivateMessage> list = Provider.Database.ReadList<ViewPrivateMessage>(@"
                 select 
-                    (us.LastPrivateMessageCheck < n.UpdateDate) AS New,
+                    (us.LastPrivateMessageCheck < n.UpdateDate AND n.UpdateUserId <> {0}) AS New,
                     u.Nick AS UserName,
                     u.Avatar AS UserPicture,
                     n.UpdateDate AS InsertDate,
