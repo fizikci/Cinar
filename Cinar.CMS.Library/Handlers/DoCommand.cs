@@ -70,6 +70,11 @@ namespace Cinar.CMS.Library.Handlers
                         userActivation();
                         break;
                     }
+                case "ValidateNewEmail":
+                    {
+                        validateNewEmail();
+                        break;
+                    }
                 case "RSS":
                     {
                         rss();
@@ -517,6 +522,26 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
+                context.Response.Redirect(Provider.Configuration.AfterUserActivationPage);
+            }
+            else
+            {
+                // login başarıSIZ, login formunun olduğu sayfaya geri gönderelim
+                context.Session["loginError"] = "Aktivasyon kodunuz geçersiz.";
+                context.Response.Redirect(Provider.Configuration.LoginPage);
+            }
+        }
+        private void validateNewEmail()
+        {
+            User user = (User)Provider.Database.Read(typeof(User), "Keyword={0}", context.Request["keyword"]);
+
+            if (user != null)
+            {
+                // login başarılı, üyelik sayfasına gönderelim.
+                string newEmail = Provider.Database.GetString("select top 1 Description from Log where InsertUserId={0} AND Category='updateEmail' order by Id desc");
+                user.Email = newEmail;
+                Provider.User = user;
+                Provider.Database.ExecuteNonQuery("update User set Email={0} where Id={1}", newEmail, user.Id);
                 context.Response.Redirect(Provider.Configuration.AfterUserActivationPage);
             }
             else

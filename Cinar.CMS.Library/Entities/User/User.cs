@@ -209,7 +209,7 @@ namespace Cinar.CMS.Library.Entities
             this.Name = this.Name.Capitalize();
             this.Surname = this.Surname.Capitalize();
 
-            if (!Regex.IsMatch(this.Nick, "^[a-zA-Z0-9_]+$"))
+            if (!Regex.IsMatch(this.Nick, "^[a-zA-Z0-9_\\.]+$"))
                 throw new Exception(Provider.TR("Kullanıcı adı sadece harf ve rakamlardan oluşabilir"));
 
             if (Id==0)

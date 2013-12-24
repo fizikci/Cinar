@@ -75,6 +75,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "SaveMember":
                 case "LoginWithKeyword":
                 case "UserActivation":
+                case "ValidateNewEmail":
                 case "RSS":
                 case "Print":
                 case "Redirect":
