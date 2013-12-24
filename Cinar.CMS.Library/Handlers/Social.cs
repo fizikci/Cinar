@@ -138,6 +138,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "updateProfile":
                         updateProfile();
                         break;
+                    case "updateEmail":
+                        updateEmail();
+                        break;
                     case "getPostRelatedData":
                         getPostRelatedData();
                         break;
@@ -743,6 +746,27 @@ http://{1}
             pa.Save();
 
             context.Response.Write(new Result { Data = pa.Id }.ToJSON());
+        }
+
+        private void updateEmail()
+        {
+            string newEmail = Provider.Request["newEmail"];
+            new Log()
+                {
+                    Category = "updateEmail",
+                    Description = newEmail
+                }.Save();
+
+            string msg = String.Format(@"
+                                Merhaba {0},<br/><br/>
+                                Aşağıdaki linki kullanarak yeni email adresinizi aktif hale getirebilirsiniz:<br/><br/>
+                                <a href=""http://{1}/ValidateNewEmail.ashx?keyword={2}"">http://{1}/LoginWithKeyword.ashx?keyword={2}</a>",
+                            Provider.User.FullName,
+                            Provider.Configuration.SiteAddress,
+                            Provider.User.Keyword);
+            Provider.SendMail(newEmail, "Yeni email adresinizi onaylayınız", msg);
+
+            context.Response.Write(new Result { Data = true }.ToJSON());
         }
     }
 
