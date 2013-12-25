@@ -216,7 +216,7 @@ namespace Cinar.CMS.Library.Entities
             {
                 //this.Password = Provider.MD5(this.Password); // password işi SetFieldsByPostData'da hallediliyor
                 this.Visible = false;
-                this.Keyword = CMSUtility.MD5(DateTime.Now.Ticks.ToString());
+                this.Keyword = CMSUtility.MD5(this.Nick+DateTime.Now.Ticks.ToString());
 
                 if(string.IsNullOrWhiteSpace(this.Country) && Provider.Request.UserLanguages.Length>0)
                     this.Country = Provider.Request.UserLanguages[0];
@@ -248,11 +248,11 @@ namespace Cinar.CMS.Library.Entities
                 Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
 
                 // add admin (root) as first contact to this user
-                new UserContact
-                {
-                    UserId = Provider.Database.GetInt("select Id from [User] where Nick={0}", "admin"),
-                    InsertUserId = this.Id
-                }.Save();
+                //new UserContact
+                //{
+                //    UserId = Provider.Database.GetInt("select Id from User where Nick={0}", "admin"),
+                //    InsertUserId = this.Id
+                //}.Save();
             }
 
             if (this.Id == Provider.User.Id)
@@ -321,10 +321,10 @@ namespace Cinar.CMS.Library.Entities
             {
                 if (us == null)
                 {
-                    us = Provider.Database.Read<UserSettings>("UserId={0}", Provider.User.Id);
+                    us = Provider.Database.Read<UserSettings>("UserId={0}", this.Id);
                     if (us == null)
                     {
-                        us = new UserSettings { UserId = Provider.User.Id };
+                        us = new UserSettings { UserId = this.Id };
                         us.LastNotificationCheck = DateTime.Now;
                         us.Save();
                     }

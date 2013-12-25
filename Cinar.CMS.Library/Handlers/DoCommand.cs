@@ -538,7 +538,7 @@ namespace Cinar.CMS.Library.Handlers
             if (user != null)
             {
                 // login başarılı, üyelik sayfasına gönderelim.
-                string newEmail = Provider.Database.GetString("select top 1 Description from Log where InsertUserId={0} AND Category='updateEmail' order by Id desc");
+                string newEmail = Provider.Database.GetString("select top 1 Description from Log where InsertUserId={0} AND Category='updateEmail' order by Id desc", user.Id);
                 user.Email = newEmail;
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Email={0} where Id={1}", newEmail, user.Id);

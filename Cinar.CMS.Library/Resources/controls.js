@@ -1589,7 +1589,7 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr class="category" id="detailsHeader' + this.hndl + '"><td colspan="2">İlişkili Veriler</td></tr>';
         str += '<tr><td colspan="2" id="details' + this.hndl + '"></td></tr>';
         str += '</tbody></table></div></td></tr>';
-        str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;"></div></td></tr>';
+        str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;overflow-y: auto;"></div></td></tr>';
         str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span> ' + lang('Save') + '</span></td></tr>';
         str += '</table>';
 
