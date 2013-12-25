@@ -318,19 +318,19 @@ function slideShowSlide(elm, dir){
 	if(elm.alreadySliding) return;
 	elm.alreadySliding = true;
 	
-    var dimCl = getDimensions(elm.find('.clipper'));
-	var leftID = parseInt(elm.find('.innerDiv').css('left'));
-    var dimID = getDimensions(elm.find('.innerDiv'));
+    var dimCl = getDimensions($(elm).find('.clipper'));
+    var leftID = parseInt($(elm).find('.innerDiv').css('left'));
+    var dimID = getDimensions($(elm).find('.innerDiv'));
 
 	if(leftID + dimID.width < dimCl.width+60)
-		elm.find('.innerDiv').animate({ left: -1*leftID}, 1000, function(){elm.alreadySliding = false;} );
+	    $(elm).find('.innerDiv').animate({ left: 0 }, 1000, function () { elm.alreadySliding = false; });
 	else if(dir == 'back'){
 		if(leftID < 0)
-			elm.find('.innerDiv').animate({ left: elm.find('.clipper').width()+20}, 1000, function(){elm.alreadySliding = false;} );
+		    $(elm).find('.innerDiv').animate({ left: $(elm).find('.clipper').width() + 20 }, 1000, function () { elm.alreadySliding = false; });
 		else
-			elm.alreadySliding = false;
+		    elm.alreadySliding = false;
 	} else
-		elm.find('.innerDiv').animate({ left: -1*(elm.find('.clipper').width()+20)}, 1000, function(){elm.alreadySliding = false;} );
+	    $(elm).find('.innerDiv').animate({ left: "-="+($(elm).find('.clipper').width() + 20)+"px" }, 1000, function () { elm.alreadySliding = false; });
 		
 	clearTimeout(elm.timeout);
 	if(elm.playing && !elm.mouseIsOver){

@@ -153,6 +153,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "createPostAd":
                         createPostAd();
                         break;
+                    case "searchPeopleAndTopics":
+                        searchPeopleAndTopics();
+                        break;
                     default:
                         break;
                 }
@@ -403,6 +406,44 @@ limit
                 userId = user.Id;
 
             context.Response.Write(new Result { Data = SocialAPI.GetUserProfilePosts(userId, lessThanId, greaterThanId, loadPostsPageSize) }.ToJSON());
+        }
+
+        private void searchPeopleAndTopics()
+        {
+            int userId = Provider.User.Id;
+            var users = Provider.Database.ReadList<ViewMiniUserInfo>(@"SELECT 
+                    u.Id,
+                    u.Avatar,
+                    u.Nick,
+                    concat(u.Name,' ',u.Surname) as FullName,
+                    u.About
+                FROM 
+                    UserContact fu, User u
+                WHERE 
+                    u.Visible = 1 AND
+                    fu.UserId = {0} AND
+                    fu.InsertUserId = u.Id AND
+                    (u.Nick like {1} OR u.Name like {1})
+                LIMIT {2}", userId, "%"+Provider.Request["q"]+"%", 4);
+
+            if (users.Count < 4) {
+                users.AddRange(Provider.Database.ReadList<ViewMiniUserInfo>(@"SELECT 
+                    u.Id,
+                    u.Avatar,
+                    u.Nick,
+                    concat(u.Name,' ',u.Surname) as FullName,
+                    u.About
+                FROM 
+                    User u
+                WHERE 
+                    (u.Nick like {0} OR u.Name like {0}) AND
+                    u.Id not in (1,3) AND
+                    u.Visible = 1 AND
+                    " + (users.Count > 0 ? "u.Id not in (" + users.Select(u => u.Id).StringJoin(",") + ")" : "1=1") + @"
+                LIMIT {1}", "%" + Provider.Request["q"] + "%", 4));
+            }
+
+            context.Response.Write(new Result { Data = users }.ToJSON());
         }
 
         private void getUserFollowers()
@@ -754,7 +795,8 @@ http://{1}
             new Log()
                 {
                     Category = "updateEmail",
-                    Description = newEmail
+                    Description = newEmail,
+                    LogType = "Notice"
                 }.Save();
 
             string msg = String.Format(@"

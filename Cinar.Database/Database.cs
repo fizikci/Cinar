@@ -976,19 +976,18 @@ namespace Cinar.Database
                 if (entity is ISerializeSubclassFields)
                     serialize(entity as ISerializeSubclassFields);
 
-                Hashtable ht = EntityToHashtable(entity);
-
                 entity.BeforeSave();
+
                 if (entity.Id == 0)
                 {
-                    this.Insert(tbl.Name, ht);
+                    this.Insert(tbl.Name, EntityToHashtable(entity));
                     object id = this.GetValue("select max(" + GetIdColumnName(entity) + ") from [" + tbl.Name + "]");
                     if (id == null) id = 0;
                     entity.Id = Convert.ToInt32(id);
                 }
                 else
                 {
-                    this.Update(tbl.Name, ht);
+                    this.Update(tbl.Name, EntityToHashtable(entity));
                 }
                 entity.AfterSave();
 

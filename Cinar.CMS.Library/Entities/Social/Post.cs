@@ -105,12 +105,12 @@ namespace Cinar.CMS.Library.Entities
 
             if (Id==0) { 
                 // aynı paylaşımı yapıyorsa kaydetmeyelim
-                var lastPost = Provider.Database.Read<Post>("select top 1 * from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? new Post();
+                var lastPost = Provider.Database.Read<Post>("select top 1 * from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? new Post() { Metin = ""};
                 if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim())
                     throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
 
-                if (lastPost.InsertDate.AddSeconds(30) > DateTime.Now)
-                    throw new Exception(Provider.TR("30 saniye içinde iki paylaşım yapılamaz"));
+                if (lastPost.InsertDate.AddSeconds(5) > DateTime.Now)
+                    throw new Exception(Provider.TR("5 saniye içinde iki paylaşım yapılamaz"));
 
                 if (this.ReplyToPostId > 0)
                     this.ThreadId = this.ReplyToPost.ThreadId > 0 ? this.ReplyToPost.ThreadId : this.ReplyToPost.Id;
@@ -197,6 +197,20 @@ namespace Cinar.CMS.Library.Entities
                         PostId = this.ReplyToPostId,
                         UserId = this.ReplyToPost.InsertUserId
                     }.Save();
+
+                    if (Provider.User.Settings.MailAfterPostReply)
+                    {
+                        string msg = String.Format(@"
+                                Merhaba {0},<br/><br/>
+                                {1} paylaşımına cevap yazdı:<br/><br/>
+                                <i>{2}</i><br/><br/>
+                                <a href=""http://{3}"">http://{3}</a>",
+                                    this.ReplyToPost.InsertUser.FullName,
+                                    Provider.User.FullName,
+                                    this.Metin,
+                                    Provider.Configuration.SiteAddress);
+                        Provider.SendMail(this.ReplyToPost.InsertUser.Email, Provider.User.FullName + " paylaşımına cevap yazdı", msg);
+                    }
                 }
 
                 // mention

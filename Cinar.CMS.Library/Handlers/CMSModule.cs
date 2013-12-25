@@ -71,7 +71,7 @@ namespace Cinar.CMS.Library.Handlers
                 if (res != pathParts[0])
                 {
                     if (pathParts.Length > 1)
-                        res = res + (res.Contains("?") ? "&" : "?") + pathParts[1];
+                        res = res + (res.Contains("?") ? "&" : "?") + HttpContext.Current.Server.UrlEncode(pathParts[1]);
                     HttpContext.Current.RewritePath(res);
                 }
             } catch{}

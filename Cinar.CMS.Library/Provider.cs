@@ -504,7 +504,7 @@ namespace Cinar.CMS.Library
             if (HttpContext.Current.Cache["StaticResource"] == null)
                 HttpContext.Current.Cache["StaticResource"] = Provider.Database.GetDictionary<string, int>("select Name, Id from StaticResource");
             if (HttpContext.Current.Cache["StaticResourceLang"] == null)
-                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string, string>("select concat(StaticResourceId,'_',LangId), Translation from StaticResourceLang");
+                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string, string>("select cast(concat(StaticResourceId,'_',LangId) as char(10)), Translation from StaticResourceLang");
         }
 
         [Description("Translates entity column name")]

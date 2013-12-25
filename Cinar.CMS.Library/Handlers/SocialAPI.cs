@@ -739,6 +739,18 @@ namespace Cinar.CMS.Library.Handlers
                 }.Save();
                 user.ContactCount = SocialAPI.GetUserFollowerCount(user.Id);
                 user.Save();
+
+                if (user.Settings.MailAfterFollow)
+                {
+                    string msg = String.Format(@"
+                                Merhaba {0},<br/><br/>
+                                {1} seni takip etti.<br/><br/>
+                                <a href=""http://{2}"">http://{2}</a>",
+                                user.FullName,
+                                Provider.User.FullName,
+                                Provider.Configuration.SiteAddress);
+                    Provider.SendMail(user.Email, Provider.User.FullName + " seni takip etti", msg);
+                }
             }
             else
             {
@@ -748,6 +760,7 @@ namespace Cinar.CMS.Library.Handlers
                     UserId = user.Id
                 }.Save();
             }
+
         }
 
     }
