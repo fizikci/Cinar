@@ -18,7 +18,7 @@ namespace Cinar.Database
         }
 
         void BeforeSave();
-        void AfterSave();
+        void AfterSave(bool isUpdate);
 
         string GetNameColumn();
         string GetNameValue();

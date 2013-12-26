@@ -25,9 +25,9 @@ namespace Cinar.CMS.Library.Entities
                 throw new Exception(Provider.TR("Mesaj güncellenemez"));
         }
 
-        public override void AfterSave()
+        public override void AfterSave(bool isUpdate)
         {
-            base.AfterSave();
+            base.AfterSave(isUpdate);
 
             PrivateLastMessage plm = Provider.Database.Read<PrivateLastMessage>("MailBoxOwnerId={0} AND UserId={1}", Provider.User.Id, this.ToUserId);
             if (plm == null)

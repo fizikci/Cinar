@@ -322,7 +322,7 @@ InnerHtml,32,<hr/>
             }
         }
         public virtual void BeforeSave() { }
-        public virtual void AfterSave() { }
+        public virtual void AfterSave(bool isUpdate) { }
 
         public string Serialize()
         {

@@ -55,7 +55,7 @@ namespace Cinar.Database
             
         }
 
-        public void AfterSave()
+        public void AfterSave(bool isUpdate)
         {
             
         }

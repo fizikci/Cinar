@@ -230,12 +230,12 @@ namespace Cinar.CMS.Library.Entities
             downloadPictureForFieldsThatStartsWithHttp();
         }
 
-        public override void AfterSave()
+        public override void AfterSave(bool isUpdate)
         {
-            base.AfterSave();
+            base.AfterSave(isUpdate);
             
             
-            if (Id==0)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
+            if (!isUpdate)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
             {
                 string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>
