@@ -174,11 +174,11 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        public override void AfterSave()
+        public override void AfterSave(bool isUpdate)
         {
-            base.AfterSave();
+            base.AfterSave(isUpdate);
 
-            if (Id==0)
+            if (!isUpdate)
             {
                 if (this.OriginalPostId > 0)
                 {

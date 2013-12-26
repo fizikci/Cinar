@@ -427,16 +427,16 @@ namespace Cinar.CMS.Library.Entities
                 }
         }
 
-        public override void AfterSave()
+        public override void AfterSave(bool isUpdate)
         {
-            base.AfterSave();
+            base.AfterSave(isUpdate);
 
             // Aktif content'te değişiklik olduysa tekrar okunmasını sağlayalım
             if (Provider.Content != null && Provider.Content.Id == this.Id)
                 Provider.Content = null;
 
             // etiketleri güncelleyelim
-            updateTags(Id>0);
+            updateTags(isUpdate);
         }
 
         protected override bool beforeDelete()

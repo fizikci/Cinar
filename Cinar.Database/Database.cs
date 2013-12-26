@@ -978,7 +978,9 @@ namespace Cinar.Database
 
                 entity.BeforeSave();
 
-                if (entity.Id == 0)
+                bool isUpdate = entity.Id > 0;
+
+                if (!isUpdate)
                 {
                     this.Insert(tbl.Name, EntityToHashtable(entity));
                     object id = this.GetValue("select max(" + GetIdColumnName(entity) + ") from [" + tbl.Name + "]");
@@ -989,7 +991,7 @@ namespace Cinar.Database
                 {
                     this.Update(tbl.Name, EntityToHashtable(entity));
                 }
-                entity.AfterSave();
+                entity.AfterSave(isUpdate);
 
                 this.Commit();
             }

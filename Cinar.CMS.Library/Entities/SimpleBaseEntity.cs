@@ -87,7 +87,7 @@ namespace Cinar.CMS.Library.Entities
             #endregion
             
         }
-        public virtual void AfterSave()
+        public virtual void AfterSave(bool isUpdate)
         {
             
         }
