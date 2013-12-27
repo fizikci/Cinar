@@ -1096,23 +1096,31 @@ namespace Cinar.CMS.Library.Handlers
             if (!url.StartsWith("http://"))
                 url = "http://" + url;
 
-            //HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
-            //web.OverrideEncoding = Encoding.UTF8;
-            //HtmlAgilityPack.HtmlDocument doc = web.Load(url);
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            using (System.Net.WebClient client = new System.Net.WebClient())
-            {
-                var html = client.DownloadString(url);
-                doc.LoadHtml(html);
-            }
-
-            doc.DocumentNode.Descendants()
-                .Where(n => n.Name == "script" || n.Name == "style")
-                .ToList()
-                .ForEach(n => n.Remove());
+            HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+            web.OverrideEncoding = Encoding.GetEncoding("windows-1254");
+            HtmlAgilityPack.HtmlDocument doc = web.Load(url);
 
             var result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
             string metin = "";
+            foreach (var node in result)
+            {
+                metin += node.InnerText;//Your desire text
+            }
+
+            if (metin.Contains('Ä'))
+            {
+                web = new HtmlAgilityPack.HtmlWeb();
+                web.OverrideEncoding = Encoding.UTF8;
+                doc = web.Load(url);
+
+                doc.DocumentNode.Descendants()
+                    .Where(n => n.Name == "script" || n.Name == "style")
+                    .ToList()
+                    .ForEach(n => n.Remove());
+            }
+
+            result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
+            metin = "";
             foreach (var node in result)
             {
                 metin += node.InnerText;//Your desire text
@@ -1139,7 +1147,7 @@ namespace Cinar.CMS.Library.Handlers
                                  select (new Uri(new Uri(url), x.Attributes["src"].Value)).ToString()).ToList<String>();
 
             context.Response.ContentType = "application/json";
-            context.Response.Write(JsonConvert.SerializeObject(new {text=metin, imgs=imgs, title=title, desc=desc}));
+            context.Response.Write(JsonConvert.SerializeObject(new { text = Provider.Server.HtmlDecode(metin), imgs = imgs, title = Provider.Server.HtmlDecode(title), desc = Provider.Server.HtmlDecode(desc) }));
             //context.Response.Write("{text:" + metin.ToJS() + ", imgs:" + imgs.ToJSON() + ", title:" + title.ToJS() + ", desc:" + desc.ToJS() + "}");
         }
 

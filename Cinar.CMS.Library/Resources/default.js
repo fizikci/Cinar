@@ -128,7 +128,7 @@ $(function () {
 							$(elm).html() +
 							'</div>' +
 							'</div>' +
-							'<div class="paging"  style="background-image:url(/external/icons/slide_next.png); background-position:left center;"></div>' +
+							'<div class="paging" style="background-image:url(/external/icons/slide_next.png); background-position:left center;"></div>' +
 							'<div style="clear:both"></div>' +
 							'<img src="/external/icons/play.png" class="playBtn"/>');
 
@@ -165,8 +165,8 @@ $(function () {
                     }
                 });
             });
-            $(elm).find('.paging').first().on('click', function () { slideShowSlide(elm, 'back'); });
-            $(elm).find('.paging').first().next().on('click', function () { slideShowSlide(elm); });
+            $(elm).find('.paging').first().on('click', function () { slideShowSlide(elm, 'back', true); });
+            $(elm).find('.paging').last().on('click', function () { slideShowSlide(elm, 'forward', true); });
         });
     // lightBox olayı
     if ($('.lightBox').length) {
@@ -258,7 +258,7 @@ $(function () {
 
             var elmTitle = $(elm).find('div.clTitle');
             links.append(elmTitle.remove());
-            elmTitle.on('mouseover', function () { currItem.hide(); $(elm).show(); currItem = elm; });
+            elmTitle.on('mouseover', function () { $(currItem).hide(); $(elm).show(); currItem = elm; });
 
             if (i > 0)
                 $(elm).hide();
@@ -314,7 +314,8 @@ function slideAllCollapse(items, dim) {
     }
 }
 
-function slideShowSlide(elm, dir) {
+function slideShowSlide(elm, dir, forceSlide) {
+    if (typeof (forceSlide) == 'undefined') forceSlide = false;
     if (elm.alreadySliding) return;
     elm.alreadySliding = true;
 
@@ -323,17 +324,17 @@ function slideShowSlide(elm, dir) {
     var dimID = getDimensions($(elm).find('.innerDiv'));
 
     if (leftID + dimID.width < dimCl.width + 60)
-	    $(elm).find('.innerDiv').animate({ left: 0 }, 1000, function () { elm.alreadySliding = false; });
+        $(elm).find('.innerDiv').animate({ left: 0 }, 1000, function () { elm.alreadySliding = false; });
     else if (dir == 'back') {
         if (leftID < 0)
-		    $(elm).find('.innerDiv').animate({ left: $(elm).find('.clipper').width() + 20 }, 1000, function () { elm.alreadySliding = false; });
+            $(elm).find('.innerDiv').animate({ left: "+=" + ($(elm).find('.clipper').width() + 20) + "px" }, 1000, function () { elm.alreadySliding = false; });
         else
-		    elm.alreadySliding = false;
+            elm.alreadySliding = false;
     } else
-	    $(elm).find('.innerDiv').animate({ left: "-="+($(elm).find('.clipper').width() + 20)+"px" }, 1000, function () { elm.alreadySliding = false; });
+        $(elm).find('.innerDiv').animate({ left: "-=" + ($(elm).find('.clipper').width() + 20) + "px" }, 1000, function () { elm.alreadySliding = false; });
 
     clearTimeout(elm.timeout);
-    if (elm.playing && !elm.mouseIsOver) {
+    if (elm.playing && (forceSlide || !elm.mouseIsOver)) {
         elm.timeout = setTimeout(function () { slideShowSlide(elm); }, 5000);
     }
 }
