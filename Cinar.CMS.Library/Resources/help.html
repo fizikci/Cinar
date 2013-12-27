@@ -886,6 +886,23 @@ jQuery(function(){
                 <div align="right">
                     <button onclick="execute(this)">Execute</button></div>
             </div>
+            <div class="codeSample">
+                <h3>Webden hızlı içerik yükleme :</h3>
+                <ul>
+                    <li>parseWebPageHtmlAsContent(callback) metodu ile bir web sayfasındaki içerik alınabilir</li>
+                    <li><b>callback:</b> Sayfadan elde edilen içerik bu fonksiyona parametre olarak verilir. {title:'...', desc:'...', text:'...', picture:'...'} şeklindedir.</li>
+                </ul>
+				Aşağıdaki kodu çalıştırdığınızda adresini girdiğiniz web sayfası içerik olarak sitenize eklenir. (Dikkat: Siteniz yayındaysa bu içerik görülebilir.) 
+                <pre class="code">parseWebPageHtmlAsContent(function(h){
+    var c = {CategoryId:1, Title:h.title, Description:h.desc, Metin:h.text, Picture:h.picture, };
+    saveEntity('Content', c, function(){
+        Windows.getFocusedWindow().close();
+        location.reload();
+    });                                                
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
         </div>
 
         <h1 id="p12">Button kullanımı ve ikonlar</h1>
