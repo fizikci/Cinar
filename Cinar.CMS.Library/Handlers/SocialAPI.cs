@@ -160,6 +160,7 @@ namespace Cinar.CMS.Library.Handlers
                     left join UserSettings us ON u.Id = us.UserId
                 WHERE 
                     us.IsInfoHidden <> 1 AND
+                    u.Visible = 1 AND
                     " + idPart + @" 
                 ORDER BY 
                     p.Id DESC
@@ -260,6 +261,7 @@ namespace Cinar.CMS.Library.Handlers
                     left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
+                    u.Visible = 1 AND
                     " + idPart + @" AND
                     p.InsertDate > DATE_SUB(curdate(), INTERVAL 1 MONTH)
                 ORDER BY 
@@ -323,6 +325,7 @@ namespace Cinar.CMS.Library.Handlers
                     left join Post po ON po.Id=p.OriginalPostId
                 WHERE 
                     p.InsertUserId = u.Id AND
+                    u.Visible = 1 AND
                     p.Metin like {0} AND
                     " + idPart + @" 
                 ORDER BY 
@@ -410,7 +413,8 @@ namespace Cinar.CMS.Library.Handlers
                     About 
                 from 
                     User
-                where 
+                where
+                    Visible = 1 AND 
                     Id in (
                         select 
                             InsertUserId 
@@ -446,6 +450,7 @@ namespace Cinar.CMS.Library.Handlers
                     Post p, User u
                 WHERE 
                     p.InsertUserId = u.Id AND
+                    u.Visible = 1 AND
                     (p.ReplyToPostId = {0} OR (p.ThreadId = {1} AND p.ThreadId>0)) AND
                     p.Id > {0}
                 ORDER BY 
@@ -474,6 +479,7 @@ namespace Cinar.CMS.Library.Handlers
                         Post p, User u
                     WHERE 
                         p.InsertUserId = u.Id AND
+                        u.Visible = 1 AND
                         p.Id = {0}"
                     , post.ReplyToPostId);
 
@@ -654,6 +660,7 @@ namespace Cinar.CMS.Library.Handlers
                 FROM 
                     UserContact fu, User u
                 WHERE 
+                    u.Visible = 1 AND
                     fu.InsertUserId = {0} AND
                     fu.UserId = u.Id AND
                     " + idPart + @" 
@@ -698,6 +705,7 @@ namespace Cinar.CMS.Library.Handlers
                 FROM 
                     Post p, User u, Notification n
                 WHERE 
+                    u.Visible = 1 AND
                     p.InsertUserId = u.Id AND
                     p.Id = n.PostId AND
                     n.InsertUserId = {0} AND
