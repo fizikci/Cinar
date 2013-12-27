@@ -266,6 +266,8 @@ namespace Cinar.CMS.Library.Handlers
             if (Provider.Request["currentCulture"] != null)
                 Provider.CurrentCulture = Provider.Request["currentCulture"];
 
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Provider.CurrentCulture);
+
             Provider.SetHttpContextUser();
             if (Provider.User.IsInRole("Designer") && !String.IsNullOrEmpty(Provider.Request["DesignMode"]))
                 Provider.DesignMode = Provider.Request["DesignMode"] == "On";
