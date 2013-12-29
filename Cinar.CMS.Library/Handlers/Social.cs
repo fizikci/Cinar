@@ -47,6 +47,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "updateLastOpenNotification":
                         updateLastOpenNotification();
                         break;
+                    case "deleteUserAvatar":
+                        deleteUserAvatar();
+                        break;
                     case "updateLastOpenPrivateMessage":
                         updateLastOpenPrivateMessage();
                         break;
@@ -170,6 +173,19 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        private void deleteUserAvatar()
+        {
+            Provider.User.Avatar = "";
+            Provider.User.Save();
+            if (Provider.User.Avatar == "")
+            {
+                context.Response.Write(new Result { Data = true }.ToJSON());
+            }
+            else {
+                context.Response.Write(new Result { IsError = true, ErrorMessage = "Avatar was not deleted." }.ToJSON());
+            }
+        }
+
         private void sendMessage()
         {
             string toUserNick = context.Request["toUserNick"];
@@ -182,7 +198,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
-
 
         private void updateLastOpenNotification()
         {
@@ -249,7 +264,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
-
 
         private void setMessageRead() { 
             
@@ -579,7 +593,6 @@ limit
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
-
 
         private void post()
         {

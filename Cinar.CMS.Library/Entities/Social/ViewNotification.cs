@@ -17,7 +17,6 @@ namespace Cinar.CMS.Library.Entities
         public DateTime InsertDate { get; set; }
         public NotificationTypes NotificationType { get; set; }
         public int PostId { get; set; }
-
         public bool New { get; set; }
     }
 }
