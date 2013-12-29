@@ -102,7 +102,8 @@ namespace Cinar.CMS.Library.Entities
             if (Id==0)
             {
                 this.InsertDate = DateTime.Now;
-                this.InsertUserId = Provider.User.Id;
+                if(this.InsertUserId==0)
+                    this.InsertUserId = Provider.User.Id;
             }
 
             #region if critical entity, log it
