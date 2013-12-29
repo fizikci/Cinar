@@ -17,6 +17,9 @@ namespace Cinar.CMS.Library.Entities
             LinkColor = "";
             BackgroundAlign = "";
             BackgroundLayout = "";
+            MailAfterFollow = true;
+            MailAfterPostReply = true;
+
         }
 
         [ColumnDetail(References=typeof(User), IsUnique=true)]
@@ -53,6 +56,9 @@ namespace Cinar.CMS.Library.Entities
         public bool MailAfterMessage { get; set; }
 
         public bool MailAfterPostReply { get; set; }
+
+        [ColumnDetail(ColumnType = DbType.VarChar, Length = 16)]
+        public AllowedMessageSenders AllowedMessageSenders { get; set; }
 
         public override void SetFieldsByPostData(NameValueCollection postData)
         {
@@ -95,5 +101,13 @@ namespace Cinar.CMS.Library.Entities
                 Provider.DeleteThumbFiles(cvUrlPath);
             }
         }
+
+    }
+
+    public enum AllowedMessageSenders
+    {
+        Everybody,
+        Nobody,
+        Followers
     }
 }

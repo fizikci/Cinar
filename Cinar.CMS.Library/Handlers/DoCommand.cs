@@ -1100,6 +1100,11 @@ namespace Cinar.CMS.Library.Handlers
             web.OverrideEncoding = Encoding.GetEncoding("windows-1254");
             HtmlAgilityPack.HtmlDocument doc = web.Load(url);
 
+            doc.DocumentNode.Descendants()
+                .Where(n => n.Name == "script" || n.Name == "style")
+                .ToList()
+                .ForEach(n => n.Remove());
+
             var result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
             string metin = "";
             foreach (var node in result)
@@ -1117,13 +1122,13 @@ namespace Cinar.CMS.Library.Handlers
                     .Where(n => n.Name == "script" || n.Name == "style")
                     .ToList()
                     .ForEach(n => n.Remove());
-            }
 
-            result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
-            metin = "";
-            foreach (var node in result)
-            {
-                metin += node.InnerText;//Your desire text
+                result = doc.DocumentNode.SelectNodes("//body//text()");//return HtmlCollectionNode
+                metin = "";
+                foreach (var node in result)
+                {
+                    metin += node.InnerText;//Your desire text
+                }
             }
 
             metin = metin.Replace("\r", "");

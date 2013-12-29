@@ -315,6 +315,8 @@ namespace Cinar.CMS.Library.Handlers
                     concat(u.Name,' ',u.Surname) as UserFullName,
                     p.Metin,
                     p.Picture,
+                    p.VideoId,
+                    p.VideoType,
                     p.InsertDate,
                     IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
                     IFNULL(po.LikeCount, p.LikeCount) as LikeCount,
@@ -360,10 +362,9 @@ namespace Cinar.CMS.Library.Handlers
         /// </summary>
         public static ViewProfileSummary GetUserProfileSummary(string userNick)
         {
-            int userId = Provider.User.Id;
             User user = Provider.Database.Read<User>("Nick={0}", userNick);
-            if (user != null)
-                userId = user.Id;
+            if (user == null)
+                throw new Exception(Provider.TR("Böyle biri yok"));
 
             ViewProfileSummary profileSummary = Provider.Database.Read<ViewProfileSummary>(@"
             select 
@@ -374,6 +375,7 @@ namespace Cinar.CMS.Library.Handlers
 	            u.About as Summary, 
 	            u.Web as Website,
                 us.CoverPicture,
+                us.AllowedMessageSenders,
 	            (select count(Id) from UserContact where UserId=u.Id and InsertUserId={1}) as IsFollowing,
 	            (select count(Id) from UserContact where UserId={1} and InsertUserId=u.Id) as IsFollower,
                 (select count(Id) from BlockedUser where UserId=u.Id and InsertUserId={1}) as IsBlocked,
@@ -381,7 +383,7 @@ namespace Cinar.CMS.Library.Handlers
 	            (select count(Id) from UserContact where InsertUserId=u.Id) as FollowingCount,
 	            (select count(Id) from UserContact where UserId=u.Id) as FollowerCount
             from user as u left join usersettings us on us.UserId=u.Id
-            where u.Id= {0}", userId, Provider.User.Id);
+            where u.Id= {0}", user.Id, Provider.User.Id);
 
             profileSummary.FollowersIFollow = Provider.Database.ReadList<ViewMiniUserInfo>(@"
             select Nick, concat(Name,' ',Surname) as FullName
