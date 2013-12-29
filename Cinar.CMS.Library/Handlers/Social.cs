@@ -47,8 +47,17 @@ namespace Cinar.CMS.Library.Handlers
                     case "updateLastOpenNotification":
                         updateLastOpenNotification();
                         break;
+                    case "confirmFollower":
+                        confirmFollower();
+                        break;
                     case "deleteUserAvatar":
                         deleteUserAvatar();
+                        break;
+                    case "deleteUserBackgroundPicture":
+                        deleteUserBackgroundPicture();
+                        break;
+                    case "deleteUserCoverPicture":
+                        deleteUserCoverPicture();
                         break;
                     case "updateLastOpenPrivateMessage":
                         updateLastOpenPrivateMessage();
@@ -173,6 +182,32 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        private void confirmFollower()
+        {
+            int rId = 0;
+            string requesterId = context.Request["rId"];
+            if (int.TryParse(requesterId, out rId))
+            {
+                Notification n = Provider.Database.Read<Notification>(@"select top 1 * from Notification 
+                                                                    where InsertUserId = {0} and UserId = {1} 
+                                                                    and NotificationType = 4 order by Id desc"
+                                                                        , rId, Provider.User.Id);
+                if (n != null)
+                {
+                    new UserContact { UserId = Provider.User.Id, InsertUserId = rId }.Save();
+                    context.Response.Write(new Result { Data = true }.ToJSON());
+                }
+                else
+                {
+                    context.Response.Write(new Result { IsError = true, ErrorMessage = Provider.TR("Böyle bir talep bulunamadı. Sayfanızı yenileyin.") }.ToJSON());
+                }
+            }
+            else
+            {
+                context.Response.Write(new Result { IsError = true, ErrorMessage = Provider.TR("Şu anda takip işlemi yapılamıyor. Lütfen daha sonra tekrar deneyin.") }.ToJSON());
+            }
+        }
+
         private void deleteUserAvatar()
         {
             Provider.User.Avatar = "";
@@ -181,8 +216,35 @@ namespace Cinar.CMS.Library.Handlers
             {
                 context.Response.Write(new Result { Data = true }.ToJSON());
             }
-            else {
+            else
+            {
                 context.Response.Write(new Result { IsError = true, ErrorMessage = "Avatar was not deleted." }.ToJSON());
+            }
+        }
+        private void deleteUserBackgroundPicture()
+        {
+            Provider.User.Settings.BackgroundPicture = "";
+            Provider.User.Settings.Save();
+            if (Provider.User.Settings.BackgroundPicture == "")
+            {
+                context.Response.Write(new Result { Data = true }.ToJSON());
+            }
+            else
+            {
+                context.Response.Write(new Result { IsError = true, ErrorMessage = "Background picture was not deleted." }.ToJSON());
+            }
+        }
+        private void deleteUserCoverPicture()
+        {
+            Provider.User.Settings.CoverPicture = "";
+            Provider.User.Settings.Save();
+            if (Provider.User.Settings.CoverPicture == "")
+            {
+                context.Response.Write(new Result { Data = true }.ToJSON());
+            }
+            else
+            {
+                context.Response.Write(new Result { IsError = true, ErrorMessage = "Cover picture was not deleted." }.ToJSON());
             }
         }
 
