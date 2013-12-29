@@ -946,6 +946,15 @@ namespace Cinar.CMS.Library
                     return System.Web.Configuration.WebConfigurationManager.AppSettings;
             }
         }
+
+        [Description("Returns HttpContext.Current")]
+        public static HttpContext HttpContext
+        {
+            get
+            {
+                return HttpContext.Current;
+            }
+        }
         [Description("Returns HttpContext.Current.Server")]
         public static HttpServerUtility Server
         {

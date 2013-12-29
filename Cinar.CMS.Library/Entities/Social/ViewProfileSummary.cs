@@ -17,6 +17,7 @@ namespace Cinar.CMS.Library.Entities
 	    u.About as Summary, 
 	    u.Web as Website,
         us.CoverPicture,
+        us.AllowedMessageSenders,
         (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
         (select count(Id) from UserContact where InsertUserId=u.Id) as IsFollowing,
         (select count(Id) from BlockedUser where InsertUserId=u.Id) as IsBlocked,
@@ -42,5 +43,6 @@ namespace Cinar.CMS.Library.Entities
         public int FollowingCount   { get; set; }
         public int FollowerCount { get; set; }
         public List<ViewMiniUserInfo> FollowersIFollow { get; set; }
+        public string AllowedMessageSenders { get; set; }
     }
 }

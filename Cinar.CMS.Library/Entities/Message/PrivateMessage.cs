@@ -12,6 +12,14 @@ namespace Cinar.CMS.Library.Entities
 
         public int ToUserId { get; set; }
 
+        public User ToUser
+        {
+            get
+            {
+                return Provider.Database.Read<User>(ToUserId);
+            }
+        }
+
         public bool Read { get; set; }
 
         public bool DeletedBySender { get; set; }
@@ -36,6 +44,20 @@ namespace Cinar.CMS.Library.Entities
             plm.Save();
 
             PrivateLastMessage plm2 = Provider.Database.Read<PrivateLastMessage>("MailBoxOwnerId={0} AND UserId={1}", this.ToUserId, Provider.User.Id);
+            if((plm2==null || plm2.UpdateDate<DateTime.Now.AddHours(-2)) && ToUser.Settings.MailAfterMessage)
+            {
+                string msg = String.Format(@"
+                                Merhaba {0},<br/><br/>
+                                {1} size özel mesaj gönderdi:<br/><br/>
+                                <i>{2}</i><br/><br/>
+                                <a href=""http://{3}"">http://{3}</a>",
+                this.ToUser.FullName,
+                Provider.User.FullName,
+                this.Message,
+                Provider.Configuration.SiteAddress);
+                Provider.SendMail(this.ToUser.Email, Provider.User.FullName + " size özel mesaj gönderdi", msg);
+            }
+
             if (plm2 == null)
                 plm2 = new PrivateLastMessage { MailBoxOwnerId = this.ToUserId, UserId = Provider.User.Id };
             plm2.Summary = this.Message.StrCrop(30);
