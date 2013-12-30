@@ -168,6 +168,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "searchPeopleAndTopics":
                         searchPeopleAndTopics();
                         break;
+                    case "getAllNotifications":
+                        getAllNotifications();
+                        break;
                     default:
                         break;
                 }
@@ -179,6 +182,31 @@ namespace Cinar.CMS.Library.Handlers
                     IsError = true,
                     ErrorMessage = ex.Message
                 }.ToJSON());
+            }
+        }
+
+        private void getAllNotifications()
+        {
+            List<ViewNotification> nots = Provider.Database.ReadList<ViewNotification>(@"
+                select 
+                    n.UserId AS NotifiedUserId,
+                    0 AS New,
+                    u.Nick AS UserName,
+                    u.Avatar AS UserPicture,
+                    n.InsertDate AS InsertDate,
+                    n.InsertUserId AS InsertUserId,
+                    n.NotificationType AS NotificationType,
+                    n.PostId AS PostId 
+                from 
+                    notification n, user u
+                where 
+                    u.Id = n.InsertUserId and
+                    n.UserId = {0}
+                Order By n.InsertDate desc", Provider.User.Id);
+
+            if (nots.Count != 0)
+            {
+                context.Response.Write(new Result { Data = nots }.ToJSON());
             }
         }
 
