@@ -832,11 +832,13 @@ limit
         private void getPostRelatedData()
         {
             int pid = 0;
+            int limit = 0; 
             int.TryParse(context.Request["pid"], out pid);
+            int.TryParse(context.Request["limit"], out limit);
             if (pid == 0)
                 throw new Exception("pid expected");
 
-            context.Response.Write(new Result { Data = SocialAPI.GetPostRelatedData(pid) }.ToJSON());
+            context.Response.Write(new Result { Data = SocialAPI.GetPostRelatedData(pid, limit) }.ToJSON());
         }
 
         private void followContacts()

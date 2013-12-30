@@ -401,7 +401,7 @@ namespace Cinar.CMS.Library.Handlers
         /// <summary>
         /// Bir paylaşımla ilgili diğer bilgiler: RelatedUsers, Replies gibi.
         /// </summary>
-        public static ViewPostRelatedData GetPostRelatedData(int pid)
+        public static ViewPostRelatedData GetPostRelatedData(int pid, int limit)
         {
             var post = Provider.Database.Read<Post>(pid);
             var res = new ViewPostRelatedData();
@@ -426,17 +426,18 @@ namespace Cinar.CMS.Library.Handlers
                             PostId={0} AND 
                             (NotificationType={1} OR NotificationType={2})
                     )
-                limit 5",
+                " + (limit == 0 ? "" : "limit {3}"),
                 (post.OriginalPost ?? post).Id,
                 NotificationTypes.Shared,
-                NotificationTypes.Liked);
+                NotificationTypes.Liked,
+                limit);
 
             foreach (var u in res.RelatedUsers)
                 u.Avatar = Provider.GetThumbPath(u.Avatar, 24, 24, false);
 
 
             res.Replies = Provider.Database.ReadList<ViewPost>(@"
-                SELECT TOP 5
+                SELECT 
                     p.Id,
                     u.Avatar as UserAvatar,
                     u.Nick as UserNick,
@@ -456,8 +457,9 @@ namespace Cinar.CMS.Library.Handlers
                     (p.ReplyToPostId = {0} OR (p.ThreadId = {1} AND p.ThreadId>0)) AND
                     p.Id > {0}
                 ORDER BY 
-                    p.Id"
-                , (post.OriginalPost ?? post).Id, post.ThreadId > 0 ? post.ThreadId : pid);
+                    p.Id
+                " + (limit == 0 ? "" : "limit {2}")
+                , (post.OriginalPost ?? post).Id, post.ThreadId > 0 ? post.ThreadId : pid, limit);
 
             foreach (var viewPost in res.Replies)
                 viewPost.UserAvatar = Provider.GetThumbPath(viewPost.UserAvatar, 32, 32, false);
