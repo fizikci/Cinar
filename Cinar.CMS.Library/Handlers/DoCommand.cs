@@ -562,6 +562,7 @@ namespace Cinar.CMS.Library.Handlers
             if (user != null)
             {
                 // login başarılı, üyelik sayfasına gönderelim.
+                user.Visible = true;
                 Provider.User = user;
                 Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
                 context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.AfterRememberPasswordPage : Provider.Configuration.AfterUserActivationPage);

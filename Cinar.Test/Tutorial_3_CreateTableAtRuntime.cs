@@ -12,17 +12,17 @@ namespace Cinar.Test
         public static void Run()
         {
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
-            Database.Database db = new Database.Database(DatabaseProvider.MySQL, "localhost", "itdnm", "root", "bk", 30, null, true);
+            Database.Database db = new Database.Database("", DatabaseProvider.SQLServer);
             /*
             Table table = db.CreateTableMetadataForType(typeof(Ogrenci));
 
             Console.WriteLine(db.GetTableDDL(table));
-
+            */
             Ogrenci ogr = new Ogrenci();
             ogr.Ad = "Mehmet";
-            ogr.TcKimlikNo = "98765432101";
+            ogr.TcKimlikNo = "987632454";
             db.Save(ogr);
-
+            /*
             Veli v = new Veli();
             v.Ad = "Bülent";
             v.TcKimlikNo = "756867";
@@ -82,6 +82,17 @@ namespace Cinar.Test
             return ht;
         }
         #endregion
+
+
+        public void BeforeSave()
+        {
+            
+        }
+
+        public void AfterSave(bool isUpdate)
+        {
+            
+        }
     }
 
     public class Veli : Ogrenci { }
