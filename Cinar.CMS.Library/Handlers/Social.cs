@@ -767,6 +767,9 @@ limit
 
             Post post = Provider.Database.Read<Post>(pid);
 
+            if ((Provider.Database.Read<User>(post.InsertUserId)).Settings.NeedsConfirmation)
+                throw new Exception("This user does not let his posts to be shared.");
+
             Post p = new Post
             {
                 LangId = Provider.CurrentLanguage.Id,
