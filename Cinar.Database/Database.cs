@@ -736,13 +736,13 @@ namespace Cinar.Database
             if (tbl.HasAutoIncrementColumn())
             {
                 if (provider == DatabaseProvider.SQLServer)
-                    sb.AppendLine("SELECT @@identity;");
+                    sb.AppendLine("SELECT SCOPE_IDENTITY();");
                 if (provider == DatabaseProvider.MySQL)
                     sb.AppendLine("SELECT LAST_INSERT_ID();");
                 if (provider == DatabaseProvider.SQLite)
                     sb.AppendLine("SELECT LAST_INSERT_ROWID();"); //-1 yapmak gerekebilir, öyle bişey vardı sanki
                 if (provider == DatabaseProvider.PostgreSQL)
-                    ; //TODO: Get auto increment for Postgres
+                    sb.AppendLine("select max(\"" + tbl.PrimaryColumn.Name + "\") from \"" + tbl.Name + "\";"); //TODO: Get auto increment for Postgres
             }
 
             return editSQLAsForProvider(sb.ToString());
@@ -946,13 +946,15 @@ namespace Cinar.Database
         {
             PropertyInfo pi = entityType.GetProperty("Id");
             Column c = GetColumnForProperty(pi);
-            Table t = GetTableForEntityType(entityType);
             if (c != null)
                 return c.Name;
-            else if (t!=null && t.PrimaryColumn != null)
-                return t.PrimaryColumn.Name;
-            else
-                return "Id";
+            else {
+                Table t = GetTableForEntityType(entityType);
+                if (t != null && t.PrimaryColumn != null)
+                    return t.PrimaryColumn.Name;
+                else
+                    return "Id";
+            }
         }
 
         // ENTITY SAVE
@@ -982,10 +984,10 @@ namespace Cinar.Database
 
                 if (!isUpdate)
                 {
-                    this.Insert(tbl.Name, EntityToHashtable(entity));
-                    object id = this.GetValue("select max(" + GetIdColumnName(entity) + ") from [" + tbl.Name + "]");
-                    if (id == null) id = 0;
-                    entity.Id = Convert.ToInt32(id);
+                    entity.Id = this.Insert(tbl.Name, EntityToHashtable(entity));
+                    //object id = this.GetValue("select max(" + GetIdColumnName(entity) + ") from [" + tbl.Name + "]");
+                    //if (id == null) id = 0;
+                    //entity.Id = Convert.ToInt32(id);
                 }
                 else
                 {
