@@ -958,22 +958,33 @@ function openEntityListForm(entityName, caption, extraFilter, forSelect, selectC
 	if(entityName=='Content'){
 		readEntityList('Lang', 'Id<>'+defaultLangId, function(langs){
 			for(var i=0; i<langs.length; i++){
-				var lang = langs[i];
-				win['form'].addCommand({id: lang.Name, icon: 'flag_red', name: lang.Name, handler: function () {
+				var langId = langs[i].Id;
+				var langName = langs[i].Name;
+				win['form'].addCommand({id: langName, icon: 'flag_red', name: langName, handler: function () {
 					var contentId = this.getSelectedEntityId();
-					readEntityList('ContentLang', 'ContentId='+contentId+' AND LangId='+lang.Id, function(cl){
+					var langId2 = langId, langName2 = langName;
+					readEntityList('ContentLang', 'ContentId='+contentId+' AND LangId='+langId2, function(cl){
 						openEntityEditForm({
 							entityName: 'ContentLang',
 							id: cl.length>0 ? cl[0].Id : 0,
-							filter: 'ContentId='+contentId+' AND LangId='+lang.Id,
-							title: lang.Name + ' Çeviri'
+							filter: 'ContentId='+contentId+' AND LangId='+langId2,
+							title: langName2 + ' Çeviri'
 						});
 					});
 				}});
 			}
 		}, 'Name');
 	}
-	
+	if(entityName=='User'){
+	    options.commands.push({id: 'LoginWith', icon: 'user', name: 'Login with...', handler: function () {
+	        var userId = this.getSelectedEntityId();
+	        var ths = this;
+	        readEntity('User', userId, function(u){
+				if(confirm('Are you sure to change your login session?'))
+					location.href = '/LoginWithKeyword.ashx?keyword='+u.Keyword;
+			});
+        }});
+	}	
 	if(extraCommands){
 		if(extraCommands.length)
 			for(var i=0; i<extraCommands.length; i++) options.commands.push(extraCommands[i]);
