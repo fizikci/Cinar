@@ -1340,7 +1340,11 @@ namespace Cinar.Database
             Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
             foreach (DataRow dr in dt.Rows)
             {
-                TKey key = (TKey)Convert.ChangeType(dr[0], typeof(TKey));
+                TKey key;
+                if (typeof(TKey).IsEnum && dr.Table.Columns[0].DataType == typeof(string))
+                    key = (TKey)Enum.Parse(typeof(TKey), dr[0].ToString());
+                else
+                    key = (TKey)Convert.ChangeType(dr[0], typeof(TKey));
                 if (!dict.ContainsKey(key))
                     dict.Add(key, (TValue)Convert.ChangeType(dr[1], typeof(TValue)));
             }

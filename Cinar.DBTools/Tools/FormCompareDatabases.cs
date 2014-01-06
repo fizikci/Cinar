@@ -73,6 +73,12 @@ namespace Cinar.DBTools.Tools
             foreach (Table tbl in db1.Tables.OrderBy(t => t.Name))
             {
                 sb1.AppendLine(tbl.Name);
+                sb1.AppendLine();
+                if (cbCount.Checked)
+                    sb1.AppendLine("\tRow Count: " + db1.GetValue("select count(*) from [" + tbl.Name + "]"));
+                if (cbMaxId.Checked && tbl.PrimaryColumn != null)
+                    sb1.AppendLine("\tMax Id: " + db1.GetValue("select max([" + tbl.PrimaryColumn.Name + "]) from [" + tbl.Name + "]"));
+                sb1.AppendLine();
                 foreach (Column f in tbl.Columns.OrderBy(f => f.Name))
                 {
                     string fStr = "";

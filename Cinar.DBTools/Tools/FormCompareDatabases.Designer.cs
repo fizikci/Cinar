@@ -37,6 +37,8 @@
             this.cbType = new System.Windows.Forms.CheckBox();
             this.cbLength = new System.Windows.Forms.CheckBox();
             this.cbNullable = new System.Windows.Forms.CheckBox();
+            this.cbCount = new System.Windows.Forms.CheckBox();
+            this.cbMaxId = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // cbDstDb
@@ -70,7 +72,8 @@
             // 
             // btnCompare
             // 
-            this.btnCompare.Location = new System.Drawing.Point(770, 14);
+            this.btnCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCompare.Location = new System.Drawing.Point(932, 14);
             this.btnCompare.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Size = new System.Drawing.Size(87, 26);
@@ -81,13 +84,13 @@
             // 
             // panel
             // 
-            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel.Location = new System.Drawing.Point(14, 48);
             this.panel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(950, 514);
+            this.panel.Size = new System.Drawing.Size(1005, 514);
             this.panel.TabIndex = 7;
             // 
             // cbName
@@ -134,11 +137,35 @@
             this.cbNullable.Text = "Nullable";
             this.cbNullable.UseVisualStyleBackColor = true;
             // 
+            // cbCount
+            // 
+            this.cbCount.AutoSize = true;
+            this.cbCount.Location = new System.Drawing.Point(744, 18);
+            this.cbCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbCount.Name = "cbCount";
+            this.cbCount.Size = new System.Drawing.Size(70, 19);
+            this.cbCount.TabIndex = 45;
+            this.cbCount.Text = "count(*)";
+            this.cbCount.UseVisualStyleBackColor = true;
+            // 
+            // cbMaxId
+            // 
+            this.cbMaxId.AutoSize = true;
+            this.cbMaxId.Location = new System.Drawing.Point(820, 18);
+            this.cbMaxId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbMaxId.Name = "cbMaxId";
+            this.cbMaxId.Size = new System.Drawing.Size(66, 19);
+            this.cbMaxId.TabIndex = 46;
+            this.cbMaxId.Text = "max(Id)";
+            this.cbMaxId.UseVisualStyleBackColor = true;
+            // 
             // FormCompareDatabases
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(978, 576);
+            this.ClientSize = new System.Drawing.Size(1033, 576);
+            this.Controls.Add(this.cbMaxId);
+            this.Controls.Add(this.cbCount);
             this.Controls.Add(this.cbNullable);
             this.Controls.Add(this.cbLength);
             this.Controls.Add(this.cbType);
@@ -168,5 +195,7 @@
         private System.Windows.Forms.CheckBox cbType;
         private System.Windows.Forms.CheckBox cbLength;
         private System.Windows.Forms.CheckBox cbNullable;
+        private System.Windows.Forms.CheckBox cbCount;
+        private System.Windows.Forms.CheckBox cbMaxId;
     }
 }
