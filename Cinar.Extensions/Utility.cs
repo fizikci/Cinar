@@ -1382,13 +1382,21 @@ namespace System
 
             switch (val.GetType().Name)
             {
+                case "Char":
                 case "String":
                     return "\"" + Utility.ToHTMLString(val.ToString()) + "\"";
                 case "Int16":
                 case "Int32":
                 case "Int64":
                 case "Decimal":
-                    return val.ToString();
+                case "Single":
+                case "Double":
+                case "Byte":
+                case "SByte":
+                case "UInt32":
+                case "UInt64":
+                case "UInt16":
+                    return val.ToString().Replace(",", ".");
                 case "DateTime":
                     if (val.Equals(DateTime.MinValue)) val = new DateTime(1970, 1, 1);
                     DateTime d = (DateTime)val;
