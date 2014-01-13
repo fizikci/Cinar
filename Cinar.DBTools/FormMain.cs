@@ -276,6 +276,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuToolsQScriptSPHelpText, Argument=SQLResources.SQLSPHelpText},
                                          new CommandTrigger{ Control = menuToolsQScriptSearhAllStringFields, Argument=SQLResources.SQLSearhAllStringFields},
                                          new CommandTrigger{ Control = menuToolsQScriptSQLTransferTableSQLGenerator, Argument=SQLResources.SQLTransferTableSQLGenerator},
+                                         new CommandTrigger{ Control = menuToolsQScriptDataTableToStringTable, Argument=SQLResources.SQLDataTableToStringTable},
                                      }
                                  },
                     #endregion

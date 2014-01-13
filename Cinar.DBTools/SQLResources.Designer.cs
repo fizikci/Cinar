@@ -272,6 +272,18 @@ namespace Cinar.DBTools {
         
         /// <summary>
         ///   Looks up a localized string similar to $
+        ///var dt = db.GetDataTable(&quot;_select_statement_&quot;);
+        ///echo(Utility.ToStringTable(dt));
+        ///$.
+        /// </summary>
+        internal static string SQLDataTableToStringTable {
+            get {
+                return ResourceManager.GetString("SQLDataTableToStringTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $
         ///foreach(table in db.Tables)
         ///    echo(&apos;truncate table [&apos; + table.Name + &apos;];\r\n&apos;);
         ///$.
