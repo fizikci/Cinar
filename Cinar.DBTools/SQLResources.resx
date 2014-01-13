@@ -808,4 +808,10 @@ while(dt!=null &amp;&amp; dt.Rows.Count&gt;0){
 }
 $</value>
   </data>
+  <data name="SQLDataTableToStringTable" xml:space="preserve">
+    <value>$
+var dt = db.GetDataTable("_select_statement_");
+echo(Utility.ToStringTable(dt));
+$</value>
+  </data>
 </root>
