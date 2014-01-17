@@ -620,8 +620,17 @@ namespace Cinar.CMS.Library.Handlers
                 // kullanıcı rollerini değiştirmeye izin vermeyelim
                 if (user.Id > 0) 
                     user.Roles = Provider.Database.GetString("select Roles from User where Id = {0}", user.Id);
-                
-                user.Save();
+
+                try
+                {
+                    user.Save();
+                }
+                catch (Exception ex) {
+                    errorList.Add(Provider.TR("Bu email adresi kullanılıyor ") + (ex.Message + (ex.InnerException!=null ? ex.InnerException.Message : "")));
+                    context.Session["membershipErrors"] = errorList;
+                    context.Response.Redirect(Provider.Configuration.MembershipFormPage + "?st=Error");
+                }
+
                 context.Response.Redirect(Provider.Configuration.AfterMembershipPage + "?st=" + st);
             }
             else

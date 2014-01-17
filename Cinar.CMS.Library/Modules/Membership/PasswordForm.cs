@@ -17,7 +17,7 @@ namespace Cinar.CMS.Library.Modules
             sb.AppendFormat("<form id=\"fPass\" method=\"post\" action=\"\" onsubmit=\"runModuleMethod('PasswordForm',{0},'SendPassword',$(this).serialize(true),passwordSent); return false;\">", this.Id);
             sb.AppendFormat("<div class=\"passInfoLabel\">{0}</div>", infoLabel);
             sb.AppendFormat("<div class=\"passEmailLabel\">{0}</div>", emailLabel);
-            sb.AppendFormat("<input class=\"passEmailInput\" type=\"text\" name=\"email\"/>");
+            sb.AppendFormat("<input class=\"passEmailInput\" type=\"text\" name=\"email\" placeholder=\"Email\"/>");
             sb.AppendFormat("<input class=\"passSubmitButton\" type=\"submit\" value=\"{0}\"/>", Provider.GetModuleResource("Send"));
             sb.AppendFormat("</form>");
 
