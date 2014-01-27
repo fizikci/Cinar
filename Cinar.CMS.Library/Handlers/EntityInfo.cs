@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.ComponentModel;
 using System.IO;
+using Cinar.CMS.Library.Other;
+using System.Configuration;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -25,8 +27,24 @@ namespace Cinar.CMS.Library.Handlers
             get { return "Editor"; }
         }
 
+        private IDatabase currentDatabase = null;
+
         public override void ProcessRequest()
         {
+            currentDatabase = Provider.Database;
+
+            CinarDatabaseSection config = ConfigurationManager.GetSection("CinarOtherSites") as CinarDatabaseSection;
+
+            if (!string.IsNullOrWhiteSpace(context.Request["selected_site"]))
+            {
+                var site = config.Sites[context.Request["selected_site"]];
+                if (site == null)
+                    throw new Exception("Couldnt find the site " + context.Request["selected_site"] + " in web.config");
+
+                currentDatabase = new Database.Database(site.SqlConnection, site.SqlProvider);
+            }
+
+
             switch (context.Request["method"])
             {
                 case "getList":
@@ -159,8 +177,8 @@ namespace Cinar.CMS.Library.Handlers
         private void getTreeList()
         {
             int catId = Int32.Parse(context.Request["catId"]);
-            DataTable dtCats = Provider.Database.GetDataTable("select Id, Title from Content where CategoryId={0} and ClassName='Category' order by Title", catId) ?? new DataTable();
-            DataTable dtCons = Provider.Database.GetDataTable("select top 10 Id, Title from Content where CategoryId={0} and ClassName<>'Category' order by InsertDate desc", catId) ?? new DataTable();
+            DataTable dtCats = currentDatabase.GetDataTable("select Id, Title from Content where CategoryId={0} and ClassName='Category' order by Title", catId) ?? new DataTable();
+            DataTable dtCons = currentDatabase.GetDataTable("select top 10 Id, Title from Content where CategoryId={0} and ClassName<>'Category' order by InsertDate desc", catId) ?? new DataTable();
 
             string[] items = new string[dtCats.Rows.Count + dtCons.Rows.Count];
             int i = 0;
@@ -286,7 +304,7 @@ namespace Cinar.CMS.Library.Handlers
             string fieldName = context.Request["fieldName"];
             string value = context.Request["value"];
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             PropertyInfo pi = entity.GetType().GetProperty(fieldName);
             object val = Convert.ChangeType(value, pi.PropertyType);
             pi.SetValue(entity, val, null);
@@ -306,7 +324,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             if (entity != null)
                 entity.Delete();
         }
@@ -322,14 +340,14 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
 
             StringBuilder sb = new StringBuilder();
             sb.Append("<table>");
             sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.Id"), entity.Id);
-            sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.InsertUserId"), Provider.Database.GetValue("select Nick from User where Id={0}", entity.InsertUserId));
+            sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.InsertUserId"), currentDatabase.GetValue("select Nick from User where Id={0}", entity.InsertUserId));
             sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.InsertDate"), entity.InsertDate);
-            sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.UpdateUserId"), Provider.Database.GetValue("select Nick from User where Id={0}", entity.UpdateUserId));
+            sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.UpdateUserId"), currentDatabase.GetValue("select Nick from User where Id={0}", entity.UpdateUserId));
             sb.AppendFormat("<tr><td>{0}</td><td>: {1}</td></tr>", Provider.GetResource("BaseEntity.UpdateDate"), entity.UpdateDate);
             sb.Append("</table>");
 
@@ -356,7 +374,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             entity.SetFieldsByPostData(context.Request.Form);
             entity.Save();
             context.Response.Write("OK");
@@ -380,7 +398,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             context.Response.Write(entity.GetPropertyEditorJSON());
         }
 
@@ -430,7 +448,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             context.Response.Write(entity.GetNameValue());
         }
         private void getEntityId()
@@ -460,7 +478,7 @@ namespace Cinar.CMS.Library.Handlers
 
             string where = "where " + (String.IsNullOrEmpty(filter) ? "1=1" : "(" + filter + ")");
 
-            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select * from [" + entityName + "] " + where + " order by " + orderBy + (orderAsc=="1"?"":" desc"), filterParser.GetParams());
+            IDatabaseEntity[] entities = currentDatabase.ReadList(tip, "select * from [" + entityName + "] " + where + " order by " + orderBy + (orderAsc=="1"?"":" desc"), filterParser.GetParams());
 
             context.Response.Write(entities.ToJSON());
         }
@@ -475,7 +493,7 @@ namespace Cinar.CMS.Library.Handlers
                 return;
             }
 
-            BaseEntity entity = (BaseEntity)Provider.Database.Read(Provider.GetEntityType(entityName), mid);
+            BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             context.Response.Write(entity.ToJSON());
         }
 
@@ -487,7 +505,7 @@ namespace Cinar.CMS.Library.Handlers
                 int.TryParse(context.Request["contentId"], out contentId);
                 if (contentId <= 0)
                     throw new Exception("content belirsiz");
-                Content c = Provider.Database.Read<Content>(contentId);
+                Content c = currentDatabase.Read<Content>(contentId);
 
                 string folderName = "/UserFiles/aktor/"+c.InsertDate.ToString("yyyyMM")+"/"+contentId;
                 string path = Provider.MapPath(folderName);
@@ -522,7 +540,7 @@ namespace Cinar.CMS.Library.Handlers
             int[] ids = sortOrder.SplitWithTrim(',').Select(s => int.Parse(s)).ToArray();
 
             for (int i = 0; i < ids.Length; i++)
-                Provider.Database.ExecuteNonQuery("update ["+entityName+"] set [OrderNo]={0} where Id={1}", i, ids[i]);
+                currentDatabase.ExecuteNonQuery("update ["+entityName+"] set [OrderNo]={0} where Id={1}", i, ids[i]);
 
             context.Response.Write("OK");
         }
