@@ -198,7 +198,7 @@ namespace Cinar.CMS.Library
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(Provider.Request["ShowExecutionTime"]);
+                return DevelopmentMode || !string.IsNullOrWhiteSpace(Provider.Request["ShowExecutionTime"]);
             }
         }
         [Description("When development mode is on, the html output is more verbose for the developer. It's set from web.config.")]
@@ -1738,7 +1738,7 @@ namespace Cinar.CMS.Library
                 Content content = (Content)Provider.CreateEntity("Content");
                 content.SetFieldsByPostData(Provider.Request.Form);
 
-                if (content.ClassName == "Article")
+                if (content.ClassName == "Content")
                 {
                     string authorName = Provider.Request.Form["Author"];
                     if (string.IsNullOrEmpty(authorName))

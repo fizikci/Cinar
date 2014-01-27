@@ -156,6 +156,7 @@
     <Compile Include="Modules\Newspaper\Manset.cs" />
     <Compile Include="Modules\Newspaper\MansetByGrouping.cs" />
     <Compile Include="Modules\Social\LastPrivateMessages.cs" />
+    <Compile Include="Other\CinarDatabaseSettings.cs" />
     <Compile Include="SocialAuthNet\BusinessObjects\Album.cs" />
     <Compile Include="SocialAuthNet\BusinessObjects\Contact.cs" />
     <Compile Include="SocialAuthNet\BusinessObjects\Enums.cs" />
