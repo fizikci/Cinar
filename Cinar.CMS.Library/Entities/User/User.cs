@@ -332,5 +332,10 @@ namespace Cinar.CMS.Library.Entities
                 return us;
             }
         }
+
+        public bool HasContact(int userId)
+        {
+            return Provider.Database.GetInt("select count(*) from UserContact where UserId={0} AND InsertUserId={1}", userId, Provider.User.Id) > 0;
+        }
     }
 }
