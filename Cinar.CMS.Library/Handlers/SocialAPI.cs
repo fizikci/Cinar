@@ -376,6 +376,7 @@ namespace Cinar.CMS.Library.Handlers
 	            u.Web as Website,
                 us.CoverPicture,
                 us.AllowedMessageSenders,
+                us.NeedsConfirmation,
 	            (select count(Id) from UserContact where UserId=u.Id and InsertUserId={1}) as IsFollowing,
 	            (select count(Id) from UserContact where UserId={1} and InsertUserId=u.Id) as IsFollower,
                 (select count(Id) from BlockedUser where UserId=u.Id and InsertUserId={1}) as IsBlocked,
@@ -499,6 +500,10 @@ namespace Cinar.CMS.Library.Handlers
         public static List<ViewPost> GetUserProfilePosts(int userId, int lessThanId, int greaterThanId, int pageSize)
         {
             //pageSize = 5; //***
+
+            bool isProtected = Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId);
+            if (Provider.User.Id != userId && isProtected && Provider.Database.GetInt("select count(*) from UserContact where UserId={0} AND InsertUserId={1}", userId, Provider.User.Id) == 0)
+                return new List<ViewPost>();
 
             string idPart = null;
             if (lessThanId > 0)
