@@ -44,5 +44,6 @@ namespace Cinar.CMS.Library.Entities
         public int FollowerCount { get; set; }
         public List<ViewMiniUserInfo> FollowersIFollow { get; set; }
         public string AllowedMessageSenders { get; set; }
+        public bool NeedsConfirmation { get; set; }
     }
 }

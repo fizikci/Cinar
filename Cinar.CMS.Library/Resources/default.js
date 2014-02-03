@@ -71,7 +71,7 @@ $(function () {
         $('.fadeShow').each(function (eix, elm) {
             if ($(elm).find('.clItem').length > 0) {
                 $(elm).append('<div class="indexElms"></div>');
-                $(elm).timeout = setTimeout(function () { fadeShowShowImg($(elm)); }, 4000);
+                elm.timeout = setTimeout(function () { fadeShowShowImg($(elm)); }, 4000);
             }
         });
     $('.fadeShow .clItem').each(function (i, elm) {
@@ -114,7 +114,7 @@ $(function () {
     // slideShow
     if ($('.slideShow').length)
         $('.slideShow').each(function (eix, elm) {
-            if ($(elm).find('img').length == 0) {
+            if ($(elm).find('> *').length == 0) {
                 $(elm).remove();
                 return;
             }
@@ -122,15 +122,14 @@ $(function () {
             if (elm.playing) elm.timeout = setTimeout(function () { slideShowSlide(elm); }, 5000);
             elm.alreadySliding = false;
             elm.mouseIsOver = false;
-            $(elm).html('<div class="paging" style="background-image:url(/external/icons/slide_prev.png); background-position:right center;"></div>' +
-							'<div class="clipper">' +
-							'<div class="innerDiv">' +
-							$(elm).html() +
-							'</div>' +
-							'</div>' +
-							'<div class="paging" style="background-image:url(/external/icons/slide_next.png); background-position:left center;"></div>' +
-							'<div style="clear:both"></div>' +
-							'<img src="/external/icons/play.png" class="playBtn"/>');
+            $(elm).html('<div class="prevNext btnPrev"></div>' +
+						'<div class="prevNext btnNext"></div>' +
+						'<div class="clipper">' +
+						    '<div class="innerDiv">' +
+						        $(elm).html() +
+						    '</div>' +
+						'</div>' +
+						'<img src="/external/icons/play.png" class="playBtn"/>');
 
             $(elm).find('.playBtn').on('click', function () {
                 elm.playing = !elm.playing;
@@ -153,20 +152,14 @@ $(function () {
                     elm.timeout = setTimeout(function () { slideShowSlide(elm); }, 5000);
             });
 
-            var imgs = $(elm).find('img');
-            var imgCounter = 0;
+            var imgs = $(elm).find('.innerDiv > *');
+            var totalWidth = 0;
             imgs.each(function (eix, img) {
-                $(img).on('load', function () {
-                    imgCounter++;
-                    if (imgCounter == imgs.length) {
-                        var totalWidth = 0;
-                        imgs.each(function (eix, i) { totalWidth += $(i).outerWidth() + 20; });
-                        $(elm).find('.innerDiv').css({ width: (totalWidth - 10) + 'px' });
-                    }
-                });
+                totalWidth += $(img).outerWidth() + 20;
             });
-            $(elm).find('.paging').first().on('click', function () { slideShowSlide(elm, 'back', true); });
-            $(elm).find('.paging').last().on('click', function () { slideShowSlide(elm, 'forward', true); });
+            $(elm).find('.innerDiv').css({ width: (totalWidth - 10) + 'px' });
+            $(elm).find('.prevNext').first().on('click', function () { slideShowSlide(elm, 'back', true); });
+            $(elm).find('.prevNext').last().on('click', function () { slideShowSlide(elm, 'forward', true); });
         });
     // lightBox olayı
     if ($('.lightBox').length) {
@@ -290,7 +283,6 @@ $(function () {
 });
 
 var slideAllCurrIndex = -1;
-
 function slideAllShow(items, index, dim) {
     var elm = items[index];
     var w = elm.getWidth();
@@ -304,7 +296,6 @@ function slideAllShow(items, index, dim) {
     elm.find('.clTitle').show();
     elm.find('.clDesc').show();
 }
-
 function slideAllCollapse(items, dim) {
     for (var i = 0; i < items.length; i++) {
         var l = dim.width / items.length * i;
@@ -313,7 +304,6 @@ function slideAllCollapse(items, dim) {
         $(items[i]).find('.clDesc').hide();
     }
 }
-
 function slideShowSlide(elm, dir, forceSlide) {
     if (typeof (forceSlide) == 'undefined') forceSlide = false;
     if (elm.alreadySliding) return;
@@ -338,6 +328,7 @@ function slideShowSlide(elm, dir, forceSlide) {
         elm.timeout = setTimeout(function () { slideShowSlide(elm); }, 5000);
     }
 }
+
 function fadeShowShowImg(fadeShow, indexElm) {
     var currIndexElm = null;
     if (!indexElm) {
@@ -353,7 +344,7 @@ function fadeShowShowImg(fadeShow, indexElm) {
     if (currIndexElm)
         currIndexElm.src = '/external/icons/bullet_white.png';
 
-    clearTimeout(fadeShow.timeout);
+    clearTimeout(fadeShow[0].timeout);
     var i = parseInt($(indexElm).attr('index'));
 
     $(fadeShow[0].currentImg).fadeOut(500);
@@ -363,7 +354,7 @@ function fadeShowShowImg(fadeShow, indexElm) {
     $(fadeShow[0].currentImg).fadeIn(500);
     $(fadeShow[0].currentImg).css({ zIndex: 2 });
 
-    fadeShow.timeout = setTimeout(function () { fadeShowShowImg(fadeShow); }, 4000);
+    fadeShow[0].timeout = setTimeout(function () { fadeShowShowImg(fadeShow); }, 4000);
 }
 function fadeWithArrowsShow(elm, which) {
     var nextImg = which == 'next' ? $(elm.currentImg).nextAll('.clItem') : $(elm.currentImg).prevAll('.clItem');
