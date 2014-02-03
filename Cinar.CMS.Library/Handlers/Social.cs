@@ -18,12 +18,12 @@ namespace Cinar.CMS.Library.Handlers
     {
         public override bool RequiresAuthorization
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override string RequiredRole
         {
-            get { return "User"; }
+            get { return ""; }
         }
 
         HttpContext context;
@@ -147,9 +147,6 @@ namespace Cinar.CMS.Library.Handlers
                     case "updatePassword":
                         updatePassword();
                         break;
-                    case "updateProfile":
-                        updateProfile();
-                        break;
                     case "updateEmail":
                         updateEmail();
                         break;
@@ -187,6 +184,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getAllNotifications()
         {
+            if(Provider.User.IsAnonim())
+                return;
+
             List<ViewNotification> nots = Provider.Database.ReadList<ViewNotification>(@"
                 select 
                     n.UserId AS NotifiedUserId,
@@ -212,6 +212,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void confirmFollower()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int rId = 0;
             string requesterId = context.Request["rId"];
             if (int.TryParse(requesterId, out rId))
@@ -238,6 +241,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void deleteUserAvatar()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Provider.User.Avatar = "";
             Provider.User.Save();
             if (Provider.User.Avatar == "")
@@ -251,6 +257,9 @@ namespace Cinar.CMS.Library.Handlers
         }
         private void deleteUserBackgroundPicture()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Provider.User.Settings.BackgroundPicture = "";
             Provider.User.Settings.Save();
             if (Provider.User.Settings.BackgroundPicture == "")
@@ -264,6 +273,9 @@ namespace Cinar.CMS.Library.Handlers
         }
         private void deleteUserCoverPicture()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Provider.User.Settings.CoverPicture = "";
             Provider.User.Settings.Save();
             if (Provider.User.Settings.CoverPicture == "")
@@ -278,6 +290,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void sendMessage()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             string toUserNick = context.Request["toUserNick"];
 
             new PrivateMessage
@@ -291,6 +306,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void updateLastOpenNotification()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Provider.User.Settings.LastNotificationCheck = DateTime.Now;
             Provider.User.Settings.Save();
 
@@ -299,6 +317,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getMessageCount()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Result res = new Result();
             res.Data = Provider.Database.GetInt("select count(*) from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id);
 
@@ -307,6 +328,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getLastMessages()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             context.Response.Write(new Result
             {
                 Data = Provider.Database.ReadList<ViewPrivateLastMessage>(@"
@@ -328,6 +352,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getMessages()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int UserId = 0;
             int.TryParse(context.Request["UserId"], out UserId);
 
@@ -349,18 +376,20 @@ namespace Cinar.CMS.Library.Handlers
 
         private void updateLastOpenPrivateMessage()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             Provider.User.Settings.LastPrivateMessageCheck = DateTime.Now;
             Provider.User.Settings.Save();
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
 
-        private void setMessageRead() { 
-            
-        }
-
         private void reportUser()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             string nick = context.Request["nick"];
             string reason = context.Request["reason"];
             string reasonText = context.Request["reasonText"];
@@ -423,6 +452,9 @@ namespace Cinar.CMS.Library.Handlers
 
         private void getUserHomePosts()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int lessThanId = 0;
             int.TryParse(context.Request["lessThanId"], out lessThanId);
             int greaterThanId = 0;
@@ -597,7 +629,8 @@ limit
 
         private void getUserNotifications()
         {
-            int userId = Provider.User.Id;
+            if (Provider.User.IsAnonim())
+                return;
 
             int limit = 10;
             int.TryParse(context.Request["limit"], out limit);
@@ -609,7 +642,8 @@ limit
 
         private void getPrivateMessages()
         {
-            int userId = Provider.User.Id;
+            if (Provider.User.IsAnonim())
+                return;
 
             int limit = 10;
             int.TryParse(context.Request["limit"], out limit);
@@ -621,6 +655,8 @@ limit
 
         private void follow()
         {
+            if (Provider.User.IsAnonim())
+                return;
 
             SocialAPI.FollowUser(Provider.User.Id, context.Request["user"], null);
 
@@ -629,6 +665,9 @@ limit
 
         private void unfollow()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
             if (user == null)
                 throw new Exception("User unknown");
@@ -641,6 +680,9 @@ limit
 
         private void unblock()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
             if (user == null)
                 throw new Exception("User unknown");
@@ -653,6 +695,9 @@ limit
 
         private void block()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
             if (user == null)
                 throw new Exception("User unknown");
@@ -672,6 +717,9 @@ limit
 
         private void spam()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             User user = Provider.Database.Read<User>("Nick={0}", context.Request["user"]);
             if (user == null)
                 throw new Exception("User unknown");
@@ -686,6 +734,9 @@ limit
 
         private void post()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int lat = 0;
             int.TryParse(context.Request["lat"], out lat);
             int lng = 0;
@@ -733,6 +784,9 @@ limit
 
         private void like()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int pid = 0;
             int.TryParse(context.Request["pid"], out pid);
             if (pid == 0)
@@ -760,6 +814,9 @@ limit
 
         private void share()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int pid = 0;
             int.TryParse(context.Request["pid"], out pid);
             if (pid == 0)
@@ -784,6 +841,9 @@ limit
 
         private void delete()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int pid = 0;
             int.TryParse(context.Request["pid"], out pid);
 
@@ -802,6 +862,9 @@ limit
 
         private void updatePassword()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             //string oldPass = Provider.Request["oldPass"];
             string newPass = Provider.Request["newPass"];
             User u = Provider.User;
@@ -821,17 +884,6 @@ limit
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
 
-        private void updateProfile()
-        {
-            string oldPass = Provider.Request["oldPass"];
-
-            User u = Provider.User;
-
-            u.Save();
-
-            context.Response.Write(new Result { Data = true }.ToJSON());
-        }
-
         private void getPostRelatedData()
         {
             int pid = 0;
@@ -846,6 +898,9 @@ limit
 
         private void followContacts()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             string[] emails = Provider.Request.Form["emails"].SplitWithTrim('&');
             foreach (string emailParts in emails)
             {
@@ -861,6 +916,9 @@ limit
 
         private void inviteContacts()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             string[] emails = Provider.Request.Form["emails"].SplitWithTrim('&');
             foreach (string emailParts in emails)
             {
@@ -882,6 +940,9 @@ http://{1}
 
         private void createPostAd()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             int postId = 0;
             int.TryParse(Provider.Request["postId"], out postId);
             if (postId == 0)
@@ -899,6 +960,9 @@ http://{1}
 
         private void updateEmail()
         {
+            if (Provider.User.IsAnonim())
+                return;
+
             string newEmail = Provider.Request["newEmail"];
             new Log()
                 {

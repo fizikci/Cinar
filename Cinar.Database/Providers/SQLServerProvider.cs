@@ -512,7 +512,7 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
 
         public string GetSQLViewCreate(Table view)
         {
-            return db.GetString("sp_helptext '" + view.Name + "';");
+            return db.GetList<string>("sp_helptext '" + view.Name + "';").StringJoin(Environment.NewLine);
         }
 
         public string GetSQLDateYearMonthPart(string columnName)

@@ -215,6 +215,9 @@ namespace Cinar.CMS.Library.Handlers
                     p.InsertUserId = u.Id AND
                     p.Id = {0}", postId);
 
+            if(Provider.User.Id!=post.Originator.Id && post.Originator.Settings.NeedsConfirmation && !post.Originator.HasContact(Provider.User.Id))
+                return new ViewPost(){Metin = "Unauthorized access"};
+
             if (post.OriginalPostId > 0)
             {
                 var orginalPost = Provider.Database.Read<Post>(post.OriginalPostId);
@@ -501,8 +504,10 @@ namespace Cinar.CMS.Library.Handlers
         {
             //pageSize = 5; //***
 
-            bool isProtected = Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId);
-            if (Provider.User.Id != userId && isProtected && Provider.Database.GetInt("select count(*) from UserContact where UserId={0} AND InsertUserId={1}", userId, Provider.User.Id) == 0)
+            // aynı kullanıcı değilse VE korumalı hesap ise VE takip etmiyorsa GÖSTERME
+            if (Provider.User.Id != userId && 
+                Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId) &&
+                !Provider.User.HasContact(userId))
                 return new List<ViewPost>();
 
             string idPart = null;
@@ -560,6 +565,11 @@ namespace Cinar.CMS.Library.Handlers
         /// </summary>
         public static List<ViewMiniUserInfo> GetUserFollowers(int userId, int lessThanId, int greaterThanId, int pageSize)
         {
+            if (Provider.User.Id != userId &&
+                Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId) &&
+                !Provider.User.HasContact(userId))
+                return new List<ViewMiniUserInfo>();
+
             string idPart = null;
             if (lessThanId > 0)
                 idPart = "fu.Id<{1}";
@@ -651,6 +661,11 @@ namespace Cinar.CMS.Library.Handlers
         /// </summary>
         public static List<ViewMiniUserInfo> GetUserFollowings(int userId, int lessThanId, int greaterThanId, int pageSize)
         {
+            if (Provider.User.Id != userId &&
+                Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId) &&
+                !Provider.User.HasContact(userId))
+                return new List<ViewMiniUserInfo>();
+
             string idPart = null;
             if (lessThanId > 0)
                 idPart = "fu.Id<{1}";
@@ -688,6 +703,11 @@ namespace Cinar.CMS.Library.Handlers
         /// </summary>
         public static List<ViewPost> GetUserProfileLikes(int userId, int lessThanId, int greaterThanId, int pageSize)
         {
+            if (Provider.User.Id != userId &&
+                Provider.Database.GetBool("select NeedsConfirmation from Usersettings where UserId={0}", userId) &&
+                !Provider.User.HasContact(userId))
+                return new List<ViewPost>();
+
             string idPart = null;
             if (lessThanId > 0)
                 idPart = "p.Id<{1}";

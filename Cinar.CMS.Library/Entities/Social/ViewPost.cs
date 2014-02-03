@@ -47,5 +47,10 @@ namespace Cinar.CMS.Library.Entities
         public int OriginalPostId { get; set; }
         public int ReplyToPostId { get; set; }
         public string SharerNick { get; set; }
+
+        public User Originator
+        {
+            get { return OriginalPostId > 0 ? Provider.Database.Read<Post>(OriginalPostId).InsertUser : Provider.Database.Read<Post>(Id).InsertUser; }
+        }
     }
 }
