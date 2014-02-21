@@ -20,5 +20,12 @@ namespace Cinar.CMS.Library.Entities
         {
             return "Name";
         }
+
+        public override void AfterSave(bool isUpdate)
+        {
+            base.AfterSave(isUpdate);
+
+            HttpContext.Current.Cache.Remove("StaticResource");
+        }
     }
 }

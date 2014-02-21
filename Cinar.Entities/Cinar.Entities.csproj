@@ -81,7 +81,7 @@
     <Compile Include="MediaSearch\Tag.cs" />
     <Compile Include="Standart\BaseEntity.cs" />
     <Compile Include="CinarContext.cs" />
-    <Compile Include="Standart\CriticalEntity.cs" />
+    <Compile Include="Standart\ICriticalEntity.cs" />
     <Compile Include="Standart\EntityHistory.cs" />
     <Compile Include="Standart\NamedEntity.cs" />
     <Compile Include="Standart\UsageReport.cs" />
@@ -93,6 +93,10 @@
     <Compile Include="Standart\RoleUser.cs" />
     <Compile Include="Standart\Report.cs" />
     <Compile Include="Standart\ReportParam.cs" />
+    <Compile Include="Workflows\WFAracTalep.cs" />
+    <Compile Include="Workflows\WorkflowEntity.cs" />
+    <Compile Include="Workflows\WorkflowState.cs" />
+    <Compile Include="Workflows\WorkflowType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">

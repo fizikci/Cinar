@@ -843,7 +843,7 @@ var LookUp = Class.create(); LookUp.prototype = {
 //#########################
 //#       TagEdit        #
 //#########################
-
+var autoCompleteTagEdit = true;
 var TagEdit = Class.create(); TagEdit.prototype = {
     listHeight: 200,
     initialize: function(id, value, options) {
@@ -853,7 +853,10 @@ var TagEdit = Class.create(); TagEdit.prototype = {
 		
         var ths = this;
 
-		this.input.keyup(function(event){
+        this.input.keyup(function (event) {
+            if (!autoCompleteTagEdit)
+                return;
+
 			switch(event.keyCode){
 				case Event.KEY_UP:
 				case Event.KEY_DOWN:

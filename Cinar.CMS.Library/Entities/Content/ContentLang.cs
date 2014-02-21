@@ -74,6 +74,15 @@ namespace Cinar.CMS.Library.Entities
             set { metin = value; }
         }
 
+        private string sourceLink;
+        [ColumnDetail(Length = 200)]
+        public string SourceLink
+        {
+            get { return sourceLink; }
+            set { sourceLink = value; }
+        }
+
+
         [EditFormFieldProps(Category = "Extra")]
         public string ExtraField1 { get; set; }
         [EditFormFieldProps(Category = "Extra")]

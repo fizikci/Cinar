@@ -44,7 +44,9 @@ namespace Cinar.Entities.Standart
 
         public bool Deleted { get; set; }
 
-        public virtual void Save()
+        string changes = null;
+
+        public void BeforeSave()
         {
             if (CinarContext.Db == null)
                 throw new Exception("Cannot reach context database");
@@ -56,7 +58,6 @@ namespace Cinar.Entities.Standart
             }
 
             bool isNewEntity = this.Id == 0;
-            string changes = null;
 
             if (this is ICriticalEntity && !isNewEntity)
             {
@@ -64,42 +65,11 @@ namespace Cinar.Entities.Standart
                 IDatabaseEntity originalEntity = CinarContext.Db.Read(this.GetType(), this.Id);
                 changes = originalEntity.CompareFields(this);
             }
+        }
 
+        public virtual void Save()
+        {
             CinarContext.Db.Save(this);
-
-            if (this is ICriticalEntity)
-            {
-                // EntityHistory tablosuna bu işlemi loglayalım
-                if (isNewEntity)
-                {
-                    EntityHistory eh = new EntityHistory()
-                    {
-                        Details = "",
-                        EntityName = this.GetType().Name,
-                        EntityId = this.Id,
-                        InsertDate = DateTime.Now,
-                        InsertUserId = CinarContext.ClientUser.Id,
-                        Operation = CRUDOperation.Insert
-                    };
-                    eh.Save();
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(changes))
-                    {
-                        EntityHistory eh = new EntityHistory()
-                        {
-                            Details = changes,
-                            EntityName = this.GetType().Name,
-                            EntityId = this.Id,
-                            InsertDate = DateTime.Now,
-                            InsertUserId = CinarContext.ClientUser.Id,
-                            Operation = CRUDOperation.Update
-                        };
-                        eh.Save();
-                    }
-                }
-            }
         }
         public virtual void Delete()
         {
@@ -189,6 +159,43 @@ namespace Cinar.Entities.Standart
                 string key = postData.GetKey(i);
                 if (!this.ht.ContainsKey(key)) continue;
                 this.ht[key] = postData[i];
+            }
+        }
+
+        public void AfterSave(bool isUpdate)
+        {
+            if (this is ICriticalEntity)
+            {
+                // EntityHistory tablosuna bu işlemi loglayalım
+                if (!isUpdate)
+                {
+                    EntityHistory eh = new EntityHistory()
+                    {
+                        Details = "",
+                        EntityName = this.GetType().Name,
+                        EntityId = this.Id,
+                        InsertDate = DateTime.Now,
+                        InsertUserId = CinarContext.ClientUser.Id,
+                        Operation = CRUDOperation.Insert
+                    };
+                    eh.Save();
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(changes))
+                    {
+                        EntityHistory eh = new EntityHistory()
+                        {
+                            Details = changes,
+                            EntityName = this.GetType().Name,
+                            EntityId = this.Id,
+                            InsertDate = DateTime.Now,
+                            InsertUserId = CinarContext.ClientUser.Id,
+                            Operation = CRUDOperation.Update
+                        };
+                        eh.Save();
+                    }
+                }
             }
         }
     }
