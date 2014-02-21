@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cinar.Database;
+using Cinar.Entities.Workflows;
+using Cinar.Entities;
 
 namespace Cinar.Test
 {
@@ -12,23 +14,31 @@ namespace Cinar.Test
         public static void Run()
         {
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
-            Database.Database db = new Database.Database("", DatabaseProvider.SQLServer);
+            CinarContext.Db = new Database.Database(DatabaseProvider.MySQL, "localhost", "cinarcms", "root", "bk", 30);
+            WFAracTalep aracTalep = new WFAracTalep { 
+                Adres = "adres",
+                Saat = "saat",
+                State = WFS_AracTalep.New
+            };
+            aracTalep.Save();
+
             /*
             Table table = db.CreateTableMetadataForType(typeof(Ogrenci));
 
             Console.WriteLine(db.GetTableDDL(table));
-            */
+
             Ogrenci ogr = new Ogrenci();
             ogr.Ad = "Mehmet";
             ogr.TcKimlikNo = "987632454";
             db.Save(ogr);
-            /*
+
             Veli v = new Veli();
             v.Ad = "Bülent";
             v.TcKimlikNo = "756867";
             db.Save(v);
-            */
+            
             List<Ogrenci> list = db.ReadList<Ogrenci>("select *, '2. Dönem' as Donem, 2012 as Yil from student");
+            */
         }
     }
 

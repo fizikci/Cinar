@@ -38,6 +38,13 @@ namespace Cinar.CMS.Library.Entities
         {
             return "Translation";
         }
+
+        public override void AfterSave(bool isUpdate)
+        {
+            base.AfterSave(isUpdate);
+
+            HttpContext.Current.Cache.Remove("StaticResourceLang");
+        }
     }
 
 }
