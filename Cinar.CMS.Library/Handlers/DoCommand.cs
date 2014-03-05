@@ -344,7 +344,7 @@ namespace Cinar.CMS.Library.Handlers
             if (c == null)
                 context.Response.Write("ERROR");
             else
-                context.Response.Write("OK");
+                context.Response.Write(c.Picture);
         }
 
         private void uploadContentTest()

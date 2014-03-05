@@ -23,6 +23,7 @@ using Cinar.Scripting;
 using System.Linq; 
 using DbType = Cinar.Database.DbType;
 using System.Globalization;
+using System.Net.Mime;
 
 
 namespace Cinar.CMS.Library
@@ -1044,6 +1045,7 @@ namespace Cinar.CMS.Library
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.Credentials = new NetworkCredential(Provider.Configuration.MailUsername, Provider.Configuration.MailPassword);
                 }
+
                 smtp.Send(mail);
                 return "";
             }
@@ -1067,6 +1069,51 @@ namespace Cinar.CMS.Library
         {
             return Provider.SendMail(null, null, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, subject, message);
         }
+
+        [Description("Sends mail to Configuration.Email with attachment")]
+        public static string SendMailWithAttachment(string subject, string message)
+        {
+            try
+            {
+                MailAddress _from = new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName);
+                MailAddress _to = new MailAddress(Provider.Configuration.AuthEmail, Provider.Configuration.SiteName);
+                MailMessage mail = new MailMessage(_from, _to);
+                mail.Subject = subject;
+                mail.IsBodyHtml = true;
+                mail.Body = message;
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = Provider.Configuration.MailHost;
+                smtp.Port = Provider.Configuration.MailPort;
+                if (!String.IsNullOrEmpty(Provider.Configuration.MailUsername) && !String.IsNullOrEmpty(Provider.Configuration.MailPassword))
+                {
+                    smtp.UseDefaultCredentials = false;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.Credentials = new NetworkCredential(Provider.Configuration.MailUsername, Provider.Configuration.MailPassword);
+                }
+
+                if (Provider.Request.Files.Count>0 && Provider.Request.Files[0].ContentLength>0)
+                {
+                    foreach (string key in Provider.Request.Files.Keys)
+                    {
+                        Attachment attachment = new Attachment(Provider.Request.Files[key].InputStream, MediaTypeNames.Application.Octet);
+                        ContentDisposition disposition = attachment.ContentDisposition;
+                        disposition.FileName = Path.GetFileName(Provider.Request.Files[key].FileName);
+                        disposition.Size = Provider.Request.Files[key].ContentLength;
+                        disposition.DispositionType = DispositionTypeNames.Attachment;
+                        mail.Attachments.Add(attachment);
+                    }
+                }
+
+                smtp.Send(mail);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
+            }
+        }
+
         #endregion
 
         [Description("Builds url with the query string parameters")]
@@ -1738,51 +1785,40 @@ namespace Cinar.CMS.Library
                 Content content = (Content)Provider.CreateEntity("Content");
                 content.SetFieldsByPostData(Provider.Request.Form);
 
-                if (content.ClassName == "Content")
+                string authorName = Provider.Request.Form["Author"];
+                if (!string.IsNullOrWhiteSpace(authorName))
                 {
-                    string authorName = Provider.Request.Form["Author"];
-                    if (string.IsNullOrEmpty(authorName))
+                    Author author = (Author)Provider.Database.Read(typeof(Author), "Name={0}", authorName);
+                    bool authorVarAmaResmiYok = author != null && String.IsNullOrEmpty(author.Picture);
+                    if (author == null || authorVarAmaResmiYok)
                     {
-                        content.AuthorId = 0;
-                    }
-                    else
-                    {
-                        Author author = (Author)Provider.Database.Read(typeof(Author), "Name={0}", authorName);
-                        bool authorVarAmaResmiYok = author != null && String.IsNullOrEmpty(author.Picture);
-                        if (author == null || authorVarAmaResmiYok)
+                        if (author == null)
+                            author = new Author();
+                        author.Name = authorName;
+                        string authorPicture = Provider.Request.Form["AuthorPicture"];
+                        if (authorPicture != null && authorPicture.StartsWith("http://"))
                         {
-                            if (author == null)
-                                author = new Author();
-                            author.Name = authorName;
-                            string authorPicture = Provider.Request.Form["AuthorPicture"];
-                            if (authorPicture != null && authorPicture.StartsWith("http://"))
+                            try
                             {
-                                try
-                                {
-                                    string imgFileName = Provider.AppSettings["authorDir"] + "/" + author.Name.MakeFileName() + "_" + (DateTime.Now.Millisecond % 1000) + authorPicture.Substring(authorPicture.LastIndexOf('.'));
-                                    WebClient wc = new WebClient();
-                                    wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                                    wc.DownloadFile(authorPicture, Provider.MapPath(imgFileName));
-                                    author.Picture = imgFileName;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Provider.Log("Notice", "UploadContent", ex.Message + "\n (Yazar resmi:" + author.Picture + ")");
-                                    author.Picture = "";
-                                }
+                                string imgFileName = Provider.AppSettings["authorDir"] + "/" + author.Name.MakeFileName() + "_" + (DateTime.Now.Millisecond % 1000) + authorPicture.Substring(authorPicture.LastIndexOf('.'));
+                                WebClient wc = new WebClient();
+                                wc.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                                wc.DownloadFile(authorPicture, Provider.MapPath(imgFileName));
+                                author.Picture = imgFileName;
                             }
-                            author.Save();
+                            catch (Exception ex)
+                            {
+                                Provider.Log("Notice", "UploadContent", ex.Message + "\n (Yazar resmi:" + author.Picture + ")");
+                                author.Picture = "";
+                            }
                         }
-                        content.AuthorId = author.Id;
+                        author.Save();
                     }
+                    content.AuthorId = author.Id;
                 }
 
                 string sourceName = Provider.Request.Form["Source"];
-                if (string.IsNullOrEmpty(sourceName))
-                {
-                    content.SourceId = 0;
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(sourceName))
                 {
                     Source source = (Source)Provider.Database.Read(typeof(Source), "Name={0}", sourceName);
                     if (source == null)
@@ -1795,12 +1831,7 @@ namespace Cinar.CMS.Library
                 }
 
                 string categoryTitle = Provider.Request.Form["Category"];
-                if (string.IsNullOrEmpty(categoryTitle))
-                {
-                    content.CategoryId = 1;
-                    content.Visible = false;
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(categoryTitle))
                 {
                     Content category = (Content)Provider.Database.Read(typeof(Content), "Title={0}", categoryTitle);
                     if (category == null)
@@ -2097,6 +2128,13 @@ namespace Cinar.CMS.Library
 ";
                 return code.Replace("APP_ID", Provider.Configuration.FacebookAppId);
             }
+        }
+
+        public static XmlDocument GetXmlDocument(string url)
+        {
+            XmlDocument res = new XmlDocument();
+            res.Load(url);
+            return res;
         }
     }
 
