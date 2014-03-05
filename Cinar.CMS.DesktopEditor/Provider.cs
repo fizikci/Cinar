@@ -18,7 +18,7 @@ namespace Cinar.CMS.DesktopEditor
             try
             {
                 if (!listDb.ContainsKey(index))
-                    listDb[index] = new Database.Database(Provider.GetConnectionString(index), Provider.GetDbProvider(index));
+                    listDb[index] = new Database.Database(Provider.GetConnectionString(index), Provider.GetDbProvider(index), Application.ExecutablePath.ToLowerInvariant().Replace("cinar.cms.desktopeditor.exe", "db" + index + ".config"));
                 return listDb[index];
             }
             catch{
@@ -37,6 +37,8 @@ namespace Cinar.CMS.DesktopEditor
         }
 
         public static System.Collections.Specialized.NameValueCollection CopiedContent { get; set; }
+
+        public static string CopiedPicturePath { get; set; }
     }
 
     public class Settings

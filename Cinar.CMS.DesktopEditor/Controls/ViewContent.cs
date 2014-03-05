@@ -134,6 +134,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
             postData.Add("Id", CurrentContentId.ToString());
             postData.Add("ClassName", "Content");
             postData.Add("Title", editTitle.Text);
+            postData.Add("SpotTitle", editSpotTitle.Text);
             if (editCategoryId.SelectedItem != null)
                 postData.Add("CategoryId", ((Item)editCategoryId.SelectedItem).Id.ToString());
             postData.Add("Description", editDescription.Text);
@@ -172,6 +173,8 @@ namespace Cinar.CMS.DesktopEditor.Controls
 
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
+                    editPicture.ImageLocation = null;
+                    
                     PictureBox picture = sender as PictureBox;
                     picture.Image = new Bitmap(dlg.FileName);
                     picture.SizeMode = PictureBoxSizeMode.Zoom;
@@ -206,6 +209,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
                 editTags.Text = dr["Tags"].ToString();
                 editPublishDate.Value = (DateTime)dr["PublishDate"];
 
+                editPicture.Tag = null;
                 editPicture.ImageLocation = Settings.Load().SiteAddress[Index].Trim('/') + dr["Picture"];
                 editPicture.Refresh();
             }
@@ -235,14 +239,24 @@ namespace Cinar.CMS.DesktopEditor.Controls
         private void btnCopy_Click(object sender, EventArgs e)
         {
             Provider.CopiedContent = getContentDataAsNameValue();
-        }
 
+            if (editPicture.Tag != null)
+                Provider.CopiedPicturePath = editPicture.Tag.ToString();
+
+            if (editPicture.ImageLocation != null)
+            {
+                Provider.CopiedPicturePath = Application.ExecutablePath.ToLowerInvariant().Replace("cinar.cms.desktopeditor.exe", "copied_image.jpg");
+                editPicture.Image.SaveJpeg(Provider.CopiedPicturePath, 100);
+            }
+        }
         private void btnPaste_Click(object sender, EventArgs e)
         {
             if (Provider.CopiedContent == null) {
                 MessageBox.Show("Önce bir kutuda kopyala butonuna tıklayınız");
                 return;
             }
+
+            this.CurrentContentId = 0;
 
             editSpotTitle.Text = Provider.CopiedContent["SpotTitle"];
             editTitle.Text = Provider.CopiedContent["Title"];
@@ -251,6 +265,10 @@ namespace Cinar.CMS.DesktopEditor.Controls
             editIsManset.Checked = Provider.CopiedContent["IsManset"] == "1";
             editTags.Text = Provider.CopiedContent["Tags"];
             editPublishDate.Value = DateTime.Parse(Provider.CopiedContent["PublishDate"]);
+
+            editPicture.Image = new Bitmap(Provider.CopiedPicturePath);
+            editPicture.Tag = Provider.CopiedPicturePath;
+            editPicture.Refresh();
         }
     }
 
