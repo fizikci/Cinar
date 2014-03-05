@@ -306,7 +306,7 @@ namespace Cinar.CMS.Library.Entities
                 string picFileName = Provider.Request.Files["Picture"].FileName;
                 if (!String.IsNullOrEmpty(picFileName))
                 {
-                    string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
+                    string imgUrl = Provider.BuildPath(System.IO.Path.GetFileName(picFileName), "uploadDir", true);
                     Image bmp = Image.FromStream(Provider.Request.Files["Picture"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
@@ -326,7 +326,7 @@ namespace Cinar.CMS.Library.Entities
                 string picFileName = Provider.Request.Files["Picture2"].FileName;
                 if (!String.IsNullOrEmpty(picFileName))
                 {
-                    string imgUrl = Provider.AppSettings["uploadDir"] + "/" + System.IO.Path.GetFileName(picFileName);
+                    string imgUrl = Provider.BuildPath(System.IO.Path.GetFileName(picFileName), "uploadDir", true);
                     Image bmp = Image.FromStream(Provider.Request.Files["Picture2"].InputStream);
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {

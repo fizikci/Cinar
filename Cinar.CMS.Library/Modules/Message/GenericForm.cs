@@ -5,24 +5,48 @@ using Cinar.Database;
 namespace Cinar.CMS.Library.Modules
 {
     [ModuleInfo(Grup = "Message")]
-    public class GenericForm : Module
+    public class GenericForm : StaticHtml
     {
-        private string formHtml = @"<table><tr><td>Name</td><td><input type=""text"" name=""name""/></td></tr><tr><td>Surname</td><td><input type=""text"" name=""Surname""/></td></tr><tr><td>...</td><td>...</td></tr></table>";
-        [ColumnDetail(ColumnType=Cinar.Database.DbType.Text)]
-        public string FormHtml
+        protected string subject = "A form submitted by site visitor";
+        public string Subject
         {
-            get { return formHtml; }
-            set { formHtml = value; }
+            get { return subject; }
+            set { subject = value; }
         }
+
+        protected string thanksMessage = "Your form has been sent. Thank you";
+        public string ThanksMessage
+        {
+            get { return thanksMessage; }
+            set { thanksMessage = value; }
+        }
+
+        public GenericForm()
+        {
+            InnerHtml = @"
+<form action=""$=Provider.Request.RawUrl$"" method=""post"">
+    <input type=""hidden"" name=""genericFormForm"" value=""$=this.Id$""/>
+    $
+    if (this.ErrorMessage)
+        echo('<div class=""error"">'+this.ErrorMessage+'</div>');
+    $
+
+    <table>
+        <tr><td>Name</td><td><input type=""text"" name=""Name""/></td></tr>
+        <tr><td>Surname</td><td><input type=""text"" name=""Surname""/></td></tr>
+        <tr><td>...</td><td>...</td></tr>
+    </table>
+
+    <input class=""send"" type=""submit"" value=""Send""/>
+</form>
+";
+        }
+
+        string errorMessage = "";
+        public string ErrorMessage { get { return errorMessage; } }
 
         internal override string show()
         {
-            StringBuilder sb = new StringBuilder();
-
-            string thanksMessage = Provider.GetModuleResource("Your form has been sent. Thank you.");
-            string btnText = Provider.GetResource("Send");
-
-            string errorMessage = "";
             if (Provider.Request["genericFormForm"] == this.Id.ToString())
             {
                 string rowFormat = "<tr><td valign=top>{0} :</td><td valign=top>{1}</td></tr>";
@@ -46,7 +70,7 @@ namespace Cinar.CMS.Library.Modules
 
                 try
                 {
-                    Provider.SendMail(Provider.GetModuleResource("A form submitted by site visitor"), sbMsg.ToString());
+                    Provider.SendMailWithAttachment(this.Subject, sbMsg.ToString());
                     return thanksMessage;
                 }
                 catch (Exception ex)
@@ -55,19 +79,7 @@ namespace Cinar.CMS.Library.Modules
                 }
             }
 
-            sb.Append("<form action=\"" + Provider.Request.RawUrl + "\" method=\"post\">");
-            sb.AppendFormat("<input type=\"hidden\" name=\"genericFormForm\" value=\"{0}\"/>", this.Id);
-
-            if (errorMessage != "")
-                sb.AppendFormat("<div class=\"error\">{0}</div>", errorMessage);
-
-            sb.Append(string.IsNullOrEmpty(this.formHtml) ? Provider.Content.Metin : this.FormHtml);
-
-            sb.AppendFormat("<input class=\"send\" type=\"submit\" value=\"{0}\"/>", btnText);
-
-            sb.Append("</form>");
-
-            return sb.ToString();
+            return base.show();
         }
 
         protected override bool canBeCachedInternal()
