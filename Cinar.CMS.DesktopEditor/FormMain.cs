@@ -60,6 +60,7 @@ namespace Cinar.CMS.DesktopEditor
             var s = Settings.Load();
 
             Form form = new Form();
+            form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             form.MinimumSize = new System.Drawing.Size(427, 310);
             form.Size = new System.Drawing.Size(630, 450);
             form.Text = s.SiteAddress[index];
