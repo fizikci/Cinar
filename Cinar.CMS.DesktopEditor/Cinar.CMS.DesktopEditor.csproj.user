@@ -2,5 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
+    <PublishUrlHistory>K:\work\CSharp\Cinar.CMS.DesktopEditor.Publish\</PublishUrlHistory>
+    <InstallUrlHistory>http://www.cinarteknoloji.com/Cinar.CMS.DesktopEditor/</InstallUrlHistory>
+    <SupportUrlHistory />
+    <UpdateUrlHistory>http://www.cinarteknoloji.com/Cinar.CMS.DesktopEditor/</UpdateUrlHistory>
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
 </Project>
