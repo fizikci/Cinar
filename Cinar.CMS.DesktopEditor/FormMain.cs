@@ -49,6 +49,8 @@ namespace Cinar.CMS.DesktopEditor
                 s.SiteAddress[index] = f.SiteAddress;
                 s.Providers[index] = f.ConnectionProvider;
                 s.ConnectionStrings[index] = f.ConnectingString;
+                s.Emails[index] = f.Email;
+                s.Passwords[index] = f.Password;
                 s.Save();
 
                 showSiteForm(index);

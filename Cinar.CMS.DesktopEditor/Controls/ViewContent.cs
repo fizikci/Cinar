@@ -11,6 +11,8 @@ using Cinar.Database;
 using System.Net;
 using System.Collections.Specialized;
 using Krystalware.UploadHelper;
+using Cinar.CMS.DesktopEditor.Entities;
+using Newtonsoft.Json;
 
 namespace Cinar.CMS.DesktopEditor.Controls
 {
@@ -40,6 +42,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
         private void setPlaceHolder(Control ctrl, string placeHolder)
         {
             ctrl.Text = placeHolder;
+            ctrl.Tag = placeHolder;
             ctrl.ForeColor = Color.Gray;
             ctrl.TextChanged += (sender, args) => {
                 if (ctrl.Text == placeHolder)
@@ -85,7 +88,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
                 return;
             }
 
-            foreach (DataRow dr in db.GetDataTable("select Id, Title from Content where ClassName='Category'").Rows)
+            foreach (DataRow dr in db.GetDataTable("select Id, Title from Content where ClassName='Category' order by Title").Rows)
                 editCategoryId.Items.Add(new Item(dr));
         }
         private void loadAuthors(bool silent)
@@ -115,17 +118,30 @@ namespace Cinar.CMS.DesktopEditor.Controls
             if (CurrentContentId == 0)
                 postData["Metin"] = postData["Metin"].Replace("\r", "").Replace("\n", "<br/>\r\n");
 
+            string res = "";
+
             if (PictureChanged)
             {
                 var files = new UploadFile[1];
                 files[0] = new UploadFile(editPicture.Tag.ToString(), "Picture", "image/jpg");
 
-                HttpUploadHelper.Upload(Settings.Load().SiteAddress[Index].Trim('/') + "/UploadContent.ashx", files, postData);
+                res = HttpUploadHelper.Upload(Settings.Load().SiteAddress[Index].Trim('/') + "/UploadContent.ashx", files, postData);
             }
             else
             {
-                HttpUploadHelper.Upload(Settings.Load().SiteAddress[Index].Trim('/') + "/UploadContent.ashx", new UploadFile[0], postData);
+                res = HttpUploadHelper.Upload(Settings.Load().SiteAddress[Index].Trim('/') + "/UploadContent.ashx", new UploadFile[0], postData);
             }
+
+            Content c = JsonConvert.DeserializeObject<Content>(res);
+            CurrentContentId = c.Id;
+            if (!string.IsNullOrWhiteSpace(c.Picture))
+            {
+                PictureChanged = false;
+                editPicture.ImageLocation = Settings.Load().SiteAddress[Index].Trim('/') + c.Picture;
+                editPicture.Refresh();
+            }
+
+            MessageBox.Show("Kaydedildi (Id: " + CurrentContentId + ")", "Cinar CMS Desktop Editor");
         }
 
         private NameValueCollection getContentDataAsNameValue()
@@ -133,14 +149,14 @@ namespace Cinar.CMS.DesktopEditor.Controls
             NameValueCollection postData = new NameValueCollection();
             postData.Add("Id", CurrentContentId.ToString());
             postData.Add("ClassName", "Content");
-            postData.Add("Title", editTitle.Text);
-            postData.Add("SpotTitle", editSpotTitle.Text);
+            postData.Add("Title", editTitle.Text.Equals(editTitle.Tag) ? "" : editTitle.Text);
+            postData.Add("SpotTitle", editSpotTitle.Text.Equals(editSpotTitle.Tag) ? "" : editSpotTitle.Text);
             if (editCategoryId.SelectedItem != null)
                 postData.Add("CategoryId", ((Item)editCategoryId.SelectedItem).Id.ToString());
-            postData.Add("Description", editDescription.Text);
-            postData.Add("Tags", editTags.Text);
+            postData.Add("Description", editDescription.Text.Equals(editDescription.Tag) ? "" : editDescription.Text);
+            postData.Add("Tags", editTags.Text.Equals(editTags.Tag) ? "" : editTags.Text);
             postData.Add("PublishDate", editPublishDate.Value.ToString("dd.MM.yyyy"));
-            postData.Add("Metin", editMetin.Text);
+            postData.Add("Metin", editMetin.Text.Equals(editMetin.Tag) ? "" : editMetin.Text);
             postData.Add("IsManset", editIsManset.Checked ? "1" : "0");
 
             if (editAuthor.SelectedItem != null)
@@ -158,6 +174,10 @@ namespace Cinar.CMS.DesktopEditor.Controls
                 s.SiteAddress[Index] = f.SiteAddress;
                 s.Providers[Index] = f.ConnectionProvider;
                 s.ConnectionStrings[Index] = f.ConnectingString;
+                if (s.Emails == null) s.Emails = new Dictionary<int, string>();
+                if (s.Passwords == null) s.Passwords = new Dictionary<int, string>();
+                s.Emails[Index] = f.Email;
+                s.Passwords[Index] = f.Password;
                 s.Save();
 
                 loadCategories(false);
@@ -192,7 +212,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
         {
             FormSelectContent f = new FormSelectContent(Index);
 
-            if (f.ShowDialog() == DialogResult.OK)
+            if (f.ShowDialog() == DialogResult.OK && f.SelectedContentId > 0)
             {
                 DataRow dr = Provider.GetDb(Index).GetDataRow("select * from Content where Id={0}", f.SelectedContentId);
                 PictureChanged = false;

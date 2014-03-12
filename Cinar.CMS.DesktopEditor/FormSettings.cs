@@ -21,14 +21,22 @@ namespace Cinar.CMS.DesktopEditor
 
             if (s.Providers.ContainsKey(index))
             {
-                editConnectionString.Text = s.ConnectionStrings[index];
-                editProvider.Text = s.Providers[index].ToString();
-                editSiteAddress.Text = s.SiteAddress[index];
+                try
+                {
+                    editConnectionString.Text = s.ConnectionStrings[index];
+                    editProvider.Text = s.Providers[index].ToString();
+                    editSiteAddress.Text = s.SiteAddress[index];
+                    editEmail.Text = s.Emails[index];
+                    editPassword.Text = s.Passwords[index];
+                }
+                catch { }
             }
         }
 
         public string ConnectingString { get { return editConnectionString.Text; } }
         public DatabaseProvider ConnectionProvider { get { return (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), editProvider.Text); } }
         public string SiteAddress { get { return editSiteAddress.Text; } }
+        public string Email { get { return editEmail.Text; } }
+        public string Password { get { return editPassword.Text; } }
     }
 }

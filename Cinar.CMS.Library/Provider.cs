@@ -1847,7 +1847,7 @@ namespace Cinar.CMS.Library
 
                 content.Save();
 
-                return content;
+                return Provider.Database.Read<Content>(content.Id);
             }
             catch (Exception ex)
             {
