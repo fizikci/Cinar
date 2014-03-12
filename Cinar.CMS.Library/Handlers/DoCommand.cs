@@ -100,6 +100,11 @@ namespace Cinar.CMS.Library.Handlers
                         uploadContentTest();
                         break;
                     }
+                case "deleteContents":
+                    {
+                        deleteContents();
+                        break;
+                    }
                 case "DefaultStyleSheet":
                     {
                         defaultStyleSheet();
@@ -344,7 +349,7 @@ namespace Cinar.CMS.Library.Handlers
             if (c == null)
                 context.Response.Write("ERROR");
             else
-                context.Response.Write(c.Picture);
+                context.Response.Write(c.ToJSON());
         }
 
         private void uploadContentTest()
@@ -364,6 +369,23 @@ namespace Cinar.CMS.Library.Handlers
             postData.Add("AuthorPicture", "");
             string s = Provider.PostData(Provider.Request.Url.ToString().Replace("UploadContentTest.ashx", "UploadContent.ashx"), postData);
             context.Response.Write(s);
+        }
+
+        private void deleteContents()
+        {
+            int[] ids = context.Request["ids"].SplitWithTrim(',').Select(int.Parse).ToArray();
+
+            if (Provider.Database.GetInt("select Id from User where Email={0} and Password={1} and Visible=1", context.Request["Email"], CMSUtility.MD5(context.Request["Passwd"])) > 0)
+            {
+                foreach (int id in ids)
+                {
+                    Content c = Provider.Database.Read<Content>(id);
+                    c.Delete();
+                }
+                context.Response.Write(ids.Length+" kayıt silindi.");
+            }
+            else
+                context.Response.Write("Erişim reddedildi");
         }
 
         private void redirect()

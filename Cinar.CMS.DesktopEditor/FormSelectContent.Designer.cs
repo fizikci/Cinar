@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.grid = new System.Windows.Forms.DataGridView();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,19 +44,42 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Location = new System.Drawing.Point(12, 12);
-            this.grid.MultiSelect = false;
             this.grid.Name = "grid";
             this.grid.ReadOnly = true;
             this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grid.Size = new System.Drawing.Size(562, 304);
+            this.grid.Size = new System.Drawing.Size(562, 269);
             this.grid.TabIndex = 0;
             this.grid.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellContentDoubleClick);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDelete.Location = new System.Drawing.Point(12, 293);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(144, 23);
+            this.btnDelete.TabIndex = 1;
+            this.btnDelete.Text = "Seçilen Kayıtları Sil";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnOK
+            // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Location = new System.Drawing.Point(471, 293);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(103, 23);
+            this.btnOK.TabIndex = 2;
+            this.btnOK.Text = "Tamam";
+            this.btnOK.UseVisualStyleBackColor = true;
             // 
             // FormSelectContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 328);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.grid);
             this.Name = "FormSelectContent";
             this.Text = "İçerik/Haber seçiniz";
@@ -66,5 +91,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView grid;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnOK;
     }
 }

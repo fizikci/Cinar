@@ -94,6 +94,30 @@
     <Compile Include="Controls\ViewContent.Designer.cs">
       <DependentUpon>ViewContent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\Content\Author.cs" />
+    <Compile Include="Entities\Content\AuthorLang.cs" />
+    <Compile Include="Entities\Content\Content.cs" />
+    <Compile Include="Entities\Content\ContentContent.cs" />
+    <Compile Include="Entities\Content\ContentLang.cs" />
+    <Compile Include="Entities\Content\ContentPicture.cs" />
+    <Compile Include="Entities\Content\ContentPictureLang.cs" />
+    <Compile Include="Entities\Content\ContentSource.cs" />
+    <Compile Include="Entities\Content\ContentTag.cs" />
+    <Compile Include="Entities\Content\ContentUser.cs" />
+    <Compile Include="Entities\Content\Source.cs" />
+    <Compile Include="Entities\Content\SourceLang.cs" />
+    <Compile Include="Entities\Content\Tag.cs" />
+    <Compile Include="Entities\Content\TagLang.cs" />
+    <Compile Include="Entities\Lang.cs" />
+    <Compile Include="Entities\NamedEntity.cs" />
+    <Compile Include="Entities\NamedEntityLang.cs" />
+    <Compile Include="Entities\SimpleBaseEntity.cs" />
+    <Compile Include="Entities\StaticResource.cs" />
+    <Compile Include="Entities\StaticResourceLang.cs" />
+    <Compile Include="Entities\User\User.cs" />
+    <Compile Include="Entities\User\UserRelatedEntity.cs" />
+    <Compile Include="Entities\User\UserSettings.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
