@@ -94,6 +94,9 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        public bool AddDefaultJS = true;
+        public bool AddDefaultCSS = true;
+
         public string HeadSection
         {
             get
@@ -153,10 +156,11 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
 
                 if (Provider.DesignMode)
-                    sb.Append("<style title=\"moduleStyles\">\n" + Provider.Configuration.DefaultStyleSheet + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
+                    sb.Append("<style title=\"moduleStyles\">\n" + (AddDefaultCSS ? Provider.Configuration.DefaultStyleSheet : "") + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 else
                 {
-                    sb.Append("<link href=\"" + (Provider.DesignMode ? "DefaultStyleSheet.css.ashx" : "/_thumbs/DefaultStyleSheet.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                    if (AddDefaultCSS)
+                        sb.Append("<link href=\"" + (Provider.DesignMode ? "DefaultStyleSheet.css.ashx" : "/_thumbs/DefaultStyleSheet.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
 
@@ -199,7 +203,8 @@ namespace Cinar.CMS.Library.Handlers
 ");
                 }
 
-                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
+                if(AddDefaultJS)
+                    sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 
                 return sb.ToString();
             }

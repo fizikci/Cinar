@@ -199,6 +199,34 @@
 	font-size:20px;
 }
 
+.roundAbout {
+    position: relative;
+    height: 270px;
+    margin-bottom: 80px;
+    margin-top: 10px;
+}
+.roundAbout .item {
+    position:absolute;
+    border:1px solid black;
+}
+
+.roundAbout .item img { 
+    width:100%;
+    height:100%;
+}
+.roundAbout .item .caption {
+    display:none;
+}
+
+.roundAboutCaption {
+    height: 55px;
+    bottom: -66px;
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    text-align:center;
+}
+
 #cc_ei_btn {
 	position:absolute;
 	border:2px solid orange;
