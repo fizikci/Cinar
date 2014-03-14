@@ -280,7 +280,48 @@ $(function () {
         });
         slideAll.on('mouseleave', function () { slideAllCollapse(items, dim); slideAllTimer = setInterval(slideAllIntFunc, 5000); });
     });
+
+    $('.roundAbout').each(function () {
+        doRoundAbout($(this), true, 0);
+        $(this).click(function (e) {
+            var move = this.move;
+            var offset = $(this).offset();
+            var posX = e.clientX - offset.left;
+            doRoundAbout($(this), false, move + (posX < $(this).width() / 2 ? 1 : -1));
+        });
+    });
 });
+
+function doRoundAbout(elm, start, move) {
+    var items = elm.find('.item');
+    var W = elm.width();
+    var H = elm.height();
+
+    for (var i = 0; i < items.length; i++) {
+        var aci = 2 * Math.PI / items.length * (i + move);
+        var h = H * Math.cos(aci);
+        var w = h * 16 / 9;
+        var l = (W - w) / 2 + W / 2 * Math.sin(aci);
+        var t = (H - h) / 2;
+        var z = Math.round(200 * Math.cos(aci));
+
+        if (start)
+            $(items.get(i)).css({ width: w + 'px', height: h + 'px', left: l + 'px', top: t + 'px', zIndex: z });
+        else
+            $(items.get(i)).animate({ width: w + 'px', height: h + 'px', left: l + 'px', top: t + 'px', zIndex: z }, {
+                step: function (now, fx) {
+                    if (fx.prop == 'zIndex')
+                        $(this).css({ zIndex: Math.floor(fx.start + (fx.end - fx.start) * fx.pos) });
+                }
+            });
+    }
+
+    elm[0].move = move;
+    var i = move % items.length;
+    if (i < 0) i = items.length + i;
+    if (i > 0) i = items.length - i;
+    elm.find('.roundAboutCaption').html($(items.get(i)).find('.caption').html());
+}
 
 var slideAllCurrIndex = -1;
 function slideAllShow(items, index, dim) {
