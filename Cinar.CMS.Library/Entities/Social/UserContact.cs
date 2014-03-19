@@ -29,7 +29,7 @@ namespace Cinar.CMS.Library.Entities
 
             if (Id==0)
             {
-                if (Provider.Database.GetInt("select count(*) from UserContact where InsertDate>{0}", DateTime.Now.Date) >= 50)
+                if (Provider.Database.GetInt("select count(*) from UserContact where InsertDate>{0} AND InsertUserId={1}", DateTime.Now.AddDays(-1d), Provider.User.Id) >= 50)
                     throw new Exception(Provider.TR("Günde 50 kişiden fazla takip edilemez"));
             }
         }
