@@ -155,9 +155,9 @@ namespace Cinar.CMS.Library.Entities
                 if (Provider.Request.Files["Picture"] != null && Provider.Request.Files["Picture"].ContentLength > 0)
                 {
                     string picFileName = Provider.Request.Files["Picture"].FileName;
-                    if (!String.IsNullOrEmpty(picFileName))
+                    if (!String.IsNullOrEmpty(picFileName) && (".jpg.png.gif.jpeg".Contains(picFileName.Substring(picFileName.LastIndexOf('.')).ToLowerInvariant())))
                     {
-                        string imgUrl = Provider.BuildPath("p_" + (DateTime.Now.Millisecond % 1000), "uploadDir", true) + picFileName.Substring(picFileName.LastIndexOf('.'));
+                        string imgUrl = Provider.BuildPath("p_" + (new Random().Next(1000000)+1), "uploadDir", true) + picFileName.Substring(picFileName.LastIndexOf('.'));
                         Image bmp = Image.FromStream(Provider.Request.Files["Picture"].InputStream);
                         if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                         {

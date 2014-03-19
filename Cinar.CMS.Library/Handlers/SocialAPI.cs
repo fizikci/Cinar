@@ -161,7 +161,8 @@ namespace Cinar.CMS.Library.Handlers
                 WHERE 
                     us.IsInfoHidden <> 1 AND
                     u.Visible = 1 AND
-                    " + idPart + @" 
+                    " + idPart + @" AND 
+                    p.ReplyToPostId = 0
                 ORDER BY 
                     p.Id DESC
                 LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);
