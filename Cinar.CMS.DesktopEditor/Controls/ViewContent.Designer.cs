@@ -44,6 +44,10 @@
             this.editAuthor = new System.Windows.Forms.ComboBox();
             this.btnYeni = new System.Windows.Forms.Button();
             this.btnPaste = new System.Windows.Forms.Button();
+            this.btnEditBold = new System.Windows.Forms.Button();
+            this.btnEditLink = new System.Windows.Forms.Button();
+            this.btnEditItalic = new System.Windows.Forms.Button();
+            this.btnEditColor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.btnSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editPicture)).BeginInit();
             this.SuspendLayout();
@@ -73,7 +77,7 @@
             // btnSettings
             // 
             this.btnSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSettings.BackgroundImage = Properties.Resources.system_config_services;
+            this.btnSettings.BackgroundImage = global::Cinar.CMS.DesktopEditor.Properties.Resources.system_config_services;
             this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSettings.Location = new System.Drawing.Point(596, 6);
@@ -98,7 +102,7 @@
             // 
             this.editPicture.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.editPicture.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.editPicture.Image = Properties.Resources.image_add;
+            this.editPicture.Image = global::Cinar.CMS.DesktopEditor.Properties.Resources.image_add;
             this.editPicture.InitialImage = null;
             this.editPicture.Location = new System.Drawing.Point(477, 42);
             this.editPicture.Name = "editPicture";
@@ -160,7 +164,7 @@
             this.editMetin.Location = new System.Drawing.Point(9, 162);
             this.editMetin.Name = "editMetin";
             this.editMetin.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.editMetin.Size = new System.Drawing.Size(613, 141);
+            this.editMetin.Size = new System.Drawing.Size(587, 141);
             this.editMetin.TabIndex = 16;
             this.editMetin.Text = "Haber Detayı";
             // 
@@ -227,10 +231,63 @@
             this.btnPaste.UseVisualStyleBackColor = true;
             this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
             // 
+            // btnEditBold
+            // 
+            this.btnEditBold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnEditBold.Location = new System.Drawing.Point(602, 162);
+            this.btnEditBold.Name = "btnEditBold";
+            this.btnEditBold.Size = new System.Drawing.Size(20, 23);
+            this.btnEditBold.TabIndex = 27;
+            this.btnEditBold.Text = "B";
+            this.btnEditBold.UseVisualStyleBackColor = true;
+            this.btnEditBold.Click += new System.EventHandler(this.btnEditBold_Click);
+            // 
+            // btnEditLink
+            // 
+            this.btnEditLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnEditLink.Location = new System.Drawing.Point(602, 191);
+            this.btnEditLink.Name = "btnEditLink";
+            this.btnEditLink.Size = new System.Drawing.Size(20, 23);
+            this.btnEditLink.TabIndex = 28;
+            this.btnEditLink.Text = "a";
+            this.btnEditLink.UseVisualStyleBackColor = true;
+            this.btnEditLink.Click += new System.EventHandler(this.btnEditLink_Click);
+            // 
+            // btnEditItalic
+            // 
+            this.btnEditItalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditItalic.Font = new System.Drawing.Font("Times New Roman", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnEditItalic.Location = new System.Drawing.Point(602, 220);
+            this.btnEditItalic.Name = "btnEditItalic";
+            this.btnEditItalic.Size = new System.Drawing.Size(20, 23);
+            this.btnEditItalic.TabIndex = 29;
+            this.btnEditItalic.Text = "I";
+            this.btnEditItalic.UseVisualStyleBackColor = true;
+            this.btnEditItalic.Click += new System.EventHandler(this.btnEditItalic_Click);
+            // 
+            // btnEditColor
+            // 
+            this.btnEditColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEditColor.Font = new System.Drawing.Font("Times New Roman", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnEditColor.ForeColor = System.Drawing.Color.Red;
+            this.btnEditColor.Location = new System.Drawing.Point(602, 249);
+            this.btnEditColor.Name = "btnEditColor";
+            this.btnEditColor.Size = new System.Drawing.Size(20, 23);
+            this.btnEditColor.TabIndex = 30;
+            this.btnEditColor.Text = "C";
+            this.btnEditColor.UseVisualStyleBackColor = true;
+            this.btnEditColor.Click += new System.EventHandler(this.btnEditColor_Click);
+            // 
             // ViewContent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnEditColor);
+            this.Controls.Add(this.btnEditItalic);
+            this.Controls.Add(this.btnEditLink);
+            this.Controls.Add(this.btnEditBold);
             this.Controls.Add(this.btnPaste);
             this.Controls.Add(this.btnYeni);
             this.Controls.Add(this.editAuthor);
@@ -274,6 +331,10 @@
         private System.Windows.Forms.ComboBox editAuthor;
         private System.Windows.Forms.Button btnYeni;
         private System.Windows.Forms.Button btnPaste;
+        private System.Windows.Forms.Button btnEditBold;
+        private System.Windows.Forms.Button btnEditLink;
+        private System.Windows.Forms.Button btnEditItalic;
+        private System.Windows.Forms.Button btnEditColor;
 
     }
 }
