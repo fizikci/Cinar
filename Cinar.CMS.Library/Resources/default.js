@@ -289,6 +289,23 @@ $(function () {
             var posX = e.clientX - offset.left;
             doRoundAbout($(this), false, move + (posX < $(this).width() / 2 ? 1 : -1));
         });
+
+        $(this).mouseenter(function () {
+            clearInterval($(this).data('timeoutId'));
+        }).mouseleave(function () {
+            var elm = $(this), timeoutId = setInterval(function () { doRoundAbout(elm, false, elm[0].move - 1); }, 3500);
+            elm.data('timeoutId', timeoutId);
+        });
+
+        var ths = $(this);
+        ths.data('timeoutId', setInterval(function () { doRoundAbout(ths, false, ths[0].move - 1); }, 3500));
+
+        ths.find('img').click(function (event) {
+            if (ths.find('img').get(ths.data('curr')) == $(this)[0]) {
+                event.stopPropagation();
+                location.href = $(this).parent().find('a').attr('href');
+            }
+        });
     });
 });
 
@@ -320,7 +337,9 @@ function doRoundAbout(elm, start, move) {
     var i = move % items.length;
     if (i < 0) i = items.length + i;
     if (i > 0) i = items.length - i;
-    elm.find('.roundAboutCaption').html($(items.get(i)).find('.caption').html());
+    var item = $(items.get(i));
+    elm.find('.roundAboutCaption').html(item.find('.caption').html());
+    elm.data('curr', i);
 }
 
 var slideAllCurrIndex = -1;

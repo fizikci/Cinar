@@ -116,7 +116,7 @@ namespace Cinar.CMS.DesktopEditor.Controls
         {
             NameValueCollection postData = getContentDataAsNameValue();
             if (CurrentContentId == 0)
-                postData["Metin"] = postData["Metin"].Replace("\r", "").Replace("\n", "<br/>\r\n");
+                postData["Metin"] = postData["Metin"];
 
             string res = "";
 
@@ -289,6 +289,30 @@ namespace Cinar.CMS.DesktopEditor.Controls
             editPicture.Image = new Bitmap(Provider.CopiedPicturePath);
             editPicture.Tag = Provider.CopiedPicturePath;
             editPicture.Refresh();
+        }
+
+        private void btnEditBold_Click(object sender, EventArgs e)
+        {
+            editMetin.SelectedText = "<b>" + editMetin.SelectedText + "</b>";
+        }
+
+        private void btnEditLink_Click(object sender, EventArgs e)
+        {
+            editMetin.SelectedText = "<a href=\"LINK\" target=\"_blank\">" + editMetin.SelectedText + "</a>";
+        }
+
+        private void btnEditItalic_Click(object sender, EventArgs e)
+        {
+            editMetin.SelectedText = "<i>" + editMetin.SelectedText + "</i>";
+        }
+
+        private void btnEditColor_Click(object sender, EventArgs e)
+        {
+            ColorDialog cs = new ColorDialog();
+            if (cs.ShowDialog() == DialogResult.OK)
+            {
+                editMetin.SelectedText = "<span style=\"color:" + ColorTranslator.ToHtml(cs.Color) + "\">" + editMetin.SelectedText + "</span>";
+            }
         }
     }
 
