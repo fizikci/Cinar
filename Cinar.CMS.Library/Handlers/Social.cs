@@ -403,52 +403,6 @@ namespace Cinar.CMS.Library.Handlers
 
             context.Response.Write(new Result { Data = true }.ToJSON());
         }
- /*
-        private void sendMessage()
-        {
-            string toUserNick = context.Request["toUserNick"];
-
-            new PrivateMessage
-            {
-                ToUserId = Provider.Database.Read<User>("Nick={0}", toUserNick).Id,
-                Message = Provider.Request["message"],
-            }.Save();
-
-            context.Response.Write(new Result{Data=true}.ToJSON());
-        }
-
-        private void getMessageCount()
-        {
-            Result res = new Result();
-            res.Data = Provider.Database.GetInt("select * from PrivateMessage where InsertDate>{0} AND ToUserId={1}", Provider.User.Settings.LastPrivateMessageCheck, Provider.User.Id);
-
-            context.Response.Write(res.ToJSON());
-        }
-
-        private void getLastMessages()
-        {
-            var res = new Result{
-                Data = Provider.Database.ReadList<ViewPrivateLastMessage>("select * from ViewPrivateLastMessage where MailBoxOwnerId={0}", Provider.User.Id)
-            };
-            context.Response.Write(res.ToJSON());
-        }
-
-        private void reportUser()
-        {
-            string nick = context.Request["nick"];
-            string reason = context.Request["reason"];
-            string reasonText = context.Request["reasonText"];
-
-            new ReportedUser
-            {
-                UserId = Provider.Database.Read<User>("Nick={0}", nick).Id,
-                Reason = reason,
-                ReasonText = reasonText
-            }.Save();
-
-            context.Response.Write(new Result{Data=true}.ToJSON());
-        }
-*/
 
         private void getUserHomePosts()
         {
@@ -984,7 +938,7 @@ http://{1}
         }
     }
 
-        public class Result
+    public class Result
     {
         public bool IsError { get; set; }
         public string ErrorMessage { get; set; }
