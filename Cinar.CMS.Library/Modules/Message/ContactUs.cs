@@ -32,7 +32,7 @@ namespace Cinar.CMS.Library.Modules
                 {
                     contactUs.Save();
                     if(sendMail)
-                        Provider.SendMail(contactUs.Email, contactUs.Name, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, Provider.GetResource("From visitor: ") + contactUs.Subject, contactUs.Message);
+                        Provider.SendMail(contactUs.Email, contactUs.Name, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, Provider.GetResource("From visitor: ") + contactUs.Subject, contactUs.Message + "<br/><br/>"+contactUs.Name+"<br/>"+contactUs.Email);
                     return thanksMessage;
                 }
                 catch (Exception ex)

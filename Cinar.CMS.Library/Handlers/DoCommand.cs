@@ -266,9 +266,6 @@ namespace Cinar.CMS.Library.Handlers
                             case "StaticHtml":
                                 StaticHtml sh = (StaticHtml)m;
                                 sh.InnerHtml = scriptifySafe(sh.InnerHtml);
-                                //sh.InnerHtml1 = scriptifySafe(sh.InnerHtml1);
-                                //sh.InnerHtml2 = scriptifySafe(sh.InnerHtml2);
-                                //sh.InnerHtml3 = scriptifySafe(sh.InnerHtml3);
                                 break;
                             case "Chart":
                                 Chart chart = (Chart)m;
@@ -327,6 +324,7 @@ namespace Cinar.CMS.Library.Handlers
         {
             string email = context.Request["email"];
             Provider.Log("Notice", "Subscribe", email);
+            Provider.SendMail("Yeni bülten üyesi", Provider.Server.HtmlEncode(email) + " üye oldu");
             context.Response.Write("OK");
         }
 
