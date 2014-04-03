@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dosyaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuYeniSite = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenSite = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuKapat = new System.Windows.Forms.ToolStripMenuItem();
             this.yardımToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -42,8 +42,11 @@
             this.menuCascade = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTileHoriz = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTileVert = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuKapat = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -73,37 +76,27 @@
             // menuYeniSite
             // 
             this.menuYeniSite.Name = "menuYeniSite";
-            this.menuYeniSite.Size = new System.Drawing.Size(152, 22);
+            this.menuYeniSite.Size = new System.Drawing.Size(127, 22);
             this.menuYeniSite.Text = "Yeni site...";
             this.menuYeniSite.Click += new System.EventHandler(this.menuYeniSite_Click);
             // 
             // menuOpenSite
             // 
             this.menuOpenSite.Name = "menuOpenSite";
-            this.menuOpenSite.Size = new System.Drawing.Size(152, 22);
+            this.menuOpenSite.Size = new System.Drawing.Size(127, 22);
             this.menuOpenSite.Text = "Open site";
             // 
-            // statusStrip1
+            // toolStripMenuItem2
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 634);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1037, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(124, 6);
             // 
-            // toolStripProgressBar1
+            // menuKapat
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(16, 17);
-            this.toolStripStatusLabel1.Text = "...";
+            this.menuKapat.Name = "menuKapat";
+            this.menuKapat.Size = new System.Drawing.Size(127, 22);
+            this.menuKapat.Text = "Kapat";
+            this.menuKapat.Click += new System.EventHandler(this.menuKapat_Click);
             // 
             // yardımToolStripMenuItem
             // 
@@ -157,17 +150,39 @@
             this.menuTileVert.Text = "Dikey Döşe";
             this.menuTileVert.Click += new System.EventHandler(this.menuTileVert_Click);
             // 
-            // toolStripMenuItem2
+            // statusStrip1
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel,
+            this.statusProgress});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 634);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1037, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
             // 
-            // menuKapat
+            // statusLabel
             // 
-            this.menuKapat.Name = "menuKapat";
-            this.menuKapat.Size = new System.Drawing.Size(152, 22);
-            this.menuKapat.Text = "Kapat";
-            this.menuKapat.Click += new System.EventHandler(this.menuKapat_Click);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(16, 17);
+            this.statusLabel.Text = "...";
+            // 
+            // statusProgress
+            // 
+            this.statusProgress.Name = "statusProgress";
+            this.statusProgress.Size = new System.Drawing.Size(100, 16);
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            // 
+            // timer
+            // 
+            this.timer.Enabled = true;
+            this.timer.Interval = 1000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // FormMain
             // 
@@ -196,8 +211,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuYeniSite;
         private System.Windows.Forms.ToolStripMenuItem menuOpenSite;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripProgressBar statusProgress;
         private System.Windows.Forms.ToolStripMenuItem yardımToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuAbout;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
@@ -207,5 +222,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuTileVert;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem menuKapat;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.Timer timer;
     }
 }
