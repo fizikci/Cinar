@@ -48,6 +48,7 @@ namespace Cinar.CMS.DesktopEditor
         public Dictionary<int, string> SiteAddress { get; set; }
         public Dictionary<int, string> Emails { get; set; }
         public Dictionary<int, string> Passwords { get; set; }
+        public Dictionary<int, string> Feed { get; set; }
 
         private static string getJsonPath() {
             return Application.ExecutablePath.ToLowerInvariant().Replace(".exe", ".json");
@@ -64,6 +65,7 @@ namespace Cinar.CMS.DesktopEditor
                 sts.SiteAddress = new Dictionary<int, string> { };
                 sts.Emails = new Dictionary<int, string> { };
                 sts.Passwords = new Dictionary<int, string> { };
+                sts.Feed = new Dictionary<int, string> { };
 
                 string json = JsonConvert.SerializeObject(sts, Formatting.Indented);
                 File.WriteAllText(jsonPath, json, Encoding.UTF8);

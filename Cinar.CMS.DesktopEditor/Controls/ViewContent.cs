@@ -176,8 +176,10 @@ namespace Cinar.CMS.DesktopEditor.Controls
                 s.ConnectionStrings[Index] = f.ConnectingString;
                 if (s.Emails == null) s.Emails = new Dictionary<int, string>();
                 if (s.Passwords == null) s.Passwords = new Dictionary<int, string>();
+                if (s.Feed == null) s.Feed = new Dictionary<int, string>();
                 s.Emails[Index] = f.Email;
                 s.Passwords[Index] = f.Password;
+                s.Feed[Index] = f.Feed;
                 s.Save();
 
                 loadCategories(false);
