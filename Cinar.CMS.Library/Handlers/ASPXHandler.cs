@@ -114,7 +114,7 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>\n");
                 sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Description) + " " : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
-                sb.Append("<meta name=\"viewport\" content=\"initial-scale=1.0,width=device-width,user-scalable=no\"/>\n");
+                sb.Append("<meta name=\"viewport\" content=\"width=device-width\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
                 //sb.Append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
