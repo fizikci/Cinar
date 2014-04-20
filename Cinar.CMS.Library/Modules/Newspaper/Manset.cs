@@ -132,9 +132,9 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} td.mansetTitle {{font-size:20px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} img.mansetImage {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.mansetDesc {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} td.mansetTitle {{font-size:20px}}\n", getCSSId());
+            sb.AppendFormat("#{0} img.mansetImage {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.mansetDesc {{}}\n", getCSSId());
             return sb.ToString();
         }
 

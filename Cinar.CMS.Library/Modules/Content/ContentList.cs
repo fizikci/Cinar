@@ -444,19 +444,19 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} img.pic {{float:right}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clItem {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clTitle {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clSTitle {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clTitleFirst {{font-weight:bold;font-size:16px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clSTitleFirst {{font-weight:bold;font-size:16px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clCategory {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clAuthor {{font-style:italic}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clPubDate {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clDesc {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clMetin {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clSource {{font-style:italic}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.clMore {{text-align:right}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} img.pic {{float:right}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clItem {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clTitle {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clSTitle {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clTitleFirst {{font-weight:bold;font-size:16px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clSTitleFirst {{font-weight:bold;font-size:16px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clCategory {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clAuthor {{font-style:italic}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clPubDate {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clDesc {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clMetin {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clSource {{font-style:italic}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.clMore {{text-align:right}}\n", getCSSId());
             return sb.ToString();
         }
 

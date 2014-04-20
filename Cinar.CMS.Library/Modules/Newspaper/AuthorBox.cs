@@ -77,10 +77,10 @@ $this.AddToFavoritesLink$
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} img {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.name {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.desc {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.fav {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} img {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.name {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.desc {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.fav {{}}\n", getCSSId());
             return sb.ToString();
         }
 

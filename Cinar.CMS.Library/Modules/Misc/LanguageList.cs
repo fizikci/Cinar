@@ -35,12 +35,12 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a:hover {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.tr-TR {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.de-DE {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.en-US {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a:hover {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.tr-TR {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.de-DE {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.en-US {{}}\n", getCSSId());
             return sb.ToString();
         }
 

@@ -22,7 +22,7 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{padding:4px;margin:4px;background:yellow;border:1px solid red;text-align:center}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{padding:4px;margin:4px;background:yellow;border:1px solid red;text-align:center}}\n", getCSSId());
             return sb.ToString();
         }
     }

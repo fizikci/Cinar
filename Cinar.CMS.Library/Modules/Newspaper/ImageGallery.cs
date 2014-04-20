@@ -114,12 +114,12 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.paging {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging a {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.paging a.sel {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} img {{cursor:pointer}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.title {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.desc {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.paging {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.paging a {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.paging a.sel {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} img {{cursor:pointer}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.title {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.desc {{}}\n", getCSSId());
             return sb.ToString();
         }
 

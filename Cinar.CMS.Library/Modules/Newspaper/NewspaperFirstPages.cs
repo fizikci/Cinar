@@ -28,12 +28,12 @@ $
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat(".slideShow {{width:967px;margin-left:0px;margin-top:0px;padding:20px 0px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".slideShow .clipper {{width:920px;height:146px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".slideShow .clipper .innerDiv {{height:146px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".slideShow .clipper .innerDiv img {{margin-right:4px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".slideShow div.paging {{height:146px;width:20px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".slideShow .playBtn {{display:none;}}\n", this.Name, this.Id);
+            sb.AppendFormat(".slideShow {{width:967px;margin-left:0px;margin-top:0px;padding:20px 0px;}}\n", getCSSId());
+            sb.AppendFormat(".slideShow .clipper {{width:920px;height:146px;}}\n", getCSSId());
+            sb.AppendFormat(".slideShow .clipper .innerDiv {{height:146px;}}\n", getCSSId());
+            sb.AppendFormat(".slideShow .clipper .innerDiv img {{margin-right:4px;}}\n", getCSSId());
+            sb.AppendFormat(".slideShow div.paging {{height:146px;width:20px;}}\n", getCSSId());
+            sb.AppendFormat(".slideShow .playBtn {{display:none;}}\n", getCSSId());
             return sb.ToString();
         }
     }

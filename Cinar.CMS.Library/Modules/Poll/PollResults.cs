@@ -64,15 +64,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.pollQuestion {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.pollAnswer {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.pollBar {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.bar1 {{background:orange}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.bar2 {{background:maroon}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.bar3 {{background:navy}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.bar4 {{background:green}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.list {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.listQuestion {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.pollQuestion {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.pollAnswer {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.pollBar {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.bar1 {{background:orange}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.bar2 {{background:maroon}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.bar3 {{background:navy}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.bar4 {{background:green}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.list {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.listQuestion {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

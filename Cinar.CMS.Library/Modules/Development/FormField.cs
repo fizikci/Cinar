@@ -219,11 +219,11 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{width:50%;padding:4px 4px 0px 0px;float:left;clear:none}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.label {{width:100%;overflow:hidden}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input {{width:100%}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} select {{width:100%}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} textarea {{width:100%}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{width:50%;padding:4px 4px 0px 0px;float:left;clear:none}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.label {{width:100%;overflow:hidden}}\n", getCSSId());
+            sb.AppendFormat("#{0} input {{width:100%}}\n", getCSSId());
+            sb.AppendFormat("#{0} select {{width:100%}}\n", getCSSId());
+            sb.AppendFormat("#{0} textarea {{width:100%}}\n", getCSSId());
             return sb.ToString();
         }
 

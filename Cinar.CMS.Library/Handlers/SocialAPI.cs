@@ -267,7 +267,7 @@ namespace Cinar.CMS.Library.Handlers
                     p.InsertUserId = u.Id AND
                     u.Visible = 1 AND
                     " + idPart + @" AND
-                    p.InsertDate > DATE_SUB(curdate(), INTERVAL 1 WEEK)
+                    p.InsertDate > DATE_SUB(curdate(), INTERVAL 2 DAY)
                 ORDER BY 
                     (p.ShareCount+1) * (p.ShareCount+1) * (p.LikeCount+1) DESC
                 LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);

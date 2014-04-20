@@ -160,15 +160,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.nav a {{display:block;padding:4px;text-decoration:none;font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.nav a:hover {{background:#efefef}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.navSel a {{display:block;padding:4px;text-decoration:none;font-weight:bold;background:orange;color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.subNav a {{display:block;padding:2px;padding-left:20px;text-decoration:none}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.subNav a:hover {{background:#efefef}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.subNavSel a {{display:block;padding:2px;padding-left:20px;text-decoration:none;font-weight:bold;background:orange;color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.popupMenuItems {{background:#808080;width:200px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.popupMenuItems div.popupMenuItem a {{display:block;width:100%;padding:4px;text-decoration:none;color:white;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.popupMenuItems div.popupMenuItem a:hover {{background:crimson}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.nav a {{display:block;padding:4px;text-decoration:none;font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.nav a:hover {{background:#efefef}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.navSel a {{display:block;padding:4px;text-decoration:none;font-weight:bold;background:orange;color:white}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.subNav a {{display:block;padding:2px;padding-left:20px;text-decoration:none}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.subNav a:hover {{background:#efefef}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.subNavSel a {{display:block;padding:2px;padding-left:20px;text-decoration:none;font-weight:bold;background:orange;color:white}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.popupMenuItems {{background:#808080;width:200px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.popupMenuItems div.popupMenuItem a {{display:block;width:100%;padding:4px;text-decoration:none;color:white;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.popupMenuItems div.popupMenuItem a:hover {{background:crimson}}\n", getCSSId());
             return sb.ToString();
         }
     }

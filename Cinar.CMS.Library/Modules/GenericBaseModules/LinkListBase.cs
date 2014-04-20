@@ -67,8 +67,8 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} a.sel {{color:orange}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.sel:hover {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} a.sel {{color:orange}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.sel:hover {{}}\n", getCSSId());
             return sb.ToString();
         }
 

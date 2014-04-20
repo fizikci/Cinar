@@ -78,6 +78,8 @@ InnerHtml,32,<hr/>
         private string css = "";
         private string details;
         private string cssClass = "";
+        private string elementId = "";
+        private string elementName = "div";
         private bool visible = true;
         private string roleToRead = "";
         #endregion
@@ -95,6 +97,17 @@ InnerHtml,32,<hr/>
         {
             get { return id; }
             set { id = value; }
+        }
+
+        public string ElementName
+        {
+            get { if (string.IsNullOrWhiteSpace(elementName)) elementName = "div"; return elementName; }
+            set { elementName = value; }
+        }
+        public string ElementId
+        {
+            get { return elementId; }
+            set { elementId = value; }
         }
 
         [ColumnDetail(IsNotNull = true, Length = 50), EditFormFieldProps(Visible = false)]
@@ -260,22 +273,28 @@ InnerHtml,32,<hr/>
                 html = Provider.ToString(ex, true);
             }
 
-            return String.Format("<div id=\"{0}_{1}\" class=\"{3}{0}{5}\"{4}>{2}</div>\n",
+            return String.Format("<{6} id=\"{1}\" class=\"{3}{0}{5}\"{4}>{2}</{6}>\n",
                 this.Name,
-                this.Id,
+                string.IsNullOrWhiteSpace(ElementId) ? this.Name + "_" + this.Id : ElementId,
                 html,
                 this.editable ? "Module " : "",
-                Provider.DesignMode ? String.Format(" title=\"Name: {0}, Id: {1}, Region: {2}\"", Provider.GetResource(this.name), this.id, this.region) : "", // tooltip
-                this.cssClass != "" ? " " + this.cssClass : "");
+                Provider.DesignMode ? String.Format(" title=\"Name: {0}, Id: {1}, Region: {2}\" mid=\"{3}\"", Provider.GetResource(this.name), this.id, this.region, this.Name + "_" + this.Id) : string.Format(" mid=\"{0}\"", this.Name + "_" + this.Id), // tooltip
+                this.cssClass != "" ? " " + this.cssClass : "",
+                this.ElementName);
         }
 
         internal virtual string show() { return ""; }
         protected internal virtual void beforeShow() { }
         protected internal virtual void afterShow() { }
 
+        protected string getCSSId() 
+        {
+            return  string.IsNullOrWhiteSpace(ElementId) ? String.Format("{0}_{1}", this.Name, this.Id) : ElementId;
+        }
+
         public virtual string GetDefaultCSS()
         {
-            return String.Format("#{0}_{1} {{}}\n", this.Name, this.Id);
+            return String.Format("#{0} {{}}\n", getCSSId());
         }
 
         public string GetPropertyEditorJSON()
@@ -288,7 +307,7 @@ InnerHtml,32,<hr/>
             if (Id>0)
             {
                 Provider.Database.ExecuteNonQuery(
-                    "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8} where Id={0}", //  and Name={1}
+                    "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8}, ElementId={9}, ElementName={10} where Id={0}", //  and Name={1}
                     Id, 
                     Name, 
                     Template, 
@@ -297,7 +316,9 @@ InnerHtml,32,<hr/>
                     CSS, 
                     this.Serialize(),
                     ParentModuleId,
-                    UseCache);
+                    UseCache,
+                    ElementId,
+                    ElementName);
 
                 this.deleteCache();
                 Provider.Database.ClearEntityWebCache(typeof(Module), this.Id);
@@ -306,14 +327,16 @@ InnerHtml,32,<hr/>
             {
                 this.OrderNo = Convert.ToInt32(Provider.Database.GetValue("select max(OrderNo)+1 from Module where Template={0} and Region={1}", this.Template, this.Region));
                 Provider.Database.ExecuteNonQuery(
-                    "insert into Module (Name, Template, Region, OrderNo, CSS, ParentModuleId, UseCache) values ({0},{1},{2},{3},{4},{5},{6})", 
+                    "insert into Module (Name, Template, Region, OrderNo, CSS, ParentModuleId, UseCache, ElementId, ElementName) values ({0},{1},{2},{3},{4},{5},{6},{7},{8})", 
                     Name, 
                     Template, 
                     Region, 
                     OrderNo, 
                     CSS, 
                     ParentModuleId,
-                    UseCache);
+                    UseCache,
+                    ElementId,
+                    ElementName);
                 this.Id = Convert.ToInt32(Provider.Database.GetValue("select max(Id) from Module"));
                 Provider.Database.ExecuteNonQuery(
                     "update Module set Details = {0} where Id={1}", 
@@ -437,14 +460,14 @@ InnerHtml,32,<hr/>
                 return null;
 
             Module module = Deserialize(m.Name, m.Details);
-            module.Id = m.Id;
-            module.Name = m.Name;
-            module.Template = m.Template;
-            module.Region = m.Region;
-            module.OrderNo = m.OrderNo;
-            module.CSS = m.CSS;
-            module.ParentModuleId = m.ParentModuleId;
-            module.UseCache = m.UseCache;
+            //module.Id = m.Id;
+            //module.Name = m.Name;
+            //module.Template = m.Template;
+            //module.Region = m.Region;
+            //module.OrderNo = m.OrderNo;
+            //module.CSS = m.CSS;
+            //module.ParentModuleId = m.ParentModuleId;
+            //module.UseCache = m.UseCache;
             return module;
         }
 
@@ -558,7 +581,7 @@ InnerHtml,32,<hr/>
 
         public override string ToString()
         {
-            return String.Format("{0} {1}", this.Name, this.Id);
+            return String.Format("{0}", getCSSId());
         }
     }
 

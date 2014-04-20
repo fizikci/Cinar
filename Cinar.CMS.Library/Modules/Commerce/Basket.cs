@@ -46,41 +46,71 @@ namespace Cinar.CMS.Library.Modules
 
         public Basket() {
             this.InnerHtml = @"<form name='basket$=this.Id$' action='$=Provider.Request.RawUrl$' method='post'>
-    <table cellpadding='0' cellspacing='0' border='0'>
-    <tr class='header'>
-        <td class='productName'>$=Provider.TR('Ürün')$</td>
-        <td class='listPrice'>$=Provider.TR('Liste Fiyatı')$</td>
-        <td class='ourPrice'>$=Provider.TR('Bizim Fiyatımız')$</td>
-        <td class='amount'>$=Provider.TR('Miktar')$</td>
-        <td class='delete'>$=Provider.TR('Çıkar')$</td>
-    </tr>
+<div class=""panel panel-default"">
+    <div class=""panel-heading"">
+		<h3>Shoping Cart</h3>
+	</div>
+	
+		<div class=""panel-body"">
+			<div class=""row"">
+				<div class=""col-12 col-lg-12"">
+						<table class=""table table-striped"">
+							<thead>
+							  <tr>
+								<th>Item</th>
+								<th>Qty</th>
+								<th>Price</th>
+								<th>Our Price</th>
+                                <th>Del</th>
+							  </tr>
+							</thead>
+							<tbody>
 $
     for (int i = 0; i < this.Sepet.Lines.Length; i++)
     {
         var si = this.Sepet.Lines[i];
-$
-        <tr class='$=i % 2 == 0 ? 'line' : 'line alt'$'>
-            <td class='productName'><a href=""$=si.Content.GetPageLinkWithTitle('')$"">$=si.Content.Title$</a></td>
-            <td class='listPrice'>$=si.ListPrice.ToString('0,0.00')$</td>
-            <td class='ourPrice'>$=si.OurPrice.ToString('0,0.00')$</td>
-            <td class='amount'><input type='text' name='up_$=si.ItemId$' value='$=si.Amount$' size='3' maxlength='3'/></td>
-            <td class='delete'><input type='checkbox' name='del' value='$=si.ItemId$'/></td>
-        </tr>
+$							  <tr>
+								<td>$=si.Content.Title$</td>
+								<td><input type='text' name='up_$=si.ItemId$' value='$=si.Amount$' size='3' maxlength='3'/></td>
+								<td>$=si.ListPrice.ToString('0.00')$ TL</td>
+								<td>$=si.OurPrice.ToString('0.00')$ TL</td>
+                                <td><input type='checkbox' name='del' value='$=si.ItemId$'/></td>
+							  </tr>
 $
 }
 $
-</table>
-
-<table class='totals'>
-<tr><td class='label'>$=Provider.TR('Ara Toplam')$</td><td class='value'>$=this.Sepet.AraToplam.ToString('0,0.00')$</td></tr>
-<tr><td class='label'>$=Provider.TR('İndirim Tutarı')$</td><td class='value'>$=this.Sepet.IndirimTutari.ToString('0,0.00')$</td></tr>
-<tr><td class='label'>$=Provider.TR('KDV Tutarı')$</td><td class='value'>$=this.Sepet.KDVTutari.ToString('0,0.00')$</td></tr>
-<tr><td class='label'><b>$=Provider.TR('Toplam Tutar')$</b></td><td class='value'><b>$=this.Sepet.ToplamTutar.ToString('0,0.00')$</b></td></tr>
-</table>
-
-<input type='submit' name='cmdUpdate' value='$=Provider.TR('Sepeti Güncelle')$'/>
-<input type='submit' name='cmdEmpty' value='$=Provider.TR('Sepeti Boşalt')$'/>
-<input type='submit' name='cmdCheckOut' value='$=Provider.TR('Ödemeyi Yap')$'/>
+							</tbody>
+					  </table>
+					  <hr>
+						<dl class=""dl-horizontal pull-right"">
+    					  <dt>Sub-total:</dt>
+						  <dd>$=this.Sepet.AraToplam.ToString('0,0.00')$</dd>
+    					  <dt>Save:</dt>
+						  <dd>$=this.Sepet.IndirimTutari.ToString('0,0.00')$</dd>
+    					  <dt>VAT:</dt>
+						  <dd>$=this.Sepet.KDVTutari.ToString('0,0.00')$</dd>
+						  <dt>Shipping Cost:</dt>
+						  <dd>0.25 TL</dd> 
+						  <dt>Total:</dt>
+						  <dd>$=this.Sepet.ToplamTutar.ToString('0,0.00')$</dd>
+						</dl>
+						<div class=""clearfix""></div>
+						
+				</div>
+			</div>
+		</div>
+		<div class=""panel-footer"">
+			<div class=""row"">
+    			<div class=""col-lg-6"">
+    				 <button type=""submit"" class=""btn btn-default"" name='cmdUpdate'><i class=""icon-ok-sign""></i> Update cart</button>
+    				 <button type=""submit"" class=""btn btn-default"" name='cmdEmpty'><i class=""icon-ok-sign""></i> Clear cart</button>
+				</div>
+				<div class=""col-lg-6"">
+					 <button type=""submit"" class=""btn btn-success pull-right"" name='cmdCheckOut'><i class=""icon-ok-sign""></i> Proceed to checkout</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </form>";
         }
@@ -90,20 +120,20 @@ $
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
 
-            sb.AppendFormat("#{0}_{1} tr.header {{background:orange; color:white; font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.header td {{padding: 3px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.line {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.alt {{background:#efefef;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} tr.header {{background:orange; color:white; font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.header td {{padding: 3px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.line {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.alt {{background:#efefef;}}\n", getCSSId());
             sb.AppendFormat("\n");
-            sb.AppendFormat("#{0}_{1} td.listPrice {{text-align:right}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.line td.listPrice {{text-decoration:line-through}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.ourPrice {{text-align:right;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.amount {{text-align:right;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.delete {{text-align:center;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} td.listPrice {{text-align:right}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.line td.listPrice {{text-decoration:line-through}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.ourPrice {{text-align:right;}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.amount {{text-align:right;}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.delete {{text-align:center;}}\n", getCSSId());
             sb.AppendFormat("\n");
-            sb.AppendFormat("#{0}_{1} table {{width:100%;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.label {{width:80%; text-align:right}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.value {{width:20%; text-align:right}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} table {{width:100%;}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.label {{width:80%; text-align:right}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.value {{width:20%; text-align:right}}\n", getCSSId());
 
             return sb.ToString();
         }

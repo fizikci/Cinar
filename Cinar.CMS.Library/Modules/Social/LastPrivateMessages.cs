@@ -59,14 +59,14 @@ jQuery(function(){
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} {{padding:10px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#privateLastMessages .summary {{float: left;font-size: 12px;display: block;width: 191px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#privateLastMessages .name {{font-weight: bold;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#privateLastMessages .date {{float: right;font-size: 9px;margin-top: 5px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#privateLastMessages img {{width: 48px;height: 48px;float: left;margin: 5px 8px 5px 5px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} h1 {{height: 29px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".privateLastMessage {{clear: both;height: 60px;border-top: 1px solid #C5C5C5;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".privateLastMessage {{background-color: #FFF;cursor: pointer;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{padding:10px;}}\n", getCSSId());
+            sb.AppendFormat("#privateLastMessages .summary {{float: left;font-size: 12px;display: block;width: 191px;}}\n", getCSSId());
+            sb.AppendFormat("#privateLastMessages .name {{font-weight: bold;}}\n", getCSSId());
+            sb.AppendFormat("#privateLastMessages .date {{float: right;font-size: 9px;margin-top: 5px;}}\n", getCSSId());
+            sb.AppendFormat("#privateLastMessages img {{width: 48px;height: 48px;float: left;margin: 5px 8px 5px 5px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} h1 {{height: 29px;}}\n", getCSSId());
+            sb.AppendFormat(".privateLastMessage {{clear: both;height: 60px;border-top: 1px solid #C5C5C5;}}\n", getCSSId());
+            sb.AppendFormat(".privateLastMessage {{background-color: #FFF;cursor: pointer;}}\n", getCSSId());
             return sb.ToString();
         }
     }

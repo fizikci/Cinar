@@ -121,15 +121,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.loginEmailLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginEmailInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.loginPassLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginPassInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.loginRememberMeLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.loginError {{color:red}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.loginSubmitButton {{display:block}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.greeting {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a {{display:block;padding-left:10px}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.loginEmailLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.loginEmailInput {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.loginPassLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.loginPassInput {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.loginRememberMeLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.loginError {{color:red}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.loginSubmitButton {{display:block}}\n", getCSSId());
+            sb.AppendFormat("#{0} span.greeting {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a {{display:block;padding-left:10px}}\n", getCSSId());
             return sb.ToString();
         }
     }

@@ -161,13 +161,13 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} td {{text-align:center}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.title {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.dayNames {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.eventDays {{font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.emptyDays {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.today {{background: orange; color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.otherDays {{color: gray;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} td {{text-align:center}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.title {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.dayNames {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.eventDays {{font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.emptyDays {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.today {{background: orange; color:white}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.otherDays {{color: gray;}}\n", getCSSId());
             return sb.ToString();
         }
     }

@@ -36,7 +36,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} input.searchText {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} input.searchText {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

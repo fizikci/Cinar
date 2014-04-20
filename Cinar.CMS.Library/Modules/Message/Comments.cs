@@ -166,18 +166,18 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{clear:both}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.mainTitle {{font-weight:bold;font-size:20px;display:block;margin-top:10px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.item {{padding:4px;margin-top:10px;font-size:12px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.child {{margin-left:20px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.title {{padding:4px;background:#dfdfdf}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.text {{padding:4px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.sign {{text-align:right;margin-bottom:10px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.linkWriteComment {{cursor:pointer}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.linkNAnswer {{cursor:pointer}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} span.linkWriteAnswer {{cursor:pointer}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.commentForm {{margin:4px;margin-left:20px;padding:4px;border:1px dashed #dfdfdf}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.commentForm textarea {{width:100%;height:100px}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{clear:both}}\n", getCSSId());
+            sb.AppendFormat("#{0} span.mainTitle {{font-weight:bold;font-size:20px;display:block;margin-top:10px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.item {{padding:4px;margin-top:10px;font-size:12px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.child {{margin-left:20px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.title {{padding:4px;background:#dfdfdf}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.text {{padding:4px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.sign {{text-align:right;margin-bottom:10px}}\n", getCSSId());
+            sb.AppendFormat("#{0} span.linkWriteComment {{cursor:pointer}}\n", getCSSId());
+            sb.AppendFormat("#{0} span.linkNAnswer {{cursor:pointer}}\n", getCSSId());
+            sb.AppendFormat("#{0} span.linkWriteAnswer {{cursor:pointer}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.commentForm {{margin:4px;margin-left:20px;padding:4px;border:1px dashed #dfdfdf}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.commentForm textarea {{width:100%;height:100px}}\n", getCSSId());
             return sb.ToString();
         }
     }

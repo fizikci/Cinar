@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Cinar.CMS.Library.Entities;
 using Cinar.Scripting;
-using Brickred.SocialAuth.NET.Core.BusinessObjects;
+using br = Brickred.SocialAuth.NET.Core.BusinessObjects;
 
 namespace Cinar.CMS.Library.Modules
 {
@@ -80,18 +80,18 @@ $
 
         internal override string show()
         {
-            List<Contact> listMemberContacts = new List<Contact>();
-            List<Contact> listContacts = new List<Contact>();
+            List<br.Contact> listMemberContacts = new List<br.Contact>();
+            List<br.Contact> listContacts = new List<br.Contact>();
 
-            if (!SocialAuthUser.IsLoggedIn())
+            if (!br.SocialAuthUser.IsLoggedIn())
             {
             }
             else
             {
                 try
                 {
-                    var contacts = SocialAuthUser.GetCurrentUser().GetContacts(SocialAuthUser.CurrentProvider);
-                    foreach (Contact c in contacts)
+                    var contacts = br.SocialAuthUser.GetCurrentUser().GetContacts(br.SocialAuthUser.CurrentProvider);
+                    foreach (br.Contact c in contacts)
                     {
                         if (string.IsNullOrWhiteSpace(c.Email))
                             continue;
@@ -120,8 +120,8 @@ $
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} .contacts, #{0}_{1} .memberContacts {{height: 200px;overflow-y: auto;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} button {{margin-left:100px;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} .contacts, #{0} .memberContacts {{height: 200px;overflow-y: auto;}}\n", getCSSId());
+            sb.AppendFormat("#{0} button {{margin-left:100px;}}\n", getCSSId());
             return sb.ToString();
         }
     

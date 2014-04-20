@@ -42,10 +42,10 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
 
-            sb.AppendFormat("#{0}_{1} table {{width:100%;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.row {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} tr.alt {{background:#efefef;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.tutar {{border-top:1px solid #404040; margin:4px; padding:4px; text-align:right}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} table {{width:100%;}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.row {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} tr.alt {{background:#efefef;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.tutar {{border-top:1px solid #404040; margin:4px; padding:4px; text-align:right}}\n", getCSSId());
 
             return sb.ToString();
         }

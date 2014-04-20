@@ -322,8 +322,8 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.subTitle {{background:#dfdfdf;font-weight:bold;padding:2px;margin-top:10px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.errorPanel {{background:#efefef;border:1px dotted #afafaf;padding:2px;margin-top:10px}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.subTitle {{background:#dfdfdf;font-weight:bold;padding:2px;margin-top:10px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.errorPanel {{background:#efefef;border:1px dotted #afafaf;padding:2px;margin-top:10px}}\n", getCSSId());
             return sb.ToString();
         }
     }

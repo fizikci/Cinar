@@ -108,15 +108,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} table {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.topLeft {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.topCenter {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.topRight {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.centerLeft {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.centerRight {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.bottomLeft {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.bottomCenter {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} td.bottomRight {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} table {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.topLeft {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.topCenter {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.topRight {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.centerLeft {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.centerRight {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.bottomLeft {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.bottomCenter {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} td.bottomRight {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

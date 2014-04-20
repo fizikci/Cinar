@@ -57,7 +57,7 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{}}\n", getCSSId());
             return sb.ToString();
         }
 

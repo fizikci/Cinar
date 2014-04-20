@@ -111,17 +111,31 @@ namespace Cinar.CMS.Library.Handlers
                 if (!string.IsNullOrWhiteSpace(Provider.Configuration.SiteName))
                     title += Provider.Configuration.SiteName;
 
+                string description = (Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Description)) ? CMSUtility.HtmlEncode(Provider.Content.Description) : CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription);
+
+                if (Provider.Request["Id"] != null) {
+                    int id = 0;
+                    if (int.TryParse(Provider.Request["Id"], out id))
+                    {
+                        Post p = Provider.Database.Read<Post>(id);
+                        if (p != null)
+                        {
+                            title = p.InsertUser.Nick + " " + Provider.Configuration.SiteName + "'te paylaştı";
+                            description = p.Metin;
+                        }
+                    }
+                }
+
                 sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>\n");
-                sb.Append("<meta name=\"description\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Description) + " " : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription) + "\"/>\n");
+                sb.Append("<meta name=\"description\" content=\"" + Provider.Server.HtmlEncode(description) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
                 sb.Append("<meta name=\"viewport\" content=\"width=device-width\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
-                //sb.Append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
                 sb.Append("<meta property=\"og:title\" content=\"" + Provider.Server.HtmlEncode(title) + "\"/>\n");
                 sb.Append("<meta property=\"og:image\" content=\"" + ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Picture)) ? Provider.Content.Picture : Provider.Configuration.SiteLogo) + "\"/>\n");
                 sb.Append("<meta property=\"og:site_name\" content=\"" + Provider.Server.HtmlEncode(Provider.Configuration.SiteName) + "\"/>\n");
-                sb.Append("<meta property=\"og:description\" content=\"" + ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Description)) ? CMSUtility.HtmlEncode(Provider.Content.Description) : CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription)) + "\"/>\n");
+                sb.Append("<meta property=\"og:description\" content=\"" + Provider.Server.HtmlEncode(description) + "\"/>\n");
 
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
@@ -259,6 +273,13 @@ namespace Cinar.CMS.Library.Handlers
             template = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", fileName);
             if (template == null)
                 throw new Exception("Template doesn't exist: " + fileName);
+
+            if (template.HTMLCode.Trim().StartsWith("use:"))
+            {
+                var htmlCode = Provider.Database.GetString("select HTMLCode from Template where FileName={0}", template.HTMLCode.Replace("use:", "").Trim());
+                if(!string.IsNullOrWhiteSpace(htmlCode))
+                    template.HTMLCode = htmlCode;
+            }
 
             Provider.OnBeginRequest();
 

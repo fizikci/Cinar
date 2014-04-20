@@ -105,14 +105,14 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} img {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.name {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.email {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.desc {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.web {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.adres {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.telWork {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.telCell {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} img {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.name {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.email {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.desc {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.web {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.adres {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.telWork {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.telCell {{}}\n", getCSSId());
             return sb.ToString();
         }
 

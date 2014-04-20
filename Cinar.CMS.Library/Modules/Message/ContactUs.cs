@@ -83,12 +83,12 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.error {{color:crimson;padding:4px;margin:4px;border:1px dashed #efefef}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.name {{width:300px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.email {{width:300px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} select.subject {{width:300px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} textarea.message {{width:400px;height:300px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.send {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.error {{color:crimson;padding:4px;margin:4px;border:1px dashed #efefef}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.name {{width:300px}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.email {{width:300px}}\n", getCSSId());
+            sb.AppendFormat("#{0} select.subject {{width:300px}}\n", getCSSId());
+            sb.AppendFormat("#{0} textarea.message {{width:400px;height:300px}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.send {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

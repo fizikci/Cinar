@@ -1439,8 +1439,8 @@ function refreshModule(module) {
         return;
     }
 
-    var name = module.attr('id').split('_')[0].substring(1);
-    var id = module.attr('id').split('_')[1];
+    var name = module.attr('mid').split('_')[0].substring(1);
+    var id = module.attr('mid').split('_')[1];
 
     var queryString = location.href.indexOf('?') > -1 ? '&' + location.href.substring(location.href.indexOf('?') + 1) : '';
 
