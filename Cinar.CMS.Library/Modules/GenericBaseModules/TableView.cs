@@ -96,7 +96,7 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.{2} {{}}\n", this.Name, this.Id, DivClassName);
+            sb.AppendFormat("#{0} div.{1} {{}}\n", getCSSId(), DivClassName);
             return sb.ToString();
         }
 

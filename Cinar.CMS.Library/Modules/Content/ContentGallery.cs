@@ -88,8 +88,8 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} img {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.picTitle {{font-weight:bold}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} img {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.picTitle {{font-weight:bold}}\n", getCSSId());
             return sb.ToString();
         }
 

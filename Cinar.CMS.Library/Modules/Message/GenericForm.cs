@@ -91,8 +91,8 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.error {{color:crimson;padding:4px;margin:4px;border:1px dashed #efefef}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.send {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.error {{color:crimson;padding:4px;margin:4px;border:1px dashed #efefef}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.send {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

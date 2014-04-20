@@ -61,7 +61,7 @@ $
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} img {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} img {{}}\n", getCSSId());
             return sb.ToString();
         }
     }

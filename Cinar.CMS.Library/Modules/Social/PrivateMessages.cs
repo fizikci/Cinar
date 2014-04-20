@@ -105,14 +105,14 @@ function showMessages(lastMsg){
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} {{background-image: none;background-color: #FFF;border: 1px solid #E8E8E8;border-radius: 6px;overflow: hidden;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} h1 {{padding: 16px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#messages {{min-height: 100px;max-height: 360px;overflow-y: auto;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".message img {{width: 24px;height: 24px;float: left;margin: 6px 9px 0 0;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".message {{padding: 0 20px 10px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".message > div {{display:inline-block;vertical-align: top;}}\n.message .fullname {{float: left;font-weight: bold;}}\n.message .date {{float: right;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".message .text {{float: left;}}\n#userInput .text {{float: right;margin-top: -40px;height: 100px;}}\n.text input[type=button] {{float: right;position: relative;top: -40px;right: -7px;}}\n", this.Name, this.Id);
-            sb.AppendFormat(".text textarea {{resize: none; width: 595px; height: 80px;outline: none;}}\n#userInput img {{float: right;margin: 0 0 0 9px;position: relative;top: 10px;right: 6px;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{background-image: none;background-color: #FFF;border: 1px solid #E8E8E8;border-radius: 6px;overflow: hidden;}}\n", getCSSId());
+            sb.AppendFormat("#{0} h1 {{padding: 16px;}}\n", getCSSId());
+            sb.AppendFormat("#messages {{min-height: 100px;max-height: 360px;overflow-y: auto;}}\n", getCSSId());
+            sb.AppendFormat(".message img {{width: 24px;height: 24px;float: left;margin: 6px 9px 0 0;}}\n", getCSSId());
+            sb.AppendFormat(".message {{padding: 0 20px 10px;}}\n", getCSSId());
+            sb.AppendFormat(".message > div {{display:inline-block;vertical-align: top;}}\n.message .fullname {{float: left;font-weight: bold;}}\n.message .date {{float: right;}}\n", getCSSId());
+            sb.AppendFormat(".message .text {{float: left;}}\n#userInput .text {{float: right;margin-top: -40px;height: 100px;}}\n.text input[type=button] {{float: right;position: relative;top: -40px;right: -7px;}}\n", getCSSId());
+            sb.AppendFormat(".text textarea {{resize: none; width: 595px; height: 80px;outline: none;}}\n#userInput img {{float: right;margin: 0 0 0 9px;position: relative;top: 10px;right: 6px;}}\n", getCSSId());
             return sb.ToString();
         }
     }

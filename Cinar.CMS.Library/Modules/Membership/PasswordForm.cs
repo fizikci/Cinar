@@ -33,10 +33,10 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.passInfoLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.passEmailLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.passEmailInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.passSubmitButton {{display:block}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.passInfoLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.passEmailLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.passEmailInput {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.passSubmitButton {{display:block}}\n", getCSSId());
             return sb.ToString();
         }
 

@@ -32,10 +32,10 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.actCodeInfoLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.actCodeEmailLabel {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.actCodeEmailInput {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input.actCodeSubmitButton {{display:block}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.actCodeInfoLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.actCodeEmailLabel {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.actCodeEmailInput {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input.actCodeSubmitButton {{display:block}}\n", getCSSId());
             return sb.ToString();
         }
 

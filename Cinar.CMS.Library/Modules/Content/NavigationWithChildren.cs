@@ -97,8 +97,8 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} a {{display:block;padding:4px;text-decoration:none;font-weight:bold}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a:hover {{background:#efefef}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} a {{display:block;padding:4px;text-decoration:none;font-weight:bold}}\n", getCSSId());
+            sb.AppendFormat("#{0} a:hover {{background:#efefef}}\n", getCSSId());
             return sb.ToString();
         }
     }

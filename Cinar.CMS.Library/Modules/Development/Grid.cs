@@ -241,17 +241,17 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table {{width:100%}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.header td {{background:#0C51B1;color:white;font-weight:bold;padding:4px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.header td a {{color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.data td {{padding:2px;border-bottom:1px solid #404040}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.data td a {{color:black}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.data td a:hover {{color:#cc0000}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.footer td {{background:#0C51B1;font-weight:bold;padding:4px;text-align:center}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} table tr.footer td a {{color:white}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} img {{cursor:pointer}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} p.newRec {{text-align:right;margin-top:10px}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} table {{width:100%}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.header td {{background:#0C51B1;color:white;font-weight:bold;padding:4px}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.header td a {{color:white}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.data td {{padding:2px;border-bottom:1px solid #404040}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.data td a {{color:black}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.data td a:hover {{color:#cc0000}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.footer td {{background:#0C51B1;font-weight:bold;padding:4px;text-align:center}}\n", getCSSId());
+            sb.AppendFormat("#{0} table tr.footer td a {{color:white}}\n", getCSSId());
+            sb.AppendFormat("#{0} img {{cursor:pointer}}\n", getCSSId());
+            sb.AppendFormat("#{0} p.newRec {{text-align:right;margin-top:10px}}\n", getCSSId());
             return sb.ToString();
         }
 

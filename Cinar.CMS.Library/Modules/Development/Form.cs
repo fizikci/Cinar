@@ -150,10 +150,10 @@ namespace Cinar.CMS.Library.Modules
         public override string GetDefaultCSS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0}_{1} {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} input {{height:20px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.infoMsg {{padding:10px;margin:10px;border:1px dashed #80FF80;background:#EFFFEF}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.errMsg {{padding:10px;margin:10px;border:1px dashed #FF8080;background:#FFEFEF}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} input {{height:20px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.infoMsg {{padding:10px;margin:10px;border:1px dashed #80FF80;background:#EFFFEF}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.errMsg {{padding:10px;margin:10px;border:1px dashed #FF8080;background:#FFEFEF}}\n", getCSSId());
             return sb.ToString();
         }
 

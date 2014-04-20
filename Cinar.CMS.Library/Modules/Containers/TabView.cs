@@ -51,12 +51,12 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.tabButtons {{font-weight:bold; font-size:12px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.tabBtnActive {{padding:4px;background:orange;color:white;border-top:2px solid orange;display:block;float:left;width:auto;margin-right:4px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.tabBtnActive:hover {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.tabBtnPassive {{padding:4px;background:silver;border-top:2px solid silver;color:orange;display:block;float:left;width:auto;margin-right:4px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.tabBtnPassive:hover {{border-top:2px solid orange}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} .Region {{padding:10px;border:2px solid orange;background:white}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.tabButtons {{font-weight:bold; font-size:12px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.tabBtnActive {{padding:4px;background:orange;color:white;border-top:2px solid orange;display:block;float:left;width:auto;margin-right:4px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.tabBtnActive:hover {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.tabBtnPassive {{padding:4px;background:silver;border-top:2px solid silver;color:orange;display:block;float:left;width:auto;margin-right:4px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.tabBtnPassive:hover {{border-top:2px solid orange}}\n", getCSSId());
+            sb.AppendFormat("#{0} .Region {{padding:10px;border:2px solid orange;background:white}}\n", getCSSId());
             return sb.ToString();
         }
     }

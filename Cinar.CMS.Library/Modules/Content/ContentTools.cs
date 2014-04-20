@@ -150,14 +150,14 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} a.comment {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.email {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.print {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} a.recommend {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.recommendForm {{background:white; margin:44px; margin-left:20px; padding:4px; border:1px dashed #dfdfdf;left:200px;top:200px;width:400px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.title {{background:#46A2F4; color:white; font-weight:bold;margin-bottom:20px;padding-top:10px;text-align:center;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.recommendForm div.buttons {{text-align:center;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div {{margin-bottom:15px;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} a.comment {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.email {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.print {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} a.recommend {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.recommendForm {{background:white; margin:44px; margin-left:20px; padding:4px; border:1px dashed #dfdfdf;left:200px;top:200px;width:400px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.title {{background:#46A2F4; color:white; font-weight:bold;margin-bottom:20px;padding-top:10px;text-align:center;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.recommendForm div.buttons {{text-align:center;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div {{margin-bottom:15px;}}\n", getCSSId());
             return sb.ToString();
         }
     }

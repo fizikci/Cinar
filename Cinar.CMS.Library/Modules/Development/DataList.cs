@@ -227,10 +227,10 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} .paging {{text-align: center;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} .paging * {{display: inline-block;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} .pagingBtn {{display: inline-block; padding: 0px 6px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} .pagingBtn.active {{background: gray; border-radius: 10px; color: white;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} .paging {{text-align: center;}}\n", getCSSId());
+            sb.AppendFormat("#{0} .paging * {{display: inline-block;}}\n", getCSSId());
+            sb.AppendFormat("#{0} .pagingBtn {{display: inline-block; padding: 0px 6px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} .pagingBtn.active {{background: gray; border-radius: 10px; color: white;}}\n", getCSSId());
             return sb.ToString();
         }
 

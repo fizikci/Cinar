@@ -44,7 +44,7 @@ function deleteWord(id, btn){
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} .BadWord {{float:left;border-radius:3px;background-color:#F7D1D1; margin-left:6px;padding:0 4px;margin-top:10px;}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} .BadWord {{float:left;border-radius:3px;background-color:#F7D1D1; margin-left:6px;padding:0 4px;margin-top:10px;}}\n", getCSSId());
             return sb.ToString();
         }
     }

@@ -52,8 +52,8 @@ namespace Cinar.CMS.Library.Modules
             if (string.IsNullOrWhiteSpace(css))
                 css = m.GetDefaultCSS();
 
-            string mId = String.Format("#{0}_{1}", m.Name, m.Id);
-            string thisId = String.Format("#{0}_{1}", this.Name, this.Id);
+            string mId = String.Format("#{0}", m.Name, m.Id);
+            string thisId = String.Format("#{0}", getCSSId());
 
             return css.Replace(mId, thisId);
         }

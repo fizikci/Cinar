@@ -141,15 +141,15 @@ namespace Cinar.CMS.Library.Modules
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(base.GetDefaultCSS());
-            sb.AppendFormat("#{0}_{1} div.title {{font-weight:bold; font-size:20px;}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.desc {{background-color:#efefef; padding:4px; margin:4px; border:1px dashed black}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.conRegion {{float:right; width:200px}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.text {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.author {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.source {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.date {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.tags {{}}\n", this.Name, this.Id);
-            sb.AppendFormat("#{0}_{1} div.sourceLink {{}}\n", this.Name, this.Id);
+            sb.AppendFormat("#{0} div.title {{font-weight:bold; font-size:20px;}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.desc {{background-color:#efefef; padding:4px; margin:4px; border:1px dashed black}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.conRegion {{float:right; width:200px}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.text {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.author {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.source {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.date {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.tags {{}}\n", getCSSId());
+            sb.AppendFormat("#{0} div.sourceLink {{}}\n", getCSSId());
             return sb.ToString();
         }
 
