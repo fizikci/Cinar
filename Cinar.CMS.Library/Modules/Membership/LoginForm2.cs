@@ -7,12 +7,8 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Membership")]
     public class LoginForm2 : StaticHtml
     {
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.templates, addBlankItem:true")]
-        public string Redirect { get; set; }
-
         public LoginForm2()
         {
-            Redirect = "";
             this.InnerHtml = @"$
 if (Provider.User.IsAnonim() || Provider.DesignMode)
 {
@@ -20,7 +16,7 @@ $
 	<form id=""fLogin"" method=""post"" action=""DoLogin.ashx"">
     <fieldset>
     <legend>Oturum Aç</legend>
-		<input type=""hidden"" name=""RedirectURL"" value=""$=Provider.Request.RawUrl$""/>
+		<input type=""hidden"" name=""RedirectURL"" value=""$=Provider.Request.RedirectURL""/>
 	    $
 	    if (Provider.Session['loginError'])
 	    {
@@ -59,19 +55,6 @@ $
 $
 }
 $";
-        }
-
-        internal override string show()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (!Provider.User.IsAnonim() && !String.IsNullOrEmpty(this.Redirect) && !Provider.DesignMode && !string.IsNullOrWhiteSpace(Provider.Request["formDoLogin"]))
-            {
-                Provider.Response.Redirect(this.Redirect, true);
-                return String.Empty; //***
-            }
-
-            return base.show();
         }
 
         protected override bool canBeCachedInternal()

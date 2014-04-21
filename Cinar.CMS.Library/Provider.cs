@@ -1483,7 +1483,7 @@ namespace Cinar.CMS.Library
             sb.Append("[\n");
             ArrayList res = new ArrayList();
             int ctrlOrderNo = 0;
-            foreach (PropertyInfo pi in obj.GetProperties())
+            foreach (PropertyInfo pi in obj.GetProperties().OrderBy(x => x.MetadataToken))
             {
                 if (pi.Name == "Item") continue;
                 if (pi.GetSetMethod() == null) continue;
@@ -1769,7 +1769,7 @@ namespace Cinar.CMS.Library
                 string lang = Provider.Request.UserLanguages[0];
                 if (lang.Contains("-"))
                     lang = lang.Substring(0, lang.IndexOf('-')); // Here we omit the country code while we shouldn't.. 
-                Lang l = (Lang)Provider.Database.Read(typeof(Lang), "Code like {0}", lang + "%");
+                Lang l = (Lang)Provider.Database.Read(typeof(Lang), "Code like {0} AND Visible=1", lang + "%");
                 if (l != null)
                     Provider.CurrentCulture = l.Code;
 

@@ -274,7 +274,6 @@
     <Compile Include="Modules\Membership\MembershipForm.cs" />
     <Compile Include="Modules\Containers\RegionRepeater.cs" />
     <Compile Include="Modules\Containers\Table.cs" />
-    <Compile Include="Modules\Membership\LoginForm.cs" />
     <Compile Include="Modules\GenericBaseModules\Module.cs" />
     <Compile Include="Modules\Content\Navigation.cs" />
     <Compile Include="Modules\Misc\StaticHtml.cs" />

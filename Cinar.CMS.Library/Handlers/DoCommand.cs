@@ -719,17 +719,17 @@ namespace Cinar.CMS.Library.Handlers
                     cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
                     Provider.Response.Cookies.Add(cookie);
                 }
-                string redirect = context.Request.Form["RedirectURL"];
-                if (redirect == null)
-                    context.Response.Redirect("/Default.aspx?DesignMode=On");
+                string redirect = context.Request["RedirectURL"];
+                if (string.IsNullOrWhiteSpace(redirect))
+                    context.Response.Redirect("/" + Provider.Configuration.MainPage);
                 else
-                    context.Response.Redirect(redirect + (redirect.Contains("?") ? "&formDoLogin=1" : "?formDoLogin=1"));
+                    context.Response.Redirect(redirect);
             }
             else
             {
                 // login başarıSIZ, login formunun olduğu sayfaya geri gönderelim
                 context.Session["loginError"] = "Email veya şifre geçersiz.";
-                context.Response.Redirect(context.Request.Form["RedirectURL"]);
+                context.Response.Redirect("/" + Provider.Configuration.LoginPage);
                 Provider.SetHttpContextUser();
             }
         }
