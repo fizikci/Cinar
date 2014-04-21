@@ -181,6 +181,14 @@ namespace Cinar.CMS.Library
             set { facebookAppId = value; }
         }
 
+        protected string defaultPageViewRole = "";
+        [EditFormFieldProps(OrderNo = 17, Category = "Uygulama Ayarları")]
+        public string DefaultPageViewRole
+        {
+            get { return defaultPageViewRole; }
+            set { defaultPageViewRole = value; }
+        }
+
         #endregion
 
         #region mail props

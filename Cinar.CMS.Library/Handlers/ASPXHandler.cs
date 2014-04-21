@@ -285,6 +285,12 @@ namespace Cinar.CMS.Library.Handlers
 
             Provider.Response.BufferOutput = Provider.Configuration.BufferOutput;
 
+            if (!string.IsNullOrWhiteSpace(Provider.Configuration.DefaultPageViewRole) && template.FileName != Provider.Configuration.LoginPage && !Provider.User.IsInRole(Provider.Configuration.DefaultPageViewRole))
+            {
+                Provider.Response.Redirect("/" + Provider.Configuration.LoginPage + "?RedirectURL=" + Provider.Server.UrlEncode(Provider.Request.RawUrl), true);
+                return;
+            }
+
             string strExecutionTimes = "";
             if (Provider.ShowExecutionTime)
                 strExecutionTimes = "<!-- Page read finished at " + stopWatch.ElapsedMilliseconds + " ms -->";
@@ -324,7 +330,7 @@ namespace Cinar.CMS.Library.Handlers
                 if (!String.IsNullOrEmpty(ps.RoleToRead) && !Provider.ContextUser.IsInRole(ps.RoleToRead))
                 {
                     string redirectPage = string.IsNullOrEmpty(ps.RedirectPage) ? Provider.Configuration.MainPage : ps.RedirectPage;
-                    Provider.Response.Redirect(redirectPage, true);
+                    Provider.Response.Redirect("/" + redirectPage + "?RedirectURL=" + Provider.Server.UrlEncode(Provider.Request.RawUrl), true);
                     return;
                 }
                 if (!Provider.ContextUser.IsInRole(ps.RoleToChange))

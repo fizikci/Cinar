@@ -99,15 +99,81 @@ InnerHtml,32,<hr/>
             set { id = value; }
         }
 
+        [EditFormFieldProps(OrderNo=1)]
         public string ElementName
         {
             get { if (string.IsNullOrWhiteSpace(elementName)) elementName = "div"; return elementName; }
             set { elementName = value; }
         }
+        [EditFormFieldProps(OrderNo = 2)]
         public string ElementId
         {
             get { return elementId; }
             set { elementId = value; }
+        }
+
+        [EditFormFieldProps(OrderNo = 3)]
+        public string CSSClass
+        {
+            get { return this.cssClass; }
+            set { this.cssClass = value; }
+        }
+
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit, OrderNo=4)]
+        public string CSS
+        {
+            get { return css; }
+            set { css = value; }
+        }
+
+        private string topHtml = "";
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(OrderNo = 5)]
+        public string TopHtml
+        {
+            get { return topHtml; }
+            set { topHtml = value; }
+        }
+
+        private string bottomHtml = "";
+        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(OrderNo = 6)]
+        public string BottomHtml
+        {
+            get { return bottomHtml; }
+            set { bottomHtml = value; }
+        }
+
+        [EditFormFieldProps(OrderNo = 7)]
+        /// <summary>
+        /// Module always visible in design mode.
+        /// Module visible in view mode if only this property is true.
+        /// </summary>
+        public bool Visible
+        {
+            get { return this.visible; }
+            set { this.visible = value; }
+        }
+
+        [EditFormFieldProps(OrderNo = 8)]
+        public string RoleToRead
+        {
+            get { return this.roleToRead; }
+            set { this.roleToRead = value; }
+        }
+
+        protected string useCache = "Default";
+        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "Default"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_USECACHE_", OrderNo=9)]
+        public string UseCache
+        {
+            get { return useCache; }
+            set { useCache = value; }
+        }
+
+        protected int cacheLifeTime = 0;
+        [EditFormFieldProps(OrderNo = 10)]
+        public int CacheLifeTime
+        {
+            get { return cacheLifeTime; }
+            set { cacheLifeTime = value; }
         }
 
         [ColumnDetail(IsNotNull = true, Length = 50), EditFormFieldProps(Visible = false)]
@@ -143,13 +209,6 @@ InnerHtml,32,<hr/>
             set { this.name = value; }
         }
 
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(ControlType = ControlType.CSSEdit)]
-        public string CSS
-        {
-            get { return css; }
-            set { css = value; }
-        }
-
         [ColumnDetail(ColumnType = Cinar.Database.DbType.Text), EditFormFieldProps(Visible = false)]
         public string Details
         {
@@ -157,49 +216,11 @@ InnerHtml,32,<hr/>
             set { details = value; }
         }
 
-        private string topHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
-        public string TopHtml
-        {
-            get { return topHtml; }
-            set { topHtml = value; }
-        }
-
-        private string bottomHtml = "";
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
-        public string BottomHtml
-        {
-            get { return bottomHtml; }
-            set { bottomHtml = value; }
-        }
-
         [ColumnDetail(IsNotNull = true, DefaultValue = "0"), EditFormFieldProps(Visible = false)]
         public int ParentModuleId
         {
             get { return parentModuleId; }
             set { parentModuleId = value; }
-        }
-
-        public string CSSClass
-        {
-            get { return this.cssClass; }
-            set { this.cssClass = value; }
-        }
-
-        /// <summary>
-        /// Module always visible in design mode.
-        /// Module visible in view mode if only this property is true.
-        /// </summary>
-        public bool Visible
-        {
-            get { return this.visible; }
-            set { this.visible = value; }
-        }
-
-        public string RoleToRead
-        {
-            get { return this.roleToRead; }
-            set { this.roleToRead = value; }
         }
         #endregion
 
@@ -473,21 +494,6 @@ InnerHtml,32,<hr/>
 
         #region Cache olayı
         public string CacheHint = "no cache";
-
-        protected string useCache = "Default";
-        [ColumnDetail(IsNotNull = true, Length = 30, DefaultValue = "Default"), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_USECACHE_")]
-        public string UseCache
-        {
-            get { return useCache; }
-            set { useCache = value; }
-        }
-
-        protected int cacheLifeTime = 0;
-        public int CacheLifeTime
-        {
-            get { return cacheLifeTime; }
-            set { cacheLifeTime = value; }
-        }
 
         protected virtual bool canBeCachedInternal()
         {
