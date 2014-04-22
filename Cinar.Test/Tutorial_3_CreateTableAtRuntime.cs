@@ -14,24 +14,28 @@ namespace Cinar.Test
         public static void Run()
         {
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
-            CinarContext.Db = new Database.Database(DatabaseProvider.MySQL, "localhost", "cinarcms", "root", "bk", 30);
-            WFAracTalep aracTalep = new WFAracTalep { 
-                Adres = "adres",
-                Saat = "saat",
-                State = WFS_AracTalep.New
-            };
-            aracTalep.Save();
+            Database.Database db =
+                new Database.Database("Server=93.89.230.247;Database=DomainSuggestion;User Id=sa;Password=//456741gf;", DatabaseProvider.SQLServer);
+            //WFAracTalep aracTalep = new WFAracTalep { 
+            //    Adres = "adres",
+            //    Saat = "saat",
+            //    State = WFS_AracTalep.New
+            //};
+            //aracTalep.Save();
 
             /*
             Table table = db.CreateTableMetadataForType(typeof(Ogrenci));
 
             Console.WriteLine(db.GetTableDDL(table));
+             */ 
 
             Ogrenci ogr = new Ogrenci();
             ogr.Ad = "Mehmet";
             ogr.TcKimlikNo = "987632454";
+            ogr.Para = 120.55m;
             db.Save(ogr);
 
+            /*
             Veli v = new Veli();
             v.Ad = "Bülent";
             v.TcKimlikNo = "756867";
@@ -64,6 +68,9 @@ namespace Cinar.Test
 
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 7)]
         public OgrenciTipi Tipi { get; set; }
+
+        [ColumnDetail(ColumnType = DbType.Currency)]
+        public decimal Para { get; set; }
 
 
         #region IDatabaseEntity members
