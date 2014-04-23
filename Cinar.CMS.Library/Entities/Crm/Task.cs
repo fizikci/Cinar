@@ -7,12 +7,15 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
-    public class Task : BaseEntity
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Task.Id as [Task.Id], Task.Name as [NamedEntity.Name], Task.TaskState as [Task.TaskState] from Task", QueryOrderBy = "Task.Id desc")]
+    public class Task : NamedEntity
     {
         public int EventId { get; set; }
         public int ContactId { get; set; }
         public int AssignedToUserId { get; set; }
+        [ColumnDetail(ColumnType=DbType.Text)]
         public string Details { get; set; }
+        [ColumnDetail(ColumnType = DbType.VarChar, Length = 16)]
         public TaskStates TaskState { get; set; }
     }
 

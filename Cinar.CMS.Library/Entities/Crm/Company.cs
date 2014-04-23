@@ -7,14 +7,23 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Company.Id as [Company.Id], Company.Name as [NamedEntity.Name] from Company", QueryOrderBy = "Company.Id desc")]
     public class Company : NamedEntity, ICriticalEntity
     {
         #region Personal Info
-        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Category = "Personal Info")]
+        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit)]
         public string Tags { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Sector'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Sector'")]
         public int SectorId { get; set; }
+
+        private int userId;
+        [ColumnDetail(IsNotNull = true, References = typeof(User)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "readOnly:true")]
+        public int UserId
+        {
+            get { return userId; }
+            set { userId = value; }
+        }
         #endregion
 
         #region Contact Info
@@ -62,14 +71,6 @@ namespace Cinar.CMS.Library.Entities
         public string ExtraField4 { get { return extraField4; } set { extraField4 = value; } }
         [EditFormFieldProps(Category = "Extra")]
         public string ExtraField5 { get { return extraField5; } set { extraField5 = value; } }
-
-        private int userId;
-        [ColumnDetail(IsNotNull = true, References = typeof(User)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "readOnly:true")]
-        public int UserId
-        {
-            get { return userId; }
-            set { userId = value; }
-        }
 
         private User _user;
         [XmlIgnore]
