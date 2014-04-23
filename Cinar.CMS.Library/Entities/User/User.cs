@@ -138,7 +138,8 @@ namespace Cinar.CMS.Library.Entities
             RedirectCount = 0;
             Roles = "User";
             Password = "";
-            FacebookId = "0";
+            FacebookId = GoogleId = YahooId = MsnId = LinkedinId = TwitterId = MyspaceId = "0";
+
         }
 
         [EditFormFieldProps(Visible = false)]

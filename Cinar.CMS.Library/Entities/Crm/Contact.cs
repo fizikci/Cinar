@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Contact.Id as [Contact.Id], Contact.Name as [NamedEntity.Name] from Contact", QueryOrderBy = "Contact.Id desc")]
     public class Contact : NamedEntity, ICriticalEntity
     {
         #region Personal Info
