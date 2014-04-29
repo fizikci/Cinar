@@ -140,34 +140,23 @@ namespace Cinar.CMS.Library.Handlers
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
                 sb.Append("<link href=\"/RSS.ashx?item=" + (Provider.Content == null ? 1 : Provider.Content.Id) + "\" rel=\"alternate\" title=\"" + Provider.Configuration.SiteName + "\" type=\"application/rss+xml\" />\n");
+
+                ////////////////////////////////////// CSS
+
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-
-                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
-                    sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
-
-                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}';</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0]);
-
-
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
                 {
                     sb.Append("<link href=\"/external/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css\" rel=\"stylesheet\">\n");
-                    sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
-                    sb.Append("<script src=\"/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
                 }
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
-                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
-
-                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? (Provider.CurrentCulture.Split('-')[0] + ".js.ashx") : ("/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js")) + "\"></script>\n");
-
+                {
+                    sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
+                }
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "cinar.cms.css.ashx" : "/_thumbs/cinar.cms.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "famfamfam.css.ashx" : "/_thumbs/famfamfam.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
 
                 if (Provider.DesignMode)
                     sb.Append("<style title=\"moduleStyles\">\n" + (AddDefaultCSS ? Provider.Configuration.DefaultStyleSheet : "") + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
@@ -177,6 +166,29 @@ namespace Cinar.CMS.Library.Handlers
                         sb.Append("<link href=\"" + (Provider.DesignMode ? "DefaultStyleSheet.css.ashx" : "/_thumbs/DefaultStyleSheet.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
+
+                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}';</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0]);
+
+                ///////////////////////////////////// JS
+
+                if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
+                {
+                    sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
+                    sb.Append("<script src=\"/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
+                }
+                if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
+                {
+                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
+                }
+
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
+
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? (Provider.CurrentCulture.Split('-')[0] + ".js.ashx") : ("/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js")) + "\"></script>\n");
+
+                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
+
 
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
                 {
@@ -191,11 +203,6 @@ namespace Cinar.CMS.Library.Handlers
                 ");
                     sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "cinar.cms.js.ashx" : "/_thumbs/cinar.cms.js") + "\"></script>\n");
                     sb.Append("<script src=\"/external/javascripts/ace/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n");
-                }
-
-                if (Provider.DevelopmentMode)
-                {
-                    sb.AppendLine(@"<script>document.observe('dom:loaded', function(){document.body.insert('<div style=""font-family:Lucida Console;font-size:12px;position:absolute;right:10px;top:10px;width:100px;padding:10px;color:white;background:orange;"">Development Mode</div>');});</script>");
                 }
 
                 if (!Provider.User.IsAnonim())

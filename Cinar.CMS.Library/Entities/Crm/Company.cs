@@ -11,7 +11,7 @@ namespace Cinar.CMS.Library.Entities
     public class Company : NamedEntity, ICriticalEntity
     {
         #region Personal Info
-        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit)]
+        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Options = "extraFilter:'Kind=CompanyTag'")]
         public string Tags { get; set; }
 
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Sector'")]
