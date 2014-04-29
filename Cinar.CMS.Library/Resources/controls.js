@@ -2436,7 +2436,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
         s += ('<div id="smMenuContainer">');
         s += this.createMenuItems('\t', this.menuItems, 'smMenu', 'menu');
         s += ('</div>');
-        wr(s);
+        $(function () { $('body').append(s); });
     },
     createMenuItems: function(tab, menus, id, subId) {
         var ths = this;
@@ -2568,7 +2568,7 @@ function runMenu(link){
     popupMenu.runMenu(link);
 }
 
-function wr(s){document.write(s);}
+//function wr(s){document.write(s);}
 
 //#############################
 //#          Console          #
