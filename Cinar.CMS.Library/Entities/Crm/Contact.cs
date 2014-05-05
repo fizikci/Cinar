@@ -53,13 +53,10 @@ namespace Cinar.CMS.Library.Entities
         #region Contact Info
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
-        public string PhoneCell { get; set; }
+        public string Phone { get; set; }
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
-        public string PhoneWork { get; set; }
-
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
-        public string PhoneHome { get; set; }
+        public string Phone2 { get; set; }
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
         public string Fax { get; set; }
