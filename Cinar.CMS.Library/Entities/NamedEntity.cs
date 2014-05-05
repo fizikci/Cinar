@@ -43,8 +43,9 @@ namespace Cinar.CMS.Library.Entities
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
                         Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
-                        imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                        //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                        //bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                        bmp2.SaveImage(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
                     else
                         Provider.Request.Files["Picture"].SaveAs(Provider.MapPath(imgUrl));
@@ -63,8 +64,9 @@ namespace Cinar.CMS.Library.Entities
                     if (bmp.Width > Provider.Configuration.ImageUploadMaxWidth)
                     {
                         Image bmp2 = bmp.ScaleImage(Provider.Configuration.ImageUploadMaxWidth, 0);
-                        imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
-                        bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                        //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                        //bmp2.SaveJpeg(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
+                        bmp2.SaveImage(Provider.MapPath(imgUrl), Provider.Configuration.ThumbQuality);
                     }
                     else
                         Provider.Request.Files["Picture2"].SaveAs(Provider.MapPath(imgUrl));
