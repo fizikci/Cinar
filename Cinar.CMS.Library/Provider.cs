@@ -1865,12 +1865,12 @@ namespace Cinar.CMS.Library
                 string year = DateTime.Now.Year.ToString();
                 string month = DateTime.Now.Month.ToString();
                 string day = DateTime.Now.Day.ToString();
-                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year)))
-                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year));
-                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month)))
-                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month));
-                if (!System.IO.Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day)))
-                    System.IO.Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day));
+                if (!Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year)))
+                    Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year));
+                if (!Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month)))
+                    Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month));
+                if (!Directory.Exists(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day)))
+                    Directory.CreateDirectory(Provider.MapPath(Provider.AppSettings[specialFolder] + "/" + year + "/" + month + "/" + day));
                 subFolders = "/" + year + "/" + month + "/" + day;
             }
             return Provider.AppSettings[specialFolder] + subFolders + "/" + fileName;
