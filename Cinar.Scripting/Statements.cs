@@ -139,6 +139,7 @@ namespace Cinar.Scripting
                     {
                         //context.Interpreter.ExecutionSuccessful = false;
                         context.Output.Write(ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "") + " at line " + (Context.CurrentStatement.LineNumber + 1));
+                        throw ex;
                     }
                 }
             }
