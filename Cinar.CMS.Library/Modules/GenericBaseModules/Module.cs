@@ -388,12 +388,19 @@ InnerHtml,32,<hr/>
                     module.TopHtml = Provider.GetResource("Error while deserializing the module. This may be because module changed or database charset problem");
                 }
             }
-            catch 
+            catch
             {
                 module = new StaticHtml();
-                ((StaticHtml)module).InnerHtml = "<font color=red>Hata</font><br/><br/>";
-                module.BottomHtml = moduleName + " isimli bu modül bulunamadı, bu modül türü silinmiş olabilir. Bu modülü siliniz.";
-                if (Provider.DevelopmentMode) 
+                try
+                {
+                    CinarSerialization.Deserialize(module, moduleData);
+                }
+                catch
+                {
+                }
+
+                ((StaticHtml)module).InnerHtml = "<font color=red>Hata</font><br/><br/>" + moduleName + " isimli bu modül bulunamadı, bu modül türü silinmiş olabilir." + ((StaticHtml)module).InnerHtml;
+                if (Provider.DevelopmentMode)
                 {
                     module.BottomHtml += "<br/><br/><b>Developer'a not:</b> Serialization geçersiz:";
                     module.BottomHtml += "<br/><br/>" + WebUtility.HtmlEncode(moduleData);

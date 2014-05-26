@@ -1379,6 +1379,7 @@ namespace System
         {
             if (val == null) return "null";
             if (val.GetType().IsEnum) return "\"" + Enum.GetName(val.GetType(), val) + "\"";
+            if (val == DBNull.Value) return "null";
 
             switch (val.GetType().Name)
             {
