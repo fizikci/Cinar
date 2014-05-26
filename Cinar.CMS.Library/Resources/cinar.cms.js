@@ -626,7 +626,7 @@ function refreshModule(module){
 	if(module.length==0)
 		module = selMod;
 		
-    var name = module.attr('mid').split('_')[0].substring(1);
+    var name = module.attr('mid').split('_')[0];
     var id = module.attr('mid').split('_')[1];
 	
 	var queryString = location.href.indexOf('?')>-1 ? '&' + location.href.substring(location.href.indexOf('?')+1) : '';
@@ -839,7 +839,7 @@ function readEntityList(entityName, filter, callback, orderBy, orderAsc) {
             if(req.responseText.startsWith('ERR:')){niceAlert(req.responseText); return;}
             var res = null;
             try{res = eval('('+req.responseText+')');}catch(e){niceAlert(e.message);}
-			callback(res);
+			if(callback) callback(res);
         },
         onException: function(req, ex){throw ex;}
     });

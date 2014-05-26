@@ -507,17 +507,17 @@ function hideOverlay() {
 function navigationPopupInit(id, horizontal) {
     $(function () {
         $('#' + id + ' div').each(function (eix, elm) {
-            var conId = $(elm).attr('conId');
+            var conId = $(elm).attr('conid');
             if (!conId || conId < 2) return;
             $(elm).on('mouseover', function (event) {
                 var divPopupMenuItems = $('#' + id).find('div.popupMenuItems');
                 divPopupMenuItems.hide();
                 var div = $(event.target).closest('div');
                 var pos = div.offset();
-                var conId = $(elm).attr('conId');
+                var conId = $(elm).attr('conid');
                 var visibleItemCount = 0;
                 $('#' + id + ' div.popupMenuItem').each(function (eix, elm) {
-                    if (elm.catId == conId) {
+                    if ($(elm).attr('catId') == conId) {
                         $(elm).show();
                         visibleItemCount++;
                     }
@@ -525,9 +525,9 @@ function navigationPopupInit(id, horizontal) {
                         $(elm).hide();
                 });
                 if (horizontal)
-                    divPopupMenuItems.css({ left: pos.left, top: pos.top + div.getHeight() });
+                    divPopupMenuItems.css({ left: pos.left, top: pos.top + div.height() });
                 else
-                    divPopupMenuItems.css({ left: pos.left + div.getWidth(), top: pos.top });
+                    divPopupMenuItems.css({ left: pos.left + div.width(), top: pos.top });
                 if (visibleItemCount)
                     divPopupMenuItems.show();
             });

@@ -14,6 +14,7 @@ namespace Cinar.CMS.Library.Entities
         public int ContactId { get; set; }
         [ColumnDetail(ColumnType=DbType.VarChar, Length=16)]
         public MeetingTypes MeetingType { get; set; }
+
         public string Details { get; set; }
     }
 

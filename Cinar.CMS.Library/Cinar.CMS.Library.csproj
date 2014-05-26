@@ -97,6 +97,7 @@
     <Compile Include="Entities\Content\Hit.cs" />
     <Compile Include="Entities\Crm\Contact.cs" />
     <Compile Include="Entities\Crm\Company.cs" />
+    <Compile Include="Entities\Crm\ContactComment.cs" />
     <Compile Include="Entities\Crm\Task.cs" />
     <Compile Include="Entities\Crm\Meeting.cs" />
     <Compile Include="Entities\Crm\EventContact.cs" />

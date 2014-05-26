@@ -14,9 +14,6 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title'", Category = "Personal Info")]
         public int TitleId { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title'", Category = "Personal Info")]
-        public int Title2Id { get; set; }
-
         [ColumnDetail(References = typeof(Company)), EditFormFieldProps(Category = "Personal Info")]
         public int CompanyId { get; set; }
 
@@ -55,11 +52,17 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
         public string Phone { get; set; }
 
+        [ColumnDetail(Length = 10), EditFormFieldProps(Category = "Contact Info")]
+        public string InterPhone { get; set; }
+
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
         public string Phone2 { get; set; }
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
         public string Fax { get; set; }
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        public string PhoneMobile { get; set; }
 
         [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Contact Info")]
         public string AddressLine1 { get; set; }
@@ -70,14 +73,23 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
         public string City { get; set; }
 
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        public string Town { get; set; }
+
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Country'", Category = "Contact Info")]
         public int CountryId { get; set; }
 
         [ColumnDetail(Length = 5), EditFormFieldProps(Category = "Contact Info")]
         public string ZipCode { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100, IsUnique = true), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email { get; set; }
+
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        public string Email2 { get; set; }
+
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        public string Email3 { get; set; }
 
         [ColumnDetail(Length = 150), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
         public string Web { get; set; }
@@ -122,5 +134,16 @@ namespace Cinar.CMS.Library.Entities
         }
 
         public bool NewsletterMembership { get; set; }
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        public int InterestId1 { get; set; }
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        public int InterestId2 { get; set; }
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        public int InterestId3 { get; set; }
+
+        public string ReferenceBy { get; set; }
     }
 }
