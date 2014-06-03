@@ -8,8 +8,7 @@ using Cinar.Database;
 
 namespace Cinar.CMS.Library.Modules
 {
-    [ModuleInfo(Grup = "Development")]
-    public class FormField : Module
+    public class FormField
     {
         public FormField()
         {
@@ -19,32 +18,25 @@ namespace Cinar.CMS.Library.Modules
             Label = "";
             UIControlType = "";
             FieldName = "";
-            CSSClass = "form-group";
         }
 
-        [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "entityName:'use#EntityName'")]
         public string FieldName { get; set; }
 
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_UICONTROLTYPE_")]
         public string UIControlType { get; set; }
 
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string Label { get; set; }
 
-        [EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:window.entityTypes,hideItems:true")]
         public string EntityName { get; set; }
 
-        [EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string Where { get; set; }
 
-        [EditFormFieldProps(Options = "noHTML:true")]
         public string FixedValue { get; set; }
 
         internal DataRow data;
         internal string value = "";
         internal Form form;
 
-        internal override string show()
+        public string GetHtml()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -203,33 +195,6 @@ namespace Cinar.CMS.Library.Modules
                     throw new Exception(Provider.GetResource("This kind of form field is not supported: {0}", ct));
             }
             return sb.ToString();
-        }
-
-        public override void BeforeSave()
-        {
-            base.BeforeSave();
-
-            if (String.IsNullOrEmpty(this.EntityName))
-            {
-                Form parentForm = (Form)Module.Read(this.ParentModuleId);
-                this.EntityName = parentForm.EntityName;
-            }
-        }
-
-        public override string GetDefaultCSS()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("#{0} {{width:50%;padding:4px 4px 0px 0px;float:left;clear:none}}\n", getCSSId());
-            sb.AppendFormat("#{0} div.label {{width:100%;overflow:hidden}}\n", getCSSId());
-            sb.AppendFormat("#{0} input {{width:100%}}\n", getCSSId());
-            sb.AppendFormat("#{0} select {{width:100%}}\n", getCSSId());
-            sb.AppendFormat("#{0} textarea {{width:100%}}\n", getCSSId());
-            return sb.ToString();
-        }
-
-        protected override bool canBeCachedInternal()
-        {
-            return false;
         }
     }
 }
