@@ -1634,8 +1634,6 @@ namespace Cinar.CMS.Library
                 options = options.Replace("_GROUPBY_", GetResource("_GROUPBY_"));
             if (options.Contains("_HORIZONTAL_"))
                 options = options.Replace("_HORIZONTAL_", GetResource("_HORIZONTAL_"));
-            if (options.Contains("_AFTERSAVEBEHAVIOR_"))
-                options = options.Replace("_AFTERSAVEBEHAVIOR_", GetResource("_AFTERSAVEBEHAVIOR_"));
             if (options.Contains("_UICONTROLTYPE_"))
                 options = options.Replace("_UICONTROLTYPE_", GetResource("_UICONTROLTYPE_"));
             if (options.Contains("_MODERATED_"))

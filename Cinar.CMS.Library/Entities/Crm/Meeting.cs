@@ -10,9 +10,13 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Meeting.Id as [Meeting.Id], Meeting.MeetingType as [Meeting.MeetingType] from Meeting", QueryOrderBy = "Meeting.Id desc")]
     public class Meeting : BaseEntity
     {
+        [ColumnDetail(References = typeof(Task))]
         public int TaskId { get; set; }
+
+        [ColumnDetail(References = typeof(Contact))]
         public int ContactId { get; set; }
-        [ColumnDetail(ColumnType=DbType.VarChar, Length=16)]
+
+        [ColumnDetail(ColumnType = DbType.VarChar, Length=16)]
         public MeetingTypes MeetingType { get; set; }
 
         public string Details { get; set; }
