@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Cinar.Entities.Workflows
 {
-    public class WorkflowState<T> : NamedEntity where T: struct
+    public abstract class WorkflowState<T> : NamedEntity where T: struct
     {
         public int WorkflowTypeId { get; set; }
         public T FromState { get; set; }
@@ -14,5 +14,6 @@ namespace Cinar.Entities.Workflows
         public int RoleId { get; set; }
         public string NotificationMessageTemplate { get; set; }
 
+        public abstract void Run(WorkflowEntity<T> entity);
     }
 }
