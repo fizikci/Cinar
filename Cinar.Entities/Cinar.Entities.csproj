@@ -95,6 +95,7 @@
     <Compile Include="Standart\ReportParam.cs" />
     <Compile Include="Workflows\WFAracTalep.cs" />
     <Compile Include="Workflows\WorkflowEntity.cs" />
+    <Compile Include="Workflows\WorkflowRunner.cs" />
     <Compile Include="Workflows\WorkflowState.cs" />
     <Compile Include="Workflows\WorkflowType.cs" />
   </ItemGroup>
