@@ -1,0 +1,1907 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solution xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>CinarAceCodeGen</Name>
+  <FileNameTemplate>$=db.Name$</FileNameTemplate>
+  <RepeatGeneration>NoRepeat</RepeatGeneration>
+  <Items>
+    <Item xsi:type="FolderItem">
+      <Name>CinarAce.DTO</Name>
+      <FileNameTemplate>$=db.Name$.DTO</FileNameTemplate>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FileItem">
+          <Name>APIException.cs</Name>
+          <RepeatGeneration>ForEachTable</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>ServiceRequest.cs</Name>
+          <RepeatGeneration>ForEachTable</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>ServiceResponse.cs</Name>
+          <RepeatGeneration>ForEachTable</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>EntityInfo</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>EntityInfo.cs</Name>
+              <FileNameTemplate>$=table.Name$Info.cs</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>BaseEntityInfo.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>NamedEntityInfo.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Properties</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>AssemblyInfo.cs</Name>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Request</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>ReqHello.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Response</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>ResHello.cs</Name>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>ServiceClient</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>BaseAPI.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>CinarAceAPI.cs</Name>
+              <FileNameTemplate>$=db.Name$API.cs</FileNameTemplate>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>CinarAce.DTO.csproj</Name>
+          <RepeatGeneration>ForEachTable</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+      </Items>
+    </Item>
+    <Item xsi:type="FolderItem">
+      <Name>CinarAce.API</Name>
+      <FileNameTemplate>$=db.Name$.API</FileNameTemplate>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FileItem">
+          <Name>ApiJson.ashx</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>ApiJson.ashx.cs</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Default.aspx</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Provider.cs</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Web.config</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>CinarAce.API.csproj</Name>
+          <FileNameTemplate>$=db.Name$.API.csproj</FileNameTemplate>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>false</IsBinary>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Assets</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FolderItem">
+              <Name>avatars</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FileItem">
+                  <Name>avatar.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>avatar1.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>avatar2.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>avatar3.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>avatar4.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>avatar5.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>profile-pic.jpg</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>user.jpg</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FolderItem">
+              <Name>css</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FolderItem">
+                  <Name>images</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FolderItem">
+                      <Name>ie6</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>borderBottomCenter.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderBottomLeft.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderBottomRight.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderMiddleLeft.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderMiddleRight.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderTopCenter.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderTopLeft.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>borderTopRight.png</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>true</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>border.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>border1.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>border2.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>controls.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>loading.gif</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>loading_background.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>overlay.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>img</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>alpha.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>hue.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>saturation.png</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>uncompressed</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-ie.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-rtl.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-skins.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>chosen.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>font-awesome-ie7.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>font-awesome.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery-ui-1.10.3.custom.css</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-fonts.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-ie.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-rtl.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-skins.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap-editable.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap-timepicker.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>chosen-sprite.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>chosen-sprite@2x.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>chosen.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>chosen.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>colorbox.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>colorpicker.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>datepicker.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>daterangepicker.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>dropzone.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>font-awesome-ie7.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>font-awesome.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fullcalendar.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fullcalendar.print.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-ui-1.10.3.custom.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-ui-1.10.3.full.min.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.gritter.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>prettify.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>select2-spinner.gif</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>select2.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>select2.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>select2x2.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ui.jqgrid.css</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FolderItem">
+              <Name>font</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FileItem">
+                  <Name>cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fontawesome-webfont.eot</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fontawesome-webfont.svg</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fontawesome-webfont.ttf</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fontawesome-webfont.woff</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>FontAwesome.otf</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FolderItem">
+              <Name>images</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FolderItem">
+                  <Name>gallery</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>image-1.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>image-2.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>image-3.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>image-4.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>image-5.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>image-6.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-1.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-2.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-3.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-4.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-5.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>thumb-6.jpg</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>true</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>back_disabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>back_enabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>back_enabled_hover.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>forward_disabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>forward_enabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>forward_enabled_hover.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>sort_asc.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>sort_asc_disabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>sort_both.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>sort_desc.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>sort_desc_disabled.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>spritemap.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>spritemap@2x.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FolderItem">
+              <Name>img</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FileItem">
+                  <Name>clear.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>glyphicons-halflings-white.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>glyphicons-halflings.png</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>loading.gif</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>true</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FolderItem">
+              <Name>js</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FolderItem">
+                  <Name>date-time</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FolderItem">
+                      <Name>locales</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.bg.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.ca.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.cs.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.da.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.de.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.el.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.es.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.fi.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.fr.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.he.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.hr.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.hu.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.id.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.is.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.it.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.ja.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.kr.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.lt.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.lv.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.ms.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.nb.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.nl.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.pl.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.pt-BR.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.pt.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.ro.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.rs-latin.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.rs.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.ru.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.sk.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.sl.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.sv.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.sw.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.th.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.tr.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.uk.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.zh-CN.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.zh-TW.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-datepicker.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-timepicker.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>daterangepicker.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>moment.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>flot</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.flot.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.flot.pie.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.flot.resize.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>fuelux</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FolderItem">
+                      <Name>data</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>fuelux.tree-sampledata.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>fuelux.spinner.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>fuelux.tree.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>fuelux.wizard.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>markdown</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-markdown.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>markdown.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>to-markdown.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>uncompressed</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FolderItem">
+                      <Name>date-time</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FolderItem">
+                          <Name>locales</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <Items>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.bg.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.ca.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.cs.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.da.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.de.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.el.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.es.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.fi.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.fr.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.he.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.hr.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.hu.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.id.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.is.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.it.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.ja.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.kr.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.lt.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.lv.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.ms.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.nb.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.nl.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.pl.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.pt-BR.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.pt.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.ro.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.rs-latin.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.rs.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.ru.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.sk.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.sl.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.sv.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.sw.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.th.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.tr.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.uk.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.zh-CN.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                            <Item xsi:type="FileItem">
+                              <Name>bootstrap-datepicker.zh-TW.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                          </Items>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-datepicker.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-timepicker.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>daterangepicker.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>moment.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FolderItem">
+                      <Name>flot</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>jquery.flot.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>jquery.flot.pie.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>jquery.flot.resize.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FolderItem">
+                      <Name>fuelux</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FolderItem">
+                          <Name>data</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <Items>
+                            <Item xsi:type="FileItem">
+                              <Name>fuelux.tree-sampledata.js</Name>
+                              <RepeatGeneration>NoRepeat</RepeatGeneration>
+                              <IsBinary>false</IsBinary>
+                            </Item>
+                          </Items>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>fuelux.spinner.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>fuelux.tree.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>fuelux.wizard.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FolderItem">
+                      <Name>markdown</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-markdown.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>markdown.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>to-markdown.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FolderItem">
+                      <Name>x-editable</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <Items>
+                        <Item xsi:type="FileItem">
+                          <Name>ace-editable.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                        <Item xsi:type="FileItem">
+                          <Name>bootstrap-editable.js</Name>
+                          <RepeatGeneration>NoRepeat</RepeatGeneration>
+                          <IsBinary>false</IsBinary>
+                        </Item>
+                      </Items>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-elements.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-extra.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>ace.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>additional-methods.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootbox.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-colorpicker.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-tag.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-wysiwyg.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>chosen.jquery.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>excanvas.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>fullcalendar.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery-1.10.2.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery-2.0.3.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery-ui-1.10.3.custom.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.autosize.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.colorbox.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.dataTables.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.easy-pie-chart.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.gritter.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.hotkeys.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.inputlimiter.1.3.1.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.knob.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.maskedinput.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.mobile.custom.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.slimscroll.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.sparkline.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.ui.touch-punch.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>jquery.validate.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>respond.src.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>select2.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>spin.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FolderItem">
+                  <Name>x-editable</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <Items>
+                    <Item xsi:type="FileItem">
+                      <Name>ace-editable.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                    <Item xsi:type="FileItem">
+                      <Name>bootstrap-editable.min.js</Name>
+                      <RepeatGeneration>NoRepeat</RepeatGeneration>
+                      <IsBinary>false</IsBinary>
+                    </Item>
+                  </Items>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-elements.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace-extra.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>ace.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>additional-methods.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootbox.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap-colorpicker.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap-tag.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap-wysiwyg.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>bootstrap.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>chosen.jquery.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>dropzone.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>excanvas.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>fullcalendar.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>html5shiv.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-1.10.2.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-1.8.3.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-2.0.3.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-2.0.3.min.map</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-ui-1.10.0.custom.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-ui-1.10.3.custom.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery-ui-1.10.3.full.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.autosize.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.colorbox-min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.dataTables.bootstrap.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.dataTables.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.easy-pie-chart.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.gritter.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.hotkeys.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.inputlimiter.1.3.1.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.knob.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.maskedinput.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.mobile.custom.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.nestable.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.slimscroll.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.sparkline.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.ui.touch-punch.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>jquery.validate.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>prettify.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>respond.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>select2.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>spin.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>typeahead-bs2.min.js</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>AjaxOperations.js</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>default.css</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>Utility.js</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Entity</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>Entity.cs</Name>
+              <FileNameTemplate>$=table.Name$.cs</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>NamedEntity.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>BaseEntity.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Properties</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FileItem">
+              <Name>AssemblyInfo.cs</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+        <Item xsi:type="FolderItem">
+          <Name>Staff</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <Items>
+            <Item xsi:type="FolderItem">
+              <Name>Handlers</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <Items>
+                <Item xsi:type="FileItem">
+                  <Name>EntityHandler.ashx</Name>
+                  <FileNameTemplate>$=table.Name$Handler.ashx</FileNameTemplate>
+                  <RepeatGeneration>ForEachTable</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+                <Item xsi:type="FileItem">
+                  <Name>BaseHandler.cs</Name>
+                  <RepeatGeneration>NoRepeat</RepeatGeneration>
+                  <IsBinary>false</IsBinary>
+                </Item>
+              </Items>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>APIDemo.aspx</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>EditEntity.aspx</Name>
+              <FileNameTemplate>Edit$=table.Name$.aspx</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>ListEntity.aspx</Name>
+              <FileNameTemplate>List$=table.Name$.aspx</FileNameTemplate>
+              <RepeatGeneration>ForEachTable</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>LogReport.aspx</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+            <Item xsi:type="FileItem">
+              <Name>Main.Master</Name>
+              <RepeatGeneration>NoRepeat</RepeatGeneration>
+              <IsBinary>false</IsBinary>
+            </Item>
+          </Items>
+        </Item>
+      </Items>
+    </Item>
+    <Item xsi:type="FolderItem">
+      <Name>_dll</Name>
+      <RepeatGeneration>NoRepeat</RepeatGeneration>
+      <Items>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.Common.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.Database.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.Extensions.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.POP3.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.Scheduler.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.Scripting.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.SQLEngine.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Cinar.SQLParser.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>ICSharpCode.SharpZipLib.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>ICSharpCode.TextEditor.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>MySql.Data.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>MySql.Data.Entity.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Newtonsoft.Json.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Newtonsoft.Json.xml</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>Npgsql.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+        <Item xsi:type="FileItem">
+          <Name>System.Data.SQLite.dll</Name>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
+          <IsBinary>true</IsBinary>
+        </Item>
+      </Items>
+    </Item>
+  </Items>
+  <Modified>true</Modified>
+</Solution>
