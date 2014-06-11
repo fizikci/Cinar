@@ -128,6 +128,12 @@ namespace Cinar.DBTools.CodeGen
 
         private void cmdGenerateCode(string arg)
         {
+            if (Provider.Database == null)
+            {
+                MessageBox.Show("Select a database first", "Cinar Database Tools");
+                return;
+            }
+
             Item item = tree.SelectedNode.Tag as Item;
 
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -198,15 +204,13 @@ namespace Cinar.DBTools.CodeGen
             {
                 foreach (string filePath in ofd.FileNames)
                 {
-                    try
+                    Item item = parent.AddExistingItem(new FileItem()
                     {
-                        Item item = parent.AddExistingItem(new FileItem()
-                        {
-                            Name = Path.GetFileName(filePath)
-                        }, filePath);
+                        Name = Path.GetFileName(filePath)
+                    }, filePath);
+
+                    if(item!=null)
                         addNode(tree.SelectedNode, item);
-                    }
-                    catch { }
                 }
                 tree.SelectedNode.Expand();
                 Solution.Save();
@@ -234,19 +238,14 @@ namespace Cinar.DBTools.CodeGen
             ofd.SelectedPath = parent.Path;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (!ofd.SelectedPath.StartsWith(parent.Path))
-                {
-                    MessageBox.Show("Plese select a folder under " + parent.Path, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
                 try
                 {
                     FolderItem item = parent.AddExistingFolder(new FolderItem()
                     {
                         Name = Path.GetFileName(ofd.SelectedPath)
                     }, ofd.SelectedPath);
-                    addNode(tree.SelectedNode, item);
+                    var tn = addNode(tree.SelectedNode, item);
+                    populateNodes(tn, item.Items);
                     tree.SelectedNode.Expand();
                     Solution.Save();
                 }
@@ -300,6 +299,7 @@ namespace Cinar.DBTools.CodeGen
         {
             TreeNode tn = parentNode.Nodes.Add(child.Name, child.Name, child.GetType().Name.Replace("Item",""), child.GetType().Name.Replace("Item",""));
             tn.Tag = child;
+
             return tn;
         }
         #endregion

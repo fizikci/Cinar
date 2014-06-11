@@ -30,16 +30,22 @@ namespace Cinar.DBTools.CodeGen
             this.Items.Add(item);
             if (filePathToCopy != item.Path)
             {
-                if (!File.Exists(item.Path) || MessageBox.Show("There is a file with the same name. Overwrite?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (!File.Exists(item.Path) || MessageBox.Show("There is a file with the same name: "+System.IO.Path.GetFileName(item.Path)+"\r\n\r\n Overwrite?", "Cinar Database Tools", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     File.Copy(filePathToCopy, item.Path, true);
-                    File.WriteAllText(item.Path, File.ReadAllText(item.Path, Encoding.UTF8).Replace("$", "\\$"), Encoding.UTF8);
+                    if (!Utility.IsBinaryFile(item.Path))
+                        File.WriteAllText(item.Path,
+                                          File.ReadAllText(item.Path, Encoding.UTF8)
+                                              .Replace("\\", "\\\\")
+                                              .Replace("$", "\\$"), Encoding.UTF8);
+                    else
+                        (item as FileItem).IsBinary = true;
                     Solution.Modified = true;
                 }
                 else
                 {
                     this.Items.Remove(item);
-                    throw new Exception("Canceled");
+                    return null;
                 }
             }
             return item;
@@ -57,7 +63,30 @@ namespace Cinar.DBTools.CodeGen
         {
             if(this.Items[folderItem.Name]!=null)
                 throw new Exception("There is already a folder with the same name");
+
             this.Items.Add(folderItem);
+
+            if (!Directory.Exists(folderItem.Path))
+                Directory.CreateDirectory(folderItem.Path);
+
+            foreach (var subFolderPath in Directory.GetDirectories(path))
+            {
+                folderItem.AddExistingFolder(new FolderItem()
+                    {
+                        Name = System.IO.Path.GetFileName(subFolderPath)
+                    }, subFolderPath);
+            }
+            foreach (var filePath in Directory.GetFiles(path))
+            {
+                folderItem.AddExistingItem(new FileItem()
+                {
+                    Name = System.IO.Path.GetFileName(filePath)
+                }, filePath);
+
+            }
+
+            Solution.Modified = true;
+
             return folderItem;
         }
 
@@ -168,7 +197,7 @@ namespace Cinar.DBTools.CodeGen
         public FolderItem() 
         {
             Items = new ItemCollection(this);
-            RepeatGeneration = RepeatGenerationTypes.ForEachCategory;
+            RepeatGeneration = RepeatGenerationTypes.NoRepeat;
         }
 
     }

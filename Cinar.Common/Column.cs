@@ -443,6 +443,7 @@ namespace Cinar.Database
         LookUp,
         DateEdit,
         NumberEdit,
-        TimeEdit
+        TimeEdit,
+        Hidden
     }
 }

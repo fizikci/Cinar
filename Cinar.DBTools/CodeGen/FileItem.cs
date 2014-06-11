@@ -11,6 +11,8 @@ namespace Cinar.DBTools.CodeGen
 {
     public class FileItem : Item
     {
+        public bool IsBinary { get; set; }
+
         public override void Delete()
         {
             File.Delete(this.Path);
@@ -41,13 +43,20 @@ namespace Cinar.DBTools.CodeGen
         }
         public GeneratedCode GenerateCode(string basePath, Table table)
         {
-            Interpreter engineForCode = new Interpreter(File.ReadAllText(this.Path), null);
-            engineForCode.SetAttribute("this", this);
-            engineForCode.SetAttribute("db", Provider.Database);
-            engineForCode.SetAttribute("table", table);
-            engineForCode.SetAttribute("util", new Util());
-            engineForCode.Parse();
-            engineForCode.Execute();
+            string code = null;
+
+            if (!this.IsBinary)
+            {
+                Interpreter engineForCode = new Interpreter(File.ReadAllText(this.Path), null);
+                engineForCode.SetAttribute("this", this);
+                engineForCode.SetAttribute("db", Provider.Database);
+                engineForCode.SetAttribute("table", table);
+                engineForCode.SetAttribute("util", new Util());
+                engineForCode.Parse();
+                engineForCode.Execute();
+
+                code = engineForCode.Output;
+            }
 
             string path = Name;
             if (!string.IsNullOrEmpty(this.FileNameTemplate))
@@ -63,7 +72,7 @@ namespace Cinar.DBTools.CodeGen
             }
 
             return new GeneratedCode {
-                Code = engineForCode.Output,
+                Code = code,
                 Path = basePath + "\\" + path
             };
         }
@@ -88,12 +97,16 @@ namespace Cinar.DBTools.CodeGen
         public void CreateCode(string basePath, Table table)
         {
             GeneratedCode gc = GenerateCode(basePath, table);
-            File.WriteAllText(gc.Path, gc.Code, Encoding.UTF8);
+
+            if(this.IsBinary)
+                File.Copy(this.Path, gc.Path);
+            else
+                File.WriteAllText(gc.Path, gc.Code, Encoding.UTF8);
         }
 
         public FileItem()
         {
-            RepeatGeneration = RepeatGenerationTypes.ForEachTable;
+            RepeatGeneration = RepeatGenerationTypes.NoRepeat;
         }
     }
 
