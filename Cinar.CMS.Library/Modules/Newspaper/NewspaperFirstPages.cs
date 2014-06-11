@@ -15,10 +15,12 @@ namespace Cinar.CMS.Library.Modules
             this.InnerHtml = @"
 <script src=""/external/javascripts/lightbox/js/lightbox-2.6.min.js""></script>
 <link href=""/external/javascripts/lightbox/css/lightbox.css"" rel=""stylesheet"">
+
 $
 var gazeteler = 'aksam,anayurt,ankarabelde,ankarasonsoz,aydinlik,birgun,bugun,cumhuriyet,dunya,evrensel,fanatik,gunboyu,gunes,haberturk,hurriyet,hurriyetdailynews,hurses,milat,milligazete,milliyet,ortadogu,ozgurgundem,posta,radikal,sabah,sol,sozcu,star,takvim,taraf,todayszaman,turkiye,vatan,yeniakit,yeniasya,yenicag,yenimesaj,yenisafak,yurt,zaman';
 foreach(var name in gazeteler.Split(','))
-	echo('<a href=""http://www.bik.gov.tr/gazeteler/dosya/'+name+'.jpg"" data-lightbox=""roadtrip$=this.Id$""><img src=""http://www.bik.gov.tr/gazeteler/dosya/'+name+'_thumb.jpg"" width=""90"" height=""146""/></a>');
+    echo('<a href=""http://resim.ihlassondakika.com/Gazete/'+DateTime.Now.ToString('dd.MM.yyyy')+'/'+name+'_'+DateTime.Now.ToString('ddMMyy')+'.jpeg"" data-lightbox=""roadtrip$=this.Id$"">
+        <img src=""http://resim.ihlassondakika.com/Gazete/kucuk/'+DateTime.Now.ToString('dd.MM.yyyy')+'/'+name+'_kucuk_'+DateTime.Now.ToString('ddMMyy')+'.jpeg"" width=""90"" height=""146""/></a>');
 $
 ";
             this.CSSClass = "slideShow autoPlay";

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -102,7 +103,8 @@ namespace Cinar.CMS.DesktopEditor
         private void timer_Tick(object sender, EventArgs e)
         {
             timer.Interval = 10 * 60 * 1000;
-            backgroundWorker.RunWorkerAsync();
+            if(!backgroundWorker.IsBusy)
+                backgroundWorker.RunWorkerAsync();
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -115,6 +117,7 @@ namespace Cinar.CMS.DesktopEditor
 
                 var siteIndex = item.Key;
                 var site = s.SiteAddress[siteIndex];
+                var db = Provider.GetDb(siteIndex).CreateNewInstance();
 
                 foreach (string rssItem in item.Value.Replace("\r", "").SplitWithTrim('\n'))
                 {
@@ -131,7 +134,7 @@ namespace Cinar.CMS.DesktopEditor
                         if (haberler.Count == 0)
                             continue;
 
-                        backgroundWorker.ReportProgress(0, rss.Element("channel").Element("title").Value + "|" + haberler.Count);
+                        backgroundWorker.ReportProgress(0, rss.Element("channel").Element("title").Value + "|" + haberler.Count + "|" + site.Trim('/'));
                         for (int i = 0; i < haberler.Count; i++)
                         {
                             var media = haberler[i].Element(mediaNS + "content");
@@ -139,7 +142,7 @@ namespace Cinar.CMS.DesktopEditor
                             var title = haberler[i].Element("title").Value;
                             var sourceLink = haberler[i].Element("link").Value;
 
-                            if (Provider.GetDb(siteIndex).GetInt("select Id from Content where SourceLink={0}", sourceLink) > 0)
+                            if (db.GetInt("select Id from Content where SourceLink={0}", sourceLink) > 0)
                             {
                                 backgroundWorker.ReportProgress(((i + 1) * 100) / haberler.Count);
                                 continue;
@@ -154,6 +157,13 @@ namespace Cinar.CMS.DesktopEditor
                             postData.Add("Id", "0");
                             postData.Add("ClassName", "Content");
                             postData.Add("Title", title);
+
+                            if (title.Replace("İ", "I").ToLowerInvariant().StartsWith("cihan") || title.Replace("Ü", "U").ToLowerInvariant().StartsWith("duzeltme"))
+                            {
+                                backgroundWorker.ReportProgress(((i + 1) * 100) / haberler.Count);
+                                continue;
+                            }
+
                             postData.Add("SourceLink", sourceLink);
                             postData.Add("CategoryId", categoryId.ToString());
                             try
@@ -170,7 +180,9 @@ namespace Cinar.CMS.DesktopEditor
                             backgroundWorker.ReportProgress(((i+1) * 100) / haberler.Count);
                         }
                     }
-                    catch { }
+                    catch(Exception ex) {
+                        
+                    }
                 }
             }
         }
@@ -180,7 +192,7 @@ namespace Cinar.CMS.DesktopEditor
             if (e.UserState != null)
             {
                 var data = e.UserState.ToString().SplitWithTrim("|");
-                statusLabel.Text = data[0] + " kaynağından " + data[1] + " haber yükleniyor ";
+                statusLabel.Text = data[0] + " kaynağından " + data[1] + " haber " + data[2] + " adresine yükleniyor ";
             }
             statusProgress.Value = e.ProgressPercentage;
         }
