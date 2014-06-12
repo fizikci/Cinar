@@ -173,8 +173,8 @@ namespace Cinar.DBTools.CodeGen
                     {
                         if (gc.IsFolder) continue;
 
-                        mainForm.addFileEditor(gc.Path);
-                        mainForm.CurrEditor.Content = gc.Code;
+                        mainForm.addFileEditor(gc.Path, gc.Code);
+                        //mainForm.CurrEditor.Content = gc.Code;
                     }
                 }
             }

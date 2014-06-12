@@ -24,7 +24,7 @@ namespace Cinar.DBTools.Controls
             InitializeComponent();
 
             this.filePath = filePath;
-            if (!string.IsNullOrEmpty(filePath))
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
                 txt.LoadFile(filePath);
                 InitialText = txt.Text;

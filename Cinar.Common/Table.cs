@@ -338,10 +338,10 @@ namespace Cinar.Database
             return null;
         }
 
-        public void GenerateUIMetadata()
+        public TableUIMetadata GenerateUIMetadata()
         {
             if (UIMetadata != null)
-                return;
+                return UIMetadata;
 
             UIMetadata = new TableUIMetadata();
             UIMetadata.DisplayName = Name;
@@ -359,6 +359,8 @@ namespace Cinar.Database
 
             foreach (Column f in this.Columns)
                 f.GenerateUIMetadata();
+
+            return UIMetadata;
         }
 
         [Description("The definitions for this table to be used generating of UI code"), Category("Extra Info")]
@@ -383,11 +385,14 @@ namespace Cinar.Database
 
         public List<string> GetUIGroups()
         {
-            return this.Columns.OrderBy(c => c.UIMetadata.DisplayOrder).Select(c => c.UIMetadata.GroupName).Distinct().ToList();
+            return this.Columns.OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.UIMetadata.GroupName).Distinct().ToList();
         }
         public List<string> GetUIGroupColumns(string groupName)
         {
-            return this.Columns.Where(c => c.UIMetadata.GroupName == groupName).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c=>c.Name).ToList();
+            if(string.IsNullOrWhiteSpace(groupName))
+                return this.Columns.Where(c => string.IsNullOrWhiteSpace(c.UIMetadata.GroupName)).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c => c.Name).ToList();
+            else
+                return this.Columns.Where(c => c.UIMetadata.GroupName == groupName).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c=>c.Name).ToList();
         }
     }
 
