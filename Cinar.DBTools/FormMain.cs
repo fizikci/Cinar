@@ -448,6 +448,11 @@ namespace Cinar.DBTools
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
+                                     Execute = cmdShowTableUIPreview,
+                                     Trigger = new CommandTrigger{ Control = menuTableShowUIPreview},
+                                     IsVisible = ()=> SelectedObject is Table
+                                 },
+                     new Command {
                                      Execute = cmdGenerateSQL,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuTableGenerateSQL, Argument="-"},
@@ -1312,6 +1317,36 @@ namespace Cinar.DBTools
 
             d.CorrectConnectionLinesPositions();
             de.Invalidate();
+        }
+
+        private void cmdShowTableUIPreview(string arg)
+        {
+            Table tbl = SelectedObject as Table;
+
+            TableFormPreview p = new TableFormPreview(this.propertyGrid);
+            p.Table = tbl;
+
+            foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
+                if (!string.IsNullOrEmpty(p.Name) && myTabPage.ToolTipText == p.GetName())
+                {
+                    tabControlEditors.SelectedTab = myTabPage;
+                    return;
+                }
+
+            MyTabPage tp = new MyTabPage();
+            //tp.ImageKey = "Query";
+            tp.ImageIndex = 1;
+
+            p.Dock = DockStyle.Fill;
+            tp.Controls.Add(p);
+            tp.ToolTipText = p.GetName();
+            tp.Text = p.GetName();
+            tabControlEditors.TabPages.Add(tp);
+            tabControlEditors.SelectTab(tp);
+
+            SetFont(tp, Font);
+
+            p.Preview();
         }
 
         private void cmdDeleteSelectedObject(string arg)
@@ -2543,8 +2578,12 @@ namespace Cinar.DBTools
                 cancel = true;
             }
 
-            if(cancel)
-                e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
+            try
+            {
+                if (cancel)
+                    e.ChangedItem.PropertyDescriptor.SetValue(propertyGrid.SelectedObject, e.OldValue);
+            }
+            catch { }
         }
 
         public object SelectedObject;

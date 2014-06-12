@@ -128,6 +128,7 @@ namespace Cinar.DBTools.Tools
                 cb.Items.Add(f);
             p.Controls.Add(lbl);
             p.Controls.Add(cb);
+            p.Tag = this;
             return p;
         }
         public override string Fix(Panel p)
@@ -163,6 +164,7 @@ namespace Cinar.DBTools.Tools
             CheckBox cb = new CheckBox() { Width = 100, Left = 300 };
             p.Controls.Add(lbl);
             p.Controls.Add(cb);
+            p.Tag = this;
             return p;
         }
         public override string Fix(Panel p)
@@ -184,7 +186,7 @@ namespace Cinar.DBTools.Tools
     {
         public override Panel GetUI()
         {
-            Panel p = new Panel() { Width = 520, Height = 24 };
+            Panel p = new Panel() { Width = 570, Height = 24 };
             Label lbl = new Label() { Width = 300, TextAlign = ContentAlignment.MiddleRight };
             lbl.Text = String.Format("Possible FK from {0}.{1} to: ", Column.Table.Name, Column.Name);
             ComboBox cb = new ComboBox() { Width = 200, Left = 300, DropDownStyle = ComboBoxStyle.DropDownList };
@@ -194,7 +196,32 @@ namespace Cinar.DBTools.Tools
             if (Table != null) cb.SelectedItem = Table;
             p.Controls.Add(lbl);
             p.Controls.Add(cb);
+
+            p.Tag = this;
+
+            LinkLabel lblHide = new LinkLabel() { Width = 50, Left = 520 };
+            lblHide.Text = "Hide";
+            lblHide.Click += lblHide_Click;
+            p.Controls.Add(lblHide);
+
             return p;
+        }
+
+        void lblHide_Click(object sender, EventArgs e)
+        {
+            var lbl = sender as LinkLabel;
+            var listRemove = new List<Control>();
+            for (int i = 0; i < lbl.Parent.Parent.Controls.Count; i++)
+            {
+                var panel = lbl.Parent.Parent.Controls[i];
+                var p = panel.Tag as Problem;
+                if (p.Column.Name == (lbl.Parent.Tag as Problem).Column.Name)
+                    listRemove.Add(panel);
+            }
+            var parent = lbl.Parent.Parent;
+            foreach (var c in listRemove)
+                parent.Controls.Remove(c);
+
         }
         public override string Fix(Panel p)
         {
