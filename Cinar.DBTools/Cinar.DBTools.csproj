@@ -99,6 +99,12 @@
     <Compile Include="Controls\BackgroundWorkerDialog.designer.cs">
       <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TableFormPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TableFormPreview.Designer.cs">
+      <DependentUpon>TableFormPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TemplateEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -162,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\BackgroundWorkerDialog.resx">
       <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TableFormPreview.resx">
+      <DependentUpon>TableFormPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TemplateEditor.resx">
       <DependentUpon>TemplateEditor.cs</DependentUpon>

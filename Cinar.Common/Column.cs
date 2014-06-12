@@ -444,6 +444,7 @@ namespace Cinar.Database
         DateEdit,
         NumberEdit,
         TimeEdit,
+        TagEdit,
         Hidden
     }
 }

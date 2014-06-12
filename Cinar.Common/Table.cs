@@ -380,6 +380,15 @@ namespace Cinar.Database
             }
             return refCons;
         }
+
+        public List<string> GetUIGroups()
+        {
+            return this.Columns.OrderBy(c => c.UIMetadata.DisplayOrder).Select(c => c.UIMetadata.GroupName).Distinct().ToList();
+        }
+        public List<string> GetUIGroupColumns(string groupName)
+        {
+            return this.Columns.Where(c => c.UIMetadata.GroupName == groupName).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c=>c.Name).ToList();
+        }
     }
 
     [Serializable]
@@ -439,4 +448,5 @@ namespace Cinar.Database
         Ascending,
         Descending
     }
+
 }

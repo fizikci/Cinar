@@ -185,6 +185,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSPHelpText = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptSearhAllStringFields = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptSQLTransferTableSQLGenerator = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptDataTableToStringTable = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -213,7 +214,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsQScriptDataTableToStringTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableShowUIPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -453,9 +454,10 @@ namespace Cinar.DBTools
             this.menuIndexEditIndex,
             this.menuIndexDropIndex,
             this.menuTableShowInDiagram,
-            this.menuTableShowChildrenRecords});
+            this.menuTableShowChildrenRecords,
+            this.menuTableShowUIPreview});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 730);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 774);
             // 
             // menuConShowHiddenConnections
             // 
@@ -1548,6 +1550,12 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSQLTransferTableSQLGenerator.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptSQLTransferTableSQLGenerator.Text = "Transfer Table SQL Generator";
             // 
+            // menuToolsQScriptDataTableToStringTable
+            // 
+            this.menuToolsQScriptDataTableToStringTable.Name = "menuToolsQScriptDataTableToStringTable";
+            this.menuToolsQScriptDataTableToStringTable.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDataTableToStringTable.Text = "DataTable To String Table";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1790,11 +1798,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsQScriptDataTableToStringTable
+            // menuTableShowUIPreview
             // 
-            this.menuToolsQScriptDataTableToStringTable.Name = "menuToolsQScriptDataTableToStringTable";
-            this.menuToolsQScriptDataTableToStringTable.Size = new System.Drawing.Size(258, 22);
-            this.menuToolsQScriptDataTableToStringTable.Text = "DataTable To String Table";
+            this.menuTableShowUIPreview.Name = "menuTableShowUIPreview";
+            this.menuTableShowUIPreview.Size = new System.Drawing.Size(265, 22);
+            this.menuTableShowUIPreview.Text = "Show UI Preview...";
             // 
             // FormMain
             // 
@@ -2028,6 +2036,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSearhAllStringFields;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSQLTransferTableSQLGenerator;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDataTableToStringTable;
+        private System.Windows.Forms.ToolStripMenuItem menuTableShowUIPreview;
 
     }
 }
