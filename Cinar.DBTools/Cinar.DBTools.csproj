@@ -105,6 +105,12 @@
     <Compile Include="Controls\TableFormPreview.Designer.cs">
       <DependentUpon>TableFormPreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TableGridPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TableGridPreview.Designer.cs">
+      <DependentUpon>TableGridPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TemplateEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -142,6 +148,12 @@
     <Compile Include="Controls\ScriptInputDialog.Designer.cs">
       <DependentUpon>ScriptInputDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UIMetadataPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UIMetadataPreview.Designer.cs">
+      <DependentUpon>UIMetadataPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="FindDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +184,9 @@
     <EmbeddedResource Include="Controls\TableFormPreview.resx">
       <DependentUpon>TableFormPreview.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TableGridPreview.resx">
+      <DependentUpon>TableGridPreview.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\TemplateEditor.resx">
       <DependentUpon>TemplateEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -188,6 +203,9 @@
     <EmbeddedResource Include="Controls\ScriptInputDialog.resx">
       <DependentUpon>ScriptInputDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\UIMetadataPreview.resx">
+      <DependentUpon>UIMetadataPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FindDialog.resx">
       <DependentUpon>FindDialog.cs</DependentUpon>

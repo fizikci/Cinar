@@ -10,31 +10,28 @@ using Cinar.Database;
 
 namespace Cinar.DBTools.Controls
 {
-    public partial class TableFormPreview : UserControl, IEditor
+    public partial class TableFormPreview : UserControl
     {
         public Table Table { get; set; }
         public PropertyGrid propertyGrid;
 
-        private Panel _activePanel;
-        private Panel activePanel
-        {
-            get { return _activePanel; }
-            set {
-                if (_activePanel != null)
-                    _activePanel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-
-                _activePanel = value;
-                _activePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            }
-        }
+        private List<Panel> _activePanels = new List<Panel>();
 
         public TableFormPreview(PropertyGrid propertyGrid)
         {
             InitializeComponent();
+            
+            this.SetStyle(ControlStyles.DoubleBuffer, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor, false);
+            this.SetStyle(ControlStyles.Opaque, false);
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
 
             this.propertyGrid = propertyGrid;
-
             this.ContextMenuStrip = contextMenu;
+            this.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
 
             foreach (var val in Enum.GetNames(typeof(EditorTypes)))
             {
@@ -44,10 +41,19 @@ namespace Cinar.DBTools.Controls
             }
         }
 
+        void ContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            if (_activePanels.Count == 0)
+                e.Cancel = true;
+        }
+
         public void Preview() {
             FlowLayoutPanel mainPanel = new FlowLayoutPanel() { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight };
             mainPanel.AutoScroll = true;
             mainPanel.DoubleClick += mainPanel_DoubleClick;
+            mainPanel.Click += mainPanel_Click;
+
+            int i = 0;
 
             foreach (string group in Table.GetUIGroups())
             {
@@ -59,6 +65,7 @@ namespace Cinar.DBTools.Controls
 
                 foreach (string column in Table.GetUIGroupColumns(group))
                 {
+                    Table.Columns[column].GenerateUIMetadata().DisplayOrder = i++;
                     var c = getControl(Table.Columns[column]);
                     if (c != null)
                         groupPanel.Controls.Add(c);
@@ -69,6 +76,12 @@ namespace Cinar.DBTools.Controls
             this.Controls.Add(mainPanel);
         }
 
+        void mainPanel_Click(object sender, EventArgs e)
+        {
+            _activePanels.Clear();
+            markActivePanels();
+        }
+
         void mainPanel_DoubleClick(object sender, EventArgs e)
         {
             this.Preview();
@@ -77,7 +90,7 @@ namespace Cinar.DBTools.Controls
         private Control getControl(Column column)
         {
             Control c = null;
-            switch (column.UIMetadata.EditorType)
+            switch (column.GenerateUIMetadata().EditorType)
             {
                 case EditorTypes.Undefined:
                 case EditorTypes.Hidden:
@@ -124,7 +137,7 @@ namespace Cinar.DBTools.Controls
             if (c == null) return null;
 
             Panel p = new Panel() { Width = 400, Height = c.Height+4};
-            Label l = new Label() { Width=160, TextAlign = ContentAlignment.MiddleRight, Text = column.UIMetadata.DisplayName};
+            Label l = new Label() { Width=160, TextAlign = ContentAlignment.MiddleRight, Text = column.GenerateUIMetadata().DisplayName};
             c.Width = 240;
             c.Left = 160;
             p.Tag = c.Tag = column;
@@ -143,53 +156,30 @@ namespace Cinar.DBTools.Controls
             if (!(sender is Panel))
                 sender = (sender as Control).Parent;
 
-            activePanel = sender as Panel;
-            propertyGrid.SelectedObject = activePanel.Tag;
+            if (Control.ModifierKeys != Keys.Control && e.Button != MouseButtons.Right)
+                _activePanels.Clear();
+
+            _activePanels.Add(sender as Panel);
+            markActivePanels();
         }
 
-        public bool Modified
+        private void markActivePanels()
         {
-            get { return false; }
-        }
+            foreach (GroupBox gb in this.Controls[0].Controls)
+                foreach (Panel panel in gb.Controls[0].Controls)
+                    panel.BorderStyle = _activePanels.Contains(panel) ? BorderStyle.FixedSingle : BorderStyle.None;
 
-        public string GetName()
-        {
-            return Table.Name + " UI View";
-        }
-
-        public bool Save()
-        {
-            return true;
-        }
-
-        public void OnClose()
-        {
-            
-        }
-
-        public string Content
-        {
-            get
-            {
-                return "";
-            }
-            set
-            {
-                
-            }
-        }
-
-        public string FilePath
-        {
-            get { return ""; }
+            propertyGrid.SelectedObject = _activePanels.Count > 0 ? _activePanels.Last().Tag : Table;
         }
 
         private void setEditorType(string name) {
-            if (activePanel == null)
+            if (_activePanels.Count == 0)
                 return;
 
             EditorTypes et = (EditorTypes)Enum.Parse(typeof(EditorTypes), name);
-            (activePanel.Tag as Column).UIMetadata.EditorType = et;
+            foreach (var activePanel in _activePanels)
+                (activePanel.Tag as Column).GenerateUIMetadata().EditorType = et;
+
 
             Provider.ConnectionsModified = true;
             Preview();
@@ -197,11 +187,12 @@ namespace Cinar.DBTools.Controls
 
         private void menuRename_Click(object sender, EventArgs e)
         {
-            if (activePanel == null)
+            if (_activePanels.Count == 0)
                 return;
 
-            var name = Provider.Prompt("Enter new display name", "Cinar Database Tools", (activePanel.Tag as Column).UIMetadata.DisplayName);
-            (activePanel.Tag as Column).UIMetadata.DisplayName = name;
+            var name = Provider.Prompt("Enter new display name", "Cinar Database Tools", (_activePanels[0].Tag as Column).GenerateUIMetadata().DisplayName);
+            foreach (var activePanel in _activePanels)
+                (activePanel.Tag as Column).GenerateUIMetadata().DisplayName = name;
 
             Provider.ConnectionsModified = true;
             Preview();
@@ -209,14 +200,17 @@ namespace Cinar.DBTools.Controls
 
         private void menuUp_Click(object sender, EventArgs e)
         {
-            if (activePanel == null)
+            if (_activePanels.Count == 0)
                 return;
 
-            var col = activePanel.Tag as Column;
-            var prevCol = col.Table.Columns.Find(c => c.UIMetadata.DisplayOrder == col.UIMetadata.DisplayOrder - 1);
-            if (prevCol != null)
-                prevCol.UIMetadata.DisplayOrder += 1;
-            col.UIMetadata.DisplayOrder -= 1;
+            foreach (var activePanel in _activePanels)
+            {
+                var col = activePanel.Tag as Column;
+                var prevCol = col.Table.Columns.Find(c => c.GenerateUIMetadata().DisplayOrder == col.GenerateUIMetadata().DisplayOrder - 1);
+                if (prevCol != null)
+                    prevCol.GenerateUIMetadata().DisplayOrder += 1;
+                col.GenerateUIMetadata().DisplayOrder -= 1;
+            }
 
             Provider.ConnectionsModified = true;
             Preview();
@@ -224,14 +218,16 @@ namespace Cinar.DBTools.Controls
 
         private void menuDown_Click(object sender, EventArgs e)
         {
-            if (activePanel == null)
+            if (_activePanels.Count == 0)
                 return;
-
-            var col = activePanel.Tag as Column;
-            var nextCol = col.Table.Columns.Find(c => c.UIMetadata.DisplayOrder == col.UIMetadata.DisplayOrder + 1);
-            if (nextCol != null)
-                nextCol.UIMetadata.DisplayOrder -= 1;
-            col.UIMetadata.DisplayOrder += 1;
+            foreach (var activePanel in _activePanels)
+            {
+                var col = activePanel.Tag as Column;
+                var nextCol = col.Table.Columns.Find(c => c.GenerateUIMetadata().DisplayOrder == col.GenerateUIMetadata().DisplayOrder + 1);
+                if (nextCol != null)
+                    nextCol.GenerateUIMetadata().DisplayOrder -= 1;
+                col.GenerateUIMetadata().DisplayOrder += 1;
+            }
 
             Provider.ConnectionsModified = true;
             Preview();
@@ -239,6 +235,19 @@ namespace Cinar.DBTools.Controls
 
         private void menuRefresh_Click(object sender, EventArgs e)
         {
+            Preview();
+        }
+
+        private void menuRenameGroupName_Click(object sender, EventArgs e)
+        {
+            if (_activePanels.Count == 0)
+                return;
+
+            var name = Provider.Prompt("Enter new group name", "Cinar Database Tools", (_activePanels[0].Tag as Column).GenerateUIMetadata().GroupName);
+            foreach (var activePanel in _activePanels)
+                (activePanel.Tag as Column).GenerateUIMetadata().GroupName = name;
+
+            Provider.ConnectionsModified = true;
             Preview();
         }
     }

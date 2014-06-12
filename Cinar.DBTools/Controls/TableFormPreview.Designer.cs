@@ -35,6 +35,7 @@
             this.menuDown = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuRenameGroupName = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,45 +43,53 @@
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuRename,
+            this.menuRenameGroupName,
             this.menuUp,
             this.menuDown,
             this.menuRefresh,
             this.toolStripMenuItem1});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(153, 120);
+            this.contextMenu.Size = new System.Drawing.Size(194, 142);
             // 
             // menuRename
             // 
             this.menuRename.Name = "menuRename";
-            this.menuRename.Size = new System.Drawing.Size(152, 22);
-            this.menuRename.Text = "Rename";
+            this.menuRename.Size = new System.Drawing.Size(193, 22);
+            this.menuRename.Text = "Rename Display Name";
             this.menuRename.Click += new System.EventHandler(this.menuRename_Click);
             // 
             // menuUp
             // 
             this.menuUp.Name = "menuUp";
-            this.menuUp.Size = new System.Drawing.Size(152, 22);
+            this.menuUp.Size = new System.Drawing.Size(193, 22);
             this.menuUp.Text = "Up";
             this.menuUp.Click += new System.EventHandler(this.menuUp_Click);
             // 
             // menuDown
             // 
             this.menuDown.Name = "menuDown";
-            this.menuDown.Size = new System.Drawing.Size(152, 22);
+            this.menuDown.Size = new System.Drawing.Size(193, 22);
             this.menuDown.Text = "Down";
             this.menuDown.Click += new System.EventHandler(this.menuDown_Click);
             // 
             // menuRefresh
             // 
             this.menuRefresh.Name = "menuRefresh";
-            this.menuRefresh.Size = new System.Drawing.Size(152, 22);
+            this.menuRefresh.Size = new System.Drawing.Size(193, 22);
             this.menuRefresh.Text = "Refresh";
             this.menuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
+            // 
+            // menuRenameGroupName
+            // 
+            this.menuRenameGroupName.Name = "menuRenameGroupName";
+            this.menuRenameGroupName.Size = new System.Drawing.Size(193, 22);
+            this.menuRenameGroupName.Text = "Rename Group Name";
+            this.menuRenameGroupName.Click += new System.EventHandler(this.menuRenameGroupName_Click);
             // 
             // TableFormPreview
             // 
@@ -101,5 +110,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuDown;
         private System.Windows.Forms.ToolStripMenuItem menuRefresh;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem menuRenameGroupName;
     }
 }

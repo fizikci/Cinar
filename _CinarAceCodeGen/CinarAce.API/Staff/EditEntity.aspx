@@ -108,7 +108,10 @@ $<%@ Page Title="" Language="C#" MasterPageFile="~/Staff/Main.Master" AutoEventW
 
 <div class="row">
     <div class="col-sm-9">
-		$ foreach(var c in table.Columns){ $
+		$ 
+		foreach(var colName in table.GetUIGroupColumns("")){
+			var c = table.Columns[colName]; 
+		$
         <div class="form-group">
             <label for="$=c.Name$" class="col-sm-3 control-label no-padding-right"> <%=Provider.TR("$=c.UIMetadata.DisplayName$")%> </label>
             <div class="col-sm-9">
@@ -120,14 +123,30 @@ $<%@ Page Title="" Language="C#" MasterPageFile="~/Staff/Main.Master" AutoEventW
 		$ } $
 	</div>
     <div class="col-sm-3">
+    PUT HERE A PICTURE OR SOMETHING ELSE
 	</div>
 </div>
 
 <div class="row">
+	$ 
+	foreach(var grup in table.GetUIGroups()) {
+		if(!grup) continue;
+	$
 	<div class="col-xs-12 col-sm-6">
+		<h3 class="header smaller lighter blue"><%=Provider.TR("$=grup$")%></h3>
+		$ 
+		foreach(var colName in table.GetUIGroupColumns(grup)){ 
+			var c = table.Columns[colName];
+		$
+	        <div class="form-group">
+	            <label for="$=c.Name$" class="col-sm-4 control-label no-padding-right"> <%=Provider.TR("$=c.UIMetadata.DisplayName$")%> </label>
+	    		<div class="col-sm-8">
+	    			$=getControlHtml(c)$
+	            </div>
+	        </div>		
+		$ } $
 	</div>
-	<div class="col-xs-12 col-sm-6">
-	</div>
+	$ } $
 </div>
 
 <div class="clearfix form-actions">

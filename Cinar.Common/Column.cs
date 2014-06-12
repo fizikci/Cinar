@@ -335,10 +335,10 @@ namespace Cinar.Database
             return res;
         }
 
-        public void GenerateUIMetadata()
+        public ColumnUIMetadata GenerateUIMetadata()
         {
             if (UIMetadata != null)
-                return;
+                return UIMetadata;
 
             UIMetadata = new ColumnUIMetadata();
             UIMetadata.DisplayName = Name;
@@ -361,6 +361,8 @@ namespace Cinar.Database
             UIMetadata.ShowInForm = !this.IsPrimaryKey;
             UIMetadata.ShowInGrid = !this.IsPrimaryKey;
             UIMetadata.SortableInGrid = true;
+
+            return UIMetadata;
         }
 
         [Description("The definitions for this column to be used generating of UI code"), Category("Extra Info")]
