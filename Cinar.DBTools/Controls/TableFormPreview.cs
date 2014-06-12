@@ -15,6 +15,19 @@ namespace Cinar.DBTools.Controls
         public Table Table { get; set; }
         public PropertyGrid propertyGrid;
 
+        private Panel _activePanel;
+        private Panel activePanel
+        {
+            get { return _activePanel; }
+            set {
+                if (_activePanel != null)
+                    _activePanel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+
+                _activePanel = value;
+                _activePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            }
+        }
+
         public TableFormPreview(PropertyGrid propertyGrid)
         {
             InitializeComponent();
@@ -27,7 +40,7 @@ namespace Cinar.DBTools.Controls
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(val);
                 item.Click += (sndr, args) => { setEditorType(val); };
-                menuChangeControl.DropDownItems.Add(item);
+                contextMenu.Items.Add(item);
             }
         }
 
@@ -114,16 +127,24 @@ namespace Cinar.DBTools.Controls
             Label l = new Label() { Width=160, TextAlign = ContentAlignment.MiddleRight, Text = column.UIMetadata.DisplayName};
             c.Width = 240;
             c.Left = 160;
-            c.Tag = column;
-            c.GotFocus += c_GotFocus;
+            p.Tag = c.Tag = column;
             p.Controls.Add(l);
             p.Controls.Add(c);
+
+            p.MouseDown += p_Click;
+            l.MouseDown += p_Click;
+            c.MouseDown += p_Click;
+
             return p;
         }
 
-        void c_GotFocus(object sender, EventArgs e)
+        void p_Click(object sender, MouseEventArgs e)
         {
-            propertyGrid.SelectedObject = (sender as Control).Tag;
+            if (!(sender is Panel))
+                sender = (sender as Control).Parent;
+
+            activePanel = sender as Panel;
+            propertyGrid.SelectedObject = activePanel.Tag;
         }
 
         public bool Modified
@@ -163,19 +184,61 @@ namespace Cinar.DBTools.Controls
             get { return ""; }
         }
 
-        private void menuHide_Click(object sender, EventArgs e)
-        {
-            setEditorType("Hidden");
-        }
-
         private void setEditorType(string name) {
-            if (this.ActiveControl == null)
+            if (activePanel == null)
                 return;
 
             EditorTypes et = (EditorTypes)Enum.Parse(typeof(EditorTypes), name);
-            (this.ActiveControl.Tag as Column).UIMetadata.EditorType = et;
+            (activePanel.Tag as Column).UIMetadata.EditorType = et;
 
             Provider.ConnectionsModified = true;
+            Preview();
+        }
+
+        private void menuRename_Click(object sender, EventArgs e)
+        {
+            if (activePanel == null)
+                return;
+
+            var name = Provider.Prompt("Enter new display name", "Cinar Database Tools", (activePanel.Tag as Column).UIMetadata.DisplayName);
+            (activePanel.Tag as Column).UIMetadata.DisplayName = name;
+
+            Provider.ConnectionsModified = true;
+            Preview();
+        }
+
+        private void menuUp_Click(object sender, EventArgs e)
+        {
+            if (activePanel == null)
+                return;
+
+            var col = activePanel.Tag as Column;
+            var prevCol = col.Table.Columns.Find(c => c.UIMetadata.DisplayOrder == col.UIMetadata.DisplayOrder - 1);
+            if (prevCol != null)
+                prevCol.UIMetadata.DisplayOrder += 1;
+            col.UIMetadata.DisplayOrder -= 1;
+
+            Provider.ConnectionsModified = true;
+            Preview();
+        }
+
+        private void menuDown_Click(object sender, EventArgs e)
+        {
+            if (activePanel == null)
+                return;
+
+            var col = activePanel.Tag as Column;
+            var nextCol = col.Table.Columns.Find(c => c.UIMetadata.DisplayOrder == col.UIMetadata.DisplayOrder + 1);
+            if (nextCol != null)
+                nextCol.UIMetadata.DisplayOrder -= 1;
+            col.UIMetadata.DisplayOrder += 1;
+
+            Provider.ConnectionsModified = true;
+            Preview();
+        }
+
+        private void menuRefresh_Click(object sender, EventArgs e)
+        {
             Preview();
         }
     }
