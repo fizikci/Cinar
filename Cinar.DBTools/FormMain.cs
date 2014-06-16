@@ -448,9 +448,9 @@ namespace Cinar.DBTools
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
-                                     Execute = cmdShowTableUIPreview,
+                                     Execute = cmdShowUIMetadataPreview,
                                      Trigger = new CommandTrigger{ Control = menuTableShowUIPreview},
-                                     IsVisible = ()=> SelectedObject is Table
+                                     IsVisible = ()=> SelectedObject is Table || SelectedObject is ConnectionSettings
                                  },
                      new Command {
                                      Execute = cmdGenerateSQL,
@@ -1319,12 +1319,10 @@ namespace Cinar.DBTools
             de.Invalidate();
         }
 
-        private void cmdShowTableUIPreview(string arg)
+        private void cmdShowUIMetadataPreview(string arg)
         {
-            Table tbl = SelectedObject as Table;
-
-            TableFormPreview p = new TableFormPreview(this.propertyGrid);
-            p.Table = tbl;
+            UIMetadataPreview p = new UIMetadataPreview(this.propertyGrid);
+            p.Connection = Provider.ActiveConnection;
 
             foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
                 if (!string.IsNullOrEmpty(p.Name) && myTabPage.ToolTipText == p.GetName())

@@ -11,7 +11,7 @@ namespace Cinar.DBTools.Controls
 {
     public partial class UIMetadataPreview : UserControl, IEditor
     {
-        public Database.Database Database { get; set; }
+        public ConnectionSettings Connection { get; set; }
         public PropertyGrid propertyGrid;
 
         public UIMetadataPreview(PropertyGrid propertyGrid)
@@ -35,7 +35,7 @@ namespace Cinar.DBTools.Controls
 
             int i = 0;
 
-            foreach (string module in Provider.GetUIModules())
+            foreach (string module in Connection.GetUIModules())
             {
                 tabControl.TabPages.Add(module);
                 TabPage tp = tabControl.TabPages[tabControl.TabPages.Count-1];
@@ -43,14 +43,34 @@ namespace Cinar.DBTools.Controls
                 FlowLayoutPanel modulePanel = new FlowLayoutPanel() { Dock = DockStyle.Fill, FlowDirection = FlowDirection.LeftToRight, AutoScroll = true};
                 tp.Controls.Add(modulePanel);
 
-                foreach (string tableName in Database.GetUIModuleTables(module))
+                foreach (string tableName in Connection.GetUIModuleTables(module))
                 {
-                    Database.Tables[tableName].GenerateUIMetadata().DisplayOrder = i++;
-                    var c = getControl(Database.Tables[tableName]);
+                    Connection.Database.Tables[tableName].GenerateUIMetadata().DisplayOrder = i++;
+                    var c = getControl(Connection.Database.Tables[tableName]);
                     if (c != null)
                         modulePanel.Controls.Add(c);
                 }
             }
+        }
+
+        private Control getControl(Database.Table table)
+        {
+            Label lbl = new Label();
+            lbl.Text = table.Name;
+            lbl.Tag = table;
+            lbl.Click += lbl_Click;
+            return lbl;
+        }
+
+        void lbl_Click(object sender, EventArgs e)
+        {
+            var ctrl = sender as Control;
+            var table = ctrl.Tag as Database.Table;
+            var tableFormPreview = new TableFormPreview(propertyGrid);
+            tableFormPreview.Table = table;
+            splitContainer.Panel2.Controls.Clear();
+            splitContainer.Panel2.Controls.Add(tableFormPreview);
+            tableFormPreview.Preview();
         }
 
 

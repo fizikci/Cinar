@@ -65,5 +65,18 @@ namespace Cinar.DBTools
             Database = new Database.Database(Provider, Host, DbName, UserName, Password, TIMEOUT, null, CreateDatabaseIfNotExist);
             Cinar.DBTools.Provider.ConnectionsModified = true;
         }
+
+        internal List<string> GetUIModules()
+        {
+            return this.Database.Tables.OrderBy(t => t.GenerateUIMetadata().DisplayOrder).Select(t => t.UIMetadata.ModuleName).Distinct().ToList();
+        }
+
+        internal IEnumerable<string> GetUIModuleTables(string module)
+        {
+            if (string.IsNullOrWhiteSpace(module))
+                return Database.Tables.Where(c => string.IsNullOrWhiteSpace(c.GenerateUIMetadata().ModuleName)).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).ToList();
+            else
+                return Database.Tables.Where(c => c.GenerateUIMetadata().ModuleName == module).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).ToList();
+        }
     }
 }
