@@ -156,10 +156,20 @@ namespace Cinar.DBTools.Controls
             if (!(sender is Panel))
                 sender = (sender as Control).Parent;
 
+            var panel = sender as Panel;
+
             if (Control.ModifierKeys != Keys.Control && e.Button != MouseButtons.Right)
                 _activePanels.Clear();
 
-            _activePanels.Add(sender as Panel);
+            if (Control.ModifierKeys == Keys.Shift)
+            {
+                _activePanels.OrderBy(p=>(p.Tag as Column).GenerateUIMetadata().DisplayOrder)
+            }
+
+            if (_activePanels.Contains(panel))
+                _activePanels.Remove(panel);
+            else
+                _activePanels.Add(panel);
             markActivePanels();
         }
 
