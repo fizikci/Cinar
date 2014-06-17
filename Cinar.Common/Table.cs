@@ -348,7 +348,7 @@ namespace Cinar.Database
             UIMetadata.DisplayOrder = parent.IndexOf(this);
             UIMetadata.ShortDisplayName = Name;
             UIMetadata.TableType = this.ReferencedByTables.Count > 0 ? TableTypes.Account : TableTypes.Transaction;
-            UIMetadata.ModuleName = this.Database.Name;
+            UIMetadata.ModuleName = "None";
             UIMetadata.ShowInMainMenu = UIMetadata.TableType == TableTypes.Account;
             UIMetadata.DefaultSortColumn = this.StringColumn == null ? null : this.StringColumn.Name;
             UIMetadata.DefaultSortType = SortTypes.Ascending;

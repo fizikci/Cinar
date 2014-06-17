@@ -652,6 +652,35 @@ namespace System
             str = str.Trim();
             return char.ToLowerInvariant(str[0]) + str.Substring(1);
         }
+        public static string HumanReadable(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str))
+                return str;
+
+            if (str.EndsWith("Id", StringComparison.InvariantCulture)) str = str.Substring(0, str.Length - 2);
+            if (str.EndsWith("_id", StringComparison.InvariantCulture)) str = str.Substring(0, str.Length - 3);
+
+            string res = str[0].ToString();
+
+            for (int i = 1; i < str.Length; i++ )
+            {
+                char lastChar = str[i-1];
+                char c = str[i];
+
+                if (c == '_')
+                {
+                    res += " ";
+                    continue;
+                }
+
+                if ((Char.IsLower(lastChar) && Char.IsUpper(c)) || (!Char.IsDigit(lastChar) && Char.IsDigit(c)) || (Char.IsDigit(lastChar) && !Char.IsDigit(c)))
+                    res += " ";
+
+                res += c;
+            }
+
+            return res;
+        }
 
         public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
         {

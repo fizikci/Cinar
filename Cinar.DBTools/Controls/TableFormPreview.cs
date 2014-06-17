@@ -163,7 +163,7 @@ namespace Cinar.DBTools.Controls
 
             if (Control.ModifierKeys == Keys.Shift)
             {
-                _activePanels.OrderBy(p=>(p.Tag as Column).GenerateUIMetadata().DisplayOrder)
+                //_activePanels.OrderBy(p=>(p.Tag as Column).GenerateUIMetadata().DisplayOrder)
             }
 
             if (_activePanels.Contains(panel))

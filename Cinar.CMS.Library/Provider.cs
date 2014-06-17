@@ -2373,9 +2373,15 @@ namespace Cinar.CMS.Library
         #region ReflectionUtility
         public static object GetAttribute(ICustomAttributeProvider mi, Type attributeType)
         {
+            if(mi==null)
+                return attributeType.GetConstructor(Type.EmptyTypes).Invoke(null);
+
             object[] attribs = mi.GetCustomAttributes(attributeType, true);
             object res = null;
-            if (attribs.Length > 0) res = attribs[0]; else res = attributeType.GetConstructor(Type.EmptyTypes).Invoke(null);
+            if (attribs.Length > 0) 
+                res = attribs[0]; 
+            else 
+                res = attributeType.GetConstructor(Type.EmptyTypes).Invoke(null);
 
             // bakalım override edilmiş mi...
             if (mi is PropertyInfo)
