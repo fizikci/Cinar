@@ -325,7 +325,9 @@ InnerHtml,32,<hr/>
 
         public void Save()
         {
-            if (Id>0)
+            bool isUpdate = Id > 0;
+            BeforeSave();
+            if (isUpdate)
             {
                 Provider.Database.ExecuteNonQuery(
                     "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8}, ElementId={9}, ElementName={10} where Id={0}", //  and Name={1}
@@ -364,6 +366,7 @@ InnerHtml,32,<hr/>
                     this.Serialize(), 
                     this.Id);
             }
+            AfterSave(isUpdate);
         }
         public virtual void BeforeSave() { }
         public virtual void AfterSave(bool isUpdate) { }

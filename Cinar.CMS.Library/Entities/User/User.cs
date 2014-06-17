@@ -29,7 +29,7 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Login")]
         public string Nick { get; set; }
 
-        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login")]
+        [ColumnDetail(IsNotNull = true, Length = 100), EditFormFieldProps(Category = "Login", ControlType = ControlType.TagEdit, Options = "items:['User','Editor','Designer']")]
         public string Roles { get; set; }
 
         [ColumnDetail(Length = 100), EditFormFieldProps(Visible=false)]

@@ -11,87 +11,87 @@ namespace Cinar.CMS.Library.Entities
     public class Contact : NamedEntity, ICriticalEntity
     {
         #region Personal Info
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title'", Category = "")]
         public int TitleId { get; set; }
 
-        [ColumnDetail(References = typeof(Company)), EditFormFieldProps(Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Company)), EditFormFieldProps(Category = "Details")]
         public int CompanyId { get; set; }
 
-        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Category = "Personal Info")]
+        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Category = "")]
         public string Tags { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "More")]
         public int Language1Id { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "More")]
         public int Language2Id { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Language'", Category = "More")]
         public int Language3Id { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "")]
         public string Gender { get; set; }
 
-        [EditFormFieldProps(Category = "Personal Info")]
+        [EditFormFieldProps(Category = "")]
         public DateTime BirthDate { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind1'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind1'", Category = "Details")]
         public int Kind1Id { get; set; }
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind2'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind2'", Category = "Details")]
         public int Kind2Id { get; set; }
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind3'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind3'", Category = "Details")]
         public int Kind3Id { get; set; }
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind4'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind4'", Category = "Details")]
         public int Kind4Id { get; set; }
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind5'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind5'", Category = "Details")]
         public int Kind5Id { get; set; }
         #endregion
 
         #region Contact Info
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string Phone { get; set; }
 
-        [ColumnDetail(Length = 10), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 10), EditFormFieldProps(Category = "Address")]
         public string InterPhone { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string Phone2 { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string Fax { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string PhoneMobile { get; set; }
 
-        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Address")]
         public string AddressLine1 { get; set; }
 
-        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 200), EditFormFieldProps(Category = "Address")]
         public string AddressLine2 { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string City { get; set; }
 
-        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Address")]
         public string Town { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Country'", Category = "Contact Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Country'", Category = "Address")]
         public int CountryId { get; set; }
 
-        [ColumnDetail(Length = 5), EditFormFieldProps(Category = "Contact Info")]
+        [ColumnDetail(Length = 5), EditFormFieldProps(Category = "Address")]
         public string ZipCode { get; set; }
 
-        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email { get; set; }
 
-        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email2 { get; set; }
 
-        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
+        [ColumnDetail(Length = 100), EditFormFieldProps(Category = "", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
         public string Email3 { get; set; }
 
-        [ColumnDetail(Length = 150), EditFormFieldProps(Category = "Contact Info", Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
+        [ColumnDetail(Length = 150), EditFormFieldProps(Category = "Address", Options = @"regEx:'(((ht|f)tp(s?):\/\/)|(www\.[^ \[\]\(\)\n\r\t]+)|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})\/)([^ \[\]\(\),;&quot;\'&lt;&gt;\n\r\t]+)([^\. \[\]\(\),;&quot;\'&lt;&gt;\n\r\t])|(([012]?[0-9]{1,2}\.){3}[012]?[0-9]{1,2})'")]
         public string Web { get; set; }
 
         #endregion
@@ -114,7 +114,7 @@ namespace Cinar.CMS.Library.Entities
         public string ExtraField5 { get { return extraField5; } set { extraField5 = value; } }
 
         private int userId;
-        [ColumnDetail(IsNotNull = true, References = typeof(User)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "readOnly:true")]
+        [ColumnDetail(IsNotNull = true, References = typeof(User)), EditFormFieldProps(ControlType = ControlType.LookUp, Options = "readOnly:true", Category = "Details")]
         public int UserId
         {
             get { return userId; }
@@ -133,17 +133,19 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
+        [EditFormFieldProps(Category = "Extra")]
         public bool NewsletterMembership { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "More")]
         public int InterestId1 { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "More")]
         public int InterestId2 { get; set; }
 
-        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "Personal Info")]
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "More")]
         public int InterestId3 { get; set; }
 
+        [EditFormFieldProps(Category = "Details")]
         public string ReferenceBy { get; set; }
     }
 }
