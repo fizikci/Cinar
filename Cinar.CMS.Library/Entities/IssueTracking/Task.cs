@@ -7,26 +7,26 @@ using Cinar.Database;
 namespace Cinar.CMS.Library.Entities
 {
     [ListFormProps(VisibleAtMainMenu = true)]
-    public class Ticket : NamedEntity, ICriticalEntity
+    public class Task : NamedEntity, ICriticalEntity
     {
-        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        [EditFormFieldProps(Category = "Status"), ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
         public TicketType Type { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        [EditFormFieldProps(Category = "Status"), ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
         public TicketStatus Status { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
+        [EditFormFieldProps(Category = "Status"), ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
         public TicketPriority Priority { get; set; }
 
-        [ColumnDetail(References = typeof(Project))]
+        [EditFormFieldProps(Category = "Details"), ColumnDetail(References = typeof(Project))]
         public int ProjectId { get; set; }
 
-        [ColumnDetail(Length = 50)]
+        [EditFormFieldProps(Category = "Details"), ColumnDetail(Length = 50)]
         public string Component { get; set; }
 
-        [ColumnDetail(References = typeof(User))]
+        [EditFormFieldProps(Category = "Details"), ColumnDetail(References = typeof(User))]
         public int ReportedById { get; set; }
-        [ColumnDetail(References = typeof(User))]
+        [EditFormFieldProps(Category = "Details"), ColumnDetail(References = typeof(User))]
         public int AssignedToId { get; set; }
 
         [ColumnDetail(ColumnType = DbType.Text)]
@@ -35,7 +35,7 @@ namespace Cinar.CMS.Library.Entities
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
 
-        public Ticket()
+        public Task()
         {
             Type = TicketType.Bug;
             Status = TicketStatus.New;
