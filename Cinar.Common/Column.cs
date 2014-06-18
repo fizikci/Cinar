@@ -145,7 +145,7 @@ namespace Cinar.Database
                     Column forCol = this.Table.Database.Tables[parts[0]].Columns[parts[1]];
                     Table tbl = this.Table.Database.Tables[forCol.Table.Name];
 
-                    var refCons = getPrimaryKeyConstraintFor(tbl);
+                    var refCons = tbl.GetPrimaryKeyConstraint();
 
                     ForeignKeyConstraint fkc = new ForeignKeyConstraint()
                     {
@@ -158,12 +158,6 @@ namespace Cinar.Database
                 }
             }
         }
-
-        private Constraint getPrimaryKeyConstraintFor(Table tbl)
-        {
-            return tbl.GetPrimaryKeyConstraint();
-        }
-
 
         [XmlIgnore, Browsable(false)]
         public Column ReferenceColumn
@@ -348,7 +342,7 @@ namespace Cinar.Database
             else if (this.IsDateType())
                 UIMetadata.EditorType = EditorTypes.DateEdit;
             else if (this.IsStringType())
-                UIMetadata.EditorType = this.Length > 200 ? EditorTypes.MemoEdit : EditorTypes.TextEdit;
+                UIMetadata.EditorType = this.Length > 100 ? EditorTypes.MemoEdit : EditorTypes.TextEdit;
             else if (this.IsNumericType())
                 UIMetadata.EditorType = EditorTypes.NumberEdit;
             else if (columnType == DbType.Boolean)
