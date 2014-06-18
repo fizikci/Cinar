@@ -104,6 +104,9 @@
     <Compile Include="Entities\Crm\EventContact.cs" />
     <Compile Include="Entities\Crm\Event.cs" />
     <Compile Include="Entities\Definition.cs" />
+    <Compile Include="Entities\IssueTracking\Project.cs" />
+    <Compile Include="Entities\IssueTracking\ProjectUser.cs" />
+    <Compile Include="Entities\IssueTracking\Ticket.cs" />
     <Compile Include="Entities\Message\PrivateLastMessage.cs" />
     <Compile Include="Entities\Message\PrivateMessage.cs" />
     <Compile Include="Entities\Social\BlockedUser.cs" />

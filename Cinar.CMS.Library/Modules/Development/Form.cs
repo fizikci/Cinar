@@ -166,15 +166,6 @@ $
             return res.Distinct().ToList();
         }
 
-
-        [ExecutableByClient(true)]
-        public string ChangeEditFormFieldProps(string props)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            return sb.ToString();
-        }
-
         protected override bool canBeCachedInternal()
         {
             return false;
