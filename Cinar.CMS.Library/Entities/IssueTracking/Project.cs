@@ -15,13 +15,26 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(References = typeof(User))]
         public int ManagerId { get; set; }
 
+        public User Manager
+        {
+            get
+            {
+                return Provider.Database.Read<User>(ManagerId);
+            }
+        }
+
         public Project() {
             ManagerId = Provider.User.Id;
         }
 
         public List<ProjectUser> GetTeamMembers()
         {
-            return Provider.Database.ReadList<ProjectUser>("SELECT * FROM ProjectUser WHERE ProjectId = {0} ORDER BY Id", Id);
+            return Provider.Database.ReadList<ProjectUser>("SELECT * FROM ProjectUser WHERE ProjectId = {0} ORDER BY Id", Id) ?? new List<ProjectUser>();
+        }
+
+        public List<Task> GetTasks()
+        {
+            return Provider.Database.ReadList<Task>("SELECT * FROM Task WHERE ProjectId = {0} ORDER BY Id", Id) ?? new List<Task>();
         }
 
         public override void AfterSave(bool isUpdate)
