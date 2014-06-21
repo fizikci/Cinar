@@ -1332,8 +1332,7 @@ namespace System
                 {
                     object val1 = pi.GetValue(obj1, null) ?? "null";
                     object val2 = obj2.GetMemberValue(pi.Name) ?? "null";
-                    if (!val1.Equals(val2))
-                    {
+                    if (!val1.Equals(val2)){
                         if(!(val1=="null" && val2==""))
                             sb.AppendLine("<p>" + pi.Name + " : " + val1 + " ==>> " + val2 + "</p>");
                     }
@@ -1694,24 +1693,7 @@ namespace System
 
         public static bool IsNumeric(this object o)
         {
-            if (o == null)
-                return false;
 
-            if (o is Type)
-            {
-                Type t = (Type)o;
-
-                return t == typeof(int) || t == typeof(long) || t == typeof(decimal) || t == typeof(short) || t == typeof(float) ||
-                    t == typeof(uint) || t == typeof(ulong) || t == typeof(ushort) || t == typeof(byte);
-            }
-
-            if (o is IConvertible)
-            {
-                TypeCode tc = ((IConvertible)o).GetTypeCode();
-                if (TypeCode.Char <= tc && tc <= TypeCode.Decimal)
-                    return true;
-            }
-            return false;
         }
 
         public static bool CanConvertToInteger(this string str)
