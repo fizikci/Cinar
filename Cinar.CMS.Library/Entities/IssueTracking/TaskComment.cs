@@ -8,19 +8,13 @@ using System.Xml.Serialization;
 namespace Cinar.CMS.Library.Entities
 {
     [ListFormProps(VisibleAtMainMenu = true)]
-    public class ContactComment : BaseEntity
+    public class TaskComment : BaseEntity
     {
-        [ColumnDetail(References = typeof(Contact))]
-        public int ContactId { get; set; }
-        
+        [ColumnDetail(References = typeof(Task))]
+        public int TaskId { get; set; }
+
         [XmlIgnore]
-        public Contact Contact
-        {
-            get
-            {
-                return (Contact)Provider.Database.Read(typeof(Contact), this.ContactId);
-            }
-        }
+        public Task Task { get { return Provider.Database.Read<Task>(TaskId); } }
 
         [ColumnDetail(ColumnType = DbType.Text)]
         public string Details { get; set; }
@@ -29,15 +23,15 @@ namespace Cinar.CMS.Library.Entities
         {
             base.AfterSave(isUpdate);
 
-            if (this.Contact.UserId != this.InsertUserId)
+            if (this.Task.AssignedToId != this.InsertUserId)
             {
                 new GenericNotification
                 {
-                    EntityName = "ContactComment",
+                    EntityName = "TaskComment",
                     EntityId = this.Id,
-                    RelatedEntityName = "Contact",
-                    RelatedEntityId = this.ContactId,
-                    UserId = this.Contact.UserId
+                    RelatedEntityName = "Task",
+                    RelatedEntityId = this.TaskId,
+                    UserId = this.Task.AssignedToId
                 }.Save();
             }
         }

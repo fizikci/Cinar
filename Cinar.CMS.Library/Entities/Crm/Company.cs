@@ -83,5 +83,21 @@ namespace Cinar.CMS.Library.Entities
                 return _user;
             }
         }
+
+        public override void AfterSave(bool isUpdate)
+        {
+            base.AfterSave(isUpdate);
+
+            if (!this.UserId.Equals(this.GetOriginalValues()["UserId"]) && Provider.User.Id != this.UserId)
+            {
+                new GenericNotification {
+                    EntityName = "Company",
+                    EntityId = this.Id,
+                    RelatedEntityName = "Company",
+                    RelatedEntityId = this.Id,
+                    UserId = this.UserId
+                }.Save();
+            }
+        }
     }
 }

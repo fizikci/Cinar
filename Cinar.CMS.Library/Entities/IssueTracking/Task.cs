@@ -41,33 +41,22 @@ namespace Cinar.CMS.Library.Entities
             Status = TicketStatus.New;
             Priority = TicketPriority.Normal;
             ReportedById = Provider.User.Id;
+
+            StartDate = DateTime.Now.Date;
+            DueDate = DateTime.Now.AddDays(3).Date;
         }
 
-        public string Project { 
+        public Project Project { 
             get {
-                if (ProjectId <= 0)
-                    return "";
-
-                return Provider.Database.Read<Project>(ProjectId).Name;
+                return Provider.Database.Read<Project>(ProjectId);
             }
-        }
-
-        public Project GetProject()
-        {
-            if (ProjectId <= 0)
-                return null;
-
-            return Provider.Database.Read<Project>(ProjectId);
         }
 
         public User ReportedBy
         {
             get
             {
-                if (ReportedById > 0)
-                    return Provider.Database.Read<User>(ReportedById);
-
-                return new User();
+                return Provider.Database.Read<User>(ReportedById);
             }
         }
 
@@ -75,10 +64,24 @@ namespace Cinar.CMS.Library.Entities
         {
             get
             {
-                if (AssignedToId > 0)
-                    return Provider.Database.Read<User>(AssignedToId);
+                return Provider.Database.Read<User>(AssignedToId);
+            }
+        }
 
-                return new User();
+        public override void AfterSave(bool isUpdate)
+        {
+            base.AfterSave(isUpdate);
+
+            if (!this.AssignedToId.Equals(this.GetOriginalValues()["AssignedToId"]) && Provider.User.Id != this.AssignedToId)
+            {
+                new GenericNotification
+                {
+                    EntityName = "Task",
+                    EntityId = this.Id,
+                    RelatedEntityName = "Task",
+                    RelatedEntityId = this.Id,
+                    UserId = this.AssignedToId
+                }.Save();
             }
         }
     }
