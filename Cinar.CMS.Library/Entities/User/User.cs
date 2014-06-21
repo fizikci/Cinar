@@ -326,7 +326,7 @@ namespace Cinar.CMS.Library.Entities
                     if (us == null)
                     {
                         us = new UserSettings { UserId = this.Id };
-                        us.LastNotificationCheck = DateTime.Now;
+                        us.LastNotificationCheck = this.InsertDate;
                         us.Save();
                     }
                 }

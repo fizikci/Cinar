@@ -25,6 +25,8 @@ namespace Cinar.CMS.Library.Entities
 
         public Project() {
             ManagerId = Provider.User.Id;
+            StartDate = DateTime.Now.Date;
+            DueDate = DateTime.Now.AddDays(20).Date;
         }
 
         public List<ProjectUser> GetTeamMembers()
@@ -43,6 +45,18 @@ namespace Cinar.CMS.Library.Entities
 
             if (!isUpdate)
                 new ProjectUser { ProjectId = this.Id, UserId = Provider.User.Id }.Save();
+
+            if (!this.ManagerId.Equals(this.GetOriginalValues()["ManagerId"]) && Provider.User.Id != this.ManagerId)
+            {
+                new GenericNotification
+                {
+                    EntityName = "Project",
+                    EntityId = this.Id,
+                    RelatedEntityName = "Project",
+                    RelatedEntityId = this.Id,
+                    UserId = this.ManagerId
+                }.Save();
+            }
         }
     }
 }

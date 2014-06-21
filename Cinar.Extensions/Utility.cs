@@ -926,6 +926,21 @@ namespace System
             return string.Format("{0} years ago", yearDiff);
         }
 
+        public static string ToStringSpan(this DateTime d1, DateTime d2, string monthFormat = "MMMM")
+        {
+            var min = d1 < d2 ? d1 : d2;
+            var max = d1 < d2 ? d2 : d1;
+
+            if (min.Year == max.Year && min.Month == max.Month && min.Day == max.Day)
+                return min.ToString("dd " + monthFormat + " yyyy");
+            else if (min.Year == max.Year && min.Month == max.Month)
+                return min.ToString("dd") + " - " + max.ToString("dd") + " " + min.ToString(monthFormat) + (DateTime.Now.Year != min.Year ? min.ToString("yyyy") : "");
+            else if (min.Year == max.Year && min.Month != max.Month)
+                return min.ToString("dd ") + min.ToString(monthFormat) + " - " + max.ToString("dd ") + max.ToString(monthFormat) + (DateTime.Now.Year != min.Year ? min.ToString("yyyy") : "");
+            else
+                return min.ToString("dd " + monthFormat + " yyyy") + " - " + max.ToString("dd " + monthFormat + " yyyy");
+        }
+
         public static string ValidateTCKimlikNo(string tcKimlik)
         {
             if (string.IsNullOrWhiteSpace(tcKimlik))

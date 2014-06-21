@@ -147,5 +147,25 @@ namespace Cinar.CMS.Library.Entities
 
         [EditFormFieldProps(Category = "Details")]
         public string ReferenceBy { get; set; }
+
+
+
+        public override void AfterSave(bool isUpdate)
+        {
+            base.AfterSave(isUpdate);
+
+            if (!this.UserId.Equals(this.GetOriginalValues()["UserId"]) && Provider.User.Id != this.UserId)
+            {
+                new GenericNotification
+                {
+                    EntityName = "Contact",
+                    EntityId = this.Id,
+                    RelatedEntityName = "Contact",
+                    RelatedEntityId = this.Id,
+                    UserId = this.UserId
+                }.Save();
+            }
+        }
+
     }
 }
