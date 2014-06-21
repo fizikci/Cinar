@@ -230,7 +230,7 @@ namespace Cinar.Database
         public string ToDDL()
         {
             if (this.parent == null)
-                throw new Exception("Bu tablo tanımı bir veritabanına ait değil. dbInstance.GetDataTable(table) şeklinde kullanın.");
+                throw new Exception("Bu tablo tanımı bir veritabanına ait değil. dbInstance.GetTableDDL(table) şeklinde kullanın.");
             return this.parent.db.GetTableDDL(this);
         }
 

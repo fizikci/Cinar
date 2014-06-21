@@ -589,6 +589,7 @@ namespace Cinar.Database
             }
             catch(Exception ex)
             {
+                
                 throw ex;
             }
             finally
