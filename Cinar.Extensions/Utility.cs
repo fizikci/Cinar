@@ -1693,7 +1693,13 @@ namespace System
 
         public static bool IsNumeric(this object o)
         {
-
+            if (o is IConvertible)
+            {
+                TypeCode tc = ((IConvertible)o).GetTypeCode();
+                if (TypeCode.Char <= tc && tc <= TypeCode.Decimal)
+                    return true;
+            }
+            return false;
         }
 
         public static bool CanConvertToInteger(this string str)
