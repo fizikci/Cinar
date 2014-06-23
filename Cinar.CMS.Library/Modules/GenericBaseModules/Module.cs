@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Data;
 using System.Xml.Serialization;
 using Cinar.Scripting;
+using System.Collections.Generic;
 
 namespace Cinar.CMS.Library.Modules
 {

@@ -72,7 +72,7 @@ namespace Cinar.CMS.Library.Entities
         {
             base.AfterSave(isUpdate);
 
-            if (!this.AssignedToId.Equals(this.GetOriginalValues()["AssignedToId"]) && Provider.User.Id != this.AssignedToId)
+            if (Provider.User.Id != this.AssignedToId)
             {
                 new GenericNotification
                 {
@@ -81,6 +81,18 @@ namespace Cinar.CMS.Library.Entities
                     RelatedEntityName = "Task",
                     RelatedEntityId = this.Id,
                     UserId = this.AssignedToId
+                }.Save();
+            }
+
+            if (Provider.User.Id != this.Project.ManagerId && this.AssignedToId != this.Project.ManagerId)
+            {
+                new GenericNotification
+                {
+                    EntityName = "Task",
+                    EntityId = this.Id,
+                    RelatedEntityName = "Task",
+                    RelatedEntityId = this.Id,
+                    UserId = this.Project.ManagerId
                 }.Save();
             }
         }
