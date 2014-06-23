@@ -9,8 +9,8 @@ namespace Cinar.CMS.Library.Entities
     [ListFormProps(VisibleAtMainMenu = true)]
     public class Task : NamedEntity, ICriticalEntity
     {
-        [EditFormFieldProps(Category = "Status"), ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
-        public TicketType Type { get; set; }
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=TaskType'")]
+        public int TypeId { get; set; }
 
         [EditFormFieldProps(Category = "Status"), ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
         public TicketStatus Status { get; set; }
@@ -37,7 +37,6 @@ namespace Cinar.CMS.Library.Entities
 
         public Task()
         {
-            Type = TicketType.Bug;
             Status = TicketStatus.New;
             Priority = TicketPriority.Normal;
             ReportedById = Provider.User.Id;
