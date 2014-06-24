@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [Index(Name = "IND_GenericNotification", ConstraintColumnNames = "EntityName,EntityId")]
     public class GenericNotification : BaseEntity
     {
         /// <summary>

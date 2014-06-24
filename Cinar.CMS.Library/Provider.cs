@@ -1213,12 +1213,15 @@ namespace Cinar.CMS.Library
         }
 
         [Description("Creates and saves log entry")]
-        public static void Log(string logType, string category, string description)
+        public static void Log(string logType, string category, string description, string entityName="", int entityId = 0)
         {
             Log log = new Log();
             log.LogType = logType;
             log.Category = category;
             log.Description = description;
+            log.EntityName = entityName;
+            log.EntityId = entityId;
+            log.InsertUserId = Provider.User.Id;
             log.Save();
         }
 
