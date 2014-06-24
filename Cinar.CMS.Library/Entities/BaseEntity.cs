@@ -107,25 +107,22 @@ namespace Cinar.CMS.Library.Entities
             }
 
             #region if critical entity, log it
-            if (this is ICriticalEntity)
+            if (this is ICriticalEntity && Id > 0)
             {
-                if (Id>0)
-                {
-                    Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
-                    IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
-                    string changes = originalEntity.CompareFields(this);
+                Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
+                IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
+                string changes = originalEntity.CompareFields(this);
 
-                    Provider.Log("History_" + this.GetType().Name, "Update", changes);
-                }
-                else
-                {
-                    Provider.Log("History_" + this.GetType().Name, "Insert", this.SerializeToString());
-                }
+                Provider.Log("EntityHistory", "Update", changes, this.GetType().Name, this.Id);
             }
             #endregion
 
         }
-        public virtual void AfterSave(bool isUpdate) { }
+        public virtual void AfterSave(bool isUpdate)
+        {
+            if(this is ICriticalEntity && !isUpdate)
+                Provider.Log("EntityHistory", "Insert", this.SerializeToString(), this.GetType().Name, this.Id);
+        }
 
         [Description("Deletes this entity")]
         public void Delete()

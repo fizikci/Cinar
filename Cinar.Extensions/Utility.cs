@@ -1328,14 +1328,16 @@ namespace System
 
             StringBuilder sb = new StringBuilder();
             foreach (PropertyInfo pi in obj1.GetProperties())
-                if (pi.PropertyType.IsValueType || pi.PropertyType == typeof(string))
+                if ((pi.PropertyType.IsValueType || pi.PropertyType == typeof(string)) && pi.Name != "UpdateDate" && pi.Name != "UpdateUserId")
                 {
                     object val1 = pi.GetValue(obj1, null) ?? "null";
                     object val2 = obj2.GetMemberValue(pi.Name) ?? "null";
-                    if (!val1.Equals(val2)){
-                        if(!(val1=="null" && val2==""))
-                            sb.AppendLine("<p>" + pi.Name + " : " + val1 + " ==>> " + val2 + "</p>");
-                    }
+                    
+                    if (val1.Equals("")) val1 = "null";
+                    if (val2.Equals("")) val2 = "null";
+
+                    if (!val1.Equals(val2))
+                        sb.AppendLine(pi.Name + " : " + val1 + " ==>> " + val2);
                 }
             return sb.ToString();
         }

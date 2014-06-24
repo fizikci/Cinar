@@ -97,11 +97,6 @@ namespace Cinar.CMS.Library.Entities
         }
     }
 
-    public enum TicketType
-    {
-        Bug,
-        Task
-    }
     public enum TicketStatus
     {
         New,

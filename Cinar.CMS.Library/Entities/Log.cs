@@ -1,10 +1,11 @@
-﻿using Cinar.Database;
+﻿using System.Xml.Serialization;
+using Cinar.Database;
 //using System.IO;
 
 namespace Cinar.CMS.Library.Entities
 {
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, LogType, Category, Description, InsertDate from [Log]")]
-    public class Log : BaseEntity
+    public class Log : SimpleBaseEntity
     {
         /// <summary>
         /// Error, Notice
@@ -17,6 +18,19 @@ namespace Cinar.CMS.Library.Entities
 
         [ColumnDetail(IsNotNull = true, ColumnType = DbType.Text), EditFormFieldProps(ControlType = ControlType.MemoEdit)]
         public string Description { get; set; }
+
+        public string EntityName { get; set; }
+        public int EntityId { get; set; }
+
+        [ColumnDetail(References = typeof(User)), EditFormFieldProps(Visible = false)]
+        public int InsertUserId { get; set; }
+
+        private User _insertUser;
+        [XmlIgnore]
+        public User InsertUser
+        {
+            get { return _insertUser ?? (_insertUser = (User)Provider.Database.Read(typeof(User), this.InsertUserId)); }
+        }
 
         public override string GetNameValue()
         {
