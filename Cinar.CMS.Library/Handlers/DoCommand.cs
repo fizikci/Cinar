@@ -120,9 +120,9 @@ namespace Cinar.CMS.Library.Handlers
                         updateTags();
                         break;
                     }
-                case "Scriptify":
+                case "GetAllActivity":
                     {
-                        scriptify();
+                        getAllActivity();
                         break;
                     }
                 case "AutoCompleteTag":
@@ -228,6 +228,85 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        private void getAllActivity()
+        {
+            DateTime lessThanDate = DateTime.Now;
+            if(!DateTime.TryParse(context.Request["lessThanDate"], out lessThanDate))
+                lessThanDate = DateTime.Now;
+
+            var sql = @"select
+                            ec.InsertDate,
+                            'Comment' as Type,
+            	            u.Name,
+            	            u.Avatar,
+            	            ec.EntityName,
+            	            ec.EntityId,
+            	            ec.Details
+                        from
+            	            EntityComment ec
+            	            left join User u ON u.Id = ec.InsertUserId
+                        where ec.InsertDate < {0}
+                        UNION
+                        select
+            	            l.InsertDate,
+            	            'History' as Type,
+            	            u.Name,
+            	            u.Avatar,
+            	            l.EntityName,
+            	            l.EntityId,
+            	            l.Description as Details
+                        from
+            	            Log l
+            	            left join User u ON u.Id = l.InsertUserId
+                        where l.InsertDate < {0}
+                        order by InsertDate desc
+                        limit 10";
+
+            DataTable dt = Provider.Database.GetDataTable(sql, lessThanDate);
+
+            var res = new List<LastActivityGroup>();
+
+            if (dt != null && dt.Rows.Count>0) {
+                foreach (DataRow dr in dt.Rows) {
+                    var lag = res.Find(l => l.Name == ((DateTime)dr["InsertDate"]).HumanReadableDay());
+                    if (lag == null) {
+                        lag = new LastActivityGroup() { Name = ((DateTime)dr["InsertDate"]).HumanReadableDay(), Activities = new List<LastActivity>() };
+                        res.Add(lag);
+                    }
+
+                    lag.Activities.Add(new LastActivity { 
+                        Avatar = dr["Avatar"].ToString(),
+                        Details = dr["Details"].ToString(),
+                        EntityId = dr["EntityId"].ToString(),
+                        EntityName = dr["EntityName"].ToString(),
+                        InsertDate = ((DateTime)dr["InsertDate"]).ToString("dd-MM-yyyy HH:mm"),
+                        Name = dr["Name"].ToString(),
+                        Time = ((DateTime)dr["InsertDate"]).ToString("HH:mm"),
+                        Type = dr["Type"].ToString()
+                    });
+                }
+            }
+
+            context.Response.Write(res.ToJSON());
+        }
+
+        public class LastActivityGroup
+        {
+            public string Name { get; set; }
+            public List<LastActivity> Activities { get; set; }
+        }
+        public class LastActivity
+        {
+            public string Avatar { get; set; }
+            public string Name { get; set; }
+            public string Time { get; set; }
+            public string Details { get; set; }
+            public string InsertDate { get; set; }
+            public string Type { get; set; }
+            public string EntityName { get; set; }
+            public string EntityId { get; set; }
+        }
+
         private void autoCompleteTag()
         {
             string tag = context.Request["tag"];
@@ -247,52 +326,6 @@ namespace Cinar.CMS.Library.Handlers
 
                 context.Response.Write(sb.ToString());
             }
-        }
-
-        private void scriptify()
-        {
-            if (Provider.Database.Tables["Template"] != null)
-            {
-                foreach (Template t in Provider.Database.ReadList(typeof(Template), "select * from Template"))
-                {
-                    t.HTMLCode = scriptifySafe(t.HTMLCode);
-                    t.Save();
-                    context.Response.Write("Page " + t.FileName + " scriptified.<br/>");
-
-                    foreach (Modules.Module m in Modules.Module.Read(t.FileName))
-                    {
-                        switch (m.Name)
-                        {
-                            case "StaticHtml":
-                                StaticHtml sh = (StaticHtml)m;
-                                sh.InnerHtml = scriptifySafe(sh.InnerHtml);
-                                break;
-                            case "Chart":
-                                Chart chart = (Chart)m;
-                                chart.SQL = scriptifySafe(chart.SQL);
-                                break;
-                            case "SQLDataList":
-                                SQLDataList dl = (SQLDataList)m;
-                                dl.SQL = scriptifySafe(dl.SQL);
-                                dl.DataTemplate = scriptifySafe(dl.DataTemplate);
-                                break;
-                            case "DataList":
-                                DataList dl2 = (DataList)m;
-                                dl2.DataTemplate = scriptifySafe(dl2.DataTemplate);
-                                break;
-                            default:
-                                continue;
-                        }
-                        m.Save();
-                        context.Response.Write("Module " + m.Template + "." + m.Name + " scriptified.<br/>");
-                    }
-                }
-            }
-        }
-        private string scriptifySafe(string s)
-        {
-            if(s==null) return null;
-            return s.Replace("$=", "$").Replace("$", "$=");
         }
 
         private void updateTags()

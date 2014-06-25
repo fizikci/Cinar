@@ -85,7 +85,7 @@ namespace Cinar.CMS.Library.Handlers
                 case "DefaultStyleSheet":
                 case "DefaultJavascript":
                 case "UpdateTags":
-                case "Scriptify":
+                case "GetAllActivity":
                 case "AutoCompleteTag":
                 case "LikeIt":
                 case "Subscribe":
