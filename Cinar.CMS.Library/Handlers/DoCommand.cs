@@ -249,7 +249,7 @@ namespace Cinar.CMS.Library.Handlers
                         UNION
                         select
             	            l.InsertDate,
-            	            'History' as Type,
+            	            l.Category as Type,
             	            u.Name,
             	            u.Avatar,
             	            l.EntityName,
@@ -281,6 +281,7 @@ namespace Cinar.CMS.Library.Handlers
                         EntityName = dr["EntityName"].ToString(),
                         InsertDate = ((DateTime)dr["InsertDate"]).ToString("dd-MM-yyyy HH:mm"),
                         Name = dr["Name"].ToString(),
+                        Title = Provider.Database.Read(Provider.GetEntityType(dr["EntityName"].ToString()), (int) dr["EntityId"]).GetNameValue(),
                         Time = ((DateTime)dr["InsertDate"]).ToString("HH:mm"),
                         Type = dr["Type"].ToString()
                     });
@@ -305,6 +306,7 @@ namespace Cinar.CMS.Library.Handlers
             public string Type { get; set; }
             public string EntityName { get; set; }
             public string EntityId { get; set; }
+            public string Title { get; set; }
         }
 
         private void autoCompleteTag()
