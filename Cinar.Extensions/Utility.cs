@@ -925,7 +925,6 @@ namespace System
 
             return string.Format("{0} years ago", yearDiff);
         }
-
         public static string ToStringSpan(this DateTime d1, DateTime d2, string monthFormat = "MMMM")
         {
             var min = d1 < d2 ? d1 : d2;
@@ -939,6 +938,19 @@ namespace System
                 return min.ToString("dd ") + min.ToString(monthFormat) + " - " + max.ToString("dd ") + max.ToString(monthFormat) + (DateTime.Now.Year != min.Year ? min.ToString("yyyy") : "");
             else
                 return min.ToString("dd " + monthFormat + " yyyy") + " - " + max.ToString("dd " + monthFormat + " yyyy");
+        }
+        public static string HumanReadableDay(this DateTime d)
+        {
+            if (DateTime.Now.Date == d.Date)
+                return "Today";
+
+            if (DateTime.Now.AddDays(-1).Date == d.Date)
+                return "Yesterday";
+
+            if(DateTime.Now.Year == d.Year)
+                return d.ToString("dd MMMM");
+
+            return d.ToString("dd MMM yyyy");
         }
 
         public static string ValidateTCKimlikNo(string tcKimlik)
@@ -1518,6 +1530,9 @@ namespace System
         }
         public static string ToJSON(this DataTable dt)
         {
+            if (dt == null)
+                return "null";
+
             StringBuilder sb = new StringBuilder();
             sb.Append("{\n");
             sb.AppendFormat("tableName:{0},", Utility.ToJS(dt.TableName));
@@ -1534,6 +1549,9 @@ namespace System
         }
         public static string ToJSON(this DataRow dr)
         {
+            if (dr == null)
+                return "null"; 
+            
             StringBuilder sb = new StringBuilder();
             sb.Append("{\n");
 
@@ -1546,6 +1564,9 @@ namespace System
         }
         public static string ToJSON(this Hashtable ht)
         {
+            if (ht == null)
+                return "null"; 
+            
             StringBuilder sb = new StringBuilder();
             sb.Append("{\n");
 
