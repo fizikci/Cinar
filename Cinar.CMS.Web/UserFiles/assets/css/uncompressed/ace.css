@@ -9355,6 +9355,7 @@ li.item-default {
 .profile-user-info-striped .profile-info-value {
   border-top: 1px dotted #DCEBF7;
   padding-left: 12px;
+  min-height: 31px;
 }
 .profile-picture {
   border: 1px solid #CCC;
