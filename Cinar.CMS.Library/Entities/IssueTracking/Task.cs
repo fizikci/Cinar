@@ -67,6 +67,14 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
+        public override void BeforeSave()
+        {
+            base.BeforeSave();
+
+            if (this.StartDate == this.DueDate)
+                this.DueDate = this.DueDate.AddHours(23).AddMinutes(59);
+        }
+
         public override void AfterSave(bool isUpdate)
         {
             base.AfterSave(isUpdate);
