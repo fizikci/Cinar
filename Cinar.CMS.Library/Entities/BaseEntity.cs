@@ -113,7 +113,8 @@ namespace Cinar.CMS.Library.Entities
                 IDatabaseEntity originalEntity = Provider.Database.Read(this.GetType(), this.Id);
                 string changes = originalEntity.CompareFields(this);
 
-                Provider.Log("EntityHistory", "Update", changes, this.GetType().Name, this.Id);
+                if(!string.IsNullOrWhiteSpace(changes))
+                    Provider.Log("EntityHistory", "Update", changes, this.GetType().Name, this.Id);
             }
             #endregion
 
