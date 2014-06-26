@@ -44,7 +44,6 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
 
             sb.AppendFormat(@"$
-var entityName = ""{0}"";
 var e = new {0}();
 var id = int.Parse(Provider.Request.eId ?? ""0"");
 if(id>0)
@@ -70,7 +69,7 @@ $
         {0}
 		<small>
 			<i class=""icon-double-angle-right""></i>
-			$=e.Id==0 ? 'Add' : 'Edit'$
+    		$=e.Id > 0 ? 'Edit details' : 'Add new'$
 		</small>
 	</h1>
 </div>
@@ -78,6 +77,8 @@ $
 <form id=""form"" method=""post"" action=""$=Provider.Request.RawUrl$"" enctype=""multipart/form-data"" class=""form-horizontal"" role=""form"" autocomplete=""off"">
 <input type=""hidden"" name=""cmdName"" value=""save""/>
 <input type=""hidden"" name=""Id"" value=""$=e.Id$""/>", EntityName);
+
+            sb.AppendLine();
 
             int i = 0;
 
@@ -95,31 +96,29 @@ $
 
                 foreach (Column field in Provider.Database.Tables[EntityName].Columns)
                 {
-                    EditFormFieldPropsAttribute attrEdit =
-                        (EditFormFieldPropsAttribute)
-                        CMSUtility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name),
-                                                typeof (EditFormFieldPropsAttribute));
+                    EditFormFieldPropsAttribute attrEdit = (EditFormFieldPropsAttribute) CMSUtility.GetAttribute(Provider.GetEntityType(EntityName).GetProperty(field.Name), typeof (EditFormFieldPropsAttribute));
 
                     if (field.IsPrimaryKey || !attrEdit.Visible || attrEdit.Category != category)
                         continue; //***
 
-                    FormField ff = new FormField();
-                    ff.EntityName = this.EntityName;
-                    ff.FieldName = field.Name;
+                    var ff = new FormField {
+                        EntityName = this.EntityName, 
+                        FieldName = field.Name
+                    };
 
                     sb.AppendLine(ff.GetHtml());
                 }
 
                 if (i == 0)
                     sb.AppendLine(@"
-</div>
-<div class=""col-sm-3"">
-	<img name=""Picture"" class=""img-responsive"" src=""/UserFiles/contact.png"" />
-    <input type=""file"" id=""Picture"" name=""Picture"" /><br/>
-    $ if(e.Id>0){ $
-    <em><i class=""icon-ok green""></i>Added by $=e.InsertUser.FullName$ on $=e.InsertDate.ToString(""dd-MM-yyyy"")$</em>
-    $ } $
-</div>
+    </div>
+    <div class=""col-sm-3"">
+	    <img name=""Picture"" class=""img-responsive"" src=""/UserFiles/contact.png"" />
+        <input type=""file"" id=""Picture"" name=""Picture"" /><br/>
+        $ if(e.Id>0){ $
+        <em><i class=""icon-ok green""></i>Added by $=e.InsertUser.FullName$ on $=e.InsertDate.ToString(""dd-MM-yyyy"")$</em>
+        $ } $
+    </div>
 </div>");
                 else
                     sb.AppendLine("</div>");
@@ -127,7 +126,7 @@ $
                 i++;
             }
 
-            sb.AppendLine(@"</div>
+            sb.AppendLine(@"
 
 <div class=""clearfix form-actions"">
 	<div class=""text-right"">
