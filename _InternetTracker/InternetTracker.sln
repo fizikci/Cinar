@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.Test", "InternetTracker.Test\InternetTracker.Test.csproj", "{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.DocumentView", "InternetTracker.DocumentView\InternetTracker.DocumentView.csproj", "{197FC033-D4D6-4F56-B61C-F79B7DAD0795}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.Browser", "InternetTracker.Browser\InternetTracker.Browser.csproj", "{DA8F8613-3CA6-4332-8321-61712875FB6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.Spider", "InternetTracker.Spider\InternetTracker.Spider.csproj", "{9C6202F5-BCFC-4F8F-AD58-56D00A005AF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.LinkFinder", "InternetTracker.LinkFinder\InternetTracker.LinkFinder.csproj", "{B0BC9320-BFA1-473A-B107-5C8F84130D4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InternetTracker.SiteMap", "InternetTracker.SiteMap\InternetTracker.SiteMap.csproj", "{35923EEC-1F25-4893-BAF2-AC8780B9B8FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_dll", "_dll", "{77DF4196-A981-485D-9D61-447A52977084}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197FC033-D4D6-4F56-B61C-F79B7DAD0795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197FC033-D4D6-4F56-B61C-F79B7DAD0795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197FC033-D4D6-4F56-B61C-F79B7DAD0795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197FC033-D4D6-4F56-B61C-F79B7DAD0795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA8F8613-3CA6-4332-8321-61712875FB6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA8F8613-3CA6-4332-8321-61712875FB6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA8F8613-3CA6-4332-8321-61712875FB6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA8F8613-3CA6-4332-8321-61712875FB6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C6202F5-BCFC-4F8F-AD58-56D00A005AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C6202F5-BCFC-4F8F-AD58-56D00A005AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C6202F5-BCFC-4F8F-AD58-56D00A005AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C6202F5-BCFC-4F8F-AD58-56D00A005AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BC9320-BFA1-473A-B107-5C8F84130D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BC9320-BFA1-473A-B107-5C8F84130D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BC9320-BFA1-473A-B107-5C8F84130D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BC9320-BFA1-473A-B107-5C8F84130D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35923EEC-1F25-4893-BAF2-AC8780B9B8FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35923EEC-1F25-4893-BAF2-AC8780B9B8FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35923EEC-1F25-4893-BAF2-AC8780B9B8FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35923EEC-1F25-4893-BAF2-AC8780B9B8FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
