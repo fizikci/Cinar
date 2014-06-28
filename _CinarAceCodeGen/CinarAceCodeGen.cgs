@@ -11,7 +11,7 @@
       <Items>
         <Item xsi:type="FileItem">
           <Name>APIException.cs</Name>
-          <RepeatGeneration>ForEachTable</RepeatGeneration>
+          <RepeatGeneration>NoRepeat</RepeatGeneration>
           <IsBinary>false</IsBinary>
         </Item>
         <Item xsi:type="FileItem">
