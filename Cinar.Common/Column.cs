@@ -294,7 +294,12 @@ namespace Cinar.Database
             if (type.FullName.Contains("Byte[]"))
                 return DbType.BlobLong;
 
-            switch (type.Name)
+            string typeName = type.Name;
+
+            if (type.IsGenericType)
+                typeName = type.GetGenericArguments()[0].Name;
+
+            switch (typeName)
             {
                 case "Int16":
                     res = DbType.Int16;

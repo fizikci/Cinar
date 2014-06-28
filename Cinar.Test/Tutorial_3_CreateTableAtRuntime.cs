@@ -15,7 +15,7 @@ namespace Cinar.Test
         {
             // Eğer bu veritabanı serverda yoksa, otomatik create edilir.
             Database.Database db =
-                new Database.Database("Server=93.89.230.247;Database=DomainSuggestion;User Id=sa;Password=//456741gf;", DatabaseProvider.SQLServer);
+                new Database.Database("Server=172.16.5.41;Initial Catalog=ServiceAPI;User Id=usr_service_api;Password=srv2013;", DatabaseProvider.SQLServer);
             //WFAracTalep aracTalep = new WFAracTalep { 
             //    Adres = "adres",
             //    Saat = "saat",
@@ -34,6 +34,8 @@ namespace Cinar.Test
             ogr.TcKimlikNo = "987632454";
             ogr.Para = 120.55m;
             db.Save(ogr);
+
+            Ogrenci ogr2 = db.Read<Ogrenci>(ogr.Id);
 
             /*
             Veli v = new Veli();
@@ -63,8 +65,10 @@ namespace Cinar.Test
         [ColumnDetail(Length = 20)]
         public string Ad { get; set; }
 
-        [ColumnDetail(IsNotNull = true, DefaultValue = "1980", Name="dogum_yili")]
-        public int DogumYili { get; set; }
+        [ColumnDetail(/*IsNotNull = true, DefaultValue = "1980",*/ Name="dogum_yili")]
+        public int? DogumYili { get; set; }
+
+        public DateTime? DogumTarihi { get; set; }
 
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 7)]
         public OgrenciTipi Tipi { get; set; }
