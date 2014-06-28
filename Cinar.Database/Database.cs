@@ -1132,11 +1132,13 @@ namespace Cinar.Database
 
                 if (pi.PropertyType.IsEnum)
                 {
-                    if (drValue!=null && drValue.GetType()==typeof(string))
+                    if (drValue != null && drValue.GetType() == typeof(string))
                         drValue = Enum.Parse(pi.PropertyType, drValue.ToString());
                     else
                         drValue = Enum.ToObject(pi.PropertyType, drValue);
                 }
+                else if (drValue != null && ((drValue.GetType() == pi.PropertyType) || drValue.GetType() == Nullable.GetUnderlyingType(pi.PropertyType)))
+                    ;
                 else
                     drValue = Convert.ChangeType(drValue, pi.PropertyType);
 
