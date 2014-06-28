@@ -783,7 +783,7 @@ namespace Cinar.Database
             ColumnCollection columns = tbl.Columns;
             int validColumnNumber = 0;
             foreach (Column fld in tbl.Columns)
-                if (data.ContainsKey(fld.Name) && data[fld.Name] != null && !fld.IsAutoIncrement)
+                if (data.ContainsKey(fld.Name) && !fld.IsAutoIncrement)
                     validColumnNumber++;
             if (validColumnNumber == 0) throw new ApplicationException("The table and the hashtable have no similarity!");
 
@@ -792,12 +792,12 @@ namespace Cinar.Database
             for (int i = 0; i < columns.Count; i++)
             {
                 Column fld = columns[i];
-                if (fld.IsAutoIncrement || !data.ContainsKey(fld.Name) || data[fld.Name] == null) continue;
+                if (fld.IsAutoIncrement || !data.ContainsKey(fld.Name)) continue;
 
                 // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                 if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
-                    if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
-                        continue;//***
+                    if (data[fld.Name]!=null && (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                        data[fld.Name] = new DateTime(1800, 1, 1, 0, 0, 0);//***
 
                 sb.AppendFormat("[{0}] = @_{0}", fld.Name);
                 sb.Append(", ");
@@ -829,7 +829,7 @@ namespace Cinar.Database
             for (int i = 0; i < columns.Count; i++)
             {
                 Column fld = columns[i];
-                if (data.ContainsKey(fld.Name) && data[fld.Name] != null)
+                if (data.ContainsKey(fld.Name))
                 {
                     // if column is reference and the value equals 0, continue
                     if (fld.ReferenceColumn != null && fld.IsNullable && fld.ColumnType == DbType.Int32)
@@ -840,8 +840,8 @@ namespace Cinar.Database
 
                     // SQLServer'da 1753'ten küçük tarihler sorun oluyor!!!
                     if (provider == DatabaseProvider.SQLServer && fld.IsDateType())
-                        if (DBNull.Value.Equals(data[fld.Name]) || (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
-                            continue;//***
+                        if (data[fld.Name] != null && (DateTime)data[fld.Name] <= new DateTime(1753, 1, 1, 12, 0, 0))
+                            data[fld.Name] = new DateTime(1800, 1, 1, 0, 0, 0);//***
                     
                     IDbDataParameter param = this.CreateParameter("@_" + fld.Name, data[fld.Name]);
                     cmd.Parameters.Add(param);
