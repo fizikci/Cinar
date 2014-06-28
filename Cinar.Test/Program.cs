@@ -16,11 +16,9 @@ namespace Cinar.Test
         [STAThread]
         static void Main(string[] args)
         {
-            //List<Data> list = new List<Data>() { new Data() { Name = "Bülent" }, new Data() { Name = "5463465" }, new Data() { Name = "sdfgsdfg" }, };
-            //Parallel.ForEach(list, i=>ParalelCalis(i));
+            Tutorial_3_CreateTableAtRuntime.Run();
 
-            //Tutorial_3_CreateTableAtRuntime.Run();
-
+            /*
             string csv_file_path = @"C:\Users\BulentKeskin\Desktop\dalist 29nisanV4.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
 
@@ -107,14 +105,10 @@ namespace Cinar.Test
                 }
                 catch { }
             }
+             */
 
             Console.WriteLine("\r\n\r\n\r\nBİTTİ");
             Console.ReadLine();
-        }
-
-        private static void ParalelCalis(Data data)
-        {
-            data.Name = data.Name + "bitti";
         }
 
         private static DataTable GetDataTabletFromCSVFile(string csv_file_path)
