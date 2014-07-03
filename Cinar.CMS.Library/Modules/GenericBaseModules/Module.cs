@@ -13,9 +13,9 @@ using System.Collections.Generic;
 namespace Cinar.CMS.Library.Modules
 {
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"0,'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
-ElementName,3,divElementId,0,CSSClass,0,CSS,42,#mainLoginForm{
-    margin: 4px 0 0px;
-}TopHtml,0,BottomHtml,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0InnerHtml,3063,    <div class=""navbar-header"">
+ElementName,3,divElementId,0,CSSClass,0,CSS,40,#mainLoginForm{
+    margin: 4px 0 0;
+}TopHtml,0,BottomHtml,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0InnerHtml,3481,    <div class=""navbar-header"">
         <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target=""#main-navbar"">
           <span class=""icon-bar""></span>
           <span class=""icon-bar""></span>
@@ -44,26 +44,36 @@ ElementName,3,divElementId,0,CSSClass,0,CSS,42,#mainLoginForm{
             </li>
         </ul>
       
-        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form navbar-right form-inline"" id=""mainLoginForm"" role=""form"">
-            <div class=""form-group"">
+        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form navbar-right form-inline"" id=""$=Provider.User.IsInRole(""User"") ? ""mainLoginForm"" : """"$"" role=""form"">
                 $ if(Provider.User.IsInRole(""Designer"")) { $
-                    <button id=""DesignModeOFF"" type=""button"" 
-                    class=""$=Provider.DesignMode?'':'sr-only'$ btn btn-primary btn-sm navbar-btn"">
-                        $=Provider.TR(""İzleme Modu"")$
-                    </button>
-                    <button id=""DesignModeOn"" type=""button"" 
-                    class=""$=!Provider.DesignMode?'':'sr-only'$ btn btn-success btn-sm navbar-btn"">
-                        $=Provider.TR(""Dizayn Modu"")$
-                    </button>
-                $ } $
-                $ if(!Provider.User.IsInRole(""User"")) { $
-                    <input type=""text"" placeholder=""Email"" name=""Email"" class=""form-control input-sm"">
-                    <input type=""password"" name=""Passwd"" placeholder=""Password"" class=""form-control input-sm"">
-                    <button type=""submit"" class=""btn btn-primary btn-sm navbar-btn"">Sign in</button>
+                    <div class=""form-group"">
+                        <button id=""DesignModeOFF"" type=""button"" 
+                        class=""$=Provider.DesignMode ? """" : ""sr-only""$ btn btn-success btn-sm navbar-btn"">
+                            $=Provider.TR(""İzleme Modu"")$
+                        </button>
+                        <button id=""DesignModeOn"" type=""button"" 
+                        class=""$=!Provider.DesignMode ? """" : ""sr-only""$ btn btn-warning btn-sm navbar-btn"">
+                            $=Provider.TR(""Dizayn Modu"")$
+                        </button>
+                    </div>
+                $ } 
+                 if(!Provider.User.IsInRole(""User"")) { $
+                    <div class=""form-group"">
+                        <input type=""text"" placeholder=""Email"" name=""Email"" class=""form-control"">
+                    </div>
+                    <div class=""form-group"">
+                        <input type=""password"" name=""Passwd"" placeholder=""Password"" class=""form-control"">
+                    </div>
+                    <div class=""form-group"">
+                        <button type=""submit"" class=""btn btn-primary btn-sm"">Sign in</button>
+                    </div>
                 $ } else { $
-                    <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-danger btn-sm"">$=Provider.TR(""Çıkış yap"")$</button>
+                    <div class=""form-group"">
+                        <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-danger btn-sm"">$=Provider.TR(""Çıkış yap"")$</button>
+                    </div>
                 $ } $
-            </div>
+                
+            
         </form>
     </div><!--/.nav-collapse -->
     
@@ -80,7 +90,8 @@ ElementName,3,divElementId,0,CSSClass,0,CSS,42,#mainLoginForm{
         });
         
         
-    </script>Id,1,3Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
+    </script>
+    Id,1,3Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"1,'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
 InnerHtml,313,<h1>Hello, world!</h1>
 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
