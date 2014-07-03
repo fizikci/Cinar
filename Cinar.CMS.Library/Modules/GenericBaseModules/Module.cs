@@ -13,7 +13,9 @@ using System.Collections.Generic;
 namespace Cinar.CMS.Library.Modules
 {
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"0,'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
-ElementName,3,divElementId,0,CSSClass,0,CSS,0,TopHtml,0,BottomHtml,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0InnerHtml,1914,    <div class=""navbar-header"">
+ElementName,3,divElementId,0,CSSClass,0,CSS,42,#mainLoginForm{
+    margin: 4px 0 0px;
+}TopHtml,0,BottomHtml,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0InnerHtml,3063,    <div class=""navbar-header"">
         <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target=""#main-navbar"">
           <span class=""icon-bar""></span>
           <span class=""icon-bar""></span>
@@ -24,36 +26,61 @@ ElementName,3,divElementId,0,CSSClass,0,CSS,0,TopHtml,0,BottomHtml,0,Visible,4,T
     </div>
     
     <div class=""navbar-collapse collapse"" id=""main-navbar"">
-      <ul class=""nav navbar-nav"">
-        <li class=""active""><a href=""#"">Home</a></li>
-        <li><a href=""#about"">About</a></li>
-        <li><a href=""#contact"">Contact</a></li>
-        <li class=""dropdown"">
-          <a href=""#"" class=""dropdown-toggle"" data-toggle=""dropdown"">Dropdown <b class=""caret""></b></a>
-          <ul class=""dropdown-menu"">
-            <li><a href=""#"">Action</a></li>
-            <li><a href=""#"">Another action</a></li>
-            <li><a href=""#"">Something else here</a></li>
-            <li class=""divider""></li>
-            <li class=""nav-header"">Nav header</li>
-            <li><a href=""#"">Separated link</a></li>
-            <li><a href=""#"">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul>
+        <ul class=""nav navbar-nav"">
+            <li class=""active""><a href=""#"">Home</a></li>
+            <li><a href=""#about"">About</a></li>
+            <li><a href=""#contact"">Contact</a></li>
+            <li class=""dropdown"">
+                <a href=""#"" class=""dropdown-toggle"" data-toggle=""dropdown"">Dropdown <b class=""caret""></b></a>
+                <ul class=""dropdown-menu"">
+                    <li><a href=""#"">Action</a></li>
+                    <li><a href=""#"">Another action</a></li>
+                    <li><a href=""#"">Something else here</a></li>
+                    <li class=""divider""></li>
+                    <li class=""nav-header"">Nav header</li>
+                    <li><a href=""#"">Separated link</a></li>
+                    <li><a href=""#"">One more separated link</a></li>
+                </ul>
+            </li>
+        </ul>
       
-    $ if(!Provider.User.IsInRole(""User"")) { $
-        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form form-inline pull-right"">
-            <input type=""text"" placeholder=""Email"" name=""Email"" class=""form-control"">
-            <input type=""password"" name=""Passwd"" placeholder=""Password"" class=""form-control"">
-            <button type=""submit"" class=""btn btn-primary btn-small"">Sign in</button>
+        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form navbar-right form-inline"" id=""mainLoginForm"" role=""form"">
+            <div class=""form-group"">
+                $ if(Provider.User.IsInRole(""Designer"")) { $
+                    <button id=""DesignModeOFF"" type=""button"" 
+                    class=""$=Provider.DesignMode?'':'sr-only'$ btn btn-primary btn-sm navbar-btn"">
+                        $=Provider.TR(""İzleme Modu"")$
+                    </button>
+                    <button id=""DesignModeOn"" type=""button"" 
+                    class=""$=!Provider.DesignMode?'':'sr-only'$ btn btn-success btn-sm navbar-btn"">
+                        $=Provider.TR(""Dizayn Modu"")$
+                    </button>
+                $ } $
+                $ if(!Provider.User.IsInRole(""User"")) { $
+                    <input type=""text"" placeholder=""Email"" name=""Email"" class=""form-control input-sm"">
+                    <input type=""password"" name=""Passwd"" placeholder=""Password"" class=""form-control input-sm"">
+                    <button type=""submit"" class=""btn btn-primary btn-sm navbar-btn"">Sign in</button>
+                $ } else { $
+                    <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-danger btn-sm"">$=Provider.TR(""Çıkış yap"")$</button>
+                $ } $
+            </div>
         </form>
-    $ } else { $
-        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form form-inline pull-right"">
-            <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-primary btn-small"">Log Out</button>
-        </form>
-    $ } $
-    </div><!--/.nav-collapse -->Id,1,3Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
+    </div><!--/.nav-collapse -->
+    
+    <script>
+    
+    
+        jQuery(function(){
+            jQuery(""#DesignModeOFF"").click(function(){
+                location.href = ""/Default.aspx?DesignMode=Off""
+            });
+            jQuery(""#DesignModeOn"").click(function(){
+                location.href = ""/Default.aspx?DesignMode=On""
+            });
+        });
+        
+        
+    </script>Id,1,3Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"1,'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
 InnerHtml,313,<h1>Hello, world!</h1>
 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
