@@ -13,36 +13,47 @@ using System.Collections.Generic;
 namespace Cinar.CMS.Library.Modules
 {
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"0,'StaticHtml','Default.aspx','topNav','Cinar.CMS.Serialization
-InnerHtml,1514,        <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target="".nav-collapse"">
+ElementName,3,divElementId,0,CSSClass,0,CSS,0,TopHtml,0,BottomHtml,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0InnerHtml,1914,    <div class=""navbar-header"">
+        <button type=""button"" class=""navbar-toggle"" data-toggle=""collapse"" data-target=""#main-navbar"">
           <span class=""icon-bar""></span>
           <span class=""icon-bar""></span>
           <span class=""icon-bar""></span>
         </button>
+        
         <a class=""navbar-brand"" href=""#"">Project name</a>
-        <div class=""nav-collapse collapse"">
-          <ul class=""nav navbar-nav"">
-            <li class=""active""><a href=""#"">Home</a></li>
-            <li><a href=""#about"">About</a></li>
-            <li><a href=""#contact"">Contact</a></li>
-            <li class=""dropdown"">
-              <a href=""#"" class=""dropdown-toggle"" data-toggle=""dropdown"">Dropdown <b class=""caret""></b></a>
-              <ul class=""dropdown-menu"">
-                <li><a href=""#"">Action</a></li>
-                <li><a href=""#"">Another action</a></li>
-                <li><a href=""#"">Something else here</a></li>
-                <li class=""divider""></li>
-                <li class=""nav-header"">Nav header</li>
-                <li><a href=""#"">Separated link</a></li>
-                <li><a href=""#"">One more separated link</a></li>
-              </ul>
-            </li>
+    </div>
+    
+    <div class=""navbar-collapse collapse"" id=""main-navbar"">
+      <ul class=""nav navbar-nav"">
+        <li class=""active""><a href=""#"">Home</a></li>
+        <li><a href=""#about"">About</a></li>
+        <li><a href=""#contact"">Contact</a></li>
+        <li class=""dropdown"">
+          <a href=""#"" class=""dropdown-toggle"" data-toggle=""dropdown"">Dropdown <b class=""caret""></b></a>
+          <ul class=""dropdown-menu"">
+            <li><a href=""#"">Action</a></li>
+            <li><a href=""#"">Another action</a></li>
+            <li><a href=""#"">Something else here</a></li>
+            <li class=""divider""></li>
+            <li class=""nav-header"">Nav header</li>
+            <li><a href=""#"">Separated link</a></li>
+            <li><a href=""#"">One more separated link</a></li>
           </ul>
-          <form class=""navbar-form form-inline pull-right"">
-            <input type=""text"" placeholder=""Email"" class=""form-control"">
-            <input type=""password"" placeholder=""Password"" class=""form-control"">
+        </li>
+      </ul>
+      
+    $ if(!Provider.User.IsInRole(""User"")) { $
+        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form form-inline pull-right"">
+            <input type=""text"" placeholder=""Email"" name=""Email"" class=""form-control"">
+            <input type=""password"" name=""Passwd"" placeholder=""Password"" class=""form-control"">
             <button type=""submit"" class=""btn btn-primary btn-small"">Sign in</button>
-          </form>
-        </div><!--/.nav-collapse -->LangId1,1,0InnerHtml1,0,LangId2,1,0InnerHtml2,0,LangId3,1,0InnerHtml3,0,Id,1,1Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlCSS,0,TopHtml,0,BottomHtml,0,ParentModuleId,1,0CSSClass,0,Visible,4,TrueRoleToRead,0,UseCache,7,DefaultCacheLifeTime,1,0'")]
+        </form>
+    $ } else { $
+        <form action=""/DoLogin.ashx"" method=""post"" class=""navbar-form form-inline pull-right"">
+            <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-primary btn-small"">Log Out</button>
+        </form>
+    $ } $
+    </div><!--/.nav-collapse -->Id,1,7Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"1,'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
 InnerHtml,313,<h1>Hello, world!</h1>
 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
