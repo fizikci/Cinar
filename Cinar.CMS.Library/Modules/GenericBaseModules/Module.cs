@@ -53,7 +53,7 @@ ElementName,3,divElementId,0,CSSClass,0,CSS,0,TopHtml,0,BottomHtml,0,Visible,4,T
             <button type=""submit"" name=""logout"" value=""1"" class=""btn btn-primary btn-small"">Log Out</button>
         </form>
     $ } $
-    </div><!--/.nav-collapse -->Id,1,7Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
+    </div><!--/.nav-collapse -->Id,1,3Template,12,Default.aspxRegion,6,topNavOrderNo,1,0Name,10,StaticHtmlParentModuleId,1,0'")]
     [DefaultData(ColumnList = "OrderNo,Name,Template,Region,Details", ValueList = @"1,'StaticHtml','Default.aspx','jumbo','Cinar.CMS.Serialization
 InnerHtml,313,<h1>Hello, world!</h1>
 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
