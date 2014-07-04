@@ -503,9 +503,17 @@ namespace Cinar.CMS.Library
         internal static void cacheResources()
         {
             if (HttpContext.Current.Cache["StaticResource"] == null)
+            {
+                //Create Table if does not exist!
+                Provider.Database.Read<StaticResource>(1);
                 HttpContext.Current.Cache["StaticResource"] = Provider.Database.GetDictionary<string, int>("select Name, Id from StaticResource");
+            }
             if (HttpContext.Current.Cache["StaticResourceLang"] == null)
+            {
+                //Create Table if does not exist!
+                Provider.Database.Read<StaticResourceLang>(1);
                 HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string, string>("select cast(concat(StaticResourceId,'_',LangId) as char(10)), Translation from StaticResourceLang");
+            }
         }
 
         [Description("Translates entity column name")]
