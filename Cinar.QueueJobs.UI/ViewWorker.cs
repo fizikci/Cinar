@@ -90,11 +90,15 @@ namespace Cinar.QueueJobs.UI
                         break;
                     case "error":
                         ((ViewWorkersFarm)this.Parent.Parent).lblStatus.Text = "ERROR on " + parts[2] + " : " + parts[1];
+                        if (((ViewWorkersFarm)this.Parent.Parent).Log != null)
+                            ((ViewWorkersFarm)this.Parent.Parent).Log("ERROR on " + parts[2] + " : " + parts[1]);
                         break;
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                if (((ViewWorkersFarm)this.Parent.Parent).Log != null)
+                    ((ViewWorkersFarm)this.Parent.Parent).Log(ex.ToStringBetter());
             }
         }
 
@@ -110,7 +114,6 @@ namespace Cinar.QueueJobs.UI
                 {
                     Thread.Sleep(timeout);
                     control.Invoke(action);
-                    //action.Invoke();
                 }
             );
             t.Start();
@@ -118,7 +121,7 @@ namespace Cinar.QueueJobs.UI
 
         private void lblTitle_Click(object sender, EventArgs e)
         {
-            Process.Start("http://93.89.226.62:9892/Staff/Logs.aspx?SocketId=" + this.WorkerId);
+            //Process.Start("http://address/Logs.aspx?SocketId=" + this.WorkerId);
         }
     }
 }

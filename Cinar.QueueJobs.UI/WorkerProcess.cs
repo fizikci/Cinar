@@ -111,8 +111,6 @@ namespace Cinar.QueueJobs.UI
             catch (Exception ex)
             {
                 jobData.Response = ex.Message + "\n" + (ex.InnerException != null ? "- " + ex.InnerException.Message : "");
-                //jobData.Response += "\n\n";
-                //jobData.Response += ex.StackTrace;
                 db.Save(jobData);
 
                 job.Status = JobStatuses.Failed;

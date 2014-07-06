@@ -1,6 +1,6 @@
 ﻿namespace Cinar.QueueJobs.Test
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -32,12 +32,18 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.workersFarm = new Cinar.QueueJobs.UI.ViewWorkersFarm();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Console = new System.Windows.Forms.ListBox();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnAddFindLinksJobs
             // 
             this.btnAddFindLinksJobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddFindLinksJobs.Location = new System.Drawing.Point(578, 509);
+            this.btnAddFindLinksJobs.Location = new System.Drawing.Point(703, 146);
             this.btnAddFindLinksJobs.Name = "btnAddFindLinksJobs";
             this.btnAddFindLinksJobs.Size = new System.Drawing.Size(140, 23);
             this.btnAddFindLinksJobs.TabIndex = 1;
@@ -48,7 +54,7 @@
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStart.Location = new System.Drawing.Point(13, 509);
+            this.btnStart.Location = new System.Drawing.Point(3, 146);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 2;
@@ -59,7 +65,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnStop.Location = new System.Drawing.Point(94, 509);
+            this.btnStop.Location = new System.Drawing.Point(84, 146);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 3;
@@ -69,26 +75,59 @@
             // 
             // workersFarm
             // 
-            this.workersFarm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.workersFarm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.workersFarm.Location = new System.Drawing.Point(0, 0);
+            this.workersFarm.Name = "workersFarm";
+            this.workersFarm.Size = new System.Drawing.Size(846, 529);
+            this.workersFarm.TabIndex = 0;
+            this.workersFarm.WorkerProcessType = null;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.workersFarm);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.Console);
+            this.splitContainer1.Panel2.Controls.Add(this.btnStop);
+            this.splitContainer1.Panel2.Controls.Add(this.btnAddFindLinksJobs);
+            this.splitContainer1.Panel2.Controls.Add(this.btnStart);
+            this.splitContainer1.Size = new System.Drawing.Size(848, 709);
+            this.splitContainer1.SplitterDistance = 531;
+            this.splitContainer1.TabIndex = 4;
+            // 
+            // Console
+            // 
+            this.Console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.workersFarm.Location = new System.Drawing.Point(13, 24);
-            this.workersFarm.Name = "workersFarm";
-            this.workersFarm.Size = new System.Drawing.Size(705, 459);
-            this.workersFarm.TabIndex = 0;
-            this.workersFarm.WorkerProcess = null;
+            this.Console.FormattingEnabled = true;
+            this.Console.IntegralHeight = false;
+            this.Console.Location = new System.Drawing.Point(4, 4);
+            this.Console.Name = "Console";
+            this.Console.Size = new System.Drawing.Size(839, 139);
+            this.Console.TabIndex = 4;
             // 
-            // Form1
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(732, 544);
-            this.Controls.Add(this.btnStop);
-            this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.btnAddFindLinksJobs);
-            this.Controls.Add(this.workersFarm);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(848, 709);
+            this.Controls.Add(this.splitContainer1);
+            this.Name = "FormMain";
+            this.Text = "Queue Jobs";
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -99,6 +138,8 @@
         private System.Windows.Forms.Button btnAddFindLinksJobs;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        public System.Windows.Forms.ListBox Console;
     }
 }
 

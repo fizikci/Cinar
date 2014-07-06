@@ -100,8 +100,12 @@ namespace Cinar.QueueJobs.UI
             catch (Exception ex)
             {
                 lblStatus.Text = "ERR: " + ex.Message;
+                if (Log != null)
+                    Log(lblStatus.Text);
             }
         }
+
+        public Action<string> Log;
 
         private void timer_Tick(object sender, EventArgs e)
         {
