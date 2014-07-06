@@ -30,13 +30,15 @@
         {
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblActiveSince = new System.Windows.Forms.Label();
-            this.lblLastCommand = new System.Windows.Forms.Label();
+            this.lblCommand = new System.Windows.Forms.Label();
             this.lblOKCount = new System.Windows.Forms.Label();
+            this.lblName = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // lblTitle
             // 
-            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTitle.BackColor = System.Drawing.Color.LightSteelBlue;
             this.lblTitle.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -56,20 +58,20 @@
             this.lblActiveSince.Name = "lblActiveSince";
             this.lblActiveSince.Size = new System.Drawing.Size(163, 18);
             this.lblActiveSince.TabIndex = 2;
-            this.lblActiveSince.Text = "???";
+            this.lblActiveSince.Text = "Active Since";
             this.lblActiveSince.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblLastCommand
+            // lblCommand
             // 
-            this.lblLastCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblLastCommand.Location = new System.Drawing.Point(9, 49);
-            this.lblLastCommand.Name = "lblLastCommand";
-            this.lblLastCommand.Size = new System.Drawing.Size(167, 19);
-            this.lblLastCommand.TabIndex = 4;
-            this.lblLastCommand.Text = "???";
-            this.lblLastCommand.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblLastCommand.Click += new System.EventHandler(this.lblLastCommand_Click);
+            this.lblCommand.Location = new System.Drawing.Point(9, 49);
+            this.lblCommand.Name = "lblCommand";
+            this.lblCommand.Size = new System.Drawing.Size(167, 19);
+            this.lblCommand.TabIndex = 4;
+            this.lblCommand.Text = "Command";
+            this.lblCommand.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCommand.Click += new System.EventHandler(this.lblLastCommand_Click);
             // 
             // lblOKCount
             // 
@@ -85,25 +87,48 @@
             this.lblOKCount.Text = "0";
             this.lblOKCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // ViewSocket
+            // lblName
+            // 
+            this.lblName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblName.Location = new System.Drawing.Point(9, 68);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(167, 19);
+            this.lblName.TabIndex = 6;
+            this.lblName.Text = "Name";
+            this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(6, 90);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(167, 17);
+            this.progressBar1.TabIndex = 7;
+            // 
+            // ViewWorker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.lblName);
             this.Controls.Add(this.lblOKCount);
-            this.Controls.Add(this.lblLastCommand);
+            this.Controls.Add(this.lblCommand);
             this.Controls.Add(this.lblActiveSince);
             this.Controls.Add(this.lblTitle);
             this.Name = "ViewWorker";
-            this.Size = new System.Drawing.Size(179, 74);
+            this.Size = new System.Drawing.Size(179, 113);
             this.ResumeLayout(false);
+
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblLastCommand;
+        private System.Windows.Forms.Label lblCommand;
         public System.Windows.Forms.Label lblActiveSince;
         public System.Windows.Forms.Label lblOKCount;
         public System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

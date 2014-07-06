@@ -69,11 +69,11 @@ namespace Cinar.QueueJobs.UI
                 switch (parts[0])
                 {
                     case "job":
-                        lblLastCommand.Text = parts[3]; //parts[2] + ": " + parts[3];
-                        ((ViewWorkersFarm) this.Parent.Parent).lblStatus.Text = lblLastCommand.Text;
+                        lblCommand.Text = parts[2];
+                        lblName.Text = parts[3];
+                        ((ViewWorkersFarm) this.Parent.Parent).lblStatus.Text = lblCommand.Text;
                         lblTitle.BackColor = Color.YellowGreen;
                         lblOKCount.BackColor = Color.YellowGreen;
-                        //setTimeout(lblTitle, () => { lblTitle.BackColor = Color.LightYellow; }, 200);
                         break;
                     case "jobend":
                         lblTitle.BackColor = Color.LightSteelBlue;
@@ -84,6 +84,9 @@ namespace Cinar.QueueJobs.UI
                         lblTitle.Text = parts[1];
                         lblActiveSince.ForeColor = Color.Red;
                         setTimeout(lblActiveSince, () => { lblActiveSince.ForeColor = Color.Black; }, 200);
+                        break;
+                    case "progress":
+                        progressBar1.Value = int.Parse(parts[1]);
                         break;
                     case "error":
                         ((ViewWorkersFarm)this.Parent.Parent).lblStatus.Text = "ERROR on " + parts[2] + " : " + parts[1];
@@ -97,7 +100,7 @@ namespace Cinar.QueueJobs.UI
 
         private void lblLastCommand_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(lblLastCommand.Text, "EppSocketManager");
+            MessageBox.Show(lblCommand.Text, "EppSocketManager");
         }
 
         public void setTimeout(Control control, Action action, int timeout)

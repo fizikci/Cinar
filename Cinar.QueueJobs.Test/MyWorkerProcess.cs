@@ -50,7 +50,7 @@ namespace Cinar.QueueJobs.Test
         }
 
 
-        private static string findLinks(string baseUrl)
+        private string findLinks(string baseUrl)
         {
             var urls = new HashSet<string>();
 
@@ -58,17 +58,21 @@ namespace Cinar.QueueJobs.Test
             list.ExceptWith(urls);
             urls.UnionWith(list);
 
+            int counter = 0;
             foreach (var url in list)
             {
                 var subList = getLinksOf(baseUrl, url);
                 urls.UnionWith(subList);
+                counter++;
+
+                ReportProgress((100 * counter) / list.Count);
             }
 
 
             return urls.Where(u => u.StartsWith("http")).OrderBy(o => o).StringJoin(Environment.NewLine);
         }
 
-        private static HashSet<string> getLinksOf(string baseUrl, string url)
+        private HashSet<string> getLinksOf(string baseUrl, string url)
         {
             using (WebClient wc = new WebClient())
             {
@@ -102,7 +106,7 @@ namespace Cinar.QueueJobs.Test
             }
         }
 
-        private static Uri getFullUrl(string baseUrl, string url)
+        private Uri getFullUrl(string baseUrl, string url)
         {
             var baseUri = new Uri(baseUrl);
             var relativeUri = new Uri(url, UriKind.RelativeOrAbsolute);
@@ -110,13 +114,13 @@ namespace Cinar.QueueJobs.Test
             return fullUri;
         }
 
-        private static string downloadContent(string url)
+        private string downloadContent(string url)
         {
             var res = getCleanText(url);
             return res.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
         }
 
-        private static Tuple<string, string, string> getCleanText(string url)
+        private Tuple<string, string, string> getCleanText(string url)
         {
             var transcoder = new NReadabilityWebTranscoder();
             bool success;
