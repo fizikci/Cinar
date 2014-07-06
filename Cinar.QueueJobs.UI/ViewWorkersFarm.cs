@@ -15,7 +15,8 @@ namespace Cinar.QueueJobs.UI
     public partial class ViewWorkersFarm : UserControl
     {
         private db.Database db;
-        public WorkerProcess WorkerProcess { get; set; }
+        public Type WorkerProcessType { get; set; }
+        public WorkerProcess WorkerProcess;
 
         public ViewWorkersFarm()
         {
@@ -27,11 +28,13 @@ namespace Cinar.QueueJobs.UI
 
         public void Start()
         {
-            if (WorkerProcess == null)
+            if (WorkerProcessType == null)
             {
                 MessageBox.Show("ViewWorkersFarm.WorkerProcess property cannot be NULL!");
                 return;
             }
+
+            WorkerProcess = (WorkerProcess)Activator.CreateInstance(WorkerProcessType);
 
             db = WorkerProcess.GetNewDatabaseInstance();
 
@@ -84,7 +87,7 @@ namespace Cinar.QueueJobs.UI
 
                 foreach (var workerId in availableWorkers)
                 {
-                    ViewWorker vs = new ViewWorker(workerId, db.GetString("SELECT Name FROM " + WorkerProcess.GetWorkerType().Name + " WHERE Id={0}", workerId), WorkerProcess);
+                    ViewWorker vs = new ViewWorker(workerId, db.GetString("SELECT Name FROM " + WorkerProcess.GetWorkerType().Name + " WHERE Id={0}", workerId), (WorkerProcess)Activator.CreateInstance(WorkerProcessType));
                     panelWorkers.Controls.Add(vs);
                     vs.Run();
 

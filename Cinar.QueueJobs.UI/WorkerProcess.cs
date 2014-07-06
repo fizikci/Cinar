@@ -25,6 +25,7 @@ namespace Cinar.QueueJobs.UI
             this.backgroundWorker = backgroundWorker;
             this.db = workerProcess.GetNewDatabaseInstance();
             this.workerProcess = workerProcess;
+            workerProcess.ReportProgress = this.ReportProgress;
         }
 
         public void Init(int workerId)
@@ -38,6 +39,11 @@ namespace Cinar.QueueJobs.UI
             worker.LastExecutionInfo = "start";
             worker.ActiveSince = DateTime.Now;
             db.Save(worker);
+        }
+
+        public void ReportProgress(int percent)
+        {
+            backgroundWorker.ReportProgress(1, "progress:" + percent);
         }
 
         public void Run()
@@ -146,5 +152,7 @@ namespace Cinar.QueueJobs.UI
         public abstract Type GetQueueDataType();
         public abstract string ExecuteJob(BaseJob job, BaseJobData jobData);
         public abstract Database.Database GetNewDatabaseInstance();
+
+        public Action<int> ReportProgress;
     }
 }

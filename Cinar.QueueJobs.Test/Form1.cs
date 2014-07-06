@@ -18,8 +18,8 @@ namespace Cinar.QueueJobs.Test
         {
             InitializeComponent();
 
-            workersFarm.WorkerProcess = new MyWorkerProcess();
-            db = workersFarm.WorkerProcess.GetNewDatabaseInstance();
+            workersFarm.WorkerProcessType = typeof(MyWorkerProcess);
+            db = ((MyWorkerProcess)Activator.CreateInstance(typeof(MyWorkerProcess))).GetNewDatabaseInstance();
         }
 
         private void btnAddFindLinksJobs_Click(object sender, EventArgs e)
@@ -32,14 +32,14 @@ namespace Cinar.QueueJobs.Test
                 {
                     BaseJob que = new BaseJob();
                     que.Command = "FindLinks";
-                    que.Name = url;
+                    que.Name = url.Replace("http://","").Replace("www.","");
                     que.WorkerId = workerIds[counter++ % workerIds.Count];
                     db.Save(que);
 
                     BaseJobData qD = new BaseJobData
                     {
                         JobId = que.Id,
-                        Request = que.Name
+                        Request = url
                     };
                     db.Save(qD);
                 }
