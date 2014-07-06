@@ -11,14 +11,17 @@ using System.Windows.Forms;
 
 namespace Cinar.QueueJobs.Test
 {
-    public partial class Form1 : Form
+    public partial class FormMain : Form
     {
         Database.Database db = null;
-        public Form1()
+        public FormMain()
         {
             InitializeComponent();
 
             workersFarm.WorkerProcessType = typeof(MyWorkerProcess);
+            workersFarm.Log = (msg) => {
+                Console.Items.Add(msg);
+            };
             db = ((MyWorkerProcess)Activator.CreateInstance(typeof(MyWorkerProcess))).GetNewDatabaseInstance();
         }
 

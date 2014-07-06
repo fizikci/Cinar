@@ -100,7 +100,6 @@ namespace Cinar.QueueJobs.Test
                 }
                 catch
                 {
-                    Console.Write("!");
                     return new HashSet<string>();
                 }
             }
