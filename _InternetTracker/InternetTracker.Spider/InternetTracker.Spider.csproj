@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\Cinar\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{83D016DC-662F-4401-B6F4-395EB3BCDD9F}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InternetTracker.Test</RootNamespace>
-    <AssemblyName>InternetTracker.Test</AssemblyName>
+    <RootNamespace>Cinar.QueueJobs.UI</RootNamespace>
+    <AssemblyName>Cinar.QueueJobs.UI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,23 +30,58 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BackgroundWorkerEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewWorker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewWorker.Designer.cs">
+      <DependentUpon>ViewWorker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewWorkersFarm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewWorkersFarm.Designer.cs">
+      <DependentUpon>ViewWorkersFarm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorkerProcess.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <EmbeddedResource Include="ViewWorkersFarm.resx">
+      <DependentUpon>ViewWorkersFarm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
+      <Project>{e9b26a78-06ff-4d79-9c37-d4198df126eb}</Project>
+      <Name>Cinar.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
+      <Project>{6727c03b-4cf9-4670-b2ec-63facfbe5dfa}</Project>
+      <Name>Cinar.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{af6cb4f3-3a42-49b1-90ca-03310efae89b}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.QueueJobs.Entities\Cinar.QueueJobs.Entities.csproj">
+      <Project>{1d5320c9-691f-4b60-8e22-333fb8e587a9}</Project>
+      <Name>Cinar.QueueJobs.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

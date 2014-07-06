@@ -1,31 +1,56 @@
-﻿using NReadability;
+﻿using Cinar.QueueJobs.Entities;
+using Cinar.QueueJobs.UI;
+using NReadability;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace InternetTracker.LinkFinder
+namespace Cinar.QueueJobs.Test
 {
-    class Program
+    public class MyWorkerProcess : WorkerProcess
     {
-        static void Main(string[] args)
+        public override Type GetWorkerType()
         {
-            List<string> listDomains = URLS.Replace("\r","").Split('\n').ToList();
-
-            foreach (string baseUrl in listDomains)
-            {
-                getLinks(baseUrl);
-
-            }
-
-
-            //File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"), urls.StringJoin(Environment.NewLine));
+            return typeof(BaseWorker);
         }
 
-        private static string getLinks(string baseUrl)
+        public override Type GetQueueType()
+        {
+            return typeof(BaseJob);
+        }
+
+        public override Type GetQueueDataType()
+        {
+            return typeof(BaseJobData);
+        }
+
+        public override string ExecuteJob(BaseJob job, BaseJobData jobData)
+        {
+            switch (job.Command)
+            {
+                case "FindLinks":
+                    return findLinks(jobData.Request);
+                case "DownloadContent":
+                    return downloadContent(jobData.Request);
+            }
+
+            return "Command not implemented";
+        }
+
+
+
+
+        public override Database.Database GetNewDatabaseInstance()
+        {
+            return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
+        }
+
+
+        private static string findLinks(string baseUrl)
         {
             var urls = new HashSet<string>();
 
@@ -66,10 +91,11 @@ namespace InternetTracker.LinkFinder
                     HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                     doc.LoadHtml(text);
 
-                    var hrefs = doc.DocumentNode.SelectNodes("//a[@href]").Select(l => l.Attributes["href"].Value).Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://"))).Select(l=>getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
+                    var hrefs = doc.DocumentNode.SelectNodes("//a[@href]").Select(l => l.Attributes["href"].Value).Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://"))).Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
                     return new HashSet<string>(hrefs);
                 }
-                catch{
+                catch
+                {
                     Console.Write("!");
                     return new HashSet<string>();
                 }
@@ -82,6 +108,12 @@ namespace InternetTracker.LinkFinder
             var relativeUri = new Uri(url, UriKind.RelativeOrAbsolute);
             var fullUri = new Uri(baseUri, relativeUri);
             return fullUri;
+        }
+
+        private static string downloadContent(string url)
+        {
+            var res = getCleanText(url);
+            return res.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
         }
 
         private static Tuple<string, string, string> getCleanText(string url)
@@ -115,105 +147,6 @@ namespace InternetTracker.LinkFinder
                 return new Tuple<string, string, string>("#FAIL#", ex.ToStringBetter(), "");
             }
         }
-
-
-
-        private static string URLS = @"http://www.haber7.com
-http://www.ntvmsnbc.com
-http://www.haberturk.com
-http://www.cnnturk.com.tr
-http://www.ahaber.com.tr
-http://www.ensonhaber.com
-http://www.objektifhaber.com
-http://www.haberx.com
-http://www.gazeteport.com
-http://www.internethaber.com
-http://www.t24.com.tr
-http://www.aktifhaber.com
-http://www.abhaber.com
-http://www.ajanshaber.com
-http://www.acikgazete.com
-http://www.aygazete.com
-http://www.bianet.org
-http://www.bigpara.com
-http://www.gazeteci.tv
-http://www.gercekgundem.com
-http://www.eurovizyon.co.uk
-http://www.f5haber.com
-http://seksihaber.com
-http://www.haber3.com
-http://www.haberler.com
-http://www.eurovizyon.co.uk
-http://www.f5haber.com
-http://www.habervitrini.com
-http://www.habervaktim.com
-http://www.hurhaber.com
-http://www.imedya.tv
-http://www.iyibilgi.com
-http://www.kanaldhaber.com.tr
-http://www.samanyoluhaber.com
-http://www.mansethaber.com
-http://www.aljazeera.com.tr
-http://www.moralhaber.net
-http://haber.mynet.com
-http://www.memurlar.net
-http://www.odatv.com
-http://www.netgazete.com
-http://www.rotahaber.com
-http://www.dipnot.tv
-http://www.pressturk.com
-http://www.aa.com.tr
-http://www.ihlassondakika.com
-http://www.dha.com.tr
-http://www.cihan.com.tr
-http://www.sansursuz.com
-http://www.sonsayfa.com
-http://www.sondakika.com
-http://www.timeturk.com
-http://www.tgrthaber.com.tr
-http://www.turktime.com
-http://www.yazete.com
-http://www.wsj.com.tr
-http://www.haberedikkat.com
-http://www.gazetea24.com
-http://www.ulkehaber.com
-http://www.yirmidorthaber.com
-http://www.agos.com.tr
-http://www.aksam.com.tr
-http://www.anayurtgazetesi.com
-http://www.cumhuriyet.com.tr
-http://www.birgun.net
-http://www.bugun.com.tr
-http://www.dunyagazetesi.com.tr
-http://efsanefotospor.com
-http://www.evrensel.net
-http://www.fanatik.com.tr
-http://www.fotomac.com.tr
-http://www.gunes.com
-http://htgazete.com
-http://www.hurriyet.com.tr
-http://www.turkishdailynews.com
-http://www.milligazete.com.tr
-http://www.milliyet.com.tr
-http://www.ortadogugazetesi.net
-http://www.posta.com.tr
-http://www.radikal.com.tr
-http://www.sabah.com.tr
-http://www.sozcu.com.tr
-http://www.stargazete.com
-http://www.takvim.com.tr
-http://www.turkiyegazetesi.com
-http://www.taraf.com.tr
-http://www.ticaretsicil.gov.tr
-http://www.todayszaman.com
-http://www.gazetevatan.com
-http://www.yeniakit.com.tr
-http://www.yeniasir.com.tr
-http://www.yeniasya.com.tr
-http://www.yenimesaj.com.tr
-http://www.yenicaggazetesi.com.tr
-http://www.yenisafak.com.tr
-http://www.zaman.com.tr";
     }
 
 

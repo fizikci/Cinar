@@ -7,7 +7,7 @@ using System;
 using System.Drawing.Drawing2D;
 
 
-namespace Cinar.HTMLParser
+namespace Cinar.Extensions
 {
     public class WebPageBitmap
     {
