@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Cinar.HTMLParser")]
+[assembly: AssemblyTitle("Cinar.QueueJobs.Entities")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Sürat Bilgisayar")]
-[assembly: AssemblyProduct("Cinar.HTMLParser")]
-[assembly: AssemblyCopyright("Copyright © Sürat Bilgisayar 2009")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Cinar.QueueJobs.Entities")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("140b2cc2-f803-4a0e-ad99-f558d31c3941")]
+[assembly: Guid("863f347b-5107-428b-9256-afba4a49ad14")]
 
 // Version information for an assembly consists of the following four values:
 //

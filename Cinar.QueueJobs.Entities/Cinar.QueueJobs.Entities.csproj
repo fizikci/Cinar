@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0537CF9E-493F-4066-AEE9-AE2E49D4F65E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{1D5320C9-691F-4B60-8E22-333FB8E587A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InternetTracker.Test</RootNamespace>
-    <AssemblyName>InternetTracker.Test</AssemblyName>
+    <RootNamespace>Cinar.QueueJobs.Entities</RootNamespace>
+    <AssemblyName>Cinar.QueueJobs.Entities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,11 +39,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BaseEntity.cs" />
+    <Compile Include="BaseJob.cs" />
+    <Compile Include="BaseJobData.cs" />
+    <Compile Include="BaseWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\Cinar.Common\Cinar.Common.csproj">
+      <Project>{e9b26a78-06ff-4d79-9c37-d4198df126eb}</Project>
+      <Name>Cinar.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cinar.Database\Cinar.Database.csproj">
+      <Project>{6727c03b-4cf9-4670-b2ec-63facfbe5dfa}</Project>
+      <Name>Cinar.Database</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -37,13 +37,13 @@
       <HintPath>..\..\Cinar.Extensions\bin\Debug\Cinar.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\Cinar\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="NReadability">
-      <HintPath>..\..\Cinar\_library\NReadability.dll</HintPath>
+      <HintPath>..\..\_library\NReadability.dll</HintPath>
     </Reference>
     <Reference Include="SgmlReaderDll">
-      <HintPath>..\..\Cinar\_library\SgmlReaderDll.dll</HintPath>
+      <HintPath>..\..\_library\SgmlReaderDll.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
