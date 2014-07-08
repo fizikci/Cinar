@@ -46,6 +46,7 @@ namespace Cinar.QueueJobs.UI
             if (backgroundWorker.CancellationPending)
                 throw new Exception("Manager is waiting for this to die");
 
+            db.FillEntity(worker);
             worker.LastExecution = DateTime.Now;
             worker.Save();
             backgroundWorker.ReportProgress(1, "progress:" + percent);
@@ -75,6 +76,9 @@ namespace Cinar.QueueJobs.UI
                     if (queue == null)
                     {
                         Thread.Sleep(1000);
+                        db.FillEntity(worker);
+                        worker.LastExecution = DateTime.Now;
+                        worker.Save();
                         continue; //***
                     }
 
