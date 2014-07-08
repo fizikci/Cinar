@@ -48,7 +48,7 @@ namespace Cinar.QueueJobs.UI
 
             db.FillEntity(worker);
             worker.LastExecution = DateTime.Now;
-            worker.Save();
+            db.Save(worker);
             backgroundWorker.ReportProgress(1, "progress:" + percent);
         }
 
