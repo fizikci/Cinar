@@ -62,6 +62,9 @@ namespace Cinar.QueueJobs.UI
 
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            if (this.Parent == null) // eğer durum buysa bu ViewWorker panelden çıkarılmış demektir, ölmeyi bekliyor, buraya gelmesinin bir anlamı yok zaten.
+                return;
+
             try
             {
                 string[] parts = e.UserState.ToString().Split(':');
