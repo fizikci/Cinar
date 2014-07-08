@@ -78,7 +78,7 @@ namespace Cinar.QueueJobs.UI
                         Thread.Sleep(1000);
                         db.FillEntity(worker);
                         worker.LastExecution = DateTime.Now;
-                        worker.Save();
+                        db.Save(worker);
                         continue; //***
                     }
 
