@@ -43,6 +43,11 @@ namespace Cinar.QueueJobs.UI
 
         public void ReportProgress(int percent)
         {
+            if (backgroundWorker.CancellationPending)
+                throw new Exception("Manager is waiting for this to die");
+
+            worker.LastExecution = DateTime.Now;
+            worker.Save();
             backgroundWorker.ReportProgress(1, "progress:" + percent);
         }
 

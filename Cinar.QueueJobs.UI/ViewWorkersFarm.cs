@@ -75,7 +75,7 @@ namespace Cinar.QueueJobs.UI
                         var ctrl = panelWorkers.Controls.Cast<ViewWorker>().FirstOrDefault(vs => vs.WorkerId == modifiedWorker.Key);
                         if (ctrl != null)
                         {
-                            ctrl.BackgroundWorker.CancelSync();
+                            ctrl.BackgroundWorker.CancelAsync();
                             panelWorkers.Controls.Remove(ctrl);
                         }
 
