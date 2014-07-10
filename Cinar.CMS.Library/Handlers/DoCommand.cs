@@ -746,6 +746,8 @@ namespace Cinar.CMS.Library.Handlers
 
             if (user != null)
             {
+                Provider.Log("Notice", "Login", "", "User", user.Id);
+
                 // login başarılı, RedirectURL sayfasına gönderelim.
                 Provider.User = user;
                 if (context.Request["RememberMe"] == "1")

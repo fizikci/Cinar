@@ -918,12 +918,7 @@ http://{1}
                 return;
 
             string newEmail = Provider.Request["newEmail"];
-            new Log()
-                {
-                    Category = "updateEmail",
-                    Description = newEmail,
-                    LogType = "Notice"
-                }.Save();
+            Provider.Log("Notice", "updateEmail", newEmail);
 
             string msg = String.Format(@"
                                 Merhaba {0},<br/><br/>

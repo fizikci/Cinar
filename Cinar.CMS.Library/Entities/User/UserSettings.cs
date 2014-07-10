@@ -60,6 +60,8 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 16)]
         public AllowedMessageSenders AllowedMessageSenders { get; set; }
 
+        public int LangId { get; set; }
+
         public override void SetFieldsByPostData(NameValueCollection postData)
         {
             base.SetFieldsByPostData(postData);
@@ -72,7 +74,7 @@ namespace Cinar.CMS.Library.Entities
             HttpPostedFile postedFile = Provider.Request.Files["BackgroundPicture"];
             if (postedFile != null && postedFile.ContentLength > 0)
             {
-                string bgUrlPath = avatarDir + Provider.User.Email + "_bg" + System.IO.Path.GetExtension(postedFile.FileName);
+                string bgUrlPath = avatarDir + Provider.User.Nick.MakeFileName() + DateTime.Now.Millisecond + "_bg" + System.IO.Path.GetExtension(postedFile.FileName);
                 string avatarFilePath = Provider.MapPath(bgUrlPath);
                 postedFile.SaveAs(avatarFilePath);
                 this.BackgroundPicture = bgUrlPath;
@@ -83,7 +85,7 @@ namespace Cinar.CMS.Library.Entities
             postedFile = Provider.Request.Files["CoverPicture"];
             if (postedFile != null && postedFile.ContentLength > 0)
             {
-                string cvUrlPath = avatarDir + Provider.User.Email + "_cv" + System.IO.Path.GetExtension(postedFile.FileName);
+                string cvUrlPath = avatarDir + Provider.User.Nick.MakeFileName() + DateTime.Now.Millisecond + "_cv" + System.IO.Path.GetExtension(postedFile.FileName);
                 string avatarFilePath = Provider.MapPath(cvUrlPath);
 
                 Image bmp = Image.FromStream(postedFile.InputStream);
