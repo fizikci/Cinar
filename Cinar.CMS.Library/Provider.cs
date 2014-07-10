@@ -135,10 +135,11 @@ namespace Cinar.CMS.Library
             {
                 string lang = (string)Provider.Session["currentCulture"];
 
-                if (lang == null)
+                if (string.IsNullOrWhiteSpace(lang))
                 {
-                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", Provider.Configuration.DefaultLang);
-                    if (lang == null)
+                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", Provider.User.Settings.LangId > 0 ? Provider.User.Settings.LangId : Provider.Configuration.DefaultLang);
+
+                    if (string.IsNullOrWhiteSpace(lang))
                     {
                         Provider.Session["currentCulture"] = "tr-TR";
                         throw new Exception(Provider.GetResource("There is no language record in Lang table with id {0}", Provider.Configuration.DefaultLang));

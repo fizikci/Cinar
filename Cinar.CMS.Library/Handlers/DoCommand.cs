@@ -750,6 +750,10 @@ namespace Cinar.CMS.Library.Handlers
 
                 // login başarılı, RedirectURL sayfasına gönderelim.
                 Provider.User = user;
+
+                if (user.Settings.LangId > 0)
+                    Provider.Session["currentCulture"] = null;
+
                 if (context.Request["RememberMe"] == "1")
                 {
                     HttpCookie cookie = new HttpCookie("keyword", user.Keyword);
