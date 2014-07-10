@@ -398,7 +398,7 @@ namespace Cinar.CMS.Library.Handlers
 		                from UserContact as fu, user u2
 		                where u2.Id = fu.UserId and fu.UserId = {0}) limit 4", profileSummary.Id, Provider.User.Id);
 
-            profileSummary.UserAvatar = Provider.GetThumbPath(profileSummary.UserAvatar, 73, 73, false);
+            //profileSummary.UserAvatar = Provider.GetThumbPath(profileSummary.UserAvatar, 73, 73, false);
 
             return profileSummary;
         }
