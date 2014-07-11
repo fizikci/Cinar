@@ -58,8 +58,12 @@ namespace Cinar.DBTools
 
         void TextArea_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (e.KeyValue==190 || e.KeyCode == System.Windows.Forms.Keys.F1)
-                CodeCompletionWindow.ShowCompletionWindow(this.FindForm(), this, null, this, '\0');
+            try
+            {
+                if (e.KeyValue == 190 || e.KeyCode == System.Windows.Forms.Keys.F1)
+                    CodeCompletionWindow.ShowCompletionWindow(this.FindForm(), this, null, this, '\0');
+            }
+            catch { }
         }
 
         protected override void OnTextChanged(EventArgs e)
@@ -79,52 +83,63 @@ namespace Cinar.DBTools
 
         public ICompletionData[] GenerateCompletionData(string fileName, TextArea textArea, char charTyped)
         {
-            List<TextWord> words = textArea.Document.GetLineSegment(textArea.Caret.Line).Words;
-            TextWord currentWord = textArea.Document.GetLineSegment(textArea.Caret.Line).GetWord(textArea.Caret.Column - 1);
-            int index = words.IndexOf(currentWord);
-            List<string> wordsChain = new List<string>();
-
-            if (currentWord == null)
+            try
             {
-                return getTypeList();
-            }
+                List<TextWord> words = textArea.Document.GetLineSegment(textArea.Caret.Line).Words;
+                TextWord currentWord = textArea.Document.GetLineSegment(textArea.Caret.Line).GetWord(textArea.Caret.Column - 1);
+                int index = words.IndexOf(currentWord);
+                List<string> wordsChain = new List<string>();
 
-            if (currentWord.Word == ".")
-            {
-                int i = index;
-                while (currentWord.Word == ".")
+                if (currentWord == null)
                 {
-                    i--;
-                    while (words[i].IsWhiteSpace) i--;
-                    currentWord = words[i];
-                    wordsChain.Insert(0, currentWord.Word);
-                    i--;
-                    if (i < 0)
-                        break;
+                    return getTypeList();
                 }
 
-                return getTypeMemberList(wordsChain.Last());
+                if (currentWord.Word == ".")
+                {
+                    int i = index;
+                    while (currentWord.Word == ".")
+                    {
+                        i--;
+                        while (words[i].IsWhiteSpace) i--;
+                        currentWord = words[i];
+                        wordsChain.Insert(0, currentWord.Word);
+                        i--;
+                        if (i < 0)
+                            break;
+                    }
+
+                    return getTypeMemberList(wordsChain.Last());
+                }
+
+                if (currentWord.IsWhiteSpace)
+                {
+                    return getTypeList();
+                }
+
             }
-            
-            if (currentWord.IsWhiteSpace)
-            {
-                return getTypeList();
-            }
+            catch { }
 
             return null;
         }
 
         private ICompletionData[] getTypeList()
         {
-            List<CinarCompletionData> list = new List<CinarCompletionData>();
-            list.Add(new CinarCompletionData("insert", "", (int)Images.Struct));
-            list.Add(new CinarCompletionData("update", "", (int)Images.Struct));
-            list.Add(new CinarCompletionData("delete", "", (int)Images.Struct));
-            list.Add(new CinarCompletionData("select", "", (int)Images.Struct));
-            list.Add(new CinarCompletionData("alter", "alter table", (int)Images.Method));
-            foreach (Table tbl in Provider.Database.Tables)
-                list.Add(new CinarCompletionData(tbl.Name, "table", (int)Images.Class));
-            return list.ToArray();
+            try
+            {
+                List<CinarCompletionData> list = new List<CinarCompletionData>();
+                list.Add(new CinarCompletionData("insert", "", (int)Images.Struct));
+                list.Add(new CinarCompletionData("update", "", (int)Images.Struct));
+                list.Add(new CinarCompletionData("delete", "", (int)Images.Struct));
+                list.Add(new CinarCompletionData("select", "", (int)Images.Struct));
+                list.Add(new CinarCompletionData("alter", "alter table", (int)Images.Method));
+                foreach (Table tbl in Provider.Database.Tables)
+                    list.Add(new CinarCompletionData(tbl.Name, "table", (int)Images.Class));
+                return list.ToArray();
+            }
+            catch { }
+
+            return null;
         }
 
         private ICompletionData[] getTypeMemberList(string varName)
@@ -152,7 +167,12 @@ namespace Cinar.DBTools
 
         public bool InsertAction(ICompletionData data, TextArea textArea, int insertionOffset, char key)
         {
-            textArea.InsertString(data.Text);
+            try
+            {
+                textArea.InsertString(data.Text);
+            }
+            catch { }
+
             return true;
         }
 

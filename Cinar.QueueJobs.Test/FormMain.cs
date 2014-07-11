@@ -14,6 +14,8 @@ namespace Cinar.QueueJobs.Test
     public partial class FormMain : Form
     {
         Database.Database db = null;
+        MyWorkerProcess wp = null;
+
         public FormMain()
         {
             InitializeComponent();
@@ -22,7 +24,8 @@ namespace Cinar.QueueJobs.Test
             workersFarm.Log = (msg) => {
                 Console.Items.Add(msg);
             };
-            db = ((MyWorkerProcess)Activator.CreateInstance(typeof(MyWorkerProcess))).GetNewDatabaseInstance();
+            wp = (MyWorkerProcess)Activator.CreateInstance(typeof(MyWorkerProcess));
+            db = wp.GetNewDatabaseInstance();
         }
 
         private void btnAddFindLinksJobs_Click(object sender, EventArgs e)
@@ -32,20 +35,7 @@ namespace Cinar.QueueJobs.Test
                 List<int> workerIds = db.GetList<int>("select Id from BaseWorker order by Id");
                 int counter = 0;
                 foreach (string url in URLS.Replace("\r", "").Split('\n'))
-                {
-                    BaseJob que = new BaseJob();
-                    que.Command = "FindLinks";
-                    que.Name = url.Replace("http://","").Replace("www.","");
-                    que.WorkerId = workerIds[counter++ % workerIds.Count];
-                    db.Save(que);
-
-                    BaseJobData qD = new BaseJobData
-                    {
-                        JobId = que.Id,
-                        Request = url
-                    };
-                    db.Save(qD);
-                }
+                    wp.AddJob(db, workerIds[counter++ % workerIds.Count], "FindLinks", url);
             });
         }
 
