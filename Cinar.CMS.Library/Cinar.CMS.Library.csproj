@@ -108,6 +108,10 @@
     <Compile Include="Entities\Message\PrivateLastMessage.cs" />
     <Compile Include="Entities\Message\PrivateMessage.cs" />
     <Compile Include="Entities\Message\EntityComment.cs" />
+    <Compile Include="Entities\QueueJobs\BaseJob.cs" />
+    <Compile Include="Entities\QueueJobs\BaseJobData.cs" />
+    <Compile Include="Entities\QueueJobs\BaseWorker.cs" />
+    <Compile Include="Entities\QueueJobs\JobServer.cs" />
     <Compile Include="Entities\Social\BlockedUser.cs" />
     <Compile Include="Entities\Social\ViewPrivateMessage.cs" />
     <Compile Include="Entities\Social\PostBlacklist.cs" />

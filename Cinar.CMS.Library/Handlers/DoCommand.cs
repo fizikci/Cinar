@@ -596,7 +596,7 @@ namespace Cinar.CMS.Library.Handlers
                 string newEmail = Provider.Database.GetString("select top 1 Description from Log where InsertUserId={0} AND Category='updateEmail' order by Id desc", user.Id);
                 user.Email = newEmail;
                 Provider.User = user;
-                Provider.Database.ExecuteNonQuery("update User set Email={0} where Id={1}", newEmail, user.Id);
+                Provider.Database.ExecuteNonQuery("update User set Email={0}, Keyword={2} where Id={1}", newEmail, user.Id, CMSUtility.MD5((user.Nick ?? "") + DateTime.Now.Ticks) );
                 context.Response.Redirect(Provider.Configuration.AfterUserActivationPage);
             }
             else
@@ -610,8 +610,8 @@ namespace Cinar.CMS.Library.Handlers
         private void loginWithKeyword()
         {
             Entities.User user = null;
-            
-            if(!String.IsNullOrEmpty(context.Request["keyword"]))
+
+            if (!String.IsNullOrEmpty(context.Request["keyword"]))
                 user = (User)Provider.Database.Read(typeof(User), "Keyword={0}", context.Request["keyword"]);
 
             if (user != null)
@@ -619,7 +619,7 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 user.Visible = true;
                 Provider.User = user;
-                Provider.Database.ExecuteNonQuery("update User set Visible=1 where Keyword={0}", context.Request["keyword"]);
+                Provider.Database.ExecuteNonQuery("update User set Visible=1, Keyword={1} where Keyword={0}", context.Request["keyword"], CMSUtility.MD5((user.Nick ?? "") + DateTime.Now.Ticks));
                 context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.AfterRememberPasswordPage : Provider.Configuration.AfterUserActivationPage);
             }
             else

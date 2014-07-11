@@ -43,6 +43,7 @@
     <Compile Include="BaseJob.cs" />
     <Compile Include="BaseJobData.cs" />
     <Compile Include="BaseWorker.cs" />
+    <Compile Include="JobServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
