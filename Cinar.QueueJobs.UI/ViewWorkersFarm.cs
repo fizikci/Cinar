@@ -56,8 +56,8 @@ namespace Cinar.QueueJobs.UI
             try
             {
                 //önce disabled olmadığı halde 2 dakikadır çalışmayan socketleri modifiye edelim
-                if (!first)
-                    db.ExecuteNonQuery("UPDATE "+WorkerProcess.GetWorkerType().Name+" SET Modified=1 WHERE Disabled=0 AND LastExecution<{0}", DateTime.Now.AddSeconds(-120d));
+                //if (!first)
+                //    db.ExecuteNonQuery("UPDATE "+WorkerProcess.GetWorkerType().Name+" SET Modified=1 WHERE Disabled=0 AND LastExecution<{0}", DateTime.Now.AddSeconds(-120d));
 
                 List<int> availableWorkers = new List<int>();
 

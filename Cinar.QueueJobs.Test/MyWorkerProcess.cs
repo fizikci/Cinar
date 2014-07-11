@@ -33,7 +33,16 @@ namespace Cinar.QueueJobs.Test
             switch (job.Command)
             {
                 case "FindLinks":
-                    return findLinks(jobData.Request);
+                    string res = findLinks(jobData.Request);
+                    var links = res.SplitWithTrim("\n");
+                    var db = this.GetNewDatabaseInstance();
+                    
+                    List<int> workerIds = db.GetList<int>("select Id from BaseWorker order by Id");
+                    int counter = 0;
+                    foreach (string url in links)
+                        AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url);
+
+                    return res;
                 case "DownloadContent":
                     return downloadContent(jobData.Request);
             }
@@ -49,6 +58,21 @@ namespace Cinar.QueueJobs.Test
             return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
         }
 
+        public void AddJob(Database.Database db, int workerId, string command, string url)
+        {
+            BaseJob que = new BaseJob();
+            que.Command = command;
+            que.Name = url.Replace("http://", "").Replace("www.", "");
+            que.WorkerId = workerId;
+            db.Save(que);
+
+            BaseJobData qD = new BaseJobData
+            {
+                JobId = que.Id,
+                Request = url
+            };
+            db.Save(qD);
+        }
 
         private string findLinks(string baseUrl)
         {
