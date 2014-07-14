@@ -48,6 +48,7 @@
     <Compile Include="ADO.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\CSVProvider.cs" />
     <Compile Include="Providers\DailyMotionProvider.cs" />
     <Compile Include="Providers\FriendFeedProvider.cs" />
     <Compile Include="Providers\YahooBossProvider.cs" />
@@ -62,6 +63,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{af6cb4f3-3a42-49b1-90ca-03310efae89b}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
       <Project>{e5aa23f7-818d-4d36-b2d3-ef8e4d60c01a}</Project>
       <Name>Cinar.POP3</Name>
