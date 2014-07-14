@@ -152,12 +152,14 @@ namespace Cinar.CMS.Library.Handlers
                     IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
                     IFNULL(po.LikeCount, p.LikeCount)  as LikeCount,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
                     Post p
                     inner join User u ON p.InsertUserId = u.Id
                     left join Post po ON po.Id=p.OriginalPostId
                     left join UserSettings us ON u.Id = us.UserId
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={2} AND n.NotificationType=1
                 WHERE 
                     us.IsInfoHidden <> 1 AND
                     u.Visible = 1 AND
@@ -165,7 +167,7 @@ namespace Cinar.CMS.Library.Handlers
                     p.ReplyToPostId = 0
                 ORDER BY 
                     p.Id DESC
-                LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);
+                LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId, userId);
 
             if (lessThanId == 2147483647)
             {
@@ -259,10 +261,12 @@ namespace Cinar.CMS.Library.Handlers
                     IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
                     IFNULL(po.LikeCount, p.LikeCount)   as LikeCount,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
                     Post p inner join User u
                     left join Post po ON po.Id=p.OriginalPostId
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={2} AND n.NotificationType=1
                 WHERE 
                     p.InsertUserId = u.Id AND
                     u.Visible = 1 AND
@@ -270,7 +274,7 @@ namespace Cinar.CMS.Library.Handlers
                     p.InsertDate > DATE_SUB(curdate(), INTERVAL 2 DAY)
                 ORDER BY 
                     (p.ShareCount+1) * (p.ShareCount+1) * (p.LikeCount+1) DESC
-                LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId);
+                LIMIT {0}", pageSize, lessThanId > 0 ? lessThanId : greaterThanId, Provider.User.Id);
 
             if (lessThanId == 2147483647)
             {
@@ -325,10 +329,12 @@ namespace Cinar.CMS.Library.Handlers
                     IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
                     IFNULL(po.LikeCount, p.LikeCount) as LikeCount,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
                     Post p inner join User u
                     left join Post po ON po.Id=p.OriginalPostId
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={3} AND n.NotificationType=1
                 WHERE 
                     p.InsertUserId = u.Id AND
                     u.Visible = 1 AND
@@ -336,7 +342,7 @@ namespace Cinar.CMS.Library.Handlers
                     " + idPart + @" 
                 ORDER BY 
                     p.Id DESC
-                LIMIT {2}", "%" + query + "%", lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+                LIMIT {2}", "%" + query + "%", lessThanId > 0 ? lessThanId : greaterThanId, pageSize, Provider.User.Id);
 
             if (lessThanId == 2147483647)
             {
@@ -731,7 +737,8 @@ namespace Cinar.CMS.Library.Handlers
                     p.ShareCount,
                     p.LikeCount,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    1 as UserLikedThis
                 FROM 
                     Post p, User u, Notification n
                 WHERE 

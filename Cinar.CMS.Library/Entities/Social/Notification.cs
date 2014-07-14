@@ -62,6 +62,37 @@ namespace Cinar.CMS.Library.Entities
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        protected override bool beforeDelete()
+        {
+            var res = base.beforeDelete();
+
+            switch (NotificationType)
+            {
+                case NotificationTypes.Shared:
+                    var sp = this.Post.OriginalPost;
+                    sp.ShareCount--;
+                    sp.Save();
+                    break;
+                case NotificationTypes.Liked:
+                    var lp = this.Post.OriginalPost ?? this.Post;
+                    lp.LikeCount--;
+                    lp.Save();
+                    break;
+                case NotificationTypes.Mention:
+                    break;
+                case NotificationTypes.Reply:
+                    break;
+                case NotificationTypes.Followed:
+                    break;
+                case NotificationTypes.FollowerRequest:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return res;
+        }
     }
 
     public enum NotificationTypes : short

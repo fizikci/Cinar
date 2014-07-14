@@ -138,6 +138,9 @@ namespace Cinar.CMS.Library.Handlers
                     case "like":
                         like();
                         break;
+                    case "unlike":
+                        unlike();
+                        break;
                     case "share":
                         share();
                         break;
@@ -764,6 +767,32 @@ limit
             }
             else
                 context.Response.Write(new Result { Data = false }.ToJSON());
+        }
+
+
+        private void unlike()
+        {
+            if (Provider.User.IsAnonim())
+                return;
+
+            int pid = 0;
+            int.TryParse(context.Request["pid"], out pid);
+            if (pid == 0)
+                throw new Exception("Post not found");
+
+            Post post = Provider.Database.Read<Post>(pid);
+            post = post.OriginalPost ?? post;
+
+            Notification n = Provider.Database.Read<Notification>
+                ("UserId = {0} and NotificationType = {1} and PostId = {2} and InsertUserId = {3}", post.InsertUserId, NotificationTypes.Liked, post.Id, Provider.User.Id);
+
+            if (n == null)
+                context.Response.Write(new Result { Data = false }.ToJSON());
+            else
+            {
+                n.Delete();
+                context.Response.Write(new Result { Data = true }.ToJSON());
+            }
         }
 
         private void share()
