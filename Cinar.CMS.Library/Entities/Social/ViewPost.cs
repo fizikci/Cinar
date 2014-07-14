@@ -48,6 +48,8 @@ namespace Cinar.CMS.Library.Entities
         public int ReplyToPostId { get; set; }
         public string SharerNick { get; set; }
 
+        public int UserLikedThis { get; set; }
+
         public User Originator
         {
             get { return OriginalPostId > 0 ? Provider.Database.Read<Post>(OriginalPostId).InsertUser : Provider.Database.Read<Post>(Id).InsertUser; }
