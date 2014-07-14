@@ -250,6 +250,7 @@ namespace Cinar.SQLEngine
                         list.Add(new Hashtable() { { "table_name", "Yahoo" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "FriendFeed" }, { "table_type", "table" } });
                         list.Add(new Hashtable() { { "table_name", "DailyMotion" }, { "table_type", "table" } });
+                        list.Add(new Hashtable() { { "table_name", "CSV" }, { "table_type", "table" } });
                         break;
                     }
                 case "information_schema.columns":
@@ -264,6 +265,7 @@ namespace Cinar.SQLEngine
                         list.AddRange(getColumnsOf(typeof(YahooResultItem), "Yahoo", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(FriendFeedItem), "FriendFeed", where, fieldNames));
                         list.AddRange(getColumnsOf(typeof(DailyMotionItem), "DailyMotion", where, fieldNames));
+                        list.AddRange(getColumnsOf(typeof(CSVItem), "CSV", where, fieldNames));
                         break;
                     }
                 case "file":
@@ -389,6 +391,16 @@ namespace Cinar.SQLEngine
                         }
                         else
                             throw new Exception("Provide query. Exp: select .. from Twitter(Query='...')");
+                        break;
+                    }
+                case "csv":
+                    {
+                        if (!join.CinarTableOptions.ContainsKey("Path") || !join.CinarTableOptions.ContainsKey("Seperator"))
+                            throw new Exception("Provide file path. Exp: select .. from CSV(Path='c:\\...', Seperator=';')");
+                        string path = Convert.ToString(join.CinarTableOptions["Path"].Calculate(this));
+                        char seperator = Convert.ToChar(join.CinarTableOptions["Seperator"].Calculate(this));
+                        CSVProvider csvProvider = new CSVProvider(path, seperator);
+                        list.AddRange(csvProvider.GetData(this, where, fieldNames));
                         break;
                     }
             }
