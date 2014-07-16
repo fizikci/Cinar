@@ -434,7 +434,8 @@ select
 from 
     hashtag 
 where
-    LangId = {0}
+    LangId = {0} AND
+    InsertDate > DATE_ADD(now(), INTERVAL -7 DAY)
 order by 
     MentionCount desc 
 limit 

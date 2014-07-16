@@ -91,10 +91,12 @@ namespace Cinar.CMS.Library.Handlers
                     IFNULL(po.ShareCount, p.ShareCount) as ShareCount,
                     IFNULL(po.LikeCount, p.LikeCount)   as LikeCount ,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
                     Post p inner join User u
                     left join Post po ON po.Id=p.OriginalPostId
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={0} AND n.NotificationType=1
                 WHERE 
                     p.InsertUserId = u.Id AND
                     (p.InsertUserId in (select UserId from UserContact where InsertUserId={0}) OR p.InsertUserId = {0}) AND
@@ -211,12 +213,14 @@ namespace Cinar.CMS.Library.Handlers
                     p.ShareCount,
                     p.LikeCount,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
-                    Post p, User u
+                    Post p
+                    inner join User u ON p.InsertUserId = u.Id
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={1} AND n.NotificationType=1
                 WHERE 
-                    p.InsertUserId = u.Id AND
-                    p.Id = {0}", postId);
+                    p.Id = {0}", postId, Provider.User.Id);
 
             if(Provider.User.Id!=post.Originator.Id && post.Originator.Settings.NeedsConfirmation && !post.Originator.HasContact(Provider.User.Id))
                 return new ViewPost(){Metin = "Unauthorized access"};
@@ -459,18 +463,19 @@ namespace Cinar.CMS.Library.Handlers
                     p.Metin,
                     p.InsertDate,
                     p.ShareCount,
-                    p.LikeCount
+                    p.LikeCount,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
-                    Post p, User u
+                    Post p
+                    inner join User u ON p.InsertUserId = u.Id AND u.Visible = 1
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={3} AND n.NotificationType=1
                 WHERE 
-                    p.InsertUserId = u.Id AND
-                    u.Visible = 1 AND
                     (p.ReplyToPostId = {0} OR (p.ThreadId = {1} AND p.ThreadId>0)) AND
                     p.Id > {0}
                 ORDER BY 
                     p.Id
                 " + (limit == 0 ? "" : "limit {2}")
-                , (post.OriginalPost ?? post).Id, post.ThreadId > 0 ? post.ThreadId : pid, limit);
+                , (post.OriginalPost ?? post).Id, post.ThreadId > 0 ? post.ThreadId : pid, limit, Provider.User.Id);
 
             foreach (var viewPost in res.Replies)
                 viewPost.UserAvatar = Provider.GetThumbPath(viewPost.UserAvatar, 32, 32, false);
@@ -489,14 +494,15 @@ namespace Cinar.CMS.Library.Handlers
                         p.Metin,
                         p.InsertDate,
                         p.ShareCount,
-                        p.LikeCount
+                        p.LikeCount,
+                        IFNULL(n.Id>0, 0) as UserLikedThis
                     FROM 
-                        Post p, User u
+                        Post p
+                        inner join User u ON p.InsertUserId = u.Id AND u.Visible = 1
+                        left join Notification n ON n.PostId=p.Id AND n.InsertUserId={1} AND n.NotificationType=1
                     WHERE 
-                        p.InsertUserId = u.Id AND
-                        u.Visible = 1 AND
                         p.Id = {0}"
-                    , post.ReplyToPostId);
+                    , post.ReplyToPostId, Provider.User.Id);
 
                 if(res.ReplyToPost!=null)
                     res.ReplyToPost.UserAvatar = Provider.GetThumbPath(res.ReplyToPost.UserAvatar, 32, 32, false);
@@ -539,17 +545,19 @@ namespace Cinar.CMS.Library.Handlers
                     p.VideoId,
                     p.VideoType,
                     p.OriginalPostId,
-                    p.ReplyToPostId
+                    p.ReplyToPostId,
+                    IFNULL(n.Id>0, 0) as UserLikedThis
                 FROM 
                     Post p inner join User u
                     left join Post po ON po.Id=p.OriginalPostId
+                    left join Notification n ON n.PostId=p.Id AND n.InsertUserId={3} AND n.NotificationType=1
                 WHERE 
                     p.InsertUserId = u.Id AND
                     p.InsertUserId = {0} AND
                     " + idPart + @" 
                 ORDER BY 
                     p.Id DESC
-                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize, Provider.User.Id);
 
             foreach (var viewPost in list)
             {
