@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Cinar.QueueJobs.Entities
 {
-    public class BaseJobData : BaseEntity
+    public class JobData : BaseEntity
     {
         public int JobId { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.TextMedium)]
         public string Request { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.TextMedium)]
         public string Response { get; set; }
     }
 }

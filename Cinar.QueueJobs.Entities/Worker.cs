@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cinar.QueueJobs.Entities
 {
-    public class BaseWorker : BaseEntity
+    public class Worker : BaseEntity
     {
         public string Name { get; set; }
         public int Disabled { get; set; }

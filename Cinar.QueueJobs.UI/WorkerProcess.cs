@@ -13,7 +13,7 @@ namespace Cinar.QueueJobs.UI
 {
     internal class InternalWorkerProcess
     {
-        private BaseWorker worker;
+        private Worker worker;
         private DB.Database db;
         private WorkerProcess workerProcess;
 
@@ -30,7 +30,7 @@ namespace Cinar.QueueJobs.UI
 
         public void Init(int workerId)
         {
-            worker = (BaseWorker)db.Read(workerProcess.GetWorkerType(), workerId);
+            worker = (Worker)db.Read(workerProcess.GetWorkerType(), workerId);
 
             if (worker == null)
                 throw new Exception("Worker with id " + workerId + " not defined in database");
@@ -71,7 +71,7 @@ namespace Cinar.QueueJobs.UI
                         break;
                     }
 
-                    BaseJob queue = getWaitingJob();
+                    Job queue = getWaitingJob();
 
                     if (queue == null)
                     {
@@ -104,9 +104,9 @@ namespace Cinar.QueueJobs.UI
             }
         }
 
-        private void executeCommand(BaseJob job)
+        private void executeCommand(Job job)
         {
-            BaseJobData jobData = (BaseJobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id);
+            JobData jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id);
             if(jobData==null)
                 throw new Exception("Queue job related data not found");
 
@@ -140,9 +140,9 @@ namespace Cinar.QueueJobs.UI
             db.Save(worker);
         }
 
-        private BaseJob getWaitingJob()
+        private Job getWaitingJob()
         {
-            BaseJob job = (BaseJob)db.Read(workerProcess.GetQueueType(), "select top 1 * from " + workerProcess.GetQueueType().Name + " where WorkerId={0} AND Status='New' order by Id", worker.Id);
+            Job job = (Job)db.Read(workerProcess.GetQueueType(), "select top 1 * from " + workerProcess.GetQueueType().Name + " where WorkerId={0} AND Status='New' order by Id", worker.Id);
             if (job != null)
             {
                 job.Status = JobStatuses.Processing;
@@ -157,7 +157,7 @@ namespace Cinar.QueueJobs.UI
         public abstract Type GetWorkerType();
         public abstract Type GetQueueType();
         public abstract Type GetQueueDataType();
-        public abstract string ExecuteJob(BaseJob job, BaseJobData jobData);
+        public abstract string ExecuteJob(Job job, JobData jobData);
         public abstract Database.Database GetNewDatabaseInstance();
 
         public Action<int> ReportProgress;

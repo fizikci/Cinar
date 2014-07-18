@@ -43,10 +43,10 @@ namespace Cinar.QueueJobs.Test
         {
             if (db.Tables["BaseWorker"] == null || db.GetInt("select count(*) from BaseWorker") == 0)
             {
-                db.Save(new BaseWorker() { Name = "Worker 1" });
-                db.Save(new BaseWorker() { Name = "Worker 2" });
-                db.Save(new BaseWorker() { Name = "Worker 3" });
-                db.Save(new BaseWorker() { Name = "Worker 4" });
+                db.Save(new Worker() { Name = "Worker 1" });
+                db.Save(new Worker() { Name = "Worker 2" });
+                db.Save(new Worker() { Name = "Worker 3" });
+                db.Save(new Worker() { Name = "Worker 4" });
             }
 
             workersFarm.Start();

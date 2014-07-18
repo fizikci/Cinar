@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace Cinar.QueueJobs.Entities
 {
-    public class BaseJob : BaseEntity
+    public class Job : BaseEntity
     {
-        public BaseJob()
+        public Job()
         {
             InsertDate = DateTime.Now;
         }
+
+        public int JobDefinitionId { get; set; }
 
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 24)]
         public string Command { get; set; }
@@ -20,6 +22,7 @@ namespace Cinar.QueueJobs.Entities
         public string Name { get; set; }
 
         public int WorkerId { get; set; }
+        public int ParentJobId { get; set; }
 
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 10)]
         public JobStatuses Status { get; set; }

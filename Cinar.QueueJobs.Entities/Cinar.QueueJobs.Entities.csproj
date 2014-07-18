@@ -40,9 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
-    <Compile Include="BaseJob.cs" />
-    <Compile Include="BaseJobData.cs" />
-    <Compile Include="BaseWorker.cs" />
+    <Compile Include="Job.cs" />
+    <Compile Include="JobData.cs" />
+    <Compile Include="Worker.cs" />
+    <Compile Include="JobDefinition.cs" />
     <Compile Include="JobServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
