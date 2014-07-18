@@ -15,42 +15,64 @@ namespace Cinar.QueueJobs.Test
     {
         public override Type GetWorkerType()
         {
-            return typeof(BaseWorker);
+            return typeof(Worker);
         }
 
         public override Type GetQueueType()
         {
-            return typeof(BaseJob);
+            return typeof(Job);
         }
 
         public override Type GetQueueDataType()
         {
-            return typeof(BaseJobData);
+            return typeof(JobData);
         }
 
-        public override string ExecuteJob(BaseJob job, BaseJobData jobData)
+        public override string ExecuteJob(Job job, JobData jobData)
         {
             switch (job.Command)
             {
+                case "CreateRootJobs":
+                    {
+                        var db = this.GetNewDatabaseInstance();
+                        var jobDefs = db.ReadList<JobDefinition>(@"
+                        SELECT 
+                            d.Id, d.CommandName, d.Data, max(j.InsertDate) as LastExecution
+                        FROM 
+                            JobDefinition d, Job j 
+                        WHERE 
+                            j.JobDefinitionId = d.Id AND 
+                            (j.Status = 'Done' OR j.Status = 'Failed')");
+                        int counter = 0;
+                        foreach (var jobDef in jobDefs)
+                        {
+                            var ts = DateTime.Now - (DateTime)jobDef["LastExecution"];
+                            if (ts.Seconds >= jobDef.RepeatInSeconds)
+                                AddJob();
+                        }
+                        return "";
+                    }
                 case "FindLinks":
-                    string res = findLinks(jobData.Request);
-                    var links = res.SplitWithTrim("\n");
-                    var db = this.GetNewDatabaseInstance();
-                    
-                    List<int> workerIds = db.GetList<int>("select Id from BaseWorker order by Id");
-                    int counter = 0;
-                    foreach (string url in links)
-                        AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url);
+                    {
+                        string res = findLinks(jobData.Request);
+                        var links = res.SplitWithTrim("\n");
 
-                    return res;
+                        var db = this.GetNewDatabaseInstance();
+                        List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
+                        int counter = 0;
+                        foreach (string url in links)
+                            AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url, job.Id);
+
+                        return res;
+                    }
                 case "DownloadContent":
-                    return downloadContent(jobData.Request);
+                    {
+                        return downloadContent(jobData.Request);
+                    }
             }
 
             return "Command not implemented";
         }
-
-
 
 
         public override Database.Database GetNewDatabaseInstance()
@@ -58,15 +80,16 @@ namespace Cinar.QueueJobs.Test
             return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
         }
 
-        public void AddJob(Database.Database db, int workerId, string command, string url)
+        public void AddJob(Database.Database db, int workerId, string command, string url, int parentJobId)
         {
-            BaseJob que = new BaseJob();
+            Job que = new Job();
             que.Command = command;
             que.Name = url.Replace("http://", "").Replace("www.", "");
             que.WorkerId = workerId;
+            que.ParentJobId = parentJobId;
             db.Save(que);
 
-            BaseJobData qD = new BaseJobData
+            JobData qD = new JobData
             {
                 JobId = que.Id,
                 Request = url

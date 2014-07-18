@@ -29,7 +29,6 @@ namespace Cinar.QueueJobs.Entities
         {
         }
 
-
         public virtual string GetNameColumn()
         {
             return "";
