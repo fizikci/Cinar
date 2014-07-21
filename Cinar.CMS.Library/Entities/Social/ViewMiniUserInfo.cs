@@ -15,5 +15,8 @@ namespace Cinar.CMS.Library.Entities
         public string Nick { get; set; }
         public string Avatar { get; set; }
         public string About { get; set; }
+
+        public int Following { get; set; }
+        public int Followed { get; set; }
     }
 }
