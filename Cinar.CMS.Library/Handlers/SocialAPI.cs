@@ -599,16 +599,18 @@ namespace Cinar.CMS.Library.Handlers
                     u.Avatar,
                     u.Nick,
                     concat(u.Name,' ',u.Surname) as FullName,
-                    u.About
+                    u.About,
+                    (select count(*) from UserContact where InsertUserId=u.Id AND UserId={3}) as Following,
+                    (select count(*) from UserContact where InsertUserId={3} AND UserId=u.Id) as Followed
                 FROM 
-                    UserContact fu, User u
+                    UserContact fu 
+                    inner join User u ON fu.InsertUserId = u.Id
                 WHERE 
                     fu.UserId = {0} AND
-                    fu.InsertUserId = u.Id AND
                     " + idPart + @" 
                 ORDER BY 
                     fu.Id DESC
-                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize, Provider.User.Id);
 
             foreach (var item in list)
                 item.Avatar = Provider.GetThumbPath(item.Avatar, 48, 48, false);
@@ -695,17 +697,19 @@ namespace Cinar.CMS.Library.Handlers
                     u.Avatar,
                     u.Nick,
                     concat(u.Name,' ',u.Surname) as FullName,
-                    u.About
+                    u.About,
+                    (select count(*) from UserContact where InsertUserId=u.Id AND UserId={3}) as Following,
+                    (select count(*) from UserContact where InsertUserId={3} AND UserId=u.Id) as Followed
                 FROM 
-                    UserContact fu, User u
+                    UserContact fu 
+                    inner join User u ON fu.UserId = u.Id
                 WHERE 
                     u.Visible = 1 AND
                     fu.InsertUserId = {0} AND
-                    fu.UserId = u.Id AND
                     " + idPart + @" 
                 ORDER BY 
                     fu.Id DESC
-                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize);
+                LIMIT {2}", userId, lessThanId > 0 ? lessThanId : greaterThanId, pageSize, Provider.User.Id);
 
             foreach (var item in list)
                 item.Avatar = Provider.GetThumbPath(item.Avatar, 48, 48, false);

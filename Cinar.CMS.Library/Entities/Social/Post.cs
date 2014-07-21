@@ -109,8 +109,8 @@ namespace Cinar.CMS.Library.Entities
                 if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim())
                     throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
 
-                if (lastPost.InsertDate.AddSeconds(5) > DateTime.Now)
-                    throw new Exception(Provider.TR("5 saniye içinde iki paylaşım yapılamaz"));
+                if (lastPost.InsertDate.AddSeconds(3) > DateTime.Now)
+                    throw new Exception(Provider.TR("3 saniye içinde iki paylaşım yapılamaz"));
 
                 if (this.ReplyToPostId > 0)
                     this.ThreadId = this.ReplyToPost.ThreadId > 0 ? this.ReplyToPost.ThreadId : this.ReplyToPost.Id;
