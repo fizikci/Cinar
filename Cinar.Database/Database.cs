@@ -2099,6 +2099,14 @@ namespace Cinar.Database
         {
             return dbProvider.GetSQLDateYearMonthPart(columnName);
         }
+        public string GetSQLDateYearMonthDayPart(string columnName)
+        {
+            return dbProvider.GetSQLDateYearMonthDayPart(columnName);
+        }
+        public string GetSQLDateYearMonthDayHourPart(string columnName)
+        {
+            return dbProvider.GetSQLDateYearMonthDayHourPart(columnName);
+        }
 
         // http://troels.arvin.dk/db/rdbms/
         // http://en.wikibooks.org/wiki/SQL_dialects_reference

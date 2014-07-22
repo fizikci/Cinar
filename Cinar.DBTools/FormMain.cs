@@ -1993,8 +1993,17 @@ namespace Cinar.DBTools
 
             if (column.SimpleColumnType == SimpleDbType.DateTime)
             {
-                columnName = Provider.Database.GetSQLDateYearMonthPart(column.Name);
-                columnNameAs = column.Name + "YearMonth";
+                var interval = Provider.Database.GetDictionary<DateTime, DateTime>("select min(" + columnName+"), max("+columnName+") from ["+column.Table.Name+"]").First();
+
+                if((interval.Value-interval.Key).Days<=2)
+                    columnName = Provider.Database.GetSQLDateYearMonthDayHourPart(column.Name);
+                else if ((interval.Value - interval.Key).Days < 90)
+                    columnName = Provider.Database.GetSQLDateYearMonthDayPart(column.Name);
+                else
+                    columnName = Provider.Database.GetSQLDateYearMonthPart(column.Name);
+
+                //columnName = Provider.Database.GetSQLDateYearMonthPart(column.Name);
+                //columnNameAs = column.Name + "YearMonth";
             }
 
             if (column.ReferenceColumn == null || column.ReferenceColumn.Table.StringColumn == null)

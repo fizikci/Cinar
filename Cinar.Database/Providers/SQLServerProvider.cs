@@ -517,7 +517,17 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
 
         public string GetSQLDateYearMonthPart(string columnName)
         {
-            return string.Format("CONVERT(VARCHAR(7), [{0}], 102)", columnName);
+            return string.Format("CONVERT(VARCHAR(7), [{0}], 120)", columnName);
+        }
+
+        public string GetSQLDateYearMonthDayPart(string columnName)
+        {
+            return string.Format("CONVERT(VARCHAR(10), [{0}], 120)", columnName);
+        }
+
+        public string GetSQLDateYearMonthDayHourPart(string columnName)
+        {
+            return string.Format("CONVERT(VARCHAR(13), [{0}], 120)", columnName);
         }
 
         #endregion
