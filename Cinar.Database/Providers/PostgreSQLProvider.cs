@@ -568,6 +568,16 @@ END;", column.Table.Name, column.Name);
             return string.Format("to_char([{0}], 'YYYY.MM')", columnName);
         }
 
+        public string GetSQLDateYearMonthDayPart(string columnName)
+        {
+            return string.Format("to_char([{0}], 'YYYY.MM.DD')", columnName);
+        }
+
+        public string GetSQLDateYearMonthDayHourPart(string columnName)
+        {
+            return string.Format("to_char([{0}], 'YYYY.MM.DD HH')", columnName);
+        }
+
         #endregion
     }
 }

@@ -529,6 +529,16 @@ order by Con.Name, Con.Type, Con.TableName, Col.ColumnName, Col.Position", db.Na
             return string.Format("strftime('%Y.%m', [{0}])", columnName);
         }
 
+        public string GetSQLDateYearMonthDayPart(string columnName)
+        {
+            return string.Format("strftime('%Y.%m.%d', [{0}])", columnName);
+        }
+
+        public string GetSQLDateYearMonthDayHourPart(string columnName)
+        {
+            return string.Format("strftime('%Y.%m.%d %H', [{0}])", columnName);
+        }
+
         #endregion
 
     }
