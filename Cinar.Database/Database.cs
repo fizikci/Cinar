@@ -199,6 +199,10 @@ namespace Cinar.Database
                 this.tables = (TableCollection)Cache[uniqueDatabaseName];
         }
 
+        public void ClearMetadataCache() {
+            Cache.Remove(uniqueDatabaseName);
+        }
+
         private void readMetadataFromFile(string serializedMetadataFilePath)
         {
             if (dbProvider.CreatedNow && File.Exists(serializedMetadataFilePath))

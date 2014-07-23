@@ -145,6 +145,11 @@ namespace Cinar.CMS.Library.Handlers
                         importLocalization();
                         break;
                     }
+                case "regenerateScripts":
+                    {
+                        regenerateScripts();
+                        break;
+                    }
                 default:
                     {
                         sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
@@ -644,6 +649,10 @@ namespace Cinar.CMS.Library.Handlers
             return res;
         }
         #endregion
+
+        private void regenerateScripts(){
+            Provider.RegenerateScripts();
+        }
     }
 
 }
