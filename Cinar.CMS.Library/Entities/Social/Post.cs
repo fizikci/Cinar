@@ -106,7 +106,7 @@ namespace Cinar.CMS.Library.Entities
             if (Id==0) { 
                 // aynı paylaşımı yapıyorsa kaydetmeyelim
                 var lastPost = Provider.Database.Read<Post>("select top 1 * from Post where InsertUserId={0} order by Id desc", Provider.User.Id) ?? new Post() { Metin = ""};
-                if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim())
+                if ((Provider.Request.Files["Picture"] == null || Provider.Request.Files["Picture"].ContentLength == 0) && lastPost.Metin.Trim() == this.Metin.Trim() && lastPost.ReplyToPostId==this.ReplyToPostId)
                     throw new Exception(Provider.TR("Bunu daha önce zaten paylaşmıştınız"));
 
                 if (lastPost.InsertDate.AddSeconds(3) > DateTime.Now)

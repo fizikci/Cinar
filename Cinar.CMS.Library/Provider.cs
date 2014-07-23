@@ -2147,6 +2147,23 @@ namespace Cinar.CMS.Library
             return res;
         }
 
+        public static void RegenerateScripts()
+        {
+            // read database metadata
+            Provider.Database.ClearMetadataCache();
+            File.Delete(Provider.MapPath("/_thumbs/db.config"));
+            Provider.Items["db"] = null;
+
+            // create external script and style files
+            foreach (string scriptName in new[] { "cinar_cms_css", "famfamfam_css", "cinar_cms_js", "controls_js", "default_css", "default_js", "en_js", "message_js", "tr_js", "help_html" })
+            {
+                string s = Properties.Resources.ResourceManager.GetString(scriptName);
+                File.WriteAllText(Provider.Server.MapPath("/_thumbs/" + scriptName.Replace("_", ".")), s, Encoding.UTF8);
+            }
+
+            File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultJavascript.js"), Provider.Configuration.DefaultJavascript, Encoding.UTF8);
+            File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultStyleSheet.css"), Provider.Configuration.DefaultStyleSheet, Encoding.UTF8);
+        }
     }
 
     public class CMSUtility

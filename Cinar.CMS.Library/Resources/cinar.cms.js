@@ -331,7 +331,8 @@ popupMenu.menuItems = [
 			{text:lang('Edit Page Load Script'), icon:'page_white_csharp', callback:editPageLoadScript},
 			{text:lang('Clear Cache'), icon:'database_delete', callback:clearCache},
 			{text:lang('Export Localization')+'...', icon:'flag_green', callback:exportLocalization},
-			{text:lang('Import Localization')+'...', icon:'flag_red', callback:importLocalization},
+			{ text: lang('Import Localization') + '...', icon: 'flag_red', callback: importLocalization },
+    		{ text: lang('Regenerate Scripts & DB'), icon: 'refresh', callback: regenerateScripts },
         ]},
     {text:lang('File Manager'), icon: 'folder_picture', callback: function () { openFileManager(undefined, function (path) { window.open(path, '_blank'); }); }},
     {text:lang('Edit General CSS'), icon:'css', callback:editStyle},
@@ -1527,4 +1528,8 @@ function importLocalization(){
             }
         }]
     });
+}
+function regenerateScripts() {
+    ajax({ url: 'SystemInfo.ashx?method=regenerateScripts', isJSON: false, noCache: false });
+    location.reload();
 }
