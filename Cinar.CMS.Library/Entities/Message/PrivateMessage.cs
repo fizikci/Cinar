@@ -25,9 +25,16 @@ namespace Cinar.CMS.Library.Entities
         public bool DeletedBySender { get; set; }
         public bool DeletedByReceiver { get; set; }
 
+        [ColumnDetail(Length = 15)]
+        public string InsertUserIp { get; set; }
+
+
         public override void BeforeSave()
         {
             base.BeforeSave();
+
+            if (Id == 0)
+                this.InsertUserIp = Utility.GetIPAddress();
 
             if (Id>0)
                 throw new Exception(Provider.TR("Mesaj güncellenemez"));
