@@ -72,6 +72,9 @@ namespace Cinar.CMS.Library.Entities
         /// </summary>
         public int LikeCount { get; set; }
 
+        [ColumnDetail(Length=15)]
+        public string InsertUserIp { get; set; }
+
         protected override bool beforeDelete()
         {
             if (Provider.Database.GetInt("select count(*) from PostAd where PostId={0}", this.Id) > 0)
@@ -114,6 +117,8 @@ namespace Cinar.CMS.Library.Entities
 
                 if (this.ReplyToPostId > 0)
                     this.ThreadId = this.ReplyToPost.ThreadId > 0 ? this.ReplyToPost.ThreadId : this.ReplyToPost.Id;
+
+                this.InsertUserIp = Utility.GetIPAddress();
             }
 
             try
