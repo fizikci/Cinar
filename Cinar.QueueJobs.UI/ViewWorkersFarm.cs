@@ -67,7 +67,7 @@ namespace Cinar.QueueJobs.UI
 	                                                jd.Name,
 	                                                jd.CommandName,
 	                                                jd.Request,
-	                                                jd.RepeatInSeconds - TIME_TO_SEC(TIMEDIFF(now(), max(j.InsertDate))) as RepeatInSeconds
+	                                                IFNULL(jd.RepeatInSeconds - TIME_TO_SEC(TIMEDIFF(now(), max(j.InsertDate))), 0) as RepeatInSeconds
                                                 from
 	                                                JobDefinition jd
 	                                                LEFT JOIN Job j ON j.Command = jd.CommandName

@@ -41,7 +41,7 @@ namespace Cinar.QueueJobs.Test
                         List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
                         int counter = 0;
                         foreach (string url in links)
-                            AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url.Replace("http://","").Replace("www.",""), url, job.Id, job.JobDefinitionId);
+                            AddJob(db, workerIds[counter++ % workerIds.Count], url.Replace("http://", "").Replace("www.", ""), "DownloadContent", url, job.Id, job.JobDefinitionId);
 
                         return res;
                     }
@@ -79,39 +79,26 @@ namespace Cinar.QueueJobs.Test
             }
 
 
-            return urls.Where(u => u.StartsWith("http")).OrderBy(o => o).StringJoin(Environment.NewLine);
+            return urls.OrderBy(o => o).StringJoin(Environment.NewLine);
         }
 
         private HashSet<string> getLinksOf(string baseUrl, string url)
         {
-            using (WebClient wc = new WebClient())
+            try
             {
-                wc.Encoding = Encoding.UTF8;
+                var fullUri = getFullUrl(baseUrl, url);
 
-                //wc.Headers["Connection"] = "keep-alive";
-                wc.Headers["Cache-Control"] = "max-age=0";
-                wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-                wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
-                //wc.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
-                wc.Headers["Accept-Language"] = "tr,en;q=0.8,en-US;q=0.6";
-                try
-                {
-                    var fullUri = getFullUrl(baseUrl, url);
+                var text = MyWebClient.DownloadAsString(fullUri.ToString());
 
-                    Console.Write(".");
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(text);
 
-                    var text = wc.DownloadString(fullUri);
-
-                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-                    doc.LoadHtml(text);
-
-                    var hrefs = doc.DocumentNode.SelectNodes("//a[@href]").Select(l => l.Attributes["href"].Value).Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://"))).Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
-                    return new HashSet<string>(hrefs);
-                }
-                catch
-                {
-                    return new HashSet<string>();
-                }
+                var hrefs = doc.DocumentNode.SelectNodes("//a[@href]").Select(l => l.Attributes["href"].Value).Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://"))).Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
+                return new HashSet<string>(hrefs.Where(u => u.StartsWith("http")));
+            }
+            catch
+            {
+                return new HashSet<string>();
             }
         }
 
@@ -125,8 +112,8 @@ namespace Cinar.QueueJobs.Test
 
         private string downloadContent(string url)
         {
-            var res = getCleanText(url);
-            return res.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
+            var res = MyWebClient.DownloadAsString(url);//getCleanText(url);
+            return res;//.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
         }
 
         private Tuple<string, string, string> getCleanText(string url)
@@ -135,6 +122,7 @@ namespace Cinar.QueueJobs.Test
             bool success;
             try
             {
+                //transcoder.Ti
                 string text = transcoder.Transcode(url, out success);
 
                 if (success)
@@ -162,5 +150,29 @@ namespace Cinar.QueueJobs.Test
         }
     }
 
+    public class MyWebClient : WebClient
+    {
+        public static string DownloadAsString(string url) {
+            using (MyWebClient wc = new MyWebClient())
+            {
+                wc.Encoding = Encoding.UTF8;
 
+                //wc.Headers["Connection"] = "keep-alive";
+                wc.Headers["Cache-Control"] = "max-age=0";
+                wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
+                //wc.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
+                wc.Headers["Accept-Language"] = "tr,en;q=0.8,en-US;q=0.6";
+
+                return wc.DownloadString(url);
+            }
+        }
+
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            w.Timeout = 5 * 1000;
+            return w;
+        }
+    }
 }
