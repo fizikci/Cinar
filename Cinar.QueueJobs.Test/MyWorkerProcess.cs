@@ -32,27 +32,6 @@ namespace Cinar.QueueJobs.Test
         {
             switch (job.Command)
             {
-                case "CreateRootJobs":
-                    {
-                        var db = this.GetNewDatabaseInstance();
-                        var jobDefs = db.ReadList<JobDefinition>(@"
-                        SELECT 
-                            d.Id, d.CommandName, d.Data, max(j.InsertDate) as LastExecution
-                        FROM 
-                            JobDefinition d, Job j 
-                        WHERE 
-                            j.JobDefinitionId = d.Id AND 
-                            (j.Status = 'Done' OR j.Status = 'Failed')");
-                        int counter = 0;
-                        List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
-                        foreach (var jobDef in jobDefs)
-                        {
-                            var ts = DateTime.Now - (DateTime)jobDef["LastExecution"];
-                            if (ts.Seconds >= jobDef.RepeatInSeconds)
-                                AddJob(db, workerIds[counter++ % workerIds.Count], jobDef.CommandName, jobDef.Data, 0, jobDef.Id);
-                        }
-                        return "";
-                    }
                 case "FindLinks":
                     {
                         string res = findLinks(jobData.Request);
@@ -62,7 +41,7 @@ namespace Cinar.QueueJobs.Test
                         List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
                         int counter = 0;
                         foreach (string url in links)
-                            AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url, job.Id, job.JobDefinitionId);
+                            AddJob(db, workerIds[counter++ % workerIds.Count], "DownloadContent", url.Replace("http://","").Replace("www.",""), url, job.Id, job.JobDefinitionId);
 
                         return res;
                     }
@@ -79,24 +58,6 @@ namespace Cinar.QueueJobs.Test
         public override Database.Database GetNewDatabaseInstance()
         {
             return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
-        }
-
-        public void AddJob(Database.Database db, int workerId, string command, string url, int parentJobId, int jobDefId)
-        {
-            Job que = new Job();
-            que.Command = command;
-            que.Name = url.Replace("http://", "").Replace("www.", "");
-            que.WorkerId = workerId;
-            que.ParentJobId = parentJobId;
-            que.JobDefinitionId = jobDefId;
-            db.Save(que);
-
-            JobData qD = new JobData
-            {
-                JobId = que.Id,
-                Request = url
-            };
-            db.Save(qD);
         }
 
         private string findLinks(string baseUrl)
