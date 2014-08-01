@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using db = Cinar.Database;
 using System.Threading;
+using Cinar.QueueJobs.Entities;
 
 namespace Cinar.QueueJobs.UI
 {
@@ -48,6 +49,8 @@ namespace Cinar.QueueJobs.UI
             running = true;
         }
 
+        int counter = 0;
+
         private void refreshWorkers(bool first)
         {
             if (!first && !running)
@@ -55,6 +58,32 @@ namespace Cinar.QueueJobs.UI
 
             try
             {
+                timer.Enabled = false;
+
+                if (counter % 60 == 0)
+                {
+                    var predefinedJobsSql = @"select
+	                                                jd.Id,
+	                                                jd.Name,
+	                                                jd.CommandName,
+	                                                jd.Request,
+	                                                jd.RepeatInSeconds - TIME_TO_SEC(TIMEDIFF(now(), max(j.InsertDate))) as RepeatInSeconds
+                                                from
+	                                                JobDefinition jd
+	                                                LEFT JOIN Job j ON j.Command = jd.CommandName
+                                                group by
+	                                                jd.Id, jd.Name, jd.CommandName, jd.Request, jd.RepeatInSeconds";
+
+                    List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
+
+                    int c = 0;
+                    foreach (var jobDef in db.ReadList<JobDefinition>(predefinedJobsSql).Where(jd => jd.RepeatInSeconds <= 0))
+                        WorkerProcess.AddJob(db, workerIds[c++ % workerIds.Count], jobDef.Name, jobDef.CommandName, jobDef.Request, 0, jobDef.Id);
+                    
+                }
+
+                counter++;
+
                 //önce disabled olmadığı halde 2 dakikadır çalışmayan socketleri modifiye edelim
                 //if (!first)
                 //    db.ExecuteNonQuery("UPDATE "+WorkerProcess.GetWorkerType().Name+" SET Modified=1 WHERE Disabled=0 AND LastExecution<{0}", DateTime.Now.AddSeconds(-120d));

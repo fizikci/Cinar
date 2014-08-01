@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnAddFindLinksJobs = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.workersFarm = new Cinar.QueueJobs.UI.ViewWorkersFarm();
@@ -39,17 +38,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnAddFindLinksJobs
-            // 
-            this.btnAddFindLinksJobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddFindLinksJobs.Location = new System.Drawing.Point(703, 146);
-            this.btnAddFindLinksJobs.Name = "btnAddFindLinksJobs";
-            this.btnAddFindLinksJobs.Size = new System.Drawing.Size(140, 23);
-            this.btnAddFindLinksJobs.TabIndex = 1;
-            this.btnAddFindLinksJobs.Text = "Add \"Find Links\" Jobs";
-            this.btnAddFindLinksJobs.UseVisualStyleBackColor = true;
-            this.btnAddFindLinksJobs.Click += new System.EventHandler(this.btnAddFindLinksJobs_Click);
             // 
             // btnStart
             // 
@@ -98,7 +86,6 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.Console);
             this.splitContainer1.Panel2.Controls.Add(this.btnStop);
-            this.splitContainer1.Panel2.Controls.Add(this.btnAddFindLinksJobs);
             this.splitContainer1.Panel2.Controls.Add(this.btnStart);
             this.splitContainer1.Size = new System.Drawing.Size(848, 709);
             this.splitContainer1.SplitterDistance = 531;
@@ -135,7 +122,6 @@
         #endregion
 
         private UI.ViewWorkersFarm workersFarm;
-        private System.Windows.Forms.Button btnAddFindLinksJobs;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.SplitContainer splitContainer1;

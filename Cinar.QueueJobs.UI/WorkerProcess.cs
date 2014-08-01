@@ -71,9 +71,9 @@ namespace Cinar.QueueJobs.UI
                         break;
                     }
 
-                    Job queue = getWaitingJob();
+                    Job _job = getWaitingJob();
 
-                    if (queue == null)
+                    if (_job == null)
                     {
                         Thread.Sleep(1000);
                         db.FillEntity(worker);
@@ -82,9 +82,9 @@ namespace Cinar.QueueJobs.UI
                         continue; //***
                     }
 
-                    backgroundWorker.ReportProgress(1, string.Format("job:{0}:{1}:{2}", queue.Id, queue.Command, queue.Name));
+                    backgroundWorker.ReportProgress(1, string.Format("job:{0}:{1}:{2}", _job.Id, _job.Command, _job.Name));
 
-                    executeCommand(queue);
+                    executeCommand(_job);
 
                     backgroundWorker.ReportProgress(1, "jobend");
                 }
@@ -161,5 +161,23 @@ namespace Cinar.QueueJobs.UI
         public abstract Database.Database GetNewDatabaseInstance();
 
         public Action<int> ReportProgress;
+
+        public void AddJob(Database.Database db, int workerId, string name, string command, string request, int parentJobId, int jobDefId)
+        {
+            Job que = new Job();
+            que.Command = command;
+            que.Name = name.StrCrop(90);
+            que.WorkerId = workerId;
+            que.ParentJobId = parentJobId;
+            que.JobDefinitionId = jobDefId;
+            db.Save(que);
+
+            JobData qD = new JobData
+            {
+                JobId = que.Id,
+                Request =request
+            };
+            db.Save(qD);
+        }
     }
 }
