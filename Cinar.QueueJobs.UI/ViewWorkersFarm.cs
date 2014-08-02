@@ -71,6 +71,8 @@ namespace Cinar.QueueJobs.UI
                                                 from
 	                                                JobDefinition jd
 	                                                LEFT JOIN Job j ON j.Command = jd.CommandName
+                                                where
+                                                    jd.Disabled = 0
                                                 group by
 	                                                jd.Id, jd.Name, jd.CommandName, jd.Request, jd.RepeatInSeconds";
 

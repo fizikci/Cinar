@@ -46,10 +46,10 @@ namespace Cinar.QueueJobs.UI
             if (backgroundWorker.CancellationPending)
                 throw new Exception("Manager is waiting for this to die");
 
-            db.FillEntity(worker);
-            worker.LastExecution = DateTime.Now;
-            db.Save(worker);
-            backgroundWorker.ReportProgress(1, "progress:" + percent);
+            //db.FillEntity(worker);
+            //worker.LastExecution = DateTime.Now;
+            //db.Save(worker);
+            backgroundWorker.ReportProgress(percent, "progress:" + percent);
         }
 
         public void Run()
@@ -58,7 +58,7 @@ namespace Cinar.QueueJobs.UI
 
             while (true)
             {
-
+                Job _job = null;
                 try
                 {
 
@@ -71,7 +71,7 @@ namespace Cinar.QueueJobs.UI
                         break;
                     }
 
-                    Job _job = getWaitingJob();
+                    _job = getWaitingJob();
 
                     if (_job == null)
                     {
@@ -86,29 +86,48 @@ namespace Cinar.QueueJobs.UI
 
                     executeCommand(_job);
 
-                    backgroundWorker.ReportProgress(1, "jobend");
+                    backgroundWorker.ReportProgress(100, "jobend");
                 }
                 catch (Exception ex)
                 {
-                    backgroundWorker.ReportProgress(1, "jobend");
+                    backgroundWorker.ReportProgress(100, "jobend");
 
-                    backgroundWorker.ReportProgress(1, string.Format("error:{0}:{1}", ex.Message+(ex.InnerException!=null ? " ("+ex.InnerException.Message+")":""), worker.Name));
+                    backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", ex.Message+(ex.InnerException!=null ? " ("+ex.InnerException.Message+")":""), worker.Name));
 
-                    db.FillEntity(worker);
-                    worker.Modified = 1;
-                    db.Save(worker);
-                    break;
+                    if (_job != null) {
+                        _job.Status = JobStatuses.Failed;
+                        db.Save(_job);
+                        JobData _jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", _job.Id);
+                        _jobData.Response = ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : "");
+                        db.Save(_jobData);
+                    }
+
                 }
-
+                if(db.Connection.State != System.Data.ConnectionState.Closed) db.Connection.Close();
                 Thread.Sleep(100);
             }
         }
 
         private void executeCommand(Job job)
         {
+            db.FillEntity(worker);
+            worker.LastExecution = DateTime.Now;
+            worker.LastExecutionInfo = job.Command + ": " + job.Name;
+            db.Save(worker);
+
             JobData jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id);
-            if(jobData==null)
-                throw new Exception("Queue job related data not found");
+            if (jobData == null)
+            {
+                jobData = new JobData { 
+                    JobId = job.Id,
+                    Response = "Job related data not found!"
+                };
+                db.Save(jobData);
+                job.Status = JobStatuses.Failed;
+                db.Save(job);
+                backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", "Job related data not found!", worker.Name));
+                return;
+            }
 
             Stopwatch sw = new Stopwatch();
             try
@@ -133,11 +152,6 @@ namespace Cinar.QueueJobs.UI
             job.Status = JobStatuses.Done;
             job.ProcessTime = (int)sw.ElapsedMilliseconds;
             db.Save(job);
-
-            db.FillEntity(worker);
-            worker.LastExecution = DateTime.Now;
-            worker.LastExecutionInfo = job.Command + ": " + job.Name;
-            db.Save(worker);
         }
 
         private Job getWaitingJob()
