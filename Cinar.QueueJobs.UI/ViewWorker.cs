@@ -68,6 +68,7 @@ namespace Cinar.QueueJobs.UI
             try
             {
                 string[] parts = e.UserState.ToString().Split(':');
+                progressBar1.Value = e.ProgressPercentage;
 
                 switch (parts[0])
                 {

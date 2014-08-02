@@ -69,14 +69,18 @@ namespace Cinar.QueueJobs.Test
             urls.UnionWith(list);
 
             int counter = 0;
-            foreach (var url in list)
+            Parallel.ForEach(list, url =>
             {
                 var subList = getLinksOf(baseUrl, url);
                 urls.UnionWith(subList);
                 counter++;
 
                 ReportProgress((100 * counter) / list.Count);
-            }
+            });
+
+            //foreach (var url in list)
+            //{
+            //}
 
 
             return urls.OrderBy(o => o).StringJoin(Environment.NewLine);
@@ -88,7 +92,7 @@ namespace Cinar.QueueJobs.Test
             {
                 var fullUri = getFullUrl(baseUrl, url);
 
-                var text = MyWebClient.DownloadAsString(fullUri.ToString());
+                var text = MyWebClient.DownloadAsString(this, fullUri.ToString());
 
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                 doc.LoadHtml(text);
@@ -112,7 +116,7 @@ namespace Cinar.QueueJobs.Test
 
         private string downloadContent(string url)
         {
-            var res = MyWebClient.DownloadAsString(url);//getCleanText(url);
+            var res = MyWebClient.DownloadAsString(this, url);//getCleanText(url);
             return res;//.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
         }
 
@@ -152,15 +156,18 @@ namespace Cinar.QueueJobs.Test
 
     public class MyWebClient : WebClient
     {
-        public static string DownloadAsString(string url) {
+        public static string DownloadAsString(WorkerProcess wp, string url) {
             using (MyWebClient wc = new MyWebClient())
             {
+                wc.DownloadProgressChanged += (s, e) => {
+                    wp.ReportProgress((int)((100 * e.BytesReceived) / e.TotalBytesToReceive));
+                };
                 wc.Encoding = Encoding.UTF8;
 
                 //wc.Headers["Connection"] = "keep-alive";
                 wc.Headers["Cache-Control"] = "max-age=0";
                 wc.Headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-                wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
+                wc.Headers["User-Agent"] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
                 //wc.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
                 wc.Headers["Accept-Language"] = "tr,en;q=0.8,en-US;q=0.6";
 
