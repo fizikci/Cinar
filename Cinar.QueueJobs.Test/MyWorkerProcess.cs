@@ -47,7 +47,9 @@ namespace Cinar.QueueJobs.Test
                     }
                 case "DownloadContent":
                     {
-                        return downloadContent(jobData.Request);
+                        var res = downloadContent(jobData.Request);
+                        var clean = getCleanText(jobData.Request, res);
+                        return clean.Item1 + "\r\n###\r\n" + clean.Item2 + "\r\n###\r\n" + clean.Item3;
                     }
             }
 
@@ -92,7 +94,7 @@ namespace Cinar.QueueJobs.Test
             {
                 var fullUri = getFullUrl(baseUrl, url);
 
-                var text = MyWebClient.DownloadAsString(this, fullUri.ToString());
+                var text = MyWebClient.DownloadAsString(null, fullUri.ToString());
 
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                 doc.LoadHtml(text);
@@ -120,9 +122,9 @@ namespace Cinar.QueueJobs.Test
             return res;//.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
         }
 
-        private Tuple<string, string, string> getCleanText(string url)
+        private Tuple<string, string, string> getCleanText(string url, string content)
         {
-            var transcoder = new NReadabilityWebTranscoder();
+            var transcoder = new NReadabilityWebTranscoder(new NReadabilityTranscoder(), new UrlFetcher(content));
             bool success;
             try
             {
@@ -159,9 +161,14 @@ namespace Cinar.QueueJobs.Test
         public static string DownloadAsString(WorkerProcess wp, string url) {
             using (MyWebClient wc = new MyWebClient())
             {
-                wc.DownloadProgressChanged += (s, e) => {
-                    wp.ReportProgress((int)((100 * e.BytesReceived) / e.TotalBytesToReceive));
-                };
+                if (wp != null)
+                {
+                    wc.DownloadProgressChanged += (s, e) =>
+                    {
+                        wp.ReportProgress((int)((100 * e.BytesReceived) / e.TotalBytesToReceive));
+                    };
+                }
+
                 wc.Encoding = Encoding.UTF8;
 
                 //wc.Headers["Connection"] = "keep-alive";
@@ -178,8 +185,26 @@ namespace Cinar.QueueJobs.Test
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 5 * 1000;
+            w.Timeout = 10 * 1000;
             return w;
+        }
+
+    }
+
+    public class UrlFetcher : IUrlFetcher
+    {
+        private string content;
+
+        public UrlFetcher(string content)
+        {
+            // TODO: Complete member initialization
+            this.content = content;
+        }
+
+
+        public string Fetch(string url)
+        {
+            return content;
         }
     }
 }
