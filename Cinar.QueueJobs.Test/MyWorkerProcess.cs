@@ -68,10 +68,12 @@ namespace Cinar.QueueJobs.Test
                         
                         this.Log(links.Length + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
 
-                        List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
+                        List<int> workerIds = db.GetList<int>("select Id from Worker where Disabled=0 order by Id");
                         int counter = 0;
+                        List<Job> list = new List<Job>();
                         foreach (string url in links)
-                            AddJob(db, workerIds[counter++ % workerIds.Count], url, "DownloadContent", url, job.Id, job.JobDefinitionId);
+                            list.Add(this.CreateJob(workerIds[counter++ % workerIds.Count], url, "DownloadContent", url, job.Id, job.JobDefinitionId));
+                        AddJobs(db, list);
 
                         return res;
                     }
