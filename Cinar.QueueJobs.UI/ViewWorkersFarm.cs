@@ -76,7 +76,7 @@ namespace Cinar.QueueJobs.UI
                                                 group by
 	                                                jd.Id, jd.Name, jd.CommandName, jd.Request, jd.RepeatInSeconds";
 
-                    List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
+                    List<int> workerIds = db.GetList<int>("select Id from Worker where Disabled=0 order by Id");
 
                     int c = 0;
                     foreach (var jobDef in db.ReadList<JobDefinition>(predefinedJobsSql).Where(jd => jd.RepeatInSeconds <= 0))

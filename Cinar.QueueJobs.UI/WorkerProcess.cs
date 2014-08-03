@@ -203,12 +203,7 @@ namespace Cinar.QueueJobs.UI
 
         public void AddJob(Database.Database db, int workerId, string name, string command, string request, int parentJobId, int jobDefId)
         {
-            Job que = new Job();
-            que.Command = command;
-            que.Name = name.StrCrop(497);
-            que.WorkerId = workerId;
-            que.ParentJobId = parentJobId;
-            que.JobDefinitionId = jobDefId;
+            Job que = CreateJob(workerId, name, command, request, parentJobId, jobDefId);
             db.Save(que);
 
             if (this.UseJobData)
@@ -220,6 +215,32 @@ namespace Cinar.QueueJobs.UI
                 };
                 db.Save(qD);
             }
+        }
+
+        public Job CreateJob(int workerId, string name, string command, string request, int parentJobId, int jobDefId)
+        {
+            Job que = new Job();
+            que.Command = command;
+            que.Name = name.StrCrop(497);
+            que.WorkerId = workerId;
+            que.ParentJobId = parentJobId;
+            que.JobDefinitionId = jobDefId;
+            return que;
+        }
+
+        public void AddJobs(Database.Database db, List<Job> jobs)
+        { 
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("insert into Job (JobDefinitionId, Command, Name, WorkerId, ParentJobId, Status, InsertDate, ProcessTime) values ");
+            for (int i = 0; i < jobs.Count; i++)
+            {
+                Job j = jobs[i];
+                sb.AppendFormat("({0},'{1}','{2}',{3},{4},'{5}','{6}',0)", j.JobDefinitionId, j.Command, j.Name.Replace("'","''"), j.WorkerId, j.ParentJobId, j.Status.ToString(), j.InsertDate.ToString("yyyy.MM.dd HH:mm:ss"));
+                if (i != jobs.Count - 1)
+                    sb.AppendLine(",");
+            }
+
+            db.ExecuteNonQuery(sb.ToString());
         }
     }
 }

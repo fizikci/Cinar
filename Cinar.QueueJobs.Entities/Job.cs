@@ -19,6 +19,7 @@ namespace Cinar.QueueJobs.Entities
         [ColumnDetail(ColumnType = DbType.VarChar, Length = 24)]
         public string Command { get; set; }
 
+        [ColumnDetail(Length = 500)]
         public string Name { get; set; }
 
         public int WorkerId { get; set; }
