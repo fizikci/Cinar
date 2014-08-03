@@ -3,6 +3,7 @@ using Cinar.QueueJobs.UI;
 using NReadability;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -28,28 +29,44 @@ namespace Cinar.QueueJobs.Test
             return typeof(JobData);
         }
 
+        public override bool UseJobData
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public override string ExecuteJob(Job job, JobData jobData)
         {
             switch (job.Command)
             {
                 case "FindLinks":
                     {
-                        string res = findLinks(jobData.Request);
+                        string res = findLinks(job.Name);
                         var links = res.SplitWithTrim("\n");
 
                         var db = this.GetNewDatabaseInstance();
                         List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
                         int counter = 0;
                         foreach (string url in links)
-                            AddJob(db, workerIds[counter++ % workerIds.Count], url.Replace("http://", "").Replace("www.", ""), "DownloadContent", url, job.Id, job.JobDefinitionId);
+                            AddJob(db, workerIds[counter++ % workerIds.Count], url, "DownloadContent", url, job.Id, job.JobDefinitionId);
 
                         return res;
                     }
                 case "DownloadContent":
                     {
-                        var res = downloadContent(jobData.Request);
-                        var clean = getCleanText(jobData.Request, res);
-                        return clean.Item1 + "\r\n###\r\n" + clean.Item2 + "\r\n###\r\n" + clean.Item3;
+                        var db = this.GetNewDatabaseInstance();
+                        var jobDefName = db.GetString("select Name from JobDefinition where Id=" + job.JobDefinitionId);
+
+                        var content = downloadContent(job.Name);
+                        var d = DateTime.Now;
+                        string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
+                        Directory.CreateDirectory(path);
+                        File.WriteAllText(path+"\\"+job.Id+".html", content, Encoding.UTF8);
+                        var clean = getCleanText(job.Name, content).ToJSON();
+                        File.WriteAllText(path + "\\" + job.Id + ".json", clean, Encoding.UTF8);
+                        return clean;
                     }
             }
 
@@ -59,7 +76,7 @@ namespace Cinar.QueueJobs.Test
 
         public override Database.Database GetNewDatabaseInstance()
         {
-            return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
+            return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"db.config"));
         }
 
         private string findLinks(string baseUrl)
@@ -118,11 +135,11 @@ namespace Cinar.QueueJobs.Test
 
         private string downloadContent(string url)
         {
-            var res = MyWebClient.DownloadAsString(this, url);//getCleanText(url);
-            return res;//.Item1 + Environment.NewLine + res.Item2 + Environment.NewLine + res.Item3;
+            var res = MyWebClient.DownloadAsString(this, url);
+            return res;
         }
 
-        private Tuple<string, string, string> getCleanText(string url, string content)
+        private CleanText getCleanText(string url, string content)
         {
             var transcoder = new NReadabilityWebTranscoder(new NReadabilityTranscoder(), new UrlFetcher(content));
             bool success;
@@ -136,22 +153,30 @@ namespace Cinar.QueueJobs.Test
                     HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                     doc.LoadHtml(text);
 
-                    var title = doc.DocumentNode.SelectSingleNode("//title").InnerText;
+                    var title = "";
+                    if (doc.DocumentNode.SelectSingleNode("//title") != null)
+                        title = doc.DocumentNode.SelectSingleNode("//title").InnerText;
                     var imgUrl = "";
                     var imgNode = doc.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
-                    if (imgNode != null) imgUrl = doc.DocumentNode.SelectSingleNode("//meta[@property='og:image']").Attributes["content"].Value;
-                    var mainText = doc.DocumentNode.SelectSingleNode("//div[@id='readInner']").InnerText;
+                    if (imgNode != null)
+                    {
+                        if (imgNode.Attributes["content"] != null)
+                            imgUrl = imgNode.Attributes["content"].Value;
+                    }
+                    var mainText = "";
+                    if (doc.DocumentNode.SelectSingleNode("//div[@id='readInner']") != null)
+                        mainText = doc.DocumentNode.SelectSingleNode("//div[@id='readInner']").InnerText;
 
-                    return new Tuple<string, string, string>(title, imgUrl, mainText);
+                    return new CleanText { Title = title, Image = imgUrl, Content = mainText, Url = url, FetchDate = DateTime.Now };
                 }
                 else
                 {
-                    return new Tuple<string, string, string>("#FAIL#", "", "");
+                    return new CleanText { Title = "#FAIL#", Image = "", Content = "", Url = url, FetchDate = DateTime.Now };
                 }
             }
             catch (Exception ex)
             {
-                return new Tuple<string, string, string>("#FAIL#", ex.ToStringBetter(), "");
+                return new CleanText { Title = "#FAIL#", Image = ex.ToStringBetter(), Content = "", Url = url, FetchDate = DateTime.Now };
             }
         }
     }
@@ -206,5 +231,14 @@ namespace Cinar.QueueJobs.Test
         {
             return content;
         }
+    }
+
+    public class CleanText
+    {
+        public string Image { get; set; }
+        public string Content { get; set; }
+        public string Title { get; set; }
+        public string Url { get; set; }
+        public DateTime FetchDate { get; set; }
     }
 }
