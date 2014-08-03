@@ -80,7 +80,7 @@ namespace Cinar.QueueJobs.UI
 
                     int c = 0;
                     foreach (var jobDef in db.ReadList<JobDefinition>(predefinedJobsSql).Where(jd => jd.RepeatInSeconds <= 0))
-                        WorkerProcess.AddJob(db, workerIds[c++ % workerIds.Count], jobDef.Name, jobDef.CommandName, jobDef.Request, 0, jobDef.Id);
+                        WorkerProcess.AddJob(db, workerIds[c++ % workerIds.Count], jobDef.Request, jobDef.CommandName, jobDef.Request, 0, jobDef.Id);
                     
                 }
 

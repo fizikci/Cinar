@@ -108,7 +108,7 @@ namespace Cinar.QueueJobs.UI
 
         private void lblLastCommand_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(lblCommand.Text, "EppSocketManager");
+            MessageBox.Show(lblCommand.Text, "Queue Manager");
         }
 
         public void setTimeout(Control control, Action action, int timeout)

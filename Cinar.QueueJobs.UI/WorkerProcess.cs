@@ -82,7 +82,7 @@ namespace Cinar.QueueJobs.UI
                         continue; //***
                     }
 
-                    backgroundWorker.ReportProgress(1, string.Format("job:{0}:{1}:{2}", _job.Id, _job.Command, _job.Name));
+                    backgroundWorker.ReportProgress(1, string.Format("job:{0}:{1}:{2}", _job.Id, _job.Command, _job.Name.Replace("http://", "").Replace("www.", "")));
 
                     executeCommand(_job);
 
@@ -97,9 +97,12 @@ namespace Cinar.QueueJobs.UI
                     if (_job != null) {
                         _job.Status = JobStatuses.Failed;
                         db.Save(_job);
-                        JobData _jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", _job.Id);
-                        _jobData.Response = ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : "");
-                        db.Save(_jobData);
+                        if (workerProcess.UseJobData)
+                        {
+                            JobData _jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", _job.Id);
+                            _jobData.Response = ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : "");
+                            db.Save(_jobData);
+                        }
                     }
 
                 }
@@ -115,31 +118,41 @@ namespace Cinar.QueueJobs.UI
             worker.LastExecutionInfo = job.Command + ": " + job.Name;
             db.Save(worker);
 
-            JobData jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id);
-            if (jobData == null)
+            JobData jobData = null;
+            if (workerProcess.UseJobData)
             {
-                jobData = new JobData { 
-                    JobId = job.Id,
-                    Response = "Job related data not found!"
-                };
-                db.Save(jobData);
-                job.Status = JobStatuses.Failed;
-                db.Save(job);
-                backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", "Job related data not found!", worker.Name));
-                return;
+                jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id) ?? new JobData();
+                if (jobData == null)
+                {
+                    jobData = new JobData
+                    {
+                        JobId = job.Id,
+                        Response = "Job related data not found!"
+                    };
+                    db.Save(jobData);
+                    job.Status = JobStatuses.Failed;
+                    db.Save(job);
+                    backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", "Job related data not found!", worker.Name));
+                    return;
+                }
             }
 
             Stopwatch sw = new Stopwatch();
             try
             {
                 sw.Start();
-                jobData.Response = workerProcess.ExecuteJob(job, jobData);
+                var res = workerProcess.ExecuteJob(job, jobData);
+                if (workerProcess.UseJobData)
+                    jobData.Response = res;
                 sw.Stop();
             }
             catch (Exception ex)
             {
-                jobData.Response = ex.Message + "\n" + (ex.InnerException != null ? "- " + ex.InnerException.Message : "");
-                db.Save(jobData);
+                if (workerProcess.UseJobData)
+                {
+                    jobData.Response = ex.Message + "\n" + (ex.InnerException != null ? "- " + ex.InnerException.Message : "");
+                    db.Save(jobData);
+                }
 
                 job.Status = JobStatuses.Failed;
 
@@ -147,7 +160,8 @@ namespace Cinar.QueueJobs.UI
                 return;
             }
 
-            db.Save(jobData);
+            if (workerProcess.UseJobData)
+                db.Save(jobData);
 
             job.Status = JobStatuses.Done;
             job.ProcessTime = (int)sw.ElapsedMilliseconds;
@@ -173,6 +187,10 @@ namespace Cinar.QueueJobs.UI
         public abstract Type GetQueueDataType();
         public abstract string ExecuteJob(Job job, JobData jobData);
         public abstract Database.Database GetNewDatabaseInstance();
+        public virtual bool UseJobData
+        {
+            get { return true; }
+        }
 
         public Action<int> ReportProgress;
 
@@ -180,18 +198,21 @@ namespace Cinar.QueueJobs.UI
         {
             Job que = new Job();
             que.Command = command;
-            que.Name = name.StrCrop(90);
+            que.Name = name.StrCrop(497);
             que.WorkerId = workerId;
             que.ParentJobId = parentJobId;
             que.JobDefinitionId = jobDefId;
             db.Save(que);
 
-            JobData qD = new JobData
+            if (this.UseJobData)
             {
-                JobId = que.Id,
-                Request =request
-            };
-            db.Save(qD);
+                JobData qD = new JobData
+                {
+                    JobId = que.Id,
+                    Request = request
+                };
+                db.Save(qD);
+            }
         }
     }
 }
