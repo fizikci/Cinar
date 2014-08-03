@@ -15,17 +15,35 @@ namespace Cinar.QueueJobs.Test
     {
         Database.Database db = null;
         MyWorkerProcess wp = null;
+        private static Type workerProcessType = typeof(MyWorkerProcess);
 
         public FormMain()
         {
             InitializeComponent();
 
-            workersFarm.WorkerProcessType = typeof(MyWorkerProcess);
+            workersFarm.WorkerProcessType = workerProcessType;
             workersFarm.Log = (msg) => {
                 Console.Items.Add(msg);
             };
-            wp = (MyWorkerProcess)Activator.CreateInstance(typeof(MyWorkerProcess));
+            wp = (MyWorkerProcess)Activator.CreateInstance(workerProcessType);
             db = wp.GetNewDatabaseInstance();
+        }
+
+        private static Dictionary<int, List<SiteUrlFilter>> urlFilters = null;
+        public static Dictionary<int, List<SiteUrlFilter>> GetUrlFilters()
+        {
+            if (urlFilters == null)
+            {
+                var filters = ((MyWorkerProcess)Activator.CreateInstance(workerProcessType)).GetNewDatabaseInstance().ReadList<SiteUrlFilter>("select * from SiteUrlFilter order by JobDefinitionId, Url");
+                urlFilters = new Dictionary<int, List<SiteUrlFilter>>();
+                foreach (var filter in filters)
+                {
+                    if (!urlFilters.ContainsKey(filter.JobDefinitionId))
+                        urlFilters.Add(filter.JobDefinitionId, new List<SiteUrlFilter>());
+                    urlFilters[filter.JobDefinitionId].Add(filter);
+                }
+            }
+            return urlFilters;
         }
 
         private void btnStart_Click(object sender, EventArgs e)

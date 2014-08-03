@@ -37,16 +37,37 @@ namespace Cinar.QueueJobs.Test
             }
         }
 
+        Database.Database db = null;
+
+        public MyWorkerProcess()
+        {
+            db = this.GetNewDatabaseInstance();
+        }
+
         public override string ExecuteJob(Job job, JobData jobData)
         {
+            var jobDefName = db.GetString("select Name from JobDefinition where Id=" + job.JobDefinitionId);
+
             switch (job.Command)
             {
                 case "FindLinks":
                     {
                         string res = findLinks(job.Name);
-                        var links = res.SplitWithTrim("\n");
 
-                        var db = this.GetNewDatabaseInstance();
+                        var d = DateTime.Now;
+                        string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
+                        Directory.CreateDirectory(path);
+                        File.WriteAllText(path + "\\found.links", res, Encoding.UTF8);
+
+                        var links = res.SplitWithTrim("\n");
+                        var foundLinkCount = links.Length;
+
+                        var filters = FormMain.GetUrlFilters().ContainsKey(job.JobDefinitionId) ? FormMain.GetUrlFilters()[job.JobDefinitionId] : null;
+                        if (filters != null)
+                            links = links.Where(l => !isTheLinkToBeSkipped(l, filters)).ToArray();
+                        
+                        this.Log((foundLinkCount-links.Length) + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
+
                         List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
                         int counter = 0;
                         foreach (string url in links)
@@ -56,21 +77,29 @@ namespace Cinar.QueueJobs.Test
                     }
                 case "DownloadContent":
                     {
-                        var db = this.GetNewDatabaseInstance();
-                        var jobDefName = db.GetString("select Name from JobDefinition where Id=" + job.JobDefinitionId);
-
                         var content = downloadContent(job.Name);
                         var d = DateTime.Now;
                         string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
+                        
                         File.WriteAllText(path+"\\"+job.Id+".html", content, Encoding.UTF8);
+                        
                         var clean = getCleanText(job.Name, content).ToJSON();
+
                         File.WriteAllText(path + "\\" + job.Id + ".json", clean, Encoding.UTF8);
                         return clean;
                     }
             }
 
             return "Command not implemented";
+        }
+
+        private bool isTheLinkToBeSkipped(string url, List<SiteUrlFilter> filters)
+        {
+            var filter = filters.Find(f=>url.StartsWith(f.Url, StringComparison.InvariantCultureIgnoreCase));
+            if (filter == null)
+                return false;
+            return filter.Skip;
         }
 
 
@@ -96,11 +125,6 @@ namespace Cinar.QueueJobs.Test
 
                 ReportProgress((100 * counter) / list.Count);
             });
-
-            //foreach (var url in list)
-            //{
-            //}
-
 
             return urls.OrderBy(o => o).StringJoin(Environment.NewLine);
         }

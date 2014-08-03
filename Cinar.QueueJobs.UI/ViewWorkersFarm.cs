@@ -120,6 +120,7 @@ namespace Cinar.QueueJobs.UI
                 {
                     ViewWorker vs = new ViewWorker(workerId, db.GetString("SELECT Name FROM " + WorkerProcess.GetWorkerType().Name + " WHERE Id={0}", workerId), (WorkerProcess)Activator.CreateInstance(WorkerProcessType));
                     panelWorkers.Controls.Add(vs);
+                    vs.Log = this.Log;
                     vs.Run();
 
                     Thread.Sleep(20);
