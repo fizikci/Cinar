@@ -26,6 +26,7 @@ namespace Cinar.QueueJobs.UI
             this.db = workerProcess.GetNewDatabaseInstance();
             this.workerProcess = workerProcess;
             workerProcess.ReportProgress = this.ReportProgress;
+            workerProcess.Log = this.Log;
         }
 
         public void Init(int workerId)
@@ -50,6 +51,11 @@ namespace Cinar.QueueJobs.UI
             //worker.LastExecution = DateTime.Now;
             //db.Save(worker);
             backgroundWorker.ReportProgress(percent, "progress:" + percent);
+        }
+
+        public void Log(string message)
+        {
+            backgroundWorker.ReportProgress(-1, "log:" + message);
         }
 
         public void Run()
@@ -92,7 +98,7 @@ namespace Cinar.QueueJobs.UI
                 {
                     backgroundWorker.ReportProgress(100, "jobend");
 
-                    backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", ex.Message+(ex.InnerException!=null ? " ("+ex.InnerException.Message+")":""), worker.Name));
+                    backgroundWorker.ReportProgress(100, string.Format("error:{0}:{1}", ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.Message + ")" : ""), worker.Name));
 
                     if (_job != null) {
                         _job.Status = JobStatuses.Failed;
@@ -193,6 +199,7 @@ namespace Cinar.QueueJobs.UI
         }
 
         public Action<int> ReportProgress;
+        public Action<string> Log;
 
         public void AddJob(Database.Database db, int workerId, string name, string command, string request, int parentJobId, int jobDefId)
         {

@@ -68,7 +68,8 @@ namespace Cinar.QueueJobs.UI
             try
             {
                 string[] parts = e.UserState.ToString().Split(':');
-                progressBar1.Value = e.ProgressPercentage;
+                if (e.ProgressPercentage>-1)
+                    progressBar1.Value = e.ProgressPercentage;
 
                 switch (parts[0])
                 {
@@ -92,19 +93,25 @@ namespace Cinar.QueueJobs.UI
                     case "progress":
                         progressBar1.Value = int.Parse(parts[1]);
                         break;
+                    case "log":
+                        if (Log != null)
+                            Log(parts[1]);
+                        break;
                     case "error":
                         ((ViewWorkersFarm)this.Parent.Parent).lblStatus.Text = "ERROR on " + parts[2] + " : " + parts[1];
-                        if (((ViewWorkersFarm)this.Parent.Parent).Log != null)
-                            ((ViewWorkersFarm)this.Parent.Parent).Log("ERROR on " + parts[2] + " : " + parts[1]);
+                        if (Log != null)
+                            Log("ERROR on " + parts[2] + " : " + parts[1]);
                         break;
                 }
             }
             catch(Exception ex)
             {
-                if (((ViewWorkersFarm)this.Parent.Parent).Log != null)
-                    ((ViewWorkersFarm)this.Parent.Parent).Log(ex.ToStringBetter());
+                if (Log != null)
+                    Log(ex.ToStringBetter());
             }
         }
+
+        public Action<string> Log;
 
         private void lblLastCommand_Click(object sender, EventArgs e)
         {
