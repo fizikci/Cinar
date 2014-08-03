@@ -66,7 +66,7 @@ namespace Cinar.QueueJobs.Test
                         if (filters != null)
                             links = links.Where(l => !isTheLinkToBeSkipped(l, filters)).ToArray();
                         
-                        this.Log((foundLinkCount-links.Length) + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
+                        this.Log(links.Length + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
 
                         List<int> workerIds = db.GetList<int>("select Id from Worker order by Id");
                         int counter = 0;
