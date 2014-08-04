@@ -99,7 +99,10 @@ namespace Cinar.QueueJobs.UI
                     Dictionary<int, int> modifiedWorkers = db.GetDictionary<int, int>("SELECT Id, Disabled FROM " + WorkerProcess.GetWorkerType().Name + " WHERE Modified=1");
 
                     if (modifiedWorkers == null || modifiedWorkers.Count == 0)
+                    {
+                        timer.Enabled = true;
                         return;
+                    }
 
                     foreach (var modifiedWorker in modifiedWorkers)
                     {
