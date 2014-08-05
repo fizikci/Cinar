@@ -68,8 +68,8 @@ namespace Cinar.QueueJobs.Test
 
                         string whereIn = "'" + links.Select(l => l.Replace("'", "''")).StringJoin("','") + "'";
                         var linksAlreadySaved = db.GetList<string>("select Name from Job where Name in (" + whereIn + ")");
-
-                        links = links.Except(linksAlreadySaved).ToArray();
+                        if (linksAlreadySaved != null && linksAlreadySaved.Count > 0)
+                            links = links.Except(linksAlreadySaved).ToArray();
                         
                         this.Log(links.Length + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
 
@@ -147,7 +147,10 @@ namespace Cinar.QueueJobs.Test
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                 doc.LoadHtml(text);
 
-                var hrefs = doc.DocumentNode.SelectNodes("//a[@href]").Select(l => l.Attributes["href"].Value).Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://"))).Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
+                var hrefs = doc.DocumentNode.SelectNodes("//a[@href]")
+                    .Select(l => l.Attributes["href"].Value)
+                    .Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://")))
+                    .Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
                 return new HashSet<string>(hrefs.Where(u => u.StartsWith("http")));
             }
             catch
