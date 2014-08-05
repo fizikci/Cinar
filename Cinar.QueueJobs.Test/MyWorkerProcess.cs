@@ -57,7 +57,8 @@ namespace Cinar.QueueJobs.Test
                         var d = DateTime.Now;
                         string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
-                        File.WriteAllText(path + "\\found.links", res, Encoding.UTF8);
+                        if(!String.IsNullOrWhiteSpace(res)) 
+                            File.WriteAllText(path + "\\found.links", res, Encoding.UTF8);
 
                         var links = res.SplitWithTrim("\n");
                         var foundLinkCount = links.Length;
@@ -149,8 +150,10 @@ namespace Cinar.QueueJobs.Test
 
                 var hrefs = doc.DocumentNode.SelectNodes("//a[@href]")
                     .Select(l => l.Attributes["href"].Value)
-                    .Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://")))
-                    .Select(l => getFullUrl(baseUrl, l).ToString()).Distinct().ToList();
+                    .Where(l => !l.StartsWith("#") && !l.StartsWith("https://"))
+                    .Select(l => getFullUrl(baseUrl, l).ToString())
+                    .Where(l => l.StartsWith(baseUrl))
+                    .Distinct().ToList();
                 return new HashSet<string>(hrefs.Where(u => u.StartsWith("http")));
             }
             catch

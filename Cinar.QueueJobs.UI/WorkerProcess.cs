@@ -119,16 +119,22 @@ namespace Cinar.QueueJobs.UI
 
         private void executeCommand(Job job)
         {
-            db.FillEntity(worker);
-            worker.LastExecution = DateTime.Now;
-            worker.LastExecutionInfo = job.Command + ": " + job.Name;
-            db.Save(worker);
+            try
+            {
+                db.FillEntity(worker);
+                worker.LastExecution = DateTime.Now;
+                worker.LastExecutionInfo = job.Command + ": " + job.Name;
+                db.Save(worker);
+            }
+            catch
+            {
+            }
 
             JobData jobData = null;
             if (workerProcess.UseJobData)
             {
                 jobData = (JobData)db.Read(workerProcess.GetQueueDataType(), "JobId = {0}", job.Id) ?? new JobData();
-                if (jobData == null)
+                if (jobData.Id <= 0)
                 {
                     jobData = new JobData
                     {
