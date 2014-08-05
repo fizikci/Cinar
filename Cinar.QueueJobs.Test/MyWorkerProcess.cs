@@ -65,6 +65,11 @@ namespace Cinar.QueueJobs.Test
                         var filters = FormMain.GetUrlFilters().ContainsKey(job.JobDefinitionId) ? FormMain.GetUrlFilters()[job.JobDefinitionId] : null;
                         if (filters != null)
                             links = links.Where(l => !isTheLinkToBeSkipped(l, filters)).ToArray();
+
+                        string whereIn = "'" + links.Select(l => l.Replace("'", "''")).StringJoin("','") + "'";
+                        var linksAlreadySaved = db.GetList<string>("select Name from Job where Name in (" + whereIn + ")");
+
+                        links = links.Except(linksAlreadySaved).ToArray();
                         
                         this.Log(links.Length + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
 
