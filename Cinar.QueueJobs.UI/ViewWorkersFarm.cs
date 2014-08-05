@@ -70,7 +70,7 @@ namespace Cinar.QueueJobs.UI
 	                                                IFNULL(jd.RepeatInSeconds - TIME_TO_SEC(TIMEDIFF(now(), max(j.InsertDate))), 0) as RepeatInSeconds
                                                 from
 	                                                JobDefinition jd
-	                                                LEFT JOIN Job j ON j.Command = jd.CommandName
+	                                                LEFT JOIN Job j ON j.JobDefinitionId = jd.Id
                                                 where
                                                     jd.Disabled = 0
                                                 group by
