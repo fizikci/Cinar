@@ -150,7 +150,7 @@ namespace Cinar.QueueJobs.Test
 
                 var hrefs = doc.DocumentNode.SelectNodes("//a[@href]")
                     .Select(l => l.Attributes["href"].Value)
-                    .Where(l => !l.StartsWith("#") && !l.StartsWith("https://"))
+                    .Where(l => !l.StartsWith("#") && !l.StartsWith("https://") && (l.StartsWith(baseUrl) || !l.StartsWith("http://")))
                     .Select(l => getFullUrl(baseUrl, l).ToString())
                     .Where(l => l.StartsWith(baseUrl))
                     .Distinct().ToList();
