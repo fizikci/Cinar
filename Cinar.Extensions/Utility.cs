@@ -1540,7 +1540,7 @@ namespace System
 
             foreach (DataRow dr in dt.Rows)
                 sb.Append(Utility.ToJSON(dr) + ",");
-            sb.Remove(sb.Length - 1, 1);
+            //sb.Remove(sb.Length - 1, 1);
 
             sb.Append("]");
             sb.Append("}");
