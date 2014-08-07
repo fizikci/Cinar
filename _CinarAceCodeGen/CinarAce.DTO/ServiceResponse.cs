@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Membership.DTO
+namespace $=db.Name$.DTO
 {
     public class ServiceResponse<T>
     {
