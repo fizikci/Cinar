@@ -1,4 +1,4 @@
-﻿namespace Membership.DTO
+﻿namespace $=db.Name$.DTO
 {
     public class ServiceRequest<T>
     {

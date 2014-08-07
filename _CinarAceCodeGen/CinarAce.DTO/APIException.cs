@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Membership.DTO
+namespace $=db.Name$.DTO
 {
     [Serializable]
     public class APIException : Exception
