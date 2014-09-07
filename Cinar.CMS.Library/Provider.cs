@@ -259,6 +259,11 @@ namespace Cinar.CMS.Library
             }
         }
 
+        public static Database.Database GetDatabaseConnection(string provider, string connectionString)
+        {
+            return new Database.Database(connectionString, (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), provider));
+        }
+
         [Browsable(false)]
         public static IDatabaseEntity[] GetIdNameList(string entityName, string extraWhere, string simpleWhere)
         {

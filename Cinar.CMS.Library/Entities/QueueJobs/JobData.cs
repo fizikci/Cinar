@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Cinar.CMS.Library.Entities
 {
-    public class BaseJobData : SimpleBaseEntity
+    public class JobData : SimpleBaseEntity
     {
         public int JobId { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.TextMedium)]
         public string Request { get; set; }
 
-        [ColumnDetail(ColumnType = DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.TextMedium)]
         public string Response { get; set; }
     }
 }

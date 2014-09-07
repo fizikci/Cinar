@@ -74,7 +74,7 @@ namespace Cinar.QueueJobs.UI
                                                 where
                                                     jd.Disabled = 0
                                                 group by
-	                                                jd.Id, jd.Name, jd.CommandName, jd.Request, jd.RepeatInSeconds";
+	                                                jd.Id";//, jd.Name, jd.CommandName, jd.Request, jd.RepeatInSeconds";
 
                     List<int> workerIds = db.GetList<int>("select Id from Worker where Disabled=0 order by Id");
 

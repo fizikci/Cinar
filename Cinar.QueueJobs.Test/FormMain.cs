@@ -63,5 +63,10 @@ namespace Cinar.QueueJobs.Test
         {
             workersFarm.Stop();
         }
+
+        private void btnClearLog_Click(object sender, EventArgs e)
+        {
+            Console.Items.Clear();
+        }
     }
 }
