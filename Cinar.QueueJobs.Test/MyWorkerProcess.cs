@@ -68,34 +68,67 @@ namespace Cinar.QueueJobs.Test
                             links = links.Where(l => !isTheLinkToBeSkipped(l, filters)).ToArray();
 
                         string whereIn = "'" + links.Select(l => l.Replace("'", "''")).StringJoin("','") + "'";
-                        var linksAlreadySaved = db.GetList<string>("select Name from Job where Name in (" + whereIn + ")");
+                        var linksAlreadySaved = db.GetList<string>("select Name from Job where Name in (" + whereIn + ") AND Status='Done' AND ResLength>0");
                         if (linksAlreadySaved != null && linksAlreadySaved.Count > 0)
                             links = links.Except(linksAlreadySaved).ToArray();
                         
-                        this.Log(links.Length + " of " + foundLinkCount + " links scheduled to download for " + jobDefName);
-
                         List<int> workerIds = db.GetList<int>("select Id from Worker where Disabled=0 order by Id");
                         int counter = 0;
                         List<Job> list = new List<Job>();
+                        int newLinks = 0, tryAgain = 0;
                         foreach (string url in links)
-                            list.Add(this.CreateJob(workerIds[counter++ % workerIds.Count], url, "DownloadContent", url, job.Id, job.JobDefinitionId));
+                        {
+                            var downloadCount = db.GetInt("select count(*) from Job where Name={0}", url);
+                            if (downloadCount > 0 && downloadCount < 5) tryAgain++;
+                            if (downloadCount == 0) newLinks++;
+                            if (downloadCount < 5)
+                                list.Add(this.CreateJob(workerIds[counter++ % workerIds.Count], url, "DownloadContent", url, job.Id, job.JobDefinitionId));
+                        }
+
+                        this.Log(string.Format("{0} {1} {2} total links, {3} new, {4} try again", 
+                            DateTime.Now.ToString("yyyy.MM.dd HH.mm   "),
+                            jobDefName.PadRight(30),
+                            foundLinkCount.ToString().PadLeft(5),
+                            newLinks.ToString().PadLeft(5),
+                            tryAgain.ToString().PadLeft(5)));
+
                         AddJobs(db, list);
 
                         return res;
                     }
                 case "DownloadContent":
                     {
-                        var content = downloadContent(job.Name);
                         var d = DateTime.Now;
                         string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
-                        
-                        File.WriteAllText(path+"\\"+job.Id+".html", content, Encoding.UTF8);
-                        
-                        var clean = getCleanText(job.Name, content).ToJSON();
+                        string content = "";
 
-                        File.WriteAllText(path + "\\" + job.Id + ".json", clean, Encoding.UTF8);
-                        return clean;
+                        try
+                        {
+                            content = downloadContent(job.Name);
+                            File.WriteAllText(path + "\\" + job.Id + ".html", content, Encoding.UTF8);
+                        }
+                        catch (Exception ex)
+                        {
+                            File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText {Title="Error occured while downloading the content!", Content=ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
+                            throw ex;
+                        }
+
+                        try
+                        {
+                            var cleanText = getCleanText(job.Name, content);
+                            var clean = cleanText.ToJSON();
+
+                            job.ResLength = cleanText.Content.Length;
+
+                            File.WriteAllText(path + "\\" + job.Id + ".json", clean, Encoding.UTF8);
+                            return clean;
+                        }
+                        catch (Exception ex)
+                        {
+                            File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText { Title = "Error occured while cleaning the text!", Content = ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
+                            throw ex;
+                        }
                     }
             }
 
@@ -231,7 +264,7 @@ namespace Cinar.QueueJobs.Test
                     };
                 }
 
-                wc.Encoding = Encoding.UTF8;
+                //wc.Encoding = Encoding.UTF8;
 
                 //wc.Headers["Connection"] = "keep-alive";
                 wc.Headers["Cache-Control"] = "max-age=0";
@@ -240,7 +273,18 @@ namespace Cinar.QueueJobs.Test
                 //wc.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
                 wc.Headers["Accept-Language"] = "tr,en;q=0.8,en-US;q=0.6";
 
-                return wc.DownloadString(url);
+                byte[] bytes = wc.DownloadData(url);
+
+                try
+                {
+                    Encoding enc = bytes.GetTextEncoding();
+                    return Encoding.UTF8.GetString(Encoding.Convert(enc, Encoding.UTF8, bytes));
+                    return enc.GetString(bytes).ConvertEncoding(enc, Encoding.UTF8);
+                }
+                catch 
+                {
+                    return Encoding.UTF8.GetString(bytes);
+                }
             }
         }
 

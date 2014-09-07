@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cinar.CMS.Library.Entities
 {
-    public class BaseWorker : SimpleBaseEntity
+    public class Worker : SimpleBaseEntity
     {
         public string Name { get; set; }
         public int Disabled { get; set; }

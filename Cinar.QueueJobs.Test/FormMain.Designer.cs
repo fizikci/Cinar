@@ -33,6 +33,7 @@
             this.workersFarm = new Cinar.QueueJobs.UI.ViewWorkersFarm();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Console = new System.Windows.Forms.ListBox();
+            this.btnClearLog = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -84,6 +85,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainer1.Panel2.Controls.Add(this.Console);
             this.splitContainer1.Panel2.Controls.Add(this.btnStop);
             this.splitContainer1.Panel2.Controls.Add(this.btnStart);
@@ -96,12 +98,25 @@
             this.Console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.Console.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.Console.FormattingEnabled = true;
             this.Console.IntegralHeight = false;
+            this.Console.ItemHeight = 11;
             this.Console.Location = new System.Drawing.Point(4, 4);
             this.Console.Name = "Console";
             this.Console.Size = new System.Drawing.Size(839, 139);
             this.Console.TabIndex = 4;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(745, 146);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(98, 23);
+            this.btnClearLog.TabIndex = 5;
+            this.btnClearLog.Text = "Clear Logs";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // FormMain
             // 
@@ -126,6 +141,7 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.SplitContainer splitContainer1;
         public System.Windows.Forms.ListBox Console;
+        private System.Windows.Forms.Button btnClearLog;
     }
 }
 

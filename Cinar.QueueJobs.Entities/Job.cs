@@ -30,6 +30,8 @@ namespace Cinar.QueueJobs.Entities
 
         public DateTime InsertDate { get; set; }
         public int ProcessTime { get; set; }
+
+        public int ResLength { get; set; }
     }
 
     public enum JobStatuses
