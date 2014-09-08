@@ -167,6 +167,7 @@
             this.editMetin.Size = new System.Drawing.Size(587, 141);
             this.editMetin.TabIndex = 16;
             this.editMetin.Text = "Haber Detayı";
+            this.editMetin.DoubleClick += new System.EventHandler(this.editMetin_DoubleClick);
             // 
             // editCategoryId
             // 

@@ -1516,7 +1516,7 @@ function selectFlickrPhotoSet(flickrApiKey, flickrUserId, callback) {
         position: 'center' // left, right
     });
     jQuery.ajax({
-        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=' + flickrApiKey + '&user_id=' + flickrUserId + '&per_page=500&format=json&nojsoncallback=1',
+        url: 'https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=' + flickrApiKey + '&user_id=' + flickrUserId + '&per_page=500&format=json&nojsoncallback=1',
         dataType: 'json',
         success: function (data) {
             var row = "";
@@ -1540,7 +1540,7 @@ function selectFlickrPhotoSet(flickrApiKey, flickrUserId, callback) {
 
 function getFlickrPhotos(flickrApiKey, photoSetId, callback) {
     jQuery.ajax({
-        url: 'http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=' + flickrApiKey + '&photoset_id=' + photoSetId + '&per_page=500&format=json&nojsoncallback=1',
+        url: 'https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=' + flickrApiKey + '&photoset_id=' + photoSetId + '&per_page=500&format=json&nojsoncallback=1',
         dataType: 'json',
         success: function (data) {
             var photos = [];
