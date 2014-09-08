@@ -746,10 +746,10 @@ namespace Cinar.CMS.Library.Handlers
 
             if (user != null)
             {
-                Provider.Log("Notice", "Login", "", "User", user.Id);
-
                 // login başarılı, RedirectURL sayfasına gönderelim.
                 Provider.User = user;
+
+                Provider.Log("Notice", "Login", "", "User", user.Id);
 
                 if (user.Settings.LangId > 0)
                     Provider.Session["currentCulture"] = null;

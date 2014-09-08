@@ -316,6 +316,47 @@ namespace Cinar.CMS.DesktopEditor.Controls
                 editMetin.SelectedText = "<span style=\"color:" + ColorTranslator.ToHtml(cs.Color) + "\">" + editMetin.SelectedText + "</span>";
             }
         }
+
+        private void editMetin_DoubleClick(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Resim Seç";
+            ofd.Filter = "Resim Dosyaları | *.jpg; *.jpeg; *.jpe; *.png; *.gif";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                NameValueCollection postData = new NameValueCollection();
+                postData.Add("Id", "0");
+                postData.Add("ClassName", "Content");
+                postData.Add("Title", "DEL "+DateTime.Now.Ticks);
+                postData.Add("SpotTitle", "");
+                postData.Add("Description", "");
+                postData.Add("Tags", "");
+                postData.Add("PublishDate", DateTime.Now.ToString("dd.MM.yyyy"));
+                postData.Add("Metin", "");
+                postData.Add("IsManset", "0");
+
+                string res = "";
+
+                var files = new UploadFile[1];
+                files[0] = new UploadFile(ofd.FileName, "Picture", "image/jpg");
+
+                var s = Settings.Load();
+
+                res = HttpUploadHelper.Upload(s.SiteAddress[Index].Trim('/') + "/UploadContent.ashx", files, postData);
+
+                Content c = JsonConvert.DeserializeObject<Content>(res);
+                editMetin.SelectionLength = 0;
+                editMetin.SelectedText = string.Format("<img src=\"{0}\"/>", c.Picture);
+
+                using (WebClient wc = new WebClient())
+                {
+                    wc.Encoding = Encoding.UTF8;
+                    string res2 = wc.DownloadString(s.SiteAddress[Index].Trim('/') + string.Format("/DoCommand.ashx?method=deleteContents&Email={0}&Passwd={1}&ids={2}", s.Emails[Index], s.Passwords[Index], c.Id.ToString()));
+                }
+
+            }
+        }
     }
 
     // Content item for the combo box

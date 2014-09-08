@@ -11,11 +11,23 @@ namespace Cinar.CMS.Library.Entities
     public class Contact : NamedEntity, ICriticalEntity
     {
         #region Personal Info
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactPrefix'", Category = "")]
+        public int PrefixId { get; set; }
+
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title'", Category = "")]
         public int TitleId { get; set; }
 
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Title2'", Category = "")]
+        public int Title2Id { get; set; }
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=RelationWithUs'", Category = "")]
+        public int RelationWithUsId { get; set; }
+
         [ColumnDetail(References = typeof(Company)), EditFormFieldProps(Category = "Details")]
         public int CompanyId { get; set; }
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Department'", Category = "")]
+        public int DepartmentId { get; set; }
 
         [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Category = "")]
         public string Tags { get; set; }
@@ -46,6 +58,16 @@ namespace Cinar.CMS.Library.Entities
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=ContactKind5'", Category = "Details")]
         public int Kind5Id { get; set; }
         #endregion
+
+        [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=AssistantType'", Category = "")]
+        public int AssistantTypeId { get; set; }
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "")]
+        public string AssistantName { get; set; }
+
+        [ColumnDetail(Length = 50), EditFormFieldProps(Category = "")]
+        public string AssistantEmail { get; set; }
+
 
         #region Contact Info
 
@@ -135,6 +157,12 @@ namespace Cinar.CMS.Library.Entities
 
         [EditFormFieldProps(Category = "Extra")]
         public bool NewsletterMembership { get; set; }
+
+        [EditFormFieldProps(Category = "Extra")]
+        public bool NewsletterMembership2 { get; set; }
+
+        [EditFormFieldProps(Category = "Extra")]
+        public bool NewsletterMembership3 { get; set; }
 
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "More")]
         public int InterestId1 { get; set; }
