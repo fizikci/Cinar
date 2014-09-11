@@ -79,7 +79,8 @@ namespace Cinar.QueueJobs.UI
                     List<int> workerIds = db.GetList<int>("select Id from Worker where Disabled=0 order by Id");
 
                     int c = 0;
-                    foreach (var jobDef in db.ReadList<JobDefinition>(predefinedJobsSql).Where(jd => jd.RepeatInSeconds <= 0))
+                    var jobDefs = db.ReadList<JobDefinition>(predefinedJobsSql).Where(jd => jd.RepeatInSeconds <= 0);
+                    foreach (var jobDef in jobDefs)
                         WorkerProcess.AddJob(db, workerIds[c++ % workerIds.Count], jobDef.Request, jobDef.CommandName, jobDef.Request, 0, jobDef.Id);
                     
                 }

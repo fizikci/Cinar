@@ -32,8 +32,9 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.workersFarm = new Cinar.QueueJobs.UI.ViewWorkersFarm();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.Console = new System.Windows.Forms.ListBox();
+            this.cbShowLog = new System.Windows.Forms.CheckBox();
             this.btnClearLog = new System.Windows.Forms.Button();
+            this.Console = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -85,6 +86,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.cbShowLog);
             this.splitContainer1.Panel2.Controls.Add(this.btnClearLog);
             this.splitContainer1.Panel2.Controls.Add(this.Console);
             this.splitContainer1.Panel2.Controls.Add(this.btnStop);
@@ -92,6 +94,30 @@
             this.splitContainer1.Size = new System.Drawing.Size(848, 709);
             this.splitContainer1.SplitterDistance = 531;
             this.splitContainer1.TabIndex = 4;
+            // 
+            // cbShowLog
+            // 
+            this.cbShowLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbShowLog.AutoSize = true;
+            this.cbShowLog.Checked = true;
+            this.cbShowLog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbShowLog.Location = new System.Drawing.Point(662, 150);
+            this.cbShowLog.Name = "cbShowLog";
+            this.cbShowLog.Size = new System.Drawing.Size(74, 17);
+            this.cbShowLog.TabIndex = 6;
+            this.cbShowLog.Text = "Show Log";
+            this.cbShowLog.UseVisualStyleBackColor = true;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Location = new System.Drawing.Point(745, 146);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(98, 23);
+            this.btnClearLog.TabIndex = 5;
+            this.btnClearLog.Text = "Clear Logs";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // Console
             // 
@@ -107,17 +133,6 @@
             this.Console.Size = new System.Drawing.Size(839, 139);
             this.Console.TabIndex = 4;
             // 
-            // btnClearLog
-            // 
-            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearLog.Location = new System.Drawing.Point(745, 146);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(98, 23);
-            this.btnClearLog.TabIndex = 5;
-            this.btnClearLog.Text = "Clear Logs";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -126,8 +141,10 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormMain";
             this.Text = "Queue Jobs";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -142,6 +159,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         public System.Windows.Forms.ListBox Console;
         private System.Windows.Forms.Button btnClearLog;
+        private System.Windows.Forms.CheckBox cbShowLog;
     }
 }
 

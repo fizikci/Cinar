@@ -3,6 +3,7 @@ using Cinar.QueueJobs.UI;
 using NReadability;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -98,6 +99,9 @@ namespace Cinar.QueueJobs.Test
                     }
                 case "DownloadContent":
                     {
+                        Stopwatch sw = new Stopwatch();
+                        var time = new Dictionary<string, long>();
+
                         var d = DateTime.Now;
                         string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
@@ -105,12 +109,15 @@ namespace Cinar.QueueJobs.Test
 
                         try
                         {
+                            sw.Start();
                             content = downloadContent(job.Name);
                             File.WriteAllText(path + "\\" + job.Id + ".html", content, Encoding.UTF8);
+                            time.Add("Download", sw.ElapsedMilliseconds);
                         }
                         catch (Exception ex)
                         {
-                            File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText {Title="Error occured while downloading the content!", Content=ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
+                            File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText { Title = "Error occured while downloading the content!", Content = ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
+                            sw.Stop();
                             throw ex;
                         }
 
@@ -122,13 +129,26 @@ namespace Cinar.QueueJobs.Test
                             job.ResLength = cleanText.Content.Length;
 
                             File.WriteAllText(path + "\\" + job.Id + ".json", clean, Encoding.UTF8);
+                            time.Add("Clear", sw.ElapsedMilliseconds-time["Download"]);
+                            sw.Stop();
+
+                            if(sw.ElapsedMilliseconds>10000)
+                                this.Log(string.Format("{0} {1} {2} (Download {3} | Clear {4})",
+                                    DateTime.Now.ToString("yyyy.MM.dd HH.mm "),
+                                    "Worker " + job.WorkerId.ToString().PadLeft(2),
+                                    job.Name.Replace("http://","").Replace("www.","").Replace(":","").StrCrop(50).PadRight(53),
+                                    time["Download"].ToString().PadLeft(6),
+                                    time["Clear"].ToString().PadLeft(6)));
+                            
                             return clean;
                         }
                         catch (Exception ex)
                         {
                             File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText { Title = "Error occured while cleaning the text!", Content = ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
+                            sw.Stop();
                             throw ex;
                         }
+
                     }
             }
 
@@ -176,7 +196,8 @@ namespace Cinar.QueueJobs.Test
             {
                 var fullUri = getFullUrl(baseUrl, url);
 
-                var text = MyWebClient.DownloadAsString(null, fullUri.ToString());
+                Encoding resolvedEncoding = Encoding.UTF8;
+                var text = MyWebClient.DownloadAsString(null, fullUri.ToString(), ref resolvedEncoding);
 
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                 doc.LoadHtml(text);
@@ -205,11 +226,56 @@ namespace Cinar.QueueJobs.Test
 
         private string downloadContent(string url)
         {
-            var res = MyWebClient.DownloadAsString(this, url);
+            Encoding resolvedEncoding = Encoding.UTF8;
+            var res = MyWebClient.DownloadAsString(this, url, ref resolvedEncoding);
             return res;
         }
 
         private CleanText getCleanText(string url, string content)
+        {
+            var transcoder = new NReadabilityTranscoder();
+            bool success;
+            try
+            {
+                //transcoder.Ti
+                TranscodingResult textRes = transcoder.Transcode(new TranscodingInput(content));
+
+                if (textRes.ContentExtracted)
+                {
+                    var title = "";
+                    if (textRes.TitleExtracted)
+                        title = textRes.ExtractedTitle;
+                    else
+                    {
+                        var titleNode = transcoder.FoundDocument.GetElementsByTagName("title").First();
+                        if (titleNode != null)
+                            title = titleNode.Value;
+                    }
+                    var imgUrl = "";
+                    var imgNode = transcoder.FoundDocument.GetElementsByTagName("meta").Where(e => e.GetAttributeValue("property", "") == "og:image").First();//doc.SelectSingleNode("//meta[@property='og:image']");
+                    if (imgNode != null)
+                        imgUrl = imgNode.GetAttributeValue("content", "");
+
+                    var mainText = "";
+                    if (transcoder.FoundContentElement != null)
+                    {
+                        mainText = transcoder.FoundContentElement.GetInnerHtml();
+                    }
+
+                    return new CleanText { Title = title, Image = imgUrl, Content = mainText, Url = url, FetchDate = DateTime.Now };
+                }
+                else
+                {
+                    return new CleanText { Title = "Content not found", Image = "", Content = "", Url = url, FetchDate = DateTime.Now };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new CleanText { Title = "Content not found", Image = ex.Message, Content = "", Url = url, FetchDate = DateTime.Now };
+            }
+        }
+
+        private CleanText getCleanText_Old(string url, string content)
         {
             var transcoder = new NReadabilityWebTranscoder(new NReadabilityTranscoder(), new UrlFetcher(content));
             bool success;
@@ -241,19 +307,20 @@ namespace Cinar.QueueJobs.Test
                 }
                 else
                 {
-                    return new CleanText { Title = "#FAIL#", Image = "", Content = "", Url = url, FetchDate = DateTime.Now };
+                    return new CleanText { Title = "Content not found", Image = "", Content = "", Url = url, FetchDate = DateTime.Now };
                 }
             }
             catch (Exception ex)
             {
-                return new CleanText { Title = "#FAIL#", Image = ex.ToStringBetter(), Content = "", Url = url, FetchDate = DateTime.Now };
+                return new CleanText { Title = "Content not found", Image = ex.ToStringBetter(), Content = "", Url = url, FetchDate = DateTime.Now };
             }
         }
     }
 
     public class MyWebClient : WebClient
     {
-        public static string DownloadAsString(WorkerProcess wp, string url) {
+        public static string DownloadAsString(WorkerProcess wp, string url, ref Encoding resolvedEncoding)
+        {
             using (MyWebClient wc = new MyWebClient())
             {
                 if (wp != null)
@@ -264,7 +331,7 @@ namespace Cinar.QueueJobs.Test
                     };
                 }
 
-                //wc.Encoding = Encoding.UTF8;
+                wc.Encoding = Encoding.ASCII;
 
                 //wc.Headers["Connection"] = "keep-alive";
                 wc.Headers["Cache-Control"] = "max-age=0";
@@ -275,17 +342,72 @@ namespace Cinar.QueueJobs.Test
 
                 byte[] bytes = wc.DownloadData(url);
 
-                try
+                string pageEncoding = "";
+                resolvedEncoding = Encoding.UTF8;
+                if (!string.IsNullOrWhiteSpace(wc.ResponseHeaders[HttpResponseHeader.ContentEncoding]))
+                    pageEncoding = wc.ResponseHeaders[HttpResponseHeader.ContentEncoding];
+                else if (!string.IsNullOrWhiteSpace(wc.ResponseHeaders[HttpResponseHeader.ContentType]))
+                    pageEncoding = getCharacterSet(wc.ResponseHeaders[HttpResponseHeader.ContentType]);
+
+                if (pageEncoding == "")
+                    pageEncoding = getCharacterSet(bytes);
+
+                if (pageEncoding != "")
                 {
-                    Encoding enc = bytes.GetTextEncoding();
-                    return Encoding.UTF8.GetString(Encoding.Convert(enc, Encoding.UTF8, bytes));
-                    return enc.GetString(bytes).ConvertEncoding(enc, Encoding.UTF8);
+                    try
+                    {
+                        resolvedEncoding = Encoding.GetEncoding(pageEncoding);
+                    }
+                    catch
+                    {
+                        //throw new Exception("Invalid encoding: " + pageEncoding);
+                    }
                 }
-                catch 
-                {
-                    return Encoding.UTF8.GetString(bytes);
-                }
+
+                return resolvedEncoding.GetString(bytes);
+
+                //return Encoding.UTF8.GetString(Encoding.Convert(wc.Encoding, Encoding.UTF8, bytes));
             }
+        }
+
+        private static string getCharacterSet(string s)
+        {
+            s = s.ToUpperInvariant();
+            int start = s.LastIndexOf("CHARSET");
+            if (start == -1)
+            {
+                start = s.LastIndexOf("ENCODING");
+                if (start == -1)
+                    return "";
+            }
+
+            start = s.IndexOf("=", start);
+            if (start == -1)
+                return "";
+
+            start++;
+            s = s.Substring(start).Trim().Trim('"');
+            int end = s.Length;
+
+            int i = s.IndexOf(";");
+            if (i != -1)
+                end = i;
+            i = s.IndexOf("\"");
+            if (i != -1 && i < end)
+                end = i;
+            i = s.IndexOf("'");
+            if (i != -1 && i < end)
+                end = i;
+            i = s.IndexOf("/");
+            if (i != -1 && i < end)
+                end = i;
+
+            return s.Substring(0, end).Trim();
+        }
+        private static string getCharacterSet(byte[] data)
+        {
+            string s = Encoding.Default.GetString(data);
+            return getCharacterSet(s);
         }
 
         protected override WebRequest GetWebRequest(Uri uri)

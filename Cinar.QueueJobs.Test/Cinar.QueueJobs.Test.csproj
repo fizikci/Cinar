@@ -35,7 +35,8 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="NReadability">
+    <Reference Include="NReadability, Version=1.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\_library\NReadability.dll</HintPath>
     </Reference>
     <Reference Include="SgmlReaderDll">
