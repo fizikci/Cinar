@@ -682,6 +682,50 @@ namespace System
             return res;
         }
 
+        public static List<string> PascalCaseWords(this string str)
+        {
+            var res = new List<string>();
+            if(string.IsNullOrWhiteSpace(str))
+                return res;
+
+            var word = str[0].ToString();
+            for (int i = 1; i < str.Length; i++)
+            {
+                if (Char.IsLower(str[i]) || Char.IsDigit(str[i]))
+                {
+                    word += str[i];
+                    continue;
+                }
+                res.Add(word);
+                word = str[i].ToString();
+            }
+            res.Add(word);
+
+            return res;
+        }
+
+        public static string PascalCaseRemoveFirstWord(this string str)
+        {
+            var res = str.PascalCaseWords();
+            if (res.Count <= 1)
+                return "";
+
+            return res.Skip(1).StringJoin();
+        }
+
+        public static string StringJoin<T>(this IEnumerable<T> source, string seperator)
+        {
+            if (source == null)
+                return "";
+            return string.Join(seperator, source.Select(t => t == null ? "" : t.ToString()).ToArray());
+        }
+        public static string StringJoin<T>(this IEnumerable<T> source)
+        {
+            return source.StringJoin("");
+        }
+
+
+
         public static string ConvertEncoding(this string str, string srcEncodingName, string destEncodingName)
         {
             return str.ConvertEncoding(Encoding.GetEncoding(srcEncodingName), Encoding.GetEncoding(destEncodingName));
@@ -1793,17 +1837,6 @@ namespace System
                 i++;
             }
             return -1;
-        }
-
-        public static string StringJoin<T>(this IEnumerable<T> source, string seperator)
-        {
-            if (source == null)
-                return "";
-            return string.Join(seperator, source.Select(t => t == null ? "" : t.ToString()).ToArray());
-        }
-        public static string StringJoin<T>(this IEnumerable<T> source)
-        {
-            return source.StringJoin("");
         }
 
         public static string ToStringBetter(this Exception ex)
