@@ -23,7 +23,8 @@ namespace Cinar.QueueJobs.Test
 
             workersFarm.WorkerProcessType = workerProcessType;
             workersFarm.Log = (msg) => {
-                Console.Items.Add(msg);
+                if(cbShowLog.Checked)
+                    Console.Items.Add(msg);
             };
             wp = (MyWorkerProcess)Activator.CreateInstance(workerProcessType);
             db = wp.GetNewDatabaseInstance();
