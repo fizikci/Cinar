@@ -3,7 +3,6 @@ function onBase(ColumnName)
 {
 	var cont = (ColumnName=="Id");
 	cont = cont || (ColumnName == "Name");
-	cont = cont || (ColumnName == "PKey");
 	cont = cont || (ColumnName == "InsertDate");
 	cont = cont || (ColumnName == "InsertUserId");
 	cont = cont || (ColumnName == "UpdateDate");
@@ -11,20 +10,20 @@ function onBase(ColumnName)
 	cont = cont || (ColumnName == "IsDeleted");
 	return cont;
 }
-$ using System;
+$ using Cinar.Database;
+using $=db.Name$.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace $=db.Name$.DTO.EntityInfo
+namespace $=db.Name$.API.Entity
 {
-    public class $=table.Name$Info : $=table.Columns["Name"]!=null ? "NamedEntity":"BaseEntity"$Info
+    public partial class $=table.Name$ : $=table.Columns["Name"]!=null ? "NamedEntity":"BaseEntity"$
     {
-
 $ 
 foreach(Column in table.Columns){ 
-	if(onBase(Column.Name)) continue;
+	if(onBase(Column.Name)) continue; 
 
 	var TYPE = util.CSType(Column.ColumnType.ToString());
 	var columnName = util.Camel(Column.Name);
@@ -40,7 +39,7 @@ foreach(Column in table.Columns){
 	if(Column.ReferenceColumn) { 
 		var ColumnName = util.Camel(Column.Name).Replace('Id','');
 $
-        public $=util.Cap(Column.ReferenceColumn.Table.Name)$Info $=util.Cap(Column.Name).Replace('Id','')$ { get; set; }
+        public $=util.Cap(Column.ReferenceColumn.Table.Name)$ $=util.Cap(Column.Name).Replace('Id','')$ { get { return Provider.Database.Read<$=util.Cap(Column.ReferenceColumn.Table.Name)$>($=Column.Name$); } }
 $ }} $
 
     }

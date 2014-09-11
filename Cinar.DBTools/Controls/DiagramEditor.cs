@@ -338,7 +338,7 @@ namespace Cinar.DBTools.Controls
                 tv.ShowFull = !tv.ShowFull;
                 CurrentSchema.correctConnectionLinesPositions(new List<TableView> { tv });
                 correctPanelSize();
-                panelPaint(false);
+                panelPaint(true);
                 modified = true;
             }
         }

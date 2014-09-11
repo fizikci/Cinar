@@ -2567,7 +2567,7 @@ namespace Cinar.DBTools
                     }
                 }
 
-                if (propertyGrid.SelectedObject is Item)
+                if (propertyGrid.SelectedObject is Item || propertyGrid.SelectedObject is Diagram)
                 {
                     cancel = false;
                     switch (e.ChangedItem.Label)
