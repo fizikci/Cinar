@@ -193,10 +193,8 @@ InnerHtml,32,<hr/>
         }
 
         [EditFormFieldProps(OrderNo = 7)]
-        /// <summary>
-        /// Module always visible in design mode.
-        /// Module visible in view mode if only this property is true.
-        /// </summary>
+        // Module always visible in design mode.
+        // Module visible in view mode if only this property is true.
         public bool Visible
         {
             get { return this.visible; }

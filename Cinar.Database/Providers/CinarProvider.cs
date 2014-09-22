@@ -19,11 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
-using Cinar.SQLEngine;
+//using Cinar.SQLEngine;
 
 namespace Cinar.Database.Providers
 {
@@ -32,10 +33,12 @@ namespace Cinar.Database.Providers
     /// </summary>
     internal class CinarProvider : BaseProvider, IDatabaseProvider
     {
+        private static Assembly sqlEngineAssembly = Assembly.LoadFrom(typeof(CinarProvider).Assembly.CodeBase.Replace("Cinar.Database", "Cinar.SQLEngine"));
+
         public CinarProvider(IDatabase db, bool createDatabaseIfNotExist)
         {
             this.db = db;
-            this.connection = new CinarConnection("cinar");
+            this.connection = (IDbConnection)Activator.CreateInstance(sqlEngineAssembly.GetType("CinarConnection"), "cinar");// new CinarConnection("cinar");
         }
 
         /// <summary>
@@ -226,12 +229,12 @@ namespace Cinar.Database.Providers
 
         public IDbConnection CreateConnection()
         {
-            return new CinarConnection(db.ConnectionString);
+            return (IDbConnection)Activator.CreateInstance(sqlEngineAssembly.GetType("CinarConnection"), "cinar");// new CinarConnection(db.ConnectionString);
         }
 
         public DbDataAdapter CreateDataAdapter(IDbCommand selectCommand)
         {
-            return new CinarDataAdapter((CinarCommand) selectCommand);
+            return (DbDataAdapter)Activator.CreateInstance(sqlEngineAssembly.GetType("CinarDataAdapter"), selectCommand);// new CinarDataAdapter((CinarCommand) selectCommand);
         }
 
         public DbDataAdapter CreateDataAdapter(string selectCommandText, params object[] parameters)
@@ -249,21 +252,26 @@ namespace Cinar.Database.Providers
             for (int i = 0; i < parameters.Length; i++)
                 cmdText = cmdText.Replace("{" + i + "}", "@_param" + i);
 
-            CinarCommand cmd = null;
+            var cmdType = sqlEngineAssembly.GetType("CinarCommand");
+            IDbCommand cmd = null;
             if (transaction != null)
-                cmd = new CinarCommand(cmdText, (CinarConnection)transaction.Connection, (CinarTransaction)transaction);
+                cmd = (IDbCommand)Activator.CreateInstance(cmdType, transaction.Connection, transaction);//new CinarCommand(cmdText, (CinarConnection)transaction.Connection, (CinarTransaction)transaction);
             else
-                cmd = new CinarCommand(cmdText, (CinarConnection)this.Connection);
+                cmd = (IDbCommand)Activator.CreateInstance(cmdType, this.Connection);//new CinarCommand(cmdText, (CinarConnection)this.Connection);
 
             for (int i = 0; i < parameters.Length; i++)
-                cmd.Parameters.AddWithValue("@_param" + i, parameters[i]);
+                cmdType.GetProperty("Parameters")
+                       .PropertyType
+                       .GetMethod("AddWithValue")
+                       .Invoke(cmdType.GetProperty("Parameters").GetValue(cmd, null), new []{"@_param" + i, parameters[i]});
+                //cmd.Parameters.AddWithValue("@_param" + i, parameters[i]);
 
             return cmd;
         }
 
         public IDbDataParameter CreateParameter(string parameterName, object value)
         {
-            return new CinarParameter(parameterName, value);
+            return (IDbDataParameter)Activator.CreateInstance(sqlEngineAssembly.GetType("CinarParameter"), parameterName, value);// new CinarParameter(parameterName, value);
         }
 
         public string GetColumnDDL(Column column)
