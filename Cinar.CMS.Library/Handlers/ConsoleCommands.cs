@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Reflection;
@@ -354,7 +355,7 @@ namespace Cinar.CMS.Library.Handlers
 
         [Description("backups UserFiles folder and the database into a zip file")]
         public static string Backup(
-            [Description("choose one of data, images, both")] string backup_what)
+            [Description("choose one of data, uploadedFiles, both")] string backup_what)
         {
             Provider.Server.ScriptTimeout = 300;
 
@@ -367,6 +368,7 @@ namespace Cinar.CMS.Library.Handlers
             string newBackupFolder = userFilesPath + "\\" + backupName;
             if (Directory.Exists(newBackupFolder)) Directory.Delete(newBackupFolder, true);
             Directory.CreateDirectory(newBackupFolder);
+
             // 2. create data sql dump into the backup folder
             if (backup_what == "data" || backup_what == "both")
             {
@@ -379,10 +381,32 @@ namespace Cinar.CMS.Library.Handlers
                     sw.Close();
                 }
             }
-            // 3. copy image folder into the backup folder
-            if (backup_what == "images" || backup_what == "both")
+
+            // 3. copy diff of UserFiles(default) folder into the backup folder,
+            // Attention: This process assumes existance of a file is within Cinar.CMS by default, UserFiles.txt file,
+            //   containing the default SVN file paths of the /UserFiles directory and it's sub directories.
+            // Check Utility.cs for more information. GetFileNames();
+            string result = "";
+            // changed "image" to user "uploadedFiles", which is more useful for taking backups.
+            if (backup_what == "uploadedFiles" || backup_what == "both")
             {
-                System.Utility.CopyDirectory(userFilesPath + "\\Image", newBackupFolder + "\\");
+
+                List<string> fileNames = Regex.Split(Utility.GetFileNames(userFilesPath, "UserFiles"), "\r\n").ToList();
+                List<string> defaultFileNames = Regex.Split(File.ReadAllText(userFilesPath + ".txt"), "\r\n").ToList();
+                defaultFileNames.Add(newBackupFolder.Substring(newBackupFolder.IndexOf("UserFiles")) + "\\dump.sql");
+
+                string[] diff = fileNames.Select((name, index) => new { name, index })
+                    .Where(x => !defaultFileNames.Contains(x.name))
+                    .Select(x => x.name).ToArray();
+
+                foreach (var item in diff)
+                {
+                    File.Copy(Provider.MapPath(item), newBackupFolder + "\\" + item.Substring("UserFiles\\".Length));
+                }
+
+                if (diff.Length == 0) result += "No uploaded file was found!\n";
+
+                //System.Utility.CopyDirectory(userFilesPath + "\\Image", newBackupFolder + "\\");
             }
             // 4. zip the backup folder
             ICSharpCode.SharpZipLib.Zip.FastZip zip = new ICSharpCode.SharpZipLib.Zip.FastZip();
@@ -391,7 +415,7 @@ namespace Cinar.CMS.Library.Handlers
             // 5. delete the backup folder
             Directory.Delete(newBackupFolder, true);
             // write download link
-            return "Download backup file from : http://" + Provider.Configuration.SiteAddress + "/UserFiles/" + backupName + ".zip";
+            return result + "Download backup file from : http://" + Provider.Configuration.SiteAddress + "/UserFiles/" + backupName + ".zip";
         }
 
 
