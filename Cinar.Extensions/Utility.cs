@@ -713,6 +713,28 @@ namespace System
             return res.Skip(1).StringJoin();
         }
 
+        /// <summary>
+        /// This method recursively searchs for file names and sticks them together with a seperator.
+        /// It also has a substring from the start parameter for creating relative paths, 
+        /// which is necessary for web.
+        /// </summary>
+        /// <param name="dir">Root directory, will be searched for full paths.</param>
+        /// <param name="relativeDirectoryFileName">Usage: Give the "name" of the root directory here for relative paths.</param>
+        /// <param name="seperator">Join value, defaults to "\r\n"</param>
+        /// <returns> All file paths of sub directories joined together with a seperator. </returns>
+        public static string GetFileNames(this string dir, string relativeDirectoryFileName = "", string seperator = "\r\n")
+        {
+            string output = Directory.GetFiles(dir).Select(x => x.Substring(x.IndexOf(relativeDirectoryFileName))).StringJoin(seperator);
+            foreach (string d in Directory.GetDirectories(dir))
+            {
+                string result = GetFileNames(d, relativeDirectoryFileName);
+                if (string.IsNullOrWhiteSpace(output)) output = result;
+                else if (!string.IsNullOrWhiteSpace(result))
+                    output = new string[] { output, result}.StringJoin(seperator);
+            }
+            return output;
+        }
+
         public static string StringJoin<T>(this IEnumerable<T> source, string seperator)
         {
             if (source == null)
