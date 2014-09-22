@@ -109,6 +109,7 @@ $<%@ Page Title="" Language="C#" MasterPageFile="~/Staff/Main.Master" AutoEventW
 <div class="row">
     <div class="col-sm-9">
 		$ 
+		debugger;
 		foreach(var colName in table.GetUIGroupColumns("")){
 			var c = table.Columns[colName]; 
 		$
