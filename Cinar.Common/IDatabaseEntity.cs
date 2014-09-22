@@ -8,15 +8,18 @@ namespace Cinar.Database
     /// <summary>
     /// An interface for storable entities.
     /// </summary>
-    public interface IDatabaseEntity
+    public interface IDatabaseEntity : IDatabaseEntityMinimal
     {
-        void Initialize();
         int Id
         {
             get;
             set;
         }
+    }
 
+    public interface IDatabaseEntityMinimal
+    {
+        void Initialize();
         void BeforeSave();
         void AfterSave(bool isUpdate);
 

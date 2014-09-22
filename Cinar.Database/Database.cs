@@ -943,7 +943,7 @@ namespace Cinar.Database
             return res;
         }
 
-        public string GetIdColumnName(IDatabaseEntity entity)
+        public string GetIdColumnName(IDatabaseEntityMinimal entity)
         {
             return GetIdColumnName(entity.GetType());
         }
@@ -969,16 +969,7 @@ namespace Cinar.Database
             {
                 this.Begin();
 
-                // first check the table existance
-                Table tbl = GetTableForEntityType(entity.GetType());//this.Tables[entity.GetType().Name];
-                Type type = entity.GetType();
-
-                if (tbl == null)
-                {
-                    if (!CreateTablesAutomatically)
-                        throw new Exception("Table for " + type.Name + " not exist. Please create table and refresh metadata.");
-                    tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);
-                }
+                var tbl = CheckTableExistance(entity);
 
                 if (entity is ISerializeSubclassFields)
                     serialize(entity as ISerializeSubclassFields);
@@ -1009,6 +1000,21 @@ namespace Cinar.Database
             }
         }
 
+        public Table CheckTableExistance(IDatabaseEntityMinimal entity)
+        {
+            // first check the table existance
+            Table tbl = GetTableForEntityType(entity.GetType()); //this.Tables[entity.GetType().Name];
+            Type type = entity.GetType();
+
+            if (tbl == null)
+            {
+                if (!CreateTablesAutomatically)
+                    throw new Exception("Table for " + type.Name + " not exist. Please create table and refresh metadata.");
+                tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);
+            }
+            return tbl;
+        }
+
         private void serialize(ISerializeSubclassFields entity)
         {
             Type baseType = entity.GetType();
@@ -1019,7 +1025,7 @@ namespace Cinar.Database
             entity.TypeName = entity.GetType().Name;
         }
 
-        public Hashtable EntityToHashtable(IDatabaseEntity entity)
+        public Hashtable EntityToHashtable(IDatabaseEntityMinimal entity)
         {
             Hashtable ht = new Hashtable();
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
@@ -1054,7 +1060,7 @@ namespace Cinar.Database
             return (pi.PropertyType.IsValueType || pi.PropertyType.Name == "String" || (pi.PropertyType.FullName !=null && pi.PropertyType.FullName.Contains("Byte[]"))) && pi.GetSetMethod() != null;
         }
 
-        public DataRow EntityToDataRow(IDatabaseEntity entity)
+        public DataRow EntityToDataRow(IDatabaseEntityMinimal entity)
         {
             DataTable dt = new DataTable();
             foreach (PropertyInfo pi in entity.GetType().GetProperties())
@@ -1076,18 +1082,18 @@ namespace Cinar.Database
 
             return dr;
         }
-        public IDatabaseEntity DataRowToEntity(Type entityType, DataRow dr)
+        public IDatabaseEntityMinimal DataRowToEntity(Type entityType, DataRow dr)
         {
             if (dr == null) return null; //***
 
-            IDatabaseEntity entity = null;
+            IDatabaseEntityMinimal entity = null;
             if (entityType.GetInterface("ISerializeSubclassFields")!=null)
             {
                 string typeName = dr["TypeName"].ToString();
-                entity = (IDatabaseEntity)Activator.CreateInstance(entityType.Assembly.GetTypes().Where(t => t.Name == typeName).First());
+                entity = (IDatabaseEntityMinimal)Activator.CreateInstance(entityType.Assembly.GetTypes().Where(t => t.Name == typeName).First());
             }
             else
-                entity = (IDatabaseEntity)Activator.CreateInstance(entityType);
+                entity = (IDatabaseEntityMinimal)Activator.CreateInstance(entityType);
 
             FillEntity(entity, dr);
             entity.Initialize();
@@ -1100,7 +1106,7 @@ namespace Cinar.Database
         }
 
         // ENTITY FILL
-        public void FillEntity(IDatabaseEntity entity, DataRow dr)
+        public void FillEntity(IDatabaseEntityMinimal entity, DataRow dr)
         {
             Type entityType = entity.GetType();
             
@@ -1164,7 +1170,7 @@ namespace Cinar.Database
             string tableName = GetTableForEntityType(entity.GetType()).Name;
             this.FillEntity(entity, GetDataRow("select * from " + tableName + " where " + GetIdColumnName(entity) + "={0}", entity.Id));
         }
-        public void FillDataRow(IDatabaseEntity entity, DataRow dr)
+        public void FillDataRow(IDatabaseEntityMinimal entity, DataRow dr)
         {
             Type entityType = entity.GetType();
 
@@ -1494,17 +1500,17 @@ namespace Cinar.Database
             }
             else
             {
-                return Read(entityType, "" + GetIdColumnName(entityType) + "=" + id);
+                return (IDatabaseEntity)Read(entityType, "" + GetIdColumnName(entityType) + "=" + id);
             }
         }
-        public T Read<T>(int id)
+        public T Read<T>(int id) where T:IDatabaseEntity
         {
             return (T)Read(typeof(T), id);
         }
         // READ ENTITY
-        public IDatabaseEntity Read(Type entityType, string where, params object[] parameters)
+        public IDatabaseEntityMinimal Read(Type entityType, string where, params object[] parameters)
         {
-            IDatabaseEntity result = null;
+            IDatabaseEntityMinimal result = null;
 
             try
             {
@@ -1538,7 +1544,7 @@ namespace Cinar.Database
             return (T)Read(typeof(T), where, parameters);
         }
 
-        public IDatabaseEntity[] ReadList(Type entityType, string selectSql, params object[] parameters)
+        public IDatabaseEntityMinimal[] ReadList(Type entityType, string selectSql, params object[] parameters)
         {
             ArrayList result = new ArrayList();
 
@@ -1568,25 +1574,25 @@ namespace Cinar.Database
                 this.Rollback();
                 throw ex;
             }
-            return (IDatabaseEntity[])result.ToArray(entityType);
+            return (IDatabaseEntityMinimal[])result.ToArray(entityType);
         }
-        public List<T> ReadList<T>(string selectSql, params object[] parameters) where T : IDatabaseEntity
+        public List<T> ReadList<T>(string selectSql, params object[] parameters) where T : IDatabaseEntityMinimal
         {
             List<T> list = new List<T>();
-            IDatabaseEntity[] arr = ReadList(typeof(T), selectSql, parameters);
+            IDatabaseEntityMinimal[] arr = ReadList(typeof(T), selectSql, parameters);
             if (list != null && arr.Length > 0)
                 for (int i = 0; i < arr.Length; i++)
                     list.Add((T)arr[i]);
             return list;
 
         }
-        public List<T> ReadList<T>(FilterExpression fExp, int pageNo, int pageSize) where T : IDatabaseEntity
+        public List<T> ReadList<T>(FilterExpression fExp, int pageNo, int pageSize) where T : IDatabaseEntityMinimal
         {
             fExp.PageNo = pageNo;
             fExp.PageSize = pageSize;
             return ReadList<T>(fExp);
         }
-        public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntity
+        public List<T> ReadList<T>(FilterExpression filterExpression) where T : IDatabaseEntityMinimal
         {
             DataTable dt = GetDataTableFor(typeof(T), filterExpression);
             List<T> list = new List<T>();
@@ -1594,14 +1600,14 @@ namespace Cinar.Database
                 list.Add(DataRowToEntity<T>(dr));
             return list;
         }
-        public List<T> ReadList<T>() where T : IDatabaseEntity
+        public List<T> ReadList<T>() where T : IDatabaseEntityMinimal
         {
             return ReadList<T>(new FilterExpression());
         }
-        public IDatabaseEntity[] ReadList(Type entityType, FilterExpression filterExpression)
+        public IDatabaseEntityMinimal[] ReadList(Type entityType, FilterExpression filterExpression)
         {
             DataTable dt = GetDataTableFor(entityType, filterExpression);
-            List<IDatabaseEntity> list = new List<IDatabaseEntity>();
+            List<IDatabaseEntityMinimal> list = new List<IDatabaseEntityMinimal>();
             foreach (DataRow dr in dt.Rows)
                 list.Add(DataRowToEntity(entityType, dr));
             return list.ToArray();
@@ -1689,8 +1695,8 @@ namespace Cinar.Database
         }
         public Table CreateTableForType(Type type, bool refreshMetadata)
         {
-            if (!typeof(IDatabaseEntity).IsAssignableFrom(type))
-                throw new Exception("The type to create table must implement IDatabaseEntity.");
+            if (!typeof(IDatabaseEntityMinimal).IsAssignableFrom(type))
+                throw new Exception("The type to create table must implement IDatabaseEntityMinimal.");
 
             DefaultDataAttribute[] defaultDataArr = (DefaultDataAttribute[])type.GetCustomAttributes(typeof(DefaultDataAttribute), false);
 
@@ -1807,7 +1813,7 @@ namespace Cinar.Database
         {
             foreach (Type type in assembly.GetTypes())
             {
-                if (type.IsAbstract || type.GetInterface("IDatabaseEntity") == null)
+                if (type.IsAbstract || type.GetInterface("IDatabaseEntityMinimal") == null)
                     continue;
 
                 if(GetTableForEntityType(type)==null)
