@@ -401,7 +401,10 @@ namespace Cinar.CMS.Library.Handlers
 
                 foreach (var item in diff)
                 {
-                    File.Copy(Provider.MapPath(item), newBackupFolder + "\\" + item.Substring("UserFiles\\".Length));
+                    string path = newBackupFolder + "\\" + item.Substring("UserFiles\\".Length);
+                    FileInfo fi = new FileInfo(path);
+                    if (!Directory.Exists(fi.DirectoryName)) Directory.CreateDirectory(fi.DirectoryName);
+                    File.Copy(Provider.MapPath(item), path);
                 }
 
                 if (diff.Length == 0) result += "No uploaded file was found!\n";
