@@ -78,7 +78,7 @@ namespace Cinar.CMS.Library.Modules
                 sb.AppendFormat("<input type=\"hidden\" name=\"anketId\" value=\"{0}\">", pollQuestionId);
                 sb.AppendFormat("<div class=\"pollQuestion\">{0}</div>", soru.Question);
 
-                IDatabaseEntity[] cevaplar = Provider.Database.ReadList(typeof(PollAnswer), "select * from PollAnswer where PollQuestionId={0}", pollId);
+                IDatabaseEntity[] cevaplar = Provider.Database.ReadList(typeof(PollAnswer), "select * from PollAnswer where PollQuestionId={0}", pollId).SafeCastToArray<IDatabaseEntity>();
                 Provider.Translate(cevaplar);
 
                 foreach (PollAnswer cevap in cevaplar)
@@ -99,7 +99,7 @@ namespace Cinar.CMS.Library.Modules
 
             sb.Append("<div class=\"pollQuestion\">" + soru.Question + "</div>");
 
-            IDatabaseEntity[] cevaplar = Provider.Database.ReadList(typeof(PollAnswer), "select * from PollAnswer where PollQuestionId={0}", ankSoruId);
+            IDatabaseEntity[] cevaplar = Provider.Database.ReadList(typeof(PollAnswer), "select * from PollAnswer where PollQuestionId={0}", ankSoruId).SafeCastToArray<IDatabaseEntity>();
             Provider.Translate(cevaplar);
 
             int maxHit = 0;

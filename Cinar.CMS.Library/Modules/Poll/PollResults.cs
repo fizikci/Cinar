@@ -40,7 +40,7 @@ namespace Cinar.CMS.Library.Modules
             string icon = (this.bulletIcon == "" ? ">> " : "<img src=\"" + this.bulletIcon + "\" align=\"absmiddle\"/> ");
 
             sb.Append("<div class=\"list\">");
-            IDatabaseEntity[] sorular = Provider.Database.ReadList(typeof(PollQuestion), "select * from PollQuestion order by InsertDate desc");
+            IDatabaseEntity[] sorular = Provider.Database.ReadList(typeof(PollQuestion), "select * from PollQuestion order by InsertDate desc").SafeCastToArray<IDatabaseEntity>();
             Provider.Translate(sorular);
 
             CinarUriParser uriParser = new CinarUriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);

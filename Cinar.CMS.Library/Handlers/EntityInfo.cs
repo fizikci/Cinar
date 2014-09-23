@@ -459,7 +459,7 @@ namespace Cinar.CMS.Library.Handlers
             BaseEntity ent = Provider.CreateEntity(entityName);
             string filter = (String.IsNullOrEmpty(extraFilter) ? "" : extraFilter + " AND ") + ent.GetNameColumn() + "like" + name + "%";
 
-            BaseEntity[] entities = (BaseEntity[])Provider.GetIdNameList(entityName, filter, "");
+            BaseEntity[] entities = Provider.GetIdNameList(entityName, filter, "").SafeCastToArray<BaseEntity>();
             if (entities != null && entities.Length>0)
                 context.Response.Write(String.Format("{{id:{0},name:{1}}}", entities[0].Id, entities[0].GetNameValue().ToJS()));
             else
@@ -478,7 +478,7 @@ namespace Cinar.CMS.Library.Handlers
 
             string where = "where " + (String.IsNullOrEmpty(filter) ? "1=1" : "(" + filter + ")");
 
-            IDatabaseEntity[] entities = currentDatabase.ReadList(tip, "select * from [" + entityName + "] " + where + " order by " + orderBy + (orderAsc=="1"?"":" desc"), filterParser.GetParams());
+            IDatabaseEntity[] entities = currentDatabase.ReadList(tip, "select * from [" + entityName + "] " + where + " order by " + orderBy + (orderAsc == "1" ? "" : " desc"), filterParser.GetParams()).SafeCastToArray<IDatabaseEntity>();
 
             context.Response.Write(entities.ToJSON());
         }

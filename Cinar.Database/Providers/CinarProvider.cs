@@ -357,7 +357,7 @@ namespace Cinar.Database.Providers
             throw new NotImplementedException();
         }
 
-        public string GetSQLTableDrop(Table table)
+        public string GetSQLTableDrop(Table table, bool addIfExists)
         {
             throw new NotImplementedException();
         }

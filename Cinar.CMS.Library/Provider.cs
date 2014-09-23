@@ -51,9 +51,9 @@ namespace Cinar.CMS.Library
             {
                 if (Provider.Items["item"] == null && Provider.Session["item"] != null)
                 {
-                    IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", Provider.Session["item"]);
+                    IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", Provider.Session["item"]).SafeCastToArray<IDatabaseEntity>();
                     if (items == null)
-                        items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", 1);
+                        items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", 1).SafeCastToArray<IDatabaseEntity>();
                     Provider.Translate(items);
                     Provider.Items["item"] = (Content)(items.Length == 1 ? items[0] : null);
                 }
@@ -75,13 +75,13 @@ namespace Cinar.CMS.Library
                 {
                     if (!String.IsNullOrEmpty(Provider.Request["tagId"]))
                     {
-                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Id={0}", Provider.Request["tagId"]);
+                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Id={0}", Provider.Request["tagId"]).SafeCastToArray<IDatabaseEntity>();
                         Provider.Translate(items);
                         Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
                     }
                     else if (!String.IsNullOrEmpty(Provider.Request["tag"]))
                     {
-                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]);
+                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]).SafeCastToArray<IDatabaseEntity>();
                         Provider.Translate(items);
                         Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
                     }
@@ -252,7 +252,8 @@ namespace Cinar.CMS.Library
                     //if(db.Tables.Count==0)
                     //    db.CreateTablesForAllTypesIn(typeof(BaseEntity).Assembly);
 
-                    Provider.Items.Add("db", db);
+                    if (Provider.Items.Contains("db")) Provider.Items["db"] = db; else Provider.Items.Add("db", db);
+
                     db.NoTransactions = Provider.AppSettings["noTransactions"]=="true";
                 }
                 return (Database.Database)Provider.Items["db"];
@@ -277,7 +278,7 @@ namespace Cinar.CMS.Library
 
             string where = "where " + (String.IsNullOrEmpty(simpleWhere) ? "1=1" : simpleWhere) + (String.IsNullOrEmpty(extraWhere) ? "" : " AND (" + extraWhere + ")");
 
-            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select Id, [" + sampleEntity.GetNameColumn() + "] from [" + entityName + "]" + where + " order by [" + sampleEntity.GetNameColumn() + "]", filterParser.GetParams());
+            IDatabaseEntity[] entities = Provider.Database.ReadList(tip, "select Id, [" + sampleEntity.GetNameColumn() + "] from [" + entityName + "]" + where + " order by [" + sampleEntity.GetNameColumn() + "]", filterParser.GetParams()).SafeCastToArray<IDatabaseEntity>();
             return entities;
         }
         [Browsable(false)]
@@ -1253,6 +1254,9 @@ namespace Cinar.CMS.Library
                     if (assembly == null)
                         continue;
                     engine.AddAssembly(assembly);
+                    var api = assembly.GetTypes().FirstOrDefault(t => t.GetInterface("IAPIProvider")!=null);
+                    if(api!=null)
+                        engine.SetAttribute(api.Name, Activator.CreateInstance(api));
                 }
 
             engine.SetAttribute("Context", new ProviderWrapper());

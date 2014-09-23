@@ -45,7 +45,7 @@ namespace Cinar.Database
 
         string GetSQLTableList();
         string GetSQLTableRename(string oldName, string newName);
-        string GetSQLTableDrop(Table table);
+        string GetSQLTableDrop(Table table, bool addIfExists);
         string GetSQLColumnList(string tableName);
         string GetSQLColumnAdd(string toTable, Column column);
         string GetSQLColumnRemove(Column column);

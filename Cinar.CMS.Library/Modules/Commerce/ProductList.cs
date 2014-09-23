@@ -57,7 +57,7 @@ namespace Cinar.CMS.Library.Modules
                 where Content.Visible=1 " + (this.showCurrentContent ? "" : whereMevcutIcerik) + (where != "" ? " AND " + where : "") + @" 
                 order by " + this.OrderBy + " " + (this.Ascending ? "asc" : "desc");
 
-            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams());
+            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams()).SafeCastToArray<IDatabaseEntity>();
             return contents;
         }
 

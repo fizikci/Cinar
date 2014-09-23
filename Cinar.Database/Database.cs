@@ -1979,9 +1979,9 @@ namespace Cinar.Database
             return dbProvider.GetSQLTableRename(oldName, newName);
         }
 
-        public string GetSQLTableDrop(Table table)
+        public string GetSQLTableDrop(Table table, bool addIfExists)
         {
-            return dbProvider.GetSQLTableDrop(table);
+            return dbProvider.GetSQLTableDrop(table, addIfExists);
         }
 
         public string GetSQLColumnList(string tableName)

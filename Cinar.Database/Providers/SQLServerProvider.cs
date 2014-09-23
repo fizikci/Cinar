@@ -374,9 +374,9 @@ namespace Cinar.Database.Providers
             return string.Format("EXEC sp_rename [{0}], [{1}]", oldName, newName);
         }
 
-        public string GetSQLTableDrop(Table table)
+        public string GetSQLTableDrop(Table table, bool addIfExists)
         {
-            return string.Format("DROP {0} [{1}]", table.IsView ? "VIEW" : "TABLE", table.Name);
+            return string.Format("{2} DROP {0} [{1}]", table.IsView ? "VIEW" : "TABLE", table.Name, addIfExists ? "IF OBJECT_ID('dbo." + table.Name + "', 'U') IS NOT NULL" : "");
         }
 
         public string GetSQLColumnList(string tableName)

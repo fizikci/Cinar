@@ -404,9 +404,9 @@ namespace Cinar.Database.Providers
             return string.Format("ALTER TABLE \"{0}\" RENAME TO \"{1}\"", oldName, newName);
         }
 
-        public string GetSQLTableDrop(Table table)
+        public string GetSQLTableDrop(Table table, bool addIfExists)
         {
-            return string.Format("DROP {0} \"{1}\"", table.IsView ? "VIEW" : "TABLE", table.Name);
+            return string.Format("DROP {0} {2}\"{1}\"", table.IsView ? "VIEW" : "TABLE", table.Name, addIfExists ? "IF EXISTS " : "");
         }
 
         public string GetSQLColumnList(string tableName)

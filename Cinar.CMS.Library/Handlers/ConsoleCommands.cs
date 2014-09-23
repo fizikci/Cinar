@@ -255,7 +255,7 @@ namespace Cinar.CMS.Library.Handlers
             foreach (Type type in types)
             {
                 //Type type = typeof(Content);
-                IDatabaseEntity[] entities = Provider.Database.ReadList(type, "select * from " + type.Name);
+                IDatabaseEntity[] entities = Provider.Database.ReadList(type, "select * from " + type.Name).SafeCastToArray<IDatabaseEntity>();
                 foreach (BaseEntity entity in entities)
                 {
                     foreach (PropertyInfo pi in type.GetProperties())
@@ -336,7 +336,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 if (dump_what == "schema" || dump_what == "both")
                 {
-                    textWriterForDump.Write(Provider.Database.GetSQLTableDrop(table)+";");
+                    textWriterForDump.Write(Provider.Database.GetSQLTableDrop(table, true)+";");
                     textWriterForDump.WriteLine();
                     textWriterForDump.Write(Provider.Database.GetTableDDL(table, dbProvider));
                     textWriterForDump.WriteLine();
