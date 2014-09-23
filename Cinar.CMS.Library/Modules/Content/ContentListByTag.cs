@@ -47,8 +47,8 @@ namespace Cinar.CMS.Library.Modules
                            this.OrderBy,
                            this.Ascending ? "asc" : "desc",
                            Provider.Tag != null ? tagJoin : "");
-            
-            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams());
+
+            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams()).SafeCastToArray<IDatabaseEntity>();
             return contents;
         }
     }

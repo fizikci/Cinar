@@ -64,7 +64,7 @@ namespace Cinar.CMS.Library.Modules
                 where
                     Content.Visible=1" + (where != "" ? " AND " + where : "");
 
-            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams());
+            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), sql, filterForContent.GetParams()).SafeCastToArray<IDatabaseEntity>();
             Provider.Translate(contents);
 
             return contents.Length > 0 ? (Entities.Content)contents[0] : null;

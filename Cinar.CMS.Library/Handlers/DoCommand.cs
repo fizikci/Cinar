@@ -540,7 +540,7 @@ namespace Cinar.CMS.Library.Handlers
                                 ORDER BY
                                     Content.PublishDate DESC
                             ",
-                catId, sourceId, authorId);
+                catId, sourceId, authorId).SafeCastToArray<Cinar.Database.IDatabaseEntity>();
 
             StringBuilder sbItems = new StringBuilder();
             foreach (Content content in contents)

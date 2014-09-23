@@ -266,7 +266,7 @@ namespace Cinar.CMS.Library.Modules
 
             dr = data.Rows[index];
 
-            IDatabaseEntity entity = Provider.Database.DataRowToEntity(Provider.GetEntityType(this.EntityName), dr);
+            IDatabaseEntity entity = (IDatabaseEntity)Provider.Database.DataRowToEntity(Provider.GetEntityType(this.EntityName), dr);
 
             Interpreter engine = Provider.GetInterpreter(html, this);
             engine.SetAttribute("entity", entity);

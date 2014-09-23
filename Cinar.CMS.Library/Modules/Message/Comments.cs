@@ -132,7 +132,7 @@ namespace Cinar.CMS.Library.Modules
             StringBuilder sb = new StringBuilder();
             Entities.Content content = Provider.Content;
 
-            IDatabaseEntity[] comments = Provider.Database.ReadList(typeof(UserComment), "select * from [UserComment] where ContentId={0} and ParentId={1} and Visible=1 order by InsertDate", content.Id, parentId, Provider.User.Id);
+            IDatabaseEntity[] comments = Provider.Database.ReadList(typeof(UserComment), "select * from [UserComment] where ContentId={0} and ParentId={1} and Visible=1 order by InsertDate", content.Id, parentId, Provider.User.Id).SafeCastToArray<IDatabaseEntity>();
 
             foreach (UserComment comment in comments)
                 sb.Append(this.GetComment(comment, parentId));

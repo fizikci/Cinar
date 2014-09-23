@@ -46,7 +46,7 @@ namespace Cinar.CMS.Library.Modules
                     Entities.Content content = Provider.Content;
                     if (content == null)
                         throw new Exception(Provider.GetResource("There is no picture to show because there is no related content"));
-                    _pictures = Provider.Database.ReadList(typeof(Entities.ContentPicture), "select * from ContentPicture where ContentId={0} order by OrderNo", content.Id);
+                    _pictures = Provider.Database.ReadList(typeof(Entities.ContentPicture), "select * from ContentPicture where ContentId={0} order by OrderNo", content.Id).SafeCastToArray<IDatabaseEntity>();
                     if (_pictures == null)
                         _pictures = new IDatabaseEntity[0];
                     Provider.Translate(_pictures);

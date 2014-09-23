@@ -60,7 +60,7 @@ namespace Cinar.CMS.Library.Modules
                         Content
                     where
                         Visible = 1 and 
-                        Hierarchy like '" + Provider.GetHierarchyLike(kategoriId) + "%'");
+                        Hierarchy like '" + Provider.GetHierarchyLike(kategoriId) + "%'").SafeCastToArray<IDatabaseEntity>();
 
 
             sb.Append("<table>");

@@ -1445,7 +1445,7 @@ namespace Cinar.DBTools
                                 if (c is Cinar.Database.ForeignKeyConstraint)
                                     sb.AppendLine(Provider.Database.GetSQLConstraintRemove(c) + ";");
                         foreach (Table t in Provider.Database.Tables)
-                            sb.AppendLine(Provider.Database.GetSQLTableDrop(t) + ";");
+                            sb.AppendLine(Provider.Database.GetSQLTableDrop(t, true) + ";");
                         SQLInputDialog sid = new SQLInputDialog(sb.ToString(), false);
                         if (sid.ShowDialog() == DialogResult.OK)
                         {
@@ -1586,7 +1586,7 @@ namespace Cinar.DBTools
         {
             if (!checkConnection()) return;
             Table table = SelectedObject as Table;
-            SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLTableDrop(table), true, string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name));
+            SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLTableDrop(table, true), true, string.Format("Table \"{0}\" will be dropped and ALL DATA LOST.\n\nContinue?", table.Name));
             if(sid.ShowDialog()==DialogResult.OK)
             {
                 try

@@ -28,7 +28,7 @@ namespace Cinar.CMS.Library.Modules
             string hier = String.Join(",", cats);
             if (String.IsNullOrEmpty(hier))
                 hier = "1"; //***
-            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), "select Id, Title, ClassName, Hierarchy, ShowInPage from Content where Id in (" + hier + ") and Visible=1");
+            IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Entities.Content), "select Id, Title, ClassName, Hierarchy, ShowInPage from Content where Id in (" + hier + ") and Visible=1").SafeCastToArray<IDatabaseEntity>();
             Provider.Translate(contents);
 
             int skipFirstCounter = 0;

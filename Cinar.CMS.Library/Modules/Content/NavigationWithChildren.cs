@@ -69,7 +69,7 @@ namespace Cinar.CMS.Library.Modules
         {
             if (Provider.Content.IsUnder(parentId) || Provider.Content.Id == parentId)
             {
-                IDatabaseEntity[] cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId={0} and Visible=1" + (listContents ? "" : " and ClassName='Category'") + " order by OrderNo", parentId);
+                IDatabaseEntity[] cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId={0} and Visible=1" + (listContents ? "" : " and ClassName='Category'") + " order by OrderNo", parentId).SafeCastToArray<IDatabaseEntity>();
                 Provider.Translate(cats);
 
                 if (cats.Length == 0)

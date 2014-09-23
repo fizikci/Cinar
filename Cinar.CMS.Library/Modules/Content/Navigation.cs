@@ -82,9 +82,9 @@ namespace Cinar.CMS.Library.Modules
             if (this.showHomeLink)
                 addLink(sb, Provider.Configuration.MainPage, "nav", selectedCatId == 1, 1, "", Provider.GetModuleResource("Home Page"));
 
-            IDatabaseEntity[] cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + (this.Dynamic ? selectedCatId : this.ParentCategoryId) + " and Visible=1 order by OrderNo");
+            IDatabaseEntity[] cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + (this.Dynamic ? selectedCatId : this.ParentCategoryId) + " and Visible=1 order by OrderNo").SafeCastToArray<IDatabaseEntity>();
             if (cats.Length == 0 && this.Dynamic)
-                cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + selectedCat.CategoryId + " and Visible=1 order by OrderNo");
+                cats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + selectedCat.CategoryId + " and Visible=1 order by OrderNo").SafeCastToArray<IDatabaseEntity>();
             Provider.Translate(cats);
 
             foreach (Entities.Content dr in cats)
@@ -97,7 +97,7 @@ namespace Cinar.CMS.Library.Modules
                 addLink(sb, template, "nav", selected, dr.Id, dr.Category.Title, dr.Title);
                 if (this.showChildCategories && (selectedCat.Id==dr.Id || selectedCat.Hierarchy.IndexOf(dr.Id.ToString().PadLeft(5, '0')) > -1))
                 {
-                    IDatabaseEntity[] subCats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + dr.Id + " and Visible=1 order by OrderNo");
+                    IDatabaseEntity[] subCats = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage from Content where CategoryId=" + dr.Id + " and Visible=1 order by OrderNo").SafeCastToArray<IDatabaseEntity>();
                     Provider.Translate(subCats);
 
                     foreach (Entities.Content drSub in subCats)
@@ -113,7 +113,7 @@ namespace Cinar.CMS.Library.Modules
             {
                 ArrayList alCats = new ArrayList();
                 foreach (Entities.Content cat in cats) alCats.Add(cat.Id.ToString());
-                IDatabaseEntity[] childItems = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage, CategoryId from Content where CategoryId in (" + string.Join(",",(string[])alCats.ToArray(typeof(string))) + ") and Visible=1 order by OrderNo");
+                IDatabaseEntity[] childItems = Provider.Database.ReadList(typeof(Entities.Content), "select Id, " + (useSpotTitle ? "SpotTitle as Title" : "Title") + ", ClassName, Hierarchy, ShowInPage, CategoryId from Content where CategoryId in (" + string.Join(",", (string[])alCats.ToArray(typeof(string))) + ") and Visible=1 order by OrderNo").SafeCastToArray<IDatabaseEntity>();
                 sb.Append("<div  style=\"display:none;position:absolute\" class=\"popupMenuItems hideOnOut\">\n");
                 foreach (Entities.Content childContent in childItems)
                 {

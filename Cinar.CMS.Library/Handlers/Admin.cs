@@ -192,7 +192,7 @@ namespace Cinar.CMS.Library.Handlers
                         Type langEntityType = Provider.GetEntityType(entityName + "Lang");
                         if (langEntityType != null)
                         {
-                            List<IDatabaseEntity> listLang = new List<IDatabaseEntity>(Provider.Database.ReadList(langEntityType, "select * from " + langEntityType.Name + " where " + entityName + "Id = {0}", id));
+                            List<IDatabaseEntity> listLang = new List<IDatabaseEntity>(Provider.Database.ReadList(langEntityType, "select * from " + langEntityType.Name + " where " + entityName + "Id = {0}", id).SafeCastToArray<IDatabaseEntity>());
                             foreach(Lang l in Provider.Database.ReadList(typeof(Lang), "select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
                             {
                                 var langEntity = listLang.Count==0 ? null : listLang.FirstOrDefault(e=>l.Id.Equals(e.GetMemberValue("LangId")));

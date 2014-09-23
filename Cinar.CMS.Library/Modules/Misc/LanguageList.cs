@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 using Cinar.CMS.Library.Entities;
 using Cinar.Database;
 
@@ -17,7 +19,7 @@ namespace Cinar.CMS.Library.Modules
         internal override string show()
         {
             StringBuilder sb = new StringBuilder();
-            IDatabaseEntity[] langs = Provider.Database.ReadList(typeof(Lang), "select * from Lang order by OrderNo");
+            IDatabaseEntity[] langs = Provider.Database.ReadList(typeof(Lang), "select * from Lang order by OrderNo").SafeCastToArray<IDatabaseEntity>();
 
             CinarUriParser uriParser = new CinarUriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
             //uriParser.QueryPart["currentCulture"] = Provider.Configuration.DefaultLang;

@@ -1861,6 +1861,14 @@ namespace System
             return -1;
         }
 
+        public static T[] SafeCastToArray<T>(this IEnumerable source)
+        {
+            if (source == null)
+                return null;
+            return source.Cast<T>().ToArray();
+        }
+
+
         public static string ToStringBetter(this Exception ex)
         {
             return ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.ToStringBetter() + ")" : "");
@@ -2140,4 +2148,8 @@ namespace System
     {
         MASTERCARD, VISA
     };
+
+    public interface IAPIProvider
+    {
+    }
 }

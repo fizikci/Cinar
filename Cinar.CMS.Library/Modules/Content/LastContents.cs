@@ -69,7 +69,7 @@ namespace Cinar.CMS.Library.Modules
                         where 
                             Content.Id in (" + ids + @")
                         order by " + this.OrderBy + " " + (this.Ascending ? "asc" : "desc");
-            return Provider.Database.ReadList(typeof(Entities.Content), sql);
+            return Provider.Database.ReadList(typeof(Entities.Content), sql).SafeCastToArray<IDatabaseEntity>();
         }
     }
 
