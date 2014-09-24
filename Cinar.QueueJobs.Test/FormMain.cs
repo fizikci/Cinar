@@ -22,8 +22,25 @@ namespace Cinar.QueueJobs.Test
             InitializeComponent();
 
             workersFarm.WorkerProcessType = workerProcessType;
-            workersFarm.Log = (msg) => {
-                if(cbShowLog.Checked)
+            workersFarm.Log = (msg) =>
+            {
+                if (msg.StartsWith("stats"))
+                {
+                    var statType = msg.Replace("stats ", "");
+                    switch (statType)
+                    {
+                        case "done":
+                            lblDone.Text = (int.Parse(lblDone.Text) + 1).ToString();
+                            break;
+                        case "failed":
+                            lblFailed.Text = (int.Parse(lblFailed.Text) + 1).ToString();
+                            break;
+                        case "contentFound":
+                            lblContentFound.Text = (int.Parse(lblContentFound.Text) + 1).ToString();
+                            break;
+                    }
+                }
+                else if (cbShowLog.Checked)
                     Console.Items.Add(msg);
             };
             wp = (MyWorkerProcess)Activator.CreateInstance(workerProcessType);

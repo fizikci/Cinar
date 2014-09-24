@@ -44,6 +44,8 @@ namespace Cinar.QueueJobs.UI
             db.Read(WorkerProcess.GetQueueType(), 1);
             db.Read(WorkerProcess.GetWorkerType(), 1);
 
+            db.ExecuteNonQuery("update Job set Status='New' where Status='Processing';");
+
             refreshWorkers(true);
 
             running = true;

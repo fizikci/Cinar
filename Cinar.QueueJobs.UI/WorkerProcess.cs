@@ -182,7 +182,7 @@ namespace Cinar.QueueJobs.UI
 
         private Job getWaitingJob()
         {
-            Job job = (Job)db.Read(workerProcess.GetQueueType(), "select top 1 * from " + workerProcess.GetQueueType().Name + " where WorkerId={0} AND Status='New' order by Id", worker.Id);
+            Job job = (Job)db.Read(workerProcess.GetQueueType(), "select top 1 * from " + workerProcess.GetQueueType().Name + " where WorkerId={0} AND Status='New' order by Id " + (this.worker.Id%2==0?"desc":"asc"), worker.Id);
             if (job != null)
             {
                 job.Status = JobStatuses.Processing;
