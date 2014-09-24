@@ -74,7 +74,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>_dll\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -87,11 +89,32 @@
     <Compile Include="Providers\PostgreSQLProvider.cs" />
     <Compile Include="Providers\MySqlProvider.cs" />
     <Compile Include="Providers\SQLServerProvider.cs" />
+    <Compile Include="SQLEngine\ADO.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SQLEngine\Interpreter.cs" />
+    <Compile Include="SQLEngine\Providers\CSVProvider.cs" />
+    <Compile Include="SQLEngine\Providers\DailyMotionProvider.cs" />
+    <Compile Include="SQLEngine\Providers\FacebookProvider.cs" />
+    <Compile Include="SQLEngine\Providers\FileProvider.cs" />
+    <Compile Include="SQLEngine\Providers\FriendFeedProvider.cs" />
+    <Compile Include="SQLEngine\Providers\POP3Provider.cs" />
+    <Compile Include="SQLEngine\Providers\RSSProvider.cs" />
+    <Compile Include="SQLEngine\Providers\SocialMediaProvider.cs" />
+    <Compile Include="SQLEngine\Providers\TwitterProvider.cs" />
+    <Compile Include="SQLEngine\Providers\YahooBossProvider.cs" />
+    <Compile Include="SQLEngine\Providers\YoutubeProvider.cs" />
+    <Compile Include="SQLParser\Expressions.cs" />
+    <Compile Include="SQLParser\Parser.cs" />
+    <Compile Include="SQLParser\Statements.cs" />
     <Compile Include="Tools\CheckSchemaProblems.cs" />
     <Compile Include="Tools\DBTransfer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+    <Content Include="SQLEngine\Providers\daily_motion.txt" />
+    <Content Include="SQLEngine\Providers\LinkedIn.txt" />
+    <Content Include="SQLParser\ToDo.txt" />
     <Content Include="_dll\Mono.Security.dll" />
     <Content Include="_dll\MySql.Data.dll" />
     <Content Include="_dll\Npgsql.dll" />
@@ -124,6 +147,13 @@
       <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
+      <Project>{e5aa23f7-818d-4d36-b2d3-ef8e4d60c01a}</Project>
+      <Name>Cinar.POP3</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SQLEngine\Providers\FriendFeed.json" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -71,10 +71,6 @@
       <Project>{e5aa23f7-818d-4d36-b2d3-ef8e4d60c01a}</Project>
       <Name>Cinar.POP3</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
-      <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
-      <Name>Cinar.SQLParser</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Providers\FriendFeed.json" />
