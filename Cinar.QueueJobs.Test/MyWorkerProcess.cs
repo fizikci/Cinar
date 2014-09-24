@@ -45,6 +45,8 @@ namespace Cinar.QueueJobs.Test
             db = this.GetNewDatabaseInstance();
         }
 
+        private const string baseDir = @"D:\Work\CRAWLER_DATA";
+
         public override string ExecuteJob(Job job, JobData jobData)
         {
             var jobDefName = db.GetString("select Name from JobDefinition where Id=" + job.JobDefinitionId);
@@ -56,7 +58,7 @@ namespace Cinar.QueueJobs.Test
                         string res = findLinks(job.Name);
 
                         var d = DateTime.Now;
-                        string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
+                        string path = baseDir + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
                         if(!String.IsNullOrWhiteSpace(res)) 
                             File.WriteAllText(path + "\\found.links", res, Encoding.UTF8);
@@ -103,7 +105,7 @@ namespace Cinar.QueueJobs.Test
                         var time = new Dictionary<string, long>();
 
                         var d = DateTime.Now;
-                        string path = AppDomain.CurrentDomain.BaseDirectory + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
+                        string path = baseDir + "\\crawler\\" + d.ToString("yyyyMMdd") + "\\" + jobDefName;
                         Directory.CreateDirectory(path);
                         string content = "";
 
@@ -118,6 +120,12 @@ namespace Cinar.QueueJobs.Test
                         {
                             File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText { Title = "Error occured while downloading the content!", Content = ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
                             sw.Stop();
+                            this.Log(string.Format("{0} {1} {2} (ERROR DOWNLOAD {3})",
+                                DateTime.Now.ToString("yyyy.MM.dd HH.mm "),
+                                "Worker " + job.WorkerId.ToString().PadLeft(2),
+                                job.Name.Replace("http://", "").Replace("www.", "").Replace(":", "").StrCrop(50).PadRight(53),
+                                ex.ToStringBetter().Replace(":", "")));
+                            this.Log("stats failed");
                             throw ex;
                         }
 
@@ -139,13 +147,21 @@ namespace Cinar.QueueJobs.Test
                                     job.Name.Replace("http://","").Replace("www.","").Replace(":","").StrCrop(50).PadRight(53),
                                     time["Download"].ToString().PadLeft(6),
                                     time["Clear"].ToString().PadLeft(6)));
-                            
+
+                            this.Log("stats done");
+                            if(job.ResLength>0) this.Log("stats contentFound");                            
                             return clean;
                         }
                         catch (Exception ex)
                         {
                             File.WriteAllText(path + "\\" + job.Id + ".json", new CleanText { Title = "Error occured while cleaning the text!", Content = ex.ToStringBetter() }.ToJSON(), Encoding.UTF8);
                             sw.Stop();
+                            this.Log(string.Format("{0} {1} {2} (ERROR CLEAN {3})",
+                                DateTime.Now.ToString("yyyy.MM.dd HH.mm "),
+                                "Worker " + job.WorkerId.ToString().PadLeft(2),
+                                job.Name.Replace("http://", "").Replace("www.", "").Replace(":", "").StrCrop(50).PadRight(53),
+                                ex.ToStringBetter().Replace(":", "")));
+                            this.Log("stats failed");
                             throw ex;
                         }
 
@@ -155,8 +171,16 @@ namespace Cinar.QueueJobs.Test
             return "Command not implemented";
         }
 
+        List<string> skippedExtensions = new List<string> { 
+            ".jpg",".pdf",".doc",".png",".wmv",".rss",".gif",".jpeg",
+            ".xls",".zip",".docx",".rar",".mp4",".ppt",".swf",".mp3",
+            ".xlsx",".exe",".pptx",".rtf"};
+
         private bool isTheLinkToBeSkipped(string url, List<SiteUrlFilter> filters)
         {
+            if (!string.IsNullOrWhiteSpace(skippedExtensions.Find(ext => url.EndsWith(ext))))
+                return true;
+
             var filter = filters.Find(f=>url.StartsWith(f.Url, StringComparison.InvariantCultureIgnoreCase));
             if (filter == null)
                 return false;
@@ -166,7 +190,7 @@ namespace Cinar.QueueJobs.Test
 
         public override Database.Database GetNewDatabaseInstance()
         {
-            return new Database.Database("Server=localhost;Database=queue_test;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"db.config"));
+            return new Database.Database("Server=localhost;Database=portal;Uid=root;Pwd=bkbk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"db.config"));
         }
 
         private string findLinks(string baseUrl)
@@ -413,7 +437,7 @@ namespace Cinar.QueueJobs.Test
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 10 * 1000;
+            w.Timeout = 2 * 1000;
             return w;
         }
 
