@@ -478,10 +478,6 @@
       <Project>{D33BDA95-9E9B-4B97-BF2A-B3520D8928F3}</Project>
       <Name>Cinar.Scripting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cinar.SQLParser\Cinar.SQLParser.csproj">
-      <Project>{AE09D13E-272E-48BF-BB6D-6EE19EA7A4C5}</Project>
-      <Name>Cinar.SQLParser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cinar.UICommands\Cinar.UICommands.csproj">
       <Project>{90107230-692B-4EEF-9308-31D954AE722E}</Project>
       <Name>Cinar.UICommands</Name>

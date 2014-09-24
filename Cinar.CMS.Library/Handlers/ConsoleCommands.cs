@@ -392,7 +392,14 @@ namespace Cinar.CMS.Library.Handlers
             {
 
                 List<string> fileNames = Regex.Split(Utility.GetFileNames(userFilesPath, "UserFiles"), "\r\n").ToList();
-                List<string> defaultFileNames = Regex.Split(File.ReadAllText(userFilesPath + ".txt"), "\r\n").ToList();
+                List<string> defaultFileNames = new List<string>();
+                try
+                {
+                    defaultFileNames = Regex.Split(File.ReadAllText(userFilesPath + ".txt"), "\r\n").ToList();
+                }
+                catch
+                {
+                }
                 defaultFileNames.Add(newBackupFolder.Substring(newBackupFolder.IndexOf("UserFiles")) + "\\dump.sql");
 
                 string[] diff = fileNames.Select((name, index) => new { name, index })
