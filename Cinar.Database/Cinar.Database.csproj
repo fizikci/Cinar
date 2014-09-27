@@ -144,7 +144,7 @@
       <Name>Cinar.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
-      <Project>{AF6CB4F3-3A42-49B1-90CA-03310EFAE89B}</Project>
+      <Project>{af6cb4f3-3a42-49b1-90ca-03310efae89b}</Project>
       <Name>Cinar.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
