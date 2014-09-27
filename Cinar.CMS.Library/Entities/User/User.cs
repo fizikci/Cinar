@@ -219,7 +219,7 @@ namespace Cinar.CMS.Library.Entities
                 this.Visible = false;
                 this.Keyword = CMSUtility.MD5((this.Nick ?? "")+DateTime.Now.Ticks.ToString());
 
-                if(string.IsNullOrWhiteSpace(this.Country) && Provider.Request.UserLanguages.Length>0)
+                if (string.IsNullOrWhiteSpace(this.Country) && Provider.Request.UserLanguages != null && Provider.Request.UserLanguages.Length > 0)
                     this.Country = Provider.Request.UserLanguages[0];
             }
             else {
