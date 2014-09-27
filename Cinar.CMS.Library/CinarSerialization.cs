@@ -45,7 +45,14 @@ namespace Cinar.CMS.Library
             Dictionary<string, string> res = new Dictionary<string, string>();
             try
             {
-                data = data.Substring("Cinar.CMS.Serialization\n".Length);
+                data = data.Substring("Cinar.CMS.Serialization\n".Length)
+                    //
+                    //   if Cinar.CMS.Serialization is edited from a different database tool, it may replace \r\n with \n
+                    //  in that case cms will not work properly and module will be shown as "Empty".
+                    //
+                    //   As a solution: new lines are changed to it C# form.
+                    .Replace("\r\n", "\n").Replace("\n", "\r\n");
+
                 while (data.Length > 0)
                 {
                     string propName = data.Substring(0, data.IndexOf(','));
