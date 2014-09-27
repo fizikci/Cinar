@@ -534,7 +534,7 @@ namespace System
                         val = Encoding.UTF8.GetString((byte[])dr[dc]);
                     if (val == null)
                         val = "";
-                    sb.AppendFormat("<td>{0}</td>", val.Replace("<","&lt;").Replace(">", "&gt;"));
+                    sb.AppendFormat("<td>{0}</td>", val);
                 }
                 sb.Append("</tr>");
             }
