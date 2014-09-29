@@ -449,6 +449,7 @@ namespace Cinar.CMS.Library
                 StaticResource newSR = new StaticResource { Name = name };
                 newSR.Save();
                 sr[name] = newSR.Id;
+                //HttpContext.Current.Cache["StaticResource"] = sr;
 
                 try
                 {
@@ -467,6 +468,8 @@ namespace Cinar.CMS.Library
                         };
                         newSRL.Save();
                         srl[newSR.Id + "_" + newSRL.LangId] = newSRL.Translation;
+                        //HttpContext.Current.Cache["StaticResourceLang"] = srl;
+
                         if (Provider.CurrentLanguage.Id == l.Id)
                             name = newSRL.Translation;
                     }
@@ -499,6 +502,8 @@ namespace Cinar.CMS.Library
                     name = newSRL.Translation;
                 }
                 catch { }
+
+                HttpContext.Current.Cache["StaticResourceLang"] = srl;
 
                 return name;
 
