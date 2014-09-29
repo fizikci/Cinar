@@ -336,36 +336,43 @@ namespace Cinar.Database
 
         public ColumnUIMetadata GenerateUIMetadata()
         {
-            if (UIMetadata != null)
-                return UIMetadata;
+            if (columnUIMetadata != null)
+                return columnUIMetadata;
 
-            UIMetadata = new ColumnUIMetadata();
-            UIMetadata.DisplayName = Name;
-            UIMetadata.DisplayOrder = parent.IndexOf(this);
+            columnUIMetadata = new ColumnUIMetadata();
+            columnUIMetadata.DisplayName = Name;
+            columnUIMetadata.DisplayOrder = parent.IndexOf(this);
             if (this.ReferenceColumn != null)
-                UIMetadata.EditorType = EditorTypes.LookUp;
+                columnUIMetadata.EditorType = EditorTypes.LookUp;
             else if (this.IsDateType())
-                UIMetadata.EditorType = EditorTypes.DateEdit;
+                columnUIMetadata.EditorType = EditorTypes.DateEdit;
             else if (this.IsStringType())
-                UIMetadata.EditorType = this.Length > 100 ? EditorTypes.MemoEdit : EditorTypes.TextEdit;
+                columnUIMetadata.EditorType = this.Length > 100 ? EditorTypes.MemoEdit : EditorTypes.TextEdit;
             else if (this.IsNumericType())
-                UIMetadata.EditorType = EditorTypes.NumberEdit;
+                columnUIMetadata.EditorType = EditorTypes.NumberEdit;
             else if (columnType == DbType.Boolean)
-                UIMetadata.EditorType = EditorTypes.CheckBox;
+                columnUIMetadata.EditorType = EditorTypes.CheckBox;
             else
-                UIMetadata.EditorType = EditorTypes.TextEdit;
-            UIMetadata.GridColumnWidth = 150;
-            UIMetadata.ShortDisplayName = Name;
-            UIMetadata.ShowInFilterPanel = false;
-            UIMetadata.ShowInForm = !this.IsPrimaryKey;
-            UIMetadata.ShowInGrid = !this.IsPrimaryKey;
-            UIMetadata.SortableInGrid = true;
+                columnUIMetadata.EditorType = EditorTypes.TextEdit;
+            columnUIMetadata.GridColumnWidth = 150;
+            columnUIMetadata.ShortDisplayName = Name;
+            columnUIMetadata.ShowInFilterPanel = false;
+            columnUIMetadata.ShowInForm = !this.IsPrimaryKey;
+            columnUIMetadata.ShowInGrid = !this.IsPrimaryKey;
+            columnUIMetadata.SortableInGrid = true;
 
-            return UIMetadata;
+            return columnUIMetadata;
         }
 
+        private ColumnUIMetadata columnUIMetadata;
         [Description("The definitions for this column to be used generating of UI code"), Category("Extra Info")]
-        public ColumnUIMetadata UIMetadata { get; set; }
+        public ColumnUIMetadata UIMetadata {
+            get { 
+                if (columnUIMetadata == null) columnUIMetadata = GenerateUIMetadata();
+                return columnUIMetadata;
+            }
+            set { columnUIMetadata = value; }
+        }
     }
 
     public class ColumnCollection : List<Column>

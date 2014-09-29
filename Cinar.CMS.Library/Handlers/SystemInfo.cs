@@ -494,48 +494,51 @@ namespace Cinar.CMS.Library.Handlers
             doc.LoadXml(xmlData);
 
             Provider.Database.Execute(() =>
-            {
-                Provider.Database.ExecuteNonQuery("truncate table StaticResourceLang;");
-                Provider.Database.ExecuteNonQuery("truncate table StaticResource;");
-
-                string[] defLangArr = Lang.GetLangFullCodeAndName(doc.FirstChild.Attributes["defaultLang"].Value);
-                Lang def = Provider.Database.Read<Lang>("Code={0}", defLangArr[0]);
-                if (def == null)
                 {
-                    def = new Lang { Name = defLangArr[1], Code = defLangArr[0] };
-                    def.Save();
-                }
+                    HttpContext.Current.Cache["StaticResource"] = null;
+                    HttpContext.Current.Cache["StaticResourceLang"] = null;
 
-                Dictionary<string, Lang> langs = new Dictionary<string, Lang>();
-                foreach (XmlNode node in doc.FirstChild.FirstChild.ChildNodes)
-                {
-                    string langCode = node.Attributes["name"].Value;
-                    string[] langArr = Lang.GetLangFullCodeAndName(langCode);
-                    langs[langCode] = Provider.Database.Read<Lang>("Code={0}", langArr[0]);
-                    if (langs[langCode] == null)
+                    Provider.Database.ExecuteNonQuery("truncate table StaticResourceLang;");
+                    Provider.Database.ExecuteNonQuery("truncate table StaticResource;");
+
+                    string[] defLangArr = Lang.GetLangFullCodeAndName(doc.FirstChild.Attributes["defaultLang"].Value);
+                    Lang def = Provider.Database.Read<Lang>("Code={0}", defLangArr[0]);
+                    if (def == null)
                     {
-                        langs[langCode] = new Lang { Name = langArr[1], Code = langArr[0] };
-                        langs[langCode].Save();
+                        def = new Lang { Name = defLangArr[1], Code = defLangArr[0] };
+                        def.Save();
                     }
-                }
 
-                foreach (XmlNode entry in doc.SelectNodes("/localization/entry"))
-                {
-                    var sr = new StaticResource { Name = entry.Attributes["phrase"].Value };
-                    sr.Save();
-
-                    foreach (XmlNode lang in entry.ChildNodes)
+                    Dictionary<string, Lang> langs = new Dictionary<string, Lang>();
+                    foreach (XmlNode node in doc.FirstChild.FirstChild.ChildNodes)
                     {
-                        try
+                        string langCode = node.Attributes["name"].Value;
+                        string[] langArr = Lang.GetLangFullCodeAndName(langCode);
+                        langs[langCode] = Provider.Database.Read<Lang>("Code={0}", langArr[0]);
+                        if (langs[langCode] == null)
                         {
-                            var srl = new StaticResourceLang { Translation = lang.InnerText, StaticResourceId = sr.Id, LangId = langs[lang.Attributes["name"].Value].Id };
-                            srl.Save();
+                            langs[langCode] = new Lang { Name = langArr[1], Code = langArr[0] };
+                            langs[langCode].Save();
                         }
-                        catch { }
                     }
 
-                }
-            });
+                    foreach (XmlNode entry in doc.SelectNodes("/localization/entry"))
+                    {
+                        var sr = new StaticResource { Name = entry.Attributes["phrase"].Value };
+                        sr.Save();
+
+                        foreach (XmlNode lang in entry.ChildNodes)
+                        {
+                            try
+                            {
+                                var srl = new StaticResourceLang { Translation = lang.InnerText, StaticResourceId = sr.Id, LangId = langs[lang.Attributes["name"].Value].Id };
+                                srl.Save();
+                            }
+                            catch { }
+                        }
+
+                    }
+                });
 
             context.Response.Write("OK");
         }

@@ -162,7 +162,7 @@ namespace Cinar.DBTools.Tools
                         engine2.Parse();
                         engine2.Execute();
                         //TODO: put code generation base path to settings
-                        path = "E:\\kodlar\\projects\\Interpress\\" + engine2.Output.Replace("|", "\\");
+                        path = @"C:\Work\DealerSafe\DealerSafe2\" + engine2.Output.Replace("|", "\\");
                     }
 
                     generatedCodes.Add(new GeneratedCode { 
