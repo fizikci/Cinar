@@ -1,8 +1,9 @@
-﻿using Cinar.Database;
+﻿using System.Collections.Generic;
+using Cinar.Database;
 using System;
 using System.Web;
 using System.Xml.Serialization;
-//using System.IO;
+using System.Linq;
 
 namespace Cinar.CMS.Library.Entities
 {
@@ -25,7 +26,20 @@ namespace Cinar.CMS.Library.Entities
         {
             base.AfterSave(isUpdate);
 
-            HttpContext.Current.Cache.Remove("StaticResource");
+            var sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
+            if (sr == null) return;//***
+            if (!isUpdate)
+                sr.Add(Name, Id);
+            // StaticResource update edilemez!!
+        }
+
+        protected override void afterDelete()
+        {
+            base.afterDelete();
+
+            var sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
+            if (sr == null) return;//***
+            sr.Remove(Name);
         }
     }
 }

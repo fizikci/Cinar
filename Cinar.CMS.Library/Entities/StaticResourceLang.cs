@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Cinar.Database;
 using System.Drawing;
 using System.Xml.Serialization;
@@ -43,7 +44,22 @@ namespace Cinar.CMS.Library.Entities
         {
             base.AfterSave(isUpdate);
 
-            HttpContext.Current.Cache.Remove("StaticResourceLang");
+            var srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
+            if (srl == null) return; //***
+            if (!isUpdate)
+                srl.Add(StaticResourceId + "_" + LangId, this.Translation);
+            else
+            {
+                srl.Remove(this.GetOriginalValues()["StaticResourceId"] + "_" + this.GetOriginalValues()["LangId"]);
+                srl.Add(StaticResourceId + "_" + LangId, this.Translation);
+            }
+        }
+
+        protected override void afterDelete()
+        {
+            var srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
+            if (srl == null) return; //***
+            srl.Remove(StaticResourceId + "_" + LangId);
         }
     }
 
