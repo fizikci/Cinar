@@ -16,7 +16,7 @@ $
 	<form id=""fLogin"" method=""post"" action=""DoLogin.ashx"">
     <fieldset>
     <legend>Oturum Aç</legend>
-		<input type=""hidden"" name=""RedirectURL"" value=""$=Provider.Request.RedirectURL""/>
+		<input type=""hidden"" name=""RedirectURL"" value=""$=Provider.Request.RedirectURL$""/>
 	    $
 	    if (Provider.Session['loginError'])
 	    {
