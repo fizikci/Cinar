@@ -66,10 +66,9 @@ namespace Cinar.Database.Providers
         /// <summary>
         /// Metadata okuma iþini yapan asýl metod. Sýrayla bütün veritabaný nesnelerini okur.
         /// </summary>
-        /// <param name="db"></param>
-        public void ReadDatabaseMetadata()
+        public void ReadDatabaseMetadata(bool readAllMetadata)
         {
-            // tables and views
+            #region tables and views
             db.Tables = new TableCollection(db);
 
             bool connectionAlreadyOpen = connection.State == ConnectionState.Open;
@@ -107,7 +106,11 @@ namespace Cinar.Database.Providers
 
                 tbl.Columns.Add(f);
             }
+            #endregion
 
+            //if (!readAllMetadata) return; //***
+
+            #region indices
             if (!connectionAlreadyOpen) connection.Open();
             DataTable dtIndexes = ((DbConnection)connection).GetSchema("Indexes");
             if (!connectionAlreadyOpen) connection.Close();
@@ -149,6 +152,7 @@ namespace Cinar.Database.Providers
 
                 index.ColumnNames.Add(drCol["COLUMN_NAME"].ToString());
             }
+            #endregion
         }
 
         #region string <=> dbType conversion

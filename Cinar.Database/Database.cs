@@ -138,9 +138,9 @@ namespace Cinar.Database
                 Cache["sqlLog"] = null;
         }
 
-        public Database(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = true)
+        public Database(string connectionString, DatabaseProvider provider, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = true, bool readAllMetadata = true)
         {
-            createProviderAndReadMetadata(connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist);
+            createProviderAndReadMetadata(connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist, readAllMetadata);
         }
 
         public Database() 
@@ -172,17 +172,19 @@ namespace Cinar.Database
         }
 
         private string serializedMetadataFilePath;
+        private bool readAllMetadata;
 
         private string uniqueDatabaseName {
             get { return this.Host + this.Provider + this.Name; }
         }
 
         private void createProviderAndReadMetadata(string connectionString, DatabaseProvider provider,
-                                                   string serializedMetadataFilePath, bool createDatabaseIfNotExist)
+                                                   string serializedMetadataFilePath, bool createDatabaseIfNotExist, bool readAllMetadata)
         {
             this.connectionString = connectionString;
             this.provider = provider;
             this.serializedMetadataFilePath = serializedMetadataFilePath;
+            this.readAllMetadata = readAllMetadata;
 
             CreateDbProvider(createDatabaseIfNotExist);
 
@@ -190,7 +192,7 @@ namespace Cinar.Database
             if (!Cache.ContainsKey(uniqueDatabaseName))
             {
                 if (string.IsNullOrEmpty(serializedMetadataFilePath))
-                    dbProvider.ReadDatabaseMetadata();
+                    dbProvider.ReadDatabaseMetadata(readAllMetadata);
                 else
                     readMetadataFromFile(serializedMetadataFilePath);
                 Cache[uniqueDatabaseName] = this.tables;
@@ -222,7 +224,7 @@ namespace Cinar.Database
             }
             else
             {
-                dbProvider.ReadDatabaseMetadata();
+                dbProvider.ReadDatabaseMetadata(readAllMetadata);
                 XmlSerializer ser = new XmlSerializer(typeof(TableCollection));
                 using (StreamWriter sr = new StreamWriter(serializedMetadataFilePath))
                     ser.Serialize(sr, this.tables);
@@ -261,11 +263,11 @@ namespace Cinar.Database
 
         public int DefaultCommandTimeout { get; set; }
 
-        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = false)
+        public Database(DatabaseProvider provider, string host, string dbName, string userName, string password, int defaultCommandTimeout, string serializedMetadataFilePath = null, bool createDatabaseIfNotExist = false, bool readAllMetadata = true)
         {
             this.DefaultCommandTimeout = defaultCommandTimeout == 0 ? 100 : defaultCommandTimeout;
             SetConnectionString(provider, host, dbName, userName, password);
-            createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist);
+            createProviderAndReadMetadata(this.connectionString, provider, serializedMetadataFilePath, createDatabaseIfNotExist, readAllMetadata);
         }
 
         public void SetConnectionString(DatabaseProvider provider, string host, string dbName, string userName, string password)
@@ -426,7 +428,7 @@ namespace Cinar.Database
         /// </summary>
         public void Refresh()
         {
-            dbProvider.ReadDatabaseMetadata();
+            dbProvider.ReadDatabaseMetadata(readAllMetadata);
             tableMappingInfo = new Dictionary<Type, Table>();
             columnMappingInfo = new Dictionary<PropertyInfo, Column>();
 

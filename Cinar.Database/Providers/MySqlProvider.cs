@@ -84,9 +84,9 @@ namespace Cinar.Database.Providers
         /// Metadata okuma iþini yapan asýl metod. Sýrayla bütün veritabaný nesnelerini okur.
         /// </summary>
         /// <param name="db"></param>
-        public void ReadDatabaseMetadata()
+        public void ReadDatabaseMetadata(bool readAllMetadata)
         {
-            // tables and views
+            #region tables and views
             db.Tables = new TableCollection(db);
 
             // columns
@@ -114,10 +114,11 @@ namespace Cinar.Database.Providers
                     tbl.Columns.Add(f);
                 }
             }
+            #endregion
 
+            #region constraints
             try
             {
-                // constraints
                 // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
                 DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
                 foreach (DataRow drCon in dtCons.Rows)
@@ -184,8 +185,11 @@ namespace Cinar.Database.Providers
                     catch { }
                 }
             }
+            #endregion
 
-            // indices
+            if (!readAllMetadata) return; //***
+
+            #region indices
             foreach (Table tbl in db.Tables)
             {
                 DataTable dtKeys = db.GetDataTable("SHOW INDEXES FROM `" + tbl.Name + "`");
@@ -205,6 +209,7 @@ namespace Cinar.Database.Providers
                             tbl.Indices.Add(index);
                     }
             }
+            #endregion
         }
 
         #region string <=> dbType conversion
