@@ -44,8 +44,7 @@ namespace Cinar.Database.Providers
         /// <summary>
         /// Metadata okuma iþini yapan asýl metod. Sýrayla bütün veritabaný nesnelerini okur.
         /// </summary>
-        /// <param name="db"></param>
-        public void ReadDatabaseMetadata()
+        public void ReadDatabaseMetadata(bool readAllMetadata)
         {
             // tables and views
             db.Tables = new TableCollection(db);
@@ -76,64 +75,6 @@ namespace Cinar.Database.Providers
                 }
             }
             
-            /*
-            // constraints
-            // Con.Name, Con.TableName, Con.Type, Col.ColumnName, Con.RefConstraintName, Con.UpdateRule, Con.DeleteRule
-            DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
-            foreach (DataRow drCon in dtCons.Rows)
-            {
-                Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
-                if (con != null)
-                {
-                    con.ColumnNames.Add(drCon["ColumnName"].ToString());
-                    continue;
-                }
-
-                switch (drCon["Type"].ToString())
-                {
-                    case "FOREIGN KEY":
-                        con = new ForeignKeyConstraint();
-                        (con as ForeignKeyConstraint).RefConstraintName = drCon["RefConstraintName"].ToString();
-                        (con as ForeignKeyConstraint).RefTableName = drCon["RefTableName"].ToString();
-                        (con as ForeignKeyConstraint).DeleteRule = drCon["DeleteRule"].ToString();
-                        (con as ForeignKeyConstraint).UpdateRule = drCon["UpdateRule"].ToString();
-                        break;
-                    case "PRIMARY KEY":
-                        con = new PrimaryKeyConstraint();
-                        break;
-                    case "UNIQUE":
-                        con = new UniqueConstraint();
-                        break;
-                    default:
-                        throw new Exception("Unknown constraint type: " + drCon["Type"].ToString());
-                }
-                con.Name = drCon["Name"].ToString();
-                con.ColumnNames.Add(drCon["ColumnName"].ToString());
-
-                db.Tables[drCon["TableName"].ToString()].Constraints.Add(con);
-            }
-
-            // indices
-            foreach (Table tbl in db.Tables)
-            {
-                DataTable dtKeys = db.GetDataTable("SHOW INDEXES FROM `" + tbl.Name + "`");
-                if (dtKeys != null)
-                    for (int i = 0; i < dtKeys.Rows.Count; i++)
-                    {
-                        DataRow drKey = dtKeys.Rows[i];
-
-                        if (db.GetConstraint(drKey["Key_name"].ToString()) != null)
-                            continue;
-
-                        Index index = tbl.Indices[drKey["Key_name"].ToString()] ?? new Index();
-                        index.Name = drKey["Key_name"].ToString();
-                        index.ColumnNames.Add(drKey["Column_name"].ToString());
-
-                        if (tbl.Indices[index.Name] == null)
-                            tbl.Indices.Add(index);
-                    }
-            }
-            */
         }
 
         #region string <=> dbType conversion

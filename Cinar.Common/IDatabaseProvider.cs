@@ -26,7 +26,7 @@ namespace Cinar.Database
 {
     public interface IDatabaseProvider
     {
-        void ReadDatabaseMetadata();
+        void ReadDatabaseMetadata(bool readAllMetadata);
         DbType StringToDbType(string typeName);
         string DbTypeToString(DbType dbType);
 

@@ -801,7 +801,7 @@ namespace Cinar.Scripting
                 foreach (Expression exp in fc.Arguments)
                 {
                     paramValues.Add(exp.Calculate(context, this));
-                    paramTypes.Add(paramValues[i].GetType()); //TODO: paramValues[i] null ise ne olacak?
+                    paramTypes.Add(paramValues[i] == null ? typeof(object) : paramValues[i].GetType());
                     i++;
                 }
 

@@ -378,12 +378,11 @@ InnerHtml,32,<hr/>
             if (isUpdate)
             {
                 Provider.Database.ExecuteNonQuery(
-                    "update Module set Name={1}, Template={2}, Region={3}, OrderNo={4}, CSS={5}, Details={6}, ParentModuleId={7}, UseCache={8}, ElementId={9}, ElementName={10} where Id={0}", //  and Name={1}
+                    "update Module set Name={1}, Template={2}, Region={3}, CSS={4}, Details={5}, ParentModuleId={6}, UseCache={7}, ElementId={8}, ElementName={9} where Id={0}", //  and Name={1}
                     Id, 
                     Name, 
                     Template, 
                     Region, 
-                    OrderNo, 
                     CSS, 
                     this.Serialize(),
                     ParentModuleId,
