@@ -12,8 +12,9 @@ using Cinar.Database;
 
 namespace Cinar.DBTools
 {
-    public class CinarSQLEditor : TextEditorControl, ICompletionDataProvider, IFoldingStrategy, ISyntaxModeFileProvider
+    public class CinarSQLEditor : TextEditorControl, IFoldingStrategy, ISyntaxModeFileProvider//, ICompletionDataProvider
     {
+        /*
         private System.Windows.Forms.ImageList imageList;
 
         private enum Images {
@@ -24,17 +25,18 @@ namespace Cinar.DBTools
             Struct = 4,
             Interface = 5
         }
+         */
 
         public CinarSQLEditor()
         {
-            Document.FoldingManager.FoldingStrategy = this;
+            //Document.FoldingManager.FoldingStrategy = this;
             
             HighlightingManager.Manager.AddSyntaxModeFileProvider(this); // Attach to the text editor.
             SetHighlighting("SQL");
 
-            ActiveTextAreaControl.TextArea.KeyUp += TextArea_KeyUp;
-            //ActiveTextAreaControl.TextArea.KeyDown += TextArea_KeyDown;
+            //ActiveTextAreaControl.TextArea.KeyUp += TextArea_KeyUp;
 
+            /*
             imageList = new System.Windows.Forms.ImageList();
             imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             imageList.ImageSize = new System.Drawing.Size(16, 16);
@@ -45,17 +47,10 @@ namespace Cinar.DBTools
             imageList.Images.Add(SQLResources.Property);
             imageList.Images.Add(SQLResources.Struct);
             imageList.Images.Add(SQLResources.Interface);
+             */
         }
 
-        //void TextArea_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        //{
-        //    if (e.KeyCode == System.Windows.Forms.Keys.F1)
-        //    {
-        //        CodeCompletionWindow.ShowCompletionWindow(this.FindForm(), this, null, this, ' ');
-        //        e.Handled = true;
-        //    }
-        //}
-
+        /*
         void TextArea_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             try
@@ -65,14 +60,11 @@ namespace Cinar.DBTools
             }
             catch { }
         }
+        */
 
-        protected override void OnTextChanged(EventArgs e)
-        {
-            base.OnTextChanged(e);
-        }
 
         #region ICompletionDataProvider Members
-
+        /*
         public int DefaultIndex
         {
             get 
@@ -195,7 +187,7 @@ namespace Cinar.DBTools
         {
             return CompletionDataProviderKeyResult.InsertionKey;
         }
-
+        */
         #endregion
 
         #region IFoldingStrategy Members

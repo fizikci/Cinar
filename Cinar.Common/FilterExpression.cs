@@ -46,6 +46,60 @@ namespace Cinar.Database
                 }
 			};
 		}
+        public static FilterExpression Parse(string where)
+        {
+            var res = new FilterExpression();
+            try
+            {
+                res.Criterias = new CriteriaList();
+                foreach (string strCriteria in where.Split(new string[] {" AND "}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var parts = strCriteria.SplitWithTrim(" ");
+                    Criteria c = new Criteria();
+                    c.ColumnName = parts[0];
+                    switch (parts[1])
+                    {
+                        case "=":
+                            c.CriteriaType = CriteriaTypes.Eq;
+                            break;
+                        case "<>":
+                            c.CriteriaType = CriteriaTypes.NotEq;
+                            break;
+                        case ">":
+                            c.CriteriaType = CriteriaTypes.Gt;
+                            break;
+                        case ">=":
+                            c.CriteriaType = CriteriaTypes.Ge;
+                            break;
+                        case "<":
+                            c.CriteriaType = CriteriaTypes.Lt;
+                            break;
+                        case "<=":
+                            c.CriteriaType = CriteriaTypes.Le;
+                            break;
+                        case "LIKE":
+                            c.CriteriaType = CriteriaTypes.Like;
+                            break;
+                        case "IN":
+                            c.CriteriaType = CriteriaTypes.In;
+                            break;
+                        case "ISNULL":
+                            c.CriteriaType = CriteriaTypes.IsNull;
+                            break;
+                        default:
+                            throw new Exception("WHERE statement can contain following operators:  AND ,  = ,  <> ,  > ,  >= ,  < ,  <= ,  LIKE ,  IN (with the spaces before and after)");
+                    }
+                    c.ColumnValue = parts.Length>2 ? parts.Skip(2).StringJoin(" ") : null;
+                    res.Criterias.Add(c);
+                }
+            }
+            catch
+            {
+                throw new Exception("WHERE statement can contain following operators:  AND ,  = ,  <> ,  > ,  >= ,  < ,  <= ,  LIKE ,  IN (with the spaces before and after)");
+            }
+            return res;
+        }
+
     	public static FilterExpression Create(Criteria criteria)
         {
             return new FilterExpression

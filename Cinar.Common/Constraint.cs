@@ -8,6 +8,15 @@ using System.Diagnostics;
 
 namespace Cinar.Database
 {
+    public enum ConstraintTypes
+    {
+        None,
+        PrimaryKey,
+        Unique,
+        ForeignKey,
+        Check
+    }
+
     [Serializable]
     [XmlInclude(typeof(PrimaryKeyConstraint))]
     [XmlInclude(typeof(UniqueConstraint))]
@@ -20,6 +29,8 @@ namespace Cinar.Database
         [Browsable(false)]
         public override Table Table { get { return parent.Table; } }
 
+        public ConstraintTypes Type { get; set; }
+
         public Constraint() {
             this.ColumnNames = new List<string>();
         }
@@ -28,12 +39,19 @@ namespace Cinar.Database
     [Serializable]
     public class PrimaryKeyConstraint : Constraint
     {
-
+        public PrimaryKeyConstraint() : base()
+        {
+            this.Type = ConstraintTypes.PrimaryKey;
+        }
     }
 
     [Serializable]
     public class UniqueConstraint : Constraint
     {
+        public UniqueConstraint() : base()
+        {
+            this.Type = ConstraintTypes.Unique;
+        }
 
     }
 
@@ -48,13 +66,23 @@ namespace Cinar.Database
         public string UpdateRule { get; set; }
         [Category("Rules"), ReadOnly(true)]
         public string DeleteRule { get; set; }
-    }
+
+        public ForeignKeyConstraint() : base()
+        {
+            this.Type = ConstraintTypes.ForeignKey;
+        }
+}
 
     [Serializable]
     public class CheckConstraint : Constraint
     {
         [Category("Check")]
         public string Expression { get; set; }
+
+        public CheckConstraint() : base()
+        {
+            this.Type = ConstraintTypes.Check;
+        }    
     }
 
 

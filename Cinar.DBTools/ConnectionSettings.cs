@@ -74,9 +74,9 @@ namespace Cinar.DBTools
         internal IEnumerable<string> GetUIModuleTables(string module)
         {
             if (string.IsNullOrWhiteSpace(module))
-                return Database.Tables.Where(c => string.IsNullOrWhiteSpace(c.GenerateUIMetadata().ModuleName)).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).ToList();
+                return Database.Tables.Where(c => string.IsNullOrWhiteSpace(c.GenerateUIMetadata().ModuleName)).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).OrderBy(n=>n).ToList();
             else
-                return Database.Tables.Where(c => c.GenerateUIMetadata().ModuleName == module).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).ToList();
+                return Database.Tables.Where(c => c.GenerateUIMetadata().ModuleName == module).OrderBy(c => c.GenerateUIMetadata().DisplayOrder).Select(c => c.Name).OrderBy(n => n).ToList();
         }
     }
 }
