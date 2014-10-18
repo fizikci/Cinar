@@ -57,6 +57,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
+      <Project>{af6cb4f3-3a42-49b1-90ca-03310efae89b}</Project>
+      <Name>Cinar.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

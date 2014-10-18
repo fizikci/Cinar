@@ -814,4 +814,12 @@ var dt = db.GetDataTable("_select_statement_");
 echo(Utility.ToStringTable(dt));
 $</value>
   </data>
+  <data name="SQLDropAllForeignKeys" xml:space="preserve">
+    <value>$
+foreach(table in db.Tables)
+	foreach(c in table.Constraints)
+		if(c.Type == 'ForeignKey')
+    		echo(db.GetSQLConstraintRemove(c) + ';\r\n');
+$</value>
+  </data>
 </root>

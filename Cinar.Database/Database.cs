@@ -812,11 +812,9 @@ namespace Cinar.Database
 
             Column[] whereColumns = null;
 
-            if (tbl.PrimaryColumn != null && data.ContainsKey(tbl.PrimaryColumn.Name) && data[tbl.PrimaryColumn.Name]!=null)
-                sb.AppendFormat(" WHERE [{0}]=@_{0}", tbl.PrimaryColumn.Name);
-            else if (originalData == null)
-                throw new Exception("Update failed because there is no primary column OR original data.");
-            else
+            if (data.ContainsKey(tbl.PrimaryColumn.Name) && data[tbl.PrimaryColumn.Name] != null)
+                sb.AppendFormat(" WHERE [{0}]=@_org_{0}", tbl.PrimaryColumn.Name);
+            else if (originalData != null)
             {
                 whereColumns = tbl.Columns.Where(f => !(f.SimpleColumnType == SimpleDbType.ByteArray || f.SimpleColumnType == SimpleDbType.Text)).ToArray();
                 string where = " WHERE " + string.Join(" AND ", whereColumns.Select((f, i) => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}]={{{1}}}", f.Name, i)).ToArray());
@@ -830,6 +828,8 @@ namespace Cinar.Database
                     throw new Exception("There is no row to be updated!");
                 sb.AppendFormat(" WHERE " + string.Join(" AND ", whereColumns.Select(f => originalData[f.Name] == null ? string.Format("[{0}] IS NULL", f.Name) : string.Format("[{0}] = @_org_{0}", f.Name)).ToArray()));
             }
+            else
+                throw new Exception("Update failed because there is no primary column OR original data.");
 
             IDbCommand cmd = this.CreateCommand(sb.ToString());
             for (int i = 0; i < columns.Count; i++)
@@ -860,6 +860,11 @@ namespace Cinar.Database
                     IDbDataParameter param = this.CreateParameter("@_org_" + f.Name, originalData[f.Name]);
                     cmd.Parameters.Add(param);
                 }
+            else
+            {
+                IDbDataParameter param = this.CreateParameter("@_org_" + tbl.PrimaryColumn.Name, originalData==null ? data[tbl.PrimaryColumn.Name] : originalData[tbl.PrimaryColumn.Name]);
+                cmd.Parameters.Add(param);
+            }
 
             int res = this.ExecuteNonQuery(cmd);
 
@@ -1198,6 +1203,10 @@ namespace Cinar.Database
         #endregion
 
         #region read data
+        /// <summary>
+        /// returns DataSet for a given select query.
+        /// If there are more than one select query in sql, you get more than one DataTable in the returned DataSet.
+        /// </summary>
         public DataSet GetDataSet(DataSet ds, string sql, params object[] parameters)
         {
             sql = editSQLAsForProvider(sql);

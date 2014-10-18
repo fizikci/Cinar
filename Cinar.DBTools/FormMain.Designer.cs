@@ -96,6 +96,7 @@ namespace Cinar.DBTools
             this.menuTableShowInDiagram = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableShowChildrenRecords = new System.Windows.Forms.ToolStripMenuItem();
             this.emptyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableShowUIPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListTree = new System.Windows.Forms.ImageList(this.components);
             this.tabControlEditors = new Cinar.DBTools.Controls.MyTabControl();
             this.menuStripEditorTabs = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -214,7 +215,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuTableShowUIPreview = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptDropAllForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -457,7 +458,7 @@ namespace Cinar.DBTools
             this.menuTableShowChildrenRecords,
             this.menuTableShowUIPreview});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 774);
+            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
             // 
             // menuConShowHiddenConnections
             // 
@@ -815,6 +816,12 @@ namespace Cinar.DBTools
             this.emptyToolStripMenuItem.Name = "emptyToolStripMenuItem";
             this.emptyToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.emptyToolStripMenuItem.Text = "empty";
+            // 
+            // menuTableShowUIPreview
+            // 
+            this.menuTableShowUIPreview.Name = "menuTableShowUIPreview";
+            this.menuTableShowUIPreview.Size = new System.Drawing.Size(265, 22);
+            this.menuTableShowUIPreview.Text = "Show UI Preview...";
             // 
             // imageListTree
             // 
@@ -1496,7 +1503,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSPHelpText,
             this.menuToolsQScriptSearhAllStringFields,
             this.menuToolsQScriptSQLTransferTableSQLGenerator,
-            this.menuToolsQScriptDataTableToStringTable});
+            this.menuToolsQScriptDataTableToStringTable,
+            this.menuToolsQScriptDropAllForeignKeys});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1798,11 +1806,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuTableShowUIPreview
+            // menuToolsQScriptDropAllForeignKeys
             // 
-            this.menuTableShowUIPreview.Name = "menuTableShowUIPreview";
-            this.menuTableShowUIPreview.Size = new System.Drawing.Size(265, 22);
-            this.menuTableShowUIPreview.Text = "Show UI Preview...";
+            this.menuToolsQScriptDropAllForeignKeys.Name = "menuToolsQScriptDropAllForeignKeys";
+            this.menuToolsQScriptDropAllForeignKeys.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDropAllForeignKeys.Text = "Drop All Foreign Keys";
             // 
             // FormMain
             // 
@@ -2037,6 +2045,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptSQLTransferTableSQLGenerator;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDataTableToStringTable;
         private System.Windows.Forms.ToolStripMenuItem menuTableShowUIPreview;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDropAllForeignKeys;
 
     }
 }

@@ -30,6 +30,7 @@ namespace Cinar.DBTools.Controls
             this.SetStyle(ControlStyles.ResizeRedraw, true);
 
             this.propertyGrid = propertyGrid;
+            this.propertyGrid.PropertyValueChanged += delegate(object o, PropertyValueChangedEventArgs args) { this.Preview(); };
             this.ContextMenuStrip = contextMenu;
             this.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
 

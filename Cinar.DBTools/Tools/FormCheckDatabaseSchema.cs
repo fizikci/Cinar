@@ -42,7 +42,7 @@ namespace Cinar.DBTools.Tools
                 Problem p = null;
                 if (tbl.PrimaryColumn == null)
                     p = new PrimaryKeyDoesntExist() { Table = tbl };
-                else if (!tbl.PrimaryColumn.IsAutoIncrement)
+                else if (!tbl.PrimaryColumn.IsAutoIncrement && tbl.PrimaryColumn.IsNumericType())
                     p = new PrimaryKeyIsNotAutoIncrement() { Column = tbl.PrimaryColumn };
 
                 foreach (Column f in tbl.Columns)

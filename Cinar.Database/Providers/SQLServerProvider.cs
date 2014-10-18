@@ -472,7 +472,8 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
 
         public string GetSQLConstraintAdd(ForeignKeyConstraint constraint)
         {
-            return string.Format("ALTER TABLE [{0}] ADD CONSTRAINT [{1}] FOREIGN KEY ([{2}]) REFERENCES [{3}]([{4}])", constraint.Table.Name, constraint.Name, string.Join("],[", constraint.ColumnNames.ToArray()), constraint.RefTableName, string.Join("],[", db.Tables[constraint.RefTableName].Constraints[constraint.RefConstraintName].ColumnNames.ToArray()));
+            return string.Format(
+                "ALTER TABLE [{0}]  WITH NOCHECK ADD  CONSTRAINT [{1}] FOREIGN KEY([{2}]) REFERENCES [{3}] ([{4}]) NOT FOR REPLICATION;\r\nALTER TABLE [{0}] NOCHECK CONSTRAINT [{1}]", constraint.Table.Name, constraint.Name, string.Join("],[", constraint.ColumnNames.ToArray()), constraint.RefTableName, string.Join("],[", db.Tables[constraint.RefTableName].Constraints[constraint.RefConstraintName].ColumnNames.ToArray()));
         }
 
         public string GetSQLConstraintAdd(PrimaryKeyConstraint constraint)
@@ -482,7 +483,7 @@ order by Con.Name, Con.TableName, Con.Type, Col.ColumnName, Col.Position", db.Na
 
         public string GetSQLConstraintRemove(PrimaryKeyConstraint constraint)
         {
-            return GetSQLConstraintRemove(constraint);
+            return string.Format("ALTER TABLE [{0}] DROP CONSTRAINT [{1}]", constraint.Table.Name, constraint.Name);
         }
 
         public string GetSQLColumnAddNotNull(Column column)

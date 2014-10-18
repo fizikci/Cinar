@@ -277,6 +277,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuToolsQScriptSearhAllStringFields, Argument=SQLResources.SQLSearhAllStringFields},
                                          new CommandTrigger{ Control = menuToolsQScriptSQLTransferTableSQLGenerator, Argument=SQLResources.SQLTransferTableSQLGenerator},
                                          new CommandTrigger{ Control = menuToolsQScriptDataTableToStringTable, Argument=SQLResources.SQLDataTableToStringTable},
+                                         new CommandTrigger{ Control = menuToolsQScriptDropAllForeignKeys, Argument=SQLResources.SQLDropAllForeignKeys},
                                      }
                                  },
                     #endregion
@@ -1292,17 +1293,17 @@ namespace Cinar.DBTools
             d.conn = Provider.ActiveConnection;
 
             List<Table> list = new List<Table>();
-
-            TableCollection parents = tbl.ReferenceTables;
-            TableCollection children = tbl.ReferencedByTables;
-
-            foreach (Table t in parents)
-                list.Add(t);
-
             list.Add(tbl);
-            
+
+            List<Table> parents = tbl.ReferenceTables.Except(list).ToList();
+            foreach (Table t in parents)
+                if (!list.Contains(t))
+                    list.Add(t);
+
+            List<Table> children = tbl.ReferencedByTables.Except(list).ToList();
             foreach (Table t in children)
-                list.Add(t);
+                if (!list.Contains(t))
+                    list.Add(t);
 
             DiagramEditor de = addDiagram(d);
             de.AddTablesToSchema(list, true);
