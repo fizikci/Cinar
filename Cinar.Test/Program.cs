@@ -19,21 +19,18 @@ namespace Cinar.Test
             //Tutorial_3_CreateTableAtRuntime.Run();
 
             
-            string csv_file_path = @"C:\Users\BulentKeskin\Desktop\hcrm2.csv";
+            string csv_file_path = @"C:\Users\BulentKeskin\Desktop\hsedbs_son.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
 
             Database.Database db = new Database.Database("Server=94.73.149.239;Database=hsedbs;Uid=hsedbs;Pwd=545454Ll;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
+            //Database.Database db = new Database.Database("Server=localhost;Database=hazarcrm;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
             db.ExecuteNonQuery(@"truncate table Contact;
                                     truncate table Company;
                                     truncate table EntityComment;
-                                    truncate table Event;
                                     truncate table EventContact;
                                     truncate table GenericNotification;
                                     truncate table Log;
-                                    truncate table Project;
-                                    truncate table ProjectUser;
                                     truncate table Tag;
-                                    truncate table Task;
                                     truncate table Definition;");
 
             int counter = 0;
@@ -43,102 +40,91 @@ namespace Cinar.Test
                 Console.Write(".");
                 try
                 {
-                    int kind1Id = 0;
-                    if (dr["Kategori1"].ToString() != "")
-                    {
-                        var kategori1 = dr["Kategori1"].ToString().Trim();
-                        kind1Id = db.GetInt("select Id from Definition where Kind='ContactKind1' AND Name={0}", kategori1);
-                        if (kind1Id == 0)
-                            kind1Id = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "ContactKind1", kategori1);
-                    }
-                    int kind2Id = 0;
-                    if (dr["Kategori2"].ToString() != "")
-                    {
-                        var kategori2 = dr["Kategori2"].ToString().Trim();
-                        kind2Id = db.GetInt("select Id from Definition where Kind='ContactKind2' AND Name={0}", kategori2);
-                        if (kind2Id == 0)
-                            kind2Id = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "ContactKind2", kategori2);
-                    }
-
-                    int interestId1 = 0;
-                    if (dr["IlgiAlani1"].ToString() != "")
-                    {
-                        var ilgiAlani1 = dr["IlgiAlani1"].ToString().Trim();
-                        interestId1 = db.GetInt("select Id from Definition where Kind='Interest' AND Name={0}", ilgiAlani1);
-                        if (interestId1 == 0)
-                            interestId1 = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "Interest", ilgiAlani1);
-                    }
-                    int interestId2 = 0;
-                    if (dr["IlgiAlani2"].ToString() != "")
-                    {
-                        var ilgiAlani2 = dr["IlgiAlani2"].ToString().Trim();
-                        interestId2 = db.GetInt("select Id from Definition where Kind='Interest' AND Name={0}", ilgiAlani2);
-                        if (interestId2 == 0)
-                            interestId2 = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "Interest", ilgiAlani2);
-                    }
-
+                    int prefixId = definition("PrefixId", "Prefix", dr, db);
+                    string name = dr["Name"].ToString();
+                    string description = dr["Description1"] + (dr["Description2"].ToString() != "" ? Environment.NewLine + dr["Description2"] : "");
+                    int relationWithUsId = definition("RelationWithUsId", "RelationWithUs", dr, db);
+                    string email = dr["Email"].ToString();
+                    string email2 = dr["Email2"].ToString();
+                    definition("Tags1", "CompanyTag", dr, db);
+                    definition("Tags2", "CompanyTag", dr, db);
+                    definition("Tags3", "CompanyTag", dr, db);
+                    definition("Tags4", "CompanyTag", dr, db);
+                    definition("Tags5", "CompanyTag", dr, db);
+                    definition("TagsVIP", "CompanyTag", dr, db);
+                    string tags = joinStrings(dr, "Tags1", "Tags2", "Tags3", "Tags4", "Tags5", "TagsVIP");
+                    int assistantTypeId = definition("AssistantTypeId", "AssistantType", dr, db);
+                    string assistantName = dr["AssistantName"].ToString();
+                    string assistantEmail = dr["AssistantEmail"].ToString();
                     int companyId = 0;
-                    if (dr["Company"].ToString() != "")
+                    if (dr["CompanyId"].ToString() != "")
                     {
-                        var company = dr["Company"].ToString().Trim();
+                        var company = dr["CompanyId"].ToString().Trim();
                         companyId = db.GetInt("select Id from Company where Name={0}", company);
                         if (companyId == 0)
-                            companyId = db.GetInt("insert into Company(Name,UserId,Email,InsertDate, InsertUserId) values({0},0,{1},now(),1); SELECT LAST_INSERT_ID();", company, dr["Email"].ToString());
+                            companyId = db.GetInt("insert into Company(Name,UserId,Email,InsertDate, InsertUserId, Visible) values({0},0,{1},now(),1,1); SELECT LAST_INSERT_ID();", company, dr["Email"].ToString());
                     }
-                    int titleId = 0;
-                    if (dr["Title2"].ToString() != "")
-                    {
-                        var title = dr["Title2"].ToString().Trim();
-                        titleId = db.GetInt("select Id from Definition where Kind='Title' AND Name={0}", title);
-                        if (titleId == 0)
-                            titleId = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "Title", title);
-                    }
-                    int countryId = 0;
-                    if (dr["Country"].ToString() != "")
-                    {
-                        var country = dr["Country"].ToString().Trim();
-                        countryId = db.GetInt("select Id from Definition where Kind='Country' AND Name={0}", country);
-                        if (countryId == 0)
-                            countryId = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId) values({0},{1},now(),1); SELECT LAST_INSERT_ID();", "Country", country);
-                    }
-                    db.ExecuteNonQuery(@"insert into contact(
-	                                    Kind1Id,
-	                                    Kind2Id,
-	                                    Name,
-	                                    CompanyId,
-	                                    TitleId,
-	                                    Description,
-	                                    Email,
-	                                    Phone,
-	                                    Phone2,
-	                                    Fax,
-	                                    PhoneMobile,
-	                                    Web,
-	                                    AddressLine1,
-	                                    City,
-	                                    CountryId,
-	                                    ExtraField1,
-	                                    ExtraField2,
-	                                    ExtraField3,
-	                                    ExtraField4,
-	                                    ExtraField5,
-                                        InterestId1,
-                                        InterestId2,
-                                        NewsletterMembership,
-                                        ReferenceBy,
-                                        Town,
-                                        UserId, InsertDate, InsertUserId
+                    int departmentId = definition("DepartmentId", "Department", dr, db);
+                    string referenceBy = dr["ReferenceBy"].ToString();
+                    int kind1Id = definition("Kind1Id", "ContactKind1", dr, db);
+                    int kind2Id = definition("Kind2Id", "ContactKind2", dr, db);
+                    string phone = dr["Phone"].ToString();
+                    string phone2 = dr["Phone2"].ToString();
+                    string fax = dr["Fax"].ToString();
+                    string phoneMobile = dr["PhoneMobile"].ToString();
+                    string web = dr["Web"].ToString();
+                    string addressLine1 = dr["AddressLine1"].ToString();
+                    string town = dr["Town"].ToString();
+                    string city = dr["City"].ToString();
+                    int countryId = definition("CountryId", "Country", dr, db);
+                    int interestId1 = definition("InterestId1", "Interest", dr, db);
+                    int interestId2 = definition("InterestId2", "Interest", dr, db);
+                    int language1Id = definition("Language1Id", "Language", dr, db);
+                    int language2Id = definition("Language2Id", "Language", dr, db);
+                    definition("NewsletterMembership", "Newsletter", dr, db);
+                    definition("NewsletterMembershipYBN", "Newsletter", dr, db);
+                    string newsletterMembership = joinStrings(dr, "NewsletterMembership", "NewsletterMembershipYBN");
+                    string extraField1 = dr["ExtraField1"].ToString();
+                    string extraField2 = dr["ExtraField2"].ToString();
+                    string extraField3 = dr["ExtraField3"].ToString();
+
+                    int contactId = db.GetInt(@"insert into contact(
+	                                    PrefixId, Name, Description, RelationWithUsId,
+	                                    Email, Email2, Tags, AssistantTypeId,
+	                                    AssistantName, AssistantEmail, CompanyId, DepartmentId,
+	                                    ReferenceBy, Kind1Id, Kind2Id, Phone,
+	                                    Phone2, Fax, PhoneMobile, Web,
+                                        AddressLine1, Town, City, CountryId,
+                                        InterestId1, InterestId2, Language1Id, Language2Id,
+                                        NewsletterMembership, ExtraField1, ExtraField2, ExtraField3,
+                                        UserId, InsertDate, InsertUserId, Visible
                                     ) values (
-                                        {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, 0, now(), 1
-                                    )
+                                        {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24},
+                                        {25}, {26}, {27}, {28}, {29}, {30}, {31}, 
+                                        0, now(), 1, 1
+                                    ); SELECT LAST_INSERT_ID();
                                 ",
-                                        kind1Id, kind2Id, dr["Name"].ToString(), companyId, titleId, dr["Title1"].ToString(),
-                                        dr["Email"].ToString(), dr["Phone"].ToString(), dr["Phone2"].ToString(), dr["Fax"].ToString(),
-                                        dr["PhoneMobile"].ToString(), dr["Web"].ToString(), dr["AddressLine1"].ToString(), dr["City"].ToString(),
-                                        countryId, dr["ExtraField1"].ToString(), dr["ExtraField2"].ToString(), dr["ExtraField3"].ToString(), dr["ExtraField4"].ToString(), dr["ExtraField5"].ToString(),
-                                        interestId1, interestId2, string.IsNullOrWhiteSpace(dr["HaftalikBulten"].ToString()) ? 1:0,
-                                        dr["ReferenceBy"].ToString(), dr["Ilce"].ToString()
+	                                    prefixId, name, description, relationWithUsId,
+	                                    email, email2, tags, assistantTypeId,
+	                                    assistantName, assistantEmail, companyId, departmentId,
+	                                    referenceBy, kind1Id, kind2Id, phone,
+	                                    phone2, fax, phoneMobile, web,
+                                        addressLine1, town, city, countryId,
+                                        interestId1, interestId2, language1Id, language2Id,
+                                        newsletterMembership, extraField1, extraField2, extraField3                                        
                                         );
+                    if (dr["EntityComment"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EntityComment(EntityName, EntityId, Details, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", "Contact", contactId, dr["EntityComment"]);
+                    if (dr["EventInvite3"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EventContact(EventId, ContactId, State, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", 3, contactId, "Invited");
+                    if (dr["EventJoining2"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EventContact(EventId, ContactId, State, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", 2, contactId, "Joining");
+                    if (dr["EventJoining4"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EventContact(EventId, ContactId, State, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", 4, contactId, "Joining");
+                    if (dr["EventJoining3"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EventContact(EventId, ContactId, State, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", 3, contactId, "Joining");
+                    if (dr["EventJoining5"].ToString() != "")
+                        db.ExecuteNonQuery("insert into EventContact(EventId, ContactId, State, InsertDate, InsertUserId,Visible) values({0},{1},{2},now(),1,1)", 5, contactId, "Joining");
                 }
                 catch(Exception ex) {
                     Console.WriteLine();
@@ -149,6 +135,27 @@ namespace Cinar.Test
 
             Console.WriteLine("\r\nBİTTİ");
             Console.ReadLine();
+        }
+
+        private static string joinStrings(DataRow dr, params string[] strs)
+        {
+            string res = "";
+            foreach (var str in strs)
+                if (dr[str].ToString() != "")
+                    res += "," + dr[str];
+            return res.Trim(',', ' ');
+        }
+
+        private static int definition(string csvColumnName, string kind, DataRow dr, Database.Database db) {
+            int id = 0;
+            if (dr[csvColumnName].ToString() != "")
+            {
+                var name = dr[csvColumnName].ToString().Trim();
+                id = db.GetInt("select Id from Definition where Kind={1} AND Name={0}", name, kind);
+                if (id == 0)
+                    id = db.GetInt("insert into Definition(Kind, Name, InsertDate, InsertUserId,Visible) values({0},{1},now(),1,1); SELECT LAST_INSERT_ID();", kind, name);
+            }
+            return id;
         }
 
         private static DataTable GetDataTabletFromCSVFile(string csv_file_path)

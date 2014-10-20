@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.ComponentModel;
 using System.IO;
-using Cinar.CMS.Library.Other;
 using System.Configuration;
 
 namespace Cinar.CMS.Library.Handlers
@@ -32,18 +31,6 @@ namespace Cinar.CMS.Library.Handlers
         public override void ProcessRequest()
         {
             currentDatabase = Provider.Database;
-
-            CinarDatabaseSection config = ConfigurationManager.GetSection("CinarOtherSites") as CinarDatabaseSection;
-
-            if (!string.IsNullOrWhiteSpace(context.Request["selected_site"]))
-            {
-                var site = config.Sites[context.Request["selected_site"]];
-                if (site == null)
-                    throw new Exception("Couldnt find the site " + context.Request["selected_site"] + " in web.config");
-
-                currentDatabase = new Database.Database(site.SqlConnection, site.SqlProvider);
-            }
-
 
             switch (context.Request["method"])
             {

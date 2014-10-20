@@ -155,14 +155,8 @@ namespace Cinar.CMS.Library.Entities
             }
         }
 
-        [EditFormFieldProps(Category = "Extra")]
-        public bool NewsletterMembership { get; set; }
-
-        [EditFormFieldProps(Category = "Extra")]
-        public bool NewsletterMembership2 { get; set; }
-
-        [EditFormFieldProps(Category = "Extra")]
-        public bool NewsletterMembership3 { get; set; }
+        [ColumnDetail(Length = 300), EditFormFieldProps(ControlType = ControlType.TagEdit, Category = "Extra")]
+        public string NewsletterMembership { get; set; }
 
         [ColumnDetail(References = typeof(Definition)), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "extraFilter:'Kind=Interest'", Category = "More")]
         public int InterestId1 { get; set; }

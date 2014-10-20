@@ -1736,8 +1736,8 @@
           <RepeatGeneration>NoRepeat</RepeatGeneration>
           <Items>
             <Item xsi:type="FileItem">
-              <Name>Entity.gen.cs</Name>
-              <FileNameTemplate>$=table.Name$.gen.cs</FileNameTemplate>
+              <Name>Entity.cs</Name>
+              <FileNameTemplate>$=table.Name$.cs</FileNameTemplate>
               <RepeatGeneration>ForEachTable</RepeatGeneration>
               <IsBinary>false</IsBinary>
             </Item>
@@ -1748,11 +1748,6 @@
             </Item>
             <Item xsi:type="FileItem">
               <Name>BaseEntity.cs</Name>
-              <RepeatGeneration>NoRepeat</RepeatGeneration>
-              <IsBinary>false</IsBinary>
-            </Item>
-            <Item xsi:type="FileItem">
-              <Name>Entity.cs</Name>
               <RepeatGeneration>NoRepeat</RepeatGeneration>
               <IsBinary>false</IsBinary>
             </Item>
