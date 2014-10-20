@@ -38,7 +38,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbDbSrc = new System.Windows.Forms.ComboBox();
             this.lbTables = new System.Windows.Forms.ListBox();
-            this.cbTransferData = new System.Windows.Forms.CheckBox();
+            this.cbData = new System.Windows.Forms.CheckBox();
             this.cbStructure = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -146,17 +146,17 @@
             this.lbTables.Sorted = true;
             this.lbTables.TabIndex = 7;
             // 
-            // cbTransferData
+            // cbData
             // 
-            this.cbTransferData.AutoSize = true;
-            this.cbTransferData.Location = new System.Drawing.Point(209, 53);
-            this.cbTransferData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbTransferData.Name = "cbTransferData";
-            this.cbTransferData.Size = new System.Drawing.Size(50, 19);
-            this.cbTransferData.TabIndex = 4;
-            this.cbTransferData.Text = "Data";
-            this.cbTransferData.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.cbTransferData.UseVisualStyleBackColor = true;
+            this.cbData.AutoSize = true;
+            this.cbData.Location = new System.Drawing.Point(209, 53);
+            this.cbData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.cbData.Name = "cbData";
+            this.cbData.Size = new System.Drawing.Size(50, 19);
+            this.cbData.TabIndex = 4;
+            this.cbData.Text = "Data";
+            this.cbData.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.cbData.UseVisualStyleBackColor = true;
             // 
             // cbStructure
             // 
@@ -239,7 +239,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.cbStructure);
-            this.Controls.Add(this.cbTransferData);
+            this.Controls.Add(this.cbData);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label5);
@@ -264,7 +264,7 @@
         private System.Windows.Forms.TextBox txtLog;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.CheckBox cbTransferData;
+        private System.Windows.Forms.CheckBox cbData;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;

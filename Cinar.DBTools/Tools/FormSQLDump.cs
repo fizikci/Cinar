@@ -48,7 +48,9 @@ namespace Cinar.DBTools.Tools
                     Database = (cbDbSrc.SelectedItem as ConnectionSettings).Database,
                     TableList = lbTables.SelectedItems.Cast<string>().ToList(),
                     FilePath = txtFileName.Text,
-                    Provider = (DatabaseProvider)cbProvider.SelectedItem
+                    Provider = (DatabaseProvider)cbProvider.SelectedItem,
+                    DumpData = cbData.Checked,
+                    DumpStructure = cbStructure.Checked
                 });
         }
 
@@ -62,8 +64,8 @@ namespace Cinar.DBTools.Tools
                     break;
                 Table t = dbDump.Database.Tables[tableName];
                 backgroundWorker.ReportProgress(0, "dumping " + t.Name + "...\r\n");
-                File.AppendAllText(dbDump.FilePath, dbDump.Database.GetTableDDL(t, dbDump.Provider), Encoding.UTF8);
-                File.AppendAllText(dbDump.FilePath, t.Dump(dbDump.Provider), Encoding.UTF8);
+                if (dbDump.DumpStructure) File.AppendAllText(dbDump.FilePath, dbDump.Database.GetTableDDL(t, dbDump.Provider), Encoding.UTF8);
+                if (dbDump.DumpData) File.AppendAllText(dbDump.FilePath, t.Dump(dbDump.Provider), Encoding.UTF8);
             }
             backgroundWorker.ReportProgress(100, "finished :)\r\n");
         }
@@ -102,5 +104,7 @@ namespace Cinar.DBTools.Tools
         public List<string> TableList { get; set; }
         public string FilePath { get; set; }
         public DatabaseProvider Provider { get; set; }
+        public bool DumpStructure { get; set; }
+        public bool DumpData { get; set; }
     }
 }
