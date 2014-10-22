@@ -98,6 +98,16 @@ namespace Cinar.CMS.Library.Handlers
                         importModule();
                         break;
                     }
+                case "editStaticHtml":
+                    {
+                        editStaticHtml();
+                        break;
+                    }
+                case "saveStaticHtml":
+                    {
+                        saveStaticHtml();
+                        break;
+                    }
                 default:
                     {
                         sendErrorMessage("Henüz " + context.Request["method"] + " isimli metod yazılmadı.");
@@ -354,6 +364,45 @@ namespace Cinar.CMS.Library.Handlers
                 Provider.Database.Rollback();
                 throw ex;
             }
+        }
+
+        private void editStaticHtml()
+        {
+            string id = context.Request["id"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+
+            Module module = Module.Read(mid);
+            if (module is StaticHtml)
+                context.Response.Write((module as StaticHtml).InnerHtml);
+            else
+                sendErrorMessage("not StaticHtml");
+        }
+
+        private void saveStaticHtml()
+        {
+            string id = context.Request["id"];
+            int mid = 0;
+            if (!Int32.TryParse(id, out mid))
+            {
+                sendErrorMessage("ID geçersiz!");
+                return;
+            }
+
+            string html = context.Request["html"];
+
+            Module module = Module.Read(mid);
+            if (module is StaticHtml)
+            {
+                (module as StaticHtml).InnerHtml = html;
+                module.Save();
+            }
+            else
+                sendErrorMessage("not StaticHtml");
         }
 
         private void exportModule()
