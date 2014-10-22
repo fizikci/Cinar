@@ -51,6 +51,7 @@ $(function(){
         mdlSel = $('#mdlSel'); mdlSel2 = $('#mdlSel2'); mdlSel3 = $('#mdlSel3'); mdlSel4 = $('#mdlSel4');
         $('.Module').each(function(eix,mdl){
             $(mdl).mousedown(highlightModule);
+            $(mdl).dblclick(editStaticHtml);
         });
         selectFirstModule();
 		setInterval(refreshModuleHighlighter, 2000);
@@ -618,6 +619,42 @@ function importModule(){
                 onException: function(req, ex){throw ex;}
             });
         } }]
+    });
+
+}
+
+function editStaticHtml(event) {
+    if (!navigationEnabled) return;
+
+    var mdl = $(event.target).closest('.Module');
+    var id = mdl.attr('mid').split('_')[1];
+    new Ajax.Request('ModuleInfo.ashx?method=editStaticHtml&id=' + id, {
+        method: 'get',
+        onComplete: function (req) {
+            if (req.responseText.startsWith('ERR:'))
+                return;
+            new AceEditor({
+                titleIcon: 'module',
+                title: 'Edit HTML',
+                buttons: [{ icon: 'save', id: 'btnSaveStaticHtml', text: lang('Save'), callback: function(editor) {
+                    var params = new Object();
+                    params['html'] = editor.getValue();
+                    new Ajax.Request('ModuleInfo.ashx?method=saveStaticHtml&id=' + id, {
+                        method: 'post',
+                        parameters:params,
+                        onComplete: function (req) {
+                            if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                            location.reload();
+                        },
+                        onException: function (req, ex) { throw ex; }
+                    });
+                }
+                }],
+                text: req.responseText,
+                lang: 'html'
+            });
+        },
+        onException: function (req, ex) { throw ex; }
     });
 
 }
