@@ -495,9 +495,12 @@ namespace Cinar.CMS.Library.Handlers
 
             Provider.Database.Execute(() =>
                 {
-                    HttpContext.Current.Cache["StaticResource"] = null;
-                    HttpContext.Current.Cache["StaticResourceLang"] = null;
+                    HttpContext.Current.Cache.Remove("StaticResource");
+                    HttpContext.Current.Cache.Remove("StaticResourceLang");
 
+                    Provider.Database.Read<StaticResource>(1);
+                    Provider.Database.Read<StaticResourceLang>(1);
+                    
                     Provider.Database.ExecuteNonQuery("truncate table StaticResourceLang;");
                     Provider.Database.ExecuteNonQuery("truncate table StaticResource;");
 

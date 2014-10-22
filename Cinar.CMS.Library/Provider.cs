@@ -524,7 +524,11 @@ namespace Cinar.CMS.Library
             {
                 //Create Table if does not exist!
                 Provider.Database.Read<StaticResourceLang>(1);
-                HttpContext.Current.Cache["StaticResourceLang"] = Provider.Database.GetDictionary<string, string>("select cast(concat(StaticResourceId,'_',LangId) as varchar(10)), Translation from StaticResourceLang");
+                Dictionary<string, string> dict = new Dictionary<string,string>();
+                foreach (DataRow dr in Provider.Database.GetDataTable("select StaticResourceId, LangId, Translation from StaticResourceLang").Rows)
+                    dict.Add(dr["StaticResourceId"] + "_" + dr["LangId"], dr["Translation"].ToString());
+
+                HttpContext.Current.Cache["StaticResourceLang"] = dict;
             }
         }
 
