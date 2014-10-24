@@ -49,7 +49,8 @@ namespace Cinar.QueueJobs.Test
 
         public override string ExecuteJob(Job job, JobData jobData)
         {
-            var jobDefName = db.GetString("select Name from JobDefinition where Id=" + job.JobDefinitionId);
+            var jobDef = db.Read<JobDefinition>(job.JobDefinitionId);
+            var jobDefName = jobDef.Name;
 
             switch (job.Command)
             {
@@ -68,7 +69,7 @@ namespace Cinar.QueueJobs.Test
 
                         var filters = FormMain.GetUrlFilters().ContainsKey(job.JobDefinitionId) ? FormMain.GetUrlFilters()[job.JobDefinitionId] : null;
                         if (filters != null)
-                            links = links.Where(l => !isTheLinkToBeSkipped(l, filters)).ToArray();
+                            links = links.Where(l => !isTheLinkToBeSkipped(l, jobDef, filters)).ToArray();
 
                         string whereIn = "'" + links.Select(l => l.Replace("'", "''")).StringJoin("','") + "'";
                         var linksAlreadySaved = db.GetList<string>("select Name from Job where Name in (" + whereIn + ") AND Status='Done' AND ResLength>0");
@@ -176,12 +177,14 @@ namespace Cinar.QueueJobs.Test
             ".xls",".zip",".docx",".rar",".mp4",".ppt",".swf",".mp3",
             ".xlsx",".exe",".pptx",".rtf"};
 
-        private bool isTheLinkToBeSkipped(string url, List<SiteUrlFilter> filters)
+        private bool isTheLinkToBeSkipped(string url, JobDefinition jobDef, List<SiteUrlFilter> filters)
         {
             if (!string.IsNullOrWhiteSpace(skippedExtensions.Find(ext => url.EndsWith(ext))))
                 return true;
 
-            var filter = filters.Find(f=>url.StartsWith(f.Url, StringComparison.InvariantCultureIgnoreCase));
+            var filter = filters.Find(f=>f.RuleType == RuleTypes.StartsWith &&  url.StartsWith(f.Url, StringComparison.InvariantCultureIgnoreCase));
+            if (filter == null)
+                filter = filters.Find(f => f.RuleType == RuleTypes.Contains && url.ToLowerInvariant().Split(jobDef.Param1.Split('|').Cast<char>().ToArray<char>()).ToList().Contains(f.Url.ToLowerInvariant()));
             if (filter == null)
                 return false;
             return filter.Skip;
@@ -437,7 +440,7 @@ namespace Cinar.QueueJobs.Test
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 2 * 1000;
+            w.Timeout = 5 * 1000;
             return w;
         }
 

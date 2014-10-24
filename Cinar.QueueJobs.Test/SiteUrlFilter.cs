@@ -12,6 +12,9 @@ namespace Cinar.QueueJobs.Test
     {
         public int JobDefinitionId { get; set; }
 
+        [ColumnDetail(ColumnType = DbType.VarChar, Length=20)]
+        public RuleTypes RuleType { get; set; }
+
         [ColumnDetail(Length = 500)]
         public string Url { get; set; }
         
@@ -21,5 +24,11 @@ namespace Cinar.QueueJobs.Test
 
         public string RemoveFromTitle { get; set; }
         public string RemoveFromMetin { get; set; }
+    }
+
+    public enum RuleTypes
+    {
+        StartsWith,
+        Contains
     }
 }
