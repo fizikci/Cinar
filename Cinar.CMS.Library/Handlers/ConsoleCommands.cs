@@ -365,7 +365,8 @@ namespace Cinar.CMS.Library.Handlers
             // 1. create backup_yyyy_MM_dd folder
             string userFilesPath = Provider.MapPath("UserFiles");
             string backupName = "backup_" + DateTime.Now.ToString("yyyy_MM_dd");
-            string newBackupFolder = userFilesPath + "\\" + backupName;
+            string backupFilesFolder = userFilesPath.Substring(0, userFilesPath.Length - "UserFiles".Length) + "Backup";
+            string newBackupFolder = backupFilesFolder + "\\" + backupName;
             if (Directory.Exists(newBackupFolder)) Directory.Delete(newBackupFolder, true);
             Directory.CreateDirectory(newBackupFolder);
 
@@ -400,7 +401,6 @@ namespace Cinar.CMS.Library.Handlers
                 catch
                 {
                 }
-                defaultFileNames.Add(newBackupFolder.Substring(newBackupFolder.IndexOf("UserFiles")) + "\\dump.sql");
 
                 string[] diff = fileNames.Select((name, index) => new { name, index })
                     .Where(x => !defaultFileNames.Contains(x.name))
@@ -415,8 +415,6 @@ namespace Cinar.CMS.Library.Handlers
                 }
 
                 if (diff.Length == 0) result += "No uploaded file was found!\n";
-
-                //System.Utility.CopyDirectory(userFilesPath + "\\Image", newBackupFolder + "\\");
             }
             // 4. zip the backup folder
             ICSharpCode.SharpZipLib.Zip.FastZip zip = new ICSharpCode.SharpZipLib.Zip.FastZip();
@@ -425,7 +423,7 @@ namespace Cinar.CMS.Library.Handlers
             // 5. delete the backup folder
             Directory.Delete(newBackupFolder, true);
             // write download link
-            return result + "Download backup file from : http://" + Provider.Configuration.SiteAddress + "/UserFiles/" + backupName + ".zip";
+            return result + "Download backup file from : http://" + Provider.Configuration.SiteAddress + zipUrl.Substring(zipUrl.IndexOf("\\Backup")).Replace("\\", "/");
         }
 
 
