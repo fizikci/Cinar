@@ -1011,10 +1011,11 @@ namespace Cinar.Database
         {
             // first check the table existance
             Table tbl = GetTableForEntityType(entity.GetType()); //this.Tables[entity.GetType().Name];
-            Type type = entity.GetType();
 
             if (tbl == null)
             {
+                Type type = entity.GetType();
+
                 if (!CreateTablesAutomatically)
                     throw new Exception("Table for " + type.Name + " not exist. Please create table and refresh metadata.");
                 tbl = tableMappingInfo[entity.GetType()] = this.CreateTableForType(type);

@@ -185,7 +185,7 @@ namespace Cinar.CMS.Library.Entities
 
         public string GetPageLinkWithTitle(string page)
         {
-            return Provider.GetPageUrl(string.IsNullOrWhiteSpace(page) ? Provider.GetTemplate(this, "") : page, this.Id, this.Category.Title, this.Title);
+            return Provider.GetPageUrl(string.IsNullOrWhiteSpace(page) ? Provider.GetTemplate(this, "") : page, this.Id, this.Category==null ? "" : this.Category.Title, this.Title);
         }
 
         private string showContentsInPage = "";
@@ -587,6 +587,16 @@ namespace Cinar.CMS.Library.Entities
             get
             {
                 return Provider.Translate(Provider.Database.ReadList<ContentPicture>("select * from ContentPicture where ContentId={0} AND fileName like {1}", this.Id, "%.pdf")).Cast<ContentPicture>().ToList();
+            }
+        }
+
+        [XmlIgnore]
+        [Description("Returns average rating for this content. (1..10)")]
+        public int Rating {
+            get
+            {
+                Provider.Database.CheckTableExistance(new ContentRating());
+                return Provider.Database.GetInt("SELECT AVG(Rating) FROM Content WHERE Id={0}", this.Id);
             }
         }
 

@@ -25,6 +25,10 @@ $(function(){
 					navigationEnabled = true;
 			}
 		});
+        
+		$('.Module').each(function (eix, mdl) {
+		    if ($(mdl).hasClass('StaticHtml')) $(mdl).dblclick(editStaticHtml);
+		});
 
         if (!designMode) return; //***
 
@@ -51,7 +55,6 @@ $(function(){
         mdlSel = $('#mdlSel'); mdlSel2 = $('#mdlSel2'); mdlSel3 = $('#mdlSel3'); mdlSel4 = $('#mdlSel4');
         $('.Module').each(function(eix,mdl){
             $(mdl).mousedown(highlightModule);
-            $(mdl).dblclick(editStaticHtml);
         });
         selectFirstModule();
 		setInterval(refreshModuleHighlighter, 2000);

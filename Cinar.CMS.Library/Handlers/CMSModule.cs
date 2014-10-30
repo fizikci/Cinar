@@ -19,8 +19,9 @@ namespace Cinar.CMS.Library.Handlers
 
         public void Init(HttpApplication context)
         {
-            context.BeginRequest += new EventHandler(context_BeginRequest);
-            context.PreRequestHandlerExecute += context_PreRequestHandlerExecute; 
+            context.BeginRequest += context_BeginRequest;
+            context.PreRequestHandlerExecute += context_PreRequestHandlerExecute;
+            context.AcquireRequestState += context_AcquireRequestState;
         }
 
         void context_PreRequestHandlerExecute(object sender, EventArgs e)
@@ -39,23 +40,48 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+        void context_AcquireRequestState(object sender, EventArgs e)
+        {
+            if (HttpContext.Current != null && HttpContext.Current.Session != null)
+            {
+                string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "");
+                // falanca.com/en/Content/Urunler/Bilgisayar_3.aspx
+                if (fullOrigionalPath.Contains(".aspx") && fullOrigionalPath.Split('/').Length == 5)
+                {
+                    string[] parts = fullOrigionalPath.Split('/');
+                    string lang = parts[1];
+
+                    if (!Provider.CurrentCulture.StartsWith(lang))
+                        Provider.CurrentCulture = lang;
+                }
+            }
+        }
+
         void context_BeginRequest(object sender, EventArgs e)
         {
             try
             {
                 string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "");
-                // sm.Main.Hakkımızda.1.aspx
-                if (fullOrigionalPath.Contains(".aspx") && fullOrigionalPath.Split('/').Length == 4)
-                {
-                    string[] parts = fullOrigionalPath.Split('/');
-                    string pageName = parts[1];
 
-                    if (parts[3].Contains(".aspx"))
+                if (fullOrigionalPath.Contains(".aspx"))
+                {
+                    // falanca.com/[en/]Content/Urunler/Bilgisayar_3.aspx
+                    string[] parts = fullOrigionalPath.Split('/');
+                    if (parts.Length >= 4)
                     {
-                        int item = int.Parse(parts[3].Substring(0, parts[3].IndexOf(".aspx")).SplitAndGetLast('_'));
-                        string restOfQueryString = fullOrigionalPath.Contains("aspx?") ? fullOrigionalPath.Split(new[] { "aspx?" }, StringSplitOptions.None)[1] : "";
-                        string rewritePath = pageName + ".aspx?item=" + item + (restOfQueryString != "" ? "&" + restOfQueryString : "");
-                        HttpContext.Current.RewritePath(rewritePath);
+                        var i = 0;
+                        if (parts.Length == 5) 
+                            i = 1;
+
+                        string pageName = parts[1 + i];
+
+                        if (parts[3 + i].Contains(".aspx"))
+                        {
+                            int item = int.Parse(parts[3 + i].Substring(0, parts[3 + i].IndexOf(".aspx")).SplitAndGetLast('_'));
+                            string restOfQueryString = fullOrigionalPath.Contains("aspx?") ? fullOrigionalPath.Split(new[] { "aspx?" }, StringSplitOptions.None)[1] : "";
+                            string rewritePath = pageName + ".aspx?item=" + item + (restOfQueryString != "" ? "&" + restOfQueryString : "");
+                            HttpContext.Current.RewritePath(rewritePath);
+                        }
                     }
                 }
 

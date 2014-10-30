@@ -415,8 +415,28 @@ InnerHtml,32,<hr/>
             }
             AfterSave(isUpdate);
         }
-        public virtual void BeforeSave() { }
-        public virtual void AfterSave(bool isUpdate) { }
+        public virtual void BeforeSave()
+        {
+            if (Id > 0)
+            {
+                Provider.Database.ClearEntityWebCache(this.GetType(), this.Id);
+                IDatabaseEntity originalEntity = Module.Read(this.Id);
+                string changes = originalEntity.CompareFields(this);
+
+                if (!string.IsNullOrWhiteSpace(changes))
+                {
+                    var mh = new ModuleHistory();
+                    originalEntity.CopyPropertiesWithSameName(mh);
+                    mh.Id = 0;
+                    mh.ModuleId = originalEntity.Id;
+                    mh.Details = originalEntity.Serialize();
+                    mh.Save();
+                }
+            }            
+        }
+        public virtual void AfterSave(bool isUpdate)
+        {
+        }
 
         public string Serialize()
         {

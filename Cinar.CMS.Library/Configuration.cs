@@ -103,6 +103,9 @@ namespace Cinar.CMS.Library
             set { defaultLang = value; }
         }
 
+        [EditFormFieldProps(OrderNo = 10, Category = "Uygulama Ayarları")]
+        public bool StartUrlsWithLangCode { get; set; }
+
         [EditFormFieldProps(OrderNo = 11, Category = "Uygulama Ayarları")]
         public bool LogHit { get; set; }
 
