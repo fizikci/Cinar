@@ -133,11 +133,15 @@ namespace Cinar.CMS.Library
         {
             get
             {
+                if (Provider.Session == null) 
+                    return null;
+
                 string lang = (string)Provider.Session["currentCulture"];
 
                 if (string.IsNullOrWhiteSpace(lang))
                 {
-                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", Provider.User.Settings.LangId > 0 ? Provider.User.Settings.LangId : Provider.Configuration.DefaultLang);
+                    int langId = Provider.User.IsAnonim() ? Provider.Configuration.DefaultLang : (Provider.User.Settings.LangId > 0 ? Provider.User.Settings.LangId : Provider.Configuration.DefaultLang);
+                    lang = (string)Provider.Database.GetValue("select Code from Lang where Id={0}", langId);
 
                     if (string.IsNullOrWhiteSpace(lang))
                     {
@@ -161,7 +165,7 @@ namespace Cinar.CMS.Library
             get
             {
                 if (Provider.Items["currentLang"] == null)
-                    Provider.Items["currentLang"] = Provider.Database.Read(typeof(Lang), "Code={0}", CurrentCulture);
+                    Provider.Items["currentLang"] = Provider.Database.Read(typeof(Lang), "Code like {0}", CurrentCulture+"%");
                 return (Lang)Provider.Items["currentLang"];
             }
         }
@@ -361,7 +365,7 @@ namespace Cinar.CMS.Library
             if (Provider.Database.Tables[entityName + "Lang"] == null)
                 return entities; //*** dil tablosu yok
 
-            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
+            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code like {0}", CurrentCulture+"%");
             ArrayList alIds = new ArrayList();
             Array.ForEach<IDatabaseEntity>(entities, delegate(IDatabaseEntity ent) { alIds.Add(ent.Id.ToString()); });
             string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
@@ -405,7 +409,7 @@ namespace Cinar.CMS.Library
             if (Provider.Database.Tables[entityName + "Lang"] == null)
                 return dt; //*** dil tablosu yok
 
-            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code={0}", CurrentCulture);
+            int langId = (int)Provider.Database.GetValue("select Id from Lang where Code like {0}", CurrentCulture+"%");
             ArrayList alIds = new ArrayList();
             foreach (DataRow dr in dt.Rows) { alIds.Add(dr["Id"].ToString()); }
             string ids = String.Join(",", (string[])alIds.ToArray(typeof(string)));
@@ -580,6 +584,9 @@ namespace Cinar.CMS.Library
 
             if (content.ShowInPage != "")
                 return content.ShowInPage;
+
+            if (string.IsNullOrWhiteSpace(content.Hierarchy))
+                return Provider.Configuration.MainPage;
 
             string template = null;
 
@@ -1280,16 +1287,18 @@ namespace Cinar.CMS.Library
         public static string GetPageUrl(string template, int id, string categoryTitle, string contentTitle)
         {
             if (id == 1)
-                return "/" + Provider.Configuration.MainPage;
+                return (Provider.Configuration.StartUrlsWithLangCode ? "/" + Provider.CurrentCulture.Split('-')[0] : "") + "/" + Provider.Configuration.MainPage;
 
             if (Provider.DesignMode)
                 return string.Format(
-                    "/{0}?item={1}",
+                    "{0}/{1}?item={2}",
+                    Provider.Configuration.StartUrlsWithLangCode ? "/" + Provider.CurrentCulture.Split('-')[0] : "",
                     template,
                     id);
 
             return string.Format(
-                    "/{0}/{1}/{2}_{3}.aspx",
+                    "{0}/{1}/{2}/{3}_{4}.aspx",
+                    Provider.Configuration.StartUrlsWithLangCode ? "/" + Provider.CurrentCulture.Split('-')[0] : "",
                     template.Replace(".aspx", "").ToLowerInvariant(),
                     categoryTitle.MakeFileName().ToLowerInvariant(),
                     contentTitle.MakeFileName().ToLowerInvariant(),
@@ -1791,7 +1800,7 @@ namespace Cinar.CMS.Library
                 if (Provider.Database.Tables["Module"] == null)
                 {
                     Provider.Database.CreateTableForType(typeof(Modules.Module));
-                    HttpContext.Current.RewritePath("Default.aspx");
+                    //HttpContext.Current.RewritePath("Default.aspx");
                 }
 
                 // if language is specified by the browser, use it:
@@ -1801,8 +1810,12 @@ namespace Cinar.CMS.Library
                 Lang l = (Lang)Provider.Database.Read(typeof(Lang), "Code like {0} AND Visible=1", lang + "%");
                 if (l != null)
                     Provider.CurrentCulture = l.Code;
+                else
+                    Provider.CurrentCulture = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang).Code;
 
                 Provider.SetHttpContextUser();
+
+                HttpContext.Current.RewritePath((Provider.Configuration.StartUrlsWithLangCode ? "/" + Provider.CurrentCulture.Split('-')[0]:"") + "/Default.aspx");
             }
         }
 
