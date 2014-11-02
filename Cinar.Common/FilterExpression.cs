@@ -57,7 +57,7 @@ namespace Cinar.Database
                     var parts = strCriteria.SplitWithTrim(" ");
                     Criteria c = new Criteria();
                     c.ColumnName = parts[0];
-                    switch (parts[1])
+                    switch (parts[1].ToUpperInvariant())
                     {
                         case "=":
                             c.CriteriaType = CriteriaTypes.Eq;

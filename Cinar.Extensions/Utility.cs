@@ -1475,6 +1475,21 @@ namespace System
             }
         }
 
+        public static List<T> ToEntityList<T>(this DataTable dt) where T : new()
+        {
+            if (dt == null) return null;
+
+            var res = new List<T>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                var t = new T();
+                foreach (DataColumn dc in dt.Columns)
+                    t.SetMemberValue(dc.ColumnName, dr[dc]);
+                res.Add(t);
+            }
+            return res;
+        }
+
         #endregion
 
         #region JSON

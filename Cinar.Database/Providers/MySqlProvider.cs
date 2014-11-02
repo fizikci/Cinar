@@ -111,6 +111,14 @@ namespace Cinar.Database.Providers
                     f.Name = drColumn["COLUMN_NAME"].ToString();
                     f.IsAutoIncrement = drColumn["IS_AUTO_INCREMENT"].ToString() == "1";
 
+                    if (drColumn["COLUMN_KEY"].ToString() == "PRI")
+                    {
+                        var pk = new PrimaryKeyConstraint();
+                        pk.Name = "PRIMARY";
+                        pk.ColumnNames.Add(f.Name);
+                        tbl.Constraints.Add(pk);
+                    }
+
                     tbl.Columns.Add(f);
                 }
             }
@@ -452,7 +460,8 @@ namespace Cinar.Database.Providers
 							CHARACTER_MAXIMUM_LENGTH,
 							IS_NULLABLE,
 							COLUMN_DEFAULT,
-                            CASE WHEN EXTRA LIKE '%auto_increment%' THEN 1 ELSE 0 END AS IS_AUTO_INCREMENT
+                            CASE WHEN EXTRA LIKE '%auto_increment%' THEN 1 ELSE 0 END AS IS_AUTO_INCREMENT,
+                            COLUMN_KEY
 						FROM
 							INFORMATION_SCHEMA.COLUMNS
 						WHERE
