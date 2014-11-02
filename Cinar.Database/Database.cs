@@ -812,7 +812,7 @@ namespace Cinar.Database
 
             Column[] whereColumns = null;
 
-            if (data.ContainsKey(tbl.PrimaryColumn.Name) && data[tbl.PrimaryColumn.Name] != null)
+            if (tbl.PrimaryColumn!=null && data.ContainsKey(tbl.PrimaryColumn.Name) && data[tbl.PrimaryColumn.Name] != null)
                 sb.AppendFormat(" WHERE [{0}]=@_org_{0}", tbl.PrimaryColumn.Name);
             else if (originalData != null)
             {
