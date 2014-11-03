@@ -134,7 +134,8 @@ namespace Cinar.Database.Providers
                     Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
                     if (con != null)
                     {
-                        con.ColumnNames.Add(drCon["ColumnName"].ToString());
+                        if (!con.ColumnNames.Contains(drCon["ColumnName"].ToString()))
+                            con.ColumnNames.Add(drCon["ColumnName"].ToString());
                         continue;
                     }
 
