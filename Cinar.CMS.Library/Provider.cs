@@ -1146,6 +1146,168 @@ namespace Cinar.CMS.Library
             }
         }
 
+
+
+        public static string EmailCustomMessage(User to, string customSubject = "", string content = "")
+        {
+            string subject = "Custom Trial Mail";
+            if (customSubject != "")
+                subject = customSubject;
+
+
+            if (content == "")
+            {
+                content = string.Format(EmailH1, "Hello" + (string.IsNullOrWhiteSpace(to.Name) ? "" : " " + to.Name) + ",");
+                string p = "This is a custom message. You can send custom html messages with it. Such as <strong>this.</strong>";
+                content += string.Format(EmailParagraph, p);
+            }
+
+            string msg = string.Format(EmailHTMLBody, content);
+
+            string response = "";
+            if (SendMail(to.Email, subject, msg) != "")
+                response = "<h6> " + to.FullName + " &lt;" + to.Email + "&gt; </h6>";
+            return response;
+        }
+
+
+        public static string EmailHTMLBody
+        {
+            get
+            {
+                return @"<div style=""margin-top:0;margin-bottom:0;margin-left:0;margin-right:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;min-width:100%"" bgcolor=""#ffffff"">
+                            <center style=""background-color:#f2efe9;width:100%;min-width:620px"">
+                              <table style=""border-collapse:collapse;border-spacing:0;background-color:#f2efe9;width:100%;min-width:620px;table-layout:fixed"">
+                                <tbody>
+                                <tr>
+                                  <td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle"">
+                                    <table style=""border-collapse:collapse;border-spacing:0;width:100%;background-color:#ebe7e1;color:#808080;Margin-left:auto;Margin-right:auto"">
+                                        <tbody>
+                                          <tr><td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle;font-size:20px;line-height:20px;min-height:20px;background-color:#f2efe9;background-image:none;background-repeat:repeat"">&nbsp;</td></tr>
+                                        </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle"">
+                                    <center>
+                                      <table style=""border-collapse:collapse;border-spacing:0;width:600px;Margin-left:auto;Margin-right:auto"">
+                                        <tbody><tr>
+                                          <td style=""padding-top:12px;padding-bottom:32px;padding-left:0;padding-right:0;vertical-align:middle;font-size:26px;line-height:36px;min-height:36px;Margin-bottom:0;font-weight:bold;color:#38434d;text-align:center;font-family:sans-serif"" align=""center"">
+                                            <center>
+                                                <div>
+                                                    <a style=""color:#38434d;text-decoration:none"" href=""http://" + Configuration.SiteAddress + @""" target=""_blank"">" + Configuration.SiteName + @"</a>
+                                                </div>
+                                            </center>
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </center>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+      
+                                <table style=""border-collapse:collapse;border-spacing:0;background-color:#f2efe9;width:80%;min-width:620px;table-layout:fixed;"">
+                                  <tbody>
+                                    <tr>
+                                        <td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;text-align:left;vertical-align:middle;background-color:#ffffff;width:600px;"">
+                                                        
+                                            <div><div style=""font-size:54px;line-height:54px;min-height:54px;"">&nbsp;</div></div>
+                                                        
+                                            <table style=""border-collapse:collapse;border-spacing:0;width:100%;"">
+                                                <tbody>
+                                                <tr>
+                                                    <td style=""padding-top:0;padding-bottom:0;;padding-left:48px;padding-right:48px;vertical-align:middle;text-align:left"">
+                                                        {0}
+                                                        <font size=""2"" style=""Margin-top:0;font-weight:normal;color:#38434d;font-family: sans-serif;font-size:14px;line-height:28px;min-height:28px;Margin-bottom:18px"">
+                                                            <a style=""color:#38434d;text-decoration:none"" href=""http://" + Configuration.SiteAddress + @"/Team"" target=""_blank"">- " + Configuration.SiteName + @" Team</a>
+                                                        </font><br><br>
+                                                        <font size=""2"" style=""Margin-top:0;font-weight:normal;color:#38434d;font-family: sans-serif;font-size:14px;line-height:28px;min-height:28px;Margin-bottom:18px"">
+                                                            <a style=""color:#38434d;text-decoration:none"" href=""http://" + Configuration.SiteAddress + @"/EditProfile"" target=""_blank""><font size=""1"">unsubscribe from emails</font></a>
+                                                        </font><br><br>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                                        
+                                            <div style=""font-size:32px;line-height:32px;min-height:32px;"">&nbsp;</div>
+                                                        
+                                        </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+
+                                <table style=""border-collapse:collapse;border-spacing:0;background-color:#f2efe9;width:100%;min-width:620px;table-layout:fixed"">
+                                <tbody>
+                                <tr>
+                                  <td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle"">
+                                    <table style=""border-collapse:collapse;border-spacing:0;width:100%;background-color:#ebe7e1;color:#808080;Margin-left:auto;Margin-right:auto"">
+                                        <tbody>
+                                          <tr><td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle;font-size:20px;line-height:20px;min-height:20px;background-color:#f2efe9;background-image:none;background-repeat:repeat"">&nbsp;</td></tr>
+                                        </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style=""padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;vertical-align:middle"">
+                                    <center>
+                                      <table style=""border-collapse:collapse;border-spacing:0;width:600px;Margin-left:auto;Margin-right:auto"">
+                                        <tbody><tr>
+                                          <td style=""padding: 0 30px 30px;vertical-align:middle;font-size:26px;Margin-bottom:0;font-weight:bold;color:#38434d;font-family:sans-serif"" align=""left"">
+
+                                            <div>"
+                                                + string.Format(EmailFooterBadge, "#", "Download Android App", "http://www.webso.it/wp-content/uploads/2013/04/logo_google_play_store_badge.png")
+                                                + string.Format(EmailFooterBadge, "#", "Download iOS App", "http://www.jackenhack.com/wp-content/uploads/2014/07/Download_on_the_App_Store_Badge_US-UK_135x40_0824.png")
+                                        + @"</div>
+                                            
+                                          </td>
+                                        </tr>
+                                      </tbody></table>
+                                    </center>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            </center>
+                        </div>
+                        ";
+            }
+        }
+
+        public static string EmailParagraph
+        {
+            get
+            {
+                return @"<font size=""2"" style=""Margin-top:0;font-weight:normal;color:#38434d;font-family:Georgia,serif;font-size:14px;line-height:28px;min-height:28px;Margin-bottom:18px"">
+                    {0}
+                    </font><br><br>";
+            }
+        }
+
+        public static string EmailLink
+        {
+            get
+            {
+                return @"
+                        <a style=""color:#cab790;text-decoration:underline"" href=""{0}"" target=""_blank"">
+                            {1}
+                        </a>";
+            }
+        }
+
+        public static string EmailH1
+        {
+            get
+            {
+                return @"
+                    <font size=""3"" style=""Margin-top:0;font-weight:normal;color:#38434d;font-family:Georgia,serif;font-size:22px;line-height:28px;min-height:28px;Margin-bottom:18px"">
+                        {0}
+                    </font><br><br>";
+            }
+        }
+
+
         #endregion
 
         [Description("Builds url with the query string parameters")]
