@@ -1766,7 +1766,7 @@ var ListForm = Class.create(); ListForm.prototype = {
         this.container = container;
         this.options = options;
 
-        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="1%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td id="filter' + this.hndl + '"></td><td width="1%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span> ' + lang('Apply') + '</span></td></table>');
+        this.container.prepend('<table' + (this.options.hideFilterPanel ? ' style="display:none"' : '') + ' class="lf-filter"><tr><td width="5%" style="padding-right:3px;vertical-align:middle">' + lang('Filter') + '</td><td width="83%" id="filter' + this.hndl + '"></td><td width="11%" style="vertical-align:middle"><span id="btnFilter' + this.hndl + '" class="ccBtn" style="margin:0px 0px 0px 10px"><span class="fff zoom"></span> ' + lang('Apply') + '</span></td></table>');
         this.filter = new FilterEdit('id', this.options.extraFilter, { entityName: options.entityName, container: '#filter' + this.hndl, readOnly: true });
         $('#btnFilter' + this.hndl).bind('click', this.fetchData.bind(this));
 
