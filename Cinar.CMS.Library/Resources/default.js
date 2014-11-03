@@ -805,7 +805,7 @@ var Chart = Class.create({
         this.margins[2] = (this.titleFontSize > this.margins[2]) ? this.titleFontSize : this.margins[2];
         var chartLeft = this.margins[0];
         var chartTop = this.margins[2];
-        var chartWidth = this.width - (this.margins[0] + this.margins[1] + this.margins[4]);
+        var chartWidth = this.width - (this.margins[0] + this.margins[1] + this.margins[3]);
         var chartHeight = this.height - (this.margins[2] + this.margins[3]);
 
         var seriesCount = this.data.length;
@@ -820,19 +820,19 @@ var Chart = Class.create({
 
         // title
         var t = this.title;
-        var tc = this.titleColor;
+        var tc = "#" + this.titleColor;
         var fs = this.titleFontSize;
-        str += '<div style="position:absolute;text-align:center;top:#{top}px;left:#{left}px;width:#{width};font-size:#{fs}px;color:#{tc}">#{title}</div>'.interpolate({ top: 0, left: 0, width: '100%', title: t, fs: fs, tc: tc });
+        str += '<div class="title" style="position:absolute;text-align:center;top:#{top}px;left:#{left}px;width:#{width};font-size:#{fs}px;color:#{tc}">#{title}</div>'.interpolate({ top: -14, left: 0, width: '100%', title: t, fs: fs, tc: tc });
         // chart area
         var bg = this.chartBgColor;
-        str += '<div style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;height:#{height}px;border-left:#{borderLeft};border-bottom:#{borderBottom};background:#{bg}"></div>'.interpolate({ top: chartTop, left: chartLeft, width: chartWidth, height: chartHeight, borderLeft: '1px solid red', borderBottom: '1px solid red', bg: bg });
+        str += '<div class="chartArea" style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;height:#{height}px;border-left:#{borderLeft};border-bottom:#{borderBottom};background:#{bg}"></div>'.interpolate({ top: chartTop, left: chartLeft, width: chartWidth, height: chartHeight, borderLeft: '1px solid red', borderBottom: '1px solid red', bg: bg });
 
         // grids
-        var steps = 5;
+        var steps = Math.floor(chartHeight / 24);
         for (var top = chartTop, i = 0; i < steps; top += chartHeight / steps, i++) {
             var val = Math.round(this.maxValue - i * (this.maxValue / steps));
-            str += '<div style="position:absolute;text-align:right;top:#{top}px;left:0px;width:#{width}px">#{val}</div>'.interpolate({ top: top, width: chartLeft, val: val });
-            str += '<div style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;border-top:1px dashed #D0D0D0"></div>'.interpolate({ top: top, left: chartLeft, width: chartWidth });
+            str += '<div class="grid-y-axis-label" style="position:absolute;text-align:right;top:#{top}px;left:0px;width:#{width}px">#{val}</div>'.interpolate({ top: top, width: chartLeft, val: val });
+            str += '<div class="grid-y-axis-line" style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;border-top:1px dashed #D0D0D0"></div>'.interpolate({ top: top, left: chartLeft, width: chartWidth });
         }
 
         for (var i = 0; i < seriesCount; i++) {
@@ -843,21 +843,21 @@ var Chart = Class.create({
                 var barTop = chartTop + (chartHeight - barHeight);
                 var barLeft = chartLeft + j * groupWidth + groupSpace + i * (barSpace + barWidth);
                 // a bar
-                str += '<div style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;height:#{height}px;background:##{bg}"></div>'.interpolate({ top: barTop, left: barLeft, width: barWidth, height: barHeight, bg: color });
+                str += (('<div class="bar" style="position:absolute;top:#{top}px;left:#{left}px;width:#{width}px;height:#{height}px;line-height: 16px;background:##{bg};color: rgb(255, 221, 160);">' + Math.round(val / 100 * ths.maxValue) + '</div>').interpolate({ top: barTop, left: barLeft, width: barWidth, height: barHeight, bg: color }));
             }
         }
 
         if (this.series && this.series.length > 0)
             for (var i = 0; i < this.labels.length; i++) {
                 var label = this.labels[i];
-                str += '<div style="position:absolute;text-align:center;top:#{top}px;left:#{left}px;width:#{width}px">#{label}</div>'.interpolate({ top: chartTop + chartHeight, left: i * groupWidth + chartLeft, width: groupWidth, label: label });
+                str += '<div class="grid-x-axis-label" style="position:absolute;text-align:center;top:#{top}px;left:#{left}px;width:#{width}px">#{label}</div>'.interpolate({ top: chartTop + chartHeight, left: i * groupWidth + chartLeft, width: groupWidth, label: label });
             }
 
         if (this.series && this.series.length > 0)
             for (var i = 0; i < this.series.length; i++) {
                 var color = this.colors[i % this.colors.length];
                 var serie = this.series[i];
-                str += '<div style="position:absolute;top:#{top}px;left:#{left}px;border-left:10px solid ##{color};padding-left:4px">#{serie}</div>'.interpolate({ top: chartTop + i * 24, left: chartLeft + chartWidth + 10, serie: serie, color: color });
+                str += '<div class="grid-serie-label" style="position:absolute;top:#{top}px;left:#{left}px;border-left:10px solid ##{color};padding-left:4px">#{serie}</div>'.interpolate({ top: chartTop + i * 24, left: chartLeft + chartWidth + 10, serie: serie, color: color });
             }
 
         this.container.append(str);
