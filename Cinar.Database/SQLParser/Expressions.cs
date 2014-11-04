@@ -522,10 +522,10 @@ namespace Cinar.SQLParser
             }
 
             if (left.GetType() == typeof(string) && right.GetType() != typeof(string))
-                left = Convert.ChangeType(left, right.GetType());
+                left = left.ChangeType(right.GetType());
 
             if (right.GetType() == typeof(string) && left.GetType() != typeof(string))
-                right = Convert.ChangeType(right, left.GetType());
+                right = right.ChangeType(left.GetType());
 
             IComparable leftC = (IComparable)(left ?? 0);
             right = right ?? 0d;

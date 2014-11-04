@@ -105,7 +105,7 @@ namespace Cinar.Database.Tools
                             {
                                 try
                                 {
-                                    drDest[dc.ColumnName] = Convert.ChangeType(dr[dc], dtDestSample.Columns[dc.ColumnName].DataType);
+                                    drDest[dc.ColumnName] = dr[dc].ChangeType(dtDestSample.Columns[dc.ColumnName].DataType);
                                 }
                                 catch(Exception ex) {
                                     log("Transfer error for " + tableName + "." + dc.ColumnName + ": " + ex.Message);

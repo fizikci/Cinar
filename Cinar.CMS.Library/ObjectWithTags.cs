@@ -56,7 +56,7 @@ namespace Cinar.CMS.Library
                     else if (pi.PropertyType == typeof(DateTime) && string.IsNullOrWhiteSpace(strVal))
                         val = new DateTime(1980, 1, 1);
                     else
-                        val = Convert.ChangeType(strVal, pi.PropertyType, CultureInfo.CurrentCulture);
+                        val = strVal.ChangeType(pi.PropertyType, CultureInfo.CurrentCulture);
                 }
                 catch
                 {

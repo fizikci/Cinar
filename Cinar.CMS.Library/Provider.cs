@@ -1145,9 +1145,10 @@ namespace Cinar.CMS.Library
                 return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
             }
         }
+        #endregion
 
-
-
+        #region Osman's custom message (bu ne olm lan? derleme hatası veriyordu kapattım kodu.) :)
+        /*
         public static string EmailCustomMessage(User to, string customSubject = "", string content = "")
         {
             string subject = "Custom Trial Mail";
@@ -1169,8 +1170,6 @@ namespace Cinar.CMS.Library
                 response = "<h6> " + to.FullName + " &lt;" + to.Email + "&gt; </h6>";
             return response;
         }
-
-
         public static string EmailHTMLBody
         {
             get
@@ -1274,7 +1273,6 @@ namespace Cinar.CMS.Library
                         ";
             }
         }
-
         public static string EmailParagraph
         {
             get
@@ -1284,7 +1282,6 @@ namespace Cinar.CMS.Library
                     </font><br><br>";
             }
         }
-
         public static string EmailLink
         {
             get
@@ -1295,7 +1292,6 @@ namespace Cinar.CMS.Library
                         </a>";
             }
         }
-
         public static string EmailH1
         {
             get
@@ -1306,8 +1302,7 @@ namespace Cinar.CMS.Library
                     </font><br><br>";
             }
         }
-
-
+         * */
         #endregion
 
         [Description("Builds url with the query string parameters")]
@@ -2622,7 +2617,7 @@ namespace Cinar.CMS.Library
                         for (int i = 0; i < fields.Length; i++)
                         {
                             PropertyInfo pInfo = res.GetType().GetProperty(fields[i]);
-                            pInfo.SetValue(res, Convert.ChangeType(values[i], pInfo.PropertyType), null);
+                            pInfo.SetValue(res, values[i].ChangeType(pInfo.PropertyType), null);
                         }
                 }
             }

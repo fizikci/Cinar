@@ -293,7 +293,7 @@ namespace Cinar.CMS.Library.Handlers
 
             BaseEntity entity = (BaseEntity)currentDatabase.Read(Provider.GetEntityType(entityName), mid);
             PropertyInfo pi = entity.GetType().GetProperty(fieldName);
-            object val = Convert.ChangeType(value, pi.PropertyType);
+            object val = value.ChangeType(pi.PropertyType);
             pi.SetValue(entity, val, null);
             entity.Save();
 

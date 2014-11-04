@@ -1158,7 +1158,7 @@ namespace Cinar.Database
                 else if (drValue != null && ((drValue.GetType() == pi.PropertyType) || drValue.GetType() == Nullable.GetUnderlyingType(pi.PropertyType)))
                     ;
                 else
-                    drValue = Convert.ChangeType(drValue, pi.PropertyType);
+                    drValue = drValue.ChangeType(pi.PropertyType);
 
                 pi.SetValue(entity, drValue, null);
 
@@ -1369,9 +1369,9 @@ namespace Cinar.Database
                 if (typeof(TKey).IsEnum && dr.Table.Columns[0].DataType == typeof(string))
                     key = (TKey)Enum.Parse(typeof(TKey), dr[0].ToString());
                 else
-                    key = (TKey)Convert.ChangeType(dr[0], typeof(TKey));
+                    key = (TKey)dr[0].ChangeType(typeof(TKey));
                 if (!dict.ContainsKey(key))
-                    dict.Add(key, (TValue)Convert.ChangeType(dr[1], typeof(TValue)));
+                    dict.Add(key, (TValue)dr[1].ChangeType(typeof(TValue)));
             }
 
             return dict;

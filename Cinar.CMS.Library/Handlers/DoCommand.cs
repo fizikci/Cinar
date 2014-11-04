@@ -651,7 +651,7 @@ namespace Cinar.CMS.Library.Handlers
             {
                 if (parameters[i].ParameterType.IsValueType && String.IsNullOrEmpty(context.Request[parameters[i].Name]))
                     throw new Exception(Provider.GetResource("The parameter {0} cannot be null.", parameters[i].Name));
-                paramValues[i] = Convert.ChangeType(context.Request[parameters[i].Name], parameters[i].ParameterType);
+                paramValues[i] = context.Request[parameters[i].Name].ChangeType(parameters[i].ParameterType);
             }
             object returnVal = mi.Invoke(module, paramValues);
 

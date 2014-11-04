@@ -644,10 +644,10 @@ namespace Cinar.Scripting
             try
             {
                 if (left.GetType() == typeof(string) && right.GetType() != typeof(string))
-                    left = Convert.ChangeType(left, right.GetType());
+                    left = left.ChangeType(right.GetType());
 
                 if (right.GetType() == typeof(string) && left.GetType() != typeof(string))
-                    right = Convert.ChangeType(right, left.GetType());
+                    right = right.ChangeType(left.GetType());
             }
             catch { }
 
@@ -832,7 +832,7 @@ namespace Cinar.Scripting
                         try
                         {
                             if(!paramTypes[j].IsSubclassOf(pinfo[j].ParameterType))
-                                paramValues[j] = Convert.ChangeType(paramValues[j], pinfo[j].ParameterType);
+                                paramValues[j] = paramValues[j].ChangeType(pinfo[j].ParameterType);
                         }
                         catch
                         {
@@ -878,7 +878,7 @@ namespace Cinar.Scripting
                         {
                             try
                             {
-                                object paramObj = Convert.ChangeType(var.Name, mi.GetParameters()[0].ParameterType);
+                                object paramObj = var.Name.ChangeType(mi.GetParameters()[0].ParameterType);
                                 res = mi.Invoke(res, new object[] { paramObj });
                             }
                             catch(Exception ex)
@@ -972,9 +972,9 @@ namespace Cinar.Scripting
                 {
                     MemberInfo mi = members[0];
                     if (mi is FieldInfo)
-                        (mi as FieldInfo).SetValue(obj, Convert.ChangeType(val, (mi as FieldInfo).FieldType));
+                        (mi as FieldInfo).SetValue(obj, val.ChangeType((mi as FieldInfo).FieldType));
                     else if (mi is PropertyInfo)
-                        (mi as PropertyInfo).SetValue(obj, Convert.ChangeType(val, (mi as PropertyInfo).PropertyType), null);
+                        (mi as PropertyInfo).SetValue(obj, val.ChangeType((mi as PropertyInfo).PropertyType), null);
                 }
             }
             else
