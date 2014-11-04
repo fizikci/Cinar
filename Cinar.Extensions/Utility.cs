@@ -1165,7 +1165,7 @@ namespace System
                             throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
                     }
                     ParameterInfo[] indexerParams = pi.GetIndexParameters();
-                    object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
+                    object indexerParam = indexer.ChangeType(indexerParams[0].ParameterType);
                     result = pi.GetValue(collectionObject, new object[] { indexerParam });
                 }
                 else
@@ -1257,13 +1257,13 @@ namespace System
                     }
                     else
                     {
-                        pi.SetValue(member, Convert.ChangeType(val, pi.PropertyType), null);
+                        pi.SetValue(member, val.ChangeType(pi.PropertyType), null);
                     }
                 }
                 else if (mi is FieldInfo)
                 {
                     FieldInfo fi = mi as FieldInfo;
-                    fi.SetValue(member, Convert.ChangeType(val, fi.FieldType));
+                    fi.SetValue(member, val.ChangeType(fi.FieldType));
                 }
 
                 return val;
@@ -1276,8 +1276,8 @@ namespace System
             PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
             if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
-            object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
-            pi.SetValue(obj, Convert.ChangeType(val, pi.PropertyType), new object[] { indexerParam });
+            object indexerParam = indexer.ChangeType(indexerParams[0].ParameterType);
+            pi.SetValue(obj, val.ChangeType(pi.PropertyType), new object[] { indexerParam });
         }
 
         public static void SetIndexedValue(this object obj, object indexer, object val)
@@ -1302,7 +1302,7 @@ namespace System
             }
             if (pi == null)
                 throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-            pi.SetValue(obj, Convert.ChangeType(val, pi.PropertyType), new object[] { indexer });
+            pi.SetValue(obj, val.ChangeType(pi.PropertyType), new object[] { indexer });
         }
 
         public static object GetIndexedValue(this object obj, string indexer, bool stringIndexer)
@@ -1312,7 +1312,7 @@ namespace System
             PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
             if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
-            object indexerParam = System.Convert.ChangeType(indexer, indexerParams[0].ParameterType);
+            object indexerParam = indexer.ChangeType(indexerParams[0].ParameterType);
             result = pi.GetValue(obj, new object[] { indexerParam });
             return result;
         }
@@ -1347,6 +1347,56 @@ namespace System
                 if (Convert.ToInt32(o) == val)
                     return (T)o;
             return (T)Enum.Parse(typeof(T), "");
+        }
+
+        public static T ChangeType<T>(this object value, CultureInfo culture = null)
+        {
+            if (culture == null) culture = CultureInfo.CurrentCulture;
+
+            var t = typeof(T);
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null || value == DBNull.Value)
+                {
+                    return default(T);
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return (T)Convert.ChangeType(value, t);
+        }
+
+        public static object ChangeType(this object value, Type conversion, CultureInfo culture = null)
+        {
+            if (culture == null) culture = CultureInfo.CurrentCulture;
+
+            var t = conversion;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null || value == DBNull.Value)
+                {
+                    return null;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            if (value == DBNull.Value)
+                return t.GetDefault();
+
+            return Convert.ChangeType(value, t);
+        }
+
+        public static object GetDefault(this Type type)
+        {
+            if (type.IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
+            return null;
         }
 
         public static string SerializeToString(this object entity, Predicate<PropertyInfo> serializeThisProperty)
@@ -1390,7 +1440,7 @@ namespace System
                     if (pi.PropertyType.IsEnum)
                         val = Enum.Parse(pi.PropertyType, valStr);
                     else
-                        val = Convert.ChangeType(valStr, pi.PropertyType);
+                        val = valStr.ChangeType(pi.PropertyType);
 
                     pi.SetValue(entity, val, null);
                 }

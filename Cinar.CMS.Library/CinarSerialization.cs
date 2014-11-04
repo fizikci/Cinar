@@ -35,7 +35,7 @@ namespace Cinar.CMS.Library
                 try
                 {
                     PropertyInfo pi = obj.GetType().GetProperty(keyValuePair.Key);
-                    pi.SetValue(obj, Convert.ChangeType(keyValuePair.Value, pi.PropertyType), null);
+                    pi.SetValue(obj, keyValuePair.Value.ChangeType(pi.PropertyType), null);
                 }catch{}
             }
         }
