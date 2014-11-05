@@ -1253,7 +1253,7 @@ namespace System
                     if (indexer != null)
                     {
                         object collectionObject = pi.GetValue(member, null);
-                        SetIndexedValue(collectionObject, indexer, stringIndexer, val);
+                        SetIndexedValue(collectionObject, indexer, stringIndexer, val.ChangeType(pi.PropertyType));
                     }
                     else
                     {
@@ -1351,21 +1351,7 @@ namespace System
 
         public static T ChangeType<T>(this object value, CultureInfo culture = null)
         {
-            if (culture == null) culture = CultureInfo.CurrentCulture;
-
-            var t = typeof(T);
-
-            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-            {
-                if (value == null || value == DBNull.Value)
-                {
-                    return default(T);
-                }
-
-                t = Nullable.GetUnderlyingType(t);
-            }
-
-            return (T)Convert.ChangeType(value, t);
+            return (T)ChangeType(value, typeof(T), culture);
         }
 
         public static object ChangeType(this object value, Type conversion, CultureInfo culture = null)
@@ -1386,6 +1372,13 @@ namespace System
 
             if (value == DBNull.Value)
                 return t.GetDefault();
+
+            if (t.IsEnum) {
+                if (value is string)
+                    return Enum.Parse(t, value.ToString());
+                else if (value.IsNumeric())
+                    return Enum.ToObject(t, (int)value);
+            }
 
             return Convert.ChangeType(value, t);
         }
