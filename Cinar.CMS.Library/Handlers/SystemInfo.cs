@@ -135,6 +135,16 @@ namespace Cinar.CMS.Library.Handlers
                         createFolder();
                         break;
                     }
+                case "getTextFile":
+                    {
+                        getTextFile();
+                        break;
+                    }
+                case "saveTextFile":
+                    {
+                        saveTextFile();
+                        break;
+                    }
                 case "exportLocalization":
                     {
                         exportLocalization();
@@ -454,6 +464,60 @@ namespace Cinar.CMS.Library.Handlers
             {
                 context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('Hata');</script>");
             }
+        }
+
+        private void getTextFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (!folderName.StartsWith("/")) folderName = "/" + folderName.Substring(1);
+
+            string path = Provider.MapPath(folderName);
+            if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                path = Path.GetDirectoryName(path);
+            if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
+
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
+                throw new Exception("Dosya seçiniz");
+            string fileName = fileNames.Split(new[] { "#NL#" }, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+                context.Response.Write(File.ReadAllText(filePath, Encoding.UTF8));
+        }
+        private void saveTextFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (!folderName.StartsWith("/")) folderName = "/" + folderName.Substring(1);
+
+            string path = Provider.MapPath(folderName);
+            if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                path = Path.GetDirectoryName(path);
+            if (!path.StartsWith(Provider.MapPath(Provider.AppSettings["userFilesDir"])))
+                path = Provider.MapPath(Provider.AppSettings["userFilesDir"]);
+
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
+                throw new Exception("Dosya seçiniz");
+            string fileName = fileNames.Split(new[] { "#NL#" }, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+            {
+                string backupFileName = "_old_" + fileName;
+                string backupPath = Path.Combine(path, backupFileName);
+
+                if (File.Exists(backupPath))
+                    File.Delete(backupPath);
+
+                File.Move(filePath, backupPath);
+                File.WriteAllText(filePath, context.Request["source"], Encoding.UTF8);
+
+                context.Response.Write("ok");
+                return;
+            }
+            context.Response.Write("ERR:File not found.");
         }
 
         private void exportLocalization()

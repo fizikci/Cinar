@@ -262,6 +262,7 @@ div.fileNameBox {
     width: 110px;
     font-size: 10px;
     overflow: hidden;
+    word-break: break-all;
 }
 div.fileNameBox img {max-width:80px; max-height:80px}
 #fileBrowserList .fileSelected {

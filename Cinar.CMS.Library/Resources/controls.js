@@ -409,7 +409,9 @@ var FileManager = Class.create(); FileManager.prototype = {
             if (arr.length > 0){
 				var name = arr[0];
 				if(name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
-					editImage(name);
+				    editImage(name);
+				else if (name.endsWith('.txt') || name.endsWith('.js') || name.endsWith('.css') || name.endsWith('.html') || name.endsWith('.htm'))
+				    editTextFile(name.substring(name.lastIndexOf('/')+1));
 				else
 					niceAlert(lang('Plese select a picture file to edit'));
 			}
@@ -676,6 +678,33 @@ function editImage(path){
 			imgPreview.attr('src', path + '?' + new Date().getMilliseconds());
 		}
 	});
+}
+
+function editTextFile(name) {
+    new AceEditor({
+        titleIcon: 'page',
+        title: currFolder + '/' + name,
+        buttons: [{ icon: 'save', id: 'btnSaveTextFile', text: lang('Save'), callback: function (editor) { saveTextFile(editor); } }],
+        text: ajax({ url: 'SystemInfo.ashx?method=getTextFile&name=' + name + '&folder=' + currFolder, isJSON: false, noCache: true }),
+        lang: name.substring(name.lastIndexOf('.') + 1)
+    });
+
+    function saveTextFile(editor) {
+        var params = new Object();
+        params['name'] = name;
+        params['folder'] = currFolder;
+        params['source'] = editor.getValue();
+        new Ajax.Request('SystemInfo.ashx?method=saveTextFile', {
+            method: 'post',
+            parameters: params,
+            onComplete: function (req) {
+                if (req.responseText.startsWith('ERR:')) { niceAlert(req.responseText); return; }
+                Windows.getFocusedWindow().close();
+                niceInfo(name + ' saved.');
+            },
+            onException: function (req, ex) { throw ex; }
+        });
+    }
 }
 
 //############################
@@ -2450,7 +2479,7 @@ var ContextMenu = Class.create(); ContextMenu.prototype = {
             else if (menu.items && menu.items.length > 0)
                 s += (tab + '\t<div class="menuFolder" onmouseover="showSubMenu(this,\'' + (id + '_' + index) + '\')" id="' + (subId + '_' + index) + '"><span class="fff ' + menu.icon + '"></span> ' + menu.text + '</div>\n');
             else
-                s += (tab + '\t<div onclick="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '"><span class="fff ' + menu.icon + '"></span> ' + menu.text + '</div>\n');
+                s += (tab + '\t<div onmousedown="runMenu(this)" onmouseover="hideMenu(this)" id="' + (subId + '_' + index) + '"><span class="fff ' + menu.icon + '"></span> ' + menu.text + '</div>\n');
         });
         s += (tab + '</div>\n');
         menus.each(function(menu, index) {
@@ -2714,6 +2743,7 @@ var AceEditor = Class.create(); AceEditor.prototype = {
         }, options || {});
 
         ths.options = options;
+        if (ths.options.lang == 'js') ths.options.lang = 'javascript';
 
         var win = new Window({ className: 'alphacube', title: '<span class="fff ' + options.titleIcon + '"></span> ' + options.title, width: options.width, height: options.height, wiredDrag: true, destroyOnClose: true });
         var winContent = $(win.getContent());
