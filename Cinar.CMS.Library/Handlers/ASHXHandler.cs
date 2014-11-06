@@ -118,9 +118,11 @@ namespace Cinar.CMS.Library.Handlers
                     Type type = Provider.GetType("Handlers", fileName);
                     if (type != null)
                     {
-                        IHttpHandler handler = (IHttpHandler)Activator.CreateInstance(type);
+                        IHttpHandler handler = (IHttpHandler) Activator.CreateInstance(type);
                         handler.ProcessRequest(context);
                     }
+                    else
+                        HttpContext.Current.Response.Write("Handler not found: " + fileName + " (URL: " + context.Request.Url + ")");
                     break;
             }
         }
