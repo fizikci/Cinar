@@ -323,23 +323,14 @@ namespace Cinar.CMS.Library
             if (string.IsNullOrEmpty(orderBy) || orderBy.Trim() == "")
                 orderBy = orderByDefault;
 
-            //if (orderBy.Contains(" "))
-            //{
-            //    string[] parts = orderBy.Split(' ');
-            //    orderBy = "[" + parts[0].Trim('[', ']') + "] " + parts[1];
-            //}
-            //else
-            //    orderBy = "[" + orderBy.Trim().Trim('[', ']') + "]";
-
             sql += " order by " + orderBy;
 
             sql = Provider.Database.AddPagingToSQL(sql, limit, pageIndex);
-            //sql += " limit " + limit + " offset " + (limit * pageIndex);
 
             dt = Provider.Database.ReadTable(entityType, sql, parameters);
             return dt;
         }
-        [Description("Returns the number of records for the entity. Where: 'CategoryId=1 AND TitlelikeHello%'")]
+        [Description("Returns the number of records for the entity.")]
         public static int ReadListTotalCount(Type entityType, string where, object[] parameters)
         {
             string sql = "select count(*)  from [" + entityType.Name + "] " + (String.IsNullOrEmpty(where) ? "" : ("where " + where));
