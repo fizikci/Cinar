@@ -1139,7 +1139,6 @@ namespace Cinar.CMS.Library
         #endregion
 
         #region Osman's custom message (bu ne olm lan? derleme hatası veriyordu kapattım kodu.) :)
-        /*
         public static string EmailCustomMessage(User to, string customSubject = "", string content = "")
         {
             string subject = "Custom Trial Mail";
@@ -1247,8 +1246,7 @@ namespace Cinar.CMS.Library
                                           <td style=""padding: 0 30px 30px;vertical-align:middle;font-size:26px;Margin-bottom:0;font-weight:bold;color:#38434d;font-family:sans-serif"" align=""left"">
 
                                             <div>"
-                                                + string.Format(EmailFooterBadge, "#", "Download Android App", "http://www.webso.it/wp-content/uploads/2013/04/logo_google_play_store_badge.png")
-                                                + string.Format(EmailFooterBadge, "#", "Download iOS App", "http://www.jackenhack.com/wp-content/uploads/2014/07/Download_on_the_App_Store_Badge_US-UK_135x40_0824.png")
+                                                + string.Format(EmailLink, BuildUrl(Configuration.SiteAddress), "unsubscribe from this email")
                                         + @"</div>
                                             
                                           </td>
@@ -1278,7 +1276,7 @@ namespace Cinar.CMS.Library
             get
             {
                 return @"
-                        <a style=""color:#cab790;text-decoration:underline"" href=""{0}"" target=""_blank"">
+                        <a style=""color:#cab790;text-decoration:underline"" href=""{0}"" target=""_blank"" border=""0"">
                             {1}
                         </a>";
             }
@@ -1293,9 +1291,21 @@ namespace Cinar.CMS.Library
                     </font><br><br>";
             }
         }
-         * */
+
+        
         #endregion
 
+        [Description("Builds base url for the website")]
+        public static string BuildUrl(string url = "")
+        {
+            if (!(url.StartsWith("http") || url.StartsWith("https")))
+            {
+                url = "http://" + Configuration.SiteAddress;
+                //url = "https://" + Provider.Configuration.SiteAddress;
+            }
+            return url;
+        }
+        
         [Description("Builds url with the query string parameters")]
         public static string BuildUrl(string pageUrl, string paramName, string paramValue)
         {
