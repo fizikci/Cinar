@@ -35,6 +35,13 @@ namespace Cinar.CMS.Library.Handlers
                         HasAppStarted = true;
 
                         Provider.RegenerateScripts();
+
+                        if (HttpContext.Current.Request.Url.IsLoopback)
+                        {
+                            Provider.DesignMode = true;
+                            HttpContext.Current.Response.Redirect(
+                                "/DoLogin.ashx?Email=root@local&Passwd=root", false);
+                        }
                     }
                 }
             }
