@@ -18,8 +18,8 @@ namespace Cinar.Test
         {
             //Tutorial_3_CreateTableAtRuntime.Run();
 
-            
-            string csv_file_path = @"C:\Users\BulentKeskin\Desktop\hsedbs_son.csv";
+
+            string csv_file_path = @"C:\Users\Bülent\Downloads\yenidatabaseV3.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
 
             Database.Database db = new Database.Database("Server=94.73.149.239;Database=hsedbs;Uid=hsedbs;Pwd=545454Ll;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
@@ -56,19 +56,12 @@ namespace Cinar.Test
                     int assistantTypeId = definition("AssistantTypeId", "AssistantType", dr, db);
                     string assistantName = dr["AssistantName"].ToString();
                     string assistantEmail = dr["AssistantEmail"].ToString();
-                    int companyId = 0;
-                    if (dr["CompanyId"].ToString() != "")
-                    {
-                        var company = dr["CompanyId"].ToString().Trim();
-                        companyId = db.GetInt("select Id from Company where Name={0}", company);
-                        if (companyId == 0)
-                            companyId = db.GetInt("insert into Company(Name,UserId,Email,InsertDate, InsertUserId, Visible) values({0},0,{1},now(),1,1); SELECT LAST_INSERT_ID();", company, dr["Email"].ToString());
-                    }
                     int departmentId = definition("DepartmentId", "Department", dr, db);
                     string referenceBy = dr["ReferenceBy"].ToString();
                     int kind1Id = definition("Kind1Id", "ContactKind1", dr, db);
                     int kind2Id = definition("Kind2Id", "ContactKind2", dr, db);
                     string phone = dr["Phone"].ToString();
+                    string interPhone = dr["Dahili"].ToString();
                     string phone2 = dr["Phone2"].ToString();
                     string fax = dr["Fax"].ToString();
                     string phoneMobile = dr["PhoneMobile"].ToString();
@@ -88,11 +81,34 @@ namespace Cinar.Test
                     string extraField2 = dr["ExtraField2"].ToString();
                     string extraField3 = dr["ExtraField3"].ToString();
 
+                    int companyId = 0;
+                    if (dr["CompanyId"].ToString() != "")
+                    {
+                        var company = dr["CompanyId"].ToString().Trim();
+                        companyId = db.GetInt("select Id from Company where Name={0}", company);
+                        if (companyId == 0)
+                            companyId = db.GetInt(@"insert into Company(
+                                            Name,UserId,Email,
+                                            AddressLine1, City, CountryId,
+                                            Phone, Fax, SectorId, Web,
+                                            InsertDate,InsertUserId,Visible
+                                        ) values(
+                                            {0},0,{1},
+                                            {2},{3},{4},{5},{6},{7},{8},
+                                            now(),1,1
+                                        ); SELECT LAST_INSERT_ID();", 
+                                            company, dr["Email"].ToString(),
+                                            addressLine1, city, countryId,
+                                            phone, fax, kind1Id, web
+                               );
+                    }
+
+
                     int contactId = db.GetInt(@"insert into contact(
 	                                    PrefixId, Name, Description, RelationWithUsId,
 	                                    Email, Email2, Tags, AssistantTypeId,
 	                                    AssistantName, AssistantEmail, CompanyId, DepartmentId,
-	                                    ReferenceBy, Kind1Id, Kind2Id, Phone,
+	                                    ReferenceBy, Kind1Id, Kind2Id, Phone, InterPhone,
 	                                    Phone2, Fax, PhoneMobile, Web,
                                         AddressLine1, Town, City, CountryId,
                                         InterestId1, InterestId2, Language1Id, Language2Id,
@@ -100,14 +116,14 @@ namespace Cinar.Test
                                         UserId, InsertDate, InsertUserId, Visible
                                     ) values (
                                         {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24},
-                                        {25}, {26}, {27}, {28}, {29}, {30}, {31}, 
+                                        {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32},
                                         0, now(), 1, 1
                                     ); SELECT LAST_INSERT_ID();
                                 ",
 	                                    prefixId, name, description, relationWithUsId,
 	                                    email, email2, tags, assistantTypeId,
 	                                    assistantName, assistantEmail, companyId, departmentId,
-	                                    referenceBy, kind1Id, kind2Id, phone,
+	                                    referenceBy, kind1Id, kind2Id, phone, interPhone,
 	                                    phone2, fax, phoneMobile, web,
                                         addressLine1, town, city, countryId,
                                         interestId1, interestId2, language1Id, language2Id,
