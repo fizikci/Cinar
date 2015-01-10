@@ -683,6 +683,14 @@ namespace System
             return res;
         }
 
+        private static Regex emailRegex = null;
+        public static bool IsEmail(this string str)
+        {
+            if(emailRegex==null)
+                emailRegex = new Regex(@"[\d\w_\-]+(\.[\d\w_\-]+)*@[\d\w_\-]+");
+            return emailRegex.IsMatch(str);
+        }
+
         public static List<string> PascalCaseWords(this string str)
         {
             var res = new List<string>();

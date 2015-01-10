@@ -128,7 +128,6 @@ namespace Cinar.CMS.Library
             }
         }
         [Description("The current language and culture code. (like en-US, tr-TR)")]
-
         public static string CurrentCulture
         {
             get
@@ -2709,6 +2708,27 @@ namespace Cinar.CMS.Library
             get {
                 return Provider.Database;
             }
+        }
+
+        public IList GetList(string entityName, string sql)
+        {
+            return Provider.Translate(Provider.Database.ReadList(Provider.GetEntityType(entityName), sql));
+        }
+        public IList GetList(string entityName, string sql, object p1)
+        {
+            return Provider.Translate(Provider.Database.ReadList(Provider.GetEntityType(entityName), sql, p1));
+        }
+        public IList GetList(string entityName, string sql, object p1, object p2)
+        {
+            return Provider.Translate(Provider.Database.ReadList(Provider.GetEntityType(entityName), sql, p1, p2));
+        }
+        public IList GetList(string entityName, string sql, object p1, object p2, object p3)
+        {
+            return Provider.Translate(Provider.Database.ReadList(Provider.GetEntityType(entityName), sql, p1, p2, p3));
+        }
+        public IList GetList(string entityName, string sql, object p1, object p2, object p3, object p4)
+        {
+            return Provider.Translate(Provider.Database.ReadList(Provider.GetEntityType(entityName), sql, p1, p2, p3, p4));
         }
 
         public DataTable GetDataTable(string sql)

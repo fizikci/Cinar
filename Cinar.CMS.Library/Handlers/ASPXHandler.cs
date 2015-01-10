@@ -306,6 +306,10 @@ namespace Cinar.CMS.Library.Handlers
             if (Provider.Request["currentCulture"] != null)
                 Provider.CurrentCulture = Provider.Request["currentCulture"];
 
+            var urlParts = Provider.Request.Url.ToString().Replace("://", "").Split('/');
+            if(urlParts.Length>0 && urlParts[1].Length==2)
+                Provider.CurrentCulture = urlParts[1];
+
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Provider.CurrentCulture);
 
             Provider.SetHttpContextUser();
