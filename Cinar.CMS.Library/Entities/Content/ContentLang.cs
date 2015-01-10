@@ -120,6 +120,14 @@ namespace Cinar.CMS.Library.Entities
             set { spotTitle = value; }
         }
 
+        private string keywords;
+        [ColumnDetail(ColumnType = DbType.Text)]
+        public string Keywords
+        {
+            get { return keywords; }
+            set { keywords = value; }
+        }
+
         public override void BeforeSave()
         {
             base.BeforeSave();

@@ -36,12 +36,12 @@ namespace Cinar.CMS.Library.Handlers
 
                         Provider.RegenerateScripts();
 
-                        if (HttpContext.Current.Request.Url.IsLoopback)
-                        {
-                            Provider.DesignMode = true;
-                            HttpContext.Current.Response.Redirect(
-                                "/DoLogin.ashx?Email=root@local&Passwd=root", false);
-                        }
+                        //if (HttpContext.Current.Request.Url.IsLoopback)
+                        //{
+                        //    Provider.DesignMode = true;
+                        //    HttpContext.Current.Response.Redirect(
+                        //        "/DoLogin.ashx?Email=root@local&Passwd=root", false);
+                        //}
                     }
                 }
             }
@@ -53,13 +53,14 @@ namespace Cinar.CMS.Library.Handlers
             {
                 string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "");
                 // falanca.com/en/Content/Urunler/Bilgisayar_3.aspx
-                if (fullOrigionalPath.Contains(".aspx") && fullOrigionalPath.Split('/').Length == 5)
+                if (fullOrigionalPath.Split('/').Length > 1)
                 {
                     string[] parts = fullOrigionalPath.Split('/');
                     string lang = parts[1];
 
                     if (!Provider.CurrentCulture.StartsWith(lang))
-                        Provider.CurrentCulture = lang;
+                        if (lang == "tr" || lang == "en" || lang == "ru" || lang == "ar" || lang == "fr" || lang == "de")
+                            Provider.CurrentCulture = lang;
                 }
             }
         }
@@ -87,6 +88,7 @@ namespace Cinar.CMS.Library.Handlers
                             int item = int.Parse(parts[3 + i].Substring(0, parts[3 + i].IndexOf(".aspx")).SplitAndGetLast('_'));
                             string restOfQueryString = fullOrigionalPath.Contains("aspx?") ? fullOrigionalPath.Split(new[] { "aspx?" }, StringSplitOptions.None)[1] : "";
                             string rewritePath = pageName + ".aspx?item=" + item + (restOfQueryString != "" ? "&" + restOfQueryString : "");
+
                             HttpContext.Current.RewritePath(rewritePath);
                         }
                     }
