@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -683,12 +684,17 @@ namespace System
             return res;
         }
 
-        private static Regex emailRegex = null;
         public static bool IsEmail(this string str)
         {
-            if(emailRegex==null)
-                emailRegex = new Regex(@"[\d\w_\-]+(\.[\d\w_\-]+)*@[\d\w_\-]+");
-            return emailRegex.IsMatch(str);
+            try
+            {
+                MailAddress m = new MailAddress(str);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
 
         public static List<string> PascalCaseWords(this string str)
@@ -1056,6 +1062,19 @@ namespace System
 
         public static bool IsUtf8(string path) {
             return new Cinar.Extensions.Utf8Checker().Check(path);
+        }
+
+        private const string digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        public static string CreatePassword(int length)
+        {
+            if (length <= 0)
+                length = 6;
+
+            var pass = "";
+            var r = new Random();
+            for (int i = 0; i < length; i++)
+                pass += digits[r.Next(digits.Length)];
+            return pass;
         }
 
         #endregion
