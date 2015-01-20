@@ -1244,7 +1244,7 @@ namespace System
             }
             MemberInfo[] mis = member.GetType().GetMember(memberName, MemberTypes.Field | MemberTypes.Property, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (mis.Length != 1)
-                throw new Exception(memberName + " isimli member bulunamadı ya da birden çok defa bulundu.");
+                return null;
 
             MemberInfo mi = mis[0];
             object result;
