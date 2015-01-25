@@ -251,12 +251,8 @@ namespace Cinar.CMS.Library
                     DatabaseProvider sqlPro = (DatabaseProvider)Enum.Parse(typeof(DatabaseProvider), Provider.AppSettings["sqlProvider"]);
                     if (sqlCon.Contains("|DataDirectory|")) sqlCon = sqlCon.Replace("|DataDirectory|", MapPath("/App_Data"));
                     Database.Database db = new Database.Database(sqlCon, sqlPro, Provider.MapPath("/_thumbs/db.config"));
-                    
-                    //if(db.Tables.Count==0)
-                    //    db.CreateTablesForAllTypesIn(typeof(BaseEntity).Assembly);
 
-                    if (Provider.Items.Contains("db")) Provider.Items["db"] = db; else Provider.Items.Add("db", db);
-
+                    if (Provider.Items["db"] == null) Provider.Items["db"] = db;
                     db.NoTransactions = Provider.AppSettings["noTransactions"]=="true";
                 }
                 return (Database.Database)Provider.Items["db"];
