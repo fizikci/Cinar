@@ -26,9 +26,10 @@ $(function(){
 			}
 		});
         
-		$('.Module').each(function (eix, mdl) {
-		    if ($(mdl).hasClass('StaticHtml')) $(mdl).dblclick(editStaticHtml);
-		});
+        if(isDesigner)
+		    $('.Module').each(function (eix, mdl) {
+		        if ($(mdl).hasClass('StaticHtml')) $(mdl).dblclick(editStaticHtml);
+		    });
 
         if (!designMode) return; //***
 

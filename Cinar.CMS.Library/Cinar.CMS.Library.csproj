@@ -109,6 +109,8 @@
     <Compile Include="Entities\Message\PrivateLastMessage.cs" />
     <Compile Include="Entities\Message\PrivateMessage.cs" />
     <Compile Include="Entities\Message\EntityComment.cs" />
+    <Compile Include="Entities\Misc\EntityAttachment.cs" />
+    <Compile Include="Entities\Misc\EntityAttachmentLang.cs" />
     <Compile Include="Entities\QueueJobs\Job.cs" />
     <Compile Include="Entities\QueueJobs\JobData.cs" />
     <Compile Include="Entities\QueueJobs\JobDefinition.cs" />

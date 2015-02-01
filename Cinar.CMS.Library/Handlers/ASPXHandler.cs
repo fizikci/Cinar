@@ -167,7 +167,7 @@ namespace Cinar.CMS.Library.Handlers
                     sb.Append("<style title=\"moduleStyles\">\n" + Provider.ReadStyles(modules) + "\n</style>\n");
                 }
 
-                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}';</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0]);
+                sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}'; isDesigner={3};</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0], Provider.User.IsInRole("Designer").ToJS());
 
                 ///////////////////////////////////// JS
 

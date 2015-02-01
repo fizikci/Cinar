@@ -26,6 +26,9 @@ namespace Cinar.CMS.Library.Entities
 
         public override void AfterSave(bool isUpdate)
         {
+            if (this.UserId <= 0)
+                return;
+
             base.AfterSave(isUpdate);
 
             string msg = String.Format(@"
