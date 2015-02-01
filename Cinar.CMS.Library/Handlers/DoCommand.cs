@@ -225,7 +225,20 @@ namespace Cinar.CMS.Library.Handlers
                         parseWebPageHtmlAsContent();
                         break;
                     }
+                case "saveEntityAttachment":
+                    {
+                        saveEntityAttachment();
+                        break;
+                    }
             }
+        }
+
+        private void saveEntityAttachment()
+        {
+            BaseEntity entity = new EntityAttachment();
+            entity.SetFieldsByPostData(context.Request.Form);
+            entity.Save();
+            context.Response.Write("<script>if(window.parent.tempCallback) window.parent.tempCallback("+entity.ToJSON()+");</script>");
         }
 
         private void getAllActivity()
@@ -274,6 +287,8 @@ namespace Cinar.CMS.Library.Handlers
                         res.Add(lag);
                     }
 
+                    var entity = Provider.Database.Read(Provider.GetEntityType(dr["EntityName"].ToString()), (int)dr["EntityId"]);
+
                     lag.Activities.Add(new LastActivity { 
                         Avatar = dr["Avatar"].ToString(),
                         Details = dr["Details"].ToString(),
@@ -281,7 +296,7 @@ namespace Cinar.CMS.Library.Handlers
                         EntityName = dr["EntityName"].ToString(),
                         InsertDate = ((DateTime)dr["InsertDate"]).ToString("dd-MM-yyyy HH:mm"),
                         Name = dr["Name"].ToString(),
-                        Title = Provider.Database.Read(Provider.GetEntityType(dr["EntityName"].ToString()), (int) dr["EntityId"]).GetNameValue(),
+                        Title = entity==null ? "" : entity.GetNameValue(),
                         Time = ((DateTime)dr["InsertDate"]).ToString("HH:mm"),
                         Type = dr["Type"].ToString()
                     });
