@@ -144,7 +144,7 @@ namespace Cinar.CMS.Library.Handlers
                 ////////////////////////////////////// CSS
 
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
+                if (Provider.Configuration.UseExternalLibrary.Contains("jQueryUI"))
                 {
                     sb.Append("<link href=\"/external/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css\" rel=\"stylesheet\">\n");
                 }
