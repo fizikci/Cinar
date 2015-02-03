@@ -378,11 +378,11 @@ namespace Cinar.CMS.Library.Entities
                 Tag t = (Tag)Provider.Database.Read(typeof(Tag), "Name={0}", tagToDelete);
                 if (t == null) continue;
                 Provider.Database.ExecuteNonQuery("delete from ContentTag where ContentId={0} and TagId={1}", this.Id, t.Id);
-                if(Provider.Configuration.CountTags) t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
-                if (t.ContentCount == 0)
-                    t.Delete();
-                else
+                if (Provider.Configuration.CountTags)
+                {
+                    t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
                     t.Save();
+                }
             }
             foreach (string tagToAddPair in alToAdd)
             {
@@ -408,22 +408,22 @@ namespace Cinar.CMS.Library.Entities
                 ct.Save();
 
 
-                if (Provider.Configuration.CountTags) t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
-                if (t.ContentCount == 0)
-                    t.Delete();
-                else
+                if (Provider.Configuration.CountTags)
+                {
+                    t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
                     t.Save();
+                }
             }
             if (isUpdate && this.GetOriginalValues()["Visible"]!=null && !this.GetOriginalValues()["Visible"].Equals(this.Visible))
                 foreach (string strTag in arrNewTags)
                 {
                     Tag t = (Tag)Provider.Database.Read(typeof(Tag), "Name={0}", strTag);
                     if (t == null) continue;
-                    if (Provider.Configuration.CountTags) t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
-                    if (t.ContentCount == 0)
-                        t.Delete();
-                    else
+                    if (Provider.Configuration.CountTags)
+                    {
+                        t.ContentCount = Convert.ToInt32(Provider.Database.GetValue("select count(*) from ContentTag t, Content c where t.ContentId=c.Id and t.TagId={0} and c.Visible=1", t.Id));
                         t.Save();
+                    }
                 }
         }
 
