@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -1810,20 +1811,7 @@ namespace System
         public static string Serialize(this object obj)
         {
             if (obj == null) return null;
-            /*
-            string xml;
 
-            XmlSerializer ser = new XmlSerializer(obj.GetType());
-            using (MemoryStream memStream = new MemoryStream(0))
-            {
-                using (XmlTextWriter xmlWriter = new XmlTextWriter(memStream, Encoding.UTF8))
-                {
-                    ser.Serialize(xmlWriter, obj);
-                }
-                xml = Encoding.UTF8.GetString(memStream.GetBuffer());
-            }
-            return xml;
-            */
             var serializer = new XmlSerializer(obj.GetType());
             var sb = new StringBuilder();
 
@@ -2185,7 +2173,6 @@ namespace System
             return context.Request.ServerVariables["REMOTE_ADDR"];
         }
 
-
         public static string ExecuteProcess(string filename, string arguments = null)
         {
             var process = new Process();
@@ -2239,6 +2226,30 @@ namespace System
 
                 throw new Exception(filename + " " + arguments + " finished with exit code = " + process.ExitCode + ": " + message);
             }
+        }
+
+        public static void SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message, string host, int port, string userName, string password, string bcc = null)
+        {
+            MailAddress _from = new MailAddress(from, fromDisplayName);
+            MailAddress _to = new MailAddress(to, toDisplayName);
+            MailMessage mail = new MailMessage(_from, _to);
+            mail.Subject = subject;
+            if (bcc!=null)
+                mail.Bcc.Add(new MailAddress(bcc, bcc));
+            mail.IsBodyHtml = true;
+            mail.Body = message;
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = host;
+            smtp.Port = port;
+            if (!String.IsNullOrEmpty(userName) && !String.IsNullOrEmpty(password))
+            {
+                smtp.UseDefaultCredentials = false;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Credentials = new NetworkCredential(userName, password);
+            }
+
+            smtp.Send(mail);
         }
     }
 
