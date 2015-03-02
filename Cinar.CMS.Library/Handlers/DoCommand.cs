@@ -532,7 +532,7 @@ namespace Cinar.CMS.Library.Handlers
             }
 
             Cinar.Database.IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Content), @"
-                                select top 10
+                                select top 200
                                     Content.Id,
                                     Content.Title,
                                     Content.Description,
@@ -552,6 +552,8 @@ namespace Cinar.CMS.Library.Handlers
                                     " + (catId > 0 ? "inner" : "left") + @" join Content as Category on Category.Id = Content.CategoryId and Content.Hierarchy like '" + Provider.GetHierarchyLike(catId) + @"%'
                                     " + (sourceId > 0 ? "inner" : "left") + @" join Source on Source.Id = Content.SourceId" + (sourceId > 0 ? " and Source.Id={1}" : "") + @"
                                     " + (authorId > 0 ? "inner" : "left") + @" join Author on Author.Id = Content.AuthorId" + (authorId > 0 ? " and Author.Id={2}" : "") + @"
+                                WHERE
+                                    Content.Visible = 1
                                 ORDER BY
                                     Content.PublishDate DESC
                             ",
