@@ -1722,11 +1722,12 @@ namespace System
             sb.Append("}");
             return sb.ToString();
         }
-        public static string ToJSON(this Hashtable ht)
+
+        public static string ToJSON(this IDictionary ht)
         {
             if (ht == null)
-                return "null"; 
-            
+                return "null";
+
             StringBuilder sb = new StringBuilder();
             sb.Append("{\n");
 
@@ -1737,6 +1738,7 @@ namespace System
             sb.Append("}");
             return sb.ToString();
         }
+
         #endregion
 
         public static string ValidateCreditCardNumber(CardType cardType, string cardNumber)
