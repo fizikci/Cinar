@@ -159,10 +159,13 @@ namespace Cinar.Scripting
     }
     public class IntegerConstant : Expression
     {
-        public IntegerConstant(int value) { fValue = value; }
+        public IntegerConstant(long value)
+        {
+            fValue = value;
+        }
 
-        readonly int fValue;
-        public int Value { get { return fValue; } }
+        readonly long fValue;
+        public long Value { get { return fValue; } }
 
         public override object Calculate(Context context, ParserNode parentNode)
         {
