@@ -36,12 +36,12 @@ namespace Cinar.CMS.Library.Handlers
 
                         Provider.RegenerateScripts();
 
-                        //if (HttpContext.Current.Request.Url.IsLoopback)
-                        //{
-                        //    Provider.DesignMode = true;
-                        //    HttpContext.Current.Response.Redirect(
-                        //        "/DoLogin.ashx?Email=root@local&Passwd=root", false);
-                        //}
+                        if (Provider.DevelopmentMode && HttpContext.Current.Request.Url.IsLoopback)
+                        {
+                            Provider.DesignMode = true;
+                            HttpContext.Current.Response.Redirect(
+                                "/DoLogin.ashx?Email=root@local&Passwd=root", false);
+                        }
                     }
                 }
             }

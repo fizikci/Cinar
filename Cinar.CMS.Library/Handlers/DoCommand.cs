@@ -531,7 +531,7 @@ namespace Cinar.CMS.Library.Handlers
                     catId = cat.CategoryId;
             }
 
-            Cinar.Database.IDatabaseEntity[] contents = Provider.Database.ReadList(typeof(Content), @"
+            Cinar.Database.IDatabaseEntity[] contents = Provider.Translate(Provider.Database.ReadList(typeof(Content), @"
                                 select top 200
                                     Content.Id,
                                     Content.Title,
@@ -557,7 +557,7 @@ namespace Cinar.CMS.Library.Handlers
                                 ORDER BY
                                     Content.PublishDate DESC
                             ",
-                catId, sourceId, authorId).SafeCastToArray<Cinar.Database.IDatabaseEntity>();
+                catId, sourceId, authorId)).SafeCastToArray<Cinar.Database.IDatabaseEntity>();
 
             StringBuilder sbItems = new StringBuilder();
             foreach (Content content in contents)
