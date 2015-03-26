@@ -1352,7 +1352,7 @@ namespace Cinar.Database
             return sql;
         }
 
-        public List<T> GetList<T>(string sql, params object[] parameters)
+        public List<T> GetList<T>(string sql, params object[] parameters) where T : IConvertible 
         {
             return GetDataTable(sql, parameters).Rows.OfType<DataRow>().Select(dr => (T)(dr[0] == DBNull.Value ? default(T) : dr[0])).ToList();
         }

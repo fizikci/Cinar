@@ -697,6 +697,10 @@ namespace System
                 return false;
             }
         }
+        public static bool IsEmpty(this string str)
+        {
+            return string.IsNullOrWhiteSpace(str);
+        }
 
         public static List<string> PascalCaseWords(this string str)
         {

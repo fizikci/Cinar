@@ -103,7 +103,7 @@ namespace Cinar.Database
         DataTable GetDataTable(string sql);
         DataTable GetDataTableFor(string tableName, FilterExpression fExp);
         DataTable GetDataTableFor(Type entityType, FilterExpression fExp);
-        List<T> GetList<T>(string sql, params object[] parameters);
+        List<T> GetList<T>(string sql, params object[] parameters) where T : IConvertible;
         Dictionary<TKey, TValue> GetDictionary<TKey, TValue>(string sql, params object[] parameters);
         Hashtable GetKeyValueList(string sql, params object[] parameters);
         DataRow GetDataRow(string sql, params object[] parameters);
