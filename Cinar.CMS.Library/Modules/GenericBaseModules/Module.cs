@@ -558,14 +558,14 @@ InnerHtml,32,<hr/>
                 return null;
 
             Module module = Deserialize(m.Name, m.Details);
-            //module.Id = m.Id;
-            //module.Name = m.Name;
-            //module.Template = m.Template;
-            //module.Region = m.Region;
-            //module.OrderNo = m.OrderNo;
-            //module.CSS = m.CSS;
-            //module.ParentModuleId = m.ParentModuleId;
-            //module.UseCache = m.UseCache;
+            module.Id = m.Id;
+            module.Name = m.Name;
+            module.Template = m.Template;
+            module.Region = m.Region;
+            module.OrderNo = m.OrderNo;
+            module.CSS = m.CSS;
+            module.ParentModuleId = m.ParentModuleId;
+            module.UseCache = m.UseCache;
             return module;
         }
 

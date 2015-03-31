@@ -45,7 +45,7 @@ namespace Cinar.Database
         /// </summary>
         internal IDatabaseProvider dbProvider;
 
-        private bool noTransactions = true;
+        private bool noTransactions = false;
         [XmlIgnore]
         public bool NoTransactions
         {
