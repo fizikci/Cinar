@@ -30,19 +30,12 @@ namespace Cinar.CMS.Library.Handlers
             {
                 lock (_syncObject)
                 {
-                    if (!HasAppStarted)
-                    {
-                        HasAppStarted = true;
+                    HasAppStarted = true;
 
-                        Provider.RegenerateScripts();
+                    Provider.RegenerateScripts();
 
-                        if (Provider.DevelopmentMode && HttpContext.Current.Request.Url.IsLoopback)
-                        {
-                            Provider.DesignMode = true;
-                            HttpContext.Current.Response.Redirect(
-                                "/DoLogin.ashx?Email=root@local&Passwd=root", false);
-                        }
-                    }
+                    if (Provider.DevelopmentMode && HttpContext.Current.Request.Url.IsLoopback)
+                        HttpContext.Current.Response.Redirect("/DoLogin.ashx?Email=root@local&Passwd=root", false);
                 }
             }
         }

@@ -545,6 +545,25 @@ namespace System
             sb.Append("</table>");
             return sb.ToString();
         }
+        public static string ToHtmlTable(this object obj) {
+            if (obj == null)
+                return "";
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<table>\r\n");
+            foreach (PropertyInfo pi in obj.GetType().GetProperties())
+            {
+                if (pi.Name == "Item") continue;
+                if (pi.GetSetMethod() == null) continue;
+
+                object val = pi.GetValue(obj, null);
+                string valStr = (val ?? "").ToString();
+                sb.AppendFormat("<tr><td><b>{0} : </b></td><td>{1}</td></tr>\r\n", pi.Name, valStr);
+            }
+            sb.Append("</table>\r\n");
+            return sb.ToString();
+        }
+
         public static string MakePhoneNumber(this string number)
         {
             if (number == null)
@@ -1951,7 +1970,10 @@ namespace System
 
         public static string ToStringBetter(this Exception ex)
         {
-            return ex.Message + (ex.InnerException != null ? " (" + ex.InnerException.ToStringBetter() + ")" : "");
+            if (ex == null)
+                return "";
+
+            return ex.InnerException == null ? ex.Message : ex.InnerException.ToStringBetter();
         }
 
 
