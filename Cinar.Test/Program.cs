@@ -19,7 +19,7 @@ namespace Cinar.Test
             //Tutorial_3_CreateTableAtRuntime.Run();
 
 
-            string csv_file_path = @"C:\Users\Bülent\Downloads\yenidatabaseV3.csv";
+            string csv_file_path = @"C:\Users\Bülent\Desktop\CRM2402.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
 
             Database.Database db = new Database.Database("Server=94.73.149.239;Database=hsedbs;Uid=hsedbs;Pwd=545454Ll;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
@@ -61,7 +61,7 @@ namespace Cinar.Test
                     int kind1Id = definition("Kind1Id", "ContactKind1", dr, db);
                     int kind2Id = definition("Kind2Id", "ContactKind2", dr, db);
                     string phone = dr["Phone"].ToString();
-                    string interPhone = dr["Dahili"].ToString();
+                    string interPhone = "";// dr["Dahili"].ToString();
                     string phone2 = dr["Phone2"].ToString();
                     string fax = dr["Fax"].ToString();
                     string phoneMobile = dr["PhoneMobile"].ToString();
