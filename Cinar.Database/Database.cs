@@ -1273,6 +1273,8 @@ namespace Cinar.Database
 
             if (fExp == null) fExp = new FilterExpression();
             if (fExp.PageSize == 0) fExp.PageSize = 50000;
+            if (fExp.PageNo < 0) fExp.PageNo = 0;
+
             string where = fExp.Criterias.ToParamString();
             string orderBy = fExp.Orders.ToString();
             if (orderBy == "") orderBy = " ORDER BY [" + (table.PrimaryColumn != null ? table.PrimaryColumn.Name : table.Columns[0].Name) + "]";
@@ -1304,7 +1306,16 @@ namespace Cinar.Database
                     break;
             }
 
-            return this.GetDataTable(sql, fExp.GetParamValues());
+            var dt = this.GetDataTable(sql, fExp.GetParamValues());
+
+            // pageNo > 0 olduğu halde hiç kayıt dönmüyorsa (yani son sayfayı aştıysak) bir önceki sayfayı gönder
+            if ((dt == null || dt.Rows.Count == 0) && fExp.PageNo > 0)
+            {
+                fExp.PageNo--;
+                return getDataTableFor(tableName, fExp);
+            }
+
+            return dt;
         }
 
         public string AddPagingToSQL(string sql, int pageSize, int pageNo)
