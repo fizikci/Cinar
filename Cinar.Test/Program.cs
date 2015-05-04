@@ -19,19 +19,19 @@ namespace Cinar.Test
             //Tutorial_3_CreateTableAtRuntime.Run();
 
 
-            string csv_file_path = @"C:\Users\Bülent\Desktop\CRM2402.csv";
+            string csv_file_path = @"C:\Users\BOS\Desktop\Haldun.csv";
             DataTable csvData = GetDataTabletFromCSVFile(csv_file_path);
 
             Database.Database db = new Database.Database("Server=94.73.149.239;Database=hsedbs;Uid=hsedbs;Pwd=545454Ll;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
             //Database.Database db = new Database.Database("Server=localhost;Database=hazarcrm;Uid=root;Pwd=bk;old syntax=yes;charset=utf8", Database.DatabaseProvider.MySQL);
-            db.ExecuteNonQuery(@"truncate table Contact;
-                                    truncate table Company;
-                                    truncate table EntityComment;
-                                    truncate table EventContact;
-                                    truncate table GenericNotification;
-                                    truncate table Log;
-                                    truncate table Tag;
-                                    truncate table Definition;");
+//            db.ExecuteNonQuery(@"truncate table Contact;
+//                                    truncate table Company;
+//                                    truncate table EntityComment;
+//                                    truncate table EventContact;
+//                                    truncate table GenericNotification;
+//                                    truncate table Log;
+//                                    truncate table Tag;
+//                                    truncate table Definition;");
 
             int counter = 0;
             foreach (DataRow dr in csvData.Rows)
