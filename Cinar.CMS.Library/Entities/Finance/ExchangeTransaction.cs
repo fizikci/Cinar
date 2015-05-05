@@ -9,7 +9,7 @@ namespace Cinar.CMS.Library.Entities
         public bool Buying { get; set; }
         public ExchangeTypes ExchangeType { get; set; }
         public int AmountInCents { get; set; }
-        public int ExchangeRateInMiliCents { get; set; }
+        public int OpenRateInMiliCents { get; set; }
         public bool Closed { get; set; }
         public DateTime CloseDate { get; set; }
         public int CloseRateInMiliCents { get; set; }
