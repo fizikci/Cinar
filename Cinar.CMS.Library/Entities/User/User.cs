@@ -66,7 +66,7 @@ namespace Cinar.CMS.Library.Entities
 
         public string FullName
         {
-            get { return string.IsNullOrWhiteSpace(Name + Surname) ? (string.IsNullOrWhiteSpace(Nick) ? Email : Nick) : (Name + " " + Surname); }
+            get { return string.IsNullOrWhiteSpace(Name + Surname) ? (string.IsNullOrWhiteSpace(Nick) ? Email.Split('@')[0] : Nick) : (Name + " " + Surname); }
         }
 
         [ColumnDetail(Length = 50), EditFormFieldProps(Category = "Personal")]
