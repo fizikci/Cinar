@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Cinar.CMS.Library.Entities
 {
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, InsertDate, USD as [ExchangeRate.USD], EUR as [ExchangeRate.EUR] from RealTimeExchange")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, InsertDate, USDBuying, USDSelling, EURBuying, EURSelling from BankExchange")]
     public class BankExchange : SimpleBaseEntity
     {
         [ColumnDetail(IsNotNull = true, DefaultValue = "0", References = typeof(Content))]
@@ -19,6 +19,7 @@ namespace Cinar.CMS.Library.Entities
         public static void FetchRates(int bankId, string bankName)
         {
             var bankExchange = new BankExchange();
+            bankExchange.BankId = bankId;
 
             if (bankName == "Bank Asya")
             {
@@ -31,7 +32,6 @@ namespace Cinar.CMS.Library.Entities
                 bankExchange.EURSelling = Int32.Parse(ds.Tables[1].Rows[3]["Kur"].ToString().Replace(".", ""));
 
                 bankExchange.Save();
-
             }
             else
             {

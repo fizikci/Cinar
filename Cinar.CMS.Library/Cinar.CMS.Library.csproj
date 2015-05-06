@@ -102,6 +102,7 @@
     <Compile Include="Entities\Crm\EventContact.cs" />
     <Compile Include="Entities\Crm\Event.cs" />
     <Compile Include="Entities\Definition.cs" />
+    <Compile Include="Entities\Finance\UserBalance.cs" />
     <Compile Include="Entities\Finance\ExchangeTransaction.cs" />
     <Compile Include="Entities\Finance\BankExchange.cs" />
     <Compile Include="Entities\IssueTracking\Project.cs" />
