@@ -38,6 +38,9 @@
     <Reference Include="Facebook">
       <HintPath>..\packages\Facebook.6.4.0\lib\net40-client\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\Cinar.CMS.Library\_library\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -52,9 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankaDovizKurlari.cs" />
     <Compile Include="CevsenFromFileToCode.cs" />
     <Compile Include="ContentExtractor.cs" />
     <Compile Include="ColorToAlphaTrim.cs" />
+    <Compile Include="Hsedbs.cs" />
     <Compile Include="Kuran.cs" />
     <Compile Include="TextOverImage.cs" />
     <Compile Include="FileRenamer.cs" />

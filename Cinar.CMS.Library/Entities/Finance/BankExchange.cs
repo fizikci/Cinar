@@ -21,7 +21,7 @@ namespace Cinar.CMS.Library.Entities
             var bankExchange = new BankExchange();
             bankExchange.BankId = bankId;
 
-            if (bankName == "Bank Asya")
+            if (bankName.ToLowerInvariant() == "bank asya")
             {
                 var ds = new DataSet("fxPrices");
                 ds.ReadXml("http://www.bankasya.com.tr/xml/kur_list.xml");
@@ -32,6 +32,12 @@ namespace Cinar.CMS.Library.Entities
                 bankExchange.EURSelling = Int32.Parse(ds.Tables[1].Rows[3]["Kur"].ToString().Replace(".", ""));
 
                 bankExchange.Save();
+            }
+            else if(bankName.ToLowerInvariant() == "finansbank")
+            {
+                var doc = new HtmlAgilityPack.HtmlDocument();
+                doc.Load("http://www.finansbank.com.tr/bankacilik/alternatif-dagitim-kanallari/internet-bankaciligi/doviz_kurlari.aspx?IntSbMO_FB_Mevduatoranlari_PU".DownloadPage());
+
             }
             else
             {
