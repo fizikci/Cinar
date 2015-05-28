@@ -460,6 +460,14 @@ namespace System
             return string.Concat(str.Normalize(NormalizationForm.FormD).Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)).Normalize(NormalizationForm.FormC);
         }
 
+        public static string ToStringOr(this object obj, string thisValue)
+        {
+            if (obj == null)
+                return thisValue;
+
+            return obj.ToString();
+        }
+
         public static string ConvertToAbsoluteURL(this string relativeUrl, string baseUrl)
         {
             return (new Uri(new Uri(baseUrl), relativeUrl)).ToString();
@@ -1325,7 +1333,8 @@ namespace System
         {
             MemberInfo[] indexers = obj.GetType().GetMember("Item");
             PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-            if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            if (pi == null) 
+                throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
             object indexerParam = indexer.ChangeType(indexerParams[0].ParameterType);
             pi.SetValue(obj, val.ChangeType(pi.PropertyType), new object[] { indexerParam });
@@ -1361,7 +1370,8 @@ namespace System
             object result;
             MemberInfo[] indexers = obj.GetType().GetMember("Item");
             PropertyInfo pi = stringIndexer ? getStringIndexer(indexers) : getNonStringIndexer(indexers);
-            if (pi == null) throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
+            if (pi == null) 
+                throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
             ParameterInfo[] indexerParams = pi.GetIndexParameters();
             object indexerParam = indexer.ChangeType(indexerParams[0].ParameterType);
             result = pi.GetValue(obj, new object[] { indexerParam });
@@ -1380,7 +1390,7 @@ namespace System
             foreach (PropertyInfo pInfo in indexers)
             {
                 ParameterInfo[] indexerParams = pInfo.GetIndexParameters();
-                if (indexerParams.Length == 1 && (indexerParams[0].ParameterType==typeof(object) || indexerParams[0].ParameterType == indexer.GetType()))
+                if (indexerParams.Length == 1 && ((indexer.GetType().IsNumeric() && indexerParams[0].ParameterType.IsNumeric()) || (indexer.GetType() == typeof(string) && indexerParams[0].ParameterType==typeof(string))))
                 {
                     pi = pInfo;
                     break;
@@ -1388,7 +1398,7 @@ namespace System
             }
             if (pi == null) 
                 throw new Exception("Belirtilen indexer bulunamadı. Not: Şu an için sadece tek parametreli indexerlar destekleniyor.");
-            result = pi.GetValue(obj, new object[] { indexer });
+            result = pi.GetValue(obj, new object[] { indexer.ChangeType(pi.GetIndexParameters()[0].ParameterType) });
             return result;
         }
 
@@ -1893,6 +1903,36 @@ namespace System
                 TypeCode tc = ((IConvertible)o).GetTypeCode();
                 if (TypeCode.Char <= tc && tc <= TypeCode.Decimal)
                     return true;
+            }
+            return false;
+        }
+        public static bool IsNumeric(this Type type) 
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.SByte:
+                case TypeCode.Single:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return true;
+                case TypeCode.Object:
+                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        return IsNumeric(Nullable.GetUnderlyingType(type));
+                    }
+                    return false;
             }
             return false;
         }

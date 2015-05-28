@@ -1747,7 +1747,9 @@ namespace Cinar.DBTools
 
                         foreach (ColumnDef colNew in tblNew.Columns)
                         {
-                            if (colNew.OriginalColumn == null) {
+                            // field yeni eklenmişse
+                            if (colNew.OriginalColumn == null) 
+                            { 
                                 Column f = new Column()
                                 {
                                     Name = colNew.Name,
@@ -1759,32 +1761,67 @@ namespace Cinar.DBTools
                                     IsAutoIncrement = colNew.IsAutoIncrement
                                 };
                                 tbl.Columns.Add(f);
+                                sb.AppendLine(Provider.Database.GetSQLColumnAdd(tbl.Name, f) + ";");
+
                                 if (colNew.IsPrimaryKey)
                                 {
                                     PrimaryKeyConstraint k = new PrimaryKeyConstraint();
                                     tbl.Constraints.Add(k);
                                     k.ColumnNames.Add(f.Name);
                                     k.Name = "PK_" + tbl.Name;
+                                    sb.AppendLine(Provider.Database.GetSQLConstraintAdd(k) + ";");
                                 }
-                                sb.AppendLine(Provider.Database.GetSQLColumnAdd(tbl.Name, f) + ";");
+
                                 continue;
                             }
+                            // field'ın adı değiştirilmişse
                             if (colNew.OriginalColumn.Name != colNew.Name)
                             {
                                 string oldName = colNew.OriginalColumn.Name;
                                 colNew.OriginalColumn.Name = colNew.Name;
                                 sb.AppendLine(Provider.Database.GetSQLColumnRename(oldName, colNew.OriginalColumn) + ";");
                             }
+                            // default value'su değiştirilmişse
                             if (colNew.OriginalColumn.DefaultValue != colNew.DefaultValue)
                             {
                                 colNew.OriginalColumn.DefaultValue = colNew.DefaultValue;
                                 sb.AppendLine(Provider.Database.GetSQLColumnChangeDefault(colNew.OriginalColumn) + ";");
                             }
-                            if (colNew.OriginalColumn.ColumnTypeOriginal != colNew.ColumnType)
+                            // field type, length veya nullable değiştirilmişse
+                            if (colNew.OriginalColumn.ColumnTypeOriginal != colNew.ColumnType || colNew.OriginalColumn.Length != colNew.Length || colNew.OriginalColumn.IsNullable != colNew.IsNullable)
                             {
+                                var dependentConstraints = colNew.OriginalColumn.Table.Constraints.Where(cons => cons.ColumnNames.Contains(colNew.OriginalColumn.Name)).ToList();
+                                foreach(var cons in dependentConstraints)
+                                    sb.AppendLine(Provider.Database.GetSQLConstraintRemove(cons) + ";");
+
                                 colNew.OriginalColumn.ColumnTypeOriginal = colNew.ColumnType;
                                 colNew.OriginalColumn.ColumnType = Provider.Database.StringToDbType(colNew.ColumnType);
+                                colNew.OriginalColumn.Length = colNew.Length;
+                                colNew.OriginalColumn.IsNullable = colNew.IsNullable;
+
                                 sb.AppendLine(Provider.Database.GetSQLColumnChangeDataType(colNew.OriginalColumn) + ";");
+
+                                foreach (var cons in dependentConstraints)
+                                    sb.AppendLine(Provider.Database.GetSQLConstraintAdd(cons) + ";");
+                            }
+                            // primary key kaldırılmışsa
+                            if (colNew.OriginalColumn.IsPrimaryKey == true && colNew.IsPrimaryKey == false)
+                            {
+                                var k = colNew.OriginalColumn.Table.Constraints.FirstOrDefault(cons => cons is PrimaryKeyConstraint);
+                                if (k != null)
+                                {
+                                    colNew.OriginalColumn.Table.Constraints.Remove(k);
+                                    sb.AppendLine(Provider.Database.GetSQLConstraintRemove(k) + ";");
+                                }
+                            }
+                            // primary key yapılmışsa
+                            if (colNew.OriginalColumn.IsPrimaryKey == false && colNew.IsPrimaryKey == true)
+                            {
+                                PrimaryKeyConstraint k = new PrimaryKeyConstraint();
+                                tbl.Constraints.Add(k);
+                                k.ColumnNames.Add(colNew.Name);
+                                k.Name = "PK_" + tbl.Name;
+                                sb.AppendLine(Provider.Database.GetSQLConstraintAdd(k) + ";");
                             }
                         }
                         List<Column> deletedColumns = new List<Column>();
