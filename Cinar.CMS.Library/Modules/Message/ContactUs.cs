@@ -30,6 +30,9 @@ namespace Cinar.CMS.Library.Modules
 
                 try
                 {
+                    if (Provider.Session["captcha"].ToString() != Provider.Request["capt"])
+                        throw new Exception("Lütfen işlem sonucunu tekrar giriniz.");
+
                     contactUs.Save();
                     if(sendMail)
                         Provider.SendMail(contactUs.Email, contactUs.Name, Provider.Configuration.AuthEmail, Provider.Configuration.SiteName, Provider.GetResource("From visitor: ") + contactUs.Subject, contactUs.Message + "<br/><br/>"+contactUs.Name+"<br/>"+contactUs.Email);
@@ -66,6 +69,14 @@ namespace Cinar.CMS.Library.Modules
                                                                 Provider.GetModuleResource("Recommendation"));
             sb.AppendFormat("{0}<br/>", Provider.GetModuleResource("Your Message"));
             sb.AppendFormat("<textarea class=\"message\" name=\"message\">{0}</textarea><br/><br/>", CMSUtility.HtmlEncode(Provider.Request["message"]));
+
+            var r = new Random();
+            int a = r.Next(10) + 1;
+            int b = r.Next(10) + 1;
+            Provider.Session["captcha"] = (a + b).ToString();
+            sb.AppendFormat(a + " + " + b + " = ? ");
+            sb.AppendFormat("<input class=\"capt\" type=\"text\" name=\"capt\" value=\"\"/><br/>");
+
 
             sb.AppendFormat("<input class=\"send\" type=\"submit\" value=\"{0}\"/>", Provider.GetResource("Send"));
 
