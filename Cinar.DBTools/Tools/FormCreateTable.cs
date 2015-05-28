@@ -146,7 +146,10 @@ namespace Cinar.DBTools.Tools
                 c.OriginalColumn.Length = c.OriginalLength;
                 c.OriginalColumn.DefaultValue = c.OriginalDefaultValue;
                 c.OriginalColumn.IsNullable = c.OriginalIsNullable;
-                //c.OriginalColumn.IsPrimaryKey = c.OriginalIsPrimaryKey;
+                if (!c.OriginalIsPrimaryKey && c.OriginalColumn.IsPrimaryKey)
+                    OriginalTable.Constraints.RemoveAll(cons => cons is PrimaryKeyConstraint);
+                if (c.OriginalIsPrimaryKey && !c.OriginalColumn.IsPrimaryKey)
+                    OriginalTable.Constraints.Add(new PrimaryKeyConstraint() { ColumnNames = new List<string>() { c.Name }, Name = "PK_" + OriginalTable.Name });
                 c.OriginalColumn.IsAutoIncrement = c.OriginalIsAutoIncrement;
             }
         }

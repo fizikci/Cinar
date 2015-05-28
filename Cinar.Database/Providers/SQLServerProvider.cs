@@ -418,7 +418,12 @@ namespace Cinar.Database.Providers
 
         public string GetSQLColumnChangeDataType(Column column)
         {
-            return string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}{3}", column.Table.Name, column.Name, column.ColumnTypeOriginal, column.SimpleColumnType == SimpleDbType.String ? "(" + column.Length + ")" : "");
+            return string.Format("ALTER TABLE [{0}] ALTER COLUMN [{1}] {2}{3}{4}", 
+                column.Table.Name, 
+                column.Name, 
+                column.ColumnTypeOriginal, 
+                column.SimpleColumnType == SimpleDbType.String ? "(" + column.Length + ")" : "",
+                column.IsNullable ? "" : " NOT NULL");
         }
 
         public string GetSQLColumnChangeDefault(Column column)
