@@ -743,6 +743,14 @@ namespace System
                     word += str[i];
                     continue;
                 }
+                else if(Char.IsUpper(str[i-1]) && Char.IsUpper(str[i]))
+                {
+                    if(i+1==str.Length || Char.IsUpper(str[i+1]))
+                    {
+                        word += str[i];
+                        continue;
+                    }
+                }
                 res.Add(word);
                 word = str[i].ToString();
             }

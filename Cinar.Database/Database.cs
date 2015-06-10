@@ -887,6 +887,14 @@ namespace Cinar.Database
             
             return res;
         }
+        public int Update(string tableName, object record)
+        {
+            Hashtable ht = new Hashtable();
+            foreach (PropertyInfo pi in record.GetType().GetProperties())
+                if (pi.GetIndexParameters().Length == 0)
+                    ht[pi.Name] = pi.GetValue(record, null);
+            return Update(tableName, ht);
+        }
 
         public int Delete(string tableName, Hashtable data)
         {
