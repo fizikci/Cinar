@@ -70,6 +70,9 @@ namespace Cinar.CMS.Library.Modules
 
                 try
                 {
+                    if (InnerHtml.Contains("_CAPTCHA_") && Provider.Session["captcha"].ToString() != Provider.Request["capt"])
+                        throw new Exception("Lütfen işlem sonucunu tekrar giriniz.");
+
                     Provider.SendMailWithAttachment(this.Subject, sbMsg.ToString());
                     return thanksMessage;
                 }
@@ -78,6 +81,15 @@ namespace Cinar.CMS.Library.Modules
                     errorMessage = ex.Message.Replace("\n", "<br/>\n");
                 }
             }
+
+            var r = new Random();
+            int a = r.Next(10) + 1;
+            int b = r.Next(10) + 1;
+            Provider.Session["captcha"] = (a + b).ToString();
+            string captcha = "<span class=\"capCont\"><label>" + (a + " + " + b + " = ? </label>");
+            captcha += "<input class=\"capt\" type=\"text\" name=\"capt\" value=\"\" size=\"3\"/><br/></span>";
+
+            InnerHtml = InnerHtml.Replace("_CAPTCHA_", captcha);
 
             return base.show();
         }

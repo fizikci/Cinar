@@ -52,11 +52,12 @@ namespace Cinar.Database
             try
             {
                 res.Criterias = new CriteriaList();
-                foreach (string strCriteria in where.Split(new string[] {" AND "}, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string strCriteria in where.Split(new string[] { " AND " }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var parts = strCriteria.SplitWithTrim(" ");
                     Criteria c = new Criteria();
                     c.ColumnName = parts[0];
+                    c.ColumnValue = parts.Length > 2 ? parts.Skip(2).StringJoin(" ") : null;
                     switch (parts[1].ToUpperInvariant())
                     {
                         case "=":
@@ -79,6 +80,8 @@ namespace Cinar.Database
                             break;
                         case "LIKE":
                             c.CriteriaType = CriteriaTypes.Like;
+                            if (c.ColumnValue != null && !c.ColumnValue.ToString().Contains('%'))
+                                c.ColumnValue = "%" + c.ColumnValue + "%";
                             break;
                         case "IN":
                             c.CriteriaType = CriteriaTypes.In;
@@ -89,7 +92,6 @@ namespace Cinar.Database
                         default:
                             throw new Exception("WHERE statement can contain following operators:  AND ,  = ,  <> ,  > ,  >= ,  < ,  <= ,  LIKE ,  IN (with the spaces before and after)");
                     }
-                    c.ColumnValue = parts.Length>2 ? parts.Skip(2).StringJoin(" ") : null;
                     res.Criterias.Add(c);
                 }
             }
