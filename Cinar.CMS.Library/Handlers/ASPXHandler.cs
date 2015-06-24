@@ -361,6 +361,9 @@ namespace Cinar.CMS.Library.Handlers
             }
             catch { }
 
+            if (Provider.ShowExecutionTime)
+                Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow() finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+
             #region Cinar Script and attributes
             string pageContent = string.IsNullOrWhiteSpace(Provider.Configuration.DefaultPageLoadScript) ? "" : (" $ try{ $ " + Provider.Configuration.DefaultPageLoadScript+"\r\n $ } catch(ex) {echo(ex);} $ ");
             pageContent += template.HTMLCode;
@@ -371,7 +374,7 @@ namespace Cinar.CMS.Library.Handlers
 
 
             if (Provider.ShowExecutionTime)
-                Provider.Response.Write("<!-- Page output finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+                Provider.Response.Write("<!-- All modules Show() finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             try
             {
@@ -380,16 +383,13 @@ namespace Cinar.CMS.Library.Handlers
             catch { }
 
             if (Provider.ShowExecutionTime)
-                Provider.Response.Write("<!-- All modules afterShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
+                Provider.Response.Write("<!-- All modules afterShow() finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             // bu hiti kaydedelim
             if (Provider.Configuration.LogHit && Provider.Request.Browser!=null && !Provider.Request.Browser.Crawler)
                 new Hit().Save();
 
             stopWatch.Stop();
-
-            if (Provider.ShowExecutionTime)
-                Provider.Response.Write(strExecutionTimes + "<!-- All modules beforeShow finished at " + stopWatch.ElapsedMilliseconds + " ms -->");
 
             if (Provider.ShowExecutionTime)
                 Provider.Response.Write("<!-- TOTAL: " + stopWatch.ElapsedMilliseconds + " ms -->");
