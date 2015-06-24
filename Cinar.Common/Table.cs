@@ -129,7 +129,7 @@ namespace Cinar.Database
 
                 if (String.IsNullOrEmpty(stringColumnName))
                 {
-                    Column res = this.Columns.Find(DbType.VarChar);
+                    Column res = this.Columns.FirstOrDefault(c=>c.ColumnType == DbType.VarChar && !c.Name.EndsWith("Id"));
                     if (res == null) res = this.Columns.Find(DbType.Char);
                     if (res == null) res = this.Columns.Find(DbType.NVarChar);
                     if (res == null) res = this.Columns.Find(DbType.NChar);
