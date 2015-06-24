@@ -36,6 +36,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnDiff = new System.Windows.Forms.Button();
+            this.btnCopyThemAll = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -80,9 +81,9 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(14, 15);
@@ -106,11 +107,11 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 26);
+            this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage2.Size = new System.Drawing.Size(788, 430);
+            this.tabPage2.Size = new System.Drawing.Size(788, 432);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -127,11 +128,24 @@
             this.btnDiff.UseVisualStyleBackColor = true;
             this.btnDiff.Click += new System.EventHandler(this.btnDiff_Click);
             // 
+            // btnCopyThemAll
+            // 
+            this.btnCopyThemAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCopyThemAll.Location = new System.Drawing.Point(18, 482);
+            this.btnCopyThemAll.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnCopyThemAll.Name = "btnCopyThemAll";
+            this.btnCopyThemAll.Size = new System.Drawing.Size(173, 26);
+            this.btnCopyThemAll.TabIndex = 4;
+            this.btnCopyThemAll.Text = "Copy them all to clipboard";
+            this.btnCopyThemAll.UseVisualStyleBackColor = true;
+            this.btnCopyThemAll.Click += new System.EventHandler(this.btnCopyThemAll_Click);
+            // 
             // FormGeneratedCode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(824, 522);
+            this.Controls.Add(this.btnCopyThemAll);
             this.Controls.Add(this.btnDiff);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnSave);
@@ -157,6 +171,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button btnDiff;
+        private System.Windows.Forms.Button btnCopyThemAll;
 
     }
 }

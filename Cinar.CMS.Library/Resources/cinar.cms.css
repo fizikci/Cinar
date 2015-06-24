@@ -156,7 +156,7 @@ table.cntrlsTbl
 table.cntrlsTbl .category {background:#F1EFE2; color: #316AC5; font-weight:bold}
 table.cntrlsTbl .category td {padding:2px !important}
 table.cntrlsTbl td {width:50%;border-bottom:1px solid #F1EFE2;border-left:1px solid #F1EFE2;text-align:left;padding:1px;cursor:default;vertical-align:middle}
-table.cntrlsTbl input {border:none;padding-left:2px}
+table.cntrlsTbl input {border:none;padding-left:2px;color: initial;}
 table.cntrlsTbl input[type=button] {padding:0px; margin:0px}
 
 /* filterPanel */

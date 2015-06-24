@@ -115,5 +115,17 @@ namespace Cinar.DBTools.Tools
 
             f.Show();
         }
+
+        private void btnCopyThemAll_Click(object sender, EventArgs e)
+        {
+            string code = "";
+            foreach (TabPage tb in tabControl1.TabPages)
+                if (tb.Tag is GeneratedCode)
+                    code += (tb.Tag as GeneratedCode).Code;
+
+            Clipboard.SetText(code);
+
+            MessageBox.Show("copied to clipboard", "Cinar DB Tools");
+        }
     }
 }
