@@ -52,7 +52,7 @@ namespace Cinar.CMS.Library
                 if (Provider.Items["item"] == null && Provider.Session["item"] != null)
                 {
                     IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", Provider.Session["item"]).SafeCastToArray<IDatabaseEntity>();
-                    if (items == null)
+                    if (items == null || items.Length==0)
                         items = Provider.Database.ReadList(typeof(Content), "select * from [Content] where Id={0}", 1).SafeCastToArray<IDatabaseEntity>();
                     Provider.Translate(items);
                     Provider.Items["item"] = (Content)(items.Length == 1 ? items[0] : null);

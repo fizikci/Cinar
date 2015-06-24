@@ -9,6 +9,7 @@ using System.Diagnostics;
 using Cinar.CMS.Library.Modules;
 using Cinar.Scripting;
 using Cinar.CMS.Library.Entities;
+using System.Text.RegularExpressions;
 
 
 namespace Cinar.CMS.Library.Handlers
@@ -265,6 +266,34 @@ namespace Cinar.CMS.Library.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
+            #region control attacks
+            if (!string.IsNullOrWhiteSpace(Provider.Request["item"]))
+            {
+                var idStr = Provider.Request["item"];
+                var m = Regex.Match(idStr, "\\d+");
+                if (!m.Success || m.Value != idStr)
+                {
+                    Provider.Response.Redirect("/Default.aspx", true);
+                    return;
+                }
+            }
+            if (Provider.Request.QueryString!=null)
+                for (int i = 0; i < Provider.Request.QueryString.Count; i++)
+                {
+                    var key = Provider.Request.QueryString.GetKey(i);
+                    var val = Provider.Request.QueryString[key];
+                    if (key.EndsWith("Id") && !string.IsNullOrWhiteSpace(val))
+                    {
+                        var m = Regex.Match(val, "\\d+");
+                        if (!m.Success || m.Value != val)
+                        {
+                            Provider.Response.Redirect("/Default.aspx", true);
+                            return;
+                        }
+                    }
+                }
+            #endregion
+
             if (Provider.DevelopmentMode)
             {
                 Provider.Database.EnableSQLLog = true;

@@ -122,7 +122,7 @@ namespace Cinar.CMS.Library.Handlers
                         handler.ProcessRequest(context);
                     }
                     else
-                        HttpContext.Current.Response.Write("Handler not found: " + fileName + " (URL: " + context.Request.Url + ")");
+                        HttpContext.Current.Response.Write("Handler not found: " + fileName + " (URL: " + fileName + ".ashx)");
                     break;
             }
         }

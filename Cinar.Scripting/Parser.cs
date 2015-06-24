@@ -1018,8 +1018,8 @@ namespace Cinar.Scripting
 
         private Expression ParseIntegerConstant()
         {
-            long lValue;
-            if (long.TryParse(fCurrentToken.Value, out lValue))
+            int lValue;
+            if (int.TryParse(fCurrentToken.Value, out lValue))
             {
                 ReadNextToken(); // skip integer constant
                 return new IntegerConstant(lValue);
