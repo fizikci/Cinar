@@ -272,10 +272,18 @@ namespace Cinar.Database
                     str += " NOT LIKE {" + index + "}";
                     break;
                 case CriteriaTypes.In:
-                    str += " IN (" + columnValue + ")";
+                    Array arr = columnValue as Array;
+                    if(arr==null)
+                        str += " IN (" + columnValue + ")";
+                    else
+                        str += " IN ('" + arr.Cast<string>().Select(s=>s.Replace("'","''")).StringJoin("','") + "')";
                     break;
                 case CriteriaTypes.NotIn:
-                    str += " NOT IN (" + columnValue + ")";
+                    Array arr2 = columnValue as Array;
+                    if(arr2==null)
+                        str += " NOT IN (" + columnValue + ")";
+                    else
+                        str += " NOT IN ('" + arr2.Cast<string>().Select(s=>s.Replace("'","''")).StringJoin("','") + "')";
                     break;
             }
 
