@@ -16,7 +16,7 @@ namespace Cinar.Test
         [STAThread]
         static void Main(string[] args)
         {
-            // Tutorial_3_CreateTableAtRuntime.Run();
+            //Tutorial_3_CreateTableAtRuntime.Run();
             // Hsedbs.Run();
 
             BankaDovizKurlari.Run();
@@ -25,7 +25,7 @@ namespace Cinar.Test
             Console.ReadLine();
         }
 
-    }
+        }
 
 
-}
+                    }
