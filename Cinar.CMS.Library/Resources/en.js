@@ -106,3 +106,22 @@ langRes['Your name'] = 'Your name';
 langRes['Your e-mail'] = 'Your e-mail';
 langRes['Friend\'s name'] = 'Friend\'s name';
 langRes['Friend\'s e-mail'] = 'Friend\'s e-mail';
+
+// okul
+langRes.Tamam = 'OK';
+langRes.SonrakiEtkinlik = 'Next Activity';
+langRes.Dogru = 'TRUE';
+langRes.Yanlis = 'FALSE';
+langRes.GeriAl = 'Drop';
+langRes.Dinle = 'Listen';
+langRes.KAPAT = 'CLOSE';
+langRes.Kaydet ='Save';
+langRes.HataBildirimi = 'Report Errors';
+langRes.BastanYap = 'Restart';
+langRes.CevaplariGoster = 'Show Answers';
+langRes.KontrolEt = 'Check Answers';
+langRes.EskiPuan = 'Old Score';
+langRes.BuEtkinliktenAldiginizPuan = "The score you got from this activity";
+langRes.ToplamPuan = 'Total Score';
+langRes.LutfenHataMesajiniziGiriniz = 'Pease enter the error message';
+langRes.Tesekkurler = 'Thanks.';

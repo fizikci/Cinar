@@ -1812,7 +1812,7 @@ namespace Cinar.DBTools
                                 {
                                     colNew.OriginalColumn.Table.Constraints.Remove(k);
                                     sb.AppendLine(Provider.Database.GetSQLConstraintRemove(k) + ";");
-                                }
+                        }
                             }
                             // primary key yapılmışsa
                             if (colNew.OriginalColumn.IsPrimaryKey == false && colNew.IsPrimaryKey == true)

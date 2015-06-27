@@ -2304,13 +2304,13 @@ namespace System
             }
         }
 
-        public static void SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message, string host, int port, string userName, string password, string bcc = null)
+        public static void SendMail(string from, string fromDisplayName, string to, string toDisplayName, string subject, string message, string host, int port, string userName, string password, string bcc = null, bool enableSSL = false)
         {
             MailAddress _from = new MailAddress(from, fromDisplayName);
             MailAddress _to = new MailAddress(to, toDisplayName);
             MailMessage mail = new MailMessage(_from, _to);
             mail.Subject = subject;
-            if (bcc!=null)
+            if (!bcc.IsEmpty())
                 mail.Bcc.Add(new MailAddress(bcc, bcc));
             mail.IsBodyHtml = true;
             mail.Body = message;
@@ -2320,6 +2320,7 @@ namespace System
             smtp.Port = port;
             if (!String.IsNullOrEmpty(userName) && !String.IsNullOrEmpty(password))
             {
+                smtp.EnableSsl = enableSSL;
                 smtp.UseDefaultCredentials = false;
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Credentials = new NetworkCredential(userName, password);

@@ -52,7 +52,7 @@ namespace Cinar.Database
             try
             {
                 res.Criterias = new CriteriaList();
-                foreach (string strCriteria in where.Split(new string[] { " AND " }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string strCriteria in where.Split(new string[] {" AND "}, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var parts = strCriteria.SplitWithTrim(" ");
                     Criteria c = new Criteria();

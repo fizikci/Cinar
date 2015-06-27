@@ -423,87 +423,95 @@ namespace Cinar.CMS.Library
         [Description("Returns the translation of phrase from default language to the current language. First looks at cache, if not found uses Google to translate and writes it to database and caches.")]
         public static string TR(string name)
         {
-            if (name.IsEmpty())
-                return "";
-
-            name = name.Trim();
-
-            if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id)
-                return name;
-
-            Dictionary<string, int> sr = null;
-            Dictionary<string, string> srl = null;
-
-            cacheResources();
-
-            sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
-            srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
-
-            if (!sr.ContainsKey(name))
+            try
             {
-                StaticResource newSR = new StaticResource { Name = name };
-                newSR.Save();
-                sr[name] = newSR.Id;
+                if (Provider.Configuration.DefaultLang == Provider.CurrentLanguage.Id || string.IsNullOrWhiteSpace(name))
+                    return name;
 
-                //try
-                //{
-                //    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
-                //    foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
-                //    {
-                //        string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
-                //        Encoding resolvedEncoding = Encoding.UTF8;
-                //        string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
-                //        if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
-                //        StaticResourceLang newSRL = new StaticResourceLang
-                //        {
-                //            LangId = l.Id,
-                //            StaticResourceId = newSR.Id,
-                //            Translation = translate
-                //        };
-                //        newSRL.Save();
-                //        srl[newSR.Id + "_" + newSRL.LangId] = newSRL.Translation;
-                //        //HttpContext.Current.Cache["StaticResourceLang"] = srl;
+                Dictionary<string, int> sr = null;
+                Dictionary<string, string> srl = null;
 
-                //        if (Provider.CurrentLanguage.Id == l.Id)
-                //            name = newSRL.Translation;
-                //    }
-                //}
-                //catch { }
+                cacheResources();
 
-                return name;
+                sr = (Dictionary<string, int>)HttpContext.Current.Cache["StaticResource"];
+                srl = (Dictionary<string, string>)HttpContext.Current.Cache["StaticResourceLang"];
+
+                if (!sr.ContainsKey(name))
+                {
+                    StaticResource newSR = new StaticResource { Name = name };
+                    newSR.Save();
+                    sr[name] = newSR.Id;
+                    //HttpContext.Current.Cache["StaticResource"] = sr;
+
+                    try
+                    {
+                        var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                        foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
+                        {
+                            string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                            Encoding resolvedEncoding = Encoding.UTF8;
+                            string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                            if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                            StaticResourceLang newSRL = new StaticResourceLang
+                            {
+                                LangId = l.Id,
+                                StaticResourceId = newSR.Id,
+                                Translation = translate
+                            };
+                            newSRL.Save();
+                            srl[newSR.Id + "_" + newSRL.LangId] = newSRL.Translation;
+                            //HttpContext.Current.Cache["StaticResourceLang"] = srl;
+
+                            if (Provider.CurrentLanguage.Id == l.Id)
+                                name = newSRL.Translation;
+                        }
+                    }
+                    catch { }
+
+                    return name;
+                }
+
+                int srItem = sr[name];
+
+                if (!srl.ContainsKey(srItem + "_" + Provider.CurrentLanguage.Id))
+                {
+                    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
+                    Lang l = Provider.CurrentLanguage;
+                    string translate = "";
+                    try
+                    {
+                        string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
+                        Encoding resolvedEncoding = Encoding.UTF8;
+                        translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
+                        if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                    }
+                    catch
+                    {
+                        translate = name;
+                    }
+
+                    StaticResourceLang newSRL = new StaticResourceLang
+                    {
+                        LangId = l.Id,
+                        StaticResourceId = srItem,
+                        Translation = translate
+                    };
+                    newSRL.Save();
+                    srl[srItem + "_" + newSRL.LangId] = newSRL.Translation;
+                    name = newSRL.Translation;
+
+                    HttpContext.Current.Cache["StaticResourceLang"] = srl;
+
+                    return name;
+
+                }
+                else
+                    return srl[srItem + "_" + Provider.CurrentLanguage.Id];
             }
-
-            int srItem = sr[name];
-
-            if (!srl.ContainsKey(srItem + "_" + Provider.CurrentLanguage.Id))
+            catch (Exception ex)
             {
-                //try
-                //{
-                //    var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
-                //    Lang l = Provider.CurrentLanguage;
-                //    string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
-                //    Encoding resolvedEncoding = Encoding.UTF8;
-                //    string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
-                //    if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
-                //    StaticResourceLang newSRL = new StaticResourceLang
-                //    {
-                //        LangId = l.Id,
-                //        StaticResourceId = srItem,
-                //        Translation = translate
-                //    };
-                //    newSRL.Save();
-                //    srl[srItem + "_" + newSRL.LangId] = newSRL.Translation;
-                //    name = newSRL.Translation;
-                //}
-                //catch { }
-
-                //HttpContext.Current.Cache["StaticResourceLang"] = srl;
-
-                return name;
-
+                return name + "<font color=red>!!!</font>";
             }
-            else
-                return srl[srItem + "_" + Provider.CurrentLanguage.Id];
         }
 
         internal static void cacheResources()

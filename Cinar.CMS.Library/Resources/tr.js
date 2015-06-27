@@ -107,3 +107,22 @@ langRes['Your name'] = 'Adınız';
 langRes['Your e-mail'] = 'E-Posta adresiniz';
 langRes['Friend\'s name'] = 'Arkadaşınızın adı';
 langRes['Friend\'s e-mail'] = 'Arkadaşınızın e-posta adresi';
+
+// okul
+langRes.Tamam = 'Tamam';
+langRes.SonrakiEtkinlik = 'Sonraki Etkinlik';
+langRes.Dogru = 'DOĞRU';
+langRes.Yanlis = 'YANLIŞ';
+langRes.GeriAl = 'Geri Al';
+langRes.Dinle = 'Dinle';
+langRes.KAPAT = 'KAPAT';
+langRes.Kaydet = 'Kaydet';
+langRes.HataBildirimi = 'Hata Bildirimi';
+langRes.BastanYap = 'Baştan Yap';
+langRes.CevaplariGoster = 'Cevapları Göster';
+langRes.KontrolEt = 'Kontrol Et';
+langRes.EskiPuan = 'Eski Puan';
+langRes.BuEtkinliktenAldiginizPuan = "Bu etkinlikten aldığınız puan";
+langRes.ToplamPuan = 'Toplam Puan';
+langRes.LutfenHataMesajiniziGiriniz = 'Lütfen hata mesajını giriniz';
+langRes.Tesekkurler = 'Teşekkür ederiz.';
