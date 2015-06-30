@@ -15,12 +15,12 @@ namespace Cinar.Database
             get;
             set;
         }
+        void BeforeSave();
     }
 
     public interface IDatabaseEntityMinimal
     {
         void Initialize();
-        void BeforeSave();
         void AfterSave(bool isUpdate);
 
         string GetNameColumn();
