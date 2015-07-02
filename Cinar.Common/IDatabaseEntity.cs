@@ -44,7 +44,7 @@ namespace Cinar.Database
         [ColumnDetail(IsNotNull = true, Length = 100)]
         string TypeName { get; set; }
 
-        [ColumnDetail(ColumnType = Cinar.Database.DbType.Text)]
+        [ColumnDetail(ColumnType = DbType.Text)]
         string Details { get; set; }
     }
 
