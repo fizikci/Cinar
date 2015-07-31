@@ -37,6 +37,9 @@ namespace Cinar.Database
         [XmlIgnore]
         DatabaseProvider Provider { get; }
 
+        DateTime Now { get; }
+
+
         /// <summary>
         /// Veritabanýndaki tablolar
         /// </summary>

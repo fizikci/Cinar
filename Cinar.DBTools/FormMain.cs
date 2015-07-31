@@ -278,6 +278,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuToolsQScriptSQLTransferTableSQLGenerator, Argument=SQLResources.SQLTransferTableSQLGenerator},
                                          new CommandTrigger{ Control = menuToolsQScriptDataTableToStringTable, Argument=SQLResources.SQLDataTableToStringTable},
                                          new CommandTrigger{ Control = menuToolsQScriptDropAllForeignKeys, Argument=SQLResources.SQLDropAllForeignKeys},
+                                         new CommandTrigger{ Control = menuToolsQScriptFindIncorrectForeignKeys, Argument=SQLResources.SQLFindIncorrectForeignKeys},
                                      }
                                  },
                     #endregion

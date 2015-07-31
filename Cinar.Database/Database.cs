@@ -130,6 +130,20 @@ namespace Cinar.Database
             }
         }
 
+        public DateTime Now
+        {
+            get
+            {
+                if(provider == DatabaseProvider.SQLServer)
+                    return GetDateTime("select getdate()");
+                else if(provider == DatabaseProvider.MySQL || provider == DatabaseProvider.PostgreSQL)
+                    return GetDateTime("select now()");
+
+                return DateTime.Now;
+            }
+        }
+
+
         public void ClearSQLLog()
         {
             if (HttpContext.Current != null)
