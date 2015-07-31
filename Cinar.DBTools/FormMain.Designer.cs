@@ -187,6 +187,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSearhAllStringFields = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptSQLTransferTableSQLGenerator = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptDataTableToStringTable = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptDropAllForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -215,7 +216,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsQScriptDropAllForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptFindIncorrectForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1504,7 +1505,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSearhAllStringFields,
             this.menuToolsQScriptSQLTransferTableSQLGenerator,
             this.menuToolsQScriptDataTableToStringTable,
-            this.menuToolsQScriptDropAllForeignKeys});
+            this.menuToolsQScriptDropAllForeignKeys,
+            this.menuToolsQScriptFindIncorrectForeignKeys});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1563,6 +1565,12 @@ namespace Cinar.DBTools
             this.menuToolsQScriptDataTableToStringTable.Name = "menuToolsQScriptDataTableToStringTable";
             this.menuToolsQScriptDataTableToStringTable.Size = new System.Drawing.Size(258, 22);
             this.menuToolsQScriptDataTableToStringTable.Text = "DataTable To String Table";
+            // 
+            // menuToolsQScriptDropAllForeignKeys
+            // 
+            this.menuToolsQScriptDropAllForeignKeys.Name = "menuToolsQScriptDropAllForeignKeys";
+            this.menuToolsQScriptDropAllForeignKeys.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDropAllForeignKeys.Text = "Drop All Foreign Keys";
             // 
             // helpToolStripMenuItem
             // 
@@ -1806,11 +1814,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsQScriptDropAllForeignKeys
+            // menuToolsQScriptFindIncorrectForeignKeys
             // 
-            this.menuToolsQScriptDropAllForeignKeys.Name = "menuToolsQScriptDropAllForeignKeys";
-            this.menuToolsQScriptDropAllForeignKeys.Size = new System.Drawing.Size(258, 22);
-            this.menuToolsQScriptDropAllForeignKeys.Text = "Drop All Foreign Keys";
+            this.menuToolsQScriptFindIncorrectForeignKeys.Name = "menuToolsQScriptFindIncorrectForeignKeys";
+            this.menuToolsQScriptFindIncorrectForeignKeys.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptFindIncorrectForeignKeys.Text = "Find Incorrect Foreign Keys";
             // 
             // FormMain
             // 
@@ -2046,6 +2054,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDataTableToStringTable;
         private System.Windows.Forms.ToolStripMenuItem menuTableShowUIPreview;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDropAllForeignKeys;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptFindIncorrectForeignKeys;
 
     }
 }

@@ -822,4 +822,17 @@ foreach(table in db.Tables)
     		echo(db.GetSQLConstraintRemove(c) + ';\r\n');
 $</value>
   </data>
+  <data name="SQLFindIncorrectForeignKeys" xml:space="preserve">
+    <value>$
+foreach(var t in db.Tables)
+	foreach(var i in t.Constraints)
+		if(i.Type=="ForeignKey")
+		{
+			var x = t.Name+".FK_"+t.Name+"_"+i.ConstraintColumnNames+"_"+i.RefTableName+" ("+i.ConstraintColumnNames+")";
+			var y = i.ToString();
+			
+			if(x!=y) echo(x+"\r\n"+y+"\r\n\r\n");
+		}
+$</value>
+  </data>
 </root>
