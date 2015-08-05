@@ -18,7 +18,9 @@ namespace Cinar.DBTools.Controls
         public string FilePath { get { return filePath; } }
         public bool Modified { get { return txtSQL.Text!=InitialText; } }
 
-        public SQLEditorAndResults(string filePath, string sql)
+        private string tempFilePath = "";
+
+        public SQLEditorAndResults(string filePath, string sql, bool temp)
         {
             InitializeComponent();
 
@@ -36,11 +38,18 @@ namespace Cinar.DBTools.Controls
             tpInfo.ImageKey = "Info";
             tpTableData.ImageKey = "TableData";
 
-            this.filePath = filePath;
+            this.filePath = temp ? "" : filePath;
+            this.tempFilePath = temp ? filePath : "";
+
             if (!string.IsNullOrEmpty(filePath))
             {
                 txtSQL.LoadFile(filePath);
                 InitialText = txtSQL.Text;
+            }
+            else if (!string.IsNullOrEmpty(tempFilePath))
+            {
+                txtSQL.LoadFile(tempFilePath);
+                InitialText = "this is not a saved file. just a temp file. this sentence is not for warning, just to be sure that InitialText is not equal to txtSQL.Text. (to keep the editor in Modified state)";
             }
             else if (!string.IsNullOrEmpty(sql))
             {
@@ -194,6 +203,17 @@ namespace Cinar.DBTools.Controls
             return false;
         }
 
+        internal void SaveTemp()
+        {
+            if(txtSQL.Text.IsEmpty())
+                return;
+
+            if (tempFilePath.IsEmpty())
+                tempFilePath = Path.GetDirectoryName(Application.ExecutablePath) + "\\tmpsvdfile_"+DateTime.Now.ToString("yyyyMMddHHmmss")+".txt";
+
+            txtSQL.SaveFile(tempFilePath);
+
+        }
 
         FilterExpression fExp;
         public Table ShowTable

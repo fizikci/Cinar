@@ -576,6 +576,12 @@ namespace Cinar.DBTools
                     }
             }
 
+            foreach (string tempFilePath in Directory.GetFiles(Path.GetDirectoryName(Application.ExecutablePath), "tmpsvdfile_*.txt"))
+            {
+                addSQLEditor(tempFilePath, "", true);
+                isAnyEditorOpened = true;
+            }
+
             if(!isAnyEditorOpened)
                 addSQLEditor("", "");
 
@@ -871,7 +877,7 @@ namespace Cinar.DBTools
             return null;
         }
 
-        internal void addSQLEditor(string filePath, string sql)
+        internal void addSQLEditor(string filePath, string sql, bool temp = false)
         {
             foreach (MyTabPage myTabPage in tabControlEditors.TabPages)
                 if (!string.IsNullOrEmpty(filePath) && myTabPage.ToolTipText == filePath)
@@ -884,11 +890,11 @@ namespace Cinar.DBTools
             //tp.ImageKey = "Query";
             tp.ImageIndex = 1;
 
-            SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql);
+            SQLEditorAndResults sqlEd = new SQLEditorAndResults(filePath, sql, temp);
             sqlEd.Dock = DockStyle.Fill;
             tp.Controls.Add(sqlEd);
             tp.ToolTipText = filePath;
-            tp.Text = string.IsNullOrEmpty(filePath) ? "Query" : Path.GetFileName(filePath);
+            tp.Text = (temp || string.IsNullOrEmpty(filePath)) ? "Query" : Path.GetFileName(filePath);
             tabControlEditors.TabPages.Add(tp);
             tabControlEditors.SelectTab(tp);
 
@@ -2442,7 +2448,7 @@ namespace Cinar.DBTools
 
             // save modified query editors and add them to "lastopened" log.
             string openedFiles = "";
-            File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles, Encoding.UTF8);
+            //File.WriteAllText(Path.GetDirectoryName(Application.ExecutablePath) + "\\lastopened.txt", openedFiles, Encoding.UTF8);
 
             for (int i = 0; i < tabControlEditors.TabPages.Count && !cancel; i++)
             {
@@ -2521,6 +2527,9 @@ namespace Cinar.DBTools
         {
             //cmdMan.SetCommandControlsVisibility();
             cmdMan.SetCommandControlsEnable();
+
+            if (DateTime.Now.Second % 10 == 0 && CurrSQLEditor != null)
+                CurrSQLEditor.SaveTemp();
         }
 
         private void propertyGrid_SelectedObjectsChanged(object sender, EventArgs e)
