@@ -54,7 +54,7 @@ namespace Brickred.SocialAuth.NET.Core.BusinessObjects
 
         public void LoadToken(Token token, string returnUrl)
         {
-            //TODO: If expiresOn is specified and token has expired, refresh token!! Currently, exception thrown!
+            // If expiresOn is specified and token has expired, refresh token!! Currently, exception thrown!
             if (token.ExpiresOn != null && token.ExpiresOn != DateTime.MinValue)
                 if (token.ExpiresOn < DateTime.Now)
                 {

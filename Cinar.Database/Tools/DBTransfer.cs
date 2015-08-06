@@ -74,7 +74,7 @@ namespace Cinar.Database.Tools
             if (transferData)
             {
                 Table srcTable = dbSrc.Tables[tableName];
-                //TODO: aktarımda datetime hatasına bir çözüm bul, aşağıdaki çözüm çok kötü.
+                // aktarımda datetime hatasına bir çözüm bul, aşağıdaki çözüm çok kötü. (kommentlemişiz zaten)
                 //foreach (Column f in srcTable.Columns)
                 //    if (f.IsDateType())
                 //    {

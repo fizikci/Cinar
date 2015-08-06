@@ -6,7 +6,6 @@ namespace Cinar.CMS.Library.Modules
     [ModuleInfo(Grup = "Content")]
     public class ContentListByTag : ContentListByFilter
     {
-        //TODO: Bir SQLBuilder sınıfı ile SQL oluşturulursa bu kod sadece SQL'e tag join'ini ekleyip, base'in GetContentList()'ini çağırabilir. Aksi halde aşağıdaki gibi kod tekrarı oluyor.
         protected override IDatabaseEntity[] GetContentList()
         {
             Entities.Content content = Provider.Content;

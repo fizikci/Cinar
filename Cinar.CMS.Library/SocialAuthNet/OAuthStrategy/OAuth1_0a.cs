@@ -126,7 +126,7 @@ namespace Brickred.SocialAuth.NET.Core
             //request.Headers.Add("Authorization", oauthHelper.GetAuthorizationHeader(oauthParameters));
             request.ContentLength = 0;
             //request.ContentType = "application/x-www-form-urlencoded";
-            //TODO: Check issue with Authorization Header
+            // Check issue with Authorization Header
             string response = "";
 
             try
