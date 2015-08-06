@@ -60,7 +60,7 @@ namespace Cinar.CMS.Library.Entities
 
         // DİKKAT: bu entity için kasten beforeDelete ve beforeSave
         // ile işlem yapmıyoruz. Çünkü bu işler Content'in Save'inde yapılıyor.
-        // TODO: gene de burada bir problem var:
+        // gene de burada bir problem var:
         // eğer bu entity Content üzerinden değil de başka bir yerden insert veya update edilirse data integrity bozulur
     }
 

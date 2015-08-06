@@ -44,7 +44,7 @@ namespace Cinar.CMS.Library.Modules
             DateTime startDate = firstDayOfMonth.AddDays(Convert.ToDouble(-1 * dayIndex));
             DateTime cellDate;
 
-            //TODO: buraya ContentListByFilter'daki gibi hier muhabbetini uygula
+            // buraya ContentListByFilter'daki gibi hier muhabbeti uygulanabilir aslýnda
             if (kategoriId == 0) kategoriId = 1;
 
             IDatabaseEntity[] events =

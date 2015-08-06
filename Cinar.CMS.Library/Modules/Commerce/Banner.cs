@@ -98,7 +98,7 @@ namespace Cinar.CMS.Library.Modules
             bool isFlash = bannerAd.BannerFile.EndsWith(".swf");
             string onClick = String.Format("runModuleMethod('Banner',{0},'AdClick',{{bannerId:{1}}});", this.Id, bannerAd.Id);
 
-            if (isFlash) //TODO: flash htmlini düzelt.
+            if (isFlash) // flash mı kaldı?
                 sb.AppendFormat("<object src=\"{0}\"><embed src=\"{0}\"></embed></object>", bannerAd.BannerFile);
             else
                 sb.AppendFormat("<a href=\"{0}\" onclick=\"{1}\" target=\"_blank\"><img src=\"{2}\" border=\"0\"/></a>", bannerAd.Href.StartsWith("http") ? bannerAd.Href : ("http://" + bannerAd.Href), onClick, bannerAd.BannerFile);

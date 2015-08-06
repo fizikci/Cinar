@@ -25,7 +25,6 @@ namespace Cinar.CMS.Library.Handlers
 
         private string getModuleTypesJSON()
         {
-            // TODO: aşağıdaki kod performansız, zaman içerisinde statik hale getirmek lazım.
             SortedDictionary<string, ArrayList> grups = new SortedDictionary<string, ArrayList>();
             foreach (Type type in Provider.GetModuleTypes())
             {
@@ -45,7 +44,6 @@ namespace Cinar.CMS.Library.Handlers
         }
         private string getEntityTypesJSON()
         {
-            // TODO: aşağıdaki kod performansız, zaman içerisinde statik hale getirmek lazım.
             ArrayList al = new ArrayList();
             foreach (Type type in Provider.GetEntityTypes())
             {

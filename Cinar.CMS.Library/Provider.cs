@@ -734,7 +734,7 @@ namespace Cinar.CMS.Library
 
             return str == null ? String.Format(code, args) : String.Format(str, args);
         }
-        //TODO: Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
+        // Bu resource stringleri veritabanına taşıyalım, değiştirilmesine izin verelim
         [Browsable(false)]
         public static string GetModuleResource(string code)
         {

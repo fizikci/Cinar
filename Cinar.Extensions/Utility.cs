@@ -2082,7 +2082,7 @@ namespace System
                     startBytes = Convert.ToInt64(range[1]);
                     if (startBytes < 0 || startBytes >= fileLength)
                     {
-                        // TODO: Find correct status code
+                        // Find correct status code
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         response.StatusDescription = string.Format("Invalid start of range: {0}", startBytes);
                         return false;
@@ -2119,7 +2119,7 @@ namespace System
                         response.BinaryWrite(br.ReadBytes(packSize));
                         response.Flush();
 
-                        // HACK: Unexplained sleep
+                        // Unexplained sleep
                         var sleep = (int)Math.Ceiling(1000.0 * packSize / speed); //the number of millisecond
                         if (sleep > 1) Thread.Sleep(sleep);
                     }
