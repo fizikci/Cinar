@@ -188,6 +188,7 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSQLTransferTableSQLGenerator = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptDataTableToStringTable = new System.Windows.Forms.ToolStripMenuItem();
             this.menuToolsQScriptDropAllForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptFindIncorrectForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelpScriptingTest = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -216,7 +217,7 @@ namespace Cinar.DBTools
             this.btnSQLDump = new System.Windows.Forms.ToolStripButton();
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.menuToolsQScriptFindIncorrectForeignKeys = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptCompareDatabases = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -459,53 +460,53 @@ namespace Cinar.DBTools
             this.menuTableShowChildrenRecords,
             this.menuTableShowUIPreview});
             this.menuStripTree.Name = "contextMenuStrip1";
-            this.menuStripTree.Size = new System.Drawing.Size(266, 752);
+            this.menuStripTree.Size = new System.Drawing.Size(264, 752);
             // 
             // menuConShowHiddenConnections
             // 
             this.menuConShowHiddenConnections.Name = "menuConShowHiddenConnections";
-            this.menuConShowHiddenConnections.Size = new System.Drawing.Size(265, 22);
+            this.menuConShowHiddenConnections.Size = new System.Drawing.Size(263, 22);
             this.menuConShowHiddenConnections.Text = "Show Hidden Connections";
             // 
             // menuConNewConnection
             // 
             this.menuConNewConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuConNewConnection.Image")));
             this.menuConNewConnection.Name = "menuConNewConnection";
-            this.menuConNewConnection.Size = new System.Drawing.Size(265, 22);
+            this.menuConNewConnection.Size = new System.Drawing.Size(263, 22);
             this.menuConNewConnection.Text = "Add New Connection...";
             // 
             // menuConEditConnection
             // 
             this.menuConEditConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuConEditConnection.Image")));
             this.menuConEditConnection.Name = "menuConEditConnection";
-            this.menuConEditConnection.Size = new System.Drawing.Size(265, 22);
+            this.menuConEditConnection.Size = new System.Drawing.Size(263, 22);
             this.menuConEditConnection.Text = "Edit Connection...";
             // 
             // menuConDeleteConnection
             // 
             this.menuConDeleteConnection.Image = ((System.Drawing.Image)(resources.GetObject("menuConDeleteConnection.Image")));
             this.menuConDeleteConnection.Name = "menuConDeleteConnection";
-            this.menuConDeleteConnection.Size = new System.Drawing.Size(265, 22);
+            this.menuConDeleteConnection.Size = new System.Drawing.Size(263, 22);
             this.menuConDeleteConnection.Text = "Delete Connection";
             // 
             // menuConHideConnection
             // 
             this.menuConHideConnection.Name = "menuConHideConnection";
-            this.menuConHideConnection.Size = new System.Drawing.Size(265, 22);
+            this.menuConHideConnection.Size = new System.Drawing.Size(263, 22);
             this.menuConHideConnection.Text = "Hide Connection";
             // 
             // menuConRefresh
             // 
             this.menuConRefresh.Image = ((System.Drawing.Image)(resources.GetObject("menuConRefresh.Image")));
             this.menuConRefresh.Name = "menuConRefresh";
-            this.menuConRefresh.Size = new System.Drawing.Size(265, 22);
+            this.menuConRefresh.Size = new System.Drawing.Size(263, 22);
             this.menuConRefresh.Text = "Refresh Nodes";
             // 
             // menuConRefreshMetadata
             // 
             this.menuConRefreshMetadata.Image = ((System.Drawing.Image)(resources.GetObject("menuConRefreshMetadata.Image")));
             this.menuConRefreshMetadata.Name = "menuConRefreshMetadata";
-            this.menuConRefreshMetadata.Size = new System.Drawing.Size(265, 22);
+            this.menuConRefreshMetadata.Size = new System.Drawing.Size(263, 22);
             this.menuConRefreshMetadata.Text = "Refresh Metadata";
             // 
             // menuMoreDatabaseOperations
@@ -519,7 +520,7 @@ namespace Cinar.DBTools
             this.menuConTransferDatabase,
             this.menuConExecuteSQLFromFile});
             this.menuMoreDatabaseOperations.Name = "menuMoreDatabaseOperations";
-            this.menuMoreDatabaseOperations.Size = new System.Drawing.Size(265, 22);
+            this.menuMoreDatabaseOperations.Size = new System.Drawing.Size(263, 22);
             this.menuMoreDatabaseOperations.Text = "More Database Operations";
             // 
             // menuConEmptyDatabase
@@ -573,7 +574,7 @@ namespace Cinar.DBTools
             this.menuDBCreateSProc,
             this.menuDBCreateFunction});
             this.menuConCreate.Name = "menuConCreate";
-            this.menuConCreate.Size = new System.Drawing.Size(265, 22);
+            this.menuConCreate.Size = new System.Drawing.Size(263, 22);
             this.menuConCreate.Text = "Create";
             // 
             // menuDBCreateTable
@@ -609,80 +610,80 @@ namespace Cinar.DBTools
             // menuConShowDatabaseERDiagram
             // 
             this.menuConShowDatabaseERDiagram.Name = "menuConShowDatabaseERDiagram";
-            this.menuConShowDatabaseERDiagram.Size = new System.Drawing.Size(265, 22);
+            this.menuConShowDatabaseERDiagram.Size = new System.Drawing.Size(263, 22);
             this.menuConShowDatabaseERDiagram.Text = "Show Database ER Diagram";
             // 
             // menuDiagramNew
             // 
             this.menuDiagramNew.Image = ((System.Drawing.Image)(resources.GetObject("menuDiagramNew.Image")));
             this.menuDiagramNew.Name = "menuDiagramNew";
-            this.menuDiagramNew.Size = new System.Drawing.Size(265, 22);
+            this.menuDiagramNew.Size = new System.Drawing.Size(263, 22);
             this.menuDiagramNew.Text = "New ER Diagram...";
             // 
             // menuDiagramOpen
             // 
             this.menuDiagramOpen.Image = ((System.Drawing.Image)(resources.GetObject("menuDiagramOpen.Image")));
             this.menuDiagramOpen.Name = "menuDiagramOpen";
-            this.menuDiagramOpen.Size = new System.Drawing.Size(265, 22);
+            this.menuDiagramOpen.Size = new System.Drawing.Size(263, 22);
             this.menuDiagramOpen.Text = "Open ER Diagram...";
             // 
             // menuDiagramDelete
             // 
             this.menuDiagramDelete.Image = ((System.Drawing.Image)(resources.GetObject("menuDiagramDelete.Image")));
             this.menuDiagramDelete.Name = "menuDiagramDelete";
-            this.menuDiagramDelete.Size = new System.Drawing.Size(265, 22);
+            this.menuDiagramDelete.Size = new System.Drawing.Size(263, 22);
             this.menuDiagramDelete.Text = "Delete ER Diagram";
             // 
             // menuTablesShowTableCounts
             // 
             this.menuTablesShowTableCounts.Name = "menuTablesShowTableCounts";
-            this.menuTablesShowTableCounts.Size = new System.Drawing.Size(265, 22);
+            this.menuTablesShowTableCounts.Size = new System.Drawing.Size(263, 22);
             this.menuTablesShowTableCounts.Text = "Show Table Row Counts on Tree";
             // 
             // menuTableCreate
             // 
             this.menuTableCreate.Image = ((System.Drawing.Image)(resources.GetObject("menuTableCreate.Image")));
             this.menuTableCreate.Name = "menuTableCreate";
-            this.menuTableCreate.Size = new System.Drawing.Size(265, 22);
+            this.menuTableCreate.Size = new System.Drawing.Size(263, 22);
             this.menuTableCreate.Text = "Create Table...";
             // 
             // menuTableAlter
             // 
             this.menuTableAlter.Name = "menuTableAlter";
-            this.menuTableAlter.Size = new System.Drawing.Size(265, 22);
+            this.menuTableAlter.Size = new System.Drawing.Size(263, 22);
             this.menuTableAlter.Text = "Alter Table...";
             // 
             // menuTableDrop
             // 
             this.menuTableDrop.Image = ((System.Drawing.Image)(resources.GetObject("menuTableDrop.Image")));
             this.menuTableDrop.Name = "menuTableDrop";
-            this.menuTableDrop.Size = new System.Drawing.Size(265, 22);
+            this.menuTableDrop.Size = new System.Drawing.Size(263, 22);
             this.menuTableDrop.Text = "Drop Table";
             // 
             // menuTableCount
             // 
             this.menuTableCount.Image = ((System.Drawing.Image)(resources.GetObject("menuTableCount.Image")));
             this.menuTableCount.Name = "menuTableCount";
-            this.menuTableCount.Size = new System.Drawing.Size(265, 22);
+            this.menuTableCount.Size = new System.Drawing.Size(263, 22);
             this.menuTableCount.Text = "Count";
             // 
             // menuTableOpen
             // 
             this.menuTableOpen.Image = ((System.Drawing.Image)(resources.GetObject("menuTableOpen.Image")));
             this.menuTableOpen.Name = "menuTableOpen";
-            this.menuTableOpen.Size = new System.Drawing.Size(265, 22);
+            this.menuTableOpen.Size = new System.Drawing.Size(263, 22);
             this.menuTableOpen.Text = "Open Table";
             // 
             // menuTableOpenWithFilter
             // 
             this.menuTableOpenWithFilter.Name = "menuTableOpenWithFilter";
-            this.menuTableOpenWithFilter.Size = new System.Drawing.Size(265, 22);
+            this.menuTableOpenWithFilter.Size = new System.Drawing.Size(263, 22);
             this.menuTableOpenWithFilter.Text = "Open Table with Filter...";
             // 
             // menuTableAnalyze
             // 
             this.menuTableAnalyze.Name = "menuTableAnalyze";
-            this.menuTableAnalyze.Size = new System.Drawing.Size(265, 22);
+            this.menuTableAnalyze.Size = new System.Drawing.Size(263, 22);
             this.menuTableAnalyze.Text = "Analyze Table";
             // 
             // menuTableGenerateSQL
@@ -695,7 +696,7 @@ namespace Cinar.DBTools
             this.menuTableGenSQLDelete,
             this.menuTableGenSQLDump});
             this.menuTableGenerateSQL.Name = "menuTableGenerateSQL";
-            this.menuTableGenerateSQL.Size = new System.Drawing.Size(265, 22);
+            this.menuTableGenerateSQL.Size = new System.Drawing.Size(263, 22);
             this.menuTableGenerateSQL.Text = "Generate SQL";
             // 
             // menuTableGenSQLSelect
@@ -738,68 +739,68 @@ namespace Cinar.DBTools
             // 
             this.menuColumnDistinct.Image = ((System.Drawing.Image)(resources.GetObject("menuColumnDistinct.Image")));
             this.menuColumnDistinct.Name = "menuColumnDistinct";
-            this.menuColumnDistinct.Size = new System.Drawing.Size(265, 22);
+            this.menuColumnDistinct.Size = new System.Drawing.Size(263, 22);
             this.menuColumnDistinct.Text = "Distinct";
             // 
             // menuColumnMax
             // 
             this.menuColumnMax.Image = ((System.Drawing.Image)(resources.GetObject("menuColumnMax.Image")));
             this.menuColumnMax.Name = "menuColumnMax";
-            this.menuColumnMax.Size = new System.Drawing.Size(265, 22);
+            this.menuColumnMax.Size = new System.Drawing.Size(263, 22);
             this.menuColumnMax.Text = "Max()";
             // 
             // menuColumnMin
             // 
             this.menuColumnMin.Image = ((System.Drawing.Image)(resources.GetObject("menuColumnMin.Image")));
             this.menuColumnMin.Name = "menuColumnMin";
-            this.menuColumnMin.Size = new System.Drawing.Size(265, 22);
+            this.menuColumnMin.Size = new System.Drawing.Size(263, 22);
             this.menuColumnMin.Text = "Min()";
             // 
             // menuColumnGroupedCounts
             // 
             this.menuColumnGroupedCounts.Image = ((System.Drawing.Image)(resources.GetObject("menuColumnGroupedCounts.Image")));
             this.menuColumnGroupedCounts.Name = "menuColumnGroupedCounts";
-            this.menuColumnGroupedCounts.Size = new System.Drawing.Size(265, 22);
+            this.menuColumnGroupedCounts.Size = new System.Drawing.Size(263, 22);
             this.menuColumnGroupedCounts.Text = "Grouped Counts";
             // 
             // menuColumnDrop
             // 
             this.menuColumnDrop.Image = ((System.Drawing.Image)(resources.GetObject("menuColumnDrop.Image")));
             this.menuColumnDrop.Name = "menuColumnDrop";
-            this.menuColumnDrop.Size = new System.Drawing.Size(265, 22);
+            this.menuColumnDrop.Size = new System.Drawing.Size(263, 22);
             this.menuColumnDrop.Text = "Drop Column";
             // 
             // menuShowUIMetadata
             // 
             this.menuShowUIMetadata.Name = "menuShowUIMetadata";
-            this.menuShowUIMetadata.Size = new System.Drawing.Size(265, 22);
+            this.menuShowUIMetadata.Size = new System.Drawing.Size(263, 22);
             this.menuShowUIMetadata.Text = "Generate UI Metadata";
             // 
             // menuIndexCreateIndex
             // 
             this.menuIndexCreateIndex.Image = ((System.Drawing.Image)(resources.GetObject("menuIndexCreateIndex.Image")));
             this.menuIndexCreateIndex.Name = "menuIndexCreateIndex";
-            this.menuIndexCreateIndex.Size = new System.Drawing.Size(265, 22);
+            this.menuIndexCreateIndex.Size = new System.Drawing.Size(263, 22);
             this.menuIndexCreateIndex.Text = "Create Index...";
             // 
             // menuIndexEditIndex
             // 
             this.menuIndexEditIndex.Image = ((System.Drawing.Image)(resources.GetObject("menuIndexEditIndex.Image")));
             this.menuIndexEditIndex.Name = "menuIndexEditIndex";
-            this.menuIndexEditIndex.Size = new System.Drawing.Size(265, 22);
+            this.menuIndexEditIndex.Size = new System.Drawing.Size(263, 22);
             this.menuIndexEditIndex.Text = "Edit Index...";
             // 
             // menuIndexDropIndex
             // 
             this.menuIndexDropIndex.Image = ((System.Drawing.Image)(resources.GetObject("menuIndexDropIndex.Image")));
             this.menuIndexDropIndex.Name = "menuIndexDropIndex";
-            this.menuIndexDropIndex.Size = new System.Drawing.Size(265, 22);
+            this.menuIndexDropIndex.Size = new System.Drawing.Size(263, 22);
             this.menuIndexDropIndex.Text = "Drop Index";
             // 
             // menuTableShowInDiagram
             // 
             this.menuTableShowInDiagram.Name = "menuTableShowInDiagram";
-            this.menuTableShowInDiagram.Size = new System.Drawing.Size(265, 22);
+            this.menuTableShowInDiagram.Size = new System.Drawing.Size(263, 22);
             this.menuTableShowInDiagram.Text = "Show in diagram";
             // 
             // menuTableShowChildrenRecords
@@ -807,7 +808,7 @@ namespace Cinar.DBTools
             this.menuTableShowChildrenRecords.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.emptyToolStripMenuItem});
             this.menuTableShowChildrenRecords.Name = "menuTableShowChildrenRecords";
-            this.menuTableShowChildrenRecords.Size = new System.Drawing.Size(265, 22);
+            this.menuTableShowChildrenRecords.Size = new System.Drawing.Size(263, 22);
             this.menuTableShowChildrenRecords.Text = "Show children records";
             this.menuTableShowChildrenRecords.DropDownClosed += new System.EventHandler(this.menuTableShowChildrenRecords_DropDownClosed);
             this.menuTableShowChildrenRecords.DropDownOpening += new System.EventHandler(this.menuTableShowChildrenRecords_DropDownOpening);
@@ -821,7 +822,7 @@ namespace Cinar.DBTools
             // menuTableShowUIPreview
             // 
             this.menuTableShowUIPreview.Name = "menuTableShowUIPreview";
-            this.menuTableShowUIPreview.Size = new System.Drawing.Size(265, 22);
+            this.menuTableShowUIPreview.Size = new System.Drawing.Size(263, 22);
             this.menuTableShowUIPreview.Text = "Show UI Preview...";
             // 
             // imageListTree
@@ -993,6 +994,7 @@ namespace Cinar.DBTools
             this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid.CategoryForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.propertyGrid.Location = new System.Drawing.Point(0, 21);
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.Size = new System.Drawing.Size(202, 292);
@@ -1413,7 +1415,7 @@ namespace Cinar.DBTools
             this.toolStripMenuItem2,
             this.quickScriptToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(52, 21);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(51, 21);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // menuToolsCodeGenerator
@@ -1506,7 +1508,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptSQLTransferTableSQLGenerator,
             this.menuToolsQScriptDataTableToStringTable,
             this.menuToolsQScriptDropAllForeignKeys,
-            this.menuToolsQScriptFindIncorrectForeignKeys});
+            this.menuToolsQScriptFindIncorrectForeignKeys,
+            this.menuToolsQScriptCompareDatabases});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1515,62 +1518,68 @@ namespace Cinar.DBTools
             // menuToolsQScriptDeleteFromTables
             // 
             this.menuToolsQScriptDeleteFromTables.Name = "menuToolsQScriptDeleteFromTables";
-            this.menuToolsQScriptDeleteFromTables.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDeleteFromTables.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptDeleteFromTables.Text = "Delete From Tables";
             // 
             // menuToolsQScriptSelectCountsFromTables
             // 
             this.menuToolsQScriptSelectCountsFromTables.Name = "menuToolsQScriptSelectCountsFromTables";
-            this.menuToolsQScriptSelectCountsFromTables.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSelectCountsFromTables.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptSelectCountsFromTables.Text = "Select Count(*) From Tables";
             // 
             // menuToolsQScriptForEachTable
             // 
             this.menuToolsQScriptForEachTable.Name = "menuToolsQScriptForEachTable";
-            this.menuToolsQScriptForEachTable.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptForEachTable.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptForEachTable.Text = "For Each Table";
             // 
             // menuToolsQScriptForEachColumn
             // 
             this.menuToolsQScriptForEachColumn.Name = "menuToolsQScriptForEachColumn";
-            this.menuToolsQScriptForEachColumn.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptForEachColumn.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptForEachColumn.Text = "For Each Column";
             // 
             // menuToolsQScriptCalculateOptDataLen
             // 
             this.menuToolsQScriptCalculateOptDataLen.Name = "menuToolsQScriptCalculateOptDataLen";
-            this.menuToolsQScriptCalculateOptDataLen.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptCalculateOptDataLen.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptCalculateOptDataLen.Text = "Calculate Optimal Data Lengths";
             // 
             // menuToolsQScriptSPHelpText
             // 
             this.menuToolsQScriptSPHelpText.Name = "menuToolsQScriptSPHelpText";
-            this.menuToolsQScriptSPHelpText.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSPHelpText.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptSPHelpText.Text = "sp_help_text";
             // 
             // menuToolsQScriptSearhAllStringFields
             // 
             this.menuToolsQScriptSearhAllStringFields.Name = "menuToolsQScriptSearhAllStringFields";
-            this.menuToolsQScriptSearhAllStringFields.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSearhAllStringFields.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptSearhAllStringFields.Text = "Searh All String Fields";
             // 
             // menuToolsQScriptSQLTransferTableSQLGenerator
             // 
             this.menuToolsQScriptSQLTransferTableSQLGenerator.Name = "menuToolsQScriptSQLTransferTableSQLGenerator";
-            this.menuToolsQScriptSQLTransferTableSQLGenerator.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptSQLTransferTableSQLGenerator.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptSQLTransferTableSQLGenerator.Text = "Transfer Table SQL Generator";
             // 
             // menuToolsQScriptDataTableToStringTable
             // 
             this.menuToolsQScriptDataTableToStringTable.Name = "menuToolsQScriptDataTableToStringTable";
-            this.menuToolsQScriptDataTableToStringTable.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDataTableToStringTable.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptDataTableToStringTable.Text = "DataTable To String Table";
             // 
             // menuToolsQScriptDropAllForeignKeys
             // 
             this.menuToolsQScriptDropAllForeignKeys.Name = "menuToolsQScriptDropAllForeignKeys";
-            this.menuToolsQScriptDropAllForeignKeys.Size = new System.Drawing.Size(258, 22);
+            this.menuToolsQScriptDropAllForeignKeys.Size = new System.Drawing.Size(266, 22);
             this.menuToolsQScriptDropAllForeignKeys.Text = "Drop All Foreign Keys";
+            // 
+            // menuToolsQScriptFindIncorrectForeignKeys
+            // 
+            this.menuToolsQScriptFindIncorrectForeignKeys.Name = "menuToolsQScriptFindIncorrectForeignKeys";
+            this.menuToolsQScriptFindIncorrectForeignKeys.Size = new System.Drawing.Size(266, 22);
+            this.menuToolsQScriptFindIncorrectForeignKeys.Text = "Find Incorrect Foreign Keys";
             // 
             // helpToolStripMenuItem
             // 
@@ -1586,18 +1595,18 @@ namespace Cinar.DBTools
             // 
             this.menuHelpScriptingTest.Image = ((System.Drawing.Image)(resources.GetObject("menuHelpScriptingTest.Image")));
             this.menuHelpScriptingTest.Name = "menuHelpScriptingTest";
-            this.menuHelpScriptingTest.Size = new System.Drawing.Size(230, 22);
+            this.menuHelpScriptingTest.Size = new System.Drawing.Size(229, 22);
             this.menuHelpScriptingTest.Text = "Cinar Script Test && Learn...";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(227, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(226, 6);
             // 
             // menuHelpAbout
             // 
             this.menuHelpAbout.Name = "menuHelpAbout";
-            this.menuHelpAbout.Size = new System.Drawing.Size(230, 22);
+            this.menuHelpAbout.Size = new System.Drawing.Size(229, 22);
             this.menuHelpAbout.Text = "About...";
             // 
             // toolStrip
@@ -1752,7 +1761,7 @@ namespace Cinar.DBTools
             // 
             this.toolStripLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(38, 22);
             this.toolStripLabel1.Text = "Tools:";
             // 
             // btnCodeGenerator
@@ -1814,11 +1823,11 @@ namespace Cinar.DBTools
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // menuToolsQScriptFindIncorrectForeignKeys
+            // menuToolsQScriptCompareDatabases
             // 
-            this.menuToolsQScriptFindIncorrectForeignKeys.Name = "menuToolsQScriptFindIncorrectForeignKeys";
-            this.menuToolsQScriptFindIncorrectForeignKeys.Size = new System.Drawing.Size(258, 22);
-            this.menuToolsQScriptFindIncorrectForeignKeys.Text = "Find Incorrect Foreign Keys";
+            this.menuToolsQScriptCompareDatabases.Name = "menuToolsQScriptCompareDatabases";
+            this.menuToolsQScriptCompareDatabases.Size = new System.Drawing.Size(266, 22);
+            this.menuToolsQScriptCompareDatabases.Text = "Compare Databases (with script)";
             // 
             // FormMain
             // 
@@ -2055,6 +2064,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuTableShowUIPreview;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDropAllForeignKeys;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptFindIncorrectForeignKeys;
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptCompareDatabases;
 
     }
 }

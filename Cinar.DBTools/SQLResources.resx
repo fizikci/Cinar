@@ -835,4 +835,31 @@ foreach(var t in db.Tables)
 		}
 $</value>
   </data>
+  <data name="SQLCompareDatabases" xml:space="preserve">
+    <value>$
+var db2 = Provider.GetConnection("DealerSafe (232.124 SQLServer)").Database;
+
+foreach(var t in db.Tables){
+	if(db2.Tables[t.Name]==null){
+		echo("Fazla "+(t.IsView ? "view":"tablo")+": " + t.Name + "\r\n");
+		continue;
+	}
+	foreach(var c in t.Columns){
+		if(db2.Tables[t.Name].Columns[c.Name]==null)
+			echo("Fazla alan: " + t.Name + "."+c.Name+"\r\n");
+	}	
+}
+
+foreach(var t in db2.Tables){
+	if(db.Tables[t.Name]==null){
+		echo("Eksik "+(t.IsView ? "view":"tablo")+": " + t.Name + "\r\n");
+		continue;
+	}
+	foreach(var c in t.Columns){
+		if(db.Tables[t.Name].Columns[c.Name]==null)
+			echo("Eksik alan: " + t.Name + "."+c.Name+"\r\n");
+	}	
+}
+$</value>
+  </data>
 </root>

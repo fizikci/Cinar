@@ -1117,6 +1117,19 @@ namespace System
             return pass;
         }
 
+        public static int ToInt(this object obj)
+        {
+            if (obj == null) return 0;
+            int res = 0;
+            if (!int.TryParse(obj.ToString(), out res))
+            {
+                var m = Regex.Match(obj.ToString(), "\\d+");
+                if (m.Success)
+                    int.TryParse(m.Value, out res);
+            }
+            return res;
+        }
+
         #endregion
 
         #region ReflectionUtility

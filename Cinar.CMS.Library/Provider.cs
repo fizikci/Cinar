@@ -81,7 +81,7 @@ namespace Cinar.CMS.Library
                     }
                     else if (!String.IsNullOrEmpty(Provider.Request["tag"]))
                     {
-                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"]).SafeCastToArray<IDatabaseEntity>();
+                        IDatabaseEntity[] items = Provider.Database.ReadList(typeof(Tag), "select * from [Tag] where Name={0}", Provider.Request["tag"].Replace("-"," ")).SafeCastToArray<IDatabaseEntity>();
                         Provider.Translate(items);
                         Provider.Items["tag"] = items.Length == 1 ? items[0] : null;
                     }
@@ -881,8 +881,7 @@ namespace Cinar.CMS.Library
             {
                 imageUrl = Provider.Configuration.NoPicture;
                 if (String.IsNullOrEmpty(imageUrl))
-                    return "/UserFiles/Avatars/heryere.jpg";
-                    //return "https://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/apps/sodipodi.png";
+                    return "https://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/apps/sodipodi.png";
                     //return Provider.DesignMode ? "ERR: " + Provider.GetResource("No picture. And NoPicture image not specified in configuration.") : "ERR: ";
             }
 

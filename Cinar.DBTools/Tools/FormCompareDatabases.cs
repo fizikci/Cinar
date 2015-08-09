@@ -40,12 +40,13 @@ namespace Cinar.DBTools.Tools
         {
             DiffControl diffControl = new DiffControl();
             diffControl.Dock = DockStyle.Fill;
+
             panel.Controls.Clear();
             panel.Controls.Add(diffControl);
 
             bool chkIgnoreCase = false;
             bool chkIgnoreWhitespace = true;
-            bool chkSupportChangeEditType = false;
+            bool chkSupportChangeEditType = true;
 
             IList<string> code1, code2;
 
