@@ -288,7 +288,7 @@ namespace Cinar.CMS.Library.Entities
         {
             base.BeforeSave();
 
-            this.Tags = this.Tags.Trim(',', ' ');
+            this.Tags = this.Tags.Trim(',', ' ').Replace('-',' ');
 
             if (Id==0)
                 this.Keyword = Guid.NewGuid().ToString();

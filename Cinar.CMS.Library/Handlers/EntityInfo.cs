@@ -149,7 +149,7 @@ namespace Cinar.CMS.Library.Handlers
 
         private void addTag()
         {
-            string tag = context.Request["tag"];
+            string tag = context.Request["tag"].Replace("-"," ");
 
             if (Provider.Content != null && !String.IsNullOrEmpty(tag))
             {
