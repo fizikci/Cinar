@@ -406,6 +406,8 @@ namespace Cinar.DBTools.Controls
 
         public void OnClose()
         {
+            if (this.FilePath.IsEmpty() && !this.tempFilePath.IsEmpty())
+                File.Delete(tempFilePath);
         }
 
 

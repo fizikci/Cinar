@@ -418,6 +418,9 @@ namespace System
         }
         public static string[] SplitWithTrim(this string str, char seperator)
         {
+            if(str==null)
+                return new string[0];
+
             string[] res = str.Split(new char[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < res.Length; i++)
                 res[i] = res[i].Trim();
