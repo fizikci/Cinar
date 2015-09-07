@@ -757,8 +757,15 @@ $</value>
   </data>
   <data name="SQLForEachColumn" xml:space="preserve">
     <value>$
-foreach(column in db.Tables['TABLE_NAME'].Columns)
-    echo(column.Name + '\r\n');
+foreach(var t in db.Tables){
+	if(!t.IsView){
+		foreach(var c in t.Columns){
+			if(c.Name.Contains('field_name_to_search')){
+	    		echo(t.Name + '.' + c.Name + '\r\n');
+	    	}
+	    }
+	}
+}
 $</value>
   </data>
   <data name="SQLForEachTable" xml:space="preserve">
