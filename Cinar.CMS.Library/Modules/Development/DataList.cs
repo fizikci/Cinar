@@ -165,6 +165,20 @@ namespace Cinar.CMS.Library.Modules
             // paging
             if (this.ShowPaging)
             {
+
+                /*
+                    <ul class="pagination mbn mtn">
+                        <li><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                        <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">...</a></li>
+                        <li><a href="#">15</a></li>
+                        <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                        <li><a href="#"><i class="fa fa-angle-double-right"></i></a></li>
+                    </ul>
+                 */
+
                 string prevPageLink = "", nextPageLink = "";
                 uriParser = new CinarUriParser(pageUrl);
                 if (AjaxPaging)
@@ -176,36 +190,36 @@ namespace Cinar.CMS.Library.Modules
                 if (pageNo > 0)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo - 1).ToString();
-                    prevPageLink = String.Format("<a href=\"{0}\" class=\"prev\"{1}>{2}</a>",
+                    prevPageLink = String.Format("<li><a href=\"{0}\"{1}>{2}</a></li>",
                         AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
                         AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelPrevPage == "Previous Page" ? Provider.GetModuleResource("Previous Page") : LabelPrevPage);
                 }
 
                 int count = Provider.Database.GetInt(countSQL, filterParser.GetParams());
-                string pagingWithNumbers = "<div class='pagingWithNumbers'>";
+                string pagingWithNumbers = ""; //"<div class='pagingWithNumbers'>";
                 for (int i = 0; i < Math.Ceiling((decimal) count / (decimal)HowManyItems); i++)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = i.ToString();
-                    pagingWithNumbers += String.Format("<a href=\"{0}\" class=\"pagingBtn{3}\"{1}>{2}</a>",
+                    pagingWithNumbers += String.Format("<li class=\"{3}\"><a href=\"{0}\"{1}>{2}</a></li>",
                         AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
                         AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         i + 1,
-                        pageNo==i ? " active":"");
+                        pageNo==i ? "active":"");
                 }
-                pagingWithNumbers += "</div>";
+                //pagingWithNumbers += "</div>";
 
                 if ((pageNo+1)*HowManyItems<count)
                 {
                     uriParser.QueryPart["pageNo" + this.Id] = (pageNo + 1).ToString();
-                    nextPageLink = String.Format("<a href=\"{0}\" class=\"next\"{1}>{2}</a>",
+                    nextPageLink = String.Format("<li><a href=\"{0}\"{1}>{2}</a></li>",
                         AjaxPaging ? "javascript:void()" : uriParser.Uri.ToString(),
                         AjaxPaging ? " onclick=\"showDataListPage('" + uriParser.Uri + "', " + this.Id + ");\"" : "",
                         LabelNextPage == "Next Page" ? Provider.GetModuleResource("Next Page") : LabelNextPage);
                 }
 
                 if (!string.IsNullOrWhiteSpace(prevPageLink) || !string.IsNullOrWhiteSpace(nextPageLink))
-                    sb.AppendFormat("<div class=\"paging\">{0} {1} {2}</div>", prevPageLink, pagingWithNumbers, nextPageLink);
+                    sb.AppendFormat("<ul class=\"pagination mbn mtn\">{0} {1} {2}</ul>", prevPageLink, pagingWithNumbers, nextPageLink);
             }
 
             return sb.ToString();
@@ -251,8 +265,8 @@ namespace Cinar.CMS.Library.Modules
             Filter = "";
             EntityName = "";
             ShowPaging = true;
-            LabelNextPage = "Next Page";
-            LabelPrevPage = "Previous Page";
+            LabelNextPage = "<i class=\"fa fa-angle-right\"></i>";
+            LabelPrevPage = "<i class=\"fa fa-angle-left\"></i>";
         }
 
         protected override string getCellHTML(int row, int col)
