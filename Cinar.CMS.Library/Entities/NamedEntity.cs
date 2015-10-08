@@ -5,6 +5,7 @@ using System.Drawing;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [Serializable]
     public abstract class NamedEntity : BaseEntity
     {
         [ColumnDetail(IsNotNull=true, Length=100)]

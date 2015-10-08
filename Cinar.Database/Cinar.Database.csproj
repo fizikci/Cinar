@@ -55,6 +55,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cinar.POP3">
+      <HintPath>..\..\CarHub\_dlls\Cinar.POP3.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -146,10 +149,6 @@
     <ProjectReference Include="..\Cinar.Extensions\Cinar.Extensions.csproj">
       <Project>{af6cb4f3-3a42-49b1-90ca-03310efae89b}</Project>
       <Name>Cinar.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cinar.POP3\Cinar.POP3.csproj">
-      <Project>{e5aa23f7-818d-4d36-b2d3-ef8e4d60c01a}</Project>
-      <Name>Cinar.POP3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

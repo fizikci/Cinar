@@ -731,6 +731,16 @@ namespace System
         {
             return string.IsNullOrWhiteSpace(str);
         }
+        public static bool IsNotEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
+        public static DateTime UsaStringToDateTime(this string str)
+        {
+            // 04/23/2011
+            return new DateTime(str.Split('/')[2].ToInt(),str.Split('/')[0].ToInt(),str.Split('/')[1].ToInt());
+        }
+
 
         public static List<string> PascalCaseWords(this string str)
         {
@@ -823,6 +833,17 @@ namespace System
                     res += s[i];
             return float.Parse(res);
         }
+
+        public static int ToInt(this string s)
+        {
+            return Int32.Parse(s);
+        }
+
+        public static double toDouble(this string s)
+        {
+            return Double.Parse(s, new CultureInfo("en-US"));
+        }
+
         public static int ToInt(this string s, int baseNumber)
         {
             s = s.ToUpperInvariant();
@@ -1098,7 +1119,7 @@ namespace System
                 return "TC Kimlik numarası geçersiz."; // 1. 3. 5. 7. ve 9. hanelerin toplamının 7 katından, 2. 4. 6. ve 8. hanelerin toplamı çıkartıldığında, elde edilen sonucun Mod10'u bize 10. haneyi verir.
             if ((tekler + ciftler + int.Parse(tcKimlik[9].ToString())) % 10 != int.Parse(tcKimlik[10].ToString()))
                 return "TC Kimlik numarası geçersiz."; // ilk 10 hanenin toplamının Mod10'u bize 11. haneyi verir.
-
+            
             return ""; // valid
         }
 

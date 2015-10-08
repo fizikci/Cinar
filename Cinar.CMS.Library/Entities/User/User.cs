@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [Serializable]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'root@local', '63A9F0EA7BB98050', 'User,Editor,Designer', 'admin', 'jhrd74ghe63'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'editor', '63A9F0EA7BB98050', 'User,Editor', 'editor', 'ge548rhe46e'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'anonim', '', '', 'anonim', '63beyte674hge'")]

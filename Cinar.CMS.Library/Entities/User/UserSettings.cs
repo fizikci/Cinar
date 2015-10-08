@@ -8,6 +8,7 @@ using System.Drawing;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [Serializable]
     public class UserSettings : BaseEntity
     {
         public UserSettings() {
