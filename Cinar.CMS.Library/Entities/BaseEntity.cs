@@ -6,6 +6,7 @@ using System.ComponentModel;
 
 namespace Cinar.CMS.Library.Entities
 {
+    [Serializable]
     public abstract class BaseEntity : ObjectWithTags, IDatabaseEntity
     {
         public virtual void Initialize()

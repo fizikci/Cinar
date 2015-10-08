@@ -7,6 +7,7 @@ using System.Globalization;
 
 namespace Cinar.CMS.Library
 {
+    [Serializable]
     public abstract class ObjectWithTags
     {
         private Hashtable tags = new Hashtable();
