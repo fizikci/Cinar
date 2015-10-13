@@ -280,6 +280,7 @@ namespace Cinar.DBTools
                                          new CommandTrigger{ Control = menuToolsQScriptDropAllForeignKeys, Argument=SQLResources.SQLDropAllForeignKeys},
                                          new CommandTrigger{ Control = menuToolsQScriptFindIncorrectForeignKeys, Argument=SQLResources.SQLFindIncorrectForeignKeys},
                                          new CommandTrigger{ Control = menuToolsQScriptCompareDatabases, Argument=SQLResources.SQLCompareDatabases},
+                                         new CommandTrigger{ Control = menuToolsQScriptChangeCollation, Argument=SQLResources.SQLChangeCollationSQLServer},
                                      }
                                  },
                     #endregion
