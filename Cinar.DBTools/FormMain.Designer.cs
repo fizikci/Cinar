@@ -218,6 +218,7 @@ namespace Cinar.DBTools
             this.btnSimpleIntegrationService = new System.Windows.Forms.ToolStripButton();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.menuToolsQScriptCompareDatabases = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuToolsQScriptChangeCollation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -1509,7 +1510,8 @@ namespace Cinar.DBTools
             this.menuToolsQScriptDataTableToStringTable,
             this.menuToolsQScriptDropAllForeignKeys,
             this.menuToolsQScriptFindIncorrectForeignKeys,
-            this.menuToolsQScriptCompareDatabases});
+            this.menuToolsQScriptCompareDatabases,
+            this.menuToolsQScriptChangeCollation});
             this.quickScriptToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("quickScriptToolStripMenuItem.Image")));
             this.quickScriptToolStripMenuItem.Name = "quickScriptToolStripMenuItem";
             this.quickScriptToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -1827,7 +1829,12 @@ namespace Cinar.DBTools
             // 
             this.menuToolsQScriptCompareDatabases.Name = "menuToolsQScriptCompareDatabases";
             this.menuToolsQScriptCompareDatabases.Size = new System.Drawing.Size(266, 22);
-            this.menuToolsQScriptCompareDatabases.Text = "Compare Databases (with script)";
+            this.menuToolsQScriptCompareDatabases.Text = "Compare Databases (with script)";            // 
+            // menuToolsQScriptCompareDatabases
+            // 
+            this.menuToolsQScriptChangeCollation.Name = "menuToolsQScriptChangeCollation";
+            this.menuToolsQScriptChangeCollation.Size = new System.Drawing.Size(266, 22);
+            this.menuToolsQScriptChangeCollation.Text = "Change Collations (with script, MS SQL)";
             // 
             // FormMain
             // 
@@ -2065,6 +2072,6 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptDropAllForeignKeys;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptFindIncorrectForeignKeys;
         private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptCompareDatabases;
-
+        private System.Windows.Forms.ToolStripMenuItem menuToolsQScriptChangeCollation;
     }
 }
