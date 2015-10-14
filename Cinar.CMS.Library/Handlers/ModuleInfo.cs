@@ -1,6 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Cinar.CMS.Library.Modules;
 using Cinar.CMS.Library.Entities;
 
@@ -98,7 +103,46 @@ namespace Cinar.CMS.Library.Handlers
                         importModule();
                         break;
                     }
+                case "getHistoryDetail":
+                    {
+                        string id = context.Request["id"];
+                        int mid = 0;
+                        if (!Int32.TryParse(id, out mid))
+                        {
+                            sendErrorMessage("ID geçersiz!");
+                            return;
+                        }
+
+                        var detail = Provider.Database.Read<ModuleHistory>("select * from ModuleHistory (nolock) where Id =  {0}",id);
+                        var xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(detail.Details);
+
+                        XmlNodeList elemlist = xmlDoc.GetElementsByTagName("InnerHtml");
+                        var result = elemlist[0].InnerXml.Replace("&lt;", "<").Replace("&gt;", ">").Trim();
+
+                        context.Response.Write(result);
+                        break;
+                    }
+                case "getHistory":
+                    {
+                        string id = context.Request["id"];
+                        int mid = 0;
+                        if (!Int32.TryParse(id, out mid))
+                        {
+                            sendErrorMessage("ID geçersiz!");
+                            return;
+                        }
+                        var dons = Provider.Database.GetDataTable(@"select top (25) h.Id, (select top 1 Email from [User] u (nolock) where u.Id = h.InsertUserId) as EMail, convert(varchar(25), h.UpdateDate, 121) as Date from ModuleHistory h (nolock) where h.ModuleId = {0} order by Id desc", id);
+                        var ret = (from DataRow row in dons.Rows select new Historic() {User = row["Id"].ToString().ToInt(), Deger = row["EMail"].ToString() + " / " + row["Date"].ToString()}).ToList();
+                        context.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(ret));
+                        break;
+                    }
                 case "editStaticHtml":
+                    {
+                        editStaticHtml();
+                        break;
+                    }
+                case "editStaticDetailHtml":
                     {
                         editStaticHtml();
                         break;
@@ -378,7 +422,10 @@ namespace Cinar.CMS.Library.Handlers
 
             Module module = Module.Read(mid);
             if (module is StaticHtml)
-                context.Response.Write((module as StaticHtml).InnerHtml);
+            {
+                var tmp = (module as StaticHtml).InnerHtml;
+                context.Response.Write(tmp);
+            }
             else
                 sendErrorMessage("not StaticHtml");
         }
@@ -462,5 +509,11 @@ namespace Cinar.CMS.Library.Handlers
             }
         }
 
+    }
+
+    public class Historic
+    {
+        public int User { get; set; }
+        public string Deger { get; set; }
     }
 }

@@ -629,12 +629,13 @@ function importModule(){
 
 function editStaticHtml(event) {
     if (!navigationEnabled) return;
-
+ 
     var mdl = $(event.target).closest('.Module');
     var id = mdl.attr('mid').split('_')[1];
+    
     new Ajax.Request('ModuleInfo.ashx?method=editStaticHtml&id=' + id, {
         method: 'get',
-        onComplete: function (req) {
+        onComplete: function(req) {
             if (req.responseText.startsWith('ERR:'))
                 return;
             new AceEditor({
@@ -657,10 +658,11 @@ function editStaticHtml(event) {
                 text: req.responseText,
                 lang: 'html'
             });
+
+            setTimeout("$.get('ModuleInfo.ashx?method=getHistory&id=' + " + id + ", function (data, status) { var dropdown = $('#historyx'); dropdown.empty(); var obj = jQuery.parseJSON(data); $.each(obj, function () { dropdown.append($('<option />').val(this.User).text(this.Deger)); }); });", 2000);
         },
         onException: function (req, ex) { throw ex; }
     });
-
 }
 
 function refreshModule(module){
