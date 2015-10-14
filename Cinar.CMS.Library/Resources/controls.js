@@ -2739,7 +2739,7 @@ var AceEditor = Class.create(); AceEditor.prototype = {
             buttons: [{ icon: 'accept', type:'default', size:'mini', id: 'btnOk', text: lang('OK'), callback: function() { Windows.getFocusedWindow().close(); } }],
             text: 'Sample AceEditor window',
             lang: 'html',
-            wrap: false
+            wrap: false,
         }, options || {});
 
         ths.options = options;
@@ -2752,8 +2752,20 @@ var AceEditor = Class.create(); AceEditor.prototype = {
             var b = options.buttons[i];
             html += getButtonHtml(b);
         }
+
+        var ek = '';
+        html += '<select id="historyx" style="position: absolute;right: 18px;width: 360px;margin-top: 7px;">'+ek+'</select>';
         html += '</div>';
         winContent.append(html);
+
+        $("#historyx").change(function () {
+            var r = confirm("Seçilen koda dönmek istiyor musunuz?\n\nNot: Önce yazdıklarınızı kaydediniz ve kodu kaydet demekdikçe eski koda dönseniz bile vazgeçebilirsiniz.");
+            if (r == true) {
+                $.get('ModuleInfo.ashx?method=getHistoryDetail&id=' + this.value, function (data, status) {
+                    ace.edit('txtSource').setValue(data);
+                });
+            }
+        });
 
         for (var i = 0; i < options.buttons.length; i++) {
             var btn = options.buttons[i];
