@@ -14,7 +14,63 @@ namespace Cinar.Test
     {
         public static void Run()
         {
+            // http://www.4icu.org/reviews/6879.htm
+            #region Uniforsities for ahmad
+            StringBuilder sb = new StringBuilder(10000000);
+            sb.AppendLine("var unis = [");
+
+            for (int i = 1; i <= 6879; i++ )
+            {
+                string url = "http://www.4icu.org/reviews/" + i + ".htm";
+                try
+                {
+                    if(i % 700 == 0)
+                        File.WriteAllText(@"C:\unihub\index.js", sb.ToString(), Encoding.UTF8);
+
+                    WebClient wc = new WebClient();
+                    wc.Encoding = Encoding.UTF8;
+                    string content = wc.DownloadString(url);
+
+                    int pos = 0;
+
+                    sb.AppendLine("\t{");
+
+                    string name = getPart(string.Format("<h2><a name=\"{0}\"></a>", i), "</h2>", out pos, ref content);
+                    sb.AppendLine("\t\tid: " + i + ",");
+                    sb.AppendLine("\t\tname: '" + name + "',");
+                    sb.AppendLine("\t\tyear: '" + getPart(string.Format("<td><h5> <!--{0}-->", i), "</h5></td>", out pos, ref content) + "',");
+                    //if (!File.Exists("c:\\unihub\\img\\" + i + ".gif"))
+                    //    wc.DownloadFile("http://www.4icu.org/i/screenshots/" + i + ".gif", "c:\\unihub\\img\\" + i + ".gif");
+                    sb.AppendLine("\t\taddress: '" + getPart("<td width=\"75%\" valign=\"top\"><h5>", "</h5></td>", out pos, ref content) + "',");
+                    sb.AppendLine("\t\tpopulation: '" + getPart(string.Format("Population range<!--{0}--></h4></td>", i), "</h5></td>", out pos, ref content) + "',");
+                    sb.AppendLine("\t\tgender: '" + (content.Contains("Men and Women") ? "both" : (content.Contains("Women Only") ? "Women" : "Men")) + "',");
+                    sb.AppendLine("\t\tintStudents: '" + (content.Contains("/i/international-students1.gif") ? "YES" : "NO") + "',");
+                    sb.AppendLine("\t\tenrollment: '" + getPart("/i/_Student_Enrollment_", ".gif", out pos, ref content) + "',");
+                    sb.AppendLine("\t\tacademicStaff: '" + getPart("/i/_Academic_Staff_", ".gif", out pos, ref content) + "',");
+                    sb.AppendLine("\t\tcontrolType: '" + getPart("/i/_Control_Type_", ".gif", out pos, ref content) + "',");
+                    sb.AppendLine("\t\twikiUrl: '"+getPart("<h4>Wikipedia</h4>","\" target=\"_blank\"", out pos, ref content).Trim().Replace("<a href=\"","")+"'");
+
+                    sb.AppendLine("\t},");
+
+                    Console.WriteLine(i + ". " + name);
+                }
+                catch {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(i + ". patladii");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+
+            }
+
+            sb.AppendLine("];");
+
+            File.WriteAllText(@"C:\unihub\index.js", sb.ToString(), Encoding.UTF8);
+
+            #endregion
+
+
             #region English Tafsir
+            /*
             StringBuilder sb = new StringBuilder(1000000);
 
             string startText = "<font class='TextResultEnglish'><font color='black'>";
@@ -43,7 +99,7 @@ namespace Cinar.Test
             }
 
             File.WriteAllText(@"C:\tefsir_en.js", sb.ToString(), Encoding.UTF8);
-
+            */
             #endregion
 
             #region Türkçe Tefsir
@@ -118,6 +174,23 @@ namespace Cinar.Test
              * */
             
             #endregion
+        }
+
+        private static string getPart(string startOf, string endOf, out int pos, ref string content)
+        {
+            pos = content.IndexOf(startOf);
+            if (pos < 0)
+                return "";
+
+            try
+            {
+                content = content.Substring(pos + startOf.Length);
+                string uname = content.Substring(0, content.IndexOf(endOf));
+                return uname.StripHtmlTags().Replace("\r", "").Replace("\n", "").Trim().Replace("'", "");
+            }
+            catch {
+                return "";
+            }
         }
     }
 }

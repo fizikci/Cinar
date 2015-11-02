@@ -19,7 +19,7 @@ namespace Cinar.Test
             //Tutorial_3_CreateTableAtRuntime.Run();
             // Hsedbs.Run();
 
-            BankaDovizKurlari.Run();
+            ContentExtractor.Run();
 
             Console.WriteLine("\r\nBİTTİ");
             Console.ReadLine();
