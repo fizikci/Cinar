@@ -337,7 +337,14 @@ namespace Cinar.CMS.Library.Handlers
             if(urlParts.Length>0 && urlParts[1].Length==2)
                 Provider.CurrentCulture = urlParts[1];
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Provider.CurrentCulture);
+            try
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(Provider.CurrentCulture);
+            }
+            catch {
+                Provider.CurrentCulture = "en-US";
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            }
 
             Provider.SetHttpContextUser();
             if (Provider.User.IsInRole("Designer") && !String.IsNullOrEmpty(Provider.Request["DesignMode"]))

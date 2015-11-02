@@ -62,8 +62,24 @@ namespace Cinar.CMS.Library.Handlers
         {
             try
             {
-                string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "");
+                string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "").Replace("https://", "");
+                
+                // check for any XSS attack
+                string lowercaseUrl = fullOrigionalPath.ToLowerInvariant();
+                if (
+                    lowercaseUrl.Contains("onmouseover") ||
+                    lowercaseUrl.Contains("onclick") ||
+                    lowercaseUrl.Contains("onmouseup") ||
+                    lowercaseUrl.Contains("onmousedown") ||
+                    lowercaseUrl.Contains("javascript:") ||
+                    lowercaseUrl.Contains("<script") ||
+                    lowercaseUrl.Contains("%3cscript"))
+                {
+                    HttpContext.Current.RewritePath("404.aspx");
+                    return;
+                }
 
+                // url rewrite
                 if (fullOrigionalPath.Contains(".aspx"))
                 {
                     // falanca.com/[en/]Content/Urunler/Bilgisayar_3.aspx
