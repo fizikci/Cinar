@@ -27,8 +27,6 @@ namespace Cinar.DBTools.Tools
             btnClose.Image = FamFamFam.cancel;
             btnClose.TextAlign = ContentAlignment.MiddleLeft;
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
-
-            checkDatabaseSchema();
         }
 
         private void checkDatabaseSchema()
@@ -41,9 +39,27 @@ namespace Cinar.DBTools.Tools
                     continue;
                 Problem p = null;
                 if (tbl.PrimaryColumn == null)
-                    p = new PrimaryKeyDoesntExist() { Table = tbl };
+                {
+                    if(cbPrimaryKeyDoesntExist.Checked)
+                        p = new PrimaryKeyDoesntExist() { Table = tbl };
+                }
                 else if (!tbl.PrimaryColumn.IsAutoIncrement && tbl.PrimaryColumn.IsNumericType())
+                {
+                    if(cbPrimaryKeyIsNotAutoIncrement.Checked)
                     p = new PrimaryKeyIsNotAutoIncrement() { Column = tbl.PrimaryColumn };
+                }
+                if (p != null)
+                {
+                    Panel pnl = p.GetUI(); pnl.Tag = p;
+                    flowPanel.Controls.Add(pnl);
+                }
+            }
+
+            foreach (Table tbl in Provider.Database.Tables)
+            {
+                if (tbl.IsView || !cbPossibleForeignKey.Checked)
+                    continue;
+                Problem p = null;
 
                 foreach (Column f in tbl.Columns)
                     if (f.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase) && !f.IsPrimaryKey)
@@ -70,14 +86,7 @@ namespace Cinar.DBTools.Tools
                             p = new PossibleForeignKey() { Column = f, Table = fTbl };
                             Panel pnl = p.GetUI(); pnl.Tag = p;
                             flowPanel.Controls.Add(pnl);
-                            p = null;
                         }
-
-                if (p != null)
-                {
-                    Panel pnl = p.GetUI(); pnl.Tag = p;
-                    flowPanel.Controls.Add(pnl);
-                }
             }
         }
 
@@ -112,6 +121,11 @@ namespace Cinar.DBTools.Tools
                 (pnl.Tag as Problem).ApplyToMetadata(pnl);
             Provider.ConnectionsModified = true;
             Close();
+        }
+
+        private void btnInvestigate_Click(object sender, EventArgs e)
+        {
+            checkDatabaseSchema();
         }
     }
 
@@ -148,7 +162,11 @@ namespace Cinar.DBTools.Tools
             {
                 Column f = (Column)cb.SelectedItem;
                 var pk = new PrimaryKeyConstraint() { ColumnNames = new List<string>() { f.Name }, Name = "PK_" + Table.Name};
-                return Provider.Database.GetSQLConstraintAdd(pk);
+                f.Table.Constraints.Add(pk);
+                var res = "";
+                res += Provider.Database.GetSQLConstraintAdd(pk);
+                f.Table.Constraints.Remove(pk);
+                return res;
             }
             return "";
         }
@@ -225,7 +243,7 @@ namespace Cinar.DBTools.Tools
             {
                 var panel = lbl.Parent.Parent.Controls[i];
                 var p = panel.Tag as Problem;
-                if (p.Column.Name == (lbl.Parent.Tag as Problem).Column.Name)
+                if (p.Column!=null && p.Column.Name == (lbl.Parent.Tag as Problem).Column.Name)
                     listRemove.Add(panel);
             }
             var parent = lbl.Parent.Parent;
