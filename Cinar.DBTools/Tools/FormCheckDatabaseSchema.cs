@@ -40,8 +40,18 @@ namespace Cinar.DBTools.Tools
                 Problem p = null;
                 if (tbl.PrimaryColumn == null)
                 {
-                    if(cbPrimaryKeyDoesntExist.Checked)
+                    if (cbPrimaryKeyDoesntExist.Checked)
+                    {
                         p = new PrimaryKeyDoesntExist() { Table = tbl };
+                        if (tbl.Columns["Id"] != null) p.Column = tbl.Columns["Id"];
+                        else if (tbl.Columns["id"] != null) p.Column = tbl.Columns["id"];
+                        else if (tbl.Columns[tbl.Name + "Id"] != null) p.Column = tbl.Columns[tbl.Name + "Id"];
+                        else if (tbl.Columns[tbl.Name + "_id"] != null) p.Column = tbl.Columns[tbl.Name + "_id"];
+                        else if (tbl.Name.EndsWith("ies") && tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 3) + "yId"] != null) p.Column = tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 3) + "yId"];
+                        else if (tbl.Name.EndsWith("ies") && tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 3) + "y_id"] != null) p.Column = tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 3) + "y_id"];
+                        else if (tbl.Name.EndsWith("s") && tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 1) + "Id"] != null) p.Column = tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 1) + "Id"];
+                        else if (tbl.Name.EndsWith("s") && tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 1) + "_id"] != null) p.Column = tbl.Columns[tbl.Name.Substring(0, tbl.Name.Length - 1) + "_id"];
+                    }
                 }
                 else if (!tbl.PrimaryColumn.IsAutoIncrement && tbl.PrimaryColumn.IsNumericType())
                 {
@@ -150,6 +160,7 @@ namespace Cinar.DBTools.Tools
             cb.Items.Add("");
             foreach (Column f in Table.Columns)
                 cb.Items.Add(f);
+            if (this.Column != null) cb.SelectedItem = this.Column;
             p.Controls.Add(lbl);
             p.Controls.Add(cb);
             p.Tag = this;
