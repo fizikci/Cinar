@@ -198,6 +198,20 @@ namespace Cinar.CMS.Library
                 Provider.Session["DesignMode"] = value;
             }
         }
+        [Description("Is the application running in a mobile app?")]
+        public static bool AppMode
+        {
+            get
+            {
+                if (Provider.Request["AppMode"] == "On")
+                    AppMode = true;
+                return Provider.Session["AppMode"] != null && (bool)Provider.Session["AppMode"];
+            }
+            set
+            {
+                Provider.Session["AppMode"] = value;
+            }
+        }
         [Description("Is ShowExecutionTime=1 query string param set? Then process time of all modules written in the html output.")]
         public static bool ShowExecutionTime
         {

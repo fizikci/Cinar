@@ -18,6 +18,10 @@ namespace Cinar.CMS.Library.Handlers
 
             string path = context.Request.Url.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
             string fileName = path.Substring(path.LastIndexOf('/') + 1);
+            if (fileName.ToLower().Contains(".aspx")) {
+                Provider.Response.Redirect(Provider.Configuration.MainPage, true);
+                return;
+            }
             fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
 
             if (fileName.Contains(".")) // bu demektir ki cinar.cms.js gibi bir dosya isteniyor
