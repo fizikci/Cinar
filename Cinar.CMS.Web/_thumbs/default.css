@@ -1,0 +1,424 @@
+﻿.navbar-fixed-top {
+	z-index: 10 !important;
+}
+
+/* Cinar CMS default CSS for effects */
+
+#gogPopDiv {position:absolute; border:1px solid black; background:white; padding:10px}
+#gogPopDiv img {width:auto; height:auto;}
+
+.lightBox img {cursor:pointer}
+#lightBoxDiv {position:absolute; border:1px solid black; background:white; padding:10px; text-align:center; padding-bottom:60px;}
+#lightBoxDiv #lbImg {margin-bottom:10px}
+#lightBoxDiv #lbPrev {position:absolute; left:0px; cursor:pointer}
+#lightBoxDiv #lbNext  {position:absolute; right:0px; cursor:pointer}
+#lightBoxDiv #lbCounter {margin-bottom:20px;}
+#lightBoxDiv #lbLeft {position:absolute;text-align:left; padding-top:10px}
+#lightBoxDiv #lbCenter {position:absolute;text-align:left; padding-top:10px}
+#lightBoxDiv #lbRight {width:10%;position:absolute;text-align:right}
+#lightBoxDiv #lbRight img {vertical-align:middle}
+#lightBoxDiv #lbLove {cursor:pointer;}
+
+.masonry {
+	position:relative;
+}
+.masonry img {
+	position:absolute;
+}
+
+.tag_bg {
+	height:34px;
+	font-size:15px;
+	padding-left:24px;
+	padding-top:4px;
+}
+
+.fadeShow {position:relative;}
+.fadeShow .indexElms {
+	position:absolute;
+	z-index:3;
+	right:10px;
+	bottom:6px;
+	cursor:pointer;
+}
+.fadeShow .clItem {
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+.fadeWithArrows {position:relative;}
+.fadeWithArrows #lbPrev {
+	position:absolute;
+	z-index:3;
+	left:0px;
+	cursor:pointer;
+}
+.fadeWithArrows #lbNext {
+	position:absolute;
+	z-index:3;
+	right:0px;
+	cursor:pointer;
+}
+.fadeWithArrows .clItem {
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+.slideShow {
+    position: relative;
+}
+.slideShow .clipper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.slideShow .clipper .innerDiv {
+    position:absolute;
+	left:0px;
+	top:0px;
+	height:auto;
+	width:30000px;
+	overflow:hidden;
+}
+.slideShow .clipper .innerDiv > * {
+    margin-right:20px;
+    display:inline-block;
+}
+.slideShow .playBtn {
+	position:absolute;
+	right: 5px;
+	bottom: 5px;
+	cursor:pointer;
+}
+.slideShow .prevNext {
+    position:absolute;
+	width:20px;
+	height:20px;
+	background-repeat:no-repeat;
+	cursor:pointer;
+    top:-20px;
+    background-position:center center;
+}
+.slideShow .btnPrev {
+    right:40px;
+    background-image:url(/external/icons/slide_prev.png);
+}
+.slideShow .btnNext {
+    right:0px;
+    background-image:url(/external/icons/slide_next.png);
+}
+
+.showDescOnImg {
+	position:relative;
+}
+.showDescOnImg .clDesc {
+	position:absolute;
+	background: url("/external/icons/black_px_alpha.png") repeat scroll 0 0 transparent;
+	color:white;
+	padding:5px;
+	cursor:pointer;
+}
+
+.mansetAktuel {
+	height:250px;
+	background-image:url(/UserFiles/Images/_design/manset.jpg);
+}
+.mansetAktuel .summary {
+	float:right;
+	background-color:rgba(0,0,0,0.8);
+	color:white;
+	width:200px;
+	height:250px;
+	padding:10px;
+}
+.mansetAktuel div.clItem {
+	float:left;
+	width:650px;
+	height:250px;
+}
+.mansetAktuel div.clSTitle {
+	font-weight:bold;
+	font-size:14px;
+	padding-top:10px;
+}
+.mansetAktuel div.clCategory {
+	font-weight:bold;
+}
+.mansetAktuel div.clPubDate {
+	padding-top:10px;
+}
+.mansetAktuel div.clDesc {
+	font-size: 12px;
+	font-style: italic;
+	padding-top: 10px;
+}
+.mansetAktuel .links {
+	float:right;
+	width:324px;
+	padding-top:10px;
+	font-weight:bold;
+}
+.mansetAktuel .links a {
+    background: url("/UserFiles/Images/_design/ok.png") no-repeat scroll 16px 9px transparent;
+    color: #FFFFFF;
+    display: block;
+    height: 22px;
+    margin: 0;
+    padding: 5px 0 0 35px;
+}
+.mansetAktuel .links a:hover {
+    background-color: #FDB812;
+    color: #000000;
+    text-decoration: none;
+}
+
+.slideAll {
+	height:375px;
+	overflow:hidden;
+	border-right:10px solid #FFF;
+}
+.slideAll div.clItem {
+	border-left:10px solid #FFF;
+	border-top:10px solid #FFF;
+	border-bottom:10px solid #FFF;
+	box-shadow: 0 0 30px #000000;
+}
+.slideAll div.clTitle {
+    background:url(/external/icons/yari_seffaf.png);
+    bottom: 10px;
+    left: 10px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+}
+.slideAll div.clTitle a {
+	color:white;
+	font-size:20px;
+}
+
+.roundAbout {
+    position: relative;
+    height: 270px;
+    margin-bottom: 80px;
+    margin-top: 10px;
+}
+.roundAbout .item {
+    position:absolute;
+    border:1px solid black;
+}
+
+.roundAbout .item img { 
+    width:100%;
+    height:100%;
+}
+.roundAbout .item .caption {
+    display:none;
+}
+
+.roundAboutCaption {
+    height: 55px;
+    bottom: -66px;
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    text-align:center;
+}
+
+#cc_ei_btn {
+	position:absolute;
+	border:2px solid orange;
+	background:black;
+	color:orange;
+	font-family:verdana;
+	font-size:10px;
+	cursor:pointer;
+}
+
+.cc_ei_canvas {
+    background: none repeat scroll 0 0 gray;
+    border: 1px inset gray;
+    height: 554px;
+    margin-top: 4px;
+    overflow: auto;
+    width: 792px;
+	position:relative;
+}
+.cc_ei_toolbar  input{
+    border: 1px solid #DDDDDD;
+    height: 16px;
+    text-align: right;
+    width: 37px;
+	vertical-align: bottom;
+	font-size: 11px !important;
+}
+.cc_ei_canvas img {
+	position:absolute;
+}
+#cc_ei_selection {
+	position:absolute;
+	cursor: move;
+	left:100px;
+	top:100px;
+	width:100px;
+	height:100px;
+    background-color: #D8DFEA;
+    opacity: 0.5;
+	border: 1px dashed black;
+}
+
+#cc_ei_se, #cc_ei_nw {
+	position:absolute;
+    background-color: #D8DFEA;
+    height: 10px;
+    opacity: 0.5;
+    width: 10px;
+}
+#cc_ei_nw {
+    cursor: nw-resize;
+    left: 95px;
+    top: 95px;
+}
+#cc_ei_se {
+    top: 195px;
+    cursor: se-resize;
+    left: 195px;
+}
+
+#editOnSiteHTML {
+	position: absolute;
+	z-index: 10;
+	background-color: rgb(255, 255, 224);
+	padding: 2px 0px 2px 5px;
+	border-top-left-radius: 14px;
+	border-top-right-radius: 14px;
+	border-bottom-right-radius: 14px;
+	border-bottom-left-radius: 14px;
+	border: 1px solid rgb(133, 133, 133);
+	line-height: 16px;
+}
+#editOnSiteHTML .fff {
+	margin-right:5px;
+}
+
+#youtube-search {
+    height: 50px;
+    text-align: center;
+    padding-top: 9px;
+}
+#youtube-search input {
+    height: 24px;
+    border-radius: 10px 0px 0px 10px;
+    width: 316px;
+    border: 1px solid orange;
+    padding-left: 10px;
+}
+#youtube-search button {
+    height: 28px;
+    border-radius: 0px 10px 10px 0px;
+    vertical-align: top;
+    color: white;
+    background: orange;
+    border: none;
+    margin: 0px;
+    cursor: pointer;
+}
+
+#youtube-search-results {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50px;
+    bottom: 0px;
+    overflow: auto;
+}
+
+#youtube-search-results .search_item {
+    width: 30%;
+    float: left;
+    height: 160px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+#youtube-search-results .search_item img {
+    float: left;
+    margin: 4px;
+    width:120px;
+    height:80px;
+    cursor:pointer
+}
+.parseHTMLForm {
+	position: absolute;
+	bottom: 0px;
+	top: 54px;
+	left: 0px;
+	right: 0px;
+}
+.parseHTMLForm .titleLabel {
+    position: absolute;
+    left: 10px;
+    width: 100px;
+}
+.parseHTMLForm input[name="title"] {
+    position: absolute;
+    left: 120px;
+    right: 10px;
+}
+.parseHTMLForm .descLabel {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    width: 100px;
+}
+.parseHTMLForm textarea[name=desc] {
+    position: absolute;
+    left: 120px;
+    right: 10px;
+    top: 40px;
+}
+.parseHTMLForm .imgsLabel {
+    position: absolute;
+    left: 10px;
+    width: 100px;
+    top: 80px;
+}
+.parseHTMLForm .imgs {
+    position: absolute;
+    left: 120px;
+    top: 80px;
+    right: 10px;
+    height: 100px;
+    overflow: auto;
+	cursor:pointer;
+}
+.parseHTMLForm .imgs .selected {
+	background: navy;
+}
+.parseHTMLForm .imgs img {
+    max-width:100px;
+    max-height:100px;
+    margin:4px;
+    border:1px solid #ddd;
+    padding:4px
+}
+.parseHTMLForm .textLabel {
+    position: absolute;
+    left: 10px;
+    top: 180px;
+    width: 100px;
+}
+.parseHTMLForm textarea[name=text] {
+    position: absolute;
+    left: 120px;
+    top: 180px;
+    right: 10px;
+    height: 300px;
+}
+.parseHTMLForm #btnOK {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}

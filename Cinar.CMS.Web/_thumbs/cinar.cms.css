@@ -1,0 +1,300 @@
+﻿.editor 
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+	letter-spacing: normal;
+	line-height:normal;
+	color:#404040;
+	text-align:left;
+
+	position:absolute;
+	border:1px solid #B9B9B9;
+	padding:2px;
+	background:white;
+	
+	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+	box-shadow: 3px 3px 4px #c1c3c2;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
+}
+.editor div.item {cursor:default;padding:2px}
+.editor div.selItem {background:#316AC5;color:white}
+.editor div.checkedItem {background:#316AC5;color:white}
+.editor input, .editor td {
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+}
+.editor textarea {
+  font-family: Lucida Console, Courier, monospace;
+  font-size: 13px;
+}
+ 
+div.StringEdit {width:640px; height:480px;}
+div.StringEdit img {cursor:pointer;margin:2px;}
+div.StringEdit textarea {width:99%; height:420px;}
+div.PictureEdit {width:860px; height:480px;}
+div.LookUp {width:800px; height:435px;}
+div.MemoEdit {width:640px; height:480px;}
+div.MemoEdit textarea {width:99%; height:439px}
+div.FilterEdit {width:324px; height:300px;}
+div.DateTimeEdit {width:200px;}
+div.ComboBox {text-align:left;overflow-y:auto;overflow-x:hidden;padding:0px;}
+
+#mdlSel, #mdlSel2, #mdlSel3, #mdlSel4 
+{
+	position:absolute;
+	border:1px solid #316AC5;
+	z-index:10;
+}
+#mdlSel div {
+    background: none repeat scroll 0 0 #316AC5;
+    border-radius: 0 0 0 9px;
+    float: right;
+    height: 23px;
+    padding: 1px 7px;
+    width: auto;
+}
+#mdlSel div img
+{
+	margin-right:4px;
+	cursor: pointer;
+}
+
+span.ccBtn 
+{
+	color: #316AC5;
+	padding: 0px 20px 0px 0px;
+	cursor: pointer;
+	/*
+	background-image:url('/external/icons/all_icons.png');
+	background-repeat: no-repeat;
+	*/
+	display:inline-block;
+	margin:4px 0px 0px 4px;
+	height:16px;
+}
+
+div.smMenu 
+{
+	color: #404040;
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+	letter-spacing: normal;
+	line-height:normal;
+	position:absolute;
+	background:white;
+	width:200px;
+	border:solid 1px #808080;
+	padding:3px;
+	z-index:1500;
+	text-align:left;
+	/*shadow*/
+	-moz-box-shadow: 3px 3px 4px #c1c3c2;
+	-webkit-box-shadow: 3px 3px 4px #c1c3c2;
+	box-shadow: 3px 3px 4px #c1c3c2;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#c1c3c2');
+}
+div.smMenu div.menuFolder
+{
+	background-image: url(/external/icons/go.png);
+	background-position: right center;
+	background-repeat:no-repeat;
+}
+div.smMenu div 
+{
+	padding: 2px 15px 2px 5px;
+	cursor:pointer
+}
+div.smMenu img 
+{
+	vertical-align:middle
+}
+div.smMenu div:hover 
+{
+	background:#316AC5;
+	color:white
+}
+div.smMenu hr {
+    margin-top:5px;
+    margin-bottom:5px;
+}
+div.menu_selected {
+	background-color: #316AC5;
+	color: white;
+}
+
+div.treeChildren {padding-left:16px}
+div.treeChildren img {vertical-align:middle}
+#nd_root span {cursor:pointer}
+span.nodeName {cursor:pointer}
+
+td 
+{
+	vertical-align:top
+}
+
+/* EditForm classes */
+table.editForm
+{
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+	letter-spacing: normal;
+	line-height:normal;}
+table.cntrlsTbl 
+{
+	width:100%;
+	color:#404040;
+	border-left:8px solid #F1EFE2;
+	border-top:1px solid #F1EFE2;
+	table-layout: fixed;}
+table.cntrlsTbl .category {background:#F1EFE2; color: #316AC5; font-weight:bold}
+table.cntrlsTbl .category td {padding:2px !important}
+table.cntrlsTbl td {width:50%;border-bottom:1px solid #F1EFE2;border-left:1px solid #F1EFE2;text-align:left;padding:1px;cursor:default;vertical-align:middle}
+table.cntrlsTbl input {border:none;padding-left:2px;color: initial;}
+table.cntrlsTbl input[type=button] {padding:0px; margin:0px}
+
+/* filterPanel */
+table.filterTable {width:300px}
+table.filterTable td.tdField {width:120px;}
+table.filterTable td.tdOp {width:60px;}
+table.filterTable td.tdControl {width:120px;}
+tr.filterRow  input[type=button] {border:none;padding:0px; margin:0px}
+
+/* ListForm classes */
+.lf-search {
+    position: absolute;
+    right: 0px;
+    top: 4px;
+}
+table.lf-filter {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+}
+div.lf-dataArea 
+{
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: normal;
+    line-height: normal;
+    overflow: auto;
+    text-align: left;
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 28px;
+    bottom: 28px;
+}
+div.lf-listFormFooter {
+    text-align: right;
+    position: absolute;
+    left: 4px;
+    right: 10px;
+    bottom: 4px;
+}
+div.lf-listFormFooter  .cpager {margin-left:8px}
+div.lf-listFormFooter span.fff {margin-left:8px}
+div.lf-listFormFooter input {width:70px}
+
+/* ListGrid classes */
+table.bk-grid 
+{
+	font-family: Tahoma, Arial, sans-serif;
+	letter-spacing: normal;
+	line-height:normal;
+	width:100%;
+	margin-top:4px;
+	color:#404040;}
+table.bk-grid th {font-size:12px; background:#404040; color:White; text-align:left; padding:2px !important; empty-cells:show; cursor:pointer}
+table.bk-grid td {padding:0px; empty-cells:show; cursor:pointer;text-align:left;font-size: 12px; padding:2px !important;}
+tr.selected {background: #316AC5; color:white}
+tr.hover {background: #efefef; color:#404040;}
+
+#fileBrowser {}
+#fileBrowserList {
+    overflow: auto;
+    padding: 10px;
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    bottom: 36px;
+    top: 0px;
+}
+#fileBrowserList .nav {padding:4px;}
+#fileBrowserList .nav  span{cursor:pointer; color:#316AC5}
+#fileBrowserFooter {
+    height: 41px;
+    padding: 4px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+}
+#fileBrowserFooter form input {font-size:smaller;}
+#fileBrowserFooter form {padding:4px; margin-right:10px; margin-bottom:8px; float:left;}
+#fileBrowserFooter iframe {visibility:hidden;width:0px;height:0px;}
+#fileBrowser table {width:100%;}
+#fileBrowser td.fileName {cursor:pointer; background-repeat:no-repeat; background-position:left center; padding-left:20px;}
+#fileBrowser td.audio {background-image:url(/external/icons/audio.gif);}
+#fileBrowser td.video {background-image:url(/external/icons/video.png);}
+#fileBrowser td.folder {background-image:url(/external/icons/folder.png);}
+#fileBrowser td.file {background-image:url(/external/icons/file.png);}
+#fileBrowser td.picture {background-image:url(/external/icons/picture.png);}
+#fileBrowser .size {text-align:right;}
+#fileBrowser .date {text-align:right;}
+#fileBrowserLoading {background-image:url(/external/icons/loading.gif);width:43px; height:11px;display:none;position: absolute;right: 20px;bottom: 16px;}
+
+div.fileNameBox {
+    cursor: pointer;
+    float: left;
+    height: 110px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 110px;
+    font-size: 10px;
+    overflow: hidden;
+    word-break: break-all;
+}
+div.fileNameBox img {max-width:80px; max-height:80px}
+#fileBrowserList .fileSelected {
+	background: #316AC5;
+	color:white;
+}
+
+#sortableList {position:absolute;top:0px;bottom:40px;right:0px;left:0px;overflow:scroll;border-bottom: 1px solid #316AC5;}
+#sortableList div.sortItem {float:left;cursor:move;margin:5px 0px 0px 5px;padding:5px; border:1px solid #aaa;}
+#sortableList div.sortItem img {width: 137px;height: 101px;}
+#sortableList div.sel {border-color:blue; background:#316AC5;}
+
+.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333; }
+.ui-widget-content a { color: #333333; }
+.ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
+
+.cs_empty_reg {
+    margin: 4px;
+    border: 2px dashed gray;
+    padding: 4px;
+    font-size: 16px;
+}
+.cs_empty_reg span {
+    font-size: 12px;
+    font-style: italic;
+}
+
+#_cnsl {
+    position: absolute;
+    right: -2px;
+    left: -2px;
+    top: -2px;
+    bottom: -2px;
+    border: none;
+}

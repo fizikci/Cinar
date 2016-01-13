@@ -1,0 +1,1151 @@
+﻿<html>
+<head>
+<!--    <link href="default.css.ashx" rel="stylesheet" />-->
+    <style>
+        body, td {
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 13px;
+            letter-spacing: normal;
+            line-height: normal;
+            color: rgb(80, 80, 80);
+        }
+		table {
+			border-spacing:0px;
+		}
+		tr.header {
+			background: #B1B1B1;
+			font-weight: bold;
+		}
+		tr.odd {
+			background:#eee;
+		}
+		td {
+			padding:3px;
+		}
+        h1 {
+            font-size: 18px;
+            border-bottom: 1px solid rgba(33, 74, 133, 0.22);
+            font-weight: normal;
+            color: #214A85;
+        }
+
+        h2 {
+			margin-top:20px;
+            font-size: 16px;
+            font-weight: normal;
+			border-bottom:1px solid rgba(33, 74, 133, 0.22);
+			color: darkorange;
+        }
+
+        h3 {
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        pre {
+            font-family: Lucida Console;
+            font-size: 11px;
+            border: 1px dashed rgb(218, 218, 218);
+            background: #fffff5;
+            padding: 8px;
+            margin-left: 32px;
+        }
+
+        .part {
+            margin-left: 20px;
+        }
+
+        div.codeSample {
+            position: relative;
+        }
+
+        button {
+            right: 0px;
+            position: absolute;
+            bottom: 0px;
+        }
+
+        b {
+            font-weight: normal;
+            color: #316AC5;
+        }
+
+            b.btn {
+                cursor: pointer;
+            }
+
+        ul {
+            margin: 0px;
+        }
+        #leftPanel {
+            position:absolute;
+            left:0px;
+            width:250px;
+            bottom:0px;
+            top:0px;
+            padding:4px;
+            overflow:auto;
+            background: #efefef;
+        }
+        #contentPanel {
+            position:absolute;
+            left:258px;
+            right:0px;
+            bottom:0px;
+            top:0px;
+            padding-left: 10px;
+			overflow-y:scroll;
+        }
+        span.nodeName {
+            font-size: 13px;
+        }
+        span.nodeName:hover {
+            color: #316AC5;
+        }
+        div.treeChildren {
+            padding-left: 16px;
+        }
+        div.treeChildren > div {
+            width: 400px;
+        }
+        #nd_root span {
+            cursor: pointer;
+        }
+        .btn2 {
+            padding-left: 20px;
+            width: 200px;
+            margin-bottom: 10px;
+            display:inline-block;
+        }
+    </style>
+	<script src="/external/javascripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/external/javascripts/prototype.js"></script>
+    <script src="default.js.ashx"></script>
+    <script src="tr.js.ashx"></script>
+    <script src="controls.js.ashx"></script>
+    <link href="famfamfam.css.ashx" rel="stylesheet" />
+	<link href="cinar.cms.css.ashx" rel="stylesheet" type="text/css">
+    <script>
+        $(function () {
+            $('.part, h1').hide();
+            $('.part').first().show();
+            $('h1').first().show();
+
+            showTree();
+        });
+
+        function toggle(event) {
+            $('.part').hide();
+            $(event.target).next().show();
+        }
+
+        function execute(btn) {
+            window.parent.eval($(btn).parent().prev('pre.code').text());
+        }
+        function executeHere(btn) {
+            eval($(btn).parent().prev('pre.code').text());
+        }
+        var tree;
+        function showTree() {
+            tree = new TreeView($('#leftPanel'), 'root', 'İçindekiler', getNodes, nodeClicked);
+            tree.toggle(tree.rootElement);
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first'));
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first').next());
+            tree.toggle(tree.rootElement.find('.treeChildren > *:first').next().next());
+        }
+        function getNodes(data) {
+            if (data == 'root') {
+                return [
+                    { data: 'overview', text: 'Genel Bakış', type: 'category' },
+                    { data: 'statik_p8', text: 'Javascript nesne ve metodları', type: 'category' },
+                    { data: 'reference', text: 'Referans', type: 'category' }
+                ];
+            }
+            else if (data == 'overview') {
+                return [
+                    { data: 'statik_p1', text: 'Çınar CMS Bileşenleri', type: 'content' },
+                    { data: 'statik_p2', text: 'Sayfalar ve Modüller', type: 'content' },
+                    { data: 'statik_p3', text: 'Kategoriler ve İçerikler', type: 'content' },
+                    { data: 'statik_p4', text: 'Yazarlar, Kaynaklar ve Etiketler', type: 'content' },
+                    { data: 'statik_p5', text: 'Kullanıcılar ve Üyelik modülleri', type: 'content' },
+                    { data: 'statik_p6', text: 'Çınar Script ile geliştirme ve Provider nesnesi', type: 'content' },
+                    { data: 'statik_p7', text: 'Genel ayarlar, genel Javascript ve CSS dosyaları', type: 'content' }
+                ];
+            }
+            else if (data == 'reference') {
+                return [
+                    { data: 'ref_module', text: 'Modüller', type: 'category' },
+                    { data: 'ref_entity', text: 'Entitiler', type: 'category' },
+                    { data: 'ref_provider', text: 'Provider', type: 'content' },
+                    { data: 'ref_utility', text: 'Utility', type: 'content' },
+                    { data: 'statik_p12', text: 'Button kullanımı ve ikonlar', type: 'content' },
+                    { data: 'statik_p13', text: 'Efekt ve animasyonlar', type: 'content' },
+                ];
+            }
+            else if (data == 'statik_p8') {
+                return [
+                    { data: 'statik_p9', text: 'Veri listeleme formu', type: 'content' },
+                    { data: 'statik_p10', text: 'Veri düzenleme formu', type: 'content' },
+                    { data: 'statik_p15', text: 'Entity okuma ve kaydetme fonksiyonları', type: 'content' },
+                    { data: 'statik_p14', text: 'EditOnSite ile site yönetimi', type: 'content' },
+                    { data: 'statik_p11', text: 'Diğer JS fonksiyonları', type: 'content' },
+                ];
+            }
+            else if (data == 'ref_module') {
+                var res = [];
+                for (var i = 0; i < window.parent.moduleTypes.length; i++)
+                    res.push({ data: 'ref_module_grup-' + window.parent.moduleTypes[i].grup, text: window.parent.moduleTypes[i].grup, type: 'category' });
+                return res;
+            }
+            else if (data.indexOf('ref_module_grup-') == 0) {
+                var grupName = data.split('-')[1];
+                var res = [];
+                for (var i = 0; i < window.parent.moduleTypes.length; i++)
+                    if (window.parent.moduleTypes[i].grup==grupName)
+                        for (var j = 0; j < window.parent.moduleTypes[i].items.length; j++)
+                            res.push({ data: 'ref_module_module-' + window.parent.moduleTypes[i].items[j].id, text: window.parent.moduleTypes[i].items[j].name, type: 'content' });
+                return res;
+            }
+            else if (data == 'ref_entity') {
+                return [
+                    { data: 'ref_temel_entity', text: 'Temel Entitiler', type: 'category' },
+                    { data: 'ref_detay_entity', text: 'Detay ve İlişkisel Entitiler', type: 'category' }
+                ];
+            }
+            else if (data == 'ref_temel_entity') {
+                var res = [];
+                for (var i = 0; i < window.parent.entityTypes.length; i++)
+                    if (window.parent.entityTypes[i][2])
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][0] + ' (' + window.parent.entityTypes[i][1] + ')', type: 'content' });
+                return res;
+            }
+            else if (data == 'ref_detay_entity') {
+                var res = [];
+                for (var i = 0; i < window.parent.entityTypes.length; i++)
+                    if (!window.parent.entityTypes[i][2])
+                        res.push({ data: 'ref_entity-' + window.parent.entityTypes[i][0], text: window.parent.entityTypes[i][0] + ' (' + window.parent.entityTypes[i][1] + ')', type: 'content' });
+                return res;
+            }
+
+        }
+        function nodeClicked(node) {
+            $('.part, h1').hide();
+            if (node.data.indexOf('statik') == 0) {
+                var id = node.data.split('_')[1];
+                $('#'+id).show();
+                $('#'+id).next().show();
+            }
+            else if (node.data.indexOf("ref_entity-")==0)
+            {
+                var parts = node.data.split('-');
+                var h1 = $('#'+parts[0] + '_' + parts[1]);
+                if (h1.length) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else
+                {
+                    var html = '<h1 id="' + parts[0] + '_' + parts[1] + '">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getEntityDocs&entityName=' + parts[1] }) + "</div>";
+                    $('#contentPanel').append(html);
+                }
+            }
+            else if (node.data == 'ref_provider') {
+                var h1 = $('#provider');
+                if (h1.length) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else {
+                    var html = '<h1 id="provider">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getProviderDocs' }) + "</div>";
+                    $('#contentPanel').append(html);
+                }
+            }
+            else if (node.data == 'ref_utility') {
+                var h1 = $('#utility');
+                if (h1.length) {
+                    h1.show();
+                    h1.next().show();
+                }
+                else {
+                    var html = '<h1 id="utility">' + node.text + '</h1>';
+                    html += '<div class="part">' + ajax({ url: 'EntityInfo.ashx?method=getUtilityDocs' }) + "</div>";
+                    $('#contentPanel').append(html);
+                }
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div id="leftPanel">
+    </div>
+
+    <div id="contentPanel">
+        <h1 id="p1">Çınar CMS Bileşenleri</h1>
+        <div class="part">
+            <ol>
+                <li>Bilginin gösterimi için <b>Sayfa</b>lar ve <b>Modül</b>ler</li>
+                <li>Bilginin saklanması için <b>Kategori</b>ler ve <b>İçerik</b>ler</li>
+                <li>Bilgiyi detaylandırmak için <b>Yazar</b>lar, <b>Kaynak</b>lar, <b>Etiket</b>ler</li>
+                <li>Etkileşim için <b>Kullanıcı</b>lar, <b>Yorum</b>lar, <b>Mesaj</b>lar</li>
+                <li>Kodlama için <b>Çınar Script</b></li>
+                <li>Genel <b>Javascript</b> ve <b>CSS</b> dosyaları</li>
+                <li>Javascript nesne ve fonksiyonları</li>
+                <li>Performans için <b>Önbellek</b> (cache) çözümü</li>
+            </ol>
+        </div>
+        <h1 id="p2">Sayfalar ve Modüller</h1>
+        <div class="part">
+            <ul>
+                <li>Çınar CMS'de tüm bilgiler veritabanında tutulur, fiziksel sayfalar yoktur</li>
+                <li>Sitenize dilediğiniz kadar sayfa ekleyebilirsiniz. Bu sayfalar görünürde .aspx uzantılı dosya gibidirler.</li>
+                <li>Default.aspx isimli sayfa kurulumda otomatik oluşturulur.</li>
+                <li>Default.aspx'in kaynak kodunu görmek için <b class="btn" onclick="window.parent.editTemplate('Default.aspx')">tıklayınız</b>.</li>
+                <li>Sayfa kodu aşağıdaki gibidir:
+                <pre class="code">&lt;html&gt;
+&lt;head&gt;
+$=this.HeadSection$
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="page"&gt;
+        &lt;div id="Header" class="Region"&gt;$=this.Header$&lt;/div&gt;
+        &lt;div id="Content" class="Region"&gt;$=this.Content$&lt;/div&gt;
+        &lt;div id="Footer" class="Region"&gt;$=this.Footer$&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                </li>
+                <li>Bu sayfayı dilediğiniz gibi düzenleyebilirsiniz.</li>
+                <li>Çınar CMS'de sayfalar bölgelerden (region), bölgeler de modüllerden oluşur.</li>
+                <li>Sayfa kodunda görülen, class'ı Region olan divlerin içindeki $=this.Content$ gibi ifadeler Çınar Script kodudur.</li>
+                <li>$=this.Content$ ifadesi Content bölgesinin modüllerini yükleyip gösterir.</li>
+                <li>Sitenize yeni sayfa eklemek için;
+                <ul>
+                    <li>sayfanın herhangi bir yerine sağ tıklayın</li>
+                    <li>açılan menüden <b>Sayfa Ekle</b>'yi seçin</li>
+                    <li>Sayfanın adını soran bir pencere açılacak, oraya YeniSayfa.aspx ismini girin.</li>
+                    <li>Yeni sayfanızın kodunu gösteren pencere açılacak, Kaydet'e basın.</li>
+                    <li>Sayfanız oluşturuldu.</li>
+                    <li>Görmek için adresin sonuna YeniSayfa.aspx yazabilir ya da sağ tıklayıp, diğer sayfalar menüsünden YeniSayfa.aspx'i seçebilirsiniz.</li>
+                </ul>
+                </li>
+                <li>Modüller bölgenin üzerine sağ tıklayarak Modül Ekle menüsünden eklenir.</li>
+                <li>Örneğin Footer bölgesine yeni bir modül eklemek için;
+                <ul>
+                    <li>Footer bölgesine sağ tıklayın</li>
+                    <li>açılan menüden <b>Modül Ekle</b> > <b>Çeşitli</b> > <b>Statik HTML</b>'i seçin.</li>
+                    <li>modül derhal sayfaya eklenecek ve modülü düzenleme formu açılacaktır.</li>
+                    <li>Açılan pencerede HTML Kodu alanına yazı girebilirsiniz.</li>
+                    <li>Bu modülün görevi girdiğiniz html kodunu göstermektir.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        <h1 id="p3">Kategoriler ve İçerikler</h1>
+        <div class="part">
+            <ul>
+                <li>Sayfalar, sayfaların içindeki bölgeler ve bölgelerin içindeki modüllerin amacı, siteye ait içerikleri göstermektir.</li>
+                <li>Site içerikleri; "kategori > alt kategori > alt kategori... > içerik" şeklinde hiyerarşik yapıdadır.</li>
+                <li>En üst kategorinin adı "Kök"dür.</li>
+                <li>Bu sitenin kategori ve içerik hiyerarşisini görmek için <b class="btn" onclick="window.parent.openCategoryContentTree()">tıklayınız</b>.</li>
+                <li>Kategori-İçerik Ağacı penceresi açılacaktır. Sayfalarınıza sağ tıklayıp menüden "Kategori-İçerik Ağacı"nı seçerek bu pencereye her zaman ulaşabilirsiniz.</li>
+                <li>Bu ağaç görünümünde 
+            <ul>
+                <li>bir kategoriye tıklarsanız, o kategorinin altındaki içerik ve kategorileri listeleyen pencere açılacaktır</li>
+                <li>bir içeriğe tıklarsanız, o içeriğin bilgilerini düzenlemek için form açılacaktır.</li>
+            </ul>
+                </li>
+                <li>Aslında içerik ve kategori birbiriyle tamamen aynı özelliklere sahiptir.</li>
+                <li>Bütün içeriklerin;
+                    <ul>
+                        <li>Başlığı (Title)</li>
+                        <li>Yayınlanma Tarihi (PublishDate)</li>
+                        <li>Açıklaması ya da özeti (Description)</li>
+                        <li>İçerik metni (Metin)</li>
+                        <li>Resmi (Picture)</li>
+                        <li>Keywords'ü (arama motorları için)</li>
+                        <li>Yazarı (Author)</li>
+                        <li>Kaynağı (Source)</li>
+                    </ul>
+                    vardır.
+                </li>
+            </ul>
+        </div>
+        <h1 id="p4">Yazarlar, Kaynaklar ve Etiketler</h1>
+        <div class="part">
+            <ul>
+                <li>İçerik için yazar girilmesi bazen gerekli olur. (Özellikle haber sitelerinde, akademik sitelerde)</li>
+                <li>Yazarları eklemek ve düzenlemek için
+                <ul>
+                    <li>Sağ tık menüyü açın.</li>
+                    <li>Veri > Yazar menüsünü seçin</li>
+                    <li>Yazarların listelendiği bir pencere açılacak.</li>
+                    <li>Tüm veri türleri için bu şekilde liste pencerelerini açabilirsiniz.</li>
+                    <li>Listeden bir satıra (yazara) tıklayıp, sağ alt köşedeki butonlarla işleminizi gerçekleştirebilirsiniz.</li>
+                    <li>Yeni yazar eklemek için + butonuna tıklayın.</li>
+                    <li>Açılan pencerede yazarın ismini, ünvanını girin.</li>
+                    <li>Resim seçin. Dilerseniz bir resmin url adresini de yazabilirsiniz. Kaydetme işlemi sırasında resim webden indirilir ve UserFiles/Images/_author klasörüne kaydedilir.</li>
+                    <li>Kaydet'e tıklayın. Yeni yazarınız kaydedildi.</li>
+                    <li>Artık bu yazarı içerik girerken seçebilirsiniz.</li>
+                </ul>
+                </li>
+                <li>Kaynaklar da aynı yazarlar gibi eklenir.</li>
+                <li>Kaynak içeriğin ait olduğu kurumu, gazeteyi vb. belirtir.</li>
+            </ul>
+        </div>
+        <h1 id="p5">Kullanıcılar ve Üyelik modülleri</h1>
+        <div class="part">
+            <ul>
+                <li>Çınar CMS ilk çalıştırıldığında 3 tane otomatik kullanıcı ekler
+                <ul>
+                    <li><b>Admin</b>: En yetkili kullanıcıdır (Roller: Designer, Editor, User)</li>
+                    <li><b>Editör</b>: Yönetim paneline girebilen kullanıcıdır (Roller: Editor, User)</li>
+                    <li><b>Anonim</b>: Henüz üye olmamış ziyaretçiler bu kullanıcı hesabında sayılır (Roller: yok)</li>
+                </ul>
+                </li>
+                <li>Roller ile kullanıcıların yetkileri belirlenir:
+                <ul>
+                    <li><b>Designer</b>: Bu rol tasarım modunda çalışma imkanı sağlar.</li>
+                    <li><b>Editör</b>: Yönetim paneline erişebilmek için kullanıcının bu role sahip olması gerekir.</li>
+                    <li><b>User</b>: Siteye üye olan kullanıcılar otomatik olarak bu role sahip olur.</li>
+                    <li>Kullanıcılarınıza bunlar dışında, dilediğiniz isimde rol atayabilirsiniz.</li>
+                    <li>Bazı modülleri sadece belli role sahip kullanıcıların görmesini sağlayabilirsiniz.</li>
+                    <li>"Sayfa Güvenliği" isimli modülü ekleyerek bir sayfanın sadece belli role sahip kullanıcılara gösterilmesini sağlayabilirsiniz.</li>
+                </ul>
+                </li>
+                <li>Kullanıcı listesini almak ve kullanıcı bilgilerini düzenlemek için Veri > Kullanıcı menüsünü seçiniz.
+                <ul>
+                    <li>Kullanıcılara rolleri virgüllerle ayrılmış kelimeler şeklinde ekleyebilirsiniz.</li>
+                    <li>Üye olan ziyaretçinin email adresine onay mesajı gönderilir.</li>
+                </ul>
+                </li>
+                <li>Kullanıcılarla ilgili modülleri eklemek için Modül Ekle > Üyelik > altındaki modüllerden birini seçiniz. Bunlar:
+                <ul>
+                    <li><b>Üyelik Formu</b>: Ziyaretçiler bu formu doldurarak siteye üye olur. Formda varsayılan olarak bütün alanlar vardır, dilerseniz tasarımını değiştirebilir, alanları azaltabilirsiniz.</li>
+                    <li><b>Login Formu</b>: Bu form ile ziyaretçiler sitede oturum açarlar.</li>
+                    <li><b>Şifre Hatırlat Formu</b>: Bu forma ziyaretçi email adresini girer, email adresine şifre hatırlatma yönergesi gönderilir.</li>
+                    <li>Login Formu modülünde "Şifremi hatırlat", "Üye olmak istiyorum" gibi linkler vardır.</li>
+                    <li>Login Formu, oturum açıldıktan sonra hoşgeldiniz mesajı görüntüler ve kullanıcının yetkisine göre uygun linkler gösterir. Örneğin Designer rolüne sahip kullanıcıya "Tasarım Modu" linki, Editor rolüne sahip kullanıcıya "Yönetim Paneli" linki gösterilir.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        <h1 id="p6">Çınar Script ile geliştirme ve Provider nesnesi</h1>
+        <div class="part">
+            <ul>
+                <li>Siteyi oluşturan sayfaların kaynak koduna, Statik HTML ve Data List modüllerine Çınar Script ile kod yazabilirsiniz.</li>
+                <li>Çınar Script DotNet frameworkü üzerinde çalışır ve C#'a çok benzer.</li>
+                <li>Kodun başladığı ve bittiği yer $ işareti ile belirtilir. Örneğin;
+                <pre>$
+    for(int i=0; i&lt;100; i++) 
+        echo("&lt;b&gt;" + i + "&lt;/b>");
+$</pre>
+                </li>
+                <li>$=DateTime.Now$ ifadesi çıktıya yazdırmanın (yani echo fonksiyonunun) kısa yoludur.</li>
+                <li>Siteyle ilgili bağlama (context'e) Provider nesnesi üzerinden erişebilirsiniz. Provider veritabanına, Request, Response nesnelerine, ve bunun gibi pek çok bağlama erişmenizi sağlar:
+                <pre>&lt;b>Son içerik ve bazı bilgiler:&lt;/b>
+$ 
+    var lastContentId =  Provider.Database.GetInt("select max(Id) from Content");
+
+    var userName = Provider.User.Name;
+    var currentContentTitle = Provider.Content.Title;
+    var currentCategoryTitle = Provider.Content.Category.Title;
+
+    if(Provider.User.IsInRole("Editor"))
+        echo("Yönetim paneline gitmek için tıklayınız.");
+
+    string siteAdi = Provider.Configuration.SiteName;
+    int oncekiIcerikId = Provider.PreviousContentId;
+    int sonrakiIcerikId = Provider.NextContentId;
+
+    string thumbImageSrc = Provider.GetThumbPath("/UserFiles/Images/logo.png", 320, 0, false);
+
+    string aWebConfigSetting = Provider.AppSettings["aWebConfigSetting"];
+    object sessionData = Provider.Session["data"];
+
+    // gibi daha pek çok metod ve özellik (detaylı bilgi için referanslara bakınız)
+$</pre>
+                </li>
+                <li>Deneme yapmak için şu adımları izleyiniz:
+                <ul>
+                    <li>Herhagi bir bölgeye sağ tıklayın ve menüden Modül Ekle > Çeşitli > Statik HTML seçiniz.</li>
+                    <li>Statik HTML modülü o bölgenin sonuna eklenecek ve düzenleme penceresi açılacaktır.</li>
+                    <li>Bu pencerede HTML Kodu alanına şu kodu girin:
+                        <pre>$
+for(int i=0; i<100; i++) 
+    echo(i + ",");
+$
+&lt;br />
+&lt;br />
+Tarih: $=DateTime.Now.ToString("dd.MM.yyyy")$
+</pre>
+                    </li>
+                    <li>Kaydet'e tıkladığınızda modülün içinde kod çıktısı gösterilecektir.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        <h1 id="p7">Genel ayarlar, genel Javascript ve CSS dosyaları</h1>
+        <div class="part">
+            <ul>
+                <li>Sitenin SEO bilgileri, runtime ayarları, mail hesabı bilgileri gibi ayarlar Konfigürasyon penceresinden yapılır.</li>
+                <li>Sağ tık menüden Konfigürasyon menüsünü seçip bu ayarları yapabilirsiniz.</li>
+                <li><b>Genel Javascript Kodu</b> ve <b>Genel CSS Ayarları</b> menülerinden sitenin javascript kodlarını ve CSS kodlarını düzenleyebilirsiniz.</li>
+                <li>Konfigürasyon penceresinde önemli bir ayar konusu Önbellek'tir. (Cache)
+                    <ul>
+                        <li>Çok ziyaretçisi olan sitelerin kaynak kullanımı çok olur.</li>
+                        <li>Çınar CMS'in en çok kullandığı kaynak veritabanıdır.</li>
+                        <li>Site ziyaret edildiğinde, her modül veritabanına sorgular gönderir ve çıktıyı oluşturur.</li>
+                        <li>Önbellek mekanizması veritabanını sorgulama işinin 10 dakikada bir yapılmasını sağlar. Bu süre değiştirilebilir.</li>
+                        <li>Örneğin saniyede 20 ziyaretçisi olan bir site veritabanına muhtemelen saniyede 200 sorgu gönderecektir. (10 dakikada toplam 120.000 sorgu)</li>
+                        <li>Önbellek kullanılırsa 120.000 yerine sadece 200 sorgu çalıştırılır.</li>
+                        <li>Önbellek mekanizması; kullanıcıya özel olmayan modüller için kullanılmalıdır.</li>
+                        <li>Konfigürasyon penceresinden yapılan önbellek ayarı bütün modüller için varsayılan ayarı belirler</li>
+                        <li>Herhangi bir modül için, modül düzenleme penceresinde bu ayarlar (o modüle özel olarak) değiştirilebilir.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <h1 id="p8">Javascript nesne ve metodları</h1>
+        <div class="part">
+        </div>
+        <h1 id="p9">Veri listeleme formu (ListForm)</h1>
+        <div class="part">
+            <ul>
+                <li>Bir entitiye ait liste penceresini açmak için bu fonksiyonu kullanabilirsiniz. (Bu pencerelere ListForm diyoruz.)</li>
+                <li>Liste açıldıktan sonra yeni entity ekleme, silme, değiştirme gibi işlemler bu pencereden yapılabilir.</li>
+                <li>Ekleme ve değiştirme için düzenleme penceresi açılır. (Buna da EditForm diyoruz.)</li>
+                <li>ListForm'lar aşağıdaki seçeneklerle açılabilir</li>
+            </ul>
+            <div class="codeSample">
+                <h3>Standart ListForm açmak:</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    title: 'Content List'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Filtre belirterek:</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    title: 'Content List',
+    extraFilter: 'CategoryId=1'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Bir entity seçtirmek için ListForm açmak:</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    title: 'Content List',
+    extraFilter: 'CategoryId=1',
+    selectCallback: function(entityId){
+        Windows.getFocusedWindow().close(); // first close list form
+        alert('You selected: ' + entityId);
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Filtre panelini ve butonları gizlemek:</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    title: 'Web Site Users',
+    hideFilterPanel: true,
+    hideEditButtons: true
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>ListForm'un altına bir komut butonu eklemek</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'Content', 
+    title: 'Content list with a custom button',
+    extraCommands: [
+        { 
+            id: 'Command', 
+            icon: 'cog', 
+            name: 'Komut', 
+            handler: function(){alert(JSON.stringify(this.getSelectedEntity(), null, '\t'));} 
+        }
+    ]
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>ListForm'dan açılan EditForm'un bir kategorisini gizlemek</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    title: 'Web Site Users',
+    editFormHideCategory: 'Temel'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>ListForm'dan açılan EditForm'un alan başlıklarını değiştirmek</h3>
+                <pre class="code">openEntityListForm({
+    entityName: 'User', 
+    title: 'Web Site Users',
+    renameLabels: {
+        Name:'Ünvan',
+        Surname:'Ecdat Adı'
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+        </div>
+        <h1 id="p10">Veri düzenleme formu (EditForm)</h1>
+        <div class="part">
+            <ul>
+                <li>Bir entitiyi düzenleme penceresini açmak için bu fonksiyonu kullanabilirsiniz.</li>
+                <li>Kategorilere ayrılmış şekilde entitinin alanları listelenir.</li>
+                <li>Değişiklikler yapılıp Kaydet buutonuna tıklayınca entity sunucuya gönderilip kaydedilir.</li>
+                <li>Options:
+                    <ul>
+                        <li>entityName: User, Content gibi entity adı</li>
+                        <li>id: açılacak entitinin id'si (0 verirseniz yeni kayıt eklemiş olursunuz.)</li>
+                        <li>title: Pencere başlığı</li>
+                        <li>filter: Bazı alanların değerlerini filtre ile atayabilirsiniz. Bu alanlar EditForm'da görünmeyecektir.</li>
+                        <li>defaultValues: Bazı alanlara değer atayabilirsiniz. EditForm'da bu alanlar görünür.</li>
+                        <li>hideCategory: açılan EditForm'da gizlenecek olan kategorinin adı</li>
+                        <li>renameLabels: Bazı alanların isimlerini renameLabels ile değiştirebilirsiniz.</li>
+                        <li>callback: kayıt işlemi tamamlandıktan sonra çağrılacak olan fonksiyon</li>
+                        <li>showRelatedEntities: Formun altındaki ilişkili veri linklerinden hangileri görünsün? ['Content','ContentPicture'] şeklinde belirtilir. Belirtilmezse hepsi görünür.</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="codeSample">
+                <h3>Standart EditForm açmak:</h3>
+                <pre class="code">openEntityEditForm({
+    entityName:'Content',
+    id:1,
+    title: 'Kök içeriği düzenle'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Filtre belirterek:</h3>
+                Aşağıda ClassName belirtildiği için bu alan gizli olarak servere gönderilir, EditForm'da görünmez.
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 0,
+    title: 'Content tablosuna yeni kayıt',
+    <b>filter</b>: 'ClassName=Content'
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Varsayılan değerler belirterek:</h3>
+                Aşağıda Title, Tages, Keywords defaul değerlerine set edilmiş, EditForm'da görünür.
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 0,
+    title: 'Content tablosuna yeni kayıt',
+    <b>defaultValues</b>: {Title:'Deneme içerik başlığı', Tags:'deneme, içerik', Keywords:'ve saire.'}
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Kategori(leri) gizlemek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Çok basit içerik girişi',
+    <b>hideCategory</b>: 'İçerik,Temel,Extra',
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>İlişkili verilerden sadece bazılarını göstermek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Basit içerik girişi',
+    hideCategory: 'İçerik,Temel,Extra',
+    <b>showRelatedEntities</b>: ['ContentPicture', 'ContentLang'],
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle='
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+            <div class="codeSample">
+                <h3>Alan başlıklarını değiştirmek</h3>
+                <pre class="code">openEntityEditForm({
+    entityName: 'Content', 
+    id: 1,
+    title: 'Çok basit içerik girişi',
+    hideCategory: 'İçerik,Temel,Extra',
+    showRelatedEntities: [],
+    filter: 'Picture2= AND Keywords= AND Tags= AND IsManset=0 AND CategoryId=1 AND SpotTitle=',
+    <b>renameLabels</b>: {
+        Title: 'BAŞLIK',
+        ClassName: 'TÜRÜ',
+        Description: 'ÖZET BİLGİ',
+        Metin: 'İÇERİK'
+    }
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+        </div>
+        <h1 id="p11">Diğer JS fonksiyonları</h1>
+        <div class="part">
+            <div class="codeSample">
+                <h3>Kategori-İçerik ağacını açmak:</h3>
+                <pre class="code">openCategoryContentTree();</pre>
+                <div align="right">
+                    <button onclick="window.parent.openCategoryContentTree()">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Sayfa-Modül ağacını açmak:</h3>
+                <pre class="code">openPageModuleTree();</pre>
+                <div align="right">
+                    <button onclick="window.parent.openPageModuleTree()">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Dosya yöneticisini açmak ve dosya seçtirmek:</h3>
+                <ul>
+                    <li>openFileManager(selectedPath, onSelectFile)</li>
+                    <li>selectedPath: FileManager'da gösterilecek dosya.</li>
+                    <li>onSelectFile: Bir dosya seçildiğinde çalışacak olan fonksiyon referansı</li>
+                </ul>
+                <pre class="code">openFileManager('/UserFiles/logo.png', function(filePath){
+	new CinarWindow({
+		url:filePath,
+		title: 'Resim Önizleme',
+		width:640,
+		height:480
+	});
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Modülü ajax ile refresh etmek:</h3>
+				Özellikle sayfa üzerinden bir entitinin eklenmesi ya da değiştirilmesi durumunda modülün ajax ile sessizce refresh edilmesi gerekli olabilir.
+                <ul>
+                    <li>refreshModule(module) metodu bu işe yarar</li>
+                    <li>Burada module parametresi modülün id'si veya DOM referansıdır. ('#StaticHtml_15' gibi..)</li>
+                </ul>
+            </div>
+			<div class="codeSample">
+                <h3>Bir elementi perde üzerinde açmak:</h3>
+                <ul>
+                    <li>showElementWithOverlay(elm, autoHide, color) metodu bu işe yarar</li>
+                    <li>elm: #id şeklinde gösterilecek elementin idsi ya da elementin DOM referansı.</li>
+                    <li>autoHide: Boş bir yere tıklandığında otomatik olarak kapansın mı?</li>
+                    <li>color: Perdenin rengi</li>
+                </ul>
+                <pre class="code">showElementWithOverlay('#Footer', true, 'black');</pre>
+                <div align="right">
+                    <button onclick="window.parent.showElementWithOverlay('#Footer', true, 'black')">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Hata mesajı vermek (alert):</h3>
+                <ul>
+                    <li>niceAlert(alert) metodu ile kullanıcıya mesaj gösterilebilir</li>
+                    <li><b>alert:</b> Kullanıcıya gösterilecek mesaj.</li>
+                </ul>
+                <pre class="code">niceAlert('Hatalı bir değer girdiniz');</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Kullanıcıdan veri girmesini istemek (prompt):</h3>
+                <ul>
+                    <li>nicePrompt(prompt, validationCallback, okCallback) metodu ile kullanıcıdan veri istenir validate edilir ve veri ile işlem yapılabilir</li>
+                    <li><b>prompt:</b> Kullanıcıya gösterilecek mesaj.</li>
+                    <li><b>validationCallback:</b> Girilen verinin validasyonu için çağrılan fonksiyon.</li>
+                    <li><b>okCallback:</b> Girilen veriyle işlem yapılması için çağrılan fonksiyon</li>
+                </ul>
+                <pre class="code">nicePrompt(
+    'Entity adını giriniz (örn Content veya Author gibi)', 
+    function(entityName){
+        if(entityTypes.any(function(elm){return elm[0]==entityName}))
+            return true;
+        else
+            niceAlert('Bu isimde entity yok.');
+
+        return false;
+    },
+    function(entityName){
+        return openEntityListForm({entityName:entityName, title:entityName+' Listesi'});
+    });</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Kullanıcıdan onay almak (confirm):</h3>
+                <ul>
+                    <li>niceConfirm(confirm, okCallback) metodu ile kullanıcıdan yapılacak işlemle ilgili onay istenir</li>
+                    <li><b>confirm:</b> Kullanıcıya gösterilecek mesaj.</li>
+                    <li><b>okCallback:</b> Onay verilmesi durumunda çağrılan fonksiyon</li>
+                </ul>
+                <pre class="code">niceConfirm(
+    'Falanca kayıt silinecek!', 
+    function(){
+        niceAlert('Tamamdır. Kayıt silindi.');
+    });</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Youtube arama ve siteye ekleme :</h3>
+                <ul>
+                    <li>searchYoutubeVideo(callback, channelName, q) metodu ile Youtube search penceresinin açılması sağlanır</li>
+                    <li><b>callback:</b> Bir videonun seçilmesi durumunda çağrılan fonksiyon. Üzerine tıklanan resmin DOM referansını verir. Böylece videonun başlığı, açıklaması gibi özelliklerine erişilebilir. </li>
+                    <li><b>channelName:</b> Eğer sadece belli bir Youtube kanalında arama yapılması isteniyorsa bu parametre ile kanal adı gönderilebilir.</li>
+					<li><b>q:</b> Aranacak kelime</li>
+                </ul>
+                <pre class="code">searchYoutubeVideo(
+    function(elm){
+		elm = jQuery(elm).parent();
+		var title = elm.find('.vtit').text();
+		var description = elm.find('.vdesc').text(); 
+		var picture = elm.find('img').attr('src');
+		var videoId = elm.find('.vid').text();
+		alert(title);
+	});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Flickr'dan galeri (photoSet) seçme :</h3>
+                <ul>
+                    <li>selectFlickrPhotoSet(flickrApiKey, flickrUserId, callback) metodu ile Flickr'daki photosetlerin listelenmesi ve seçilebilmesi sağlanır</li>
+					<li><b>flickrApiKey</b> Flickr'da siteniz için oluşturduğunuz api key</li>
+					<li><b>flickrUserId</b> Flickr kullanıcı id'si.</li>
+                    <li><b>callback:</b> Bir photoSet'in seçilmesi durumunda çağrılan fonksiyon. Üzerine tıklanan resmin DOM referansını verir. Böylece fotoğrafın başlığı, açıklaması gibi özelliklerine erişilebilir.</li>
+                </ul>
+                <pre class="code">selectFlickrPhotoSet('_api_key_', '_user_id_', function(elm){
+	elm = jQuery(elm).parent(); 
+	var entity = {
+		ExtraField1: elm.find('.pid').text(), // bu alan daha sonra flickr'dan fotoğrafları göstermek için kullanılabilir
+		Title: elm.find('.ptit').text(),
+		CategoryId:27, // foto galeri için oluşturduğunuz kategori id'si
+		ClassName:'Content',
+		Picture: elm.find('img').attr('src').replace('_n.','_b.')
+	};
+	saveEntity('Content', entity, function(entity){
+		Windows.getFocusedWindow().close();
+		location.reload();
+	});
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Flickr'dan galeri (photoSet) resimlerini alma :</h3>
+                <ul>
+                    <li>getFlickrPhotos(flickrApiKey, photoSetId, callback) metodu ile Flickr'daki bir galerinin resimleri alınır</li>
+					<li><b>flickrApiKey</b> Flickr'da siteniz için oluşturduğunuz api key</li>
+					<li><b>photoSetId</b> selectFlickrPhotoSet fonksiyonu ile seçilen photoSet id'si. Flickr'dan da öğrenilebilir.</li>
+                    <li><b>callback:</b> Galeriye ait fotoğraflar bu fonksiyona parametre olarak verilir. [{photoUrl:'...', thumbUrl:'...'}, {photoUrl:'...', thumbUrl:'...'}, ..] şeklindedir.</li>
+                </ul>
+				Aşağıdaki kod StatikHTML modülüne yazılırsa, içeriğin ExtraField1 alanında belirtilmiş galerinin resimlerini lightbox ile gösterir. 
+                <pre class="code">&lt;div class="fotoGaleriThumbs"&gt;&lt;/div&gt;
+&lt;script src="/external/javascripts/lightbox/js/lightbox-2.6.min.js"&gt;&lt;/script&gt;
+&lt;link href="/external/javascripts/lightbox/css/lightbox.css" rel="stylesheet" /&gt;
+&lt;script&gt;
+jQuery(function(){
+    getFlickrPhotos('_api_key_', '$=entity.ExtraField1$',function (photos) {
+        var row = "";
+        for (var i = 0; i &lt; photos.length; i++) {
+            row += "&lt;a href='"+photos[i].photoUrl+"' data-lightbox='roadtrip$=this.Id$'&gt;&lt;img src='"+photos[i].thumbUrl+"' height='30' /&gt;&lt;/a&gt;";
+        }
+        jQuery(".fotoGaleriThumbs").html(row);
+    });
+});    
+&lt;/script&gt;</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+            <div class="codeSample">
+                <h3>Webden hızlı içerik yükleme :</h3>
+                <ul>
+                    <li>parseWebPageHtmlAsContent(callback) metodu ile bir web sayfasındaki içerik alınabilir</li>
+                    <li><b>callback:</b> Sayfadan elde edilen içerik bu fonksiyona parametre olarak verilir. {title:'...', desc:'...', text:'...', picture:'...'} şeklindedir.</li>
+                </ul>
+				Aşağıdaki kodu çalıştırdığınızda adresini girdiğiniz web sayfası içerik olarak sitenize eklenir. (Dikkat: Siteniz yayındaysa bu içerik görülebilir.) 
+                <pre class="code">parseWebPageHtmlAsContent(function(h){
+    var c = {CategoryId:1, Title:h.title, Description:h.desc, Metin:h.text, Picture:h.picture, };
+    saveEntity('Content', c, function(){
+        Windows.getFocusedWindow().close();
+        location.reload();
+    });                                                
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+        </div>
+
+        <h1 id="p12">Button kullanımı ve ikonlar</h1>
+        <div class="part">
+            Çınar CMS'e FamFamFam ikonları eklenmiştir.
+            <ul>
+                <li>Bu ikon kütüphanesinde 1000 tane ikon var.</li>
+                <li>Hepsi tek bir PNG resim haline getirildiğinden web sunucunuzu zorlamaz.</li>
+                <li>Bir HTML elementinin class'ına "fff" ve "ikonAdı" yazdığınızda adını verdiğiniz ikona dönüşür.</li>
+                <li>İkonlar 16x16 pixel boyutundadır.</li>
+            </ul>
+            <div class="codeSample">
+                <h3>Örnek ikon:</h3>
+                <pre class="code">&lt;span class="fff add" title="Ekle">&lt;/span> Yeni Kayıt</pre>
+                Şeklindeki kod aşağıdaki gibi görünür:<br />
+                <span class="fff add" title="Ekle"></span> Yeni Kayıt
+            </div>
+            <br />
+            <div class="codeSample">
+                <h3>İkon listesi:</h3>
+                (Ctrl-F ile ikonu arayıp bulun, adını class olarak kullanın.)
+                <script>
+                    var classes2 = ['accept', 'add', 'anchor', 'application', 'application_add', 'application_cascade', 'application_delete', 'application_double', 'application_edit', 'application_error', 'application_form', 'application_form_add', 'application_form_delete', 'application_form_edit', 'application_form_magnify', 'application_get', 'application_go', 'application_home', 'application_key', 'application_lightning', 'application_link', 'application_osx', 'application_osx_terminal', 'application_put', 'application_side_boxes', 'application_side_contract', 'application_side_expand', 'application_side_list', 'application_side_tree', 'application_split', 'application_tile_horizontal', 'application_tile_vertical', 'application_view_columns', 'application_view_detail', 'application_view_gallery', 'application_view_icons', 'application_view_list', 'application_view_tile', 'application_xp', 'application_xp_terminal', 'arrow_branch', 'arrow_divide', 'arrow_down', 'arrow_in', 'arrow_inout', 'arrow_join', 'arrow_left', 'arrow_merge', 'arrow_out', 'arrow_redo', 'arrow_refresh', 'arrow_refresh_small', 'arrow_right', 'arrow_rotate_anticlockwise', 'arrow_rotate_clockwise', 'arrow_switch', 'arrow_turn_left', 'arrow_turn_right', 'arrow_undo', 'arrow_up', 'asterisk_orange', 'asterisk_yellow', 'attach', 'award_star_add', 'award_star_bronze_1', 'award_star_bronze_2', 'award_star_bronze_3', 'award_star_delete', 'award_star_gold_1', 'award_star_gold_2', 'award_star_gold_3', 'award_star_silver_1', 'award_star_silver_2', 'award_star_silver_3', 'basket', 'basket_add', 'basket_delete', 'basket_edit', 'basket_error', 'basket_go', 'basket_put', 'basket_remove', 'bell', 'bell_add', 'bell_delete', 'bell_error', 'bell_go', 'bell_link', 'bin', 'bin_closed', 'bin_empty', 'bomb', 'book', 'book_add', 'book_addresses', 'book_delete', 'book_edit', 'book_error', 'book_go', 'book_key', 'book_link', 'book_next', 'book_open', 'book_previous', 'box', 'brick', 'brick_add', 'brick_delete', 'brick_edit', 'brick_error', 'brick_go', 'brick_link', 'bricks', 'briefcase', 'bug', 'bug_add', 'bug_delete', 'bug_edit', 'bug_error', 'bug_go', 'bug_link', 'building', 'building_add', 'building_delete', 'building_edit', 'building_error', 'building_go', 'building_key', 'building_link', 'bullet_add', 'bullet_arrow_bottom', 'bullet_arrow_down', 'bullet_arrow_top', 'bullet_arrow_up', 'bullet_black', 'bullet_blue', 'bullet_delete', 'bullet_disk', 'bullet_error', 'bullet_feed', 'bullet_go', 'bullet_green', 'bullet_key', 'bullet_orange', 'bullet_picture', 'bullet_pink', 'bullet_purple', 'bullet_red', 'bullet_star', 'bullet_toggle_minus', 'bullet_toggle_plus', 'bullet_white', 'bullet_wrench', 'bullet_yellow', 'cake', 'calculator', 'calculator_add', 'calculator_delete', 'calculator_edit', 'calculator_error', 'calculator_link', 'calendar', 'calendar_add', 'calendar_delete', 'calendar_edit', 'calendar_link', 'calendar_view_day', 'calendar_view_month', 'calendar_view_week', 'camera', 'camera_add', 'camera_delete', 'camera_edit', 'camera_error', 'camera_go', 'camera_link', 'camera_small', 'cancel', 'car', 'car_add', 'car_delete', 'cart', 'cart_add', 'cart_delete', 'cart_edit', 'cart_error', 'cart_go', 'cart_put', 'cart_remove', 'cd', 'cd_add', 'cd_burn', 'cd_delete', 'cd_edit', 'cd_eject', 'cd_go', 'chart_bar', 'chart_bar_add', 'chart_bar_delete', 'chart_bar_edit', 'chart_bar_error', 'chart_bar_link', 'chart_curve', 'chart_curve_add', 'chart_curve_delete', 'chart_curve_edit', 'chart_curve_error', 'chart_curve_go', 'chart_curve_link', 'chart_line', 'chart_line_add', 'chart_line_delete', 'chart_line_edit', 'chart_line_error', 'chart_line_link', 'chart_organisation', 'chart_organisation_add', 'chart_organisation_delete', 'chart_pie', 'chart_pie_add', 'chart_pie_delete', 'chart_pie_edit', 'chart_pie_error', 'chart_pie_link', 'clock', 'clock_add', 'clock_delete', 'clock_edit', 'clock_error', 'clock_go', 'clock_link', 'clock_pause', 'clock_play', 'clock_red', 'clock_stop', 'cog', 'cog_add', 'cog_delete', 'cog_edit', 'cog_error', 'cog_go', 'coins', 'coins_add', 'coins_delete', 'color_swatch', 'color_wheel', 'comment', 'comment_add', 'comment_delete', 'comment_edit', 'comments', 'comments_add', 'comments_delete', 'compress', 'computer', 'computer_add', 'computer_delete', 'computer_edit', 'computer_error', 'computer_go', 'computer_key', 'computer_link', 'connect', 'contrast', 'contrast_decrease', 'contrast_high', 'contrast_increase', 'contrast_low', 'control_eject', 'control_eject_blue', 'control_end', 'control_end_blue', 'control_equalizer', 'control_equalizer_blue', 'control_fastforward', 'control_fastforward_blue', 'control_pause', 'control_pause_blue', 'control_play', 'control_play_blue', 'control_repeat', 'control_repeat_blue', 'control_rewind', 'control_rewind_blue', 'control_start', 'control_start_blue', 'control_stop', 'control_stop_blue', 'controller', 'controller_add', 'controller_delete', 'controller_error', 'creditcards', 'cross', 'css', 'css_add', 'css_delete', 'css_go', 'css_valid', 'cup', 'cup_add', 'cup_delete', 'cup_edit', 'cup_error', 'cup_go', 'cup_key', 'cup_link', 'cursor', 'cut', 'cut_red', 'database', 'database_add', 'database_connect', 'database_delete', 'database_edit', 'database_error', 'database_gear', 'database_go', 'database_key', 'database_lightning', 'database_link', 'database_refresh', 'database_save', 'database_table', 'date', 'date_add', 'date_delete', 'date_edit', 'date_error', 'date_go', 'date_link', 'date_magnify', 'date_next', 'date_previous', 'delete', 'disconnect', 'disk', 'disk_multiple', 'door', 'door_in', 'door_open', 'door_out', 'drink', 'drink_empty', 'drive', 'drive_add', 'drive_burn', 'drive_cd', 'drive_cd_empty', 'drive_delete', 'drive_disk', 'drive_edit', 'drive_error', 'drive_go', 'drive_key', 'drive_link', 'drive_magnify', 'drive_network', 'drive_rename', 'drive_user', 'drive_web', 'dvd', 'dvd_add', 'dvd_delete', 'dvd_edit', 'dvd_error', 'dvd_go', 'dvd_key', 'dvd_link', 'email', 'email_add', 'email_attach', 'email_delete', 'email_edit', 'email_error', 'email_go', 'email_link', 'email_open', 'email_open_image', 'emoticon_evilgrin', 'emoticon_grin', 'emoticon_happy', 'emoticon_smile', 'emoticon_surprised', 'emoticon_tongue', 'emoticon_unhappy', 'emoticon_waii', 'emoticon_wink', 'error', 'error_add', 'error_delete', 'error_go', 'exclamation', 'eye', 'feed', 'feed_add', 'feed_delete', 'feed_disk', 'feed_edit', 'feed_error', 'feed_go', 'feed_key', 'feed_link', 'feed_magnify', 'female', 'film', 'film_add', 'film_delete', 'film_edit', 'film_error', 'film_go', 'film_key', 'film_link', 'film_save', 'find', 'flag_blue', 'flag_green', 'flag_orange', 'flag_pink', 'flag_purple', 'flag_red', 'flag_yellow', 'folder', 'folder_add', 'folder_bell', 'folder_brick', 'folder_bug', 'folder_camera', 'folder_database', 'folder_delete', 'folder_edit', 'folder_error', 'folder_explore', 'folder_feed', 'folder_find', 'folder_go', 'folder_heart', 'folder_image', 'folder_key', 'folder_lightbulb', 'folder_link', 'folder_magnify', 'folder_page', 'folder_page_white', 'folder_palette', 'folder_picture', 'folder_star', 'folder_table', 'folder_user', 'folder_wrench', 'font', 'font_add', 'font_delete', 'font_go', 'group', 'group_add', 'group_delete', 'group_edit', 'group_error', 'group_gear', 'group_go', 'group_key', 'group_link', 'heart', 'heart_add', 'heart_delete', 'help', 'hourglass', 'hourglass_add', 'hourglass_delete', 'hourglass_go', 'hourglass_link', 'house', 'house_go', 'house_link', 'html', 'html_add', 'html_delete', 'html_go', 'html_valid', 'image', 'image_add', 'image_delete', 'image_edit', 'image_link', 'images', 'information', 'ipod', 'ipod_cast', 'ipod_cast_add', 'ipod_cast_delete', 'ipod_sound', 'joystick', 'joystick_add', 'joystick_delete', 'joystick_error', 'key', 'key_add', 'key_delete', 'key_go', 'keyboard', 'keyboard_add', 'keyboard_delete', 'keyboard_magnify', 'layers', 'layout', 'layout_add', 'layout_content', 'layout_delete', 'layout_edit', 'layout_error', 'layout_header', 'layout_link', 'layout_sidebar', 'lightbulb', 'lightbulb_add', 'lightbulb_delete', 'lightbulb_off', 'lightning', 'lightning_add', 'lightning_delete', 'lightning_go', 'link', 'link_add', 'link_break', 'link_delete', 'link_edit', 'link_error', 'link_go', 'lock', 'lock_add', 'lock_break', 'lock_delete', 'lock_edit', 'lock_go', 'lock_open', 'lorry', 'lorry_add', 'lorry_delete', 'lorry_error', 'lorry_flatbed', 'lorry_go', 'lorry_link', 'magifier_zoom_out', 'magnifier', 'magnifier_zoom_in', 'male', 'map', 'map_add', 'map_delete', 'map_edit', 'map_go', 'map_magnify', 'medal_bronze_1', 'medal_bronze_2', 'medal_bronze_3', 'medal_bronze_add', 'medal_bronze_delete', 'medal_gold_1', 'medal_gold_2', 'medal_gold_3', 'medal_gold_add', 'medal_gold_delete', 'medal_silver_1', 'medal_silver_2', 'medal_silver_3', 'medal_silver_add', 'medal_silver_delete', 'money', 'money_add', 'money_delete', 'money_dollar', 'money_euro', 'money_pound', 'money_yen', 'monitor', 'monitor_add', 'monitor_delete', 'monitor_edit', 'monitor_error', 'monitor_go', 'monitor_lightning', 'monitor_link', 'mouse', 'mouse_add', 'mouse_delete', 'mouse_error', 'music', 'new', 'newspaper', 'newspaper_add', 'newspaper_delete', 'newspaper_go', 'newspaper_link', 'note', 'note_add', 'note_delete', 'note_edit', 'note_error', 'note_go', 'overlays', 'package', 'package_add', 'package_delete', 'package_go', 'package_green', 'package_link', 'page', 'page_add', 'page_attach', 'page_code', 'page_copy', 'page_delete', 'page_edit', 'page_error', 'page_excel', 'page_find', 'page_gear', 'page_go', 'page_green', 'page_key', 'page_lightning', 'page_link', 'page_paintbrush', 'page_paste', 'page_red', 'page_refresh', 'page_save', 'page_white', 'page_white_acrobat', 'page_white_actionscript', 'page_white_add', 'page_white_c', 'page_white_camera', 'page_white_cd', 'page_white_code', 'page_white_code_red', 'page_white_coldfusion', 'page_white_compressed', 'page_white_copy', 'page_white_cplusplus', 'page_white_csharp', 'page_white_cup', 'page_white_database', 'page_white_delete', 'page_white_dvd', 'page_white_edit', 'page_white_error', 'page_white_excel', 'page_white_find', 'page_white_flash', 'page_white_freehand', 'page_white_gear', 'page_white_get', 'page_white_go', 'page_white_h', 'page_white_horizontal', 'page_white_key', 'page_white_lightning', 'page_white_link', 'page_white_magnify', 'page_white_medal', 'page_white_office', 'page_white_paint', 'page_white_paintbrush', 'page_white_paste', 'page_white_php', 'page_white_picture', 'page_white_powerpoint', 'page_white_put', 'page_white_ruby', 'page_white_stack', 'page_white_star', 'page_white_swoosh', 'page_white_text', 'page_white_text_width', 'page_white_tux', 'page_white_vector', 'page_white_visualstudio', 'page_white_width', 'page_white_word', 'page_white_world', 'page_white_wrench', 'page_white_zip', 'page_word', 'page_world', 'paintbrush', 'paintcan', 'palette', 'paste_plain', 'paste_word', 'pencil', 'pencil_add', 'pencil_delete', 'pencil_go', 'phone', 'phone_add', 'phone_delete', 'phone_sound', 'photo', 'photo_add', 'photo_delete', 'photo_link', 'photos', 'picture', 'picture_add', 'picture_delete', 'picture_edit', 'picture_empty', 'picture_error', 'picture_go', 'picture_key', 'picture_link', 'picture_save', 'pictures', 'pilcrow', 'pill', 'pill_add', 'pill_delete', 'pill_go', 'plugin', 'plugin_add', 'plugin_delete', 'plugin_disabled', 'plugin_edit', 'plugin_error', 'plugin_go', 'plugin_link', 'printer', 'printer_add', 'printer_delete', 'printer_empty', 'printer_error', 'rainbow', 'report', 'report_add', 'report_delete', 'report_disk', 'report_edit', 'report_go', 'report_key', 'report_link', 'report_magnify', 'report_picture', 'report_user', 'report_word', 'resultset_first', 'resultset_last', 'resultset_next', 'resultset_previous', 'rosette', 'rss', 'rss_add', 'rss_delete', 'rss_go', 'rss_valid', 'ruby', 'ruby_add', 'ruby_delete', 'ruby_gear', 'ruby_get', 'ruby_go', 'ruby_key', 'ruby_link', 'ruby_put', 'script', 'script_add', 'script_code', 'script_code_red', 'script_delete', 'script_edit', 'script_error', 'script_gear', 'script_go', 'script_key', 'script_lightning', 'script_link', 'script_palette', 'script_save', 'server', 'server_add', 'server_chart', 'server_compressed', 'server_connect', 'server_database', 'server_delete', 'server_edit', 'server_error', 'server_go', 'server_key', 'server_lightning', 'server_link', 'server_uncompressed', 'shading', 'shape_align_bottom', 'shape_align_center', 'shape_align_left', 'shape_align_middle', 'shape_align_right', 'shape_align_top', 'shape_flip_horizontal', 'shape_flip_vertical', 'shape_group', 'shape_handles', 'shape_move_back', 'shape_move_backwards', 'shape_move_forwards', 'shape_move_front', 'shape_rotate_anticlockwise', 'shape_rotate_clockwise', 'shape_square', 'shape_square_add', 'shape_square_delete', 'shape_square_edit', 'shape_square_error', 'shape_square_go', 'shape_square_key', 'shape_square_link', 'shape_ungroup', 'shield', 'shield_add', 'shield_delete', 'shield_go', 'sitemap', 'sitemap_color', 'sound', 'sound_add', 'sound_delete', 'sound_low', 'sound_mute', 'sound_none', 'spellcheck', 'sport_8ball', 'sport_basketball', 'sport_football', 'sport_golf', 'sport_raquet', 'sport_shuttlecock', 'sport_soccer', 'sport_tennis', 'star', 'status_away', 'status_busy', 'status_offline', 'status_online', 'stop', 'style', 'style_add', 'style_delete', 'style_edit', 'style_go', 'sum', 'tab', 'tab_add', 'tab_delete', 'tab_edit', 'tab_go', 'table', 'table_add', 'table_delete', 'table_edit', 'table_error', 'table_gear', 'table_go', 'table_key', 'table_lightning', 'table_link', 'table_multiple', 'table_refresh', 'table_relationship', 'table_row_delete', 'table_row_insert', 'table_save', 'table_sort', 'tag', 'tag_blue', 'tag_blue_add', 'tag_blue_delete', 'tag_blue_edit', 'tag_green', 'tag_orange', 'tag_pink', 'tag_purple', 'tag_red', 'tag_yellow', 'telephone', 'telephone_add', 'telephone_delete', 'telephone_edit', 'telephone_error', 'telephone_go', 'telephone_key', 'telephone_link', 'television', 'television_add', 'television_delete', 'text_align_center', 'text_align_justify', 'text_align_left', 'text_align_right', 'text_allcaps', 'text_bold', 'text_columns', 'text_dropcaps', 'text_heading_1', 'text_heading_2', 'text_heading_3', 'text_heading_4', 'text_heading_5', 'text_heading_6', 'text_horizontalrule', 'text_indent', 'text_indent_remove', 'text_italic', 'text_kerning', 'text_letter_omega', 'text_letterspacing', 'text_linespacing', 'text_list_bullets', 'text_list_numbers', 'text_lowercase', 'text_padding_bottom', 'text_padding_left', 'text_padding_right', 'text_padding_top', 'text_replace', 'text_signature', 'text_smallcaps', 'text_strikethrough', 'text_subscript', 'text_superscript', 'text_underline', 'text_uppercase', 'textfield', 'textfield_add', 'textfield_delete', 'textfield_key', 'textfield_rename', 'thumb_down', 'thumb_up', 'tick', 'time', 'time_add', 'time_delete', 'time_go', 'timeline_marker', 'transmit', 'transmit_add', 'transmit_blue', 'transmit_delete', 'transmit_edit', 'transmit_error', 'transmit_go', 'tux', 'user', 'user_add', 'user_comment', 'user_delete', 'user_edit', 'user_female', 'user_go', 'user_gray', 'user_green', 'user_orange', 'user_red', 'user_suit', 'vcard', 'vcard_add', 'vcard_delete', 'vcard_edit', 'vector', 'vector_add', 'vector_delete', 'wand', 'weather_clouds', 'weather_cloudy', 'weather_lightning', 'weather_rain', 'weather_snow', 'weather_sun', 'webcam', 'webcam_add', 'webcam_delete', 'webcam_error', 'world', 'world_add', 'world_delete', 'world_edit', 'world_go', 'world_link', 'wrench', 'wrench_orange', 'xhtml', 'xhtml_add', 'xhtml_delete', 'xhtml_go', 'xhtml_valid', 'zoom', 'zoom_in', 'zoom_out'];
+                    $(function () {
+                        var html = '';
+                        for (var i = 0; i < classes2.length; i++)
+                            html += '<div class="btn2"><span class="fff ' + classes2[i] + '"></span> ' + classes2[i]+"</div>";
+                        $('#iconsDiv2').append(html);
+                    });
+                </script>
+                <div id="iconsDiv2"></div>  
+            </div>
+        </div>
+
+        <h1 id="p13">Efekt ve animasyonlar</h1>
+        <div class="part">
+            Çınar CMS'de modüllerin "CSS Class" özelliğine class isimleri yazarak efekt ve animasyonlar ekleyebilirsiniz. Bunlar:
+            <ul>
+                <li><b>lightBox:</b> Modülün içindeki resimlere tıklandığında pop up şeklinde açılmasını sağlar</li>
+                <li><b>gogPop:</b> Google'ın resim aramasında olduğu gibi fareyi resimlerin üzerine sürüklediğinizde resmin biraz büyümesini sağlar</li>
+                <li><b>hideOnOut:</b> Dışarıda bir yere tıklandığında elementin gizlenmesini sağlar</li>
+                <li><b>removeOnOut:</b> Dışarıda bir yere tıklandığında elementin yok edilmesini sağlar</li>
+                <li><b>showDescOnImg:</b> Fare resmin üzerine sürüklendiğinde açıklama yazısının resim üzerinde görünmesini sağlar</li>
+                <li><b>masonry:</b> Modül içindeki resimlerin duvar taşları gibi birbirine bitişmesini sağlar</li>
+                <li><b>fadeShow:</b> 4 saniyede bir sonraki resmin (içeriğin) görünmesini sağlar</li>
+                <li><b>fadeWithArrows:</b> Resmin iki tarafına ok ekler ve oklara tıklandığında sonraki veya önceki resmi gösterir</li>
+                <li><b>slideShow:</b> Resmin iki tarafına ok ekler ve oklara tıklandığında sonraki veya önceki resmi kaydırarak gösterir</li>
+                <li><b>slideAll:</b> Tüm resimleri kaydırarak gösterir</li>
+                <li><b>cc_edit_img:</b> Eklendiği resmin üzerine tıklandığında düzenlenebilmesini sağlar (resize, crop, vs..)</li>
+            </ul>
+            <h2>lightBox</h2>
+            Resme tıklandığında Youtube videosu olarak açılması için
+            <pre class="code">
+&lt;img 
+    border="0" 
+    height="100" 
+    src="$=entity.Picture" 
+    path="$=entity.Picture$"
+    entityId='$=entity.Id$'
+    title="$=Provider.Server.HtmlEncode(entity.Title)$"
+    tag='video'
+    desc='&lt;iframe src="http://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen>&lt;/iframe>'/>
+            </pre>
+        </div>
+
+        <h1 id="p14">EditOnSite ile site yönetimi</h1>
+        <div class="part">
+            <h2>Çınar CMS'in bir yönetim paneli yoktur. Çünkü:</h2>
+            <ul>
+                <li>Çınar CMS'le çok farklı web siteleri geliştirebilirsiniz. Bunların hepsine uyacak standart bir yönetim paneli yapılamaz.</li>
+                <li>Yönetim panellerinin öğrenilmesi ekstra emek ister.</li>
+                <li>Basit siteler için kompleks yönetim panelleri bir tezattan başka bir şey değildir.</li>
+            </ul>
+            <h2>Çınar CMS ile yapılmış siteler kendi sayfaları üzerinden yönetilebilir.</h2>
+            <ul>
+                <li>Bunun için Çınar CMS'te EditOnSite adında bir teknoloji geliştirildi.</li>
+                <li>Örneğin sitenizde ürünlerin listelendiği sayfalar olsun.</li>
+                <li>Genellikle bu ürünler yönetim paneli denilen merdiven altı sayfalarda düzenlenir.</li>
+                <li>Oysa sitede ürünler zaten listeleniyor, niye direk buradan düzenlenmesin?</li>
+            </ul>
+            <h2>EditOnSite'ı kullanmak çok kolaydır:</h2>
+            <ul>
+                <li>Herhangi bir içeriği gösteren HTML elementine onmouseover="editOnSite(this)" yazmak yeterli.</li>
+                <li>Elbette bu kadar basit değil. :) Ama ana fikir bundan ibarettir.</li>
+                <li>Çınar CMS'te içerikler (ve diğer tüm veriler) DataList modülü ile listelenir.</li>
+                <li>DataList modülü içeriği gösteren bir şablon tanımlar.</li>
+                <li>Bu şablonu içine alan HTML elementine onmouseover="editOnSite(this, {options})" yazıldığında, fare bu elementin üzerine sürüklendiğinde ekleme, silme, değiştirme butonları belirir.</li>
+				<li>Bu butonlar default olarak içerik entitisi için çalışır. Eğer ikinci parametre olan option belirtilirse editOnSite'ın çalışma şekli tamamen değiştirilebilir.</li>
+            </ul>
+			<b>Options yapısı:</b>
+            <pre class="code">{
+	entityName: 'Content', // entity adı
+	id: 1, // entiti id'si 
+	editHandler: function, // edit butonuna tıklandığında çalışacak fonksiyon (default EditForm açar)
+	editCallback: function, // edit başarılı olunca çalışacak fonksiyon  (modülü refresh eder)
+	deleteHandler: function, // delete butonuna tıklandığında çalışacak fonksiyon (deleteEntity ile silme işi yapar)
+	deleteCallback: function, // delete başarılı olunca çalışacak fonksiyon  (modülü refresh eder)
+	insertHandler: function, // insert butonuna tıklandığında çalışacak fonksiyon (EditForm açar)
+	insertCallback: function, // insert başarılı olunca çalışacak fonksiyon (modülü refresh eder)
+	
+	// ekstra komutlar aşağıdaki diziye eklenebilir
+	commands:[
+		{name:'Bilgi', icon:'information', handler:function(){alert($=entity.Id$);}}
+	]
+}
+            </pre>
+			
+            <h2>Örnek 1:</h2>
+			Sayfanıza bir DataList modülü ekleyip içerik listelemesini sağlayın. Aşağıdaki örnek kodu Şablon olarak girin:
+            <pre class="code">
+&lt;div class="col-lg-4" 
+    $ if(Provider.User.IsInRole('Editor')) { $
+    onmouseover="editOnSite(this, 
+                                {
+                                    id:$=entity.Id$, 
+                                    editHandler:function(){
+                                        openEntityEditForm({
+                                            entityName:'Content', 
+                                            id:$=entity.Id$,
+                                            hideCategory: 'İçerik,Temel,Extra',
+                                            showRelatedEntities: []
+                                        });
+                                    }, 
+                                    deleteHandler:null, 
+                                    commands:[
+                                        {name:'Bilgi', icon:'information', handler:function(){alert($=entity.Id$);}}
+                                    ]
+                                }
+                            )"
+    $ } $
+    >
+    &lt;h2>$=entity.Title$&lt;/h2>
+    &lt;p>$=entity.Description$&lt;/p>
+    &lt;p>&lt;a class="btn btn-default" href="$=entity.GetPageLinkWithTitle('')$">Devamını oku &raquo;&lt;/a>&lt;/p>
+&lt;/div>
+            </pre>
+			Bu kodda deleteHandler:null set edilerek delete butonunun görünmesi engellenmiş. editHandler ve insertHandler da null set edilebilir.<br/>
+			<br/>
+			<h2>Örnek 2:</h2>
+			Listelenen resimlerin editImage fonksiyonu ile site üzerinden manipüle edilmesini sağlamak:
+			<pre class="code">
+&lt;img 
+	src = "$=entity.Picture$"
+
+$ if(Provider.User.IsInRole('Editor')) { $
+
+	onmouseover="editOnSite(this, {
+			editHandler: null, 
+			deleteHandler: null, 
+			insertHandler: null, 
+			commands:[
+				{name:'editImage', icon:'picture_edit', handler:function(){editImage('$=entity.Picture$');}}
+			]
+		})"
+
+$ } $
+
+/>
+			</pre>
+        </div>
+
+		<h1 id="p15">Entity okuma ve kaydetme fonksiyonları</h1>
+		<div class="part">
+
+			<h2>Adı ve id'si ile bir entity'yi okumak için</h2>
+			<pre>readEntity(entityName, id, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Okunacak entity'nin adı (Content, Author gibi..)</li>
+				<li>id: Okunacak entity'nin idsi</li>
+				<li>callback: Entity okunduktan sonra çağrılacak fonksiyon referansı. Bu fonksiyona okunan entity parametre olarak gönderilir.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntity('Content', 1, function(entity){
+	alert(JSON.stringify(entity));
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+
+			<h2>Adı ve filtresi belirtilerek entity listesi okumak için</h2>
+			<pre>readEntityList(entityName, filter, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Okunacak entity'nin adı (Content, Author gibi..)</li>
+				<li>filter: where koşulu (ClassName='Content' AND CategoryId=1 gibi..)</li>
+				<li>callback: Entity okunduktan sonra çağrılacak fonksiyon referansı. Bu fonksiyona okunan entity parametre olarak gönderilir.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntityList('Content', 'CategoryId=1', function(entityList){
+	alert(JSON.stringify(entityList));
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>			
+			
+			<h2>Entity'yi veritabanına kaydetmek için</h2>
+			<pre>saveEntity(entityName, entity, callback)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Kaydedilecek entity'nin adı (Content, Author gibi..)</li>
+				<li>entity: JSON formatında entity. readEntity fonksiyonundan dönen JSON gibi.</li>
+				<li>callback: Entity kaydedildikten sonra çağrılacak fonksiyon referansı.</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">var yazar = {Name:'John Lennox', Description:'Matematik ve felsefe profesörü'};
+saveEntity('Author', yazar, function(){
+	openEntityEditForm({
+		entityName:'Author',
+		id: yazar.Id,
+		title: 'Az önce kaydettiğimiz yazar'
+	});
+});
+				</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+			
+			<h2>Entity'yi silmek için</h2>
+			<pre>deleteEntity(entityName, id, callback, noWarning)</pre>
+			fonksiyonu kullanılır. Parametreler:
+			<ul>
+				<li>entityName: Silinecek entity'nin adı (Content, Author gibi..)</li>
+				<li>id: id'si</li>
+				<li>callback: Entity silindikten sonra çağrılacak fonksiyon referansı.</li>
+				<li>noWarning: Eğer true set edilirse hiç uyarmadan silme işlemi yapılır (default false)</li>
+			</ul>
+			<h3>Örnek:</h3>
+            <div class="codeSample">
+                <pre class="code">readEntityList('Author', 'Name=John Lennox', function(entityList){
+	deleteEntity('Author', entityList[0].Id, function(){
+		niceInfo(entityList[0].Name + ' isimli yazar silindi');
+	});
+});</pre>
+                <div align="right">
+                    <button onclick="execute(this)">Execute</button></div>
+            </div>
+		</div>
+    </div>
+</body>
+</html>
+
+

@@ -1888,7 +1888,7 @@ namespace Cinar.DBTools
             {
                 case "CreateTable":
                     if (table.IsView)
-                        sb.Append(Provider.Database.GetSQLViewCreate(table));
+                        sb.Append(Provider.Database.GetSQLViewCreate(table).Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\n\n", "\n").Replace("\n\n", "\n").Replace("\n\n", "\n").Replace("\n\n", "\n"));
                     else
                         sb.Append(table.ToDDL());
                     break;

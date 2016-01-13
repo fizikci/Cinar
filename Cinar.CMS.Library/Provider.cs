@@ -2370,6 +2370,67 @@ namespace Cinar.CMS.Library
             File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultJavascript.js"), Provider.Configuration.DefaultJavascript, Encoding.UTF8);
             File.WriteAllText(Provider.Server.MapPath("/_thumbs/DefaultStyleSheet.css"), Provider.Configuration.DefaultStyleSheet, Encoding.UTF8);
         }
+
+        public static string SendFalconideMailWithAPI(string fromName, string fromEmail, string toName, string toEmail, string subject, string message, string refNo)
+        {
+            WebRequest request = WebRequest.Create("https://api.falconide.com/falconapi/web.send.rest");
+
+            request.Method = "POST";
+            var postData = "api_key=" + Provider.AppSettings["FalconideAPIKey"];
+            postData += "&subject=" + HttpUtility.UrlEncode(subject);
+            postData += "&fromname=" + HttpUtility.UrlEncode(fromName);
+            postData += "&from="+fromEmail;
+            postData += "&recipients=" + toEmail;
+            postData += "&content=" + HttpUtility.UrlEncode(message);
+            // ---> bu tanımsızmış!.... postData += "&template=1799";
+            if(!refNo.IsEmpty())
+                postData += "&X-APIHEADER=" + refNo; // zorunlu değil, takip için seri no veribilirsiniz
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteArray.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
+
+            WebResponse response = request.GetResponse();
+            dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            string responseFromServer = reader.ReadToEnd();
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+
+            return responseFromServer;
+        }
+
+        public static string SendFalconideMail( string fromDisplayName, string from, string toDisplayName, string to, string subject, string message, string refNo)
+        {
+            try
+            {
+                MailAddress _from = new MailAddress("info@hsedbs.com", Provider.Configuration.SiteName);
+                MailAddress _to = new MailAddress(to, toDisplayName);
+                MailMessage mail = new MailMessage(_from, _to);
+                mail.Subject = subject;
+                mail.IsBodyHtml = true;
+                mail.Body = message;
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.falconide.com";
+                smtp.Port = 587;
+
+                smtp.UseDefaultCredentials = false;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Credentials = new NetworkCredential("hsedbs", "Hse@1234");
+
+                smtp.Send(mail);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + (ex.InnerException == null ? "" : (" (" + ex.InnerException.Message + ")"));
+            }
+        }
     }
 
     public class CMSUtility

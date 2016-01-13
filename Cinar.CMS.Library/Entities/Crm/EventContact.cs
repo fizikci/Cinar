@@ -35,7 +35,7 @@ namespace Cinar.CMS.Library.Entities
 
     public enum EventContactStates
     {
-        None,
+        InList,
         Invited,
         Joining,
         Rejected

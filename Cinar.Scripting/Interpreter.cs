@@ -204,8 +204,15 @@ namespace Cinar.Scripting
                         if (t != null) return t;
                     }
                 }
+
                 t = Assembly.GetCallingAssembly().GetType(fullClassName);
                 if (t != null) return t;
+
+                foreach (AssemblyName asmblyName in Assembly.GetCallingAssembly().GetReferencedAssemblies())
+                {
+                    t = Assembly.Load(asmblyName).GetType(fullClassName);
+                    if (t != null) return t;
+                }
 
                 foreach (Assembly assembly in AdditionalAssemblies)
                 {

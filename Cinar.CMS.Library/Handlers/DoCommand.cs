@@ -570,7 +570,7 @@ namespace Cinar.CMS.Library.Handlers
                     .Replace("{SiteAddress}", CMSUtility.HtmlEncode(Provider.Configuration.SiteAddress))
                     .Replace("{description}", CMSUtility.HtmlEncode(content.Description))
                     .Replace("{category}", category)
-                    .Replace("{image}", CMSUtility.HtmlEncode(content[kategoryName + "Picture"].ToString()))
+                    .Replace("{image}", CMSUtility.HtmlEncode((content[kategoryName + "Picture"] ?? "").ToString()))
                     .Replace("{date}", CMSUtility.HtmlEncode(content.PublishDate.ToString()));
                 sbItems.Append(item);
             }
@@ -1009,7 +1009,7 @@ namespace Cinar.CMS.Library.Handlers
     }             */
 
                 var client = new FacebookClient(accessToken);
-                dynamic result = client.Get("me", new { fields = "id,name,email,username,gender,first_name,last_name,picture" });
+                dynamic result = client.Get("me", new { fields = "id,name,email,gender,first_name,last_name,picture" });
 
                 User u = Provider.Database.Read<User>("FacebookId={0}", result.id);
                 if (u != null)
@@ -1019,17 +1019,30 @@ namespace Cinar.CMS.Library.Handlers
                     return;
                 }
 
-                u = new User
+                u = Provider.Database.Read<User>("Email={0}", result.email);
+
+                if (u != null) 
                 {
-                    FacebookId = result.id,
-                    Name = result.first_name,
-                    Surname = result.last_name,
-                    Avatar = result.picture.data.url,
-                    Email = result.email,
-                    Nick = result.username,
-                    Gender = result.gender == "male" ? "Erkek" : "Kadın",
-                    Visible = true
-                };
+                    u.FacebookId = result.id;
+                    if (string.IsNullOrWhiteSpace(u.Avatar)) u.Avatar = result.picture.data.url;
+                    if (string.IsNullOrWhiteSpace(u.Name)) u.Name = result.first_name;
+                    if (string.IsNullOrWhiteSpace(u.Surname)) u.Surname = result.last_name;
+                    u.Visible = true;
+                }
+                else
+                {
+                    u = new User
+                    {
+                        FacebookId = result.id,
+                        Name = result.first_name,
+                        Surname = result.last_name,
+                        Avatar = result.picture.data.url,
+                        Email = result.email,
+                        Nick = "nick" + Provider.Database.GetInt("select max(Id) as lastId from User"),
+                        Gender = result.gender == "male" ? "Erkek" : "Kadın",
+                        Visible = true
+                    };
+                }
                 u.Save();
                 Provider.User = u;
                 context.Response.Redirect("/");

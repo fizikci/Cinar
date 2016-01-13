@@ -282,7 +282,7 @@ namespace Cinar.CMS.Library.Handlers
                     var val = Provider.Request.QueryString[key];
                     if (key.EndsWith("Id") && !string.IsNullOrWhiteSpace(val))
                     {
-                        var m = Regex.Match(val, "[\\d\\w]+");
+                        var m = Regex.Match(val, "[\\d\\w\\,]+");
                         if (!m.Success || m.Value != val)
                         {
                             Provider.Response.Redirect("/Default.aspx", true);
