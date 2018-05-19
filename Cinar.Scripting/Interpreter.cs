@@ -204,7 +204,6 @@ namespace Cinar.Scripting
                         if (t != null) return t;
                     }
                 }
-
                 t = Assembly.GetCallingAssembly().GetType(fullClassName);
                 if (t != null) return t;
 

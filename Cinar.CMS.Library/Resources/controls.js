@@ -1622,13 +1622,14 @@ var EditForm = Class.create(); EditForm.prototype = {
         str += '<tr><td colspan="2" id="details' + this.hndl + '"></td></tr>';
         str += '</tbody></table></div></td></tr>';
         str += '<tr><td style="min-height:50px;padding:7px 0px;"><div id="desc' + this.hndl + '" style="height:50px;background:#F1EFE2;padding:4px;overflow-y: auto;"></div></td></tr>';
-        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span> ' + lang('Save') + '</span></td></tr>';
+        str += '<tr><td style="height:16px;text-align:right"><span class="ccBtn" id="btnDelete' + this.hndl + '"><span class="fff delete"></span> ' + lang('Delete') + '</span> <span class="ccBtn" id="btnSave' + this.hndl + '"><span class="fff disk"></span> ' + lang('Save') + '</span></td></tr>';
         str += '</table>';
 
         container.append(str);
         var details = $('#details' + this.hndl);
         this.tdDesc = $('#desc' + this.hndl);
         $('#btnSave' + this.hndl).bind('click', this.saveClick.bind(this));
+        $('#btnDelete' + this.hndl).bind('click', this.deleteClick.bind(this));
 
         for (var i = 0; i < controls.length; i++) {
             var control = controls[i];
@@ -1734,7 +1735,7 @@ var EditForm = Class.create(); EditForm.prototype = {
                 return this.controls[i];
         return null;
     },
-    saveClick: function(event) {
+    saveClick: function (event) {
         for (var i = 0; i < this.controls.length; i++)
             this.controls[i].value = this.controls[i].getValue();
 
@@ -1745,6 +1746,24 @@ var EditForm = Class.create(); EditForm.prototype = {
             this.onSave(this);
         else
             niceAlert(res);
+    },
+    deleteClick: function (event) {
+        var ths = this;
+        niceConfirm(lang('The record will be deleted!'), function () {
+            var id = ths.entityId;
+            if (!id || id <= 0) return;
+            new Ajax.Request('EntityInfo.ashx?method=delete&entityName=' + ths.entityName + '&id=' + id, {
+                method: 'get',
+                onComplete: function (req) {
+                    if (req.responseText.startsWith('ERR:')) {
+                        niceAlert(req.responseText);
+                        return;
+                    }
+                    Windows.getFocusedWindow().destroy();
+                },
+                onException: function (req, ex) { throw ex; }
+            });
+        });
     },
 	isModified: function(){
 		var data = this.serialize();

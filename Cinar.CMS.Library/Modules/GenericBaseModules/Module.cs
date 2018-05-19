@@ -141,6 +141,8 @@ InnerHtml,32,<hr/>
         internal ASPXHandler ContainerPage = null;
         internal bool editable = true;
 
+        public ASPXHandler GetPage() { return ContainerPage; }
+
         #region Properties
         [ColumnDetail(IsAutoIncrement = true, IsNotNull = true, IsPrimaryKey = true), EditFormFieldProps(Visible = false)]
         public int Id
@@ -201,7 +203,7 @@ InnerHtml,32,<hr/>
             set { this.visible = value; }
         }
 
-        [EditFormFieldProps(OrderNo = 8)]
+        [EditFormFieldProps(OrderNo = 8, Options = "noHTML:true")]
         public string RoleToRead
         {
             get { return this.roleToRead; }
@@ -309,10 +311,16 @@ InnerHtml,32,<hr/>
             //return String.Empty;
         }
 
+        internal string output = null;
+
         public string Show()
         {
+            if (output != null) return output;
+
             if (!Provider.DesignMode && !this.Visible)
                 return String.Empty; //***
+
+            // moved RoleToRead check here, because we can can seperate user with different role names and show them relavant content
             if (!Provider.DesignMode && !Provider.User.IsInRole(this.RoleToRead))
                 return string.Empty; //**
 

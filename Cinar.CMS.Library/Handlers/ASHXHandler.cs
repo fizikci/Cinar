@@ -17,6 +17,8 @@ namespace Cinar.CMS.Library.Handlers
             Provider.OnBeginRequest();
 
             string path = context.Request.Url.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+                if (path[path.Length - 1] == '/')
+                    path = path.Substring(0, path.LastIndexOf('/'));
             string fileName = path.Substring(path.LastIndexOf('/') + 1);
             if (fileName.ToLower().Contains(".aspx")) {
                 Provider.Response.Redirect(Provider.Configuration.MainPage, true);

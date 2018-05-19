@@ -230,7 +230,7 @@ namespace Cinar.DBTools.Tools
             lbl.Text = String.Format("Possible FK from {0}.{1} to: ", Column.Table.Name, Column.Name);
             ComboBox cb = new ComboBox() { Width = 200, Left = 300, DropDownStyle = ComboBoxStyle.DropDownList };
             cb.Items.Add("");
-            foreach (Table t in Provider.Database.Tables)
+            foreach (Table t in Provider.Database.Tables.Where(t=>!t.IsView).OrderBy(t=>t.Name))
                 cb.Items.Add(t);
             if (Table != null) cb.SelectedItem = Table;
             p.Controls.Add(lbl);
@@ -288,11 +288,13 @@ namespace Cinar.DBTools.Tools
             if (cb.SelectedItem is Table)
             {
                 Table = cb.SelectedItem as Table;
+                var pkc = Table.GetPrimaryKeyConstraint();
+                if (pkc == null) return;
                 ForeignKeyConstraint fk = new ForeignKeyConstraint()
                 {
                     ColumnNames = new List<string>() { Column.Name },
                     Name = string.Format("FK_{0}_{1}_{2}", Column.Table.Name, Column.Name, Table.Name),
-                    RefConstraintName = Table.GetPrimaryKeyConstraint().Name,
+                    RefConstraintName = pkc.Name,
                     RefTableName = Table.Name
                 };
                 Column.Table.Constraints.Add(fk);

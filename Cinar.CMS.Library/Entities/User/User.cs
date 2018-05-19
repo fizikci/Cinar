@@ -15,7 +15,7 @@ namespace Cinar.CMS.Library.Entities
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'root@local', '63A9F0EA7BB98050', 'User,Editor,Designer', 'admin', 'jhrd74ghe63'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'editor', '63A9F0EA7BB98050', 'User,Editor', 'editor', 'ge548rhe46e'")]
     [DefaultData(ColumnList = "Email, Password, Roles, Nick, Keyword", ValueList = "'anonim', '', '', 'anonim', '63beyte674hge'")]
-    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email, Roles, Visible from [User]")]
+    [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Email, InsertDate, Roles, Visible from [User]")]
     public class User : BaseEntity
     {
         [ColumnDetail(IsNotNull = true, Length = 100, IsUnique = true), EditFormFieldProps(Category="Login", Options = @"regEx:'^[\w-]+@([\w-]+\.)+[\w-]+$'")]
@@ -240,14 +240,14 @@ namespace Cinar.CMS.Library.Entities
             if (!isUpdate)// && !Provider.Request.Url.IsLoopback && Provider.Session["DontSendEmail"]!=null)
             {
                 string msg = String.Format(@"
-                                Merhaba {0},<br/><br/>
-                                Aşağıdaki linki kullanarak {1} üyeliğinizi aktif hale getirebilirsiniz:<br/><br/>
+                                Hi {0},<br/><br/>
+                                Please activate your {1} membership by following the link below:<br/><br/>
                                 <a href=""http://{2}/LoginWithKeyword.ashx?keyword={3}"">http://{2}/LoginWithKeyword.ashx?keyword={3}</a>",
                                 this.GetNameValue(),
                                 Provider.Configuration.SiteName,
                                 Provider.Configuration.SiteAddress,
                                 this.Keyword);
-                Provider.SendMail(this.Email, "Üyeliğinizi onaylayınız", msg);
+                Provider.SendMail(this.Email, "Membership Confirmation", msg);
 
                 // add admin (root) as first contact to this user
                 //new UserContact

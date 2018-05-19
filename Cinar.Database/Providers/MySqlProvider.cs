@@ -201,22 +201,26 @@ namespace Cinar.Database.Providers
             #region indices
             foreach (Table tbl in db.Tables)
             {
-                DataTable dtKeys = db.GetDataTable("SHOW INDEXES FROM `" + tbl.Name + "`");
-                if (dtKeys != null)
-                    for (int i = 0; i < dtKeys.Rows.Count; i++)
-                    {
-                        DataRow drKey = dtKeys.Rows[i];
-                        
-                        if (db.GetConstraint(drKey["Key_name"].ToString()) != null)
-                            continue;
+                try
+                {
+                    DataTable dtKeys = db.GetDataTable("SHOW INDEXES FROM `" + tbl.Name + "`");
+                    if (dtKeys != null)
+                        for (int i = 0; i < dtKeys.Rows.Count; i++)
+                        {
+                            DataRow drKey = dtKeys.Rows[i];
 
-                        Index index = tbl.Indices[drKey["Key_name"].ToString()] ?? new Index();
-                        index.Name = drKey["Key_name"].ToString();
-                        index.ColumnNames.Add(drKey["Column_name"].ToString());
+                            if (db.GetConstraint(drKey["Key_name"].ToString()) != null)
+                                continue;
 
-                        if (tbl.Indices[index.Name] == null)
-                            tbl.Indices.Add(index);
-                    }
+                            Index index = tbl.Indices[drKey["Key_name"].ToString()] ?? new Index();
+                            index.Name = drKey["Key_name"].ToString();
+                            index.ColumnNames.Add(drKey["Column_name"].ToString());
+
+                            if (tbl.Indices[index.Name] == null)
+                                tbl.Indices.Add(index);
+                        }
+                }
+                catch { }
             }
             #endregion
         }

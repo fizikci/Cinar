@@ -55,6 +55,7 @@ namespace Cinar.QueueJobs.Test
             switch (job.Command)
             {
                 case "FindLinks":
+                    #region
                     {
                         string res = findLinks(job.Name);
 
@@ -100,7 +101,9 @@ namespace Cinar.QueueJobs.Test
 
                         return res;
                     }
+                    #endregion
                 case "DownloadContent":
+                    #region
                     {
                         Stopwatch sw = new Stopwatch();
                         var time = new Dictionary<string, long>();
@@ -167,6 +170,7 @@ namespace Cinar.QueueJobs.Test
                         }
 
                     }
+                    #endregion
             }
 
             return "Command not implemented";

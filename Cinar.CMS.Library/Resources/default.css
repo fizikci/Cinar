@@ -422,3 +422,104 @@
     bottom: 10px;
     right: 10px;
 }
+
+
+
+#theFileBrowser {
+    width: 885px;
+    height: 470px;
+    position: fixed;
+    background: white;
+    z-index: 1000;
+    padding: 10px;
+    border: 2px solid #438EB9;
+    left: 200px;
+    top: 200px;
+    -webkit-box-shadow: 0px 0px 7px 1px rgba(112,112,112,0.83);
+    -moz-box-shadow: 0px 0px 7px 1px rgba(112,112,112,0.83);
+    box-shadow: 0px 0px 7px 1px rgba(112,112,112,0.83);
+}
+
+    #theFileBrowser #fileBrowser {
+    }
+    #theFileBrowser #fileBrowserList {
+        overflow: auto;
+        padding: 0px 10px 10px 14px;
+        position: absolute;
+        right: 0px;
+        left: 0px;
+        bottom: 36px;
+        top: 33px;
+    }
+    #theFileBrowser #fBTitle {
+        background: #438EB9;
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        padding: 1px 10px;
+        color: white;
+        height: 23px;
+    }
+    #theFileBrowser #fileBrowserFooter {
+        height: 41px;
+        padding: 4px;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+    }
+        #theFileBrowser #fileBrowserFooter form input {
+            font-size: smaller;
+        }
+#theFileBrowser #fileBrowserFooter form {padding: 4px;margin-right: 10px;margin-bottom: 8px;float: left;}
+#theFileBrowser #fileBrowserFooter iframe {visibility: hidden;width: 0px;height: 0px;}
+#theFileBrowser #fileBrowser table {width: 100%;}
+#theFileBrowser #fileBrowser td.fileName {cursor: pointer;background-repeat: no-repeat;background-position: left center;padding-left: 20px;}
+#theFileBrowser #fileBrowser td.audio {background-image:url(/external/icons/audio.gif);}
+#theFileBrowser #fileBrowser td.video {background-image:url(/external/icons/video.png);}
+#theFileBrowser #fileBrowser td.folder {background-image:url(/external/icons/folder.png);}
+#theFileBrowser #fileBrowser td.file {background-image:url(/external/icons/file.png);}
+#theFileBrowser #fileBrowser td.picture {background-image:url(/external/icons/picture.png);}
+#theFileBrowser #fileBrowser .size {text-align:right;}
+#theFileBrowser #fileBrowser .date {text-align:right;}
+#theFileBrowser #fileBrowserLoading {background-image:url(/external/icons/loading.gif);width:43px; height:11px;display:none;position: absolute;right: 20px;bottom: 16px;}
+
+    #theFileBrowser #btnFBClose {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        height: 15px;
+        line-height: 14px;
+        width: 16px;
+        padding: 0px;
+        background-color: #D15B47;
+        border: none;
+        font-family: monospace;
+        font-weight: bold;
+        color: white;
+    }
+
+#theFileBrowser div.fileNameBox {
+    cursor: pointer;
+    float: left;
+    height: 110px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 110px;
+    font-size: 10px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+    #theFileBrowser div.fileNameBox img {
+        max-width: 80px;
+        max-height: 80px
+    }
+
+#theFileBrowser #fileBrowserList .fileSelected {
+    background: #316AC5;
+    color: white;
+}

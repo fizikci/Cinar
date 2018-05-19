@@ -1,4 +1,33 @@
-﻿// on load
+﻿var isMobile = {
+    Android: function () {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iPhone: function () {
+        return navigator.userAgent.match(/iPhone/i);
+    },
+    iPad: function () {
+        return navigator.userAgent.match(/iPad/i);
+    },
+    iPod: function () {
+        return navigator.userAgent.match(/iPod/i);
+    },
+    iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+// on load
 $(function () {
     if (typeof (currLang) != 'undefined' && currLang == 'ar')
         $('html').attr('dir', 'rtl');
@@ -123,13 +152,13 @@ $(function () {
             elm.alreadySliding = false;
             elm.mouseIsOver = false;
             $(elm).html('<div class="prevNext btnPrev"></div>' +
-						'<div class="prevNext btnNext"></div>' +
-						'<div class="clipper">' +
-						    '<div class="innerDiv">' +
-						        $(elm).html() +
-						    '</div>' +
-						'</div>' +
-						'<img src="/external/icons/play.png" class="playBtn"/>');
+                '<div class="prevNext btnNext"></div>' +
+                '<div class="clipper">' +
+                '<div class="innerDiv">' +
+                $(elm).html() +
+                '</div>' +
+                '</div>' +
+                '<img src="/external/icons/play.png" class="playBtn"/>');
 
             $(elm).find('.playBtn').on('click', function () {
                 elm.playing = !elm.playing;
@@ -621,16 +650,16 @@ function lightBox(img) {
     var fbLikeExist = img.closest('.lightBox').hasClass('fbLike');
     var allImg = $A(img.closest('.lightBox').find('img').toArray());
     var html = '<div id="lightBoxDiv">' +
-					(allImg.length > 0 ? '<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>' : '') +
-					'<img id="lbImg" src="' + (img.attr('path') ? img.attr('path') : img.attr('src')) + '"/>' +
-					(allImg.length > 0 ? '<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>' : '') +
-					'<div id="lbLeft"></div>' +
-					'<div id="lbCenter"></div>' +
-					'<div id="lbRight">' +
-						(allImg.length > 0 ? '<div id="lbCounter">1/20</div>' : '') +
-						(fbLikeExist ? '<img id="lbLove" src="' + img.attr('likeSrc') + '"/> <span id="lbLoveCount">0</span>' : '') +
-					'</div>' +
-				'</div>';
+        (allImg.length > 0 ? '<img src="/external/icons/lbPrev.png" id="lbPrev" class="hideOnPerde" style="display:none"/>' : '') +
+        '<img id="lbImg" src="' + (img.attr('path') ? img.attr('path') : img.attr('src')) + '"/>' +
+        (allImg.length > 0 ? '<img src="/external/icons/lbNext.png" id="lbNext" class="hideOnPerde" style="display:none"/>' : '') +
+        '<div id="lbLeft"></div>' +
+        '<div id="lbCenter"></div>' +
+        '<div id="lbRight">' +
+        (allImg.length > 0 ? '<div id="lbCounter">1/20</div>' : '') +
+        (fbLikeExist ? '<img id="lbLove" src="' + img.attr('likeSrc') + '"/> <span id="lbLoveCount">0</span>' : '') +
+        '</div>' +
+        '</div>';
     $('body').append(html);
     lightBoxDiv = $('#lightBoxDiv');
     lightBoxDiv.find('#lbPrev').on('click', function () {
@@ -1600,4 +1629,146 @@ function parseWebPageHtmlAsContent(callback) {
                 });
         });
     });
+}
+
+
+function openUserFileManager(selectedPath, onSelectFile) {
+    if (!$('#theFileBrowser').length) {
+        $('body').prepend('<div id="theFileBrowser"></div>');
+        $('#theFileBrowser').draggable({ handle: "#fBTitle" });
+    }
+
+    var winContent = $('#theFileBrowser');
+    var fm = new UserFileManager({
+        container: winContent,
+        folder: selectedPath ? selectedPath.substring(0, selectedPath.lastIndexOf("/")) : undefined,
+        onSelectFile: onSelectFile
+    });
+
+    return fm;
+}
+
+
+var fileBrowserCurrInput, list, footer, currFolder, currPicEdit;
+var UserFileManager = Class.create(); UserFileManager.prototype = {
+    width: 600,
+    height: 500,
+    title: 'Select file',
+    container: null,
+    listMode: 'pics',
+    onSelectFile: null,
+    canDelete: true,
+    initialize: function (options) {
+        Object.extend(this, options);
+        this.container = $(this.container ? this.container : document.body);
+        var html = '<div id="fBTitle">File Browser</div><input type="button" onclick="$(\'#theFileBrowser\').hide(\'fast\', function(){$(this).remove();})" value="X" id="btnFBClose"><div><div id="fileBrowserList" onselectstart="return false;"></div>' +
+            '<div id="fileBrowserFooter">' +
+            '<form action="/Staff/Handlers/DoCommand.ashx?method=uploadFile" method="post" enctype="multipart/form-data" target="fakeUplFrm" class="ui-widget-content ui-corner-all">' +
+            '<input type="hidden" name="folder"/>' +
+            'Image: <input type="file" name="upload" multiple="multiple" style="display:inline"/><input type="submit" value="Upload"/><div id="fileBrowserLoading">&nbsp;</div>' +
+            '<iframe name="fakeUplFrm"></iframe>' +
+            '</form>' +
+            '<form id="fileManagerRenameForm" action="/Staff/Handlers/DoCommand.ashx?method=renameFile" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
+            '<input type="hidden" name="folder"/><input type="hidden" name="name"/>' +
+            'Name: <input type="text" name="newName" style="width:80px"/><input type="submit" value="Change"/>' +
+            '</form>' +
+            '<form action="/Staff/Handlers/DoCommand.ashx?method=deleteFile" method="post" target="fakeUplFrm" class="ui-widget-content ui-corner-all delForm">' +
+            '<input type="hidden" name="folder"/>' +
+            '<input type="hidden" name="name"/><input type="submit" value="Delete"/>' +
+            '</form>' +
+            '</div></div>';
+        this.container.append(html);
+        this.container.find('form').each(function (eix, frm) {
+            $(frm).on('submit', function () {
+                $('#fileBrowserLoading').show();
+                $(frm).find('input[name=folder]').val(currFolder);
+                if ($(frm).hasClass('delForm'))
+                    $(frm).find('input[name=name]').val($A($('#fileBrowserList .fileSelected')).collect(function (elm) { return $(elm).attr('name'); }).join('#NL#'));
+            });
+        });
+        currFolder = '/' + window.currUser.Id;
+        currPicEdit = this;
+        this.getFileList();
+
+        var ths = this;
+
+        $('#fb_btnImgEdit').on('click', function () {
+            var arr = ths.getSelectedFiles();
+            if (arr.length > 0) {
+                var name = arr[0];
+                if (name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
+                    editImage(name);
+                else
+                    niceAlert(lang('Plese select a picture file to edit'));
+            }
+        });
+
+    },
+    getFileList: function () {
+        var list = $('#fileBrowserList');
+
+        if ($('#fileBrowserLoading').length) $('#fileBrowserLoading').show();
+        var ths = this;
+        new Ajax.Request('/Staff/Handlers/DoCommand.ashx?method=getFileList&folder=' + currFolder, {
+            onComplete: function (resp) {
+                resp = eval("(" + resp.responseText + ")");
+                if (resp.success) {
+
+                    var str = '';
+                    for (var i = 0; i < resp.root.length; i++) {
+                        var item = resp.root[i];
+                        var fileClass = ths.getFileClassName(item);
+                        if (fileClass == 'picture') {
+                            var src = ('/UserFiles/Images/_member' + currFolder + '/' + item.name);
+                            str += '<div class="fileNameBox ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + ' ui-widget-content ui-corner-all" name="' + item.name + '"><img src="' + src + '"/><br/>' + item.name + '</div>';
+                        } else {
+                            var src = ('/Assets/images/icons/' + fileClass + '.png');
+                            str += '<div class="fileNameBox ' + ths.getFileClassName(item) + (item.size < 0 ? "" : " fileItem") + ' ui-widget-content ui-corner-all" name="' + item.name + '"><img src="' + src + '"/><br/>' + item.name + '</div>';
+                        }
+
+                    }
+                    list.html(str);
+                    list.find('.fileItem').each(function (eix, elm) {
+                        $(elm).on('dblclick', function () {
+                            var path = currFolder + '/' + $(elm).attr('name');
+                            if (ths.onSelectFile) {
+                                ths.onSelectFile(path);
+                                $('#theFileBrowser').hide('fast', function () { $(this).remove(); })
+                            }
+                        });
+                        $(elm).on('click', function (event) {
+                            var path = currFolder + '/' + $(elm).attr('name');
+                            if (!(event.ctrlKey || event.shiftKey || event.metaKey))
+                                list.find('.fileNameBox').each(function (eix, fnm) { $(fnm).removeClass('fileSelected'); });
+                            $(elm).toggleClass('fileSelected');
+                            $('#fileManagerRenameForm input[name=newName]').val($(elm).attr('name'));
+                        });
+                    });
+                } else
+                    alert(resp.errorMessage);
+
+                $('#fileBrowserLoading').hide();
+            }
+        });
+
+    },
+    getSelectedFiles: function () {
+        return $A($('#fileBrowserList .fileSelected')).collect(function (elm) { return currFolder + '/' + $(elm).attr('name'); });
+    },
+    getFileClassName: function (item) {
+        if (item.size == -1)
+            return 'folder';
+        var name = item.name.toLowerCase();
+        if (name.endsWith('.png') || name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.gif') || name.endsWith('.jpe'))
+            return 'picture';
+        if (name.endsWith('.wmv') || name.endsWith('.mpg') || name.endsWith('.mpeg') || name.endsWith('.flv') || name.endsWith('.avi') || name.endsWith('.3gp') || name.endsWith('.rm') || name.endsWith('.mov'))
+            return 'video';
+        if (name.endsWith('.wav') || name.endsWith('.mp3') || name.endsWith('.wma') || name.endsWith('.mid'))
+            return 'audio';
+        return 'file';
+    }
+};
+userFileBrowserUploadFeedback = function (msg, url) {
+    currPicEdit.getFileList();
+    currPicEdit.container.find('form').trigger('reset');
 }

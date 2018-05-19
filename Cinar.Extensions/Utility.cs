@@ -465,7 +465,7 @@ namespace System
 
         public static string ToStringOr(this object obj, string thisValue)
         {
-            if (obj == null)
+            if (obj == null || obj == DBNull.Value)
                 return thisValue;
 
             return obj.ToString();
@@ -717,6 +717,9 @@ namespace System
 
         public static bool IsEmail(this string str)
         {
+            if (str.IsEmpty())
+                return false;
+
             try
             {
                 MailAddress m = new MailAddress(str);
@@ -729,11 +732,11 @@ namespace System
         }
         public static bool IsEmpty(this string str)
         {
-            return string.IsNullOrWhiteSpace(str);
+            return string.IsNullOrEmpty(str);
         }
         public static bool IsNotEmpty(this string str)
         {
-            return string.IsNullOrEmpty(str);
+            return !str.IsEmpty();
         }
         public static DateTime UsaStringToDateTime(this string str)
         {
@@ -1128,17 +1131,22 @@ namespace System
             return new Cinar.Extensions.Utf8Checker().Check(path);
         }
 
-        private const string digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static readonly Random r = new Random();
+        private static readonly object syncLock = new object();
+
+        private const string digits = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
         public static string CreatePassword(int length)
         {
-            if (length <= 0)
-                length = 6;
+            string id = "";
 
-            var pass = "";
-            var r = new Random();
-            for (int i = 0; i < length; i++)
-                pass += digits[r.Next(digits.Length)];
-            return pass;
+            lock (syncLock)
+            {
+                for (int i = 0; i < length; i++)
+                    id += digits[r.Next(digits.Length)];
+                Thread.Sleep(1); // let the milisecond change
+            }
+
+            return id;
         }
 
         public static int ToInt(this object obj)
@@ -1154,6 +1162,50 @@ namespace System
             return res;
         }
 
+        public static int ComputeSimilarity(this string s, string t)
+        {
+            int n = s.Length;
+            int m = t.Length;
+            int[,] d = new int[n + 1, m + 1];
+
+            // Step 1
+            if (n == 0)
+            {
+                return m;
+            }
+
+            if (m == 0)
+            {
+                return n;
+            }
+
+            // Step 2
+            for (int i = 0; i <= n; d[i, 0] = i++)
+            {
+            }
+
+            for (int j = 0; j <= m; d[0, j] = j++)
+            {
+            }
+
+            // Step 3
+            for (int i = 1; i <= n; i++)
+            {
+                //Step 4
+                for (int j = 1; j <= m; j++)
+                {
+                    // Step 5
+                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+
+                    // Step 6
+                    d[i, j] = Math.Min(
+                        Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                        d[i - 1, j - 1] + cost);
+                }
+            }
+            // Step 7
+            return d[n, m];
+        }
         #endregion
 
         #region ReflectionUtility
@@ -1633,6 +1685,27 @@ namespace System
             {
                 var t = new T();
                 foreach (DataColumn dc in dt.Columns)
+                {
+                    try
+                    {
+                        t.SetMemberValue(dc.ColumnName, dr[dc]);
+                    }
+                    catch { }
+                }
+                res.Add(t);
+            }
+            return res;
+        }
+
+        public static List<T> ToEntityList<T>(this DataTable dt, string exec) where T : new()
+        {
+            if (dt == null) return null;
+
+            var res = new List<T>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                var t = new T();
+                foreach (DataColumn dc in dt.Columns)
                     t.SetMemberValue(dc.ColumnName, dr[dc]);
                 res.Add(t);
             }
@@ -1829,7 +1902,7 @@ namespace System
             {
                 if (char.IsDigit(cardNumber, i))
                 {
-                    if (len == 16) return "Kart numarası çok fazla haneden oluşuyor."; // number has too many digits
+                    if (len == 16) return "Too many digits for a card number."; // number has too many digits
                     number[len++] = byte.Parse(cardNumber[i].ToString());
                 }
             }
@@ -1839,16 +1912,16 @@ namespace System
             {
                 case CardType.MASTERCARD:
                     if (len != 16)
-                        return "MasterCard için uyumsuz kart numarası";
+                        return "Invalid number for MasterCard";
                     if (number[0] != 5 || number[1] == 0 || number[1] > 5)
-                        return "MasterCard için uyumsuz kart numarası";
+                        return "Invalid number for MasterCard";
                     break;
 
                 case CardType.VISA:
                     if (len != 16 && len != 13)
-                        return "VISA için uyumsuz kart numarası";
+                        return "Invalid card number for VISA";
                     if (number[0] != 4)
-                        return "VISA için uyumsuz kart numarası";
+                        return "Invalid card number for VISA";
                     break;
             }
 
@@ -1864,7 +1937,7 @@ namespace System
                 else
                     sum += number[i];
             }
-            return (sum % 10 == 0) ? "" : "Geçersiz kart numarası";
+            return (sum % 10 == 0) ? "" : "Invalid card number";
         }
 
         public static object Deserialize(this string xml, Type type)
@@ -2058,7 +2131,7 @@ namespace System
             if (ex == null)
                 return "";
 
-            return ex.InnerException == null ? ex.Message : ex.InnerException.ToStringBetter();
+            return ex.InnerException == null ? (ex.Message + "<br><br>" + ex.StackTrace) : ex.InnerException.ToStringBetter();
         }
 
 
@@ -2362,7 +2435,6 @@ namespace System
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Credentials = new NetworkCredential(userName, password);
             }
-
             smtp.Send(mail);
         }
     }

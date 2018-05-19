@@ -25,8 +25,8 @@ $(function(){
 					navigationEnabled = true;
 			}
 		});
-        
-        if(isDesigner)
+
+        if (isDesigner && !isMobile.any())
 		    $('.Module').each(function (eix, mdl) {
 		        if ($(mdl).hasClass('StaticHtml')) $(mdl).dblclick(editStaticHtml);
 		    });

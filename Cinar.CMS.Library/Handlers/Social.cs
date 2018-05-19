@@ -849,20 +849,18 @@ limit
             if (Provider.User.IsAnonim())
                 return;
 
-            //string oldPass = Provider.Request["oldPass"];
             string newPass = Provider.Request["newPass"];
+            string newPass2 = Provider.Request["newPass2"];
+
             User u = Provider.User;
-            //string currPass = ((string)Provider.Database.GetValue("select Password from user where Nick = {0}", Provider.User.Nick)).Substring(0, 16).ToLower();
 
-            //if (string.IsNullOrWhiteSpace(oldPass) || string.IsNullOrWhiteSpace(newPass))
-            //    throw new Exception("password expected");
+            if (newPass.IsEmpty() || newPass.Length<6)
+                throw new Exception("Password must be no less than 6 chars");
 
-            //oldPass = Utility.MD5(oldPass).Substring(0, 16);
+            if (newPass != newPass2)
+                throw new Exception("Passwords not match");
 
-            //if (oldPass != currPass)
-            //    throw new Exception("password didn't match: " + oldPass + " =/= " + currPass);
-
-            u.Password = Utility.MD5(newPass);
+            u.Password = Utility.MD5(newPass).Substring(0, 16); ;
             u.Save();
 
             context.Response.Write(new Result { Data = true }.ToJSON());

@@ -462,10 +462,13 @@ namespace Cinar.CMS.Library
                         var defLang = Provider.Database.Read<Lang>(Provider.Configuration.DefaultLang);
                         foreach (Lang l in Provider.Database.ReadList<Lang>("select * from Lang where Id<>{0}", Provider.Configuration.DefaultLang))
                         {
+                            /*
                             string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
                             Encoding resolvedEncoding = Encoding.UTF8;
                             string translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
                             if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                            */
+                            string translate = l.Code.Split('-')[0] + ":" + name;
                             StaticResourceLang newSRL = new StaticResourceLang
                             {
                                 LangId = l.Id,
@@ -494,10 +497,13 @@ namespace Cinar.CMS.Library
                     string translate = "";
                     try
                     {
+                        /*
                         string url = "http://translate.google.com/translate_a/t?client=t&sl=" + defLang.Code.Split('-')[0] + "&tl=" + l.Code.Split('-')[0] + "&hl=en&sc=2&ie=UTF-8&oe=UTF-8&oc=1&otf=1&ssel=4&tsel=0&q=" + Provider.Server.UrlEncode(name);
                         Encoding resolvedEncoding = Encoding.UTF8;
                         translate = url.DownloadPage(ref resolvedEncoding).SplitWithTrim('"')[1];
                         if (char.IsUpper(name[0]) && char.IsLower(translate[0])) translate = translate.CapitalizeFirstLetterInvariant();
+                        */
+                        translate = l.Code.Split('-')[0] + ":" + name;
                     }
                     catch
                     {
@@ -1538,7 +1544,7 @@ namespace Cinar.CMS.Library
                             parts[0] = "^" + parts[0];
                         if (!parts[0].EndsWith("$"))
                             parts[0] = parts[0] + "$";
-                        routes.Add(new Regex(parts[0]), parts[1]);
+                        routes.Add(new Regex(parts[0], RegexOptions.IgnoreCase), parts[1]);
                     }
                 }
                 return routes;
@@ -2918,6 +2924,7 @@ namespace Cinar.CMS.Library
             : base(url)
         {
             this.queryPart = new QueryParts(this.Query, this);
+            this.Port = -1;
         }
 
         public new string Query

@@ -24,8 +24,8 @@ namespace Cinar.CMS.Library.Modules
             if (Provider.DesignMode)
                 return "<div style=\"background:crimson;color:white;font-weight:bold;margin:4px;padding:4px\">" +
                     Provider.GetResource("This page can be seen by <i>{0}</i> and modified by <i>{1}</i>", 
-                    RoleToRead == "" ? "herkes" : (RoleToRead + " rolündeki kullanýcýlar "), 
-                    RoleToChange == "" ? "herkes" : (RoleToChange + " rolündeki kullanýcýlar ")) + "</div>";
+                    RoleToRead == "" ? "everyone" : RoleToRead, 
+                    RoleToChange == "" ? "everyone" : RoleToChange) + "</div>";
             else
                 return String.Empty;
         }

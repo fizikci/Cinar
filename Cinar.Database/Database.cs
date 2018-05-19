@@ -230,7 +230,8 @@ namespace Cinar.Database
             if (File.Exists(serializedMetadataFilePath))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(TableCollection));
-                using (StreamReader sr = new StreamReader(serializedMetadataFilePath))
+                // 15.08.2016 updated using (StreamReader sr = new StreamReader(serializedMetadataFilePath))
+                using (StreamReader sr = new StreamReader(new FileStream(serializedMetadataFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
                 {
                     this.tables = (TableCollection)ser.Deserialize(sr);
                     this.SetCollectionParents();
@@ -482,6 +483,9 @@ namespace Cinar.Database
                         return c;
             return null;
         }
+
+        [XmlIgnore]
+        public Action<string, int> LowPerformanceAlert;
 
         public override string ToString()
         {
@@ -1198,7 +1202,8 @@ namespace Cinar.Database
         public void FillEntity(IDatabaseEntity entity)
         {
             string tableName = GetTableForEntityType(entity.GetType()).Name;
-            this.FillEntity(entity, GetDataRow("select * from " + tableName + " where " + GetIdColumnName(entity) + "={0}", entity.Id));
+            string nolock = Provider == DatabaseProvider.SQLServer ? " (nolock)" : ""; 
+            this.FillEntity(entity, GetDataRow("select * from " + tableName + nolock + " where " + GetIdColumnName(entity) + "={0}", entity.Id));
         }
         public void FillDataRow(IDatabaseEntityMinimal entity, DataRow dr)
         {
@@ -1220,6 +1225,7 @@ namespace Cinar.Database
 
             string tableName = GetTableForEntityType(entity.GetType()).Name;
             string primaryColumnName = GetIdColumnName(entity.GetType());
+
             ExecuteNonQuery("delete from [" + tableName + "] where [" + primaryColumnName + "] = {0}", entity.Id);
         }
 
@@ -1232,6 +1238,9 @@ namespace Cinar.Database
         /// </summary>
         public DataSet GetDataSet(DataSet ds, string sql, params object[] parameters)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             sql = editSQLAsForProvider(sql);
             addToSQLLog(sql);
             DbDataAdapter da = this.dbProvider.CreateDataAdapter(sql, parameters);
@@ -1243,6 +1252,11 @@ namespace Cinar.Database
             if(ds==null)
                 ds = new DataSet();
             da.Fill(ds);
+
+            if (sw.ElapsedMilliseconds > 2000 && LowPerformanceAlert != null)
+                LowPerformanceAlert(sql, Convert.ToInt32(sw.ElapsedMilliseconds/1000));
+
+
             return ds;
         }
         public DataSet GetDataSet(string sql, params object[] parameters)
@@ -1317,7 +1331,7 @@ namespace Cinar.Database
                                 (
                                     SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @",
                                     ROW_NUMBER() OVER (" + orderBy + @") AS '_CinarRowNumber'
-                                    FROM [" + table.Name + @"] 
+                                    FROM [" + table.Name + @"] (nolock)
                                     " + where + @"
                                 ) 
                                 SELECT " + string.Join(", ", table.Columns.Select(f => "[" + f.Name + "]").ToArray()) + @" 
@@ -1571,7 +1585,8 @@ namespace Cinar.Database
                 }
                 
                 where = where.Trim();
-                string sql = where.StartsWith("select", StringComparison.InvariantCultureIgnoreCase) ? where : ("select * from [" + table.Name + "] where " + where);
+                string nolock = Provider == DatabaseProvider.SQLServer ? " (nolock)" : "";
+                string sql = where.StartsWith("select", StringComparison.InvariantCultureIgnoreCase) ? where : ("select * from [" + table.Name + "]"+ nolock + " where " + where);
                 sql = editSQLAsForProvider(sql);
                 result = DataRowToEntity(entityType, this.GetDataRow(sql, parameters));
 

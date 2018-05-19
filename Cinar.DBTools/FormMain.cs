@@ -1888,7 +1888,7 @@ namespace Cinar.DBTools
             {
                 case "CreateTable":
                     if (table.IsView)
-                        sb.Append(Provider.Database.GetSQLViewCreate(table).Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\r\n\r\n", "\r\n").Replace("\n\n", "\n").Replace("\n\n", "\n").Replace("\n\n", "\n").Replace("\n\n", "\n"));
+                        sb.Append(Provider.Database.GetSQLViewCreate(table));
                     else
                         sb.Append(table.ToDDL());
                     break;
@@ -2408,7 +2408,7 @@ namespace Cinar.DBTools
                                     sb.AppendFormat("insert into search_results values('{0}', '{1}', '{2}');\r\n",
                                                     matchInfo.Keyword,
                                                     matchInfo.File.Replace("\\", "\\\\").Replace("'", "\\'"),
-                                                    matchInfo.Line.Replace("'", "\\'"));
+                                                    matchInfo.Line.Replace("\\", "\\\\").Replace("'", "\\'"));
                             }
 
                             int percent = Convert.ToInt32((i/(float) keyWords.Length)*100);

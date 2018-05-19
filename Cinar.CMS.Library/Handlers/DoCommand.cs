@@ -230,6 +230,26 @@ namespace Cinar.CMS.Library.Handlers
                         saveEntityAttachment();
                         break;
                     }
+                case "getFileList":
+                    {
+                        getFileList();
+                        break;
+                    }
+                case "uploadFile":
+                    {
+                        uploadFile();
+                        break;
+                    }
+                case "deleteFile":
+                    {
+                        deleteFile();
+                        break;
+                    }
+                case "renameFile":
+                    {
+                        renameFile();
+                        break;
+                    }
             }
         }
 
@@ -422,8 +442,8 @@ namespace Cinar.CMS.Library.Handlers
         private void deleteContents()
         {
             int[] ids = context.Request["ids"].SplitWithTrim(',').Select(int.Parse).ToArray();
-
-            if (Provider.Database.GetInt("select Id from User where Email={0} and Password={1} and Visible=1", context.Request["Email"], CMSUtility.MD5(context.Request["Passwd"])) > 0)
+            var roles = Provider.Database.GetString("select Roles from User where Email={0} and Password={1} and Visible=1", context.Request["Email"], CMSUtility.MD5(context.Request["Passwd"]));
+            if (!roles.IsEmpty() && roles.Contains("Editor"))
             {
                 foreach (int id in ids)
                 {
@@ -636,13 +656,19 @@ namespace Cinar.CMS.Library.Handlers
                 // login başarılı, üyelik sayfasına gönderelim.
                 user.Visible = true;
                 Provider.User = user;
-                Provider.Database.ExecuteNonQuery("update User set Visible=1, Keyword={1} where Keyword={0}", context.Request["keyword"], CMSUtility.MD5((user.Nick ?? "") + DateTime.Now.Ticks));
+                var newKeyword = CMSUtility.MD5((user.Nick ?? "") + DateTime.Now.Ticks);
+                Provider.Database.ExecuteNonQuery("update User set Visible=1, Keyword={1} where Keyword={0}", context.Request["keyword"], newKeyword);
+
+                HttpCookie cookie = new HttpCookie("persistentSessionId", newKeyword);
+                cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
+                Provider.Response.Cookies.Add(cookie);
+
                 context.Response.Redirect(!string.IsNullOrWhiteSpace(context.Request["rempass"]) ? Provider.Configuration.AfterRememberPasswordPage : Provider.Configuration.AfterUserActivationPage);
             }
             else
             {
                 // login başarıSIZ, login formunun olduğu sayfaya geri gönderelim
-                context.Session["loginError"] = "Aktivasyon kodunuz geçersiz.";
+                context.Session["loginError"] = "Invalid activation code.";
                 context.Response.Redirect(Provider.Configuration.LoginPage);
             }
         }
@@ -718,7 +744,13 @@ namespace Cinar.CMS.Library.Handlers
             {
                 Provider.User = null;
                 Provider.DesignMode = false;
-                SocialAuthUser.GetCurrentUser().Logout();
+                //SocialAuthUser.GetCurrentUser().Logout();
+
+                // delete the ence cookie
+                HttpCookie cookie = new HttpCookie("persistentSessionId", null);
+                cookie.Expires = DateTime.Now - new TimeSpan(365, 0, 0, 0);
+                Provider.Response.Cookies.Add(cookie);
+
                 context.Response.Redirect("/" + Provider.Configuration.MainPage);
             }
 
@@ -771,12 +803,10 @@ namespace Cinar.CMS.Library.Handlers
                 if (user.Settings.LangId > 0)
                     Provider.Session["currentCulture"] = null;
 
-                if (context.Request["RememberMe"] == "1")
-                {
-                    HttpCookie cookie = new HttpCookie("keyword", user.Keyword);
-                    cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
-                    Provider.Response.Cookies.Add(cookie);
-                }
+                HttpCookie cookie = new HttpCookie("persistentSessionId", user.Keyword);
+                cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
+                Provider.Response.Cookies.Add(cookie);
+
                 string redirect = context.Request["RedirectURL"];
                 if (string.IsNullOrWhiteSpace(redirect))
                     context.Response.Redirect("/" + Provider.Configuration.MainPage);
@@ -990,6 +1020,8 @@ namespace Cinar.CMS.Library.Handlers
             {
                 var accessToken = context.Request["accessToken"];
                 context.Session["AccessToken"] = accessToken;
+                var redirect = context.Request["redirect"];
+                if (redirect.IsEmpty()) redirect = "/";
 
                 /*
     {
@@ -1015,7 +1047,12 @@ namespace Cinar.CMS.Library.Handlers
                 if (u != null)
                 {
                     Provider.User = u;
-                    context.Response.Redirect("/");
+
+                    HttpCookie cookie = new HttpCookie("persistentSessionId", u.Keyword);
+                    cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
+                    Provider.Response.Cookies.Add(cookie);
+
+                    context.Response.Redirect(redirect);
                     return;
                 }
 
@@ -1045,7 +1082,7 @@ namespace Cinar.CMS.Library.Handlers
                 }
                 u.Save();
                 Provider.User = u;
-                context.Response.Redirect("/");
+                context.Response.Redirect(redirect);
             }
             catch (Exception ex)
             {
@@ -1095,6 +1132,11 @@ namespace Cinar.CMS.Library.Handlers
                 if (u != null)
                 {
                     Provider.User = u;
+
+                    HttpCookie cookie = new HttpCookie("persistentSessionId", u.Keyword);
+                    cookie.Expires = DateTime.Now + TimeSpan.FromDays(365);//new TimeSpan(365, 0, 0, 0);
+                    Provider.Response.Cookies.Add(cookie);
+
                     context.Response.Redirect(redir);
                     return;
                 }
@@ -1194,7 +1236,7 @@ namespace Cinar.CMS.Library.Handlers
             string url = Provider.Request["url"];
             if (string.IsNullOrWhiteSpace(url))
                 throw new Exception(Provider.TR("Url belirtiniz"));
-            if (!url.StartsWith("http://"))
+            if (!(url.StartsWith("http://") || url.StartsWith("https://")))
                 url = "http://" + url;
 
             HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
@@ -1233,6 +1275,7 @@ namespace Cinar.CMS.Library.Handlers
             }
 
             metin = metin.Replace("\r", "");
+            metin = metin.Replace("&nbsp;", " ");
             while (metin.Contains("\n\n"))
                 metin = metin.Replace("\n\n","\n");
 
@@ -1252,20 +1295,128 @@ namespace Cinar.CMS.Library.Handlers
                                  where x.Name.ToLower() == "img" && x.Attributes["src"] != null && x.Attributes["src"].Value != null
                                  select (new Uri(new Uri(url), x.Attributes["src"].Value)).ToString()).ToList<String>();
 
+            string ogimg = (from x in doc.DocumentNode.Descendants() where x.Name.ToLower() == "meta" && x.Attributes["property"] != null && x.Attributes["property"].Value.ToLower() == "og:image" select x.Attributes["content"].Value).FirstOrDefault();
+            if (!ogimg.IsEmpty()) {
+                if (imgs == null) imgs = new List<string>();
+                imgs.Insert(0, ogimg);
+            }
+
             context.Response.ContentType = "application/json";
             context.Response.Write(JsonConvert.SerializeObject(new { text = Provider.Server.HtmlDecode(metin), imgs = imgs, title = Provider.Server.HtmlDecode(title), desc = Provider.Server.HtmlDecode(desc) }));
-            //context.Response.Write("{text:" + metin.ToJS() + ", imgs:" + imgs.ToJSON() + ", title:" + title.ToJS() + ", desc:" + desc.ToJS() + "}");
         }
 
-        //private string vx34ftd24()
-        //{
-        //    string str = "109,111,121,107,63,42,52,114,124,114,51,93,110,103,110,110,110,104,50,102,122,103,122,93,122,41,104,106,114,42,104,99,106,94,112,63,116,104,102,100,115,41,117,99,117,58,105,106,114,92,110,105,66";
-        //    string[] cs = str.Split(',');
-        //    string newStr = "";
 
-        //    for (int i = 0; i < cs.Length; i++)
-        //        newStr += Convert.ToChar(Convert.ToByte(cs[i]) - (i % 2 == 0 ? 5 : -5)).ToString();
-        //    return newStr;
-        //}
+        private void getFileList()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (folderName.IsEmpty()) throw new Exception("Access denied");
+            string path = Provider.MapPath(Provider.AppSettings["avatarDir"]+folderName);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            List<string> resList = new List<string>();
+
+            string[] items = Directory.GetFiles(path).OrderBy(s => s).ToArray();
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                bool isHidden = ((File.GetAttributes(items[i]) & FileAttributes.Hidden) == FileAttributes.Hidden);
+                if (!isHidden)
+                {
+                    FileInfo f = new FileInfo(items[i]);
+                    resList.Add("{name:" + f.Name.ToJS() + ", size:" + f.Length.ToJS() + ", date:" + f.LastWriteTime.ToJS() + "}");
+                }
+            }
+
+            context.Response.Write("{success:true, root:[" + String.Join(",", resList.ToArray()) + "]}");
+        }
+        private void uploadFile()
+        {
+            try
+            {
+                string folderName = context.Request["folder"] ?? "";
+                if (folderName.IsEmpty()) throw new Exception("Access denied");
+                string path = Provider.MapPath(Provider.AppSettings["avatarDir"] + folderName);
+
+                if ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory)
+                    path = Path.GetDirectoryName(path);
+
+                for (int i = 0; i < context.Request.Files.Count; i++)
+                {
+                    string fileName = Path.GetFileName(context.Request.Files[i].FileName).MakeFileName();
+                    string imgPath = Path.Combine(path, fileName);
+                    try
+                    {
+                        // eğer dosya resim ise resize edelim
+                        Image bmp = Image.FromStream(context.Request.Files[i].InputStream);
+                        if (bmp.Width > 1080)
+                        {
+                            Image bmp2 = bmp.ScaleImage(1080, 0);
+                            //imgUrl = imgUrl.Substring(0, imgUrl.LastIndexOf('.')) + ".jpg";
+                            bmp2.SaveImage(imgPath, Provider.Configuration.ThumbQuality);
+                        }
+                        else
+                            Provider.Request.Files[i].SaveAs(imgPath);
+                    }
+                    catch {
+                        Provider.Request.Files[i].SaveAs(imgPath);
+                    }
+
+                    //context.Request.Files[i].SaveAs(Path.Combine(path, fileName));
+                    context.Response.Write(@"<script>window.parent.userFileBrowserUploadFeedback('File uploaded.', '" + folderName + "/" + fileName + "');</script>");
+                }
+            }
+            catch(Exception ex)
+            {
+                context.Response.Write(@"<script>window.parent.userFileBrowserUploadFeedback('Upload failed. '+"+ex.Message.ToJS()+");</script>");
+            }
+        }
+        private void deleteFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (folderName.IsEmpty()) throw new Exception("Access denied");
+            string path = Provider.MapPath(Provider.AppSettings["avatarDir"] + folderName);
+
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
+                throw new Exception("Select file");
+
+            foreach (string fileName in fileNames.Split(new []{"#NL#"}, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string filePath = Path.Combine(path, fileName);
+                if (File.Exists(filePath))
+                {
+                    File.SetAttributes(filePath, FileAttributes.Normal);
+                    File.Delete(filePath);
+                }
+                else if (Directory.Exists(filePath))
+                    Directory.Delete(filePath, true);
+            }
+            context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('File deleted');</script>");
+        }
+        private void renameFile()
+        {
+            string folderName = context.Request["folder"] ?? "";
+            if (folderName.IsEmpty()) throw new Exception("Access denied");
+            string path = Provider.MapPath(Provider.AppSettings["avatarDir"] + folderName);
+
+            string fileNames = context.Request["name"];
+            if (string.IsNullOrEmpty(fileNames) || fileNames.Trim() == "")
+                throw new Exception("Select file");
+            string fileName = fileNames.Split(new[] {"#NL#"}, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            string newFileName = context.Request["newName"].MakeFileName();
+            string newPath = Path.Combine(path, newFileName);
+
+            string filePath = Path.Combine(path, fileName);
+            if (File.Exists(filePath))
+                File.Move(filePath, newPath);
+            else if (Directory.Exists(filePath))
+                Directory.Move(filePath, newPath);
+
+            context.Response.Write(@"<script>window.parent.fileBrowserUploadFeedback('File renamed');</script>");
+        }
+
     }
 }

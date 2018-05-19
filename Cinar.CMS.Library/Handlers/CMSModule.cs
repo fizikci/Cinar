@@ -4,6 +4,7 @@ using System.Reflection;
 using System.IO;
 using System.Text;
 using System.Web.Routing;
+using System.Linq;
 
 namespace Cinar.CMS.Library.Handlers
 {
@@ -16,6 +17,7 @@ namespace Cinar.CMS.Library.Handlers
         
         private static bool HasAppStarted = false;
         private readonly static object _syncObject = new object();
+        private static object MapUrlMethod = null;
 
         public void Init(HttpApplication context)
         {
@@ -63,7 +65,7 @@ namespace Cinar.CMS.Library.Handlers
             try
             {
                 string fullOrigionalPath = HttpContext.Current.Request.RawUrl.Replace("http://", "").Replace("https://", "");
-                
+
                 // check for any XSS attack
                 string lowercaseUrl = fullOrigionalPath.ToLowerInvariant();
                 if (
@@ -79,9 +81,43 @@ namespace Cinar.CMS.Library.Handlers
                     return;
                 }
 
+                //ashx'lere dokunma
+                if (lowercaseUrl.Contains(".ashx"))
+                    return;
+
+                #region customAssembly Url Rewriting
+                if (MapUrlMethod == null)
+                {
+                    if (!String.IsNullOrEmpty(Provider.AppSettings["customAssemblies"]))
+                        foreach (string customAssembly in Provider.AppSettings["customAssemblies"].SplitWithTrim(','))
+                        {
+                            Assembly assembly = Provider.GetAssembly(customAssembly);
+                            if (assembly == null)
+                                continue;
+                            var api = assembly.GetTypes().FirstOrDefault(t => t.GetInterface("IAPIProvider") != null);
+                            if (api != null)
+                                MapUrlMethod = api.GetMethod("MapUrl") ?? (object)false;
+                        }
+                    if (MapUrlMethod == null)
+                        MapUrlMethod = (object)false;
+                }
+
+                if (MapUrlMethod is MethodInfo)
+                {
+                    object ret = ((MethodInfo)MapUrlMethod).Invoke(null, new object[] { HttpContext.Current.Request });
+                    if (ret != null && !ret.ToString().IsEmpty())
+                    {
+                        HttpContext.Current.RewritePath(ret.ToString());
+                        return;
+                    }
+                }
+                #endregion
+
+
                 // url rewrite
                 if (fullOrigionalPath.Contains(".aspx"))
                 {
+                    #region default CMS url rewriting
                     // falanca.com/[en/]Content/Urunler/Bilgisayar_3.aspx
                     string[] parts = fullOrigionalPath.Split('/');
                     if (parts.Length >= 4)
@@ -99,10 +135,13 @@ namespace Cinar.CMS.Library.Handlers
                             string rewritePath = pageName + ".aspx?item=" + item + (restOfQueryString != "" ? "&" + restOfQueryString : "");
 
                             HttpContext.Current.RewritePath(rewritePath);
+                            return;
                         }
                     }
+                    #endregion
                 }
 
+                #region CMS user defined url rewriting
                 string[] pathParts = HttpContext.Current.Request.RawUrl.Split('?');
                 string res = Provider.GetRewritePath(pathParts[0]);
                 if (res != pathParts[0])
@@ -111,6 +150,8 @@ namespace Cinar.CMS.Library.Handlers
                         res = res + (res.Contains("?") ? "&" : "?") + HttpContext.Current.Server.UrlEncode(pathParts[1]);
                     HttpContext.Current.RewritePath(res);
                 }
+                #endregion
+
             } catch{}
         }
 

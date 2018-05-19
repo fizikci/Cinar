@@ -5,7 +5,7 @@ using Cinar.Database;
 namespace Cinar.CMS.Library.Entities
 {
     [ListFormProps(VisibleAtMainMenu = true, QuerySelect = "select Id, Name, Visible from [Lang]", QueryOrderBy = "Name")]
-    [DefaultData(ColumnList="Code, Name", ValueList="'tr-TR', 'Türkçe'")]
+    [DefaultData(ColumnList="Code, Name", ValueList="'en-US', 'English'")]
     public class Lang : BaseEntity
     {
         [ColumnDetail(IsNotNull = true), EditFormFieldProps(ControlType = ControlType.ComboBox, Options = "items:_LANGS_")]

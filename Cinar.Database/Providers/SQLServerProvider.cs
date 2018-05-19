@@ -115,6 +115,9 @@ namespace Cinar.Database.Providers
             DataTable dtCons = db.GetDataTable(this.GetSQLConstraintList());
             foreach (DataRow drCon in dtCons.Rows)
             {
+                if (db.Tables[drCon["TableName"].ToString()] == null)
+                    continue;
+
                 Constraint con = db.Tables[drCon["TableName"].ToString()].Constraints[drCon["Name"].ToString()];
                 if (con != null)
                 {
@@ -371,7 +374,9 @@ namespace Cinar.Database.Providers
 					    select
 							TABLE_NAME, TABLE_TYPE
 						from
-							INFORMATION_SCHEMA.TABLES", db.Name);
+							INFORMATION_SCHEMA.TABLES
+                        where 
+                            TABLE_SCHEMA = 'dbo'", db.Name);
         }
 
         public string GetSQLTableRename(string oldName, string newName)

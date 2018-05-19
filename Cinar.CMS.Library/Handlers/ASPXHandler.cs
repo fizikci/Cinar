@@ -78,6 +78,12 @@ namespace Cinar.CMS.Library.Handlers
             {
                 mdl.ContainerPage = this;
                 this.readModulesRecursive(mdl);
+
+                Stopwatch stopWatch = new Stopwatch(); stopWatch.Start();
+
+                mdl.output = mdl.Show();
+
+                stopWatch.Stop(); if (Provider.ShowExecutionTime) mdl.output += String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds, mdl.CacheHint);
             }
         }
         private void readModulesRecursive(Module mdl)
@@ -89,6 +95,12 @@ namespace Cinar.CMS.Library.Handlers
                 {
                     childModule.ContainerPage = this;
                     readModulesRecursive(childModule);
+
+                    Stopwatch stopWatch = new Stopwatch(); stopWatch.Start();
+
+                    childModule.output = childModule.Show();
+
+                    stopWatch.Stop(); if (Provider.ShowExecutionTime) childModule.output += String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds, childModule.CacheHint);
                 }
             }
         }
@@ -96,21 +108,69 @@ namespace Cinar.CMS.Library.Handlers
         public bool AddDefaultJS = true;
         public bool AddDefaultCSS = true;
 
+        public string CDN { get { return Provider.AppSettings["CDN"] ?? ""; } }
+
+        private string _title = "";
+        public string Title {
+            get {
+                if (_title == "")
+                {
+                    string title = "";
+                    if (Provider.Content != null && Provider.Content.Id != 1)
+                        title += Provider.Content.Title;
+                    if (Provider.Content != null && Provider.Content.Id != 1 && !string.IsNullOrWhiteSpace(Provider.Configuration.SiteName))
+                        title += " - ";
+                    if (!string.IsNullOrWhiteSpace(Provider.Configuration.SiteName))
+                        title += Provider.Configuration.SiteName;
+                    return title;
+                }
+                return _title;
+            }
+            set {
+                _title = value;
+            }
+        }
+
+        private string _description = "";
+        public string Description
+        {
+            get
+            {
+                if (_description == "")
+                {
+                    return (Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Description)) ? CMSUtility.HtmlEncode(Provider.Content.Description) : CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription);
+                }
+                return _description;
+            }
+            set
+            {
+                _description = value;
+            }
+        }
+
+        private string _image = "";
+        public string Image
+        {
+            get
+            {
+                if (_image == "")
+                {
+                    return ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Picture)) ? Provider.Content.Picture : Provider.Configuration.SiteLogo);
+                }
+                return _image;
+            }
+            set
+            {
+                _image = value;
+            }
+        }
+
         public string HeadSection
         {
             get
             {
                 StringBuilder sb = new StringBuilder();
 
-                string title = "";
-                if (Provider.Content != null && Provider.Content.Id != 1)
-                    title += Provider.Content.Title;
-                if (Provider.Content != null && Provider.Content.Id != 1 && !string.IsNullOrWhiteSpace(Provider.Configuration.SiteName))
-                    title += " - ";
-                if (!string.IsNullOrWhiteSpace(Provider.Configuration.SiteName))
-                    title += Provider.Configuration.SiteName;
-
-                string description = (Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Description)) ? CMSUtility.HtmlEncode(Provider.Content.Description) : CMSUtility.HtmlEncode(Provider.Configuration.SiteDescription);
 
                 if (Provider.Request["Id"] != null) {
                     int id = 0;
@@ -119,22 +179,37 @@ namespace Cinar.CMS.Library.Handlers
                         Post p = Provider.Database.Read<Post>(id);
                         if (p != null)
                         {
-                            title = p.InsertUser.Nick + " " + Provider.Configuration.SiteName + "'te paylaştı";
-                            description = p.Metin;
+                            Title = p.InsertUser.Nick + " " + Provider.Configuration.SiteName + "'te paylaştı";
+                            Description = p.Metin;
                         }
                     }
                 }
 
-                sb.Append("<title>" + Provider.Server.HtmlEncode(title) + "</title>\n");
-                sb.Append("<meta name=\"description\" content=\"" + Provider.Server.HtmlEncode(description) + "\"/>\n");
+                sb.Append("<title>" + Provider.Server.HtmlEncode(Title) + "</title>\n");
+                sb.Append("<link rel =\"canonical\" href =\"//" + Provider.Request.Url.Authority + Provider.Request.RawUrl + "\" />\n");
+                sb.Append("<meta name=\"description\" content=\"" + Provider.Server.HtmlEncode(Description) + "\"/>\n");
                 sb.Append("<meta name=\"keywords\" content=\"" + (Provider.Content != null ? CMSUtility.HtmlEncode(Provider.Content.Keywords) + " " + CMSUtility.HtmlEncode(Provider.Content.Tags) + "," : "") + CMSUtility.HtmlEncode(Provider.Configuration.SiteKeywords) + "\"/>\n");
                 sb.Append("<meta name=\"viewport\" content=\"width=device-width\"/>\n");
                 sb.Append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\"/>\n");
-                sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\"TR\"/>\n");
-                sb.Append("<meta property=\"og:title\" content=\"" + Provider.Server.HtmlEncode(title) + "\"/>\n");
-                sb.Append("<meta property=\"og:image\" content=\"" + ((Provider.Content != null && !string.IsNullOrWhiteSpace(Provider.Content.Picture)) ? Provider.Content.Picture : Provider.Configuration.SiteLogo) + "\"/>\n");
+                sb.Append("<META HTTP-EQUIV=\"Content-Language\" CONTENT=\""+(Provider.CurrentCulture==null ? "EN" : Provider.CurrentCulture.Split('-')[0])+"\"/>\n");
+                foreach (var lang in Provider.Database.GetList<string>("select Code from Lang where Id<>{0}", Provider.CurrentLanguage.Id))
+                {
+                    CinarUriParser uriParser = new CinarUriParser(Provider.Request.Url.Scheme + "://" + Provider.Request.Url.Authority + Provider.Request.RawUrl);
+                    uriParser.QueryPart["currentCulture"] = lang;
+                    sb.Append("<link rel=\"alternate\" href=\"" + uriParser + "\" hreflang=\"" + lang + "\" />\n");
+                }
+
+                if(!Provider.Configuration.FacebookAppId.IsEmpty())
+                    sb.Append("<meta property=\"fb:app_id\" content=\""+Provider.Configuration.FacebookAppId+"\"/>\n");
+
+                sb.Append("<meta property=\"og:title\" content=\"" + Provider.Server.HtmlEncode(Title) + "\"/>\n");
+                sb.Append("<meta property=\"og:image\" content=\"" + Image + "\"/>\n");
                 sb.Append("<meta property=\"og:site_name\" content=\"" + Provider.Server.HtmlEncode(Provider.Configuration.SiteName) + "\"/>\n");
-                sb.Append("<meta property=\"og:description\" content=\"" + Provider.Server.HtmlEncode(description) + "\"/>\n");
+                sb.Append("<meta property=\"og:description\" content=\"" + Provider.Server.HtmlEncode(Description) + "\"/>\n");
+
+                sb.Append("<meta name=\"twitter:card\" content=\"summary\">\n");
+                sb.Append("<meta name=\"twitter:title\" content=\"" + Provider.Server.HtmlEncode(Title) + "\"/>\n");
+                sb.Append("<meta name=\"twitter:image\" content=\"" + Image + "\"/>\n");
 
                 if (Provider.Configuration.SiteIcon.Trim() != "")
                     sb.Append("<link href=\"" + Provider.Configuration.SiteIcon + "\" rel=\"SHORTCUT ICON\"/>\n");
@@ -145,17 +220,17 @@ namespace Cinar.CMS.Library.Handlers
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "default.css.ashx" : "/_thumbs/default.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQueryUI"))
                 {
-                    sb.Append("<link href=\"/external/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css\" rel=\"stylesheet\">\n");
+                    sb.Append("<link href=\"" + CDN + "/external/themes/ui-lightness/jquery-ui-1.10.3.custom.min.css\" rel=\"stylesheet\">\n");
                 }
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                 {
-                    sb.Append("<link rel=\"stylesheet\" href=\"/external/bootstrap/css/bootstrap.min.css\">\n");
+                    sb.Append("<link rel=\"stylesheet\" href=\"" + CDN + "/external/bootstrap/css/bootstrap.min.css\">\n");
                 }
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "cinar.cms.css.ashx" : "/_thumbs/cinar.cms.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
                 sb.Append("<link href=\"" + (Provider.DesignMode ? "famfamfam.css.ashx" : "/_thumbs/famfamfam.css") + "\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
-                sb.Append("<link href=\"/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
-                sb.Append("<link href=\"/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"" + CDN + "/external/themes/default.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
+                sb.Append("<link href=\"" + CDN + "/external/themes/alphacube.css\" rel=\"stylesheet\" type=\"text/css\"/>\n");
 
                 if (Provider.DesignMode)
                     sb.Append("<style title=\"moduleStyles\">\n" + (AddDefaultCSS ? Provider.Configuration.DefaultStyleSheet : "") + "\n" + Provider.ReadStyles(modules) + "\n</style>\n");
@@ -169,24 +244,36 @@ namespace Cinar.CMS.Library.Handlers
                 sb.AppendFormat("<script type='text/javascript'>var designMode = {0}, defaultLangId = {1}; currLang = '{2}'; isDesigner={3};</script>\n", Provider.DesignMode.ToJS(), Provider.Configuration.DefaultLang, Provider.CurrentLanguage.Code.Split('-')[0], Provider.User.IsInRole("Designer").ToJS());
 
                 ///////////////////////////////////// JS
+                if (template == null || !template.HTMLCode.Contains("$=this.Scripts"))
+                    sb.Append(Scripts);
 
+                return sb.ToString();
+            }
+        }
+
+        public string Scripts
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append("<script src=\"" + CDN + "/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
                 if (Provider.Configuration.UseExternalLibrary.Contains("jQuery"))
                 {
-                    sb.Append("<script src=\"/external/javascripts/jquery-1.10.2.min.js\"></script>\n");
-                    sb.Append("<script src=\"/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
+                    sb.Append("<script src=\"" + CDN + "/external/javascripts/jquery-ui-1.10.3.custom.min.js\"></script>\n");
                 }
                 if (Provider.Configuration.UseExternalLibrary.Contains("Bootstrap"))
                 {
-                    sb.Append("<script src=\"/external/bootstrap/js/bootstrap.min.js\"></script>\n");
+                    sb.Append("<script src=\"" + CDN + "/external/bootstrap/js/bootstrap.min.js\"></script>\n");
                 }
 
-                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/prototype.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + CDN + "/external/javascripts/prototype.js\"></script>\n");
 
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "default.js.ashx" : "/_thumbs/default.js") + "\"></script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "message.js.ashx" : "/_thumbs/message.js") + "\"> </script>\n");
                 sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? (Provider.CurrentCulture.Split('-')[0] + ".js.ashx") : ("/_thumbs/" + Provider.CurrentCulture.Split('-')[0] + ".js")) + "\"></script>\n");
 
-                sb.Append("<script type=\"text/javascript\" src=\"/external/javascripts/window.js\"></script>\n");
+                sb.Append("<script type=\"text/javascript\" src=\"" + CDN + "/external/javascripts/window.js\"></script>\n");
 
 
                 if (Provider.DesignMode || Provider.User.IsInRole("Editor"))
@@ -201,7 +288,7 @@ namespace Cinar.CMS.Library.Handlers
 </script>
                 ");
                     sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "cinar.cms.js.ashx" : "/_thumbs/cinar.cms.js") + "\"></script>\n");
-                    sb.Append("<script src=\"/external/javascripts/ace/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n");
+                    sb.Append("<script src=\"" + CDN + "/external/javascripts/ace/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script>\n");
                 }
 
                 if (!Provider.User.IsAnonim())
@@ -223,12 +310,13 @@ namespace Cinar.CMS.Library.Handlers
 ");
                 }
 
-                if(AddDefaultJS)
+                if (AddDefaultJS)
                     sb.Append("<script type=\"text/javascript\" src=\"" + (Provider.DesignMode ? "DefaultJavascript.ashx" : "/_thumbs/DefaultJavascript.js") + "\"></script>\n");
 
                 return sb.ToString();
             }
         }
+
 
         public string this[string regionName]
         {
@@ -241,13 +329,8 @@ namespace Cinar.CMS.Library.Handlers
                 {
                     if (module.Region == regionName && module.Template.ToLower() == template.FileName.ToLower())
                     {
-                        Stopwatch stopWatch = new Stopwatch();
-                        stopWatch.Start();
                         //sb.Append(module.Show());
                         Provider.Response.Write(module.Show());
-                        stopWatch.Stop();
-                        if(Provider.ShowExecutionTime)
-                            Provider.Response.Write(String.Format("<!-- {0} ms  ({1}) -->", stopWatch.ElapsedMilliseconds, module.CacheHint));
                         moduleCount++;
                     }
                 }
@@ -280,9 +363,9 @@ namespace Cinar.CMS.Library.Handlers
                 {
                     var key = Provider.Request.QueryString.GetKey(i);
                     var val = Provider.Request.QueryString[key];
-                    if (key.EndsWith("Id") && !string.IsNullOrWhiteSpace(val))
+                    if (key!=null && key.EndsWith("Id") && !string.IsNullOrWhiteSpace(val))
                     {
-                        var m = Regex.Match(val, "[\\d\\w\\,]+");
+                        var m = Regex.Match(val, "[\\d\\w\\,\\-]+");
                         if (!m.Success || m.Value != val)
                         {
                             Provider.Response.Redirect("/Default.aspx", true);
@@ -306,11 +389,12 @@ namespace Cinar.CMS.Library.Handlers
 
             template = (Template)Provider.Database.Read(typeof(Template), "FileName={0}", fileName);
             if (template == null)
-                throw new Exception("Template doesn't exist: " + fileName);
+                throw new HttpException(404, "Template doesn't exist: " + fileName);
 
             if (template.HTMLCode.Trim().StartsWith("use:"))
             {
-                var htmlCode = Provider.Database.GetString("select HTMLCode from Template where FileName={0}", template.HTMLCode.Replace("use:", "").Trim());
+                var templateName = template.HTMLCode.Replace("use:", "").Trim();
+                var htmlCode = Provider.Database.GetString("select HTMLCode from Template where FileName={0}", templateName);
                 if(!string.IsNullOrWhiteSpace(htmlCode))
                     template.HTMLCode = htmlCode;
             }
@@ -349,6 +433,16 @@ namespace Cinar.CMS.Library.Handlers
             Provider.SetHttpContextUser();
             if (Provider.User.IsInRole("Designer") && !String.IsNullOrEmpty(Provider.Request["DesignMode"]))
                 Provider.DesignMode = Provider.Request["DesignMode"] == "On";
+
+            // persistentSessionId cookie'si set edilmisse otomatik oturum acalim.
+            if (Provider.User.IsAnonim() && Provider.Request.Cookies["persistentSessionId"] != null && !Provider.Request.Cookies["persistentSessionId"].Value.IsEmpty())
+            {
+                var user = Provider.Database.Read<User>("Keyword = {0}", Provider.Request.Cookies["persistentSessionId"].Value);
+                if (user == null)
+                    Provider.Response.Cookies["persistentSessionId"].Expires = DateTime.Now.AddDays(-1);
+                else
+                    Provider.User = user;
+            }
 
             #region item (içerik) id'sini Session'a koyalım
             if (Provider.Request["item"] != null)

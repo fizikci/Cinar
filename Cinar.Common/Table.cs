@@ -372,13 +372,16 @@ namespace Cinar.Database
             if (refCons == null)
             {
                 var index = this.Indices.FirstOrDefault(i => i.Name == "PRIMARY");
-                PrimaryKeyConstraint pkc = new PrimaryKeyConstraint
+                if (index != null)
                 {
-                    Name = index.Name,
-                    ColumnNames = index.ColumnNames
-                };
-                this.Constraints.Add(pkc);
-                refCons = pkc;
+                    PrimaryKeyConstraint pkc = new PrimaryKeyConstraint
+                    {
+                        Name = index.Name,
+                        ColumnNames = index.ColumnNames
+                    };
+                    this.Constraints.Add(pkc);
+                    refCons = pkc;
+                }
             }
             return refCons;
         }

@@ -19,7 +19,7 @@ namespace Cinar.Test
             //Tutorial_3_CreateTableAtRuntime.Run();
             // Hsedbs.Run();
 
-            ContentExtractor.Run();
+            DictDownload.Run();
 
             Console.WriteLine("\r\nBİTTİ");
             Console.ReadLine();
