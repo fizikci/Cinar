@@ -300,7 +300,11 @@ namespace Cinar.Database
                                                           host, dbName, userName, password, DefaultCommandTimeout).Replace("Database=;", "");
                     break;
                 case DatabaseProvider.SQLServer:
-                    this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",
+                    if(userName.IsEmpty() && password.IsEmpty())
+                        this.connectionString = String.Format("Server={0};Database={1};Trusted_Connection=True;",
+                                                              host, dbName, userName, password).Replace("Database=;", "");
+                    else
+                        this.connectionString = String.Format("Data Source={0};Initial Catalog={1};User Id={2};Password={3};",
                                                           host, dbName, userName, password).Replace("Initial Catalog=;", "");
                     break;
                 case DatabaseProvider.Cinar:
