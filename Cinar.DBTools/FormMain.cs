@@ -21,6 +21,7 @@ using Constraint = Cinar.Database.Constraint;
 using Cinar.DBTools.CodeGen;
 using Cinar.WebServer;
 using ColumnDef = Cinar.DBTools.Tools.ColumnDef;
+using System.Text.RegularExpressions;
 
 namespace Cinar.DBTools
 {
@@ -2386,15 +2387,19 @@ namespace Cinar.DBTools
                             }
                             else
                             {
+                                var reg = new Regex("\\b" + kw + "\\b", RegexOptions.IgnoreCase);
                                 var allMatches = allFiles
                                                      .SelectMany(fn => File.ReadLines(fn), (fn, line) => new {fn, line})
-                                                     .Where(@t => @t.line.ToUpper().Contains(kw.ToUpper()) &&
+                                                     .Where(@t => reg.IsMatch(@t.line) &&
+                                                                //@t.line.ToUpper().Contains(kw.ToUpper()) &&
                                                                   (@t.line.ToUpper().Contains("CREATEOBJECTSET") ||
                                                                    @t.line.ToUpper().Contains("ENTİTY") ||
+                                                                   @t.line.ToUpper().Contains("ENTITY") ||
                                                                    @t.line.ToUpper().Contains("CLASS") ||
                                                                    @t.line.ToUpper().Contains("OBJDB") ||
                                                                    @t.line.ToUpper().Contains("SELECT ") ||
                                                                    @t.line.ToUpper().Contains("İNSERT ") ||
+                                                                   @t.line.ToUpper().Contains("INSERT ") ||
                                                                    @t.line.ToUpper().Contains("UPDATE ") ||
                                                                    @t.line.ToUpper().Contains("DELETE ")))
                                                      .Select(@t => new
