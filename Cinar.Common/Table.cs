@@ -31,7 +31,7 @@ namespace Cinar.Database
     /// Bir tabloya ait yapı bilgisini modelleyen sınıf.
     /// </summary>
     [Serializable]
-    public class Table : IMetadata
+    public class Table : IMetadata, IComparable
     {
         public Table()
         {
@@ -396,6 +396,14 @@ namespace Cinar.Database
                 return this.Columns.Where(c => string.IsNullOrWhiteSpace(c.UIMetadata.GroupName)).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c => c.Name).ToList();
             else
                 return this.Columns.Where(c => c.UIMetadata.GroupName == groupName).OrderBy(c => c.UIMetadata.DisplayOrder).Select(c=>c.Name).ToList();
+        }
+
+        public int CompareTo(object obj)
+        {
+            var tbl = obj as Table;
+            if (tbl == null)
+                return -1;
+            return Name.CompareTo(tbl.Name);
         }
     }
 
