@@ -162,12 +162,13 @@ namespace Cinar.Database
         DbType StringToDbType(string dbType);
         string[] GetOriginalColumnTypes();
         string GetDatabaseDDL(bool addDropTable);
-        string GetTableDDL(Table table);
+        string GetTableDDL(Table table, bool withConstraints = true, bool withIndices = true);
         string GetTableDDL(Table table, DatabaseProvider provider);
         string GetColumnDDL(Column column);
         string GetSQLTableList();
         string GetSQLTableRename(string oldName, string newName);
         string GetSQLTableDrop(Table table, bool addIfExists);
+        string GetSQLTableCreate(Table table, bool withConstraints = true, bool withIndices = true);
         string GetSQLColumnList(string tableName);
         string GetSQLColumnAdd(string toTable, Column column);
         string GetSQLColumnRemove(Column column);

@@ -1162,6 +1162,7 @@ namespace System
             return res;
         }
 
+        public static int LevenshteinDistance(this string s, string t) { return ComputeSimilarity(s,t); }
         public static int ComputeSimilarity(this string s, string t)
         {
             int n = s.Length;
@@ -1413,6 +1414,8 @@ namespace System
                     }
                     else
                     {
+                        if (pi.PropertyType.IsEnum && val is string && val != null)
+                            val = val.ToString().Replace(" ","_");
                         pi.SetValue(member, val.ChangeType(pi.PropertyType), null);
                     }
                 }
