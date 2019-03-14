@@ -324,7 +324,7 @@ namespace Cinar.Database.Providers
             return columnDDL.ToString();
         }
 
-        public string GetTableDDL(Table table)
+        public string GetTableDDL(Table table, bool withConstraints = true, bool withIndices = true)
         {
             if (table.Columns.Count == 0)
                 return "";

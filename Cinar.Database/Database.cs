@@ -1995,9 +1995,9 @@ namespace Cinar.Database
 
             return sb.ToString();
         }
-        public string GetTableDDL(Table table)
+        public string GetTableDDL(Table table, bool withConstraints = true, bool withIndices = true)
         {
-            return dbProvider.GetTableDDL(table);
+            return dbProvider.GetTableDDL(table, withConstraints, withIndices);
         }
         public string GetTableDDL(Table table, DatabaseProvider provider)
         {
@@ -2046,6 +2046,11 @@ namespace Cinar.Database
         public string GetSQLTableDrop(Table table, bool addIfExists)
         {
             return dbProvider.GetSQLTableDrop(table, addIfExists);
+        }
+
+        public string GetSQLTableCreate(Table table, bool withConstraints = true, bool withIndices = true)
+        {
+            return dbProvider.GetTableDDL(table, false, false);
         }
 
         public string GetSQLColumnList(string tableName)

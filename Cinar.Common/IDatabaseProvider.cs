@@ -38,7 +38,7 @@ namespace Cinar.Database
         IDbCommand CreateCommand(string cmdText, IDbTransaction transaction, params object[] parameters);
         IDbDataParameter CreateParameter(string parameterName, object value);
 
-        string GetTableDDL(Table table);
+        string GetTableDDL(Table table, bool withConstraints = true, bool withIndices = true);
         string GetColumnDDL(Column column);
 
         string[] GetColumnTypes();

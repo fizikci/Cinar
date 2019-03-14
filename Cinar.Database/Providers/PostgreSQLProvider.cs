@@ -357,7 +357,7 @@ namespace Cinar.Database.Providers
             //    columnDDL += " REFERENCES \"" + f.ReferenceColumn.Table.Name + "\"(\"" + f.ReferenceColumn.Name + "\")";
             return columnDDL;
         }
-        public string GetTableDDL(Table table)
+        public string GetTableDDL(Table table, bool withConstraints = true, bool withIndices = true)
         {
             if (table.Columns.Count == 0)
                 return "";
@@ -370,10 +370,12 @@ namespace Cinar.Database.Providers
             sbColumns = sbColumns.Remove(sbColumns.Length - len, len);
 
             StringBuilder sbCons = new StringBuilder();
-            foreach (Constraint c in table.Constraints)
-                sbCons.Append(GetSQLConstraintAdd(c) + ";" + Environment.NewLine);
-            foreach (Index i in table.Indices)
-                sbCons.Append(GetSQLIndexAdd(i) + ";" + Environment.NewLine);
+            if(withConstraints)
+                foreach (Constraint c in table.Constraints)
+                    sbCons.Append(GetSQLConstraintAdd(c) + ";" + Environment.NewLine);
+            if(withIndices)
+                foreach (Index i in table.Indices)
+                    sbCons.Append(GetSQLIndexAdd(i) + ";" + Environment.NewLine);
 
             if (table.IsView)
                 return String.Format("CREATE VIEW \"{0}\" AS {1}" + Environment.NewLine,
