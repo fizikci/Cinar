@@ -842,6 +842,18 @@ namespace System
             return Int32.Parse(s);
         }
 
+        public static int ToSafeInt(this string s, int safeValue = 0)
+        {
+            try
+            {
+                return Int32.Parse(s);
+            }
+            catch
+            {
+                return safeValue;
+            }
+        }
+
         public static double toDouble(this string s)
         {
             return Double.Parse(s, new CultureInfo("en-US"));
