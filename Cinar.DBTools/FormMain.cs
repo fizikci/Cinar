@@ -430,6 +430,11 @@ namespace Cinar.DBTools
                                      IsVisible = ()=> SelectedObject is Table
                                  },
                      new Command {
+                                     Execute = cmdTableTruncate,
+                                     Trigger = new CommandTrigger{ Control = menuTableTruncate},
+                                     IsVisible = ()=> SelectedObject is Table
+                                 },
+                     new Command {
                                      Execute = cmdTableOpen,
                                      Triggers = new List<CommandTrigger>{
                                          new CommandTrigger{ Control = menuTableOpen},
@@ -1616,6 +1621,26 @@ namespace Cinar.DBTools
                 }
             }
         }
+        internal void cmdTableTruncate(string arg)
+        {
+            if (!checkConnection()) return;
+            Table table = SelectedObject as Table;
+            SQLInputDialog sid = new SQLInputDialog(Provider.Database.GetSQLTableTruncate(table, true), true, string.Format("Table \"{0}\" will be truncated and ALL DATA LOST.\n\nContinue?", table.Name));
+            if (sid.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    int i = Provider.Database.ExecuteNonQuery(sid.SQL);
+                    if (CurrSQLEditor != null)
+                        CurrSQLEditor.ShowInfoText("Table " + table.Name + " truncated succesfully.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cinar Database Tools", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
         private void cmdTableCount(string arg)
         {
             if (!checkConnection()) return;

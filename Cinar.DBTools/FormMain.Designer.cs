@@ -73,6 +73,7 @@ namespace Cinar.DBTools
             this.menuTableCreate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableAlter = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableDrop = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTableTruncate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableCount = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTableOpenWithFilter = new System.Windows.Forms.ToolStripMenuItem();
@@ -443,6 +444,7 @@ namespace Cinar.DBTools
             this.menuTableCreate,
             this.menuTableAlter,
             this.menuTableDrop,
+            this.menuTableTruncate,
             this.menuTableCount,
             this.menuTableOpen,
             this.menuTableOpenWithFilter,
@@ -660,6 +662,13 @@ namespace Cinar.DBTools
             this.menuTableDrop.Name = "menuTableDrop";
             this.menuTableDrop.Size = new System.Drawing.Size(263, 22);
             this.menuTableDrop.Text = "Drop Table";
+            // 
+            // menuTableTruncate
+            // 
+            this.menuTableTruncate.Image = ((System.Drawing.Image)(resources.GetObject("menuTableDrop.Image")));
+            this.menuTableTruncate.Name = "menuTableTruncate";
+            this.menuTableTruncate.Size = new System.Drawing.Size(263, 22);
+            this.menuTableTruncate.Text = "Truncate Table";
             // 
             // menuTableCount
             // 
@@ -1916,6 +1925,7 @@ namespace Cinar.DBTools
         private System.Windows.Forms.ToolStripButton btnCheckDatabaseSchema;
         private System.Windows.Forms.ToolStripMenuItem menuToolsDBTransfer;
         private System.Windows.Forms.ToolStripMenuItem menuTableDrop;
+        private System.Windows.Forms.ToolStripMenuItem menuTableTruncate;
         private System.Windows.Forms.ToolStripButton btnExecuteScript;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton btnDatabaseTransfer;

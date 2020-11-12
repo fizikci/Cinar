@@ -2047,7 +2047,10 @@ namespace Cinar.Database
         {
             return dbProvider.GetSQLTableDrop(table, addIfExists);
         }
-
+        public string GetSQLTableTruncate(Table table, bool addIfExists)
+        {
+            return "TRUNCATE TABLE " + table.Name;
+        }
         public string GetSQLTableCreate(Table table, bool withConstraints = true, bool withIndices = true)
         {
             return dbProvider.GetTableDDL(table, false, false);
