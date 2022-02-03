@@ -267,6 +267,12 @@ namespace Cinar.DBTools
                                      }
                                  },
                      new Command {
+                                     Execute = cmdSearchSQLInProjectFiles,
+                                     Triggers = new List<CommandTrigger>(){
+                                         new CommandTrigger{ Control = menuSearchSQLInProjectFiles},
+                                     }
+                                 },
+                     new Command {
                                      Execute = cmdQuickScript,
                                      Triggers = new List<CommandTrigger>(){
                                          new CommandTrigger{ Control = menuToolsQScriptDeleteFromTables, Argument=SQLResources.SQLDeleteFromTables},
@@ -2452,6 +2458,206 @@ namespace Cinar.DBTools
             }
         }
 
+        private void cmdSearchSQLInProjectFiles(string arg)
+        {
+            var f = new FormSearchProjectFolder();
+
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                var fProjectFolder = @"C:\Users\buk\Desktop\_delete";
+
+                var allFiles = new List<string>();
+                foreach (string ext in f.SearchExtensions /*new string[] { ".cs"}*/)
+                    allFiles.AddRange(Directory.EnumerateFiles(f.ProjectFolder/*fProjectFolder*/, "*" + ext, SearchOption.AllDirectories));
+
+
+                BackgroundWorkerDialog bwd = new BackgroundWorkerDialog();
+                bwd.MessageFormat = "Please wait while " + allFiles.Count + " files being searched. ({0})";
+                bwd.DoWork = () =>
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.AppendLine("drop table DOCS_SQLUsage;");
+                    sb.AppendLine("create table DOCS_SQLUsage (FilePath varchar(max), LineNumber int, SQLType varchar(10), SQLCode varchar(max), FormattedSQLCode varchar(max), MainTable varchar(max), Fields varchar(max), RelatedTables varchar(max));");
+
+                    for (int i = 0; i < allFiles.Count && !bwd.Canceled; i++)
+                    {
+                        var filePath = allFiles[i];
+                        var sqls = GetStrings(filePath).Where(s => isSQL(s.SqlCode.Trim().ToUpper())).ToList();
+
+                        if (sqls.Count > 0)
+                            sqls.ForEach(s => s.FilePath = s.FilePath.Replace(f.ProjectFolder/*fProjectFolder*/, "").Replace("\\", "/"));
+                        else
+                            continue;
+
+                        sqls.ForEach(sql => {
+                            try
+                            {
+                                if (sql.SqlCode.Trim().ToUpper().StartsWith("SELECT"))
+                                {
+                                    sql.SqlType = "SELECT";
+                                    var s = (new SQLParser.Parser(new StringReader(sql.SqlCode), false).ReadNextStatement() as SQLParser.SelectStatement)?.SelectExpression;
+                                    if (s == null) { sql.SqlType = "SKIP"; return; }
+                                    sql.MainTable = s.From?.FirstOrDefault()?.TableName;
+                                    sql.RelatedTables = s.From?.Skip(1).Select(t => t.GetTableReference(s.From)).StringJoin(", ");
+                                    sql.Fields = s.Select?.Select(t => t.Field).StringJoin(", ");
+                                    sql.FormattedSQLCode = s.ToString();
+                                }
+                                else if (sql.SqlCode.Trim().ToUpper().StartsWith("UPDATE"))
+                                {
+                                    sql.SqlType = "UPDATE";
+                                    var s = new SQLParser.Parser(new StringReader(sql.SqlCode), false).ReadNextStatement() as SQLParser.UpdateStatement;
+                                    if (s == null) { sql.SqlType = "SKIP"; return; }
+                                    sql.MainTable = s.TableName;
+                                    sql.Fields = s.Set?.Select(t => t.Key).StringJoin(", ");
+                                    sql.FormattedSQLCode = s.ToString();
+                                }
+                                else if (sql.SqlCode.Trim().ToUpper().StartsWith("DELETE"))
+                                {
+                                    sql.SqlType = "DELETE";
+                                    var s = new SQLParser.Parser(new StringReader(sql.SqlCode), false).ReadNextStatement() as SQLParser.DeleteStatement;
+                                    if (s == null) { sql.SqlType = "SKIP"; return; }
+                                    sql.MainTable = s.TableName;
+                                    sql.Fields = "";
+                                    sql.FormattedSQLCode = s.ToString();
+                                }
+                                else if (sql.SqlCode.Trim().ToUpper().StartsWith("INSERT"))
+                                {
+                                    sql.SqlType = "INSERT";
+                                    var s = new SQLParser.Parser(new StringReader(sql.SqlCode), false).ReadNextStatement() as SQLParser.InsertStatement;
+                                    if (s == null) { sql.SqlType = "SKIP"; return; }
+                                    sql.MainTable = s.TableName;
+                                    sql.Fields = s.Fields?.StringJoin(", ");
+                                    sql.FormattedSQLCode = s.ToString();
+                                }
+                            }
+                            catch { 
+                            }
+                        });
+
+
+                        foreach (var sql in sqls.Where(s => s.SqlType != "SKIP"))
+                        {
+                            /*
+                            sb.AppendFormat(@"
+-----------------------------------------------------------------
+-- {2}, {5}, {7}
+-----------------------------------------------------------------
+{3}
+-----------------------------------------------------------------
+{4}
+",
+                                            sql.FilePath,
+                                            sql.LineNumber,
+                                            sql.SqlType,
+                                            sql.SqlCode,
+                                            sql.FormattedSQLCode,
+                                            sql.MainTable,
+                                            sql.Fields,
+                                            sql.RelatedTables);
+                            */
+                            
+                            sb.AppendFormat("insert into DOCS_SQLUsage values('{0}', {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');\r\n",
+                                            sql.FilePath?.Replace("\\", "\\\\").Replace("'", "''"),
+                                            sql.LineNumber,
+                                            sql.SqlType,
+                                            sql.SqlCode?.Replace("\\", "\\\\").Replace("'", "''"),
+                                            sql.FormattedSQLCode?.Replace("\\", "\\\\").Replace("'", "''"),
+                                            sql.MainTable?.Replace("\\", "\\\\").Replace("'", "''"),
+                                            sql.Fields?.Replace("\\", "\\\\").Replace("'", "''"),
+                                            sql.RelatedTables?.Replace("\\", "\\\\").Replace("'", "''"));
+                            
+                        }
+
+                        int percent = Convert.ToInt32((i / (float)allFiles.Count) * 100);
+                        bwd.ReportProgress(percent, Path.GetFileName(filePath));
+                    }
+
+                    return sb.ToString();
+                };
+                bwd.Completed = () => addFileEditor("", bwd.Result);
+                bwd.Show();
+            }
+        }
+
+        private bool isSQL(string s)
+        {
+            return
+                (s.StartsWith("SELECT") || s.StartsWith("UPDATE") || s.StartsWith("INSERT") || s.StartsWith("DELETE"))
+                && s.Length > 10;
+        }
+
+        private List<CodeLocation> GetStrings(string filePath)
+        {
+            var content = File.ReadLines(filePath).Select(l => l.Trim().StartsWith("//") ? "" : l).StringJoin("\r\n");
+            var escapes = new Dictionary<char, string>() { { 'n', "\n" }, { 'r', "\r" }, { '\'', "\'" }, { '\"', "\"" }, { 't', "\t" } };
+            var res = new List<CodeLocation>();
+
+            bool reading = false;
+            bool statementEnded = true;
+            int lineNumber = 0;
+            int plusFound = 0;
+
+            for (int i = 0; i < content.Length; i++)
+            {
+                if (content[i] == '\n')
+                    lineNumber++;
+
+                if (reading == false && content[i] == '"')
+                {
+                    reading = true;
+                    if (statementEnded == true)
+                    {
+                        res.Add(new CodeLocation { LineNumber = lineNumber, FilePath = filePath });
+                        statementEnded = false;
+                    }
+                    continue;
+                }
+
+                if (reading)
+                {
+                    if(plusFound > 1)
+                    {
+                        res[res.Count - 1].SqlCode += " {0} ";
+                        plusFound = 0;
+                    }
+
+                    if (content[i] == '\\')
+                    {
+                        i++;
+                        res[res.Count - 1].SqlCode += escapes.ContainsKey(content[i]) ? escapes[content[i]] : "";
+                    }
+                    else if (content[i] == '"')
+                    {
+                        reading = false;
+                        res[res.Count - 1].SqlCode += " ";
+                    }
+                    else
+                        res[res.Count - 1].SqlCode += content[i];
+                }
+                else
+                {
+                    if (content[i] == ';')
+                        statementEnded = true;
+
+                    if (!statementEnded && content[i] == '+')
+                        plusFound++;
+                }
+            }
+
+            return res;
+        }
+        public class CodeLocation
+        {
+            public string FilePath { get; set; }
+            public int LineNumber { get; set; }
+            public string SqlType { get; set; }
+            public string SqlCode { get; set; } = "";
+            public string MainTable { get; set; }
+            public string Fields { get; set; }
+            public string RelatedTables { get; set; }
+            public string FormattedSQLCode { get; set; }
+        }
 
         private void cmdQuickScript(string arg)
         {

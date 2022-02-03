@@ -407,7 +407,7 @@ namespace Cinar.Database.Providers
 							INFORMATION_SCHEMA.COLUMNS
 						WHERE
 							TABLE_NAME='{0}'
-                        ORDER BY ORDINAL_POSITION", tableName);
+                        ORDER BY ORDINAL_POSITION", tableName.Replace("'",""));
         }
 
         public string GetSQLColumnAdd(string toTable, Column column)

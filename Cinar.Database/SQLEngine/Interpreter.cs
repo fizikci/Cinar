@@ -56,7 +56,7 @@ namespace Cinar.SQLEngine
             }
         }
         public List<Hashtable> ResultSet = null;
-        public ListSelect FieldNames = null;
+        public ListSelectPart FieldNames = null;
         public List<Type> FieldTypes = null;
         
         //todo: burada korkunç bir hata var. Parse() ve ardından Execute() çalıştırılıyor. Parse hataları yutuyor. Execute çalışıyor. Parse hatası oluşunca execution iptal edilmeli.
@@ -137,7 +137,7 @@ namespace Cinar.SQLEngine
                 // her bir kayıt için hashtable oluştur, context'e ekle, where expressionı üzerinde excute ettir. true ise listeye ekle.
                 // falan filan uzun iş bu. niye yapıyorum ki ben bunu?
 
-                SelectStatement ss = statement as SelectStatement;
+                SelectExpression ss = (statement as SelectStatement).SelectExpression;
                 Expression filter = null;
                 if (ss.From[0].On == null && ss.Where == null) filter = null;
                 else if (ss.From[0].On != null && ss.Where != null) filter = new AndExpression(ss.From[0].On, ss.Where);
@@ -149,7 +149,7 @@ namespace Cinar.SQLEngine
                 this.FieldTypes = new List<Type>();
                 if (this.ResultSet.Count > 0)
                 {
-                    foreach (Select key in ss.Select)
+                    foreach (SelectPart key in ss.Select)
                         if (this.ResultSet[0][key.Alias] != null)
                             this.FieldTypes.Add(this.ResultSet[0][key.Alias].GetType());
                         else
@@ -232,7 +232,7 @@ namespace Cinar.SQLEngine
                 return null;
         }
 
-        internal List<Hashtable> GetData(Join join, Expression where, ListSelect fieldNames)
+        internal List<Hashtable> GetData(Join join, Expression where, ListSelectPart fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
@@ -408,7 +408,7 @@ namespace Cinar.SQLEngine
             return list;
         }
 
-        private List<Hashtable> getColumnsOf(Type type, string tableName, Expression where, ListSelect fieldNames)
+        private List<Hashtable> getColumnsOf(Type type, string tableName, Expression where, ListSelectPart fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
             foreach (PropertyInfo pi in type.GetProperties())
@@ -429,7 +429,7 @@ namespace Cinar.SQLEngine
                     if (where==null || (bool)where.Calculate(this))
                     {
                         Hashtable ht = new Hashtable();
-                        foreach (Select field in fieldNames)
+                        foreach (SelectPart field in fieldNames)
                             ht[field.Alias] = field.Field.Calculate(this);//Variables[fieldName];
                         list.Add(ht);
                     }

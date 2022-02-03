@@ -19,7 +19,7 @@ namespace Cinar.SQLEngine.Providers
             this.recursive = recursive;
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelectPart fieldNames)
         {
             List<Hashtable> list = getFileList(context, where, fieldNames, path);
 
@@ -27,7 +27,7 @@ namespace Cinar.SQLEngine.Providers
 
         }
 
-        private List<Hashtable> getFileList(Context context, Expression where, ListSelect fieldNames, string dirPath)
+        private List<Hashtable> getFileList(Context context, Expression where, ListSelectPart fieldNames, string dirPath)
         {
             List<Hashtable> list = new List<Hashtable>();
             DirectoryInfo di = new DirectoryInfo(dirPath);
@@ -37,7 +37,7 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (Select field in fieldNames)
+                    foreach (SelectPart field in fieldNames)
                         ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
                     list.Add(ht);
                     if (recursive)
@@ -50,7 +50,7 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (Select field in fieldNames)
+                    foreach (SelectPart field in fieldNames)
                         ht[field.Alias] = field.Field.Calculate(context);//context.Variables[fieldName];
                     list.Add(ht);
                 }

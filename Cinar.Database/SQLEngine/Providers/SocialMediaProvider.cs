@@ -29,7 +29,7 @@ namespace Cinar.SQLEngine.Providers
             this.source = source;
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelectPart fieldNames)
         {
             List<SocialMediaItem> items = new List<SocialMediaItem>();
 
@@ -57,7 +57,7 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (Select field in fieldNames)
+                    foreach (SelectPart field in fieldNames)
                         ht[field.Alias] = field.Field.Calculate(context);
                     list.Add(ht);
                 }

@@ -533,10 +533,10 @@ namespace Cinar.SQLEngine
     {
         private List<Hashtable> list;
         private int currentIndex;
-        private ListSelect fieldNames;
+        private ListSelectPart fieldNames;
         private List<Type> fieldTypes;
 
-        public CinarDataReader(List<Hashtable> list, ListSelect fieldNames, List<Type> fieldTypes)
+        public CinarDataReader(List<Hashtable> list, ListSelectPart fieldNames, List<Type> fieldTypes)
         {
             this.currentIndex = -1;
             this.list = list;

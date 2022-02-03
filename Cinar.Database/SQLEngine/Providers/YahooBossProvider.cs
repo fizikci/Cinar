@@ -53,7 +53,7 @@ namespace Cinar.SQLEngine.Providers
                 return new List<YahooResultItem>();
         }
 
-        internal List<Hashtable> GetData(Context context, Expression where, ListSelect fieldNames)
+        internal List<Hashtable> GetData(Context context, Expression where, ListSelectPart fieldNames)
         {
             List<Hashtable> list = new List<Hashtable>();
 
@@ -62,7 +62,7 @@ namespace Cinar.SQLEngine.Providers
                 if (item.Filter(context, where))
                 {
                     Hashtable ht = new Hashtable();
-                    foreach (Select field in fieldNames)
+                    foreach (SelectPart field in fieldNames)
                         ht[field.Alias] = field.Field.Calculate(context);
                     list.Add(ht);
                 }

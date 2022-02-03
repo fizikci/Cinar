@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace Cinar.SQLParser
 {
@@ -19,7 +20,16 @@ namespace Cinar.SQLParser
 
     public abstract class Expression : ParserNode
     {
+        public bool InParanthesis { get; set; }
+        public bool IsDistinct { get; set; }
         public abstract object Calculate(IContext context);
+
+        public abstract string ToCode();
+
+        public override string ToString()
+        {
+            return (IsDistinct ? "DISTINCT " : "") + (InParanthesis ? "(" + ToCode() + ")" : ToCode());
+        }
     }
 
     public class FunctionCall : Expression
@@ -47,7 +57,7 @@ namespace Cinar.SQLParser
             else
                 throw new Exception("Undefined function: " + this);
         }
-        public override string ToString()
+        public override string ToCode()
         {
             StringBuilder sb = new StringBuilder();
             foreach (Expression expression in fArguments)
@@ -76,7 +86,7 @@ namespace Cinar.SQLParser
         {
             return context.GetValueOfCurrent(fName);
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0}", fName);
         }
@@ -99,7 +109,7 @@ namespace Cinar.SQLParser
         {
             return context.GetVariableValue(fName);
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0}", fName);
         }
@@ -116,7 +126,7 @@ namespace Cinar.SQLParser
         {
             return fValue;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0}", fValue);
         }
@@ -132,7 +142,7 @@ namespace Cinar.SQLParser
         {
             return fValue;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0}", fValue.ToString().Replace(",","."));
         }
@@ -152,9 +162,9 @@ namespace Cinar.SQLParser
         {
             return fValue;
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("{0}", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
+            return String.Format("'{0}'", fValue.Replace("\\", "\\\\").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\r", "\\r"));
         }
     }
     public class CaseWhen : Expression
@@ -179,7 +189,7 @@ namespace Cinar.SQLParser
 
             return null;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("CASE");
@@ -214,35 +224,30 @@ namespace Cinar.SQLParser
                 :
                 falseExpression.Calculate(context);
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0} ? {1} : {2}", boolExp.ToString(), trueExpression.ToString(), falseExpression.ToString());
         }
     }
-    public class IsNullShortCut : Expression
+    public class IsNullExpression : Expression
     {
-        public IsNullShortCut(Expression nullableExp, Expression notNullExp)
+        public IsNullExpression(Expression nullableExp, bool isNot)
         {
             this.nullableExp = nullableExp;
-            this.notNullExp = notNullExp;
+            this.isNot = isNot;
         }
 
         readonly Expression nullableExp;
-        public Expression NullableExp { get { return nullableExp; } }
-        readonly Expression notNullExp;
-        public Expression NotNullExp { get { return notNullExp; } }
+        readonly bool isNot;
 
         public override object Calculate(IContext context)
         {
             object val = nullableExp.Calculate(context);
-            if (val == null || val.Equals(""))
-                return notNullExp.Calculate(context);
-            else
-                return val;
+            return (isNot && val != null) || (!isNot && val == null);
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("{0} ?? {1}", nullableExp.ToString(), notNullExp.ToString());
+            return String.Format("{0} IS{1} NULL", nullableExp.ToString(), isNot ? " NOT" : "");
         }
     }
 
@@ -278,9 +283,9 @@ namespace Cinar.SQLParser
 
             return leftBool && rightBool;
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} AND {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} AND {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
 
         public static bool ParseBool(object obj)
@@ -325,11 +330,76 @@ namespace Cinar.SQLParser
             else if (leftBool == false && rightBool == true)
                 return right;
             else
-            return leftBool || rightBool;
+                return leftBool || rightBool;
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} OR {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} OR {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
+        }
+    }
+    public class BinaryOrExpression : BinaryExpression
+    {
+        public BinaryOrExpression(Expression leftChildExpression, Expression rightChildExpression)
+            : base(leftChildExpression, rightChildExpression) { }
+
+        public override object Calculate(IContext context)
+        {
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
+
+            if (left is int && right is int)
+                return (int)left | (int)right;
+            else if (left is bool && right is bool)
+                return (bool)left | (bool)right;
+            else
+                throw new Exception("Argument type error for binary OR (|) expression");
+        }
+        public override string ToCode()
+        {
+            return String.Format("{0} | {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
+        }
+    }
+    public class CastAsTypeExpression : Expression
+    {
+        private Expression leftChildExpression;
+        private string typeName;
+        public CastAsTypeExpression(Expression leftChildExpression, string typeName)
+        {
+            this.leftChildExpression = leftChildExpression;
+            this.typeName = typeName.ToLower();
+        }
+
+        public override object Calculate(IContext context)
+        {
+            object left = leftChildExpression.Calculate(context);
+
+            return null;
+        }
+        public override string ToCode()
+        {
+            return String.Format("CAST({0} AS {1})", leftChildExpression.ToString(), typeName);
+        }
+    }
+    public class BinaryAndExpression : BinaryExpression
+    {
+        public BinaryAndExpression(Expression leftChildExpression, Expression rightChildExpression)
+            : base(leftChildExpression, rightChildExpression) { }
+
+        public override object Calculate(IContext context)
+        {
+            object left = LeftChildExpression.Calculate(context);
+            object right = RightChildExpression.Calculate(context);
+
+            if (left is int && right is int)
+                return (int)left & (int)right;
+            else if (left is bool && right is bool)
+                return (bool)left & (bool)right;
+            else
+                throw new Exception("Argument type error for binary AND (&) expression");
+        }
+        public override string ToCode()
+        {
+            return String.Format("{0} & {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Addition : BinaryExpression
@@ -366,9 +436,9 @@ namespace Cinar.SQLParser
             else
                 return left.ToString() + right.ToString();
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} + {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} + {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Mod : BinaryExpression
@@ -389,9 +459,9 @@ namespace Cinar.SQLParser
             else
                 return Convert.ToDecimal(left) % Convert.ToDecimal(right);
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} % {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} % {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Subtraction : BinaryExpression
@@ -430,9 +500,9 @@ namespace Cinar.SQLParser
             else
                 return Convert.ToDecimal(left) - Convert.ToDecimal(right);
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} - {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} - {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Division : BinaryExpression
@@ -462,9 +532,9 @@ namespace Cinar.SQLParser
 
             return Convert.ToDecimal(left) / Convert.ToDecimal(right);
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} / {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} / {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Multiplication : BinaryExpression
@@ -485,9 +555,9 @@ namespace Cinar.SQLParser
             else
                 return Convert.ToDecimal(left) * Convert.ToDecimal(right);
         }
-        public override string ToString()
+        public override string ToCode()
         {
-            return String.Format("({0} * {1})", LeftChildExpression.ToString(), RightChildExpression.ToString());
+            return String.Format("{0} * {1}", LeftChildExpression.ToString(), RightChildExpression.ToString());
         }
     }
     public class Comparison : BinaryExpression
@@ -562,7 +632,7 @@ namespace Cinar.SQLParser
 
             return true;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             string op = "";
             switch (Operator)
@@ -590,7 +660,7 @@ namespace Cinar.SQLParser
                 default:
                     break;
             }
-            return String.Format("({0} {2} {1})", LeftChildExpression.ToString(), RightChildExpression.ToString(), op);
+            return String.Format("{0} {2} {1}", LeftChildExpression.ToString(), RightChildExpression.ToString(), op);
         }
     }
     public enum ComparisonOperator
@@ -614,7 +684,7 @@ namespace Cinar.SQLParser
         {
             throw new NotImplementedException();
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("{0}.{1}", LeftChildExpression, RightChildExpression);
         }
@@ -642,7 +712,7 @@ namespace Cinar.SQLParser
             int res = Convert.ToInt32(ChildExpression.Calculate(context));
             return -1 * res;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("-{0}", ChildExpression.ToString());
         }
@@ -657,9 +727,217 @@ namespace Cinar.SQLParser
             bool b = Convert.ToBoolean(ChildExpression.Calculate(context));
             return !b;
         }
-        public override string ToString()
+        public override string ToCode()
         {
             return String.Format("NOT {0}", ChildExpression.ToString());
         }
     }
+
+    public class SelectExpression : Expression
+    {
+        public bool All { get; set; }
+        public bool Distinct { get; set; }
+        public ListSelectPart Select { get; set; }
+        public ListJoin From { get; set; }
+        public Expression Where { get; set; }
+        public List<Order> OrderBy { get; set; }
+        public Expression Having { get; set; }
+        public List<Expression> GroupBy { get; set; }
+        public Expression Limit { get; set; }
+        public Expression Offset { get; set; }
+
+        public SelectExpression()
+        {
+            Select = new ListSelectPart();
+            From = new ListJoin();
+            OrderBy = new List<Order>();
+            GroupBy = new List<Expression>();
+        }
+        public override object Calculate(IContext context) { return null; }
+        public override string ToCode()
+        {
+            string res = "SELECT";
+            if (Distinct)
+                res += " DISTINCT";
+            if (this.Limit != null)
+                res += " TOP " + this.Limit;
+            res += "\r\n\t" + string.Join(",\r\n\t", this.Select.Select(s => s.ToString()).ToArray());
+            if (this.From.Count > 0)
+                res += "\r\nFROM\r\n" + this.From;
+            if (this.Where != null)
+                res += "\r\nWHERE\r\n\t" + this.Where;
+            if (this.GroupBy.Count > 0)
+                res += "\r\nGROUP BY\r\n\t" + string.Join(",\r\n\t", this.GroupBy.Select(g => g.ToString()).ToArray());
+            if (this.Having != null)
+                res += "\r\nHAVING\r\n\t" + this.Having;
+            if (this.OrderBy.Count > 0)
+                res += "\r\nORDER BY\r\n\t" + string.Join(",\r\n\t", this.OrderBy.Select(o => o.ToString()).ToArray());
+            if (this.Offset != null)
+                res += " OFFSET " + this.Offset;
+            return res;
+        }
+    }
+
+    public class SelectPart
+    {
+        public Expression Field { get; set; }
+        public string Alias { get; set; }
+
+        public override string ToString()
+        {
+            string fieldName = Field.ToString();
+            if (Field is DbObjectName)
+                fieldName = Field.ToString();
+            return fieldName + ((!string.IsNullOrEmpty(Alias) && Alias != Field.ToString()) ? " AS " + Alias : "");
+        }
+    }
+    public class ListSelectPart : List<SelectPart>
+    {
+        public SelectPart this[string aliasName]
+        {
+            get
+            {
+                foreach (SelectPart s in this)
+                    if (s.Alias == aliasName)
+                        return s;
+                return null;
+            }
+        }
+
+        public int IndexOf(string aliasName)
+        {
+            for (int i = 0; i < this.Count; i++)
+                if (this[i].Alias == aliasName)
+                    return i;
+            return -1;
+        }
+    }
+    public class ListJoin : List<Join>
+    {
+        public Join this[string aliasName]
+        {
+            get
+            {
+                foreach (Join join in this)
+                    if (join.Alias == aliasName)
+                        return join;
+                return null;
+            }
+        }
+        public override string ToString()
+        {
+            this[0].TableName = this[0].TableName;
+            this[0].Alias = this[0].Alias ?? this[0].Alias;
+            string res = "\t" + this[0].TableName + ((!string.IsNullOrEmpty(this[0].Alias) && this[0].Alias != this[0].TableName) ? " AS " + this[0].Alias : "") + "\r\n";
+            for (int i = 1; i < this.Count; i++)
+                res += "\t" + this[i].ToString() + "\r\n";
+            res = res.TrimEnd();
+            return res;
+        }
+    }
+    public class Join
+    {
+        public JoinType JoinType { get; set; }
+        public Expression SelectExpression { get; set; }
+        public string TableName { get; set; }
+        public string Alias { get; set; }
+        public Dictionary<string, Expression> CinarTableOptions { get; set; }
+        public Expression On { get; set; }
+
+        public Join()
+        {
+            CinarTableOptions = new Dictionary<string, Expression>();
+        }
+
+        public override string ToString()
+        {
+            return JoinType.ToString().ToUpperInvariant() + " JOIN " + TableName + ((!string.IsNullOrEmpty(Alias) && Alias != TableName) ? " AS " + Alias : "") + (On != null ? " ON " + On : "");
+        }
+
+        public string GetTableReference(ListJoin from)
+        {
+            var mainTableAlias = from.FirstOrDefault().Alias;
+
+            var comp = this.On as Comparison;
+            if (comp != null && comp.Operator == ComparisonOperator.Equal) // find relation in ON expression
+            {
+                var left = comp.LeftChildExpression as MemberAccess;
+                var right = comp.RightChildExpression as MemberAccess;
+
+                if (left != null && right != null)
+                {
+                    if (left.LeftChildExpression is Variable && (left.LeftChildExpression as Variable).Name.ToUpper() == mainTableAlias.ToUpper())
+                        return (left.RightChildExpression as Variable).Name + " => " + TableName;
+                    if (right.LeftChildExpression is Variable && (right.LeftChildExpression as Variable).Name.ToUpper() == mainTableAlias.ToUpper())
+                        return (right.RightChildExpression as Variable).Name + " => " + TableName;
+                }
+            }
+            else // find relation in WHERE clause
+            {
+
+            }
+
+            return "";
+        }
+    }
+
+    public enum JoinType
+    {
+        Inner, // cartesian product
+        Left, // all left table rows and joined right table row with nulls on right if not joined
+        Right, // all right table rows and joined left table row with nulls on left if not joined
+        Full, // all right & left table rows with nulls on both sides if not joined
+        Cross // cartesian product
+    }
+
+    public class Order
+    {
+        public Expression By { get; set; }
+        public bool Desc { get; set; }
+
+        public override string ToString()
+        {
+            string fieldName = By.ToString();
+            if (By is DbObjectName)
+                fieldName = fieldName;
+            return fieldName + (Desc ? " DESC" : "");
+        }
+    }
+
+    public class ListExpression : Expression
+    {
+        readonly List<Expression> items;
+        public ListExpression(List<Expression> items)
+        {
+            this.items = items;
+        }
+        public override object Calculate(IContext context) 
+        {
+            return items.Select(e=>e.Calculate(context)).ToList();
+        }
+        public override string ToCode()
+        {
+            return "(" + items.Select(e=>e.ToString()).StringJoin(", ") + ")";
+        }
+    }
+
+    public class InExpression : Expression
+    {
+        readonly Expression item;
+        readonly ListExpression list;
+        public InExpression(Expression item, ListExpression list)
+        {
+            this.item = item;
+            this.list = list;
+        }
+        public override object Calculate(IContext context)
+        {
+            return ((List<object>)list.Calculate(context)).Select(e=>e.ToString()).Contains(item.Calculate(context).ToString());
+        }
+        public override string ToCode()
+        {
+            return item + " IN " + list;
+        }
+    }
+
 }
