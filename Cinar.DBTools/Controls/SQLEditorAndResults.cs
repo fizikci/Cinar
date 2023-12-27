@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Cinar.Database;
 using System.IO;
 using Cinar.DBTools.Tools;
+using FFF = Cinar.FamFamFam.Properties.FamFamFam;
 
 namespace Cinar.DBTools.Controls
 {
@@ -26,11 +27,11 @@ namespace Cinar.DBTools.Controls
 
             btnSave.Text = "";
 
-            imageListTabs.Images.Add("Results", FamFamFam.application_split);
-            imageListTabs.Images.Add("Output", FamFamFam.application_xp_terminal);
-            imageListTabs.Images.Add("SQLLog", FamFamFam.clock);
-            imageListTabs.Images.Add("Info", FamFamFam.information);
-            imageListTabs.Images.Add("TableData", FamFamFam.table);
+            imageListTabs.Images.Add("Results", FFF.application_split);
+            imageListTabs.Images.Add("Output", FFF.application_xp_terminal);
+            imageListTabs.Images.Add("SQLLog", FFF.clock);
+            imageListTabs.Images.Add("Info", FFF.information);
+            imageListTabs.Images.Add("TableData", FFF.table);
 
             tpResults.ImageKey = "Results";
             tpOutput.ImageKey = "Output";

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Cinar.Database;
 using Cinar.DBTools.Controls;
 using ForeignKeyConstraint = Cinar.Database.ForeignKeyConstraint;
+using FFF = Cinar.FamFamFam.Properties.FamFamFam;
 
 namespace Cinar.DBTools.Tools
 {
@@ -20,11 +21,11 @@ namespace Cinar.DBTools.Tools
         {
             InitializeComponent();
 
-            btnFix.Image = FamFamFam.database_gear;
+            btnFix.Image = FFF.database_gear;
             btnFix.TextAlign = ContentAlignment.MiddleLeft;
             btnFix.TextImageRelation = TextImageRelation.ImageBeforeText;
 
-            btnClose.Image = FamFamFam.cancel;
+            btnClose.Image = FFF.cancel;
             btnClose.TextAlign = ContentAlignment.MiddleLeft;
             btnClose.TextImageRelation = TextImageRelation.ImageBeforeText;
         }

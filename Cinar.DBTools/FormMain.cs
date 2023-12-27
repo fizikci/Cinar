@@ -22,6 +22,7 @@ using Cinar.DBTools.CodeGen;
 using Cinar.WebServer;
 using ColumnDef = Cinar.DBTools.Tools.ColumnDef;
 using System.Text.RegularExpressions;
+using FFF = Cinar.FamFamFam.Properties.FamFamFam;
 
 namespace Cinar.DBTools
 {
@@ -41,26 +42,26 @@ namespace Cinar.DBTools
             toolStrip.BackColor = Color.FromArgb(188, 199, 216);
             imgYellowBg = splitContainerMain.Panel1.BackgroundImage;
 
-            imageListTree.Images.Add("Folder", FamFamFam.folder);
-            imageListTree.Images.Add("File", FamFamFam.page);
-            imageListTree.Images.Add("Table", FamFamFam.table);
-            imageListTree.Images.Add("Column", FamFamFam.table_row_insert);
-            imageListTree.Images.Add("Key", FamFamFam.key);
-            imageListTree.Images.Add("Constraint", FamFamFam.database_link);
-            imageListTree.Images.Add("Index", FamFamFam.database_key);
-            imageListTree.Images.Add("View", FamFamFam.eye);
-            imageListTree.Images.Add("Diagram", FamFamFam.chart_organisation);
-            imageListTree.Images.Add("Database", FamFamFam.database);
-            imageListTree.Images.Add("MySQL", FamFamFam.mysql);
-            imageListTree.Images.Add("PostgreSQL", FamFamFam.postgresql);
-            imageListTree.Images.Add("SQLServer", FamFamFam.sqlserver);
-            imageListTree.Images.Add("Cinar", FamFamFam.Cinar);
-            imageListTree.Images.Add("SQLite", FamFamFam.SQLite);
-            imageListTree.Images.Add("Script", FamFamFam.script);
+            imageListTree.Images.Add("Folder", FFF.folder);
+            imageListTree.Images.Add("File", FFF.page);
+            imageListTree.Images.Add("Table", FFF.table);
+            imageListTree.Images.Add("Column", FFF.table_row_insert);
+            imageListTree.Images.Add("Key", FFF.key);
+            imageListTree.Images.Add("Constraint", FFF.database_link);
+            imageListTree.Images.Add("Index", FFF.database_key);
+            imageListTree.Images.Add("View", FFF.eye);
+            imageListTree.Images.Add("Diagram", FFF.chart_organisation);
+            imageListTree.Images.Add("Database", FFF.database);
+            imageListTree.Images.Add("MySQL", FFF.mysql);
+            imageListTree.Images.Add("PostgreSQL", FFF.postgresql);
+            imageListTree.Images.Add("SQLServer", FFF.sqlserver);
+            imageListTree.Images.Add("Cinar", FFF.Cinar);
+            imageListTree.Images.Add("SQLite", FFF.SQLite);
+            imageListTree.Images.Add("Script", FFF.script);
 
-            imageListTabs.Images.Add("Diagram", FamFamFam.chart_organisation);
-            imageListTabs.Images.Add("Query", FamFamFam.script);
-            imageListTabs.Images.Add("File", FamFamFam.page);
+            imageListTabs.Images.Add("Diagram", FFF.chart_organisation);
+            imageListTabs.Images.Add("Query", FFF.script);
+            imageListTabs.Images.Add("File", FFF.page);
 
             #region commands
             cmdMan.AfterCommandExecute = showSelectedObjectOnPropertyGrid;
@@ -2924,7 +2925,7 @@ namespace Cinar.DBTools
                 foreach (Cinar.Database.ForeignKeyConstraint fk in t.Constraints.Where(c => c is Cinar.Database.ForeignKeyConstraint))
                     if (fk.RefTableName == tbl.Name)
                     {
-                        ToolStripMenuItem item = new ToolStripMenuItem(t.Name, FamFamFam.table);
+                        ToolStripMenuItem item = new ToolStripMenuItem(t.Name, FFF.table);
                         item.Click += (sndr, args) => { showGroupedCounts(fk.Columns[0]); };
                         menuTableShowChildrenRecords.DropDownItems.Add(item);
                     }
