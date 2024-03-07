@@ -2,17 +2,17 @@
 Cinar is a database-centric code library. It contains a framework named Cinar.Database and an SQL Client named Cinar.DBTools with many features that the creators needed in 20 years of their programming life.
 
 # Cinar Database
-## Tanım
-Cinar.Database kütüphanesi veritabanı ile çalışmayı daha fonksiyonel ve daha eğlenceli hale getirir.
+## Definition
+The Cinar.Database library enhances the functionality and enjoyment of working with databases by offering a comprehensive suite of features designed to simplify database operations.
 
-## Özellikler
-- **Database abstraction:** MySQL, MS SQL Server, PostgreSQL ve SQLite ile çalışabilir. (İzle)
-- **Veritabanı metedatasına erişim:** Veritabanında tanımlı olan tablo, field, index gibi nesnelere ait detaylı bilgi sağlıyor.
-- **SQL Generation:** Metadatadan "create table", "insert", "update" gibi SQL scriptlerini üretebiliyor
-- **Transaction**lı veya transactionsız çalışabilir. (Özellikle web uygulamalarında performansı arttırmak için transaction'ı kapatmak gerekli olabilir) Execute metoduna parametre olarak geçilen bir "lambda ifadesini" bir transaction içerisinde çalıştırıp commit veya duruma göre rollback edebiliyor.
-- **Loglama: Çalıştırılan SQL'lerin detaylı loglarını tutuyor. (hangi kod satırından hangi SQL çalıştı?)
-- **Cache:** Web uygulamalarında bir request için çalışan Cache (önbellek) mekanizmasına sahip.
-- **Object Relational Mapping yaklaşımı**
+## Features
+- **Database abstraction:** Supports various databases, including MySQL, MS SQL Server, PostgreSQL, and SQLite, providing flexibility across different platforms.
+- **Database Metadata Access:** Offers access to detailed information about database-defined objects like tables, fields, and indexes.
+- **SQL Generation:** Automatically generates SQL scripts such as "create table", "insert", and "update" from metadata, streamlining the development process.
+- **Transaction Management:** Facilitates both transactional and non-transactional operations, crucial for optimizing performance in web applications. Features functionality to execute lambda expressions within transactions, with automatic commit or rollback as appropriate.
+- **Logging**: Maintains detailed logs of SQL queries executed, enhancing debugging and monitoring capabilities.
+- **Caching:** Incorporates a caching mechanism for efficient handling of web application requests.
+- **Object Relational Mapping**
   - Nesnelerin sınıf isimlerini tablo adı olarak ve public {get; set;} imzasına sahip propertilerini tablo fieldı olarak kabul edip database ile map ediyor.
   - Nesneler üzerinde FieldDetail ve TableDetail attribute'u ile ekstra mapping metadatası belirtilebiliyor (TableName, FieldName, FieldType, IsNotNull, DefaultValue, vb.)
   - Nesnesi olup kendisi olmayan tabloların runtime'da otomatik "create" edilmesini sağlıyor.
